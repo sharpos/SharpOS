@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<project name="SharpOS AOT Compiler" default="build" basedir=".">
+	<description>A compiler that takes assemblies in the Microsoft Extended PE format and converts them to a binary format for use in SharpOS.</description>
+	<property name="output-filename" value="sharpos-aot.exe" />
+	<target name="clean">
+		<delete file="${output-filename}" />
+	</target>
+	<target name="build" description="Compiles the AOT Compiler.">
+		<csc target="exe" output="${output-filename}" unsafe="true">
+			<sources>
+				<include name="Operations/Mov.cs" />
+				<include name="Operations/OperationBase.cs" />
+				<include name="Operations/OperationSizes.cs" />
+				<include name="Operations/Registers.cs" />
+				<include name="Main.cs" />
+				<include name="MethodBuilder.cs" />
+			</sources>
+			<references>
+					<include name="Mono.Cecil.dll" />
+			</references>
+		</csc>
+	</target>
+</project>

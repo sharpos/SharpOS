@@ -33,6 +33,7 @@ namespace SharpOS.AOT
 				Console.WriteLine(t.FullName);
 				foreach(MethodDefinition method in t.Methods)
 				{
+					System.Console.WriteLine("              " + method.Name);
 					if (method.IsStatic) buildMethod(method);
 				}
 			}
