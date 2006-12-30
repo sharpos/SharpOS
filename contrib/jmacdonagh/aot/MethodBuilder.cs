@@ -43,7 +43,7 @@ namespace SharpOS.AOT
 		
 		private uint sizeOf(TypeReference type)
 		{
-			Mono.Cecil.TypeReference a = new Mono.Cecil.TypeReference
+			return 0;
 		}
 		
 		#region Instruction Handlers
