@@ -8,6 +8,8 @@
 	<target name="build" description="Compiles the AOT Compiler.">
 		<csc target="exe" output="${output-filename}" unsafe="true">
 			<sources>
+				<include name="CilStack.cs" />
+				<include name="CilStackEntry.cs" />
 				<include name="Operations/Mov.cs" />
 				<include name="Operations/OperationBase.cs" />
 				<include name="Operations/OperationSizes.cs" />
