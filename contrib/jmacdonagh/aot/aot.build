@@ -10,6 +10,10 @@
 			<sources>
 				<include name="CilStack.cs" />
 				<include name="CilStackEntry.cs" />
+				<include name="CilTypes.cs" />
+				<include name="Operations/Cbw.cs" />
+                                <include name="Operations/Cwde.cs" />
+                                <include name="Operations/Cdq.cs" />
 				<include name="Operations/Mov.cs" />
 				<include name="Operations/OperationBase.cs" />
 				<include name="Operations/OperationSizes.cs" />

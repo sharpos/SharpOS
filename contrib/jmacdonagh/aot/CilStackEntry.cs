@@ -8,22 +8,25 @@ namespace SharpOS.AOT
 		private TypeReference _Type;
 		private uint _Size;
 		
-		public CilStackEntry(TypeReference type, uint size)
+		public CilStackEntry(TypeReference type)
 		{
 			_Type = type;
-			_Size = size;
+			_Size = CilTypes.SizeOf(type);
 		}
 		
 		public TypeReference Type
 		{
 			get { return _Type; }
-			set { _Type = value; }
+			set
+			{
+				_Type = value;
+				_Size = CilTypes.SizeOf(value);
+			}
 		}
 		
 		public uint Size
 		{
 			get { return _Size; }
-			set { _Size = value; }
 		}
 	}
 }

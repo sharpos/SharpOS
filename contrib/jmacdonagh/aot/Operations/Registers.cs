@@ -14,6 +14,14 @@ namespace SharpOS.AOT
 		BL,
 		BH,
 		EBX,
+		CL,
+		CH,
+		CX,
+		ECX,
+		DL,
+		DH,
+		DX,
+		EDX,
 		EBP
 	}
 }

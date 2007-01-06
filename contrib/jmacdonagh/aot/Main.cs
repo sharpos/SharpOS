@@ -6,8 +6,9 @@ namespace SharpOS.AOT
 	{
 		public static void Main()
 		{
-			Console.WriteLine(String.Format("{0:x}", 1));
-			Console.WriteLine(~1+1);
+			// TODO: Port over original main code and clean it up a little.
+			// TODO: Write AssemblyBuilder.cs
+			// TODO: Write TypeBuilder.cs
 		}
 	}
 }
