@@ -4,38 +4,19 @@ using System.Text;
 
 namespace SharpOS
 {
-    class Tests
+    public class Tests
     {
-        public static int DeadCodeElimination(int b, int c)
+        public long Types(byte byteValue, int intValue, Int16 int16Value, Int32 int32Value, Int64 int64Value, float floatValue, double doubleValue)
         {
-            int a, d, e, f;
+            byteValue += 10;
+            intValue -= 10;
+            int16Value *= 10;
+            int32Value /= 10;
+            int64Value = -int64Value;
+            floatValue *= 2.0f + int32Value;
+            doubleValue *= 4.0d + int64Value;
 
-            a = b + c; // Useless Code
-            d = b - c; // Useless Code
-            e = 100;
-            e = b * c + e;
-            f = b / c; // Useless Code
-
-            return e;
-        }
-
-        public static int Test(int a)
-        {
-            if (a < 5)
-            {
-                a = a * 5;
-            }
-            else
-            {
-                a = a + 5;
-            }
-
-            if (a == 10)
-            {
-                a = 100;
-            }
-
-            return a;
+            return byteValue + intValue + int16Value + int32Value + int64Value + (long) floatValue + (long) doubleValue;
         }
 
         public static int Dominance(int b, int c, int d, int f)
@@ -65,7 +46,7 @@ namespace SharpOS
 
                     x = e + f;
 
-                    Console.WriteLine(x);
+                    //Console.WriteLine(x);
                 }
                 while (x < 1);
             }
@@ -80,7 +61,68 @@ namespace SharpOS
 
             return z;
         }
+        
+        public static int Test(int a)
+        {
+            if (a < 5)
+            {
+                a = a * 5;
+            }
+            else
+            {
+                a = a + 5;
+            }
 
+            if (a == 10)
+            {
+                a = 100;
+            }
+
+            return a;
+        }
+
+        public static int DeadCodeElimination(int b, int c)
+        {
+            int a, d, e, f;
+
+            a = b + c; // Useless Code
+            d = b - c; // Useless Code
+            e = 100;
+            e = b * c + e;
+            f = b / c; // Useless Code
+
+            return e;
+        }
+
+        public static void Tst()
+        {
+            long x = 0xDEADBEEFDEAD;
+
+            x = TstLong(x);
+
+            Console.WriteLine("Result: " + x.ToString());
+
+            Console.WriteLine("Result: " + TstInt(0xDEAD, 0xBEEF).ToString());
+        }
+
+        public static long TstLong(long x)
+        {
+            long y = x * 100;
+
+            x = y / 5 + x;
+
+            return x * 4 + 5;
+        }
+
+        public static int TstInt(int x, int z)
+        {
+            int y = x * 100;
+
+            x = y / 5 + x;
+
+            return x * 4 + 5 - z;
+        }
+        
         public static int fib(int n)
         {
             if (n < 2)

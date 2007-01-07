@@ -19,26 +19,27 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-// TODO
-// - Retrieve the init vars of arrays (e.g. x = new int[] {1, 2, 3})
-// - Implement the other opcodes if they are needed (e.g. ldnull, castclass, box, unbox...)
-// - Implement the other stind and ldind
-// - in a try/catch/finally block: it should point to the return block to compute the reverse dominator tree?
-// - How to handle Array values when doing SSA (Value[5] = A2)?
-// - Insert SSA Edge-Splits
-// - Liveness Analysis
-// - Second Chance Bitpacking 
 
 namespace SharpOS.AOT.IR
 {
+    
     public partial class Engine : IEnumerable<Method>
     {
         public Engine()
 		{
 		}
- 
-        public bool Run(string assembly)
+
+        private IAssembly asm = null;
+
+        public IAssembly Assembly
         {
+            get { return asm; }
+        }
+	
+        public void Run(IAssembly asm, string assembly, string target)
+        {
+            this.asm = asm;
+
             AssemblyDefinition library = AssemblyFactory.GetAssembly(assembly);
          
             foreach (TypeDefinition type in library.MainModule.Types)
@@ -60,7 +61,9 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            asm.Encode(this, target);
+
+            return;
         }
 
         private List<Method> methods = new List<Method>();
@@ -161,7 +164,7 @@ namespace SharpOS.AOT.IR
             return false;
         }
 
-        private bool BuildBlocks()
+        private void BuildBlocks()
         {
             blocks = new List<Block>();
 
@@ -322,15 +325,10 @@ namespace SharpOS.AOT.IR
             }
             while (found == true);
 
-            for (int i = 0; i < this.blocks.Count; i++)
-            {
-                this.blocks[i].Index = i;
-            }
-
-            return true;
+            return;
         }
 
-        private bool FillOuts(Block destination, Mono.Cecil.Cil.Instruction[] instructions)
+        private void FillOuts(Block destination, Mono.Cecil.Cil.Instruction[] instructions)
         {
             foreach (Mono.Cecil.Cil.Instruction instruction in instructions)
             {
@@ -354,10 +352,10 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
-        private bool ClassifyAndLinkBlocks()
+        private void ClassifyAndLinkBlocks()
         {
             for (int i = 0; i < blocks.Count; i++)
             {
@@ -448,10 +446,42 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
-        private bool ConvertFromCIL()
+        public void BlocksOptimization()
+        {
+            bool changed;
+            do
+            {
+                changed = false;
+                for (int i = 1; i < this.blocks.Count; i++)
+                {
+                    if (this.blocks[i].Ins.Count == 1
+                        && this.blocks[i - 1].Outs.Count == 1
+                        && this.blocks[i].Ins[0] == this.blocks[i - 1]
+                        && this.blocks[i - 1].Outs[0] == this.blocks[i])
+                    {
+                        this.blocks[i - 1].Merge(this.blocks[i]);
+
+                        this.blocks.Remove(this.blocks[i]);
+
+                        changed = true;
+                        break;
+                    }
+                }
+            }
+            while (changed == true);
+
+            for (int i = 0; i < this.blocks.Count; i++)
+            {
+                this.blocks[i].Index = i;
+            }
+
+            return;
+        }
+
+        private void ConvertFromCIL()
         {
             foreach (Block block in blocks)
             {
@@ -507,10 +537,20 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
-        public bool Preorder(List<Block> visited, List<Block> list, Block current)
+        private List<Block> Preorder()
+        {
+            List<Block> list = new List<Block>();
+            List<Block> visited = new List<Block>();
+
+            Preorder(visited, list, this.blocks[0]);
+
+            return list;
+        }
+
+        private void Preorder(List<Block> visited, List<Block> list, Block current)
         {
             if (visited.Contains(current) == false)
             {
@@ -524,58 +564,80 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
-        public bool Postorder(List<Block> visited, List<Block> list, Block current)
+        private List<Block> Postorder()
+        {
+            List<Block> list = new List<Block>();
+            List<Block> visited = new List<Block>();
+
+            Postorder(visited, list, this.blocks[0]);
+
+            return list;
+        }
+
+        private void Postorder(List<Block> visited, List<Block> list, Block current)
         {
             if (visited.Contains(current) == false)
             {
-                if (visited.Contains(current) == false)
+                visited.Add(current);
+
+                for (int i = 0; i < current.Outs.Count; i++)
                 {
-                    visited.Add(current);
-
-                    for (int i = 0; i < current.Outs.Count; i++)
-                    {
-                        Postorder(visited, list, current.Outs[i]);
-                    }
-
-                    list.Add(current);
+                    Postorder(visited, list, current.Outs[i]);
                 }
+
+                list.Add(current);
             }
 
-            return true;
+            return;
         }
 
-        public bool ReversePostorder(List<Block> visited, List<Block> list, Block current)
+        private List<Block> ReversePostorder()
         {
-            if (visited.Contains(current) == false)
+            List<Block> list = new List<Block>();
+            List<Block> visited = new List<Block>();
+            List<Block> active = new List<Block>();
+
+            visited.Add(this.blocks[0]);
+            list.Add(this.blocks[0]);
+
+            ReversePostorder(visited, active, list, this.blocks[0]);
+
+            return list;
+        }
+
+        private void ReversePostorder(List<Block> visited, List<Block> active, List<Block> list, Block current)
+        {
+            if (active.Contains(current) == true)
             {
-                if (visited.Contains(current) == false)
-                {
-                    visited.Add(current);
-                    list.Add(current);
+                return;
+            }
 
-                    for (int i = 0; i < current.Outs.Count; i++)
-                    {
-                        ReversePostorder(visited, list, current.Outs[current.Outs.Count - 1 - i]);
-                    }
+            active.Add(current);
+
+            for (int i = 0; i < current.Outs.Count; i++)
+            {
+                if (visited.Contains(current.Outs[i]) == false)
+                {
+                    visited.Add(current.Outs[i]);
+                    list.Add(current.Outs[i]);
                 }
             }
 
-            return true;
+            for (int i = 0; i < current.Outs.Count; i++)
+            {
+                ReversePostorder(visited, active, list, current.Outs[i]);
+            }
+            
+            active.Remove(current);
+
+            return;
         }
 
-        private bool Dominators()
+        private void Dominators()
         {
-            List<Block> preorder = new List<Block>();
-            List<Block> postorderx = new List<Block>();
-            List<Block> reversePostorder = new List<Block>();
-
-            ReversePostorder(new List<Block>(), reversePostorder, blocks[0]);
-            Preorder(new List<Block>(), preorder, blocks[0]);
-            Postorder(new List<Block>(), postorderx, blocks[0]);
-
             for (int i = 0; i < this.blocks.Count; i++)
             {
                 foreach (Block block in blocks)
@@ -584,7 +646,7 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            List<Block> list = preorder;
+            List<Block> list = Preorder();
 
             bool changed = true;
 
@@ -723,8 +785,6 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            //Console.WriteLine(this.Dump(this.blocks));
-
             Console.WriteLine("=======================================");
             Console.WriteLine("Dominator");
             Console.WriteLine("=======================================");
@@ -816,14 +876,14 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
-        private bool AddVariable(Dictionary<SharpOS.AOT.IR.Operands.Identifier, List<Block>> identifierList, Identifier identifier, Block block)
+        private void AddVariable(Dictionary<SharpOS.AOT.IR.Operands.Identifier, List<Block>> identifierList, Identifier identifier, Block block)
         {
             /*if (identifier is SharpOS.AOT.IR.Operands.Register == true)
             {
-                return true;
+                return;
             }*/
 
             foreach (Identifier key in identifierList.Keys)
@@ -835,7 +895,7 @@ namespace SharpOS.AOT.IR
                         identifierList[key].Add(block);
                     }
 
-                    return true; ;
+                    return; ;
                 }
             }
 
@@ -843,10 +903,10 @@ namespace SharpOS.AOT.IR
             list.Add(block);
             identifierList[identifier.Clone() as Identifier] = list;
 
-            return true;
+            return;
         }
 
-        private bool ConvertToSSA()
+        private void TransformationToSSA()
         {
             Dictionary<SharpOS.AOT.IR.Operands.Identifier, List<Block>> identifierList = new Dictionary<SharpOS.AOT.IR.Operands.Identifier, List<Block>>();
 
@@ -941,7 +1001,7 @@ namespace SharpOS.AOT.IR
                 this.SSARename(this.blocks[0], count, stack);
             }
 
-            return true;
+            return;
         }
 
         private int GetSSAStackValue(Dictionary<string, Stack<int>> stack, string name)
@@ -954,7 +1014,7 @@ namespace SharpOS.AOT.IR
             return stack[name].Peek();
         }
 
-        private bool SSARename(Block block, Dictionary<string, int> count, Dictionary<string, Stack<int>> stack)
+        private void SSARename(Block block, Dictionary<string, int> count, Dictionary<string, Stack<int>> stack)
         {
             foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block)
             {
@@ -1047,13 +1107,13 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
         Dictionary<string, List<Instructions.Instruction>> defuse;
 
         // The first entry in every list of each variable is the definition instruction, the others are the instructions that use the variable.
-        private bool GetListOfDefUse()
+        private void GetListOfDefUse()
         {
             defuse = new Dictionary<string, List<Instructions.Instruction>>();
 
@@ -1102,7 +1162,7 @@ namespace SharpOS.AOT.IR
                         {
                             if (defuse[id][0] != null)
                             {
-                                throw new Exception("SSA variable '" + id + "' in '" + this.methodDefinition.DeclaringType.FullName + "." + this.methodDefinition.Name + "' defined a second time.");
+                                throw new Exception("SSA variable '" + id + "' in '" + this.MethodFullName + "' defined a second time.");
                             }
 
                             defuse[id][0] = instruction;
@@ -1121,7 +1181,7 @@ namespace SharpOS.AOT.IR
 
                 if (list[0] == null)
                 {
-                    throw new Exception("Def statement for '" + key + "' in '" + this.methodDefinition.DeclaringType.FullName + "." + this.methodDefinition.Name + "' not found.");
+                    throw new Exception("Def statement for '" + key + "' in '" + this.MethodFullName + "' not found.");
                 }
 
                 Console.WriteLine(list[0].Block.Index + " : " + list[0].ToString());
@@ -1132,10 +1192,10 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
-        private bool DeadCodeElimination()
+        private void DeadCodeElimination()
         {
             string[] values = new string[this.defuse.Keys.Count];
             this.defuse.Keys.CopyTo(values, 0);
@@ -1190,10 +1250,10 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
-        private bool SimpleConstantPropagation()
+        private void SimpleConstantPropagation()
         {
             string[] values = new string[this.defuse.Keys.Count];
             this.defuse.Keys.CopyTo(values, 0);
@@ -1284,8 +1344,83 @@ namespace SharpOS.AOT.IR
                         {
                             string id = (used as Assign).Asignee.ToString();
 
-                            // Remove "A = B + C" from B & C
-                            //this.defuse[id].Remove(definition);
+                            // Add to the queue 
+                            if (keys.Contains(id) == false)
+                            {
+                                keys.Add(id);
+                            }
+                        }
+                    }
+                }
+            }
+
+            return;
+        }
+
+        private void CopyPropagation()
+        {
+            string[] values = new string[this.defuse.Keys.Count];
+            this.defuse.Keys.CopyTo(values, 0);
+            List<string> keys = new List<string>(values);
+
+            Console.WriteLine("=======================================");
+            Console.WriteLine("Copy Propagation");
+            Console.WriteLine("=======================================");
+
+            while (keys.Count > 0)
+            {
+                string key = keys[0];
+                keys.RemoveAt(0);
+
+                List<Instructions.Instruction> list = this.defuse[key];
+
+                Instructions.Instruction definition = list[0];
+
+                // A = B
+                if (definition is Assign == true
+                    && (definition as Assign).Asignee is Identifier == true
+                    && (definition as Assign).Value is Identifier == true)
+                {
+                    Console.WriteLine(definition.Block.Index + " : " + definition.ToString());
+
+                    // Remove the instruction from the block that it is containing it
+                    definition.Block.RemoveInstruction(definition);
+
+                    // Remove the variable from the defuse list
+                    defuse.Remove(key);
+
+                    // "X = A" becomes "X = B"
+                    for (int i = 1; i < list.Count; i++)
+                    {
+                        Instructions.Instruction used = list[i];
+
+                        if (used.Value != null)
+                        {
+                            for (int j = 0; j < used.Value.Operands.Length; j++)
+                            {
+                                Operand operand = used.Value.Operands[j];
+
+                                // Replace A with B
+                                if (operand is Identifier == true
+                                    && operand.ToString().Equals(key) == true)
+                                {
+                                    if (used.Value is Identifier == true)
+                                    {
+                                        used.Value = definition.Value;
+                                    }
+                                    else
+                                    {
+                                        used.Value.Operands[j] = definition.Value;
+                                    }
+                                }
+                            }
+
+                            Console.WriteLine("\t" + definition.Block.Index + " : " + used.ToString());
+                        }
+
+                        if (used is Assign == true)
+                        {
+                            string id = (used as Assign).Asignee.ToString();
 
                             // Add to the queue 
                             if (keys.Contains(id) == false)
@@ -1297,31 +1432,422 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return true;
+            return;
         }
 
-        public bool Process()
+
+        public string MethodFullName
+        {
+            get
+            {
+                return this.methodDefinition.DeclaringType.FullName + "." + this.methodDefinition.Name;
+            }
+        }
+
+        // If a block that has many predecessors is linked to a block that has many successors 
+        // then an empty edge is inserted. Its used later for the transformation out of SSA.
+        public void EdgeSplit()
+        {
+            foreach (Block block in Preorder())
+            {
+                if (block.Ins.Count > 1)
+                {
+                    for (int i = 0; i < block.Ins.Count; i++)
+                    {
+                        Block predecessor = block.Ins[i];
+
+                        if (predecessor.Outs.Count > 1)
+                        {
+                            int position = 0;
+
+                            for (; position < predecessor.Outs.Count && predecessor.Outs[position] != block; position++) ;
+
+                            if (position == predecessor.Outs.Count)
+                            {
+                                throw new Exception("In '" + this.MethodFullName + "' Block " + predecessor.Index + " is not linked to the Block " + block.Index + ".");
+                            }
+
+                            Block split = new Block();
+
+                            split.Index = this.blocks[this.blocks.Count - 1].Index + 1;
+                            split.Type = Block.BlockType.OneWay;
+                            split.InsertInstruction(0, new Jump());
+                            split.Ins.Add(predecessor);
+                            split.Outs.Add(block);
+
+                            predecessor.Outs[position] = split;
+                            block.Ins[i] = split;
+
+                            this.blocks.Add(split);
+                        }
+                    }
+                }
+            }
+        }
+
+        // Transformation out of SSA
+        private void TransformationOutOfSSA()
+        {
+            foreach (Block block in this.blocks)
+            {
+                List<Instructions.Instruction> remove = new List<SharpOS.AOT.IR.Instructions.Instruction>();
+
+                foreach (Instructions.Instruction instruction in block)
+                {
+                    if (instruction is PHI == false)
+                    {
+                        break;
+                    }
+
+                    PHI phi = instruction as PHI;
+
+                    for (int i = 0; i < block.Ins.Count; i++)
+                    {
+                        Block predecessor = block.Ins[i];
+
+                        Assign assign = new Assign(phi.Asignee.Clone() as Identifier, phi.Value.Operands[i].Clone());
+
+                        int position = predecessor.InstructionsCount;
+
+                        if (predecessor.InstructionsCount > 0
+                            && predecessor[predecessor.InstructionsCount - 1] is Jump == true)
+                        {
+                            position--;
+                        }
+
+                        predecessor.InsertInstruction(position, assign);
+
+                        remove.Add(instruction);
+                    }
+                }
+
+                foreach (Instructions.Instruction instruction in remove)
+                {
+                    block.RemoveInstruction(instruction);
+                }
+            }
+
+            return;
+        }
+
+        private class LiveRange: IComparable
+        {
+            public LiveRange(string id, Instructions.Instruction start)
+            {
+                this.id = id;
+                this.start = start;
+                this.end = start;
+            }
+
+            private string id = string.Empty;
+
+	        public string ID
+	        {
+		        get { return id;}
+		        set { id = value;}
+	        }
+
+            private int register = int.MinValue;
+
+            public int Register
+            {
+                get { return register; }
+                set { register = value; }
+            }
+
+            private int stack = int.MinValue;
+
+            public int Stack
+            {
+                get { return stack; }
+                set { stack = value; }
+            }
+	
+            private Instructions.Instruction start = null;
+
+            public Instructions.Instruction Start
+            {
+                get { return start; }
+                set { start = value; }
+            }
+
+            private Instructions.Instruction end = null;
+
+            public Instructions.Instruction End
+            {
+                get { return end; }
+                set { end = value; }
+            }
+	
+            private List<Operand> identifiers = new List<Operand>();
+
+            public List<Operand> Identifiers
+            {
+                get { return identifiers; }
+                set { identifiers = value; }
+            }
+
+            int IComparable.CompareTo(object obj)
+            {
+                LiveRange liveRange = (LiveRange)obj;
+
+                return this.id.CompareTo(liveRange.id);
+            }
+
+            public override string ToString()
+            {
+                string register = string.Empty;
+
+                if (this.Register != int.MinValue)
+                {
+                    register = "R" + this.Register;
+                }
+                else if (this.Stack != int.MinValue)
+                {
+                    register = "M" + this.Stack;
+                }
+
+                return this.ID + " : " + register + " : " + this.Start.Index + " <-> " + this.End.Index;
+            }
+
+            public class SortByStart : IComparer<LiveRange>
+            {
+                int IComparer<LiveRange>.Compare(LiveRange liveRange1, LiveRange liveRange2)
+                {
+                    if (liveRange1.Start.Index > liveRange2.Start.Index)
+                    {
+                        return 1;
+                    }
+
+                    if (liveRange1.Start.Index < liveRange2.Start.Index)
+                    {
+                        return -1;
+                    }
+
+                    if (liveRange1.End.Index > liveRange2.End.Index)
+                    {
+                        return 1;
+                    }
+
+                    if (liveRange1.End.Index < liveRange2.End.Index)
+                    {
+                        return -1;
+                    }
+
+                    return 0;
+                }
+            }
+
+            public class SortByEnd : IComparer<LiveRange>
+            {
+                int IComparer<LiveRange>.Compare(LiveRange liveRange1, LiveRange liveRange2)
+                {
+                    if (liveRange1.End.Index > liveRange2.End.Index)
+                    {
+                        return 1;
+                    }
+
+                    if (liveRange1.End.Index < liveRange2.End.Index)
+                    {
+                        return -1;
+                    }
+
+                    return 0;
+                }
+            }
+        }
+
+        private void AddLineScaneValue(Dictionary<string, LiveRange> values, Identifier identifier, Instructions.Instruction instruction)
+        {
+            if (identifier is Argument == true)
+            {
+                return;
+            }
+
+            string id = identifier.ToString();
+
+            if (values.ContainsKey(id) == false)
+            {
+                LiveRange liveRange = new LiveRange(id, instruction);
+
+                values[id] = liveRange;
+            }
+            else
+            {
+                values[id].End = instruction;
+            }
+
+            values[id].Identifiers.Add(identifier);
+        }
+
+        private List<LiveRange> liveRanges;
+
+        private void LiveRanges()
+        {
+            int index = 0;
+            Dictionary<string, LiveRange> values = new Dictionary<string, LiveRange>();
+
+            foreach (Block block in ReversePostorder())
+            {
+                foreach (Instructions.Instruction instruction in block)
+                {
+                    instruction.Index = index++;
+
+                    if (instruction.Value != null)
+                    {
+                        foreach (Operand operand in instruction.Value.Operands)
+                        {
+                            if (operand is Identifier == true)
+                            {
+                                AddLineScaneValue(values, operand as Identifier, instruction);
+                            }
+                        }
+                    }
+
+                    if (instruction is Assign == true)
+                    {
+                        AddLineScaneValue(values, (instruction as Assign).Asignee, instruction);
+                    }
+                }
+            }
+
+            this.liveRanges = new List<LiveRange>();
+
+            foreach (KeyValuePair<string, LiveRange> entry in values)
+            {
+                this.liveRanges.Add(entry.Value);
+            }
+
+            this.liveRanges.Sort(new LiveRange.SortByStart());
+
+            Console.WriteLine("=======================================");
+            Console.WriteLine("Live Ranges");
+            Console.WriteLine("=======================================");
+
+            foreach (LiveRange entry in this.liveRanges)
+            {
+                Console.WriteLine(entry);
+            }
+
+            return;
+        }
+
+        private void LinearScanRegisterAllocation()
+        {
+            List<LiveRange> active = new List<LiveRange>();
+            List<int> registers = new List<int>();
+            int stackPosition = 0;
+
+            for (int i = 0; i < this.engine.Assembly.AvailableRegistersCount; i++)
+            {
+                registers.Add(i);
+            }
+
+            for (int i = 0; i < this.liveRanges.Count; i++)
+            {
+                ExpireOldIntervals(active, registers, this.liveRanges[i]);
+
+                if (active.Count == this.engine.Assembly.AvailableRegistersCount)
+                {
+                    SpillAtInterval(active, registers, ref stackPosition, this.liveRanges[i]);
+                }
+                else
+                {
+                    int register = registers[0];
+                    registers.RemoveAt(0);
+
+                    this.liveRanges[i].Register = register;
+
+                    active.Add(this.liveRanges[i]);
+                    active.Sort(new LiveRange.SortByEnd());
+                }
+            }
+
+            Console.WriteLine("=======================================");
+            Console.WriteLine("Linear Scan Register Allocation");
+            Console.WriteLine("=======================================");
+
+            foreach (LiveRange entry in this.liveRanges)
+            {
+                Console.WriteLine(entry);
+            }
+
+            return;
+        }
+
+        private void ExpireOldIntervals(List<LiveRange> active, List<int> registers, LiveRange liveRange)
+        {
+            List<LiveRange> remove = new List<LiveRange>();
+
+            foreach (LiveRange value in active)
+            {
+                if (value.End.Index >= liveRange.Start.Index)
+                {
+                    break;
+                }
+
+                remove.Add(value);
+            }
+
+            foreach (LiveRange value in remove)
+            {
+                registers.Add(value.Register);
+
+                active.Remove(value);
+            }
+        }
+
+        private void SpillAtInterval(List<LiveRange> active, List<int> registers, ref int stackPosition, LiveRange liveRange)
+        {
+            LiveRange spill = active[active.Count - 1];
+
+            if (spill.End.Index > liveRange.End.Index)
+            {
+                liveRange.Register = spill.Register;
+
+                spill.Register = int.MinValue;
+                spill.Stack = stackPosition++;
+
+                active.Remove(spill);
+
+                active.Add(liveRange);
+                active.Sort(new LiveRange.SortByEnd());
+            }
+            else
+            {
+                liveRange.Stack = stackPosition++;
+            }
+        }
+
+        public void Process()
         {
             if (this.methodDefinition.Body == null)
             {
-                return true;
+                return;
             }
 
             this.BuildBlocks();
             this.ClassifyAndLinkBlocks();
+            this.BlocksOptimization();
             this.ConvertFromCIL();
             this.Dominators();
-            this.ConvertToSSA();
+            this.TransformationToSSA();
+            this.EdgeSplit();
 
             Console.WriteLine(this.Dump());
 
             this.GetListOfDefUse();
             this.DeadCodeElimination();
             this.SimpleConstantPropagation();
+            this.CopyPropagation();
+            this.TransformationOutOfSSA();
 
-            Console.WriteLine(this.Dump());
+            this.LiveRanges();
+            this.LinearScanRegisterAllocation();
 
-            return true;
+            Console.WriteLine(this.Dump(ReversePostorder()));
+
+            return;
         }
 
         private List<Block> blocks;
@@ -1338,5 +1864,11 @@ namespace SharpOS.AOT.IR
         {
             return ((IEnumerable<Block>)this).GetEnumerator();
         }
+    }
+
+    public interface IAssembly
+    {
+        bool Encode(Engine engine, string target);
+        int AvailableRegistersCount { get; }
     }
 }

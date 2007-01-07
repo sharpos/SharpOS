@@ -119,6 +119,11 @@ namespace SharpOS.AOT.IR
             return result;
         }
 
+        private void Convert(Operands.Operand.ConvertType type)
+        {
+            this.instructions[this.instructions.Count - 1].Value.ConvertTo = type;
+        }
+
         public void ConvertFromCIL(bool secondPass)
         {
             stack = 0; 
@@ -143,42 +148,143 @@ namespace SharpOS.AOT.IR
             {
                 SharpOS.AOT.IR.Instructions.Instruction instruction = null;
 
-                if (cilInstruction.OpCode == OpCodes.Nop
-                    || cilInstruction.OpCode == OpCodes.Conv_I
-                    || cilInstruction.OpCode == OpCodes.Conv_I1
-                    || cilInstruction.OpCode == OpCodes.Conv_I2
-                    || cilInstruction.OpCode == OpCodes.Conv_I4
-                    || cilInstruction.OpCode == OpCodes.Conv_I8
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I1
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I1_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I2
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I2_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I4
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I4_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I8
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_I8_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U1
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U1_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U2
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U2_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U4
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U4_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U8
-                    || cilInstruction.OpCode == OpCodes.Conv_Ovf_U8_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_R_Un
-                    || cilInstruction.OpCode == OpCodes.Conv_R4
-                    || cilInstruction.OpCode == OpCodes.Conv_R8
-                    || cilInstruction.OpCode == OpCodes.Conv_U
-                    || cilInstruction.OpCode == OpCodes.Conv_U1
-                    || cilInstruction.OpCode == OpCodes.Conv_U2
-                    || cilInstruction.OpCode == OpCodes.Conv_U4
-                    || cilInstruction.OpCode == OpCodes.Conv_U8)
+                if (cilInstruction.OpCode == OpCodes.Nop)
                 {
                     continue;
+                }
+
+                // Convert
+                else if (cilInstruction.OpCode == OpCodes.Conv_I)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_I);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_I1)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_I1);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_I2)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_I2);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_I4)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_I4);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_I8)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_I8);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I1)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I1);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I1_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I1_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I2)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I2);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I2_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I2_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I4)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I4);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I4_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I4_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I8)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I8);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I8_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I8_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U1)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U1);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U1_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U1_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U2)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U2);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U2_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U2_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U4)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U4);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U4_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U4_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U8)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U8);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U8_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U8_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_R_Un)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_R_Un);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_R4)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_R4);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_R8)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_R8);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_U)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_U);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_U1)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_U1);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_U2)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_U2);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_U4)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_U4);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Conv_U8)
+                {
+                    Convert(Operands.Operand.ConvertType.Conv_U8);
                 }
 
                 // Arithmetic
@@ -233,6 +339,10 @@ namespace SharpOS.AOT.IR
                 else if (cilInstruction.OpCode == OpCodes.Rem_Un)
                 {
                     instruction = new Assign(new Register(stack - 2), new Arithmetic(new Binary(Operator.BinaryType.RemainderUnsigned), new Register(stack - 2), new Register(stack - 1)));
+                }
+                else if (cilInstruction.OpCode == OpCodes.Neg)
+                {
+                    instruction = new Assign(new Register(stack - 1), new Arithmetic(new Unary(Operator.UnaryType.Negation), new Register(stack - 1)));
                 }
 
                 // Bitwise
@@ -646,7 +756,7 @@ namespace SharpOS.AOT.IR
 
                 else
                 {
-                    throw new Exception("Instruction '" + cilInstruction.OpCode.Name + "' is not implemented.");
+                    throw new Exception("Instruction '" + cilInstruction.OpCode.Name + "' is not implemented. (Found in '" + this.method.MethodFullName  + "')");
                 }
 
                 if (instruction != null)
@@ -669,6 +779,22 @@ namespace SharpOS.AOT.IR
             }
         }
 
+        public void Merge(Block block)
+        {
+            if (this.type == BlockType.OneWay)
+            {
+                this.cil.Remove(this.cil[this.cil.Count - 1]);
+            }
+
+            this.type = block.type;
+            this.outs = block.outs;
+
+            foreach (Mono.Cecil.Cil.Instruction instruction in block.cil)
+            {
+                this.cil.Add(instruction);
+            }
+        }
+
         private int stack = 0;
 
         public int Stack
@@ -677,11 +803,11 @@ namespace SharpOS.AOT.IR
         }
 
         /*private int backwardBranches = 0;
-        private bool visited = false;
-        private bool active = false;
+        private void visited = false;
+        private void active = false;
         private int index = 0;
 
-        public bool Visit(ref int index)
+        public void Visit(ref int index)
         {
             if (this.visited == false)
             {
@@ -702,7 +828,7 @@ namespace SharpOS.AOT.IR
                 this.backwardBranches++;
             }
 
-            return true;
+            return;
         }*/
 
         public enum BlockType

@@ -9,8 +9,10 @@ using System;
 using System.IO;
 using System.Collections.Generic;
 using System.Text;
+using SharpOS;
 using SharpOS.AOT.IR;
 using SharpOS.AOT.X86;
+
 
 namespace Nutex
 {
@@ -21,10 +23,7 @@ namespace Nutex
             //try
             {
                 Engine engine = new Engine();
-                engine.Run("SharpOS.dll");
-
-                /*Assembly asm = new Assembly();
-                asm.Encode(engine, "SharpOS.bin");*/
+                engine.Run(new Assembly(), "SharpOS.dll", "SharpOS.bin");
             }
             //catch (Exception ex)
             {

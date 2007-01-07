@@ -1374,7 +1374,7 @@ namespace SharpOS.AOT.X86
         }
     }
 
-    public partial class Assembly
+    public partial class Assembly: IAssembly
     {
         public Assembly()
         {
@@ -1520,7 +1520,7 @@ namespace SharpOS.AOT.X86
             return address;
         }
 
-        public bool Encode(Engine engine, string destination)
+        public bool Encode(Engine engine, string target)
         {
             MemoryStream memoryStream = new MemoryStream();
 
@@ -1531,7 +1531,7 @@ namespace SharpOS.AOT.X86
 
             this.Encode(memoryStream);
             
-            FileStream fileStream = new FileStream(destination, FileMode.Create);
+            FileStream fileStream = new FileStream(target, FileMode.Create);
             memoryStream.WriteTo(fileStream);
             fileStream.Close();
             
@@ -1958,16 +1958,26 @@ namespace SharpOS.AOT.X86
             }
         }
 
+        public int AvailableRegistersCount
+        {
+            get
+            {
+                return 3;
+            }
+        }
+
         private bool GetAssemblyCode(Method method)
         {
+            SupportedType(method.MethodFullName, method.MethodDefinition.ReturnType.ReturnType.FullName);
+
             foreach (ParameterDefinition parameter in method.MethodDefinition.Parameters)
             {
-                SupportedType(method.MethodDefinition.Name, parameter.ParameterType.FullName);
+                SupportedType(method.MethodFullName, parameter.ParameterType.FullName);
             }
 
             foreach (VariableDefinition variable in method.MethodDefinition.Body.Variables)
             {
-                SupportedType(method.MethodDefinition.Name, variable.VariableType.FullName);
+                SupportedType(method.MethodFullName, variable.VariableType.FullName);
             }
 
             //blocks.UpdateIndex();

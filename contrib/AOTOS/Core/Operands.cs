@@ -18,8 +18,54 @@ namespace SharpOS.AOT.IR.Operands
     [Serializable]
     public abstract class Operand
     {
+        public enum ConvertType
+        {
+            NotSet
+            , Conv_I
+            , Conv_I1
+            , Conv_I2
+            , Conv_I4
+            , Conv_I8
+            , Conv_Ovf_I
+            , Conv_Ovf_I_Un
+            , Conv_Ovf_I1
+            , Conv_Ovf_I1_Un
+            , Conv_Ovf_I2
+            , Conv_Ovf_I2_Un
+            , Conv_Ovf_I4
+            , Conv_Ovf_I4_Un
+            , Conv_Ovf_I8
+            , Conv_Ovf_I8_Un
+            , Conv_Ovf_U
+            , Conv_Ovf_U_Un
+            , Conv_Ovf_U1
+            , Conv_Ovf_U1_Un
+            , Conv_Ovf_U2
+            , Conv_Ovf_U2_Un
+            , Conv_Ovf_U4
+            , Conv_Ovf_U4_Un
+            , Conv_Ovf_U8
+            , Conv_Ovf_U8_Un
+            , Conv_R_Un
+            , Conv_R4
+            , Conv_R8
+            , Conv_U
+            , Conv_U1
+            , Conv_U2
+            , Conv_U4
+            , Conv_U8
+        }
+
         public Operand()
         {
+        }
+
+        private ConvertType convertTo = ConvertType.NotSet;
+
+        public ConvertType ConvertTo
+        {
+            get { return convertTo; }
+            set { convertTo = value; }
         }
 
         public Operand(Operator _operator, Operand[] operands)
