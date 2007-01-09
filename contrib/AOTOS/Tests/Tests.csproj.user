@@ -3,6 +3,6 @@
     <StartAction>Program</StartAction>
     <StartProgram>C:\Programme\NUnit-Net-2.0 2.2.9\bin\nunit-gui.exe</StartProgram>
     <StartWorkingDirectory>E:\dev\AOTOS\Tests\bin\Debug\</StartWorkingDirectory>
-    <StartArguments>Tests.dll</StartArguments>
+    <StartArguments>SharpOS.AOT.Tests.dll</StartArguments>
   </PropertyGroup>
 </Project>

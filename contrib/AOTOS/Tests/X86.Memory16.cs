@@ -121,87 +121,171 @@ public class X86Memory16
 	}
 	
 	[Test]
-	public void Mov__BX___0x1234___DX ()
+	public void Mov__BX_0x1234___DX ()
 	{
-		// Mov [BX + 0x1234], DX
+		// Mov [BX+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(null, R16.BX, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(null, R16.BX, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x89, 0x97, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__DS_BX___0x1234___DX ()
+	public void Mov__DS_BX_0x1234___DX ()
 	{
-		// Mov [DS:BX + 0x1234], DX
+		// Mov [DS:BX+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.DS, R16.BX, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.DS, R16.BX, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x3e, 0x89, 0x97, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__ES_BX___0x1234___DX ()
+	public void Mov__ES_BX_0x1234___DX ()
 	{
-		// Mov [ES:BX + 0x1234], DX
+		// Mov [ES:BX+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.ES, R16.BX, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.ES, R16.BX, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x26, 0x89, 0x97, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__CS_BX___0x1234___DX ()
+	public void Mov__CS_BX_0x1234___DX ()
 	{
-		// Mov [CS:BX + 0x1234], DX
+		// Mov [CS:BX+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.CS, R16.BX, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.CS, R16.BX, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x2e, 0x89, 0x97, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__SS_BX___0x1234___DX ()
+	public void Mov__SS_BX_0x1234___DX ()
 	{
-		// Mov [SS:BX + 0x1234], DX
+		// Mov [SS:BX+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.SS, R16.BX, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.SS, R16.BX, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x36, 0x89, 0x97, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__FS_BX___0x1234___DX ()
+	public void Mov__FS_BX_0x1234___DX ()
 	{
-		// Mov [FS:BX + 0x1234], DX
+		// Mov [FS:BX+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.FS, R16.BX, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.FS, R16.BX, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x64, 0x89, 0x97, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__GS_BX___0x1234___DX ()
+	public void Mov__GS_BX_0x1234___DX ()
 	{
-		// Mov [GS:BX + 0x1234], DX
+		// Mov [GS:BX+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.GS, R16.BX, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.GS, R16.BX, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x65, 0x89, 0x97, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX+0x1234], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__BX_0xC___DX ()
+	{
+		// Mov [BX-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(null, R16.BX, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x89, 0x57, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DS_BX_0xC___DX ()
+	{
+		// Mov [DS:BX-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.DS, R16.BX, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x3e, 0x89, 0x57, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__ES_BX_0xC___DX ()
+	{
+		// Mov [ES:BX-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.ES, R16.BX, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x26, 0x89, 0x57, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__CS_BX_0xC___DX ()
+	{
+		// Mov [CS:BX-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.CS, R16.BX, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x2e, 0x89, 0x57, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SS_BX_0xC___DX ()
+	{
+		// Mov [SS:BX-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.SS, R16.BX, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x36, 0x89, 0x57, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__FS_BX_0xC___DX ()
+	{
+		// Mov [FS:BX-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.FS, R16.BX, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x64, 0x89, 0x57, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__GS_BX_0xC___DX ()
+	{
+		// Mov [GS:BX-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.GS, R16.BX, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x65, 0x89, 0x57, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX-0xC], DX' failed.");
 	}
 	
 	[Test]
@@ -289,87 +373,171 @@ public class X86Memory16
 	}
 	
 	[Test]
-	public void Mov__BX___SI___0x1234___DX ()
+	public void Mov__BX___SI_0x1234___DX ()
 	{
-		// Mov [BX + SI + 0x1234], DX
+		// Mov [BX + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(null, R16.BX, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(null, R16.BX, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x89, 0x90, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__DS_BX___SI___0x1234___DX ()
+	public void Mov__DS_BX___SI_0x1234___DX ()
 	{
-		// Mov [DS:BX + SI + 0x1234], DX
+		// Mov [DS:BX + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.DS, R16.BX, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.DS, R16.BX, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x3e, 0x89, 0x90, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__ES_BX___SI___0x1234___DX ()
+	public void Mov__ES_BX___SI_0x1234___DX ()
 	{
-		// Mov [ES:BX + SI + 0x1234], DX
+		// Mov [ES:BX + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.ES, R16.BX, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.ES, R16.BX, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x26, 0x89, 0x90, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__CS_BX___SI___0x1234___DX ()
+	public void Mov__CS_BX___SI_0x1234___DX ()
 	{
-		// Mov [CS:BX + SI + 0x1234], DX
+		// Mov [CS:BX + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.CS, R16.BX, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.CS, R16.BX, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x2e, 0x89, 0x90, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__SS_BX___SI___0x1234___DX ()
+	public void Mov__SS_BX___SI_0x1234___DX ()
 	{
-		// Mov [SS:BX + SI + 0x1234], DX
+		// Mov [SS:BX + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.SS, R16.BX, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.SS, R16.BX, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x36, 0x89, 0x90, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__FS_BX___SI___0x1234___DX ()
+	public void Mov__FS_BX___SI_0x1234___DX ()
 	{
-		// Mov [FS:BX + SI + 0x1234], DX
+		// Mov [FS:BX + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.FS, R16.BX, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.FS, R16.BX, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x64, 0x89, 0x90, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__GS_BX___SI___0x1234___DX ()
+	public void Mov__GS_BX___SI_0x1234___DX ()
 	{
-		// Mov [GS:BX + SI + 0x1234], DX
+		// Mov [GS:BX + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.GS, R16.BX, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.GS, R16.BX, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x65, 0x89, 0x90, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX + SI+0x1234], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__BX___SI_0xC___DX ()
+	{
+		// Mov [BX + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(null, R16.BX, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x89, 0x50, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DS_BX___SI_0xC___DX ()
+	{
+		// Mov [DS:BX + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.DS, R16.BX, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x3e, 0x89, 0x50, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__ES_BX___SI_0xC___DX ()
+	{
+		// Mov [ES:BX + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.ES, R16.BX, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x26, 0x89, 0x50, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__CS_BX___SI_0xC___DX ()
+	{
+		// Mov [CS:BX + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.CS, R16.BX, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x2e, 0x89, 0x50, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SS_BX___SI_0xC___DX ()
+	{
+		// Mov [SS:BX + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.SS, R16.BX, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x36, 0x89, 0x50, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__FS_BX___SI_0xC___DX ()
+	{
+		// Mov [FS:BX + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.FS, R16.BX, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x64, 0x89, 0x50, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__GS_BX___SI_0xC___DX ()
+	{
+		// Mov [GS:BX + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.GS, R16.BX, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x65, 0x89, 0x50, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX + SI-0xC], DX' failed.");
 	}
 	
 	[Test]
@@ -457,87 +625,171 @@ public class X86Memory16
 	}
 	
 	[Test]
-	public void Mov__BX___DI___0x1234___DX ()
+	public void Mov__BX___DI_0x1234___DX ()
 	{
-		// Mov [BX + DI + 0x1234], DX
+		// Mov [BX + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(null, R16.BX, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(null, R16.BX, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x89, 0x91, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__DS_BX___DI___0x1234___DX ()
+	public void Mov__DS_BX___DI_0x1234___DX ()
 	{
-		// Mov [DS:BX + DI + 0x1234], DX
+		// Mov [DS:BX + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.DS, R16.BX, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.DS, R16.BX, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x3e, 0x89, 0x91, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__ES_BX___DI___0x1234___DX ()
+	public void Mov__ES_BX___DI_0x1234___DX ()
 	{
-		// Mov [ES:BX + DI + 0x1234], DX
+		// Mov [ES:BX + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.ES, R16.BX, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.ES, R16.BX, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x26, 0x89, 0x91, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__CS_BX___DI___0x1234___DX ()
+	public void Mov__CS_BX___DI_0x1234___DX ()
 	{
-		// Mov [CS:BX + DI + 0x1234], DX
+		// Mov [CS:BX + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.CS, R16.BX, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.CS, R16.BX, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x2e, 0x89, 0x91, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__SS_BX___DI___0x1234___DX ()
+	public void Mov__SS_BX___DI_0x1234___DX ()
 	{
-		// Mov [SS:BX + DI + 0x1234], DX
+		// Mov [SS:BX + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.SS, R16.BX, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.SS, R16.BX, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x36, 0x89, 0x91, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__FS_BX___DI___0x1234___DX ()
+	public void Mov__FS_BX___DI_0x1234___DX ()
 	{
-		// Mov [FS:BX + DI + 0x1234], DX
+		// Mov [FS:BX + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.FS, R16.BX, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.FS, R16.BX, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x64, 0x89, 0x91, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__GS_BX___DI___0x1234___DX ()
+	public void Mov__GS_BX___DI_0x1234___DX ()
 	{
-		// Mov [GS:BX + DI + 0x1234], DX
+		// Mov [GS:BX + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.GS, R16.BX, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.GS, R16.BX, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x65, 0x89, 0x91, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX + DI+0x1234], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__BX___DI_0xC___DX ()
+	{
+		// Mov [BX + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(null, R16.BX, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x89, 0x51, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BX + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DS_BX___DI_0xC___DX ()
+	{
+		// Mov [DS:BX + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.DS, R16.BX, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x3e, 0x89, 0x51, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BX + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__ES_BX___DI_0xC___DX ()
+	{
+		// Mov [ES:BX + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.ES, R16.BX, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x26, 0x89, 0x51, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BX + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__CS_BX___DI_0xC___DX ()
+	{
+		// Mov [CS:BX + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.CS, R16.BX, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x2e, 0x89, 0x51, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BX + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SS_BX___DI_0xC___DX ()
+	{
+		// Mov [SS:BX + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.SS, R16.BX, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x36, 0x89, 0x51, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BX + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__FS_BX___DI_0xC___DX ()
+	{
+		// Mov [FS:BX + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.FS, R16.BX, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x64, 0x89, 0x51, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BX + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__GS_BX___DI_0xC___DX ()
+	{
+		// Mov [GS:BX + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.GS, R16.BX, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x65, 0x89, 0x51, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BX + DI-0xC], DX' failed.");
 	}
 	
 	[Test]
@@ -625,87 +877,171 @@ public class X86Memory16
 	}
 	
 	[Test]
-	public void Mov__BP___0x1234___DX ()
+	public void Mov__BP_0x1234___DX ()
 	{
-		// Mov [BP + 0x1234], DX
+		// Mov [BP+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(null, R16.BP, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(null, R16.BP, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x89, 0x96, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__DS_BP___0x1234___DX ()
+	public void Mov__DS_BP_0x1234___DX ()
 	{
-		// Mov [DS:BP + 0x1234], DX
+		// Mov [DS:BP+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.DS, R16.BP, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.DS, R16.BP, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x3e, 0x89, 0x96, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__ES_BP___0x1234___DX ()
+	public void Mov__ES_BP_0x1234___DX ()
 	{
-		// Mov [ES:BP + 0x1234], DX
+		// Mov [ES:BP+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.ES, R16.BP, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.ES, R16.BP, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x26, 0x89, 0x96, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__CS_BP___0x1234___DX ()
+	public void Mov__CS_BP_0x1234___DX ()
 	{
-		// Mov [CS:BP + 0x1234], DX
+		// Mov [CS:BP+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.CS, R16.BP, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.CS, R16.BP, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x2e, 0x89, 0x96, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__SS_BP___0x1234___DX ()
+	public void Mov__SS_BP_0x1234___DX ()
 	{
-		// Mov [SS:BP + 0x1234], DX
+		// Mov [SS:BP+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.SS, R16.BP, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.SS, R16.BP, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x36, 0x89, 0x96, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__FS_BP___0x1234___DX ()
+	public void Mov__FS_BP_0x1234___DX ()
 	{
-		// Mov [FS:BP + 0x1234], DX
+		// Mov [FS:BP+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.FS, R16.BP, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.FS, R16.BP, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x64, 0x89, 0x96, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__GS_BP___0x1234___DX ()
+	public void Mov__GS_BP_0x1234___DX ()
 	{
-		// Mov [GS:BP + 0x1234], DX
+		// Mov [GS:BP+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.GS, R16.BP, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.GS, R16.BP, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x65, 0x89, 0x96, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP+0x1234], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__BP_0xC___DX ()
+	{
+		// Mov [BP-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(null, R16.BP, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x89, 0x56, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DS_BP_0xC___DX ()
+	{
+		// Mov [DS:BP-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.DS, R16.BP, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x3e, 0x89, 0x56, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__ES_BP_0xC___DX ()
+	{
+		// Mov [ES:BP-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.ES, R16.BP, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x26, 0x89, 0x56, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__CS_BP_0xC___DX ()
+	{
+		// Mov [CS:BP-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.CS, R16.BP, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x2e, 0x89, 0x56, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SS_BP_0xC___DX ()
+	{
+		// Mov [SS:BP-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.SS, R16.BP, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x36, 0x89, 0x56, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__FS_BP_0xC___DX ()
+	{
+		// Mov [FS:BP-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.FS, R16.BP, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x64, 0x89, 0x56, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__GS_BP_0xC___DX ()
+	{
+		// Mov [GS:BP-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.GS, R16.BP, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x65, 0x89, 0x56, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP-0xC], DX' failed.");
 	}
 	
 	[Test]
@@ -793,87 +1129,171 @@ public class X86Memory16
 	}
 	
 	[Test]
-	public void Mov__BP___SI___0x1234___DX ()
+	public void Mov__BP___SI_0x1234___DX ()
 	{
-		// Mov [BP + SI + 0x1234], DX
+		// Mov [BP + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(null, R16.BP, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(null, R16.BP, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x89, 0x92, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__DS_BP___SI___0x1234___DX ()
+	public void Mov__DS_BP___SI_0x1234___DX ()
 	{
-		// Mov [DS:BP + SI + 0x1234], DX
+		// Mov [DS:BP + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.DS, R16.BP, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.DS, R16.BP, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x3e, 0x89, 0x92, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__ES_BP___SI___0x1234___DX ()
+	public void Mov__ES_BP___SI_0x1234___DX ()
 	{
-		// Mov [ES:BP + SI + 0x1234], DX
+		// Mov [ES:BP + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.ES, R16.BP, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.ES, R16.BP, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x26, 0x89, 0x92, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__CS_BP___SI___0x1234___DX ()
+	public void Mov__CS_BP___SI_0x1234___DX ()
 	{
-		// Mov [CS:BP + SI + 0x1234], DX
+		// Mov [CS:BP + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.CS, R16.BP, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.CS, R16.BP, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x2e, 0x89, 0x92, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__SS_BP___SI___0x1234___DX ()
+	public void Mov__SS_BP___SI_0x1234___DX ()
 	{
-		// Mov [SS:BP + SI + 0x1234], DX
+		// Mov [SS:BP + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.SS, R16.BP, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.SS, R16.BP, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x36, 0x89, 0x92, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__FS_BP___SI___0x1234___DX ()
+	public void Mov__FS_BP___SI_0x1234___DX ()
 	{
-		// Mov [FS:BP + SI + 0x1234], DX
+		// Mov [FS:BP + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.FS, R16.BP, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.FS, R16.BP, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x64, 0x89, 0x92, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP + SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__GS_BP___SI___0x1234___DX ()
+	public void Mov__GS_BP___SI_0x1234___DX ()
 	{
-		// Mov [GS:BP + SI + 0x1234], DX
+		// Mov [GS:BP + SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.GS, R16.BP, R16.SI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.GS, R16.BP, R16.SI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x65, 0x89, 0x92, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP + SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP + SI+0x1234], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__BP___SI_0xC___DX ()
+	{
+		// Mov [BP + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(null, R16.BP, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x89, 0x52, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DS_BP___SI_0xC___DX ()
+	{
+		// Mov [DS:BP + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.DS, R16.BP, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x3e, 0x89, 0x52, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__ES_BP___SI_0xC___DX ()
+	{
+		// Mov [ES:BP + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.ES, R16.BP, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x26, 0x89, 0x52, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__CS_BP___SI_0xC___DX ()
+	{
+		// Mov [CS:BP + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.CS, R16.BP, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x2e, 0x89, 0x52, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SS_BP___SI_0xC___DX ()
+	{
+		// Mov [SS:BP + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.SS, R16.BP, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x36, 0x89, 0x52, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__FS_BP___SI_0xC___DX ()
+	{
+		// Mov [FS:BP + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.FS, R16.BP, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x64, 0x89, 0x52, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP + SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__GS_BP___SI_0xC___DX ()
+	{
+		// Mov [GS:BP + SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.GS, R16.BP, R16.SI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x65, 0x89, 0x52, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP + SI-0xC], DX' failed.");
 	}
 	
 	[Test]
@@ -961,87 +1381,171 @@ public class X86Memory16
 	}
 	
 	[Test]
-	public void Mov__BP___DI___0x1234___DX ()
+	public void Mov__BP___DI_0x1234___DX ()
 	{
-		// Mov [BP + DI + 0x1234], DX
+		// Mov [BP + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(null, R16.BP, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(null, R16.BP, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x89, 0x93, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__DS_BP___DI___0x1234___DX ()
+	public void Mov__DS_BP___DI_0x1234___DX ()
 	{
-		// Mov [DS:BP + DI + 0x1234], DX
+		// Mov [DS:BP + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.DS, R16.BP, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.DS, R16.BP, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x3e, 0x89, 0x93, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__ES_BP___DI___0x1234___DX ()
+	public void Mov__ES_BP___DI_0x1234___DX ()
 	{
-		// Mov [ES:BP + DI + 0x1234], DX
+		// Mov [ES:BP + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.ES, R16.BP, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.ES, R16.BP, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x26, 0x89, 0x93, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__CS_BP___DI___0x1234___DX ()
+	public void Mov__CS_BP___DI_0x1234___DX ()
 	{
-		// Mov [CS:BP + DI + 0x1234], DX
+		// Mov [CS:BP + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.CS, R16.BP, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.CS, R16.BP, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x2e, 0x89, 0x93, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__SS_BP___DI___0x1234___DX ()
+	public void Mov__SS_BP___DI_0x1234___DX ()
 	{
-		// Mov [SS:BP + DI + 0x1234], DX
+		// Mov [SS:BP + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.SS, R16.BP, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.SS, R16.BP, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x36, 0x89, 0x93, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__FS_BP___DI___0x1234___DX ()
+	public void Mov__FS_BP___DI_0x1234___DX ()
 	{
-		// Mov [FS:BP + DI + 0x1234], DX
+		// Mov [FS:BP + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.FS, R16.BP, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.FS, R16.BP, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x64, 0x89, 0x93, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP + DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__GS_BP___DI___0x1234___DX ()
+	public void Mov__GS_BP___DI_0x1234___DX ()
 	{
-		// Mov [GS:BP + DI + 0x1234], DX
+		// Mov [GS:BP + DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.GS, R16.BP, R16.DI, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.GS, R16.BP, R16.DI, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x65, 0x89, 0x93, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP + DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP + DI+0x1234], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__BP___DI_0xC___DX ()
+	{
+		// Mov [BP + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(null, R16.BP, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x89, 0x53, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [BP + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DS_BP___DI_0xC___DX ()
+	{
+		// Mov [DS:BP + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.DS, R16.BP, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x3e, 0x89, 0x53, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:BP + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__ES_BP___DI_0xC___DX ()
+	{
+		// Mov [ES:BP + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.ES, R16.BP, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x26, 0x89, 0x53, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:BP + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__CS_BP___DI_0xC___DX ()
+	{
+		// Mov [CS:BP + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.CS, R16.BP, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x2e, 0x89, 0x53, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:BP + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SS_BP___DI_0xC___DX ()
+	{
+		// Mov [SS:BP + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.SS, R16.BP, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x36, 0x89, 0x53, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:BP + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__FS_BP___DI_0xC___DX ()
+	{
+		// Mov [FS:BP + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.FS, R16.BP, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x64, 0x89, 0x53, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:BP + DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__GS_BP___DI_0xC___DX ()
+	{
+		// Mov [GS:BP + DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.GS, R16.BP, R16.DI, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x65, 0x89, 0x53, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:BP + DI-0xC], DX' failed.");
 	}
 	
 	[Test]
@@ -1129,87 +1633,171 @@ public class X86Memory16
 	}
 	
 	[Test]
-	public void Mov__SI___0x1234___DX ()
+	public void Mov__SI_0x1234___DX ()
 	{
-		// Mov [SI + 0x1234], DX
+		// Mov [SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(null, R16.SI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(null, R16.SI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x89, 0x94, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__DS_SI___0x1234___DX ()
+	public void Mov__DS_SI_0x1234___DX ()
 	{
-		// Mov [DS:SI + 0x1234], DX
+		// Mov [DS:SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.DS, R16.SI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.DS, R16.SI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x3e, 0x89, 0x94, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__ES_SI___0x1234___DX ()
+	public void Mov__ES_SI_0x1234___DX ()
 	{
-		// Mov [ES:SI + 0x1234], DX
+		// Mov [ES:SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.ES, R16.SI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.ES, R16.SI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x26, 0x89, 0x94, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__CS_SI___0x1234___DX ()
+	public void Mov__CS_SI_0x1234___DX ()
 	{
-		// Mov [CS:SI + 0x1234], DX
+		// Mov [CS:SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.CS, R16.SI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.CS, R16.SI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x2e, 0x89, 0x94, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__SS_SI___0x1234___DX ()
+	public void Mov__SS_SI_0x1234___DX ()
 	{
-		// Mov [SS:SI + 0x1234], DX
+		// Mov [SS:SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.SS, R16.SI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.SS, R16.SI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x36, 0x89, 0x94, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__FS_SI___0x1234___DX ()
+	public void Mov__FS_SI_0x1234___DX ()
 	{
-		// Mov [FS:SI + 0x1234], DX
+		// Mov [FS:SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.FS, R16.SI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.FS, R16.SI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x64, 0x89, 0x94, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:SI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__GS_SI___0x1234___DX ()
+	public void Mov__GS_SI_0x1234___DX ()
 	{
-		// Mov [GS:SI + 0x1234], DX
+		// Mov [GS:SI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.GS, R16.SI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.GS, R16.SI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x65, 0x89, 0x94, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:SI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:SI+0x1234], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SI_0xC___DX ()
+	{
+		// Mov [SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(null, R16.SI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x89, 0x54, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DS_SI_0xC___DX ()
+	{
+		// Mov [DS:SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.DS, R16.SI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x3e, 0x89, 0x54, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__ES_SI_0xC___DX ()
+	{
+		// Mov [ES:SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.ES, R16.SI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x26, 0x89, 0x54, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__CS_SI_0xC___DX ()
+	{
+		// Mov [CS:SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.CS, R16.SI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x2e, 0x89, 0x54, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SS_SI_0xC___DX ()
+	{
+		// Mov [SS:SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.SS, R16.SI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x36, 0x89, 0x54, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__FS_SI_0xC___DX ()
+	{
+		// Mov [FS:SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.FS, R16.SI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x64, 0x89, 0x54, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:SI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__GS_SI_0xC___DX ()
+	{
+		// Mov [GS:SI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.GS, R16.SI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x65, 0x89, 0x54, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:SI-0xC], DX' failed.");
 	}
 	
 	[Test]
@@ -1297,86 +1885,170 @@ public class X86Memory16
 	}
 	
 	[Test]
-	public void Mov__DI___0x1234___DX ()
+	public void Mov__DI_0x1234___DX ()
 	{
-		// Mov [DI + 0x1234], DX
+		// Mov [DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(null, R16.DI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(null, R16.DI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x89, 0x95, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__DS_DI___0x1234___DX ()
+	public void Mov__DS_DI_0x1234___DX ()
 	{
-		// Mov [DS:DI + 0x1234], DX
+		// Mov [DS:DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.DS, R16.DI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.DS, R16.DI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x3e, 0x89, 0x95, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__ES_DI___0x1234___DX ()
+	public void Mov__ES_DI_0x1234___DX ()
 	{
-		// Mov [ES:DI + 0x1234], DX
+		// Mov [ES:DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.ES, R16.DI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.ES, R16.DI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x26, 0x89, 0x95, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__CS_DI___0x1234___DX ()
+	public void Mov__CS_DI_0x1234___DX ()
 	{
-		// Mov [CS:DI + 0x1234], DX
+		// Mov [CS:DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.CS, R16.DI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.CS, R16.DI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x2e, 0x89, 0x95, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__SS_DI___0x1234___DX ()
+	public void Mov__SS_DI_0x1234___DX ()
 	{
-		// Mov [SS:DI + 0x1234], DX
+		// Mov [SS:DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.SS, R16.DI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.SS, R16.DI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x36, 0x89, 0x95, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__FS_DI___0x1234___DX ()
+	public void Mov__FS_DI_0x1234___DX ()
 	{
-		// Mov [FS:DI + 0x1234], DX
+		// Mov [FS:DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.FS, R16.DI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.FS, R16.DI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x64, 0x89, 0x95, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:DI+0x1234], DX' failed.");
 	}
 	
 	[Test]
-	public void Mov__GS_DI___0x1234___DX ()
+	public void Mov__GS_DI_0x1234___DX ()
 	{
-		// Mov [GS:DI + 0x1234], DX
+		// Mov [GS:DI+0x1234], DX
 		MemoryStream memoryStream = new MemoryStream();
 		Assembly asm = new Assembly(false);
-		asm.MOV (new WordMemory(Seg.GS, R16.DI, null, 0x1234),  R16.DX);
+		asm.MOV (new WordMemory(Seg.GS, R16.DI, null, +0x1234),  R16.DX);
 		asm.Encode(memoryStream);
 		byte[] target = new byte[] {0x65, 0x89, 0x95, 0x34, 0x12};
-		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:DI + 0x1234], DX' failed.");
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:DI+0x1234], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DI_0xC___DX ()
+	{
+		// Mov [DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(null, R16.DI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x89, 0x55, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__DS_DI_0xC___DX ()
+	{
+		// Mov [DS:DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.DS, R16.DI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x3e, 0x89, 0x55, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [DS:DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__ES_DI_0xC___DX ()
+	{
+		// Mov [ES:DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.ES, R16.DI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x26, 0x89, 0x55, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [ES:DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__CS_DI_0xC___DX ()
+	{
+		// Mov [CS:DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.CS, R16.DI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x2e, 0x89, 0x55, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [CS:DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__SS_DI_0xC___DX ()
+	{
+		// Mov [SS:DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.SS, R16.DI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x36, 0x89, 0x55, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [SS:DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__FS_DI_0xC___DX ()
+	{
+		// Mov [FS:DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.FS, R16.DI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x64, 0x89, 0x55, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [FS:DI-0xC], DX' failed.");
+	}
+	
+	[Test]
+	public void Mov__GS_DI_0xC___DX ()
+	{
+		// Mov [GS:DI-0xC], DX
+		MemoryStream memoryStream = new MemoryStream();
+		Assembly asm = new Assembly(false);
+		asm.MOV (new WordMemory(Seg.GS, R16.DI, null, -0xC),  R16.DX);
+		asm.Encode(memoryStream);
+		byte[] target = new byte[] {0x65, 0x89, 0x55, 0xf4};
+		Assert.IsTrue(CompareData(memoryStream, target), "'Mov [GS:DI-0xC], DX' failed.");
 	}
 }

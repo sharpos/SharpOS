@@ -6,17 +6,15 @@ namespace SharpOS
 {
     public class Tests
     {
-        public long Types(byte byteValue, int intValue, Int16 int16Value, Int32 int32Value, Int64 int64Value, float floatValue, double doubleValue)
+        public static UInt64 TypesU(int intValue, long longValue, UInt16 int16Value, UInt32 int32Value, UInt64 int64Value)
         {
-            byteValue += 10;
             intValue -= 10;
+            longValue = -longValue;
             int16Value *= 10;
             int32Value /= 10;
-            int64Value = -int64Value;
-            floatValue *= 2.0f + int32Value;
-            doubleValue *= 4.0d + int64Value;
+            int64Value += int64Value;
 
-            return byteValue + intValue + int16Value + int32Value + int64Value + (long) floatValue + (long) doubleValue;
+            return (UInt32)intValue + (UInt32)longValue + int16Value + int32Value + int64Value;
         }
 
         public static int Dominance(int b, int c, int d, int f)
@@ -60,6 +58,44 @@ namespace SharpOS
             z = r + d;
 
             return z;
+        }
+   
+        public static long Types(byte byteValue, int intValue, long longValue, Int16 int16Value, Int32 int32Value, Int64 int64Value, float floatValue, double doubleValue)
+        {
+            byteValue += 10;
+            intValue -= 10;
+            int16Value *= 10;
+            int32Value /= 10;
+            int64Value = -int64Value;
+            longValue = longValue - 10;
+            floatValue *= 2.0f + int32Value;
+            doubleValue *= 4.0d + int64Value;
+
+            return longValue + byteValue + intValue + int16Value + int32Value + int64Value + (long)floatValue + (long)doubleValue;
+        }
+
+        public static bool TypeBool(bool value)
+        {
+            return !value;
+        }
+
+        public static long TypeD2L(double value)
+        {
+            return (long) value;
+        }
+
+        public static double TstDouble(double a, double b)
+        {
+            a = b * a;
+            b = a / 5;
+            a = b + 5;
+
+            return a * b;
+        }
+
+        public static float TstFloat(float a, float b)
+        {
+            return a * b + b / 5;
         }
         
         public static int Test(int a)
