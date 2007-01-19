@@ -3,7 +3,11 @@ debugger_log: debug.log
 log: info.log
 
 floppya: image=disk.img, status=inserted
-boot: a
+floppyb: image=Grub.img, status=inserted
+boot: floppy
+
+#floppyb: 1_44="B|", status=inserted
+#boot: floppy
 
 error: action=report
 panic: action=ask

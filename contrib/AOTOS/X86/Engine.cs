@@ -79,7 +79,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ADC ByteMemory R8Type":
-							this.ADC(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADC(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADC DWordMemory Byte":
@@ -87,7 +87,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ADC DWordMemory R32Type":
-							this.ADC(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADC(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADC DWordMemory UInt32":
@@ -95,47 +95,47 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ADC R16Type Byte":
-							this.ADC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADC R16Type R16Type":
-							this.ADC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADC R16Type UInt16":
-							this.ADC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADC R16Type WordMemory":
-							this.ADC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.ADC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "ADC R32Type Byte":
-							this.ADC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADC R32Type DWordMemory":
-							this.ADC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.ADC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "ADC R32Type R32Type":
-							this.ADC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADC R32Type UInt32":
-							this.ADC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADC R8Type Byte":
-							this.ADC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADC R8Type ByteMemory":
-							this.ADC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.ADC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "ADC R8Type R8Type":
-							this.ADC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADC WordMemory Byte":
@@ -143,7 +143,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ADC WordMemory R16Type":
-							this.ADC(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADC(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADC WordMemory UInt16":
@@ -163,7 +163,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ADD ByteMemory R8Type":
-							this.ADD(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADD(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADD DWordMemory Byte":
@@ -171,7 +171,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ADD DWordMemory R32Type":
-							this.ADD(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADD(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADD DWordMemory UInt32":
@@ -179,47 +179,47 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ADD R16Type Byte":
-							this.ADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADD R16Type R16Type":
-							this.ADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADD R16Type UInt16":
-							this.ADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADD R16Type WordMemory":
-							this.ADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.ADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "ADD R32Type Byte":
-							this.ADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADD R32Type DWordMemory":
-							this.ADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.ADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "ADD R32Type R32Type":
-							this.ADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADD R32Type UInt32":
-							this.ADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADD R8Type Byte":
-							this.ADD(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ADD R8Type ByteMemory":
-							this.ADD(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.ADD(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "ADD R8Type R8Type":
-							this.ADD(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADD(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADD WordMemory Byte":
@@ -227,7 +227,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ADD WordMemory R16Type":
-							this.ADD(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ADD(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ADD WordMemory UInt16":
@@ -247,7 +247,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "AND ByteMemory R8Type":
-							this.AND(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.AND(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "AND DWordMemory Byte":
@@ -255,7 +255,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "AND DWordMemory R32Type":
-							this.AND(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.AND(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "AND DWordMemory UInt32":
@@ -263,47 +263,47 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "AND R16Type Byte":
-							this.AND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "AND R16Type R16Type":
-							this.AND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.AND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "AND R16Type UInt16":
-							this.AND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "AND R16Type WordMemory":
-							this.AND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.AND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "AND R32Type Byte":
-							this.AND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "AND R32Type DWordMemory":
-							this.AND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.AND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "AND R32Type R32Type":
-							this.AND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.AND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "AND R32Type UInt32":
-							this.AND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "AND R8Type Byte":
-							this.AND(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "AND R8Type ByteMemory":
-							this.AND(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.AND(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "AND R8Type R8Type":
-							this.AND(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.AND(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "AND WordMemory Byte":
@@ -311,7 +311,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "AND WordMemory R16Type":
-							this.AND(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.AND(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "AND WordMemory UInt16":
@@ -327,11 +327,11 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "ARPL R16Type R16Type":
-							this.ARPL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ARPL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ARPL WordMemory R16Type":
-							this.ARPL(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ARPL(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -355,11 +355,11 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "BOUND R16Type Memory":
-							this.BOUND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.BOUND(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "BOUND R32Type Memory":
-							this.BOUND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.BOUND(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -371,19 +371,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "BSF R16Type R16Type":
-							this.BSF(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BSF(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BSF R16Type WordMemory":
-							this.BSF(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.BSF(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "BSF R32Type DWordMemory":
-							this.BSF(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.BSF(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "BSF R32Type R32Type":
-							this.BSF(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BSF(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -395,19 +395,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "BSR R16Type R16Type":
-							this.BSR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BSR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BSR R16Type WordMemory":
-							this.BSR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.BSR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "BSR R32Type DWordMemory":
-							this.BSR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.BSR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "BSR R32Type R32Type":
-							this.BSR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BSR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -419,7 +419,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "BSWAP R32Type":
-							this.BSWAP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BSWAP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -435,23 +435,23 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "BT DWordMemory R32Type":
-							this.BT(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BT(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BT R16Type Byte":
-							this.BT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "BT R16Type R16Type":
-							this.BT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BT R32Type Byte":
-							this.BT(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BT(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "BT R32Type R32Type":
-							this.BT(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BT(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BT WordMemory Byte":
@@ -459,7 +459,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "BT WordMemory R16Type":
-							this.BT(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BT(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -475,23 +475,23 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "BTC DWordMemory R32Type":
-							this.BTC(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTC(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTC R16Type Byte":
-							this.BTC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "BTC R16Type R16Type":
-							this.BTC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTC R32Type Byte":
-							this.BTC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "BTC R32Type R32Type":
-							this.BTC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTC WordMemory Byte":
@@ -499,7 +499,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "BTC WordMemory R16Type":
-							this.BTC(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTC(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -515,23 +515,23 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "BTR DWordMemory R32Type":
-							this.BTR(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTR(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTR R16Type Byte":
-							this.BTR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "BTR R16Type R16Type":
-							this.BTR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTR R32Type Byte":
-							this.BTR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "BTR R32Type R32Type":
-							this.BTR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTR WordMemory Byte":
@@ -539,7 +539,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "BTR WordMemory R16Type":
-							this.BTR(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTR(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -555,23 +555,23 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "BTS DWordMemory R32Type":
-							this.BTS(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTS(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTS R16Type Byte":
-							this.BTS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "BTS R16Type R16Type":
-							this.BTS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTS R32Type Byte":
-							this.BTS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "BTS R32Type R32Type":
-							this.BTS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "BTS WordMemory Byte":
@@ -579,7 +579,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "BTS WordMemory R16Type":
-							this.BTS(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.BTS(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -595,11 +595,11 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "CALL R16Type":
-							this.CALL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CALL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CALL R32Type":
-							this.CALL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CALL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CALL String":
@@ -743,19 +743,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVA R16Type R16Type":
-							this.CMOVA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVA R16Type WordMemory":
-							this.CMOVA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVA R32Type DWordMemory":
-							this.CMOVA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVA R32Type R32Type":
-							this.CMOVA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -767,19 +767,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVAE R16Type R16Type":
-							this.CMOVAE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVAE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVAE R16Type WordMemory":
-							this.CMOVAE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVAE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVAE R32Type DWordMemory":
-							this.CMOVAE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVAE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVAE R32Type R32Type":
-							this.CMOVAE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVAE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -791,19 +791,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVB R16Type R16Type":
-							this.CMOVB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVB R16Type WordMemory":
-							this.CMOVB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVB R32Type DWordMemory":
-							this.CMOVB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVB R32Type R32Type":
-							this.CMOVB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -815,19 +815,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVBE R16Type R16Type":
-							this.CMOVBE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVBE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVBE R16Type WordMemory":
-							this.CMOVBE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVBE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVBE R32Type DWordMemory":
-							this.CMOVBE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVBE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVBE R32Type R32Type":
-							this.CMOVBE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVBE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -839,19 +839,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVC R16Type R16Type":
-							this.CMOVC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVC R16Type WordMemory":
-							this.CMOVC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVC R32Type DWordMemory":
-							this.CMOVC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVC R32Type R32Type":
-							this.CMOVC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -863,19 +863,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVE R16Type R16Type":
-							this.CMOVE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVE R16Type WordMemory":
-							this.CMOVE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVE R32Type DWordMemory":
-							this.CMOVE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVE R32Type R32Type":
-							this.CMOVE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -887,19 +887,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVG R16Type R16Type":
-							this.CMOVG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVG R16Type WordMemory":
-							this.CMOVG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVG R32Type DWordMemory":
-							this.CMOVG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVG R32Type R32Type":
-							this.CMOVG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -911,19 +911,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVGE R16Type R16Type":
-							this.CMOVGE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVGE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVGE R16Type WordMemory":
-							this.CMOVGE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVGE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVGE R32Type DWordMemory":
-							this.CMOVGE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVGE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVGE R32Type R32Type":
-							this.CMOVGE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVGE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -935,19 +935,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVL R16Type R16Type":
-							this.CMOVL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVL R16Type WordMemory":
-							this.CMOVL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVL R32Type DWordMemory":
-							this.CMOVL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVL R32Type R32Type":
-							this.CMOVL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -959,19 +959,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVLE R16Type R16Type":
-							this.CMOVLE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVLE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVLE R16Type WordMemory":
-							this.CMOVLE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVLE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVLE R32Type DWordMemory":
-							this.CMOVLE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVLE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVLE R32Type R32Type":
-							this.CMOVLE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVLE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -983,19 +983,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNA R16Type R16Type":
-							this.CMOVNA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNA R16Type WordMemory":
-							this.CMOVNA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNA R32Type DWordMemory":
-							this.CMOVNA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNA R32Type R32Type":
-							this.CMOVNA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1007,19 +1007,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNAE R16Type R16Type":
-							this.CMOVNAE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNAE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNAE R16Type WordMemory":
-							this.CMOVNAE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNAE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNAE R32Type DWordMemory":
-							this.CMOVNAE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNAE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNAE R32Type R32Type":
-							this.CMOVNAE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNAE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1031,19 +1031,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNB R16Type R16Type":
-							this.CMOVNB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNB R16Type WordMemory":
-							this.CMOVNB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNB R32Type DWordMemory":
-							this.CMOVNB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNB R32Type R32Type":
-							this.CMOVNB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1055,19 +1055,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNBE R16Type R16Type":
-							this.CMOVNBE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNBE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNBE R16Type WordMemory":
-							this.CMOVNBE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNBE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNBE R32Type DWordMemory":
-							this.CMOVNBE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNBE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNBE R32Type R32Type":
-							this.CMOVNBE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNBE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1079,19 +1079,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNC R16Type R16Type":
-							this.CMOVNC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNC R16Type WordMemory":
-							this.CMOVNC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNC R32Type DWordMemory":
-							this.CMOVNC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNC R32Type R32Type":
-							this.CMOVNC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1103,19 +1103,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNE R16Type R16Type":
-							this.CMOVNE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNE R16Type WordMemory":
-							this.CMOVNE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNE R32Type DWordMemory":
-							this.CMOVNE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNE R32Type R32Type":
-							this.CMOVNE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1127,19 +1127,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNG R16Type R16Type":
-							this.CMOVNG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNG R16Type WordMemory":
-							this.CMOVNG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNG R32Type DWordMemory":
-							this.CMOVNG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNG R32Type R32Type":
-							this.CMOVNG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1151,19 +1151,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNGE R16Type R16Type":
-							this.CMOVNGE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNGE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNGE R16Type WordMemory":
-							this.CMOVNGE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNGE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNGE R32Type DWordMemory":
-							this.CMOVNGE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNGE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNGE R32Type R32Type":
-							this.CMOVNGE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNGE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1175,19 +1175,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNL R16Type R16Type":
-							this.CMOVNL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNL R16Type WordMemory":
-							this.CMOVNL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNL R32Type DWordMemory":
-							this.CMOVNL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNL R32Type R32Type":
-							this.CMOVNL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1199,19 +1199,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNLE R16Type R16Type":
-							this.CMOVNLE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNLE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNLE R16Type WordMemory":
-							this.CMOVNLE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNLE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNLE R32Type DWordMemory":
-							this.CMOVNLE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNLE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNLE R32Type R32Type":
-							this.CMOVNLE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNLE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1223,19 +1223,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNO R16Type R16Type":
-							this.CMOVNO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNO R16Type WordMemory":
-							this.CMOVNO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNO R32Type DWordMemory":
-							this.CMOVNO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNO R32Type R32Type":
-							this.CMOVNO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1247,19 +1247,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNP R16Type R16Type":
-							this.CMOVNP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNP R16Type WordMemory":
-							this.CMOVNP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNP R32Type DWordMemory":
-							this.CMOVNP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNP R32Type R32Type":
-							this.CMOVNP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1271,19 +1271,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNS R16Type R16Type":
-							this.CMOVNS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNS R16Type WordMemory":
-							this.CMOVNS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNS R32Type DWordMemory":
-							this.CMOVNS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNS R32Type R32Type":
-							this.CMOVNS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1295,19 +1295,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVNZ R16Type R16Type":
-							this.CMOVNZ(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNZ(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVNZ R16Type WordMemory":
-							this.CMOVNZ(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNZ(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNZ R32Type DWordMemory":
-							this.CMOVNZ(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVNZ(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVNZ R32Type R32Type":
-							this.CMOVNZ(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVNZ(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1319,19 +1319,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVO R16Type R16Type":
-							this.CMOVO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVO R16Type WordMemory":
-							this.CMOVO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVO R32Type DWordMemory":
-							this.CMOVO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVO R32Type R32Type":
-							this.CMOVO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1343,19 +1343,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVP R16Type R16Type":
-							this.CMOVP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVP R16Type WordMemory":
-							this.CMOVP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVP R32Type DWordMemory":
-							this.CMOVP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVP R32Type R32Type":
-							this.CMOVP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1367,19 +1367,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVPE R16Type R16Type":
-							this.CMOVPE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVPE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVPE R16Type WordMemory":
-							this.CMOVPE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVPE(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVPE R32Type DWordMemory":
-							this.CMOVPE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVPE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVPE R32Type R32Type":
-							this.CMOVPE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVPE(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1391,19 +1391,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVPO R16Type R16Type":
-							this.CMOVPO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVPO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVPO R16Type WordMemory":
-							this.CMOVPO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVPO(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVPO R32Type DWordMemory":
-							this.CMOVPO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVPO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVPO R32Type R32Type":
-							this.CMOVPO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVPO(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1415,19 +1415,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVS R16Type R16Type":
-							this.CMOVS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVS R16Type WordMemory":
-							this.CMOVS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVS R32Type DWordMemory":
-							this.CMOVS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVS R32Type R32Type":
-							this.CMOVS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1439,19 +1439,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMOVZ R16Type R16Type":
-							this.CMOVZ(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVZ(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMOVZ R16Type WordMemory":
-							this.CMOVZ(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVZ(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVZ R32Type DWordMemory":
-							this.CMOVZ(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMOVZ(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMOVZ R32Type R32Type":
-							this.CMOVZ(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMOVZ(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1467,7 +1467,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "CMP ByteMemory R8Type":
-							this.CMP(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMP(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMP DWordMemory Byte":
@@ -1475,7 +1475,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "CMP DWordMemory R32Type":
-							this.CMP(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMP(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMP DWordMemory UInt32":
@@ -1483,47 +1483,47 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "CMP R16Type Byte":
-							this.CMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "CMP R16Type R16Type":
-							this.CMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMP R16Type UInt16":
-							this.CMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "CMP R16Type WordMemory":
-							this.CMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMP R32Type Byte":
-							this.CMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "CMP R32Type DWordMemory":
-							this.CMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMP R32Type R32Type":
-							this.CMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMP R32Type UInt32":
-							this.CMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "CMP R8Type Byte":
-							this.CMP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "CMP R8Type ByteMemory":
-							this.CMP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.CMP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "CMP R8Type R8Type":
-							this.CMP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMP WordMemory Byte":
@@ -1531,7 +1531,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "CMP WordMemory R16Type":
-							this.CMP(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMP(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMP WordMemory UInt16":
@@ -1583,27 +1583,27 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "CMPXCHG ByteMemory R8Type":
-							this.CMPXCHG(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMPXCHG(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMPXCHG DWordMemory R32Type":
-							this.CMPXCHG(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMPXCHG(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMPXCHG R16Type R16Type":
-							this.CMPXCHG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMPXCHG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMPXCHG R32Type R32Type":
-							this.CMPXCHG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMPXCHG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMPXCHG R8Type R8Type":
-							this.CMPXCHG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMPXCHG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "CMPXCHG WordMemory R16Type":
-							this.CMPXCHG(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.CMPXCHG(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1735,15 +1735,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "DEC R16Type":
-							this.DEC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.DEC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "DEC R32Type":
-							this.DEC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.DEC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "DEC R8Type":
-							this.DEC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.DEC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "DEC WordMemory":
@@ -1767,15 +1767,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "DIV R16Type":
-							this.DIV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.DIV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "DIV R32Type":
-							this.DIV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.DIV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "DIV R8Type":
-							this.DIV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.DIV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "DIV WordMemory":
@@ -1843,7 +1843,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FADD FPType":
-							this.FADD(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FADD(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FADD QWordMemory":
@@ -1859,7 +1859,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FADDP FPType":
-							this.FADDP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FADDP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1871,7 +1871,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FADDP__ST0 FPType":
-							this.FADDP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FADDP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1883,7 +1883,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FADD_ST0 FPType":
-							this.FADD_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FADD_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1895,7 +1895,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FADD__ST0 FPType":
-							this.FADD__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FADD__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1955,7 +1955,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVB FPType":
-							this.FCMOVB(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVB(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1967,7 +1967,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVBE FPType":
-							this.FCMOVBE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVBE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1979,7 +1979,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVBE_ST0 FPType":
-							this.FCMOVBE_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVBE_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -1991,7 +1991,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVB_ST0 FPType":
-							this.FCMOVB_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVB_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2003,7 +2003,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVE FPType":
-							this.FCMOVE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2015,7 +2015,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVE_ST0 FPType":
-							this.FCMOVE_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVE_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2027,7 +2027,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVNB FPType":
-							this.FCMOVNB(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVNB(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2039,7 +2039,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVNBE FPType":
-							this.FCMOVNBE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVNBE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2051,7 +2051,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVNBE_ST0 FPType":
-							this.FCMOVNBE_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVNBE_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2063,7 +2063,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVNB_ST0 FPType":
-							this.FCMOVNB_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVNB_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2075,7 +2075,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVNE FPType":
-							this.FCMOVNE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVNE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2087,7 +2087,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVNE_ST0 FPType":
-							this.FCMOVNE_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVNE_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2099,7 +2099,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVNU FPType":
-							this.FCMOVNU(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVNU(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2111,7 +2111,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVNU_ST0 FPType":
-							this.FCMOVNU_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVNU_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2123,7 +2123,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVU FPType":
-							this.FCMOVU(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVU(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2135,7 +2135,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCMOVU_ST0 FPType":
-							this.FCMOVU_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCMOVU_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2151,7 +2151,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FCOM FPType":
-							this.FCOM(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCOM(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FCOM QWordMemory":
@@ -2167,7 +2167,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCOMI FPType":
-							this.FCOMI(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCOMI(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2179,7 +2179,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCOMIP FPType":
-							this.FCOMIP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCOMIP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2191,7 +2191,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCOMIP_ST0 FPType":
-							this.FCOMIP_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCOMIP_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2203,7 +2203,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCOMI_ST0 FPType":
-							this.FCOMI_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCOMI_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2219,7 +2219,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FCOMP FPType":
-							this.FCOMP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCOMP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FCOMP QWordMemory":
@@ -2247,7 +2247,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCOMP_ST0 FPType":
-							this.FCOMP_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCOMP_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2259,7 +2259,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FCOM_ST0 FPType":
-							this.FCOM_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FCOM_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2311,7 +2311,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FDIV FPType":
-							this.FDIV(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIV(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FDIV QWordMemory":
@@ -2327,7 +2327,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FDIVP FPType":
-							this.FDIVP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIVP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2339,7 +2339,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FDIVP__ST0 FPType":
-							this.FDIVP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIVP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2355,7 +2355,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FDIVR FPType":
-							this.FDIVR(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIVR(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FDIVR QWordMemory":
@@ -2371,7 +2371,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FDIVRP FPType":
-							this.FDIVRP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIVRP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2383,7 +2383,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FDIVRP__ST0 FPType":
-							this.FDIVRP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIVRP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2395,7 +2395,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FDIVR_ST0 FPType":
-							this.FDIVR_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIVR_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2407,7 +2407,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FDIVR__ST0 FPType":
-							this.FDIVR__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIVR__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2419,7 +2419,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FDIV_ST0 FPType":
-							this.FDIV_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIV_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2431,7 +2431,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FDIV__ST0 FPType":
-							this.FDIV__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FDIV__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2455,7 +2455,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FFREE FPType":
-							this.FFREE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FFREE(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2467,7 +2467,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FFREEP FPType":
-							this.FFREEP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FFREEP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2691,7 +2691,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FLD FPType":
-							this.FLD(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FLD(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FLD QWordMemory":
@@ -2823,7 +2823,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FMUL FPType":
-							this.FMUL(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FMUL(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FMUL QWordMemory":
@@ -2839,7 +2839,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FMULP FPType":
-							this.FMULP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FMULP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2851,7 +2851,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FMULP__ST0 FPType":
-							this.FMULP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FMULP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2863,7 +2863,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FMUL_ST0 FPType":
-							this.FMUL_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FMUL_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -2875,7 +2875,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FMUL__ST0 FPType":
-							this.FMUL__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FMUL__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3155,7 +3155,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FST FPType":
-							this.FST(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FST(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FST QWordMemory":
@@ -3199,7 +3199,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FSTP FPType":
-							this.FSTP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSTP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FSTP QWordMemory":
@@ -3247,7 +3247,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FSUB FPType":
-							this.FSUB(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUB(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FSUB QWordMemory":
@@ -3263,7 +3263,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FSUBP FPType":
-							this.FSUBP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUBP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3275,7 +3275,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FSUBP__ST0 FPType":
-							this.FSUBP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUBP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3291,7 +3291,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FSUBR FPType":
-							this.FSUBR(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUBR(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "FSUBR QWordMemory":
@@ -3307,7 +3307,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FSUBRP FPType":
-							this.FSUBRP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUBRP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3319,7 +3319,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FSUBRP__ST0 FPType":
-							this.FSUBRP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUBRP__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3331,7 +3331,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FSUBR_ST0 FPType":
-							this.FSUBR_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUBR_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3343,7 +3343,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FSUBR__ST0 FPType":
-							this.FSUBR__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUBR__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3355,7 +3355,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FSUB_ST0 FPType":
-							this.FSUB_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUB_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3367,7 +3367,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FSUB__ST0 FPType":
-							this.FSUB__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FSUB__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3391,7 +3391,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FUCOM FPType":
-							this.FUCOM(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FUCOM(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3403,7 +3403,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FUCOMI FPType":
-							this.FUCOMI(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FUCOMI(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3415,7 +3415,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FUCOMIP FPType":
-							this.FUCOMIP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FUCOMIP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3427,7 +3427,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FUCOMIP_ST0 FPType":
-							this.FUCOMIP_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FUCOMIP_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3439,7 +3439,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FUCOMI_ST0 FPType":
-							this.FUCOMI_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FUCOMI_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3451,7 +3451,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FUCOMP FPType":
-							this.FUCOMP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FUCOMP(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3475,7 +3475,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FUCOMP_ST0 FPType":
-							this.FUCOMP_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FUCOMP_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3487,7 +3487,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FUCOM_ST0 FPType":
-							this.FUCOM_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FUCOM_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3527,7 +3527,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "FXCH FPType":
-							this.FXCH(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FXCH(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3539,7 +3539,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FXCH_ST0 FPType":
-							this.FXCH_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FXCH_ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3551,7 +3551,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "FXCH__ST0 FPType":
-							this.FXCH__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.FXCH__ST0(FP.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -3655,15 +3655,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "IDIV R16Type":
-							this.IDIV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.IDIV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "IDIV R32Type":
-							this.IDIV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.IDIV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "IDIV R8Type":
-							this.IDIV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.IDIV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "IDIV WordMemory":
@@ -3687,79 +3687,79 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "IMUL R16Type":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "IMUL R16Type Byte":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R16Type R16Type":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "IMUL R16Type R16Type Byte":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R16Type R16Type UInt16":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R16Type UInt16":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R16Type WordMemory":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "IMUL R16Type WordMemory Byte":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R16Type WordMemory UInt16":
-							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call), Convert.ToUInt16((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call), Convert.ToUInt16((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R32Type":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "IMUL R32Type Byte":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R32Type DWordMemory":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "IMUL R32Type DWordMemory Byte":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R32Type DWordMemory UInt32":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call), Convert.ToUInt32((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call), Convert.ToUInt32((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R32Type R32Type":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "IMUL R32Type R32Type Byte":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R32Type R32Type UInt32":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R32Type UInt32":
-							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "IMUL R8Type":
-							this.IMUL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.IMUL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "IMUL WordMemory":
@@ -3783,15 +3783,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "INC R16Type":
-							this.INC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.INC(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "INC R32Type":
-							this.INC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.INC(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "INC R8Type":
-							this.INC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.INC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "INC WordMemory":
@@ -4231,11 +4231,11 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "JMP R16Type":
-							this.JMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.JMP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "JMP R32Type":
-							this.JMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.JMP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "JMP String":
@@ -4707,19 +4707,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LAR R16Type R16Type":
-							this.LAR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.LAR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "LAR R16Type WordMemory":
-							this.LAR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LAR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LAR R32Type DWordMemory":
-							this.LAR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LAR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LAR R32Type R32Type":
-							this.LAR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.LAR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -4731,11 +4731,11 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LDS R16Type Memory":
-							this.LDS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LDS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LDS R32Type Memory":
-							this.LDS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LDS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -4747,11 +4747,11 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LEA R16Type Memory":
-							this.LEA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LEA(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LEA R32Type Memory":
-							this.LEA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LEA(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -4775,11 +4775,11 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LES R16Type Memory":
-							this.LES(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LES(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LES R32Type Memory":
-							this.LES(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LES(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -4803,11 +4803,11 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LFS R16Type Memory":
-							this.LFS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LFS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LFS R32Type Memory":
-							this.LFS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LFS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -4831,11 +4831,11 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LGS R16Type Memory":
-							this.LGS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LGS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LGS R32Type Memory":
-							this.LGS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LGS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -4859,7 +4859,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LLDT R16Type":
-							this.LLDT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.LLDT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "LLDT WordMemory":
@@ -4875,7 +4875,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LMSW R16Type":
-							this.LMSW(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.LMSW(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "LMSW WordMemory":
@@ -4987,19 +4987,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LSL R16Type R16Type":
-							this.LSL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.LSL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "LSL R16Type WordMemory":
-							this.LSL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LSL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LSL R32Type DWordMemory":
-							this.LSL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LSL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LSL R32Type R32Type":
-							this.LSL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.LSL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -5011,11 +5011,11 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LSS R16Type Memory":
-							this.LSS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LSS(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "LSS R32Type Memory":
-							this.LSS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.LSS(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -5027,7 +5027,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "LTR R16Type":
-							this.LTR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.LTR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "LTR WordMemory":
@@ -5059,23 +5059,23 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "MOV ByteMemory R8Type":
-							this.MOV(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV CRType R32Type":
-							this.MOV(CR.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(CR.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV DRType R32Type":
-							this.MOV(DR.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(DR.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV DWordMemory R32Type":
-							this.MOV(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV DWordMemory SegType":
-							this.MOV(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), Seg.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), Seg.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV DWordMemory UInt32":
@@ -5083,95 +5083,95 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "MOV R16Type R16Type":
-							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV R16Type SegType":
-							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Seg.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Seg.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV R16Type String":
-							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), (method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
+							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), (method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
 							break;
 						
 						case "MOV R16Type UInt16":
-							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "MOV R16Type WordMemory":
-							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOV(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOV R32Type CRType":
-							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), CR.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), CR.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV R32Type DRType":
-							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), DR.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), DR.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV R32Type DWordMemory":
-							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOV R32Type R32Type":
-							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV R32Type SegType":
-							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Seg.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Seg.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV R32Type String":
-							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), (method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
+							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), (method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
 							break;
 						
 						case "MOV R32Type TRType":
-							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), TR.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), TR.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV R32Type UInt32":
-							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "MOV R8Type Byte":
-							this.MOV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "MOV R8Type ByteMemory":
-							this.MOV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOV R8Type R8Type":
-							this.MOV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV SegType DWordMemory":
-							this.MOV(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOV(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOV SegType R16Type":
-							this.MOV(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV SegType R32Type":
-							this.MOV(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV SegType WordMemory":
-							this.MOV(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOV(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOV TRType R32Type":
-							this.MOV(TR.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(TR.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV WordMemory R16Type":
-							this.MOV(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV WordMemory SegType":
-							this.MOV(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), Seg.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOV(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), Seg.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOV WordMemory UInt16":
@@ -5223,27 +5223,27 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "MOVSX R16Type ByteMemory":
-							this.MOVSX(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOVSX(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOVSX R16Type R8Type":
-							this.MOVSX(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOVSX(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOVSX R32Type ByteMemory":
-							this.MOVSX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOVSX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOVSX R32Type R16Type":
-							this.MOVSX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOVSX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOVSX R32Type R8Type":
-							this.MOVSX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOVSX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOVSX R32Type WordMemory":
-							this.MOVSX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOVSX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -5255,27 +5255,27 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "MOVZX R16Type ByteMemory":
-							this.MOVZX(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOVZX(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOVZX R16Type R8Type":
-							this.MOVZX(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOVZX(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOVZX R32Type ByteMemory":
-							this.MOVZX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOVZX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "MOVZX R32Type R16Type":
-							this.MOVZX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOVZX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOVZX R32Type R8Type":
-							this.MOVZX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MOVZX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MOVZX R32Type WordMemory":
-							this.MOVZX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.MOVZX(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						default:
@@ -5367,15 +5367,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "MUL R16Type":
-							this.MUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MUL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MUL R32Type":
-							this.MUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MUL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MUL R8Type":
-							this.MUL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.MUL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "MUL WordMemory":
@@ -5399,15 +5399,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "NEG R16Type":
-							this.NEG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.NEG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "NEG R32Type":
-							this.NEG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.NEG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "NEG R8Type":
-							this.NEG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.NEG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "NEG WordMemory":
@@ -5443,15 +5443,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "NOT R16Type":
-							this.NOT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.NOT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "NOT R32Type":
-							this.NOT(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.NOT(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "NOT R8Type":
-							this.NOT(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.NOT(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "NOT WordMemory":
@@ -5483,7 +5483,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "OR ByteMemory R8Type":
-							this.OR(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.OR(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "OR DWordMemory Byte":
@@ -5491,7 +5491,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "OR DWordMemory R32Type":
-							this.OR(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.OR(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "OR DWordMemory UInt32":
@@ -5499,47 +5499,47 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "OR R16Type Byte":
-							this.OR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "OR R16Type R16Type":
-							this.OR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.OR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "OR R16Type UInt16":
-							this.OR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "OR R16Type WordMemory":
-							this.OR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.OR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "OR R32Type Byte":
-							this.OR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "OR R32Type DWordMemory":
-							this.OR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.OR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "OR R32Type R32Type":
-							this.OR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.OR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "OR R32Type UInt32":
-							this.OR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "OR R8Type Byte":
-							this.OR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "OR R8Type ByteMemory":
-							this.OR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.OR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "OR R8Type R8Type":
-							this.OR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.OR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "OR WordMemory Byte":
@@ -5547,7 +5547,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "OR WordMemory R16Type":
-							this.OR(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.OR(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "OR WordMemory UInt16":
@@ -5699,15 +5699,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "POP R16Type":
-							this.POP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.POP(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "POP R32Type":
-							this.POP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.POP(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "POP SegType":
-							this.POP(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.POP(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "POP WordMemory":
@@ -5851,15 +5851,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "PUSH R16Type":
-							this.PUSH(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.PUSH(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "PUSH R32Type":
-							this.PUSH(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.PUSH(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "PUSH SegType":
-							this.PUSH(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.PUSH(Seg.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "PUSH UInt16":
@@ -5963,15 +5963,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "RCL R16Type Byte":
-							this.RCL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "RCL R32Type Byte":
-							this.RCL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "RCL R8Type Byte":
-							this.RCL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "RCL WordMemory Byte":
@@ -5995,15 +5995,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "RCL__CL R16Type":
-							this.RCL__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.RCL__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "RCL__CL R32Type":
-							this.RCL__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.RCL__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "RCL__CL R8Type":
-							this.RCL__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.RCL__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "RCL__CL WordMemory":
@@ -6027,15 +6027,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "RCR R16Type Byte":
-							this.RCR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "RCR R32Type Byte":
-							this.RCR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "RCR R8Type Byte":
-							this.RCR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "RCR WordMemory Byte":
@@ -6059,15 +6059,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "RCR__CL R16Type":
-							this.RCR__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.RCR__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "RCR__CL R32Type":
-							this.RCR__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.RCR__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "RCR__CL R8Type":
-							this.RCR__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.RCR__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "RCR__CL WordMemory":
@@ -6175,15 +6175,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ROL R16Type Byte":
-							this.ROL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ROL R32Type Byte":
-							this.ROL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ROL R8Type Byte":
-							this.ROL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ROL WordMemory Byte":
@@ -6207,15 +6207,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ROL__CL R16Type":
-							this.ROL__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ROL__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ROL__CL R32Type":
-							this.ROL__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ROL__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ROL__CL R8Type":
-							this.ROL__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ROL__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ROL__CL WordMemory":
@@ -6239,15 +6239,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ROR R16Type Byte":
-							this.ROR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ROR R32Type Byte":
-							this.ROR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ROR R8Type Byte":
-							this.ROR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "ROR WordMemory Byte":
@@ -6271,15 +6271,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "ROR__CL R16Type":
-							this.ROR__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ROR__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ROR__CL R32Type":
-							this.ROR__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ROR__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ROR__CL R8Type":
-							this.ROR__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.ROR__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "ROR__CL WordMemory":
@@ -6327,15 +6327,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SAL R16Type Byte":
-							this.SAL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SAL R32Type Byte":
-							this.SAL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SAL R8Type Byte":
-							this.SAL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SAL WordMemory Byte":
@@ -6371,15 +6371,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SAL__CL R16Type":
-							this.SAL__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SAL__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SAL__CL R32Type":
-							this.SAL__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SAL__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SAL__CL R8Type":
-							this.SAL__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SAL__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SAL__CL WordMemory":
@@ -6403,15 +6403,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SAR R16Type Byte":
-							this.SAR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SAR R32Type Byte":
-							this.SAR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SAR R8Type Byte":
-							this.SAR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SAR WordMemory Byte":
@@ -6435,15 +6435,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SAR__CL R16Type":
-							this.SAR__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SAR__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SAR__CL R32Type":
-							this.SAR__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SAR__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SAR__CL R8Type":
-							this.SAR__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SAR__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SAR__CL WordMemory":
@@ -6463,7 +6463,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SBB ByteMemory R8Type":
-							this.SBB(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SBB(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SBB DWordMemory Byte":
@@ -6471,7 +6471,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SBB DWordMemory R32Type":
-							this.SBB(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SBB(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SBB DWordMemory UInt32":
@@ -6479,47 +6479,47 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SBB R16Type Byte":
-							this.SBB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SBB R16Type R16Type":
-							this.SBB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SBB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SBB R16Type UInt16":
-							this.SBB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SBB R16Type WordMemory":
-							this.SBB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.SBB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "SBB R32Type Byte":
-							this.SBB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SBB R32Type DWordMemory":
-							this.SBB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.SBB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "SBB R32Type R32Type":
-							this.SBB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SBB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SBB R32Type UInt32":
-							this.SBB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SBB R8Type Byte":
-							this.SBB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SBB R8Type ByteMemory":
-							this.SBB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.SBB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "SBB R8Type R8Type":
-							this.SBB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SBB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SBB WordMemory Byte":
@@ -6527,7 +6527,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SBB WordMemory R16Type":
-							this.SBB(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SBB(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SBB WordMemory UInt16":
@@ -6583,7 +6583,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETA R8Type":
-							this.SETA(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETA(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6599,7 +6599,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETAE R8Type":
-							this.SETAE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETAE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6615,7 +6615,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETB R8Type":
-							this.SETB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6631,7 +6631,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETBE R8Type":
-							this.SETBE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETBE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6647,7 +6647,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETC R8Type":
-							this.SETC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6663,7 +6663,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETE R8Type":
-							this.SETE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6679,7 +6679,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETG R8Type":
-							this.SETG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6695,7 +6695,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETGE R8Type":
-							this.SETGE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETGE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6711,7 +6711,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETL R8Type":
-							this.SETL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6727,7 +6727,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETLE R8Type":
-							this.SETLE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETLE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6743,7 +6743,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNA R8Type":
-							this.SETNA(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNA(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6759,7 +6759,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNAE R8Type":
-							this.SETNAE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNAE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6775,7 +6775,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNB R8Type":
-							this.SETNB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6791,7 +6791,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNBE R8Type":
-							this.SETNBE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNBE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6807,7 +6807,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNC R8Type":
-							this.SETNC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNC(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6823,7 +6823,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNE R8Type":
-							this.SETNE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6839,7 +6839,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNG R8Type":
-							this.SETNG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6855,7 +6855,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNGE R8Type":
-							this.SETNGE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNGE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6871,7 +6871,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNL R8Type":
-							this.SETNL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6887,7 +6887,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNLE R8Type":
-							this.SETNLE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNLE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6903,7 +6903,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNO R8Type":
-							this.SETNO(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNO(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6919,7 +6919,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNP R8Type":
-							this.SETNP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6935,7 +6935,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNS R8Type":
-							this.SETNS(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNS(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6951,7 +6951,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETNZ R8Type":
-							this.SETNZ(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETNZ(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6967,7 +6967,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETO R8Type":
-							this.SETO(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETO(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6983,7 +6983,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETP R8Type":
-							this.SETP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETP(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -6999,7 +6999,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETPE R8Type":
-							this.SETPE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETPE(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -7015,7 +7015,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETPO R8Type":
-							this.SETPO(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETPO(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -7031,7 +7031,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETS R8Type":
-							this.SETS(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETS(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -7047,7 +7047,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SETZ R8Type":
-							this.SETZ(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SETZ(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -7091,15 +7091,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SHL R16Type Byte":
-							this.SHL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHL R32Type Byte":
-							this.SHL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHL R8Type Byte":
-							this.SHL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHL WordMemory Byte":
@@ -7115,19 +7115,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "SHLD DWordMemory R32Type Byte":
-							this.SHLD(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHLD(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHLD R16Type R16Type Byte":
-							this.SHLD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHLD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHLD R32Type R32Type Byte":
-							this.SHLD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHLD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHLD WordMemory R16Type Byte":
-							this.SHLD(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHLD(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						default:
@@ -7139,19 +7139,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "SHLD___CL DWordMemory R32Type":
-							this.SHLD___CL(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHLD___CL(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHLD___CL R16Type R16Type":
-							this.SHLD___CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHLD___CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHLD___CL R32Type R32Type":
-							this.SHLD___CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHLD___CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHLD___CL WordMemory R16Type":
-							this.SHLD___CL(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHLD___CL(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -7171,15 +7171,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SHL__CL R16Type":
-							this.SHL__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHL__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHL__CL R32Type":
-							this.SHL__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHL__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHL__CL R8Type":
-							this.SHL__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHL__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHL__CL WordMemory":
@@ -7203,15 +7203,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SHR R16Type Byte":
-							this.SHR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHR R32Type Byte":
-							this.SHR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHR R8Type Byte":
-							this.SHR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHR WordMemory Byte":
@@ -7227,19 +7227,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "SHRD DWordMemory R32Type Byte":
-							this.SHRD(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHRD(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHRD R16Type R16Type Byte":
-							this.SHRD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHRD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHRD R32Type R32Type Byte":
-							this.SHRD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHRD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SHRD WordMemory R16Type Byte":
-							this.SHRD(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHRD(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						default:
@@ -7251,19 +7251,19 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "SHRD___CL DWordMemory R32Type":
-							this.SHRD___CL(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHRD___CL(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHRD___CL R16Type R16Type":
-							this.SHRD___CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHRD___CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHRD___CL R32Type R32Type":
-							this.SHRD___CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHRD___CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHRD___CL WordMemory R16Type":
-							this.SHRD___CL(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHRD___CL(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -7283,15 +7283,15 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SHR__CL R16Type":
-							this.SHR__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHR__CL(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHR__CL R32Type":
-							this.SHR__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHR__CL(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHR__CL R8Type":
-							this.SHR__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SHR__CL(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SHR__CL WordMemory":
@@ -7319,7 +7319,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "SLDT R16Type":
-							this.SLDT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SLDT(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SLDT WordMemory":
@@ -7335,7 +7335,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "SMSW R16Type":
-							this.SMSW(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SMSW(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SMSW WordMemory":
@@ -7423,7 +7423,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "STR R16Type":
-							this.STR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.STR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "STR WordMemory":
@@ -7443,7 +7443,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SUB ByteMemory R8Type":
-							this.SUB(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SUB(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SUB DWordMemory Byte":
@@ -7451,7 +7451,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SUB DWordMemory R32Type":
-							this.SUB(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SUB(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SUB DWordMemory UInt32":
@@ -7459,47 +7459,47 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SUB R16Type Byte":
-							this.SUB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SUB R16Type R16Type":
-							this.SUB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SUB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SUB R16Type UInt16":
-							this.SUB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SUB R16Type WordMemory":
-							this.SUB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.SUB(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "SUB R32Type Byte":
-							this.SUB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SUB R32Type DWordMemory":
-							this.SUB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.SUB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "SUB R32Type R32Type":
-							this.SUB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SUB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SUB R32Type UInt32":
-							this.SUB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SUB R8Type Byte":
-							this.SUB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "SUB R8Type ByteMemory":
-							this.SUB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.SUB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "SUB R8Type R8Type":
-							this.SUB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SUB(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SUB WordMemory Byte":
@@ -7507,7 +7507,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "SUB WordMemory R16Type":
-							this.SUB(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.SUB(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "SUB WordMemory UInt16":
@@ -7575,11 +7575,11 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "TEST ByteMemory R8Type":
-							this.TEST(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.TEST(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "TEST DWordMemory R32Type":
-							this.TEST(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.TEST(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "TEST DWordMemory UInt32":
@@ -7587,31 +7587,31 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "TEST R16Type R16Type":
-							this.TEST(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.TEST(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "TEST R16Type UInt16":
-							this.TEST(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "TEST R32Type R32Type":
-							this.TEST(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.TEST(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "TEST R32Type UInt32":
-							this.TEST(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "TEST R8Type Byte":
-							this.TEST(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "TEST R8Type R8Type":
-							this.TEST(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.TEST(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "TEST WordMemory R16Type":
-							this.TEST(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.TEST(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "TEST WordMemory UInt16":
@@ -7627,7 +7627,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "VERR R16Type":
-							this.VERR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.VERR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "VERR WordMemory":
@@ -7643,7 +7643,7 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "VERW R16Type":
-							this.VERW(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.VERW(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "VERW WordMemory":
@@ -7695,27 +7695,27 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "XADD ByteMemory R8Type":
-							this.XADD(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XADD(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XADD DWordMemory R32Type":
-							this.XADD(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XADD(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XADD R16Type R16Type":
-							this.XADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XADD(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XADD R32Type R32Type":
-							this.XADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XADD(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XADD R8Type R8Type":
-							this.XADD(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XADD(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XADD WordMemory R16Type":
-							this.XADD(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XADD(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -7727,39 +7727,39 @@ namespace SharpOS.AOT.X86
 					switch(parameterTypes)
 					{
 						case "XCHG ByteMemory R8Type":
-							this.XCHG(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XCHG(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XCHG DWordMemory R32Type":
-							this.XCHG(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XCHG(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XCHG R16Type R16Type":
-							this.XCHG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XCHG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XCHG R16Type WordMemory":
-							this.XCHG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.XCHG(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "XCHG R32Type DWordMemory":
-							this.XCHG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.XCHG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "XCHG R32Type R32Type":
-							this.XCHG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XCHG(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XCHG R8Type ByteMemory":
-							this.XCHG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.XCHG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "XCHG R8Type R8Type":
-							this.XCHG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XCHG(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XCHG WordMemory R16Type":
-							this.XCHG(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XCHG(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						default:
@@ -7799,7 +7799,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "XOR ByteMemory R8Type":
-							this.XOR(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XOR(GetByteMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XOR DWordMemory Byte":
@@ -7807,7 +7807,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "XOR DWordMemory R32Type":
-							this.XOR(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XOR(GetDWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XOR DWordMemory UInt32":
@@ -7815,47 +7815,47 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "XOR R16Type Byte":
-							this.XOR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "XOR R16Type R16Type":
-							this.XOR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XOR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XOR R16Type UInt16":
-							this.XOR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "XOR R16Type WordMemory":
-							this.XOR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.XOR(R16.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "XOR R32Type Byte":
-							this.XOR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "XOR R32Type DWordMemory":
-							this.XOR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.XOR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetDWordMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "XOR R32Type R32Type":
-							this.XOR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XOR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R32.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XOR R32Type UInt32":
-							this.XOR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR(R32.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToUInt32((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "XOR R8Type Byte":
-							this.XOR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						case "XOR R8Type ByteMemory":
-							this.XOR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
+							this.XOR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), GetByteMemory(method.Operands[1] as SharpOS.AOT.IR.Operands.Call));
 							break;
 						
 						case "XOR R8Type R8Type":
-							this.XOR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XOR(R8.GetByID((method.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString()), R8.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XOR WordMemory Byte":
@@ -7863,7 +7863,7 @@ namespace SharpOS.AOT.X86
 							break;
 						
 						case "XOR WordMemory R16Type":
-							this.XOR(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString()));
+							this.XOR(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), R16.GetByID((method.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString()));
 							break;
 						
 						case "XOR WordMemory UInt16":

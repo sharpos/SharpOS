@@ -79,6 +79,7 @@ namespace SharpOS.AOT.IR.Operands
                 return stringBuilder.ToString();
             }
         }
+
         public override string ToString()
         {
             StringBuilder stringBuilder = new StringBuilder();

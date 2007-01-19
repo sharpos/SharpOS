@@ -1012,12 +1012,21 @@ namespace SharpOS.AOT.IR
                 if (instruction is Assign == true)
                 //|| instruction is PHI == true)
                 {
-                    string id = (instruction as Assign).Asignee.Value;
+                    if ((instruction as Assign).Asignee is Reference == true)
+                    {
+                        Identifier identifier = ((instruction as Assign).Asignee as Reference).Value; 
 
-                    count[id]++;
-                    stack[id].Push(count[id]);
+                        identifier.Version = GetSSAStackValue(stack, identifier.Value);
+                    }
+                    else
+                    {
+                        string id = (instruction as Assign).Asignee.Value;
 
-                    (instruction as Assign).Asignee.Version = count[id];
+                        count[id]++;
+                        stack[id].Push(count[id]);
+
+                        (instruction as Assign).Asignee.Version = count[id];
+                    }
                 }
             }
 
@@ -1070,7 +1079,10 @@ namespace SharpOS.AOT.IR
                 {
                     Assign assign = instruction as Assign;
 
-                    stack[assign.Asignee.Value].Pop();
+                    if (assign.Asignee is Reference == false)
+                    {
+                        stack[assign.Asignee.Value].Pop();
+                    }
                 }
             }
 
@@ -1120,19 +1132,29 @@ namespace SharpOS.AOT.IR
                     {
                         string id = (instruction as Assign).Asignee.ID;
 
-                        if (defuse.ContainsKey(id) == false)
+                        if ((instruction as Assign).Asignee is Reference == true)
                         {
-                            defuse[id] = new List<SharpOS.AOT.IR.Instructions.Instruction>();
-                            defuse[id].Add(instruction);
+                            if (defuse[id].Contains(instruction) == false)
+                            {
+                                defuse[id].Add(instruction);
+                            }
                         }
                         else
                         {
-                            if (defuse[id][0] != null)
+                            if (defuse.ContainsKey(id) == false)
                             {
-                                throw new Exception("SSA variable '" + id + "' in '" + this.MethodFullName + "' defined a second time.");
+                                defuse[id] = new List<SharpOS.AOT.IR.Instructions.Instruction>();
+                                defuse[id].Add(instruction);
                             }
+                            else
+                            {
+                                if (defuse[id][0] != null)
+                                {
+                                    throw new Exception("SSA variable '" + id + "' in '" + this.MethodFullName + "' defined a second time.");
+                                }
 
-                            defuse[id][0] = instruction;
+                                defuse[id][0] = instruction;
+                            }
                         }
                     }
                 }
@@ -1161,6 +1183,17 @@ namespace SharpOS.AOT.IR
                 for (int i = 1; i < list.Count; i++)
                 {
                     Instructions.Instruction instruction = list[i];
+
+                    if (instruction is Assign == true
+                        && (instruction as Assign).Asignee is Reference == true)
+                    {
+                        Reference reference = (instruction as Assign).Asignee as Reference;
+
+                        if (reference.Value.ID.Equals(definition.Asignee.ID) == true)
+                        {
+                            reference.Value = definition.Asignee;
+                        }
+                    }
 
                     if (instruction.Value != null)
                     {
@@ -1278,6 +1311,8 @@ namespace SharpOS.AOT.IR
             Console.WriteLine("Simple Constant Propagation");
             Console.WriteLine("=======================================");
 
+            keys.Sort();
+
             while (keys.Count > 0)
             {
                 string key = keys[0];
@@ -1382,6 +1417,8 @@ namespace SharpOS.AOT.IR
             Console.WriteLine("Copy Propagation");
             Console.WriteLine("=======================================");
 
+            keys.Sort();
+
             while (keys.Count > 0)
             {
                 string key = keys[0];
@@ -1392,9 +1429,31 @@ namespace SharpOS.AOT.IR
                 Instructions.Instruction definition = list[0];
 
                 // A = B
-                if (definition is Assign == true
-                    && (definition as Assign).Asignee is Identifier == true
+
+                if (definition is Assign != true)
+                {
+                    continue;
+                }
+
+                if ((definition as Assign).Asignee is Register == true
+                    && (definition as Assign).Value is Identifier == true
+                    && this.engine.Assembly.IsRegister(((definition as Assign).Value as Identifier).Value) == true)
+                {
+                }
+                else if ((definition as Assign).Asignee is Register == true
+                    && (definition as Assign).Value is Operands.Call == true
+                    && this.engine.Assembly.IsInstruction(((definition as Assign).Value as Operands.Call).Method.DeclaringType.FullName) == true)
+                {
+                }
+                else if ((definition as Assign).Asignee is Identifier == true 
                     && (definition as Assign).Value is Identifier == true)
+                {
+                }
+                else
+                {
+                    continue;
+                }
+                
                 {
                     Console.WriteLine(definition.Block.Index + " : " + definition.ToString());
 
@@ -1520,7 +1579,13 @@ namespace SharpOS.AOT.IR
                     {
                         Block predecessor = block.Ins[i];
 
-                        //Assign assign = new Assign(phi.Asignee.Clone() as Identifier, phi.Value.Operands[i].Clone());
+                        // Skip uninitilized register assignments (Reg1_5=Reg2_0)
+                        if (phi.Value.Operands[i] is Register == true
+                            && (phi.Value.Operands[i] as Register).Version == 0)
+                        {
+                            continue;
+                        }
+
                         Assign assign = new Assign(phi.Asignee, phi.Value.Operands[i]);
 
                         int position = predecessor.InstructionsCount;
@@ -1711,6 +1776,11 @@ namespace SharpOS.AOT.IR
                 return;
             }
 
+            if (this.engine.Assembly.IsRegister(identifier.Value) == true)
+            {
+                return;
+            }
+
             string id = identifier.ID;
 
             if (values.ContainsKey(id) == false)
@@ -1727,14 +1797,6 @@ namespace SharpOS.AOT.IR
         }
 
         private List<LiveRange> liveRanges;
-
-        /*public List<LiveRange> LiveRanges
-        {
-            get
-            {
-                return this.liveRanges;
-            }
-        }*/
 
         private void ComputeLiveRanges()
         {
@@ -1903,54 +1965,71 @@ namespace SharpOS.AOT.IR
 
         private void ComputeSizeType()
         {
-            foreach (Block block in this.ReversePostorder())
-            {
-                foreach (Instructions.Instruction instruction in block)
-                {
-                    if (instruction is Assign == true)
-                    {
-                        if ((instruction as Assign).Asignee.SizeType == Operand.InternalSizeType.NotSet)
-                        {
-                            bool found = false;
-                            Assign assign = instruction as Assign;
+            int unsolvedCounter = 0;
+            int lastUnsolvedCounter = 0;
 
-                            if (assign.Value.ConvertTo != Operand.ConvertType.NotSet)
+            do 
+            {
+                lastUnsolvedCounter = unsolvedCounter;
+                unsolvedCounter = 0;
+
+                foreach (Block block in this.ReversePostorder())
+                {
+                    foreach (Instructions.Instruction instruction in block)
+                    {
+                        if (instruction is Assign == true)
+                        {
+                            if ((instruction as Assign).Asignee.SizeType == Operand.InternalSizeType.NotSet)
                             {
-                                found = true;
-                                assign.Asignee.SizeType = assign.Value.ConvertSizeType;
-                            }
-                            else if (assign.Value.SizeType != Operand.InternalSizeType.NotSet)
-                            {
-                                found = true;
-                                assign.Asignee.SizeType = assign.Value.SizeType;
-                            }
-                            else if (assign.Value.Operands.Length > 0)
-                            {
-                                foreach (Operand operand in assign.Value.Operands)
+                                bool found = false;
+                                Assign assign = instruction as Assign;
+
+                                if (assign.Value.ConvertTo != Operand.ConvertType.NotSet)
                                 {
-                                    if (operand.ConvertTo != Operand.ConvertType.NotSet)
+                                    found = true;
+                                    assign.Asignee.SizeType = assign.Value.ConvertSizeType;
+                                }
+                                else if (assign.Value.SizeType != Operand.InternalSizeType.NotSet)
+                                {
+                                    found = true;
+                                    assign.Asignee.SizeType = assign.Value.SizeType;
+                                }
+                                else if (assign.Value.Operands.Length > 0)
+                                {
+                                    foreach (Operand operand in assign.Value.Operands)
                                     {
-                                        found = true;
-                                        assign.Asignee.SizeType = operand.ConvertSizeType;
-                                        break;
-                                    }
-                                    else if (operand.SizeType != Operand.InternalSizeType.NotSet)
-                                    {
-                                        found = true;
-                                        assign.Asignee.SizeType = operand.SizeType;
-                                        break;
+                                        if (operand.ConvertTo != Operand.ConvertType.NotSet)
+                                        {
+                                            found = true;
+                                            assign.Asignee.SizeType = operand.ConvertSizeType;
+                                            break;
+                                        }
+                                        else if (operand.SizeType != Operand.InternalSizeType.NotSet)
+                                        {
+                                            found = true;
+                                            assign.Asignee.SizeType = operand.SizeType;
+                                            break;
+                                        }
                                     }
                                 }
-                            }
 
-                            if (found == false)
-                            {
-                                throw new Exception("Could not compute variable size for '" + assign + "' in '" + this.MethodFullName + "'.");
+                                if (found == false)
+                                {
+                                    unsolvedCounter++;
+                                }
                             }
                         }
                     }
                 }
+
+                if (unsolvedCounter != 0 && lastUnsolvedCounter == unsolvedCounter)
+                {
+                    throw new Exception("Could not compute variable sizes in '" + this.MethodFullName + "'.");
+                }
             }
+            while (unsolvedCounter != 0);
+
+            return;
         }
 
         public void Process()
@@ -1966,6 +2045,8 @@ namespace SharpOS.AOT.IR
             this.ConvertFromCIL();
             this.Dominators();
 
+            Console.WriteLine(this.Dump());
+
             this.TransformationToSSA();
             this.EdgeSplit();
 
@@ -1974,8 +2055,13 @@ namespace SharpOS.AOT.IR
             this.GetListOfDefUse();
             this.DeadCodeElimination();
             this.SimpleConstantPropagation();
+
+            Console.WriteLine(this.Dump());
+
             this.CopyPropagation();
             this.TransformationOutOfSSA();
+
+            Console.WriteLine(this.Dump());
 
             this.ComputeSizeType();
             this.ComputeLiveRanges();

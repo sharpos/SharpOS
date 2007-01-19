@@ -27,5 +27,7 @@ namespace SharpOS.AOT.IR
         bool Encode(Engine engine, string target);
         int AvailableRegistersCount { get; }
         bool Spill(Operands.Operand.InternalSizeType type);
+        bool IsRegister(string value);
+        bool IsInstruction(string value);
     }
 }

@@ -6,7 +6,7 @@ namespace SharpOS
 {
     public class Tests
     {
-        public static UInt64 TypesU(int intValue, long longValue, UInt16 int16Value, UInt32 int32Value, UInt64 int64Value)
+       /* public static UInt64 TypesU(int intValue, long longValue, UInt16 int16Value, UInt32 int32Value, UInt64 int64Value)
         {
             intValue -= 10;
             longValue = -longValue;
@@ -292,19 +292,6 @@ namespace SharpOS
             return 0;
         }
 
-        /*public static int test_0_castclass()
-        {
-            object a = "a";
-
-            for (int i = 0; i < 100000000; i++)
-            {
-                string b = (string)a;
-                if ((object)a != (object)b)
-                    return 1;
-            }
-            return 0;
-        }*/
-
         public static int test_23005000_float()
         {
             double a, b, c, d;
@@ -357,5 +344,20 @@ namespace SharpOS
             //printf("Count: %d\n", count);
             return (count);
         }*/
+
+        /*public static int test_0_castclass()
+        {
+            object a = "a";
+
+            for (int i = 0; i < 100000000; i++)
+            {
+                string b = (string)a;
+                if ((object)a != (object)b)
+                    return 1;
+            }
+            return 0;
+        }*/
+
+
     }
 }

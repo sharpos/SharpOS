@@ -14,9 +14,9 @@ using SharpOS.AOT.IR;
 
 namespace SharpOS
 {
-    /*public class SharpOS
+    public class SharpOS
     {
-        public static void BootSectorBegin()
+        /*public static void BootSectorBegin()
         {
             Asm.BITS32(false);
             Asm.ORG(0x7C00);
@@ -105,7 +105,7 @@ namespace SharpOS
             x = (x * 91 + y / 45) * (x + 5) + 15 * (y + 300) + (x * y / 500);
 
             return x / 50;
-        }
+        }*/
 
         public static void ClearScreen(byte clear_to, byte attrib)
         {
@@ -118,16 +118,16 @@ namespace SharpOS
                 {
                     for (int x = 0; x < 80; x++)
                     {
-                        video[(y * 80 + x) * 2] = clear_to;
+                        video[(y * 80 + x) * 2] = (byte) (clear_to * 2);
                         
                         pos = (y * 80 + x) * 2 + 1;
-                        video[pos] = attrib;
+                        video[pos] = (byte) (attrib * 2);
                     }
                 }
             }
         }
 
-        public static void BootSectorEnd()
+        /*public static void BootSectorEnd()
         {
             Asm.DATA("GDT", (UInt16)0x17);
             Asm.DATA("GDTAddress", (UInt32)0);
@@ -164,7 +164,7 @@ namespace SharpOS
 
             Asm.OFFSET(510);
             Asm.DATA(0xAA55);
-        }
-    }*/
+        }*/
+    }
 }
 

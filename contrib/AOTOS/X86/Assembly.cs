@@ -59,6 +59,21 @@ namespace SharpOS.AOT.X86
             return stringBuilder.ToString();
         }
 
+        public bool IsRegister(string value)
+        {
+            return value.StartsWith("SharpOS.AOT.X86.");
+        }
+
+        public bool IsInstruction(string value)
+        {
+            return value.StartsWith("SharpOS.AOT.X86.");
+        }
+
+        private bool IsAssemblyStub(string value)
+        {
+            return value.Equals("SharpOS.AOT.X86.Asm");
+        }
+
         public void BITS32(bool value) 
         {
             this.instructions.Add(new Bits32Instruction(value));
@@ -247,7 +262,259 @@ namespace SharpOS.AOT.X86
             return true;
         }
 
+        private Memory GetMemoryInternal(SharpOS.AOT.IR.Operands.Call call)
+        {
+            if (call.Operands.Length == 1)
+            {
+                string parameter = (call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString();
+
+                if (call.Method.DeclaringType.FullName.EndsWith(".Memory") == true)
+                {
+                    return new Memory(parameter);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".ByteMemory") == true)
+                {
+                    return new ByteMemory(parameter);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".WordMemory") == true)
+                {
+                    return new WordMemory(parameter);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".DWordMemory") == true)
+                {
+                    return new DWordMemory(parameter);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".QWordMemory") == true)
+                {
+                    return new QWordMemory(parameter);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".TWordMemory") == true)
+                {
+                    return new TWordMemory(parameter);
+                }
+                else
+                {
+                    throw new Exception("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+                }
+            }
+            else if (call.Operands.Length == 2)
+            {
+                SegType segment = Seg.GetByID((call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
+                string label = (call.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString();
+                
+                if (call.Method.DeclaringType.FullName.EndsWith(".Memory") == true)
+                {
+                    return new Memory(segment, label);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".ByteMemory") == true)
+                {
+                    return new ByteMemory(segment, label);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".WordMemory") == true)
+                {
+                    return new WordMemory(segment, label);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".DWordMemory") == true)
+                {
+                    return new DWordMemory(segment, label);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".QWordMemory") == true)
+                {
+                    return new QWordMemory(segment, label);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".TWordMemory") == true)
+                {
+                    return new TWordMemory(segment, label);
+                }
+                else
+                {
+                    throw new Exception("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+                }
+            }
+            else if (call.Operands.Length == 3)
+            {
+                SegType segment = Seg.GetByID((call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
+                R16Type _base = R16.GetByID((call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                R16Type index = R16.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                
+                if (call.Method.DeclaringType.FullName.EndsWith(".Memory") == true)
+                {
+                    return new Memory(segment, _base, index);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".ByteMemory") == true)
+                {
+                    return new ByteMemory(segment, _base, index);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".WordMemory") == true)
+                {
+                    return new WordMemory(segment, _base, index);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".DWordMemory") == true)
+                {
+                    return new DWordMemory(segment, _base, index);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".QWordMemory") == true)
+                {
+                    return new QWordMemory(segment, _base, index);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".TWordMemory") == true)
+                {
+                    return new TWordMemory(segment, _base, index);
+                }
+                else
+                {
+                    throw new Exception("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+                }
+            }
+            else if (call.Operands.Length == 4)
+            {
+                if (call.Method.Parameters[1].ParameterType.FullName.IndexOf("16") != -1)
+                {
+                    SegType segment = Seg.GetByID((call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
+                    R16Type _base = R16.GetByID((call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                    R16Type index = R16.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                    Int16 displacement = Convert.ToInt16((call.Operands[3] as SharpOS.AOT.IR.Operands.Constant).Value);
+
+                    if (call.Method.DeclaringType.FullName.EndsWith(".Memory") == true)
+                    {
+                        return new Memory(segment, _base, index, displacement);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".ByteMemory") == true)
+                    {
+                        return new ByteMemory(segment, _base, index, displacement);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".WordMemory") == true)
+                    {
+                        return new WordMemory(segment, _base, index, displacement);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".DWordMemory") == true)
+                    {
+                        return new DWordMemory(segment, _base, index, displacement);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".QWordMemory") == true)
+                    {
+                        return new QWordMemory(segment, _base, index, displacement);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".TWordMemory") == true)
+                    {
+                        return new TWordMemory(segment, _base, index, displacement);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+                    }
+                }
+                else
+                {
+                    SegType segment = Seg.GetByID((call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
+                    R32Type _base = R32.GetByID((call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                    R32Type index = R32.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                    Byte scale = Convert.ToByte((call.Operands[3] as SharpOS.AOT.IR.Operands.Constant).Value);
+
+                    if (call.Method.DeclaringType.FullName.EndsWith(".Memory") == true)
+                    {
+                        return new Memory(segment, _base, index, scale);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".ByteMemory") == true)
+                    {
+                        return new ByteMemory(segment, _base, index, scale);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".WordMemory") == true)
+                    {
+                        return new WordMemory(segment, _base, index, scale);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".DWordMemory") == true)
+                    {
+                        return new DWordMemory(segment, _base, index, scale);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".QWordMemory") == true)
+                    {
+                        return new QWordMemory(segment, _base, index, scale);
+                    }
+                    else if (call.Method.DeclaringType.FullName.EndsWith(".TWordMemory") == true)
+                    {
+                        return new TWordMemory(segment, _base, index, scale);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+                    }
+                }
+            }
+            else if (call.Operands.Length == 5)
+            {
+                SegType segment = Seg.GetByID((call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
+                R32Type _base = R32.GetByID((call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                R32Type index = call.Operands[2] is Constant? null: R32.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                Byte scale = Convert.ToByte((call.Operands[3] as SharpOS.AOT.IR.Operands.Constant).Value);
+                Int32 displacement = Convert.ToInt32((call.Operands[4] as SharpOS.AOT.IR.Operands.Constant).Value);
+
+                if (call.Method.DeclaringType.FullName.EndsWith(".Memory") == true)
+                {
+                    return new Memory(segment, _base, index, scale, displacement);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".ByteMemory") == true)
+                {
+                    return new ByteMemory(segment, _base, index, scale, displacement);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".WordMemory") == true)
+                {
+                    return new WordMemory(segment, _base, index, scale, displacement);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".DWordMemory") == true)
+                {
+                    return new DWordMemory(segment, _base, index, scale, displacement);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".QWordMemory") == true)
+                {
+                    return new QWordMemory(segment, _base, index, scale, displacement);
+                }
+                else if (call.Method.DeclaringType.FullName.EndsWith(".TWordMemory") == true)
+                {
+                    return new TWordMemory(segment, _base, index, scale, displacement);
+                }
+                else
+                {
+                    throw new Exception("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+                }
+            }
+            else
+            {
+                throw new Exception("'" + call.Method.Name + "' has wrong parameters.");
+            }
+        }
+
         public Memory GetMemory(SharpOS.AOT.IR.Operands.Call call)
+        {
+            return GetMemoryInternal(call);
+        }
+
+        public ByteMemory GetByteMemory(SharpOS.AOT.IR.Operands.Call call)
+        {
+            return GetMemoryInternal(call) as ByteMemory;
+        }
+
+        public WordMemory GetWordMemory(SharpOS.AOT.IR.Operands.Call call)
+        {
+            return GetMemoryInternal(call) as WordMemory;
+        }
+
+        public DWordMemory GetDWordMemory(SharpOS.AOT.IR.Operands.Call call)
+        {
+            return GetMemoryInternal(call) as DWordMemory;
+        }
+
+        public QWordMemory GetQWordMemory(SharpOS.AOT.IR.Operands.Call call)
+        {
+            return GetMemoryInternal(call) as QWordMemory;
+        }
+
+        public TWordMemory GetTWordMemory(SharpOS.AOT.IR.Operands.Call call)
+        {
+            return GetMemoryInternal(call) as TWordMemory;
+        }
+
+        /*public Memory GetMemory(SharpOS.AOT.IR.Operands.Call call)
         {
             if (call.Operands.Length == 1)
             {
@@ -423,9 +690,9 @@ namespace SharpOS.AOT.X86
             }
             else if (call.Operands.Length == 5)
             {
-                return new DWordMemory(Seg.GetByID((call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString())
-                    , R32.GetByID((call.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString())
-                    , R32.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Constant).Value.ToString())
+                return new DWordMemory(Seg.GetByID((call.Operands[0] as SharpOS.AOT.IR.Operands.Field).Value.ToString())
+                    , R32.GetByID((call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString())
+                    , R32.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString())
                     , Convert.ToByte((call.Operands[3] as SharpOS.AOT.IR.Operands.Constant).Value)
                     , Convert.ToInt32((call.Operands[4] as SharpOS.AOT.IR.Operands.Constant).Value));
             }
@@ -527,21 +794,6 @@ namespace SharpOS.AOT.X86
             {
                 throw new Exception("'" + call.Method.Name + "' has wrong parameters.");
             }
-        }
-
-        /*private void SupportedType(string methodName, string name)
-        {
-            if (name.Equals("System.Byte") != true
-                && name.Equals("System.Byte*") != true
-                && name.Equals("System.UInt16") != true
-                && name.Equals("System.UInt16*") != true
-                && name.Equals("System.Int16") != true
-                && name.Equals("System.UInt32") != true
-                && name.Equals("System.Int32") != true
-                && name.Equals("System.Boolean") != true)
-            {
-                throw new Exception("'" + name + "' is no supported parameter. (" + methodName + ")");
-            }
         }*/
 
         private void SetValue(SharpOS.AOT.IR.Operands.Operand operand, R32Type source)
@@ -571,10 +823,19 @@ namespace SharpOS.AOT.X86
 
         private void GetValue(R32Type target, SharpOS.AOT.IR.Operands.Operand operand)
         {
-            if (operand is SharpOS.AOT.IR.Operands.Local)
+            if (operand is SharpOS.AOT.IR.Operands.Local
+                || operand is SharpOS.AOT.IR.Operands.Register)
             {
-                Int32 index = -(operand as SharpOS.AOT.IR.Operands.Local).Index * 4;
-                this.MOV(target, new DWordMemory(null, R32.EBP, null, 0, index));
+                if (operand.IsRegisterSet == true)
+                {
+                    this.MOV(target, this.GetRegister(operand.Register));
+                }
+                else
+                {
+                    Int32 index = -(operand as SharpOS.AOT.IR.Operands.Local).Index * 4;
+
+                    this.MOV(target, new DWordMemory(null, R32.EBP, null, 0, index));
+                }
             }
             else if (operand is SharpOS.AOT.IR.Operands.Argument)
             {
@@ -601,6 +862,29 @@ namespace SharpOS.AOT.X86
             {
                 throw new Exception("'" + operand.GetType() + "' is not supported.");
             }
+        }
+
+        private SharpOS.AOT.X86.R32Type GetRegister(int i)
+        {
+            switch (i)
+            {
+                case 0:
+                    return R32.EBX;
+
+                case 1:
+                    return R32.ESI;
+
+                case 2:
+                    return R32.EDI;
+
+                default:
+                    throw new Exception("'" + i.ToString() + "' is no valid register.");
+            }
+        }
+
+        private SharpOS.AOT.X86.DWordMemory GetStackAddress(int i)
+        {
+            return new DWordMemory(null, R32.EBP, null, 0, -((3 + i) * 4));
         }
 
         public int AvailableRegistersCount
@@ -630,21 +914,7 @@ namespace SharpOS.AOT.X86
 
         private bool GetAssemblyCode(Method method)
         {
-            /*SupportedType(method.MethodFullName, method.MethodDefinition.ReturnType.ReturnType.FullName);
-
-            foreach (ParameterDefinition parameter in method.MethodDefinition.Parameters)
-            {
-                SupportedType(method.MethodFullName, parameter.ParameterType.FullName);
-            }
-
-            foreach (VariableDefinition variable in method.MethodDefinition.Body.Variables)
-            {
-                SupportedType(method.MethodFullName, variable.VariableType.FullName);
-            }*/
-
-            //blocks.UpdateIndex();
-
-            string fullname = method.MethodDefinition.DeclaringType.FullName + "." + method.MethodDefinition.Name;
+            string fullname = method.MethodFullName;
 
             if (method.MethodDefinition.Name.StartsWith("BootSector") == false)
             {
@@ -667,126 +937,34 @@ namespace SharpOS.AOT.X86
 
                 foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block)
                 {
-                    if (instruction is SharpOS.AOT.IR.Instructions.Call
-                        && (instruction as SharpOS.AOT.IR.Instructions.Call).Method.Method.DeclaringType.FullName.Equals("Nutex.X86.Asm") == true)
+                    if (instruction is SharpOS.AOT.IR.Instructions.Call == true
+                        && this.IsAssemblyStub((instruction as SharpOS.AOT.IR.Instructions.Call).Method.Method.DeclaringType.FullName) == true)
                     {
-                        SharpOS.AOT.IR.Instructions.Call call = instruction as SharpOS.AOT.IR.Instructions.Call;
-
-                        string parameterTypes = string.Empty;
-
-                        foreach (ParameterDefinition parameter in call.Method.Method.Parameters)
-                        {
-                            if (parameterTypes.Length > 0)
-                            {
-                                parameterTypes += " ";
-                            }
-
-                            parameterTypes += parameter.ParameterType.Name;
-                        }
-
-                        parameterTypes = call.Method.Method.Name + " " + parameterTypes;
-                        parameterTypes = parameterTypes.Trim();
-
-                        this.GetAssemblyInstruction(call.Method, parameterTypes);
+                        HandleAssemblyStub(method, block, instruction);
                     }
-                    else if (instruction is SharpOS.AOT.IR.Instructions.Call)
+                    else if (instruction is SharpOS.AOT.IR.Instructions.Call == true)
                     {
-                        SharpOS.AOT.IR.Instructions.Call call = (instruction as SharpOS.AOT.IR.Instructions.Call);
-
-                        for (int i = 0; i < call.Method.Operands.Length; i++)
-                        {
-                            Operand operand = call.Method.Operands[call.Method.Operands.Length - i - 1];
-
-                            if (operand is Arithmetic)
-                            {
-                                this.GetValue(R32.EAX, operand);
-                                this.PUSH(R32.EAX);
-                            }
-                            else if (operand is Argument)
-                            {
-                                this.GetValue(R32.EAX, operand);
-                                this.PUSH(R32.EAX);
-                            }
-                            else if (operand is Constant)
-                            {
-                                this.PUSH(Convert.ToUInt32((operand as Constant).Value));
-                            }
-                            else
-                            {
-                                // TODO check for other type of operands
-                                throw new Exception("'" + call.Method.Operands[i].GetType() + "' is not supported.");
-                            }
-                        }
-
-                        this.CALL(call.Method.Method.DeclaringType.FullName + "." + call.Method.Method.Name);
-                        this.ADD(R32.ESP, (UInt32)(4 * call.Method.Method.Parameters.Count));
+                        HandleCall(method, block, instruction);
                     }
-                    else if (instruction is SharpOS.AOT.IR.Instructions.Assign)
+                    else if (instruction is SharpOS.AOT.IR.Instructions.Assign == true)
                     {
-                        SharpOS.AOT.IR.Instructions.Assign assign = (instruction as SharpOS.AOT.IR.Instructions.Assign);
-
-                        this.GetValue(R32.EAX, assign.Value);
-                        this.SetValue(assign.Asignee, R32.EAX);
+                        HandleAssign(method, block, instruction);
                     }
-                    else if (instruction is SharpOS.AOT.IR.Instructions.ConditionalJump)
+                    else if (instruction is SharpOS.AOT.IR.Instructions.ConditionalJump == true)
                     {
-                        SharpOS.AOT.IR.Instructions.ConditionalJump jump = instruction as SharpOS.AOT.IR.Instructions.ConditionalJump;
-
-                        string label = fullname + "_" + block.Outs[0].StartOffset.ToString();
-
-                        if (jump.Value is SharpOS.AOT.IR.Operands.Boolean)
-                        {
-                            SharpOS.AOT.IR.Operands.Boolean expression = jump.Value as SharpOS.AOT.IR.Operands.Boolean;
-
-                            if (expression.Operator is SharpOS.AOT.IR.Operators.Relational)
-                            {
-                                SharpOS.AOT.IR.Operators.Relational relational = expression.Operator as SharpOS.AOT.IR.Operators.Relational;
-
-                                this.GetValue(R32.EAX, expression.Operands[0]);
-                                this.GetValue(R32.EBX, expression.Operands[1]);
-
-                                this.CMP(R32.EAX, R32.EBX);
-
-                                if (relational.Type == Operator.RelationalType.Equal)
-                                {
-                                    this.JE(label);
-                                }
-                                else if (relational.Type == Operator.RelationalType.LessThan)
-                                {
-                                    this.JL(label);
-                                }
-                                else if (relational.Type == Operator.RelationalType.GreaterThan)
-                                {
-                                    this.JG(label);
-                                }
-                                else if (relational.Type == Operator.RelationalType.LessThanOrEqual)
-                                {
-                                    this.JLE(label);
-                                }
-                                else if (relational.Type == Operator.RelationalType.GreaterThanOrEqual)
-                                {
-                                    this.JGE(label);
-                                }
-                                else
-                                {
-                                    throw new Exception("'" + relational.Type + "' is not supported.");
-                                }
-                            }
-                            else
-                            {
-                                throw new Exception("'" + expression.Operator.GetType() + "' is not supported.");
-                            }
-                        }
-                        else
-                        {
-                            throw new Exception("'" + jump.Value.GetType() + "' is not supported.");
-                        }
+                        HandleConditionalJump(method, block, instruction);
                     }
-                    else if (instruction is SharpOS.AOT.IR.Instructions.Jump)
+                    else if (instruction is SharpOS.AOT.IR.Instructions.Jump == true)
                     {
-                        SharpOS.AOT.IR.Instructions.Jump jump = instruction as SharpOS.AOT.IR.Instructions.Jump;
-
-                        this.JMP(fullname + "_" + block.Outs[0].StartOffset.ToString());
+                        HandleJump(method, block, instruction);
+                    }
+                    else if (instruction is SharpOS.AOT.IR.Instructions.Return == true)
+                    {
+                        HandleReturn(method, block, instruction);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + instruction + "' is not supported.");
                     }
                 }
             }
@@ -802,6 +980,252 @@ namespace SharpOS.AOT.X86
             }
 
             return true;
+        }
+
+        private void HandleConditionalJump(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+        {
+            SharpOS.AOT.IR.Instructions.ConditionalJump jump = instruction as SharpOS.AOT.IR.Instructions.ConditionalJump;
+
+            string label = method.MethodFullName + "_" + block.Outs[0].StartOffset.ToString();
+
+            if (jump.Value is SharpOS.AOT.IR.Operands.Boolean)
+            {
+                SharpOS.AOT.IR.Operands.Boolean expression = jump.Value as SharpOS.AOT.IR.Operands.Boolean;
+
+                if (expression.Operator is SharpOS.AOT.IR.Operators.Relational == true)
+                {
+                    // TODO
+                    SharpOS.AOT.IR.Operators.Relational relational = expression.Operator as SharpOS.AOT.IR.Operators.Relational;
+
+                    this.GetValue(R32.EAX, expression.Operands[0]);
+                    this.GetValue(R32.EBX, expression.Operands[1]);
+
+                    this.CMP(R32.EAX, R32.EBX);
+
+                    if (relational.Type == Operator.RelationalType.Equal)
+                    {
+                        this.JE(label);
+                    }
+                    else if (relational.Type == Operator.RelationalType.LessThan)
+                    {
+                        this.JL(label);
+                    }
+                    else if (relational.Type == Operator.RelationalType.GreaterThan)
+                    {
+                        this.JG(label);
+                    }
+                    else if (relational.Type == Operator.RelationalType.LessThanOrEqual)
+                    {
+                        this.JLE(label);
+                    }
+                    else if (relational.Type == Operator.RelationalType.GreaterThanOrEqual)
+                    {
+                        this.JGE(label);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + relational.Type + "' is not supported.");
+                    }
+                }
+                else if (expression.Operator is SharpOS.AOT.IR.Operators.Boolean == true)
+                {
+                    // TODO
+                    SharpOS.AOT.IR.Operators.Boolean boolean = expression.Operator as SharpOS.AOT.IR.Operators.Boolean;
+
+                    if (boolean.Type == Operator.BooleanType.True)
+                    {
+                        this.MOV(R32.ECX, 1);
+                    }
+                    else if (boolean.Type == Operator.BooleanType.False)
+                    {
+                        this.MOV(R32.ECX, 0);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + expression.Operator.GetType() + "' is not supported.");
+                    }
+
+                    this.GetValue(R32.EAX, expression.Operands[0]);
+
+                    this.CMP(R32.EAX, R32.ECX);
+                    this.JE(label);
+                }
+                else
+                {
+                    throw new Exception("'" + expression.Operator.GetType() + "' is not supported.");
+                }
+            }
+            else
+            {
+                throw new Exception("'" + jump.Value.GetType() + "' is not supported.");
+            }
+        }
+
+        private void HandleJump(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+        {
+            SharpOS.AOT.IR.Instructions.Jump jump = instruction as SharpOS.AOT.IR.Instructions.Jump;
+
+            this.JMP(method.MethodFullName + "_" + block.Outs[0].StartOffset.ToString());
+        }
+
+        private void HandleAssemblyStub(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+        {
+            SharpOS.AOT.IR.Instructions.Call call = instruction as SharpOS.AOT.IR.Instructions.Call;
+
+            string parameterTypes = string.Empty;
+
+            foreach (ParameterDefinition parameter in call.Method.Method.Parameters)
+            {
+                if (parameterTypes.Length > 0)
+                {
+                    parameterTypes += " ";
+                }
+
+                parameterTypes += parameter.ParameterType.Name;
+            }
+
+            parameterTypes = call.Method.Method.Name + " " + parameterTypes;
+            parameterTypes = parameterTypes.Trim();
+
+            this.GetAssemblyInstruction(call.Method, parameterTypes);
+        }
+
+        private void HandleCall(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+        {
+            SharpOS.AOT.IR.Instructions.Call call = (instruction as SharpOS.AOT.IR.Instructions.Call);
+
+            for (int i = 0; i < call.Method.Operands.Length; i++)
+            {
+                Operand operand = call.Method.Operands[call.Method.Operands.Length - i - 1];
+
+                if (operand is Arithmetic)
+                {
+                    // TODO
+                    this.GetValue(R32.EAX, operand);
+                    this.PUSH(R32.EAX);
+                }
+                else if (operand is Argument)
+                {
+                    // TODO
+                    this.GetValue(R32.EAX, operand);
+                    this.PUSH(R32.EAX);
+                }
+                else if (operand is Constant)
+                {
+                    // TODO long/float
+                    this.PUSH(Convert.ToUInt32((operand as Constant).Value));
+                }
+                else
+                {
+                    // TODO check for other type of operands
+                    throw new Exception("'" + call.Method.Operands[i].GetType() + "' is not supported.");
+                }
+            }
+
+            this.CALL(call.Method.Method.DeclaringType.FullName + "." + call.Method.Method.Name);
+            this.ADD(R32.ESP, (UInt32)(4 * call.Method.Method.Parameters.Count));
+        }
+
+        private void HandleAssign(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+        {
+            SharpOS.AOT.IR.Instructions.Assign assign = (instruction as SharpOS.AOT.IR.Instructions.Assign);
+
+            if (assign.Asignee is Reference == true)
+            {
+                // TODO
+            }
+            else if (assign.Value is Constant == true)
+            {
+                if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
+                    || assign.Asignee.SizeType == Operand.InternalSizeType.I2
+                    || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                {
+                    if (assign.Asignee.IsRegisterSet == true)
+                    {
+                        this.MOV(this.GetRegister(assign.Asignee.Register), Convert.ToUInt32((assign.Value as Constant).Value));
+                    }
+                    else
+                    {
+                        this.MOV(this.GetStackAddress(assign.Asignee.Stack), Convert.ToUInt32((assign.Value as Constant).Value));
+                    }
+                }
+                else
+                {
+                    throw new Exception("'" + instruction + "' is not supported.");
+                }
+            }
+            else if (assign.Value is Identifier == true)
+            {
+                if (assign.Asignee.IsRegisterSet == true
+                    && assign.Value.IsRegisterSet == true)
+                {
+                    this.MOV(this.GetRegister(assign.Asignee.Register), this.GetRegister(assign.Value.Register));
+                }
+                else if (assign.Asignee.IsRegisterSet == false
+                    && assign.Value.IsRegisterSet == false)
+                {
+                    if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
+                        || assign.Asignee.SizeType == Operand.InternalSizeType.I2
+                        || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                    {
+                        this.MOV(R32.EAX, this.GetStackAddress(assign.Value.Stack));
+                        this.MOV(this.GetStackAddress(assign.Asignee.Stack), R32.EAX);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + instruction + "' is not supported.");
+                    }
+                }
+                else if (assign.Asignee.IsRegisterSet == false
+                    && assign.Value.IsRegisterSet == true)
+                {
+                    if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
+                        || assign.Asignee.SizeType == Operand.InternalSizeType.I2
+                        || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                    {
+                        this.MOV(this.GetStackAddress(assign.Asignee.Stack), this.GetRegister(assign.Value.Register));
+                    }
+                    else
+                    {
+                        throw new Exception("'" + instruction + "' is not supported.");
+                    }
+                }
+                else if (assign.Asignee.IsRegisterSet == true
+                    && assign.Value.IsRegisterSet == false)
+                {
+                    if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
+                        || assign.Asignee.SizeType == Operand.InternalSizeType.I2
+                        || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                    {
+                        this.MOV(this.GetRegister(assign.Asignee.Register), this.GetStackAddress(assign.Value.Stack));
+                    }
+                    else
+                    {
+                        throw new Exception("'" + instruction + "' is not supported.");
+                    }
+                }
+                else
+                {
+                    throw new Exception("'" + instruction + "' is not supported.");
+                }
+            }
+            else if (assign.Value is Arithmetic == true)
+            {
+                // TODO
+            }
+            else if (assign.Value is SharpOS.AOT.IR.Operands.Boolean == true)
+            {
+                // TODO
+            }
+            else
+            {
+                throw new Exception("'" + instruction + "' is not supported.");
+            }
+        }
+
+        private void HandleReturn(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+        {
+            // TODO
         }
     }
 }

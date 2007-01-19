@@ -116,6 +116,14 @@ namespace SharpOS.AOT.IR.Operands
             set { register = value; }
         }
 
+        public bool IsRegisterSet
+        {
+            get
+            {
+                return register != int.MinValue;
+            }
+        }
+
         private int stack = int.MinValue;
 
         public int Stack
@@ -142,6 +150,11 @@ namespace SharpOS.AOT.IR.Operands
 
         public void SetSizeType(string type)
         {
+            if (type.EndsWith("*") == true)
+            {
+                type = type.Substring(0, type.Length - 1);
+            }
+
             if (type.Equals("System.Boolean") == true)
             {
                 this.sizeType = InternalSizeType.I1;

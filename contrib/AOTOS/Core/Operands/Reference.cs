@@ -23,5 +23,31 @@ namespace SharpOS.AOT.IR.Operands
         {
 
         }
+
+        public override string ID
+        {
+            get
+            {
+                return this.operands[0].ID;
+            }
+        }
+
+        public new Identifier Value
+        {
+            get
+            {
+                return this.operands[0] as Identifier;
+            }
+
+            set
+            {
+                this.operands[0] = value;
+            }
+        }
+
+        public override string ToString()
+        {
+            return "ref(" + this.Value.ToString() + ")";
+        }
     }
 }

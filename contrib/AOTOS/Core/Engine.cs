@@ -57,6 +57,8 @@ namespace SharpOS.AOT.IR
                     Method method = new Method(this, entry);
 
                     method.Process();
+
+                    this.methods.Add(method);
                 }
             }
 
