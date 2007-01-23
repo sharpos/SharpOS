@@ -21,87 +21,50 @@ namespace SharpOS.AOT.IR.Operands
         public enum ConvertType
         {
             NotSet
-            ,
-            Conv_I
-          ,
-            Conv_I1
-          ,
-            Conv_I2
-          ,
-            Conv_I4
-          ,
-            Conv_I8
-          ,
-            Conv_Ovf_I
-          ,
-            Conv_Ovf_I_Un
-          ,
-            Conv_Ovf_I1
-          ,
-            Conv_Ovf_I1_Un
-          ,
-            Conv_Ovf_I2
-          ,
-            Conv_Ovf_I2_Un
-          ,
-            Conv_Ovf_I4
-          ,
-            Conv_Ovf_I4_Un
-          ,
-            Conv_Ovf_I8
-          ,
-            Conv_Ovf_I8_Un
-          ,
-            Conv_Ovf_U
-          ,
-            Conv_Ovf_U_Un
-          ,
-            Conv_Ovf_U1
-          ,
-            Conv_Ovf_U1_Un
-          ,
-            Conv_Ovf_U2
-          ,
-            Conv_Ovf_U2_Un
-          ,
-            Conv_Ovf_U4
-          ,
-            Conv_Ovf_U4_Un
-          ,
-            Conv_Ovf_U8
-          ,
-            Conv_Ovf_U8_Un
-          ,
-            Conv_R_Un
-          ,
-            Conv_R4
-          ,
-            Conv_R8
-          ,
-            Conv_U
-          ,
-            Conv_U1
-          ,
-            Conv_U2
-          ,
-            Conv_U4
-          , Conv_U8
+            , Conv_I
+            , Conv_I1
+            , Conv_I2
+            , Conv_I4
+            , Conv_I8
+            , Conv_Ovf_I
+            , Conv_Ovf_I_Un
+            , Conv_Ovf_I1
+            , Conv_Ovf_I1_Un
+            , Conv_Ovf_I2
+            , Conv_Ovf_I2_Un
+            , Conv_Ovf_I4
+            , Conv_Ovf_I4_Un
+            , Conv_Ovf_I8
+            , Conv_Ovf_I8_Un
+            , Conv_Ovf_U
+            , Conv_Ovf_U_Un
+            , Conv_Ovf_U1
+            , Conv_Ovf_U1_Un
+            , Conv_Ovf_U2
+            , Conv_Ovf_U2_Un
+            , Conv_Ovf_U4
+            , Conv_Ovf_U4_Un
+            , Conv_Ovf_U8
+            , Conv_Ovf_U8_Un
+            , Conv_R_Un
+            , Conv_R4
+            , Conv_R8
+            , Conv_U
+            , Conv_U1
+            , Conv_U2
+            , Conv_U4
+            , Conv_U8
         }
 
         public enum InternalSizeType
         {
             NotSet
-            ,
-            I1
-          ,
-            I2
-          ,
-            I4
-          ,
-            I8
-          ,
-            R4
-          , R8
+            , I1
+            , I2
+            , I4
+            , I8
+            , R4
+            , R8
         }
 
         public Operand()
@@ -173,6 +136,10 @@ namespace SharpOS.AOT.IR.Operands
                 this.sizeType = InternalSizeType.I1;
             }
 
+            else if (type.Equals("char") == true)
+            {
+                this.sizeType = InternalSizeType.I2;
+            }
             else if (type.Equals("short") == true)
             {
                 this.sizeType = InternalSizeType.I2;

@@ -35,20 +35,20 @@ namespace SharpOS.AOT.IR.Operators
             Add
             , AddSignedWithOverflowCheck
             , AddUnsignedWithOverflowCheck
-            , And
-            , Div
-            , DivUnsigned
+            , Sub
+            , SubSignedWithOverflowCheck
+            , SubUnsignedWithOverflowCheck
             , Mul
             , MulSignedWithOverflowCheck
             , MulUnsignedWithOverflowCheck
+            , Div
+            , DivUnsigned
             , Remainder
             , RemainderUnsigned
             , SHL
             , SHR
             , SHRUnsigned
-            , Sub
-            , SubSignedWithOverflowCheck
-            , SubUnsignedWithOverflowCheck
+            , And
             , Or
             , Xor
         }
@@ -61,6 +61,7 @@ namespace SharpOS.AOT.IR.Operators
             , Or
             , Conditional
         }
+
         public enum RelationalType
         {
             Equal
