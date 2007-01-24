@@ -588,10 +588,10 @@ namespace SharpOS.AOT.IR
                 }
 
                 // Load Locales
-                else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S)
+                /*else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S)
                 {
                     instruction = new Assign(new Register(stack), this.Method.GetLocal((cilInstruction.Operand as VariableDefinition).Index));
-                }
+                }*/
                 else if (cilInstruction.OpCode == OpCodes.Ldloc || cilInstruction.OpCode == OpCodes.Ldloc_S)
                 {
                     instruction = new Assign(new Register(stack), this.Method.GetLocal((cilInstruction.Operand as VariableDefinition).Index));
@@ -648,7 +648,7 @@ namespace SharpOS.AOT.IR
                 {
                     instruction = new Assign(new Register(stack), this.Method.GetArgument((cilInstruction.Operand as ParameterDefinition).Sequence));
                 }
-                else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S)
+                /*else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S)
                 {
                     if (cilInstruction.Operand is ParameterDefinition)
                     {
@@ -658,7 +658,7 @@ namespace SharpOS.AOT.IR
                     {
                         instruction = new Assign(new Register(stack), this.Method.GetArgument((int)cilInstruction.Operand));
                     }
-                }
+                }*/
                 else if (cilInstruction.OpCode == OpCodes.Ldarg_0)
                 {
                     instruction = new Assign(new Register(stack), this.Method.GetArgument(1));
