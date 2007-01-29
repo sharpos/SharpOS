@@ -54,6 +54,7 @@
     <Compile Include="FPType.cs" />
     <Compile Include="Instruction.cs" />
     <Compile Include="Instructions.cs" />
+    <Compile Include="AlignInstruction.cs" />
     <Compile Include="LabelInstruction.cs" />
     <Compile Include="Memory.cs" />
     <Compile Include="OffsetInstruction.cs" />

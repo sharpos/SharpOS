@@ -782,6 +782,7 @@ namespace SharpOS.AOT.IR
                    || cilInstruction.OpCode == OpCodes.Stelem_Any
                    || cilInstruction.OpCode == OpCodes.Ldelema)
                 {
+                    // TODO Signed/Unsigned
                     instruction = new Assign(new Register(stack - 1), new ArrayElement(new Register(stack - 2), new Register(stack - 1)));
                 }
 

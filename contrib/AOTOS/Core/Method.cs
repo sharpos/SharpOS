@@ -1417,8 +1417,6 @@ namespace SharpOS.AOT.IR
             Console.WriteLine("Copy Propagation");
             Console.WriteLine("=======================================");
 
-            keys.Sort();
-
             while (keys.Count > 0)
             {
                 string key = keys[0];
@@ -1454,53 +1452,51 @@ namespace SharpOS.AOT.IR
                     continue;
                 }
                 
+                Console.WriteLine(definition.Block.Index + " : " + definition.ToString());
+
+                // Remove the instruction from the block that it is containing it
+                definition.Block.RemoveInstruction(definition);
+
+                // Remove the variable from the defuse list
+                defuse.Remove(key);
+
+                // "X = A" becomes "X = B"
+                for (int i = 1; i < list.Count; i++)
                 {
-                    Console.WriteLine(definition.Block.Index + " : " + definition.ToString());
+                    Instructions.Instruction used = list[i];
 
-                    // Remove the instruction from the block that it is containing it
-                    definition.Block.RemoveInstruction(definition);
-
-                    // Remove the variable from the defuse list
-                    defuse.Remove(key);
-
-                    // "X = A" becomes "X = B"
-                    for (int i = 1; i < list.Count; i++)
+                    if (used.Value != null)
                     {
-                        Instructions.Instruction used = list[i];
-
-                        if (used.Value != null)
+                        for (int j = 0; j < used.Value.Operands.Length; j++)
                         {
-                            for (int j = 0; j < used.Value.Operands.Length; j++)
-                            {
-                                Operand operand = used.Value.Operands[j];
+                            Operand operand = used.Value.Operands[j];
 
-                                // Replace A with B
-                                if (operand is Identifier == true
-                                    && operand.ID.Equals(key) == true)
+                            // Replace A with B
+                            if (operand is Identifier == true
+                                && operand.ID.Equals(key) == true)
+                            {
+                                if (used.Value is Identifier == true)
                                 {
-                                    if (used.Value is Identifier == true)
-                                    {
-                                        used.Value = definition.Value;
-                                    }
-                                    else
-                                    {
-                                        used.Value.Operands[j] = definition.Value;
-                                    }
+                                    used.Value = definition.Value;
+                                }
+                                else
+                                {
+                                    used.Value.Operands[j] = definition.Value;
                                 }
                             }
-
-                            Console.WriteLine("\t" + definition.Block.Index + " : " + used.ToString());
                         }
 
-                        if (used is Assign == true)
-                        {
-                            string id = (used as Assign).Asignee.ID;
+                        Console.WriteLine("\t" + definition.Block.Index + " : " + used.ToString());
+                    }
 
-                            // Add to the queue 
-                            if (keys.Contains(id) == false)
-                            {
-                                keys.Add(id);
-                            }
+                    if (used is Assign == true)
+                    {
+                        string id = (used as Assign).Asignee.ID;
+
+                        // Add to the queue 
+                        if (keys.Contains(id) == false)
+                        {
+                            keys.Add(id);
                         }
                     }
                 }

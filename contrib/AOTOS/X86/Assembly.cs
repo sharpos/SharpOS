@@ -129,6 +129,11 @@ namespace SharpOS.AOT.X86
             this.instructions.Add(new OrgInstruction(value));
         }
 
+        public void ALIGN(UInt32 value)
+        {
+            this.instructions.Add(new AlignInstruction(value));
+        }
+
         public void LABEL(string label)
         {
             this.instructions.Add(new LabelInstruction(label));
@@ -166,6 +171,13 @@ namespace SharpOS.AOT.X86
                 {
                     address = (UInt32)instruction.Value;
                 }
+                else if (instruction is AlignInstruction)
+                {
+                    if (address % (UInt32)instruction.Value != 0)
+                    {
+                        address += ((UInt32)instruction.Value - address % (UInt32)instruction.Value);
+                    }
+                }
                 else
                 {
                     address += instruction.Size(this.bits32);
@@ -180,14 +192,46 @@ namespace SharpOS.AOT.X86
             return address;
         }
 
+        public void AddMultibootHeader()
+        {
+            uint magic = 0x1BADB002;
+            uint flags = 0x00010003; //Extra info following and retrieve memory and video modes infos
+            uint checksum = (uint) (-(magic + flags));
+
+            this.DATA(magic);
+            this.DATA(flags);
+            this.DATA(checksum);
+
+            // Header Address
+            this.DATA(0x00100000);
+            
+            // Load Address
+            this.DATA(0x00100000);
+
+            // Load End Address
+            this.DATA(0x00101000);
+
+            // BSS End Address
+            this.DATA(0x00103000);
+
+            // Entry End Address (Just after this header)
+            this.DATA(0x00100020);
+
+            this.ORG(0x00100000);
+        }
+
         public bool Encode(Engine engine, string target)
         {
             MemoryStream memoryStream = new MemoryStream();
+
+            this.AddMultibootHeader();
 
             foreach (Method method in engine)
             {
                 this.GetAssemblyCode(method);
             }
+
+            this.ALIGN(4096);
 
             this.Encode(memoryStream);
             
@@ -204,59 +248,130 @@ namespace SharpOS.AOT.X86
 
             BinaryWriter binaryWriter = new BinaryWriter(memoryStream);
 
-            foreach (Instruction instruction in this.instructions)
+            // The first pass does the optimization
+            // The second pass writes the content
+            for (int pass = 0; pass < 2; pass++)
             {
-                if (instruction is OrgInstruction)
-                {
-                    org = (UInt32)instruction.Value;
-                }
+                bool changed;
 
-                if (instruction is Bits32Instruction)
+                do
                 {
-                    this.bits32 = (bool) instruction.Value;
-                }
-                 
-                if (instruction.Reference.Length > 0)
-                {
-                    instruction.Value = new UInt32[] { this.GetLabelAddress(instruction.Reference)};
+                    changed = false;
+                    UInt32 offset = 0;
 
-                    if (instruction.Relative == false)
+                    for (int i = 0; i < this.instructions.Count; i++)
                     {
-                        ((UInt32[])instruction.Value)[0] += org;
+                        Instruction instruction = this.instructions[i];
+
+                        if (instruction is OrgInstruction)
+                        {
+                            org = (UInt32)instruction.Value;
+                        }
+
+                        if (instruction is Bits32Instruction)
+                        {
+                            this.bits32 = (bool)instruction.Value;
+                        }
+
+                        if (instruction is OffsetInstruction)
+                        {
+                            offset = (UInt32)instruction.Value;
+
+                            if (offset < binaryWriter.BaseStream.Length)
+                            {
+                                throw new Exception("Wrong offset '" + offset.ToString() + "'.");
+                            }
+
+                            if (pass == 1)
+                            {
+                                while (binaryWriter.BaseStream.Length < offset)
+                                {
+                                    binaryWriter.Write((byte)0);
+                                }
+                            }
+
+                            continue;
+                        }
+
+                        if (instruction is AlignInstruction)
+                        {
+                            if (offset % (UInt32)instruction.Value != 0)
+                            {
+                                offset += ((UInt32)instruction.Value - offset % (UInt32)instruction.Value);
+                            }
+
+                            if (pass == 1)
+                            {
+                                while (binaryWriter.BaseStream.Length < offset)
+                                {
+                                    binaryWriter.Write((byte)0);
+                                }
+                            }
+                        }
+
+                        if (pass == 0)
+                        {
+                            if (instruction.Reference.Length > 0)
+                            {
+                                instruction.Value = new UInt32[] { this.GetLabelAddress(instruction.Reference) };
+
+                                if (instruction.Relative == false)
+                                {
+                                    ((UInt32[])instruction.Value)[0] += org;
+                                }
+                                else
+                                {
+                                    int delta = (int)(((UInt32[])instruction.Value)[0] - offset);
+
+                                    if (delta >= -128 && delta <= 127)
+                                    {
+                                        Assembly temp = new Assembly();
+                                        
+                                        if (instruction.Name.Equals("JMP") == true
+                                            && instruction.Encoding[0] == "E9")
+                                        {
+                                            temp.JMP((byte)0);
+
+                                            instruction.Set(temp[0]);
+
+                                            changed = true;
+                                        }
+                                        else if (instruction.Name.Equals("JNZ") == true
+                                            && instruction.Encoding[1] == "85")
+                                        {
+                                            temp.JNZ((byte)0);
+
+                                            instruction.Set(temp[0]);
+
+                                            changed = true;
+                                        }
+                                        else if (instruction.Name.Equals("JNE") == true
+                                            && instruction.Encoding[1] == "85")
+                                        {
+                                            temp.JNE((byte)0);
+
+                                            instruction.Set(temp[0]);
+
+                                            changed = true;
+                                        }
+                                    }
+                                }
+                            }
+
+                            if (instruction.RMMemory != null && instruction.RMMemory.Reference.Length > 0)
+                            {
+                                instruction.RMMemory.Displacement = (int)(org + this.GetLabelAddress(instruction.RMMemory.Reference));
+                            }
+                        }
+                        else
+                        {
+                            instruction.Encode(this.bits32, binaryWriter);
+                        }
+
+                        offset += instruction.Size(this.bits32);
                     }
                 }
-
-                if (instruction.RMMemory != null && instruction.RMMemory.Reference.Length > 0)
-                {
-                    instruction.RMMemory.Displacement = (int) (org + this.GetLabelAddress(instruction.RMMemory.Reference));
-                }
-            }
-
-            foreach (Instruction instruction in this.instructions)
-            {
-                if (instruction is Bits32Instruction)
-                {
-                    this.bits32 = (bool)instruction.Value;
-                }
-
-                if (instruction is OffsetInstruction)
-                {
-                    UInt32 offset = (UInt32)instruction.Value;
-
-                    if (offset < binaryWriter.BaseStream.Length)
-                    {
-                        throw new Exception("Wrong offset '" + offset.ToString() + "'.");
-                    }
-
-                    while (binaryWriter.BaseStream.Length < offset)
-                    {
-                        binaryWriter.Write((byte)0);
-                    }
-                    
-                    continue;
-                }
-
-                instruction.Encode(this.bits32, binaryWriter);
+                while (changed == true);
             }
 
             return true;
@@ -855,9 +970,7 @@ namespace SharpOS.AOT.X86
 
                 if (operand is Arithmetic == true)
                 {
-                    if (operand.SizeType == Operand.InternalSizeType.I1
-                        || operand.SizeType == Operand.InternalSizeType.I2
-                        || operand.SizeType == Operand.InternalSizeType.I4)
+                    if (this.IsFourBytes(operand) == true)
                     {
                         this.MovRegisterArithmetic(R32.EAX, operand as Arithmetic);
                         
@@ -870,9 +983,7 @@ namespace SharpOS.AOT.X86
                 }
                 else if (operand is Argument == true)
                 {
-                    if (operand.SizeType == Operand.InternalSizeType.I1
-                        || operand.SizeType == Operand.InternalSizeType.I2
-                        || operand.SizeType == Operand.InternalSizeType.I4)
+                    if (this.IsFourBytes(operand) == true)
                     {
                         this.PUSH(GetArgument((operand as SharpOS.AOT.IR.Operands.Argument).Index));
                     }
@@ -883,9 +994,7 @@ namespace SharpOS.AOT.X86
                 }
                 else if (operand is Constant == true)
                 {
-                    if (operand.SizeType == Operand.InternalSizeType.I1
-                        || operand.SizeType == Operand.InternalSizeType.I2
-                        || operand.SizeType == Operand.InternalSizeType.I4)
+                    if (this.IsFourBytes(operand) == true)
                     {
                         this.PUSH(Convert.ToUInt32((operand as Constant).Value));
                     }
@@ -985,9 +1094,7 @@ namespace SharpOS.AOT.X86
             }
             else if (assign.Value is Constant == true)
             {
-                if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
-                    || assign.Asignee.SizeType == Operand.InternalSizeType.I2
-                    || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                if (this.IsFourBytes(assign.Asignee) == true)
                 {
                     if (assign.Asignee.IsRegisterSet == true)
                     {
@@ -1013,9 +1120,7 @@ namespace SharpOS.AOT.X86
                 else if (assign.Asignee.IsRegisterSet == false
                     && assign.Value.IsRegisterSet == false)
                 {
-                    if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
-                        || assign.Asignee.SizeType == Operand.InternalSizeType.I2
-                        || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                    if (this.IsFourBytes(assign.Asignee) == true)
                     {
                         this.MOV(R32.EAX, this.GetStackAddress(assign.Value.Stack));
                         this.MOV(this.GetStackAddress(assign.Asignee.Stack), R32.EAX);
@@ -1028,9 +1133,7 @@ namespace SharpOS.AOT.X86
                 else if (assign.Asignee.IsRegisterSet == false
                     && assign.Value.IsRegisterSet == true)
                 {
-                    if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
-                        || assign.Asignee.SizeType == Operand.InternalSizeType.I2
-                        || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                    if (this.IsFourBytes(assign.Asignee) == true)
                     {
                         this.MOV(this.GetStackAddress(assign.Asignee.Stack), this.GetRegister(assign.Value.Register));
                     }
@@ -1042,9 +1145,7 @@ namespace SharpOS.AOT.X86
                 else if (assign.Asignee.IsRegisterSet == true
                     && assign.Value.IsRegisterSet == false)
                 {
-                    if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
-                        || assign.Asignee.SizeType == Operand.InternalSizeType.I2
-                        || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                    if (this.IsFourBytes(assign.Asignee) == true)
                     {
                         this.MOV(this.GetRegister(assign.Asignee.Register), this.GetStackAddress(assign.Value.Stack));
                     }
@@ -1061,9 +1162,7 @@ namespace SharpOS.AOT.X86
             }
             else if (assign.Value is Arithmetic == true)
             {
-                if (assign.Asignee.SizeType == Operand.InternalSizeType.I1
-                    || assign.Asignee.SizeType == Operand.InternalSizeType.I2
-                    || assign.Asignee.SizeType == Operand.InternalSizeType.I4)
+                if (this.IsFourBytes(assign.Asignee) == true)
                 {
                     if (assign.Asignee.IsRegisterSet == true)
                     {
@@ -1093,6 +1192,21 @@ namespace SharpOS.AOT.X86
         private void HandleReturn(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
         {
             // TODO
+        }
+
+        private bool IsFourBytes(Operand operand)
+        {
+            if (operand.SizeType == Operand.InternalSizeType.I1
+                || operand.SizeType == Operand.InternalSizeType.U1
+                || operand.SizeType == Operand.InternalSizeType.I2
+                || operand.SizeType == Operand.InternalSizeType.U2
+                || operand.SizeType == Operand.InternalSizeType.I4
+                || operand.SizeType == Operand.InternalSizeType.U4)
+            {
+                return true;
+            }
+
+            return false;
         }
     }
 }

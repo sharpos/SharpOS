@@ -60,7 +60,10 @@ namespace SharpOS
             Asm.CALL("SharpOS.SharpOS.KeyboardWait");
 
             ClearScreen(0, 0);
+        }*/
 
+        public static void Entry()
+        {
             // Display the Boot Message
             Asm.MOV(R32.EAX, "BootMessage");
             Asm.PUSH(R32.EAX);
@@ -70,6 +73,8 @@ namespace SharpOS
             // Just hang
             Asm.LABEL("Hang");
             Asm.JMP("Hang");
+
+            Asm.DATA("BootMessage", "Grub -> Booting [SharpOS] 2006 by Mircea-Cristian Racasan (\x01)\0");
         }
 
         public static void WriteMessage()
@@ -89,7 +94,7 @@ namespace SharpOS
             Asm.LABEL("Done");
         }
 
-        public static void KeyboardWait()
+        /*public static void KeyboardWait()
         {
             Asm.LABEL("A20");
             Asm.IN_AL(0x64);
@@ -105,7 +110,7 @@ namespace SharpOS
             x = (x * 91 + y / 45) * (x + 5) + 15 * (y + 300) + (x * y / 500);
 
             return x / 50;
-        }*/
+        }
 
         public static void ClearScreen(byte clear_to, byte attrib)
         {
@@ -126,6 +131,7 @@ namespace SharpOS
                 }
             }
         }
+        */
 
         /*public static void BootSectorEnd()
         {

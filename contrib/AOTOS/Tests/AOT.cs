@@ -13,6 +13,17 @@ namespace AOT
 {
     public class Misc
     {
+        public static void File()
+        {
+            float value = 123.0234f;
+
+            Console.WriteLine("0x{0:X}", value);
+
+            System.IO.StreamWriter writer = System.IO.File.CreateText("output.txt");
+            writer.WriteLine("test");
+            writer.Close();
+        }
+
         public static UInt64 TypesU(int intValue, long longValue, UInt16 int16Value, UInt32 int32Value, UInt64 int64Value)
         {
             intValue -= 10;

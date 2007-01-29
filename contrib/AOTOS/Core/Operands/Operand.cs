@@ -60,9 +60,13 @@ namespace SharpOS.AOT.IR.Operands
         {
             NotSet
             , I1
+            , U1
             , I2
+            , U2
             , I4
+            , U4
             , I8
+            , U8
             , R4
             , R8
         }
@@ -120,16 +124,16 @@ namespace SharpOS.AOT.IR.Operands
 
             if (type.Equals("System.Boolean") == true)
             {
-                this.sizeType = InternalSizeType.I1;
+                this.sizeType = InternalSizeType.U1;
             }
             else if (type.Equals("bool") == true)
             {
-                this.sizeType = InternalSizeType.I1;
+                this.sizeType = InternalSizeType.U1;
             }
 
             else if (type.Equals("System.Byte") == true)
             {
-                this.sizeType = InternalSizeType.I1;
+                this.sizeType = InternalSizeType.U1;
             }
             else if (type.Equals("System.SByte") == true)
             {
@@ -138,7 +142,7 @@ namespace SharpOS.AOT.IR.Operands
 
             else if (type.Equals("char") == true)
             {
-                this.sizeType = InternalSizeType.I2;
+                this.sizeType = InternalSizeType.U2;
             }
             else if (type.Equals("short") == true)
             {
@@ -146,11 +150,11 @@ namespace SharpOS.AOT.IR.Operands
             }
             else if (type.Equals("ushort") == true)
             {
-                this.sizeType = InternalSizeType.I2;
+                this.sizeType = InternalSizeType.U2;
             }
             else if (type.Equals("System.UInt16") == true)
             {
-                this.sizeType = InternalSizeType.I2;
+                this.sizeType = InternalSizeType.U2;
             }
             else if (type.Equals("System.Int16") == true)
             {
@@ -163,11 +167,11 @@ namespace SharpOS.AOT.IR.Operands
             }
             else if (type.Equals("uint") == true)
             {
-                this.sizeType = InternalSizeType.I4;
+                this.sizeType = InternalSizeType.U4;
             }
             else if (type.Equals("System.UInt32") == true)
             {
-                this.sizeType = InternalSizeType.I4;
+                this.sizeType = InternalSizeType.U4;
             }
             else if (type.Equals("System.Int32") == true)
             {
@@ -180,11 +184,11 @@ namespace SharpOS.AOT.IR.Operands
             }
             else if (type.Equals("ulong") == true)
             {
-                this.sizeType = InternalSizeType.I8;
+                this.sizeType = InternalSizeType.U8;
             }
             else if (type.Equals("System.UInt64") == true)
             {
-                this.sizeType = InternalSizeType.I8;
+                this.sizeType = InternalSizeType.U8;
             }
             else if (type.Equals("System.Int64") == true)
             {
@@ -230,43 +234,51 @@ namespace SharpOS.AOT.IR.Operands
                 case Operand.ConvertType.Conv_I1:
                 case Operand.ConvertType.Conv_Ovf_I1:
                 case Operand.ConvertType.Conv_Ovf_I1_Un:
+                    return InternalSizeType.I1;
+
+                case Operand.ConvertType.Conv_U1:
                 case Operand.ConvertType.Conv_Ovf_U1:
                 case Operand.ConvertType.Conv_Ovf_U1_Un:
-                case Operand.ConvertType.Conv_U1:
-                    return InternalSizeType.I1;
+                    return InternalSizeType.U1;
 
                 case Operand.ConvertType.Conv_I2:
                 case Operand.ConvertType.Conv_Ovf_I2:
                 case Operand.ConvertType.Conv_Ovf_I2_Un:
-                case Operand.ConvertType.Conv_Ovf_U2:
-                case Operand.ConvertType.Conv_Ovf_U2_Un:
-                case Operand.ConvertType.Conv_U2:
                     return InternalSizeType.I2;
 
+                case Operand.ConvertType.Conv_U2:
+                case Operand.ConvertType.Conv_Ovf_U2:
+                case Operand.ConvertType.Conv_Ovf_U2_Un:
+                    return InternalSizeType.U2;
+
                 case Operand.ConvertType.Conv_I:
-                case Operand.ConvertType.Conv_I4:
                 case Operand.ConvertType.Conv_Ovf_I:
                 case Operand.ConvertType.Conv_Ovf_I_Un:
+                case Operand.ConvertType.Conv_I4:
                 case Operand.ConvertType.Conv_Ovf_I4:
                 case Operand.ConvertType.Conv_Ovf_I4_Un:
+                    return InternalSizeType.I4;
+
+                case Operand.ConvertType.Conv_U:
                 case Operand.ConvertType.Conv_Ovf_U:
                 case Operand.ConvertType.Conv_Ovf_U_Un:
+                case Operand.ConvertType.Conv_U4:
                 case Operand.ConvertType.Conv_Ovf_U4:
                 case Operand.ConvertType.Conv_Ovf_U4_Un:
-                case Operand.ConvertType.Conv_U:
-                case Operand.ConvertType.Conv_U4:
-                    return InternalSizeType.I4;
+                    return InternalSizeType.U4;
 
                 case Operand.ConvertType.Conv_I8:
                 case Operand.ConvertType.Conv_Ovf_I8:
                 case Operand.ConvertType.Conv_Ovf_I8_Un:
-                case Operand.ConvertType.Conv_Ovf_U8:
-                case Operand.ConvertType.Conv_Ovf_U8_Un:
-                case Operand.ConvertType.Conv_U8:
                     return InternalSizeType.I8;
 
-                case Operand.ConvertType.Conv_R_Un:
+                case Operand.ConvertType.Conv_U8:
+                case Operand.ConvertType.Conv_Ovf_U8:
+                case Operand.ConvertType.Conv_Ovf_U8_Un:
+                    return InternalSizeType.U8;
+
                 case Operand.ConvertType.Conv_R4:
+                case Operand.ConvertType.Conv_R_Un:
                     return InternalSizeType.R4;
 
                 case Operand.ConvertType.Conv_R8:

@@ -39,6 +39,19 @@ namespace SharpOS.AOT.X86
         private Register rmRegister = null;
         private string[] encoding = null;
 
+        public string[] Encoding
+        {
+            get
+            {
+                return this.encoding;
+            }
+        }
+
+        public void Set(Instruction instruction)
+        {
+            this.encoding = instruction.encoding;
+        }
+
         private Memory rmMemory = null;
 
         public Memory RMMemory
