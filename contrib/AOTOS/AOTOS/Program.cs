@@ -18,12 +18,40 @@ namespace SharpOS
 {
     public class AOTOS
     {
+        public static byte value = 1;
+
+        public static string message = "test 123";
+
         static void Main(string[] args)
         {
             //try
             {
                 Engine engine = new Engine();
-                engine.Run(new Assembly(), "SharpOS.dll", "SharpOS.bin");
+                string filename = "SharpOS.dll";
+
+                Console.WriteLine(message);
+
+                float x = value + 0x12345678;
+
+                if (args.Length == 1)
+                {
+                    filename = args[0];
+                }
+                else if (args.Length > 0)
+                {
+                    Console.WriteLine("Usage: AOTOS [filename]");
+                    
+                    return;
+                }
+
+                if (System.IO.File.Exists(filename) == false)
+                {
+                    Console.WriteLine("File '" + filename + "' was not found.");
+
+                    return;
+                }
+
+                engine.Run(new Assembly(), filename, "SharpOS.bin");
             }
             //catch (Exception ex)
             {

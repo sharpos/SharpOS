@@ -134,6 +134,11 @@ namespace SharpOS.AOT.X86
             this.instructions.Add(new AlignInstruction(value));
         }
 
+        public void TIMES(UInt32 length, Byte value)
+        {
+            this.instructions.Add(new TimesInstruction(length, value));
+        }
+
         public void LABEL(string label)
         {
             this.instructions.Add(new LabelInstruction(label));
@@ -167,16 +172,22 @@ namespace SharpOS.AOT.X86
                     break;
                 }
 
-                if (instruction is OffsetInstruction)
+                if (instruction is OffsetInstruction == true)
                 {
                     address = (UInt32)instruction.Value;
                 }
-                else if (instruction is AlignInstruction)
+                else if (instruction is AlignInstruction == true)
                 {
                     if (address % (UInt32)instruction.Value != 0)
                     {
                         address += ((UInt32)instruction.Value - address % (UInt32)instruction.Value);
                     }
+                }
+                else if (instruction is TimesInstruction == true)
+                {
+                    TimesInstruction times = instruction as TimesInstruction;
+
+                    address += times.Length;
                 }
                 else
                 {
@@ -209,29 +220,82 @@ namespace SharpOS.AOT.X86
             this.DATA(0x00100000);
 
             // Load End Address
-            this.DATA(0x00101000);
+            this.DATA((uint)0);
 
             // BSS End Address
-            this.DATA(0x00103000);
+            this.DATA((uint)0);
 
             // Entry End Address (Just after this header)
             this.DATA(0x00100020);
 
             this.ORG(0x00100000);
+
+            this.MOV(R32.ESP, this.END_STACK);
+
+            this.CALL("SharpOS.SharpOS..cctor");
+            this.CALL("SharpOS.SharpOS.Main");
+            
+            // Just hang
+            this.LABEL(THE_END);
+            this.JMP(THE_END);
         }
+
+        private string END_DATA = "[END DATA]";
+        private string END_STACK = "[END STACK]";
+        private string THE_END = "[THE END]";
+        private Assembly data;
 
         public bool Encode(Engine engine, string target)
         {
             MemoryStream memoryStream = new MemoryStream();
+            data = new Assembly();
 
             this.AddMultibootHeader();
 
-            foreach (Method method in engine)
+            foreach (Class _class in engine)
             {
-                this.GetAssemblyCode(method);
+                foreach (Method method in _class)
+                {
+                    this.GetAssemblyCode(method);
+                }
+            }
+
+            foreach (Class _class in engine)
+            {
+                foreach (FieldDefinition field in _class.ClassDefinition.Fields)
+                {
+                    string fullname = field.DeclaringType.FullName + "." + field.Name;
+
+                    if (field.IsStatic == false)
+                    {
+                        Console.WriteLine("Not processing '" + fullname + "'");
+
+                        continue;
+                    }
+
+                    this.LABEL(fullname);
+
+                    if (field.FieldType.ToString().Equals("System.String") == true)
+                    {
+                        this.DATA((uint)0);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + field.FieldType + "' is not supported.");
+                    }
+                }
+            }
+
+            foreach (Instruction instruction in data.instructions)
+            {
+                this.instructions.Add(instruction);
             }
 
             this.ALIGN(4096);
+            this.LABEL(END_DATA);
+
+            this.TIMES(8192, 0);
+            this.LABEL(END_STACK);
 
             this.Encode(memoryStream);
             
@@ -258,22 +322,21 @@ namespace SharpOS.AOT.X86
                 {
                     changed = false;
                     UInt32 offset = 0;
+                    bool bss = false;
 
                     for (int i = 0; i < this.instructions.Count; i++)
                     {
                         Instruction instruction = this.instructions[i];
 
-                        if (instruction is OrgInstruction)
+                        if (instruction is OrgInstruction == true)
                         {
                             org = (UInt32)instruction.Value;
                         }
-
-                        if (instruction is Bits32Instruction)
+                        else if (instruction is Bits32Instruction)
                         {
                             this.bits32 = (bool)instruction.Value;
                         }
-
-                        if (instruction is OffsetInstruction)
+                        else if (instruction is OffsetInstruction == true)
                         {
                             offset = (UInt32)instruction.Value;
 
@@ -282,30 +345,32 @@ namespace SharpOS.AOT.X86
                                 throw new Exception("Wrong offset '" + offset.ToString() + "'.");
                             }
 
-                            if (pass == 1)
+                            while (pass == 1 && bss == false && binaryWriter.BaseStream.Length < offset)
                             {
-                                while (binaryWriter.BaseStream.Length < offset)
-                                {
-                                    binaryWriter.Write((byte)0);
-                                }
+                                binaryWriter.Write((byte)0);
                             }
-
-                            continue;
                         }
-
-                        if (instruction is AlignInstruction)
+                        else if (instruction is AlignInstruction == true)
                         {
                             if (offset % (UInt32)instruction.Value != 0)
                             {
                                 offset += ((UInt32)instruction.Value - offset % (UInt32)instruction.Value);
                             }
 
-                            if (pass == 1)
+                            while (pass == 1 && bss == false && binaryWriter.BaseStream.Length < offset)
                             {
-                                while (binaryWriter.BaseStream.Length < offset)
-                                {
-                                    binaryWriter.Write((byte)0);
-                                }
+                                binaryWriter.Write((byte)0);
+                            }
+                        }
+                        else if (instruction is TimesInstruction == true)
+                        {
+                            TimesInstruction times = instruction as TimesInstruction;
+
+                            offset += times.Length;
+
+                            while (pass == 1 && bss == false && binaryWriter.BaseStream.Length < offset)
+                            {
+                                binaryWriter.Write((byte) times.Value);
                             }
                         }
 
@@ -354,6 +419,8 @@ namespace SharpOS.AOT.X86
 
                                             changed = true;
                                         }
+
+                                        // TODO optimizations for the other jump instructions
                                     }
                                 }
                             }
@@ -362,10 +429,27 @@ namespace SharpOS.AOT.X86
                             {
                                 instruction.RMMemory.Displacement = (int)(org + this.GetLabelAddress(instruction.RMMemory.Reference));
                             }
+
+                            // Load End Address
+                            if (instruction.Label.Equals(END_DATA) == true)
+                            {
+                                bss = true;
+
+                                this.instructions[5].Value = org + offset;
+                            }
+
+                            // BSS End Address
+                            if (instruction.Label.Equals(END_STACK) == true)
+                            {
+                                this.instructions[6].Value = org + offset;
+                            }
                         }
                         else
                         {
-                            instruction.Encode(this.bits32, binaryWriter);
+                            if (bss == false)
+                            {
+                                instruction.Encode(this.bits32, binaryWriter);
+                            }
                         }
 
                         offset += instruction.Size(this.bits32);
@@ -523,7 +607,8 @@ namespace SharpOS.AOT.X86
                 {
                     SegType segment = Seg.GetByID((call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString());
                     R32Type _base = R32.GetByID((call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
-                    R32Type index = R32.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                    //R32Type index = R32.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
+                    R32Type index = call.Operands[2] is Constant ? null : R32.GetByID((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString());
                     Byte scale = Convert.ToByte((call.Operands[3] as SharpOS.AOT.IR.Operands.Constant).Value);
 
                     if (call.Method.DeclaringType.FullName.EndsWith(".Memory") == true)
@@ -1003,6 +1088,15 @@ namespace SharpOS.AOT.X86
                         throw new Exception("'" + operand + "' is not supported.");
                     }
                 }
+                else if (operand is Field == true)
+                {
+                    Field field = operand as Field;
+                    
+                    /*this.MOV(R32.EAX, field.Value);
+                    this.PUSH(R32.EAX);*/
+
+                    this.PUSH(new DWordMemory(field.Value));
+                }
                 else
                 {
                     throw new Exception("'" + call.Method.Operands[i].GetType() + "' is not supported.");
@@ -1062,6 +1156,57 @@ namespace SharpOS.AOT.X86
             }
         }
 
+        private string AddString(string value)
+        {
+            string label = this.GetFreeResourceLabel;
+
+            data.LABEL(label);
+            data.DATA(value);
+            data.DATA((byte)0);
+
+            return label;
+        }
+
+        private void MoveRegisterConstant(Assign assign)
+        {
+            if ((assign.Value as Constant).Value.GetType().ToString().Equals("System.String") == true)
+            {
+                this.MOV(this.GetRegister(assign.Asignee.Register), this.AddString((assign.Value as Constant).Value.ToString()));
+            }
+            else
+            {
+                this.MovRegisterConstant(this.GetRegister(assign.Asignee.Register), Convert.ToUInt32((assign.Value as Constant).Value));
+            }
+        }
+
+        private void MovMemoryConstant(Assign assign)
+        {
+            DWordMemory address;
+
+            if (assign.Asignee is Field == true)
+            {
+                address = new DWordMemory (assign.Asignee.Value);
+            }
+            else if (assign.Asignee.Stack != int.MinValue)
+            {
+                address = this.GetStackAddress(assign.Asignee.Stack);
+            }
+            else
+            {
+                throw new Exception("Wrong '" + assign.Asignee.ToString() + "' Operand.");
+            }
+
+            if ((assign.Value as Constant).Value.GetType().ToString().Equals("System.String") == true)
+            {
+                this.MOV(R32.EAX, this.AddString((assign.Value as Constant).Value.ToString()));
+                this.MOV(address, R32.EAX);
+            }
+            else
+            {
+                this.MovMemoryConstant(address, Convert.ToUInt32((assign.Value as Constant).Value));
+            }
+        }
+
         private void MovMemoryConstant(DWordMemory address, UInt32 constant)
         {
             if (constant == 0)
@@ -1073,7 +1218,6 @@ namespace SharpOS.AOT.X86
             {
                 this.MOV(address, constant);
             }
-            
         }
 
         private void MovRegisterRegister(R32Type target, R32Type source)
@@ -1083,26 +1227,35 @@ namespace SharpOS.AOT.X86
                 this.MOV(target, source);
             }
         }
+        private int resourceCounter = 0;
+
+        private string GetFreeResourceLabel
+        {
+            get
+            {
+                return "Resource_" + this.resourceCounter++;
+            }
+        }
 
         private void HandleAssign(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
         {
             SharpOS.AOT.IR.Instructions.Assign assign = (instruction as SharpOS.AOT.IR.Instructions.Assign);
 
-            if (assign.Asignee is Reference == true)
+            /*if (assign.Asignee is Reference == true)
             {
                 // TODO
             }
-            else if (assign.Value is Constant == true)
+            else */if (assign.Value is Constant == true)
             {
                 if (this.IsFourBytes(assign.Asignee) == true)
                 {
                     if (assign.Asignee.IsRegisterSet == true)
                     {
-                        this.MovRegisterConstant(this.GetRegister(assign.Asignee.Register), Convert.ToUInt32((assign.Value as Constant).Value));
+                        this.MoveRegisterConstant(assign);
                     }
                     else
                     {
-                        this.MovMemoryConstant(this.GetStackAddress(assign.Asignee.Stack), Convert.ToUInt32((assign.Value as Constant).Value));
+                        this.MovMemoryConstant(assign);
                     }
                 }
                 else
@@ -1196,7 +1349,9 @@ namespace SharpOS.AOT.X86
 
         private bool IsFourBytes(Operand operand)
         {
-            if (operand.SizeType == Operand.InternalSizeType.I1
+            if (operand.SizeType == Operand.InternalSizeType.I
+                || operand.SizeType == Operand.InternalSizeType.U
+                || operand.SizeType == Operand.InternalSizeType.I1
                 || operand.SizeType == Operand.InternalSizeType.U1
                 || operand.SizeType == Operand.InternalSizeType.I2
                 || operand.SizeType == Operand.InternalSizeType.U2

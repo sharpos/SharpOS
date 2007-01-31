@@ -144,6 +144,9 @@ namespace SharpOS.AOT.X86
 		// ADD rmreg32,imm8
 		public static void ADD (R32Type target, Byte source) {}
 		
+		// ALIGN 
+		public static void ALIGN (UInt32 value) {}
+		
 		// AND mem8,reg8
 		public static void AND (ByteMemory target, R8Type source) {}
 		
@@ -3173,6 +3176,9 @@ namespace SharpOS.AOT.X86
 		
 		// TEST rmreg32,imm32
 		public static void TEST (R32Type target, UInt32 source) {}
+		
+		// TIMES 
+		public static void TIMES (UInt32 length, Byte value) {}
 		
 		// VERR mem16
 		public static void VERR (WordMemory target) {}

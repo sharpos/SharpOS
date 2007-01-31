@@ -37,6 +37,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Class.cs" />
     <Compile Include="Operands\Argument.cs" />
     <Compile Include="Operands\Call.cs" />
     <Compile Include="Operands\Constant.cs" />

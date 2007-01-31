@@ -59,6 +59,8 @@ namespace SharpOS.AOT.IR.Operands
         public enum InternalSizeType
         {
             NotSet
+            , I
+            , U
             , I1
             , U1
             , I2
@@ -211,6 +213,15 @@ namespace SharpOS.AOT.IR.Operands
             else if (type.Equals("System.Double") == true)
             {
                 this.sizeType = InternalSizeType.R8;
+            }
+
+            else if (type.Equals("string") == true)
+            {
+                this.sizeType = InternalSizeType.U;
+            }
+            else if (type.Equals("System.String") == true)
+            {
+                this.sizeType = InternalSizeType.U;
             }
 
             else

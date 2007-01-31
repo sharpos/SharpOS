@@ -55,6 +55,7 @@
     <Compile Include="Instruction.cs" />
     <Compile Include="Instructions.cs" />
     <Compile Include="AlignInstruction.cs" />
+    <Compile Include="TimesInstruction.cs" />
     <Compile Include="LabelInstruction.cs" />
     <Compile Include="Memory.cs" />
     <Compile Include="OffsetInstruction.cs" />

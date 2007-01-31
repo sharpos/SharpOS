@@ -22,7 +22,7 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR
 {
-    public partial class Engine : IEnumerable<Method>
+    public partial class Engine : IEnumerable<Class>
     {
         public Engine()
 		{
@@ -52,13 +52,39 @@ namespace SharpOS.AOT.IR
 
                 Console.WriteLine(type.FullName);
 
-                foreach (MethodDefinition entry in type.Methods)
+                Class _class = new Class(this, type);
+                this.classes.Add(_class);
+
+                foreach (MethodDefinition entry in type.Constructors)
                 {
+                    if (entry.Name.Equals(".cctor") == false)
+                    {
+                        continue;
+                    }
+
                     Method method = new Method(this, entry);
 
                     method.Process();
 
-                    this.methods.Add(method);
+                    _class.Add(method);
+
+                    break;
+                }
+
+                foreach (MethodDefinition entry in type.Methods)
+                {
+                    if (entry.IsStatic == false || entry.ImplAttributes != MethodImplAttributes.Managed)
+                    {
+                        Console.WriteLine("Not processing '" + entry.DeclaringType.FullName + "." + entry.Name + "'");
+
+                        continue;
+                    }
+
+                    Method method = new Method(this, entry);
+
+                    method.Process();
+
+                    _class.Add(method);
                 }
             }
 
@@ -67,19 +93,19 @@ namespace SharpOS.AOT.IR
             return;
         }
 
-        private List<Method> methods = new List<Method>();
+        private List<Class> classes = new List<Class>();
 
-        IEnumerator<Method> IEnumerable<Method>.GetEnumerator()
+        IEnumerator<Class> IEnumerable<Class>.GetEnumerator()
         {
-            foreach (Method method in this.methods)
+            foreach (Class _class in this.classes)
             {
-                yield return method;
+                yield return _class;
             }
         }
 
         IEnumerator IEnumerable.GetEnumerator()
         {
-            return ((IEnumerable<Method>)this).GetEnumerator();
+            return ((IEnumerable<Class>)this).GetEnumerator();
         }
     }
 }

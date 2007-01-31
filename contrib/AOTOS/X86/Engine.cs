@@ -239,6 +239,18 @@ namespace SharpOS.AOT.X86
 					}
 					break;
 				
+				case "ALIGN":
+					switch(parameterTypes)
+					{
+						case "ALIGN UInt32":
+							this.ALIGN(Convert.ToUInt32((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							break;
+						
+						default:
+							throw new Exception("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
 				case "AND":
 					switch(parameterTypes)
 					{
@@ -7616,6 +7628,18 @@ namespace SharpOS.AOT.X86
 						
 						case "TEST WordMemory UInt16":
 							this.TEST(GetWordMemory(method.Operands[0] as SharpOS.AOT.IR.Operands.Call), Convert.ToUInt16((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							break;
+						
+						default:
+							throw new Exception("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
+				case "TIMES":
+					switch(parameterTypes)
+					{
+						case "TIMES UInt32 Byte":
+							this.TIMES(Convert.ToUInt32((method.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToByte((method.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;
 						
 						default:

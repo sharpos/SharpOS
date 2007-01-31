@@ -1259,9 +1259,11 @@ namespace SharpOS.AOT.IR
                 keys.RemoveAt(0);
 
                 List<Instructions.Instruction> list = this.defuse[key];
-
+                
                 // This variable is only defined but not used
-                if (list.Count == 1)
+                if (list.Count == 1
+                    && !(list[0] is Assign == true
+                        && (list[0] as Assign).Asignee is Field == true))
                 {
                     // A = B + C;
                     Instructions.Instruction definition = list[0];
@@ -1352,9 +1354,10 @@ namespace SharpOS.AOT.IR
                     }
                 }
                 // A = 100
-                else if (definition is Assign == true && (definition as Assign).Value is Constant == true)
+                else if (definition is Assign == true 
+                    && (definition as Assign).Value is Constant == true 
+                    && (definition as Assign).Asignee is Field == false)
                 {
-
                     // Remove the instruction from the block that it is containing it
                     definition.Block.RemoveInstruction(definition);
 
@@ -1767,7 +1770,8 @@ namespace SharpOS.AOT.IR
 
         private void AddLineScaneValue(Dictionary<string, LiveRange> values, Identifier identifier, Instructions.Instruction instruction)
         {
-            if (identifier is Argument == true)
+            if (identifier is Argument == true
+                || identifier is Field == true)
             {
                 return;
             }
@@ -1896,11 +1900,6 @@ namespace SharpOS.AOT.IR
             }
 
             this.liveRanges.Sort(new LiveRange.SortByRegisterStack());
-
-            /*foreach (LiveRange entry in this.liveRanges)
-            {
-
-            }*/
 
             Console.WriteLine("=======================================");
             Console.WriteLine("Linear Scan Register Allocation");
