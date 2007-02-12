@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("AOTOS")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("nutex")]
+[assembly: AssemblyCompany("SharpOS")]
 [assembly: AssemblyProduct("AOTOS")]
-[assembly: AssemblyCopyright("Copyright © nutex 2006")]
+[assembly: AssemblyCopyright("Copyright © SharpOS 2007")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

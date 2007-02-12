@@ -992,7 +992,13 @@ namespace SharpOS.AOT.IR
                     {
                         foreach (Operand operand in instruction.Value.Operands)
                         {
-                            if (operand is Identifier == true)
+                            if (operand is Reference == true)
+                            {
+                                Identifier identifier = (operand as Reference).Value as Identifier;
+
+                                identifier.Version = GetSSAStackValue(stack, identifier.Value);
+                            }
+                            else if (operand is Identifier == true)
                             {
                                 Identifier identifier = operand as Identifier;
 
@@ -1207,7 +1213,13 @@ namespace SharpOS.AOT.IR
 
                                 if (definition.Asignee.ID.Equals(id) == true)
                                 {
-                                    if (instruction.Value is Identifier == true)
+                                    if (instruction.Value is Reference == true)
+                                    {
+                                        Reference reference = instruction.Value as Reference;
+
+                                        reference.Value = definition.Asignee;
+                                    }
+                                    else if (instruction.Value is Identifier == true)
                                     {
                                         instruction.Value = definition.Asignee;
                                     }
@@ -1431,7 +1443,12 @@ namespace SharpOS.AOT.IR
 
                 // A = B
 
-                if (definition is Assign != true)
+                if (definition is Assign != true
+                    || list.Count == 1
+                    || (definition as Assign).Value.ConvertTo != SharpOS.AOT.IR.Operands.Operand.ConvertType.NotSet
+                    || (definition as Assign).Value is Reference == true
+                    || (definition as Assign).Value is Field == true
+                    || (definition as Assign).Value is Arithmetic == true)
                 {
                     continue;
                 }
@@ -1468,6 +1485,17 @@ namespace SharpOS.AOT.IR
                 {
                     Instructions.Instruction used = list[i];
 
+                    if (used is Assign == true
+                        && (used as Assign).Asignee is Reference == true)
+                    {
+                        Reference reference = (used as Assign).Asignee as Reference;
+
+                        if (reference.ID.Equals(key) == true)
+                        {
+                            reference.Value = definition.Value as Identifier;
+                        }
+                    }
+
                     if (used.Value != null)
                     {
                         for (int j = 0; j < used.Value.Operands.Length; j++)
@@ -1492,7 +1520,8 @@ namespace SharpOS.AOT.IR
                         Console.WriteLine("\t" + definition.Block.Index + " : " + used.ToString());
                     }
 
-                    if (used is Assign == true)
+                    if (used is Assign == true
+                        && (used as Assign).Asignee is Reference == false)
                     {
                         string id = (used as Assign).Asignee.ID;
 
@@ -1771,7 +1800,8 @@ namespace SharpOS.AOT.IR
         private void AddLineScaneValue(Dictionary<string, LiveRange> values, Identifier identifier, Instructions.Instruction instruction)
         {
             if (identifier is Argument == true
-                || identifier is Field == true)
+                || identifier is Field == true
+                || identifier is Reference == true)
             {
                 return;
             }
@@ -1991,19 +2021,28 @@ namespace SharpOS.AOT.IR
                                 }
                                 else if (assign.Value.Operands.Length > 0)
                                 {
-                                    foreach (Operand operand in assign.Value.Operands)
+                                    if (assign.Value is Operands.Call == true)
                                     {
-                                        if (operand.ConvertTo != Operand.ConvertType.NotSet)
+                                        found = true;
+                                        Operands.Call call = assign.Value as Operands.Call;
+                                        assign.Asignee.SetSizeType(call.Method.ReturnType.ReturnType.FullName);
+                                    }
+                                    else
+                                    {
+                                        foreach (Operand operand in assign.Value.Operands)
                                         {
-                                            found = true;
-                                            assign.Asignee.SizeType = operand.ConvertSizeType;
-                                            break;
-                                        }
-                                        else if (operand.SizeType != Operand.InternalSizeType.NotSet)
-                                        {
-                                            found = true;
-                                            assign.Asignee.SizeType = operand.SizeType;
-                                            break;
+                                            if (operand.ConvertTo != Operand.ConvertType.NotSet)
+                                            {
+                                                found = true;
+                                                assign.Asignee.SizeType = operand.ConvertSizeType;
+                                                break;
+                                            }
+                                            else if (operand.SizeType != Operand.InternalSizeType.NotSet)
+                                            {
+                                                found = true;
+                                                assign.Asignee.SizeType = operand.SizeType;
+                                                break;
+                                            }
                                         }
                                     }
                                 }

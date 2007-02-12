@@ -13,7 +13,6 @@ using SharpOS;
 using SharpOS.AOT.IR;
 using SharpOS.AOT.X86;
 
-
 namespace SharpOS
 {
     public class AOTOS

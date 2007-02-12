@@ -121,10 +121,16 @@ namespace SharpOS.AOT.IR.Operands
         {
             if (type.EndsWith("*") == true)
             {
-                type = type.Substring(0, type.Length - 1);
+                //type = type.Substring(0, type.Length - 1);
+                this.sizeType = InternalSizeType.U;
+            }
+            else if (type.EndsWith("[]") == true)
+            {
+                //type = type.Substring(0, type.Length - 2);
+                this.sizeType = InternalSizeType.U;
             }
 
-            if (type.Equals("System.Boolean") == true)
+            else if (type.Equals("System.Boolean") == true)
             {
                 this.sizeType = InternalSizeType.U1;
             }

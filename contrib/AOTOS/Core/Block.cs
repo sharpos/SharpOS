@@ -119,9 +119,14 @@ namespace SharpOS.AOT.IR
             return result;
         }
 
-        private void Convert(Operands.Operand.ConvertType type)
+        private SharpOS.AOT.IR.Instructions.Instruction Convert(Operands.Operand.ConvertType type)
         {
-            this.instructions[this.instructions.Count - 1].Value.ConvertTo = type;
+            //this.instructions[this.instructions.Count - 1].Value.ConvertTo = type;
+
+            SharpOS.AOT.IR.Instructions.Instruction instruction = new Assign(new Register(stack - 1), new Register(stack - 1));
+            instruction.Value.ConvertTo = type;
+
+            return instruction;
         }
 
         public void ConvertFromCIL(bool secondPass)
@@ -156,135 +161,135 @@ namespace SharpOS.AOT.IR
                 // Convert
                 else if (cilInstruction.OpCode == OpCodes.Conv_I)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_I);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_I);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_I1)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_I1);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_I1);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_I2)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_I2);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_I2);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_I4)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_I4);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_I4);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_I8)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_I8);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_I8);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I1)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I1);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I1);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I1_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I1_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I1_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I2)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I2);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I2);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I2_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I2_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I2_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I4)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I4);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I4);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I4_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I4_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I4_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I8)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I8);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I8);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I8_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_I8_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_I8_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U1)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U1);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U1);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U1_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U1_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U1_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U2)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U2);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U2);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U2_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U2_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U2_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U4)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U4);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U4);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U4_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U4_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U4_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U8)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U8);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U8);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U8_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_Ovf_U8_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_Ovf_U8_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_R_Un)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_R_Un);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_R_Un);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_R4)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_R4);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_R4);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_R8)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_R8);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_R8);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_U)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_U);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_U);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_U1)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_U1);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_U1);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_U2)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_U2);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_U2);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_U4)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_U4);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_U4);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Conv_U8)
                 {
-                    Convert(Operands.Operand.ConvertType.Conv_U8);
+                    instruction = this.Convert(Operands.Operand.ConvertType.Conv_U8);
                 }
 
                 // Arithmetic
@@ -586,6 +591,108 @@ namespace SharpOS.AOT.IR
                     instruction = new Assign(new Register(stack), new Constant(cilInstruction.Operand));
                     (instruction.Value as Constant).SizeType = Operand.InternalSizeType.R8;
                 }
+                
+                // Indirect Load
+                else if (cilInstruction.OpCode == OpCodes.Ldind_I)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.I;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_I1)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.I1;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I1;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_I2)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.I2;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I2;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_I4)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.I4;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I4;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_I8)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.I8;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I8;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_R4)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.R4;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.R4;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_R8)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.R8;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.R8;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_U1)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.U1;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.U1;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_U2)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.U2;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.U2;
+
+                    instruction = new Assign(register, reference);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Ldind_U4)
+                {
+                    Reference reference = new Reference(new Register(stack - 1));
+                    reference.SizeType = Operand.InternalSizeType.U4;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.U4;
+
+                    instruction = new Assign(register, reference);
+                }
 
                 // Load Locales
                 /*else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S)
@@ -613,15 +720,79 @@ namespace SharpOS.AOT.IR
                     instruction = new Assign(new Register(stack), this.Method.GetLocal(3));
                 }
 
-                // Store
+                // Indirect Store 
+                else if (cilInstruction.OpCode == OpCodes.Stind_I)
+                {
+                    Reference reference = new Reference(new Register(stack - 2));
+                    reference.SizeType = Operand.InternalSizeType.I;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I;
+
+                    instruction = new Assign(reference, register);
+                }
                 else if (cilInstruction.OpCode == OpCodes.Stind_I1)
                 {
-                    instruction = new Assign(new Reference(new Register(stack - 2)), new Register(stack - 1));
+                    Reference reference = new Reference(new Register(stack - 2));
+                    reference.SizeType = Operand.InternalSizeType.I1;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I1;
+
+                    instruction = new Assign(reference, register);
                 }
                 else if (cilInstruction.OpCode == OpCodes.Stind_I2)
                 {
-                    instruction = new Assign(new Reference(new Register(stack - 2)), new Register(stack - 1));
+                    Reference reference = new Reference(new Register(stack - 2));
+                    reference.SizeType = Operand.InternalSizeType.I2;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I2;
+
+                    instruction = new Assign(reference, register);
                 }
+                else if (cilInstruction.OpCode == OpCodes.Stind_I4)
+                {
+                    Reference reference = new Reference(new Register(stack - 2));
+                    reference.SizeType = Operand.InternalSizeType.I4;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I4;
+
+                    instruction = new Assign(reference, register);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Stind_I8)
+                {
+                    Reference reference = new Reference(new Register(stack - 2));
+                    reference.SizeType = Operand.InternalSizeType.I8;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.I8;
+
+                    instruction = new Assign(reference, register);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Stind_R4)
+                {
+                    Reference reference = new Reference(new Register(stack - 2));
+                    reference.SizeType = Operand.InternalSizeType.R4;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.R4;
+
+                    instruction = new Assign(reference, register);
+                }
+                else if (cilInstruction.OpCode == OpCodes.Stind_R8)
+                {
+                    Reference reference = new Reference(new Register(stack - 2));
+                    reference.SizeType = Operand.InternalSizeType.R8;
+
+                    Register register = new Register(stack - 1);
+                    register.SizeType = Operand.InternalSizeType.R8;
+
+                    instruction = new Assign(reference, register);
+                }
+
+                // Store Locales
                 else if (cilInstruction.OpCode == OpCodes.Stloc || cilInstruction.OpCode == OpCodes.Stloc_S)
                 {
                     instruction = new Assign(this.Method.GetLocal((cilInstruction.Operand as VariableDefinition).Index), new Register(stack - 1));

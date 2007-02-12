@@ -14,7 +14,7 @@ using SharpOS.AOT.IR;
 
 namespace SharpOS
 {
-    public class SharpOS
+    public class Kernel
     {
         /*public static void BootSectorBegin()
         {
@@ -67,15 +67,32 @@ namespace SharpOS
             Asm.DATA("BootMessage", "Grub -> Booting [SharpOS] 2006 by Mircea-Cristian Racasan (\x01)\0");
         }*/
 
-        public static string BootMessage = "Grub -> Booting [SharpOS] 2007 by Mircea-Cristian Racasan (\x01)";
+        public unsafe static byte* String(string value)
+        {
+            return null;
+        }
 
-        public static void Main()
+        public unsafe static byte* BootMessage = String("Grub -> Booting [SharpOS] 2007 by Mircea-Cristian Racasan (\x01)");
+
+        public unsafe static void Main()
         {
             WriteMessage(BootMessage);
         }
 
-        public static void WriteMessage(string message)
+        public unsafe static void WriteMessage(byte* message)
         {
+            byte* video = (byte*)0xB8000;
+
+            int i = 0;
+
+            while (message[i] != 0)
+            {
+                *video++ = message[i++];
+                *video++ = 7;
+            }
+        }
+
+        /*{
             Asm.MOV(R32.ESI, new DWordMemory(null, R32.EBP, null, 0, 0x08));
             Asm.MOV(R32.EDI, 0xB8000);
             Asm.MOV(R8.AH, 0x0F);
@@ -89,7 +106,7 @@ namespace SharpOS
             Asm.JMP("WriteMessage");
 
             Asm.LABEL("Done");
-        }
+        }*/
 
         /*public static void KeyboardWait()
         {
@@ -109,7 +126,7 @@ namespace SharpOS
             return x / 50;
         }*/
 
-        public static void ClearScreen(byte clear_to, byte attrib)
+        /*public static void ClearScreen(byte clear_to, byte attrib)
         {
             unsafe
             {
@@ -127,7 +144,7 @@ namespace SharpOS
                     }
                 }
             }
-        }
+        }*/
         
 
         /*public static void BootSectorEnd()
