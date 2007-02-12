@@ -13,33 +13,32 @@
 {
 	.class public ansi auto Add extends [mscorlib]System.Object
 	{
-		.method public static int64 AddI8R4(int64, float32) cil managed
+		.method public static int32 AddI4I4(int32, int32) cil managed
 		{
 			.maxstack 3
 			
 			ldarg.0
 			ldarg.1
 			add
-			conv.i8
 			ret
 		}
 		
-		.method public static int64 Test1() cil managed
+		.method public static int32 Test0() cil managed
 		{
 			.maxstack 3
 			
-			ldc.i8 0x5555555555555555
-			ldc.r4 1234567
-			call int64 AOTTests.Add::AddI8R4(int64, float32)
+			ldc.i4 1
+			ldc.i4 2
+			call int32 AOTTests.Add::AddI4I4(int32, int32)
 			ret
 		}
 		
-		.method public static int32 CMP1() cil managed
+		.method public static int32 CMP0() cil managed
 		{
 			.maxstack 3
 
-			call int64 AOTTests.Add::Test1()
-			ldc.i8 0xAAAAAAAA9EEC098D
+			call int32 AOTTests.Add::Test0()
+			ldc.i4 3
 			ceq
 			brtrue ok
 
