@@ -1,0 +1,67 @@
+SharpGC -- A garbage collector written in C#
+
+Version: unreleased
+Author: William Lahti
+Date: Feb 12, 2007 (first commit)
+
+(C) 2007 William Lahti. This software is licensed under the terms of the 
+GNU Lesser General Public License.
+
+Introduction
+------------
+SharpGC provides a conservative, generational, compacting mark/sweep garbage collector
+written in C#. It is designed to be usable without any of the runtime features of C#, 
+so it is ideal for use with the SharpOS kernel. The runtime interface is tweaked toward 
+the CLI and C#, although it's conceivable that SharpGC could be used for another 
+purpose.
+
+Managed Heap
+-------
+The code has two primary static classes, SharpGC.GC and SharpGC.ManagedHeap. The 
+ManagedHeap class is an implementation of a compacting, resizable heap. The managed 
+heap handles allocation/deallocation of the heap from the system malloc/free, and also 
+manages memory allocated in the heap. The runtime determines the initial size of the 
+heap, 64 KB is the recommended starting point for processes. The runtime can also 
+control when the managed heap performs emergency compaction to regain space when the 
+heap is filled up and by how much the heap expands itself when it is full and 
+compaction does not help the situation.
+
+The heap keeps track of a pointer called NextObjPtr, which is used to allocate new 
+objects from the managed heap. As objects are allocated, this pointer is incremented. 
+When the heap allocates a memory range, it also reserves space for the "managed entry 
+header", which stores information necessary for the managed heap to update the 
+runtime's object pointers. 
+
+Interface
+---------
+The collector provides an interface that is mostly compatible with the System.GC class, 
+except where additional runtime functionality is required. SharpGC makes use of 
+delegates for notifying the runtime of object finalization as well as for getting the 
+fields of an object. The specific interface is outlined here.
+
+- First, the runtime must call the GC.Initialize() method with valid Finalizer and
+  ObjectWalk delegates, and the initial size of the managed heap, which is passed along 
+  to ManagedHeap.Initialize().
+- For each object which is constructed, the runtime must call GC.Allocate(objSize), 
+  which reserves a portion of the managed heap for the object. GC.Allocate() returns a 
+  GCData pointer containing the size of the memory range and a pointer to the range 
+  itself. The GCData pointer also contains two fields, Flags and Status, which are used
+  for object-specific communication between the runtime and the garbage collector. This 
+  structure will be updated by the garbage collector during compaction or possibly other
+  operations so it's important to only retain pointers to the GCData structure, and not 
+  to the memory itself.
+- Garbage collection is performed in the GC.Collect() method. The runtime should perform
+  two sets of periodic collections: young object collection and full object collection. 
+  Young object collection is a call to GC.Collect(generation, root_list) where 
+  "generation" is a low number, causing the garbage collector to only consider young 
+  objects for collection. Full object collection can be achieved by calling the overload
+  of Collect() which does not accept a "generation" argument. The root_list parameter
+  provides a list of static/global "root" fields, which together allow the garbage 
+  collector to walk over all of the objects reachable by application code.
+- The garbage collector uses the runtime's implementation of the "ObjectWalk" delegate 
+  provided during initialization to query the runtime for the fields available from each
+  object. 
+
+Status
+------
+See the TODO/CHANGELOG files for the status of SharpGC.

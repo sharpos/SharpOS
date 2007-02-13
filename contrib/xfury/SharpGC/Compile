@@ -1,0 +1,11 @@
+#!/bin/bash
+#
+# Sorry for just the simple compile script,
+# haven't had time to make an nant script :-\
+
+export MONO_PATH="$PWD/bin:$MONO_PATH"
+
+mkdir -p bin
+gmcs GC.cs ManagedHeap.cs /unsafe /target:library /debug /out:bin/SharpGC.dll
+gmcs GCTest.cs /r:SharpGC /unsafe /debug /out:bin/GCTest.exe
+gmcs HeapTest.cs /r:SharpGC /unsafe /debug /out:bin/HeapTest.exe

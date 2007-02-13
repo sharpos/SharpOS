@@ -1,0 +1,6 @@
+TODO
+- Tighten code access--use internal/private more where needed
+- Finish GCFlags/GCStatus changes to GCData*
+- Clean up
+- Documentation
+- Create nant/multibuild build file
