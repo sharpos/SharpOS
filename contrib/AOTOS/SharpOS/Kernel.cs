@@ -76,7 +76,8 @@ namespace SharpOS
 
         public unsafe static void Main()
         {
-            WriteMessage(BootMessage);
+            WriteMessage(String("OK"));
+            //WriteMessage(BootMessage);
         }
 
         public unsafe static void WriteMessage(byte* message)

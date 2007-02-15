@@ -451,13 +451,18 @@ namespace SharpOS.AOT.IR
                 // Misc
                 else if (cilInstruction.OpCode == OpCodes.Ret)
                 {
-                    if (stack > 0)
+                    
+                    if (this.method.MethodDefinition.ReturnType.ReturnType.FullName.Equals("System.Void") == true)
+                    {
+                        instruction = new Return(); 
+                    }
+                    else if (stack > 0)
                     {
                         instruction = new Return(new Register(stack - 1));
                     }
                     else
                     {
-                        instruction = new Return();
+                        instruction = new Return(new Register(0)); 
                     }
                 }
                 else if (cilInstruction.OpCode == OpCodes.Switch)
@@ -956,7 +961,7 @@ namespace SharpOS.AOT.IR
                    || cilInstruction.OpCode == OpCodes.Ldelem_U1
                    || cilInstruction.OpCode == OpCodes.Ldelem_U2
                    || cilInstruction.OpCode == OpCodes.Ldelem_U4
-                   || cilInstruction.OpCode == OpCodes.Stelem_Any
+                   || cilInstruction.OpCode == OpCodes.Ldelem_Any
                    || cilInstruction.OpCode == OpCodes.Ldelema)
                 {
                     // TODO Signed/Unsigned
@@ -982,10 +987,11 @@ namespace SharpOS.AOT.IR
                 stack += GetStackDelta(cilInstruction);
             }
 
-            if (secondPass == true && stack != 0 && !(stack == 1 && this.type == BlockType.Return && this[this.InstructionsCount - 1].Value != null))
+            // TODO remove me
+            /*if (secondPass == true && stack != 0 && !(stack == 1 && this.type == BlockType.Return && this[this.InstructionsCount - 1].Value != null))
             {
                 throw new Exception("Could not fix the stack in '" + this.method.ToString() + "'.");
-            }
+            }*/
         }
 
         public void Merge(Block block)

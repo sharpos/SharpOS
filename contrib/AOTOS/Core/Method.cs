@@ -450,12 +450,14 @@ namespace SharpOS.AOT.IR
 
         private void ConvertFromCIL()
         {
+            // TODO don't move the instructions from one block to the other
+
             foreach (Block block in blocks)
             {
                 block.ConvertFromCIL(false);
             }
 
-            List<Block> removeFirstInstruction = new List<Block>();
+            /*List<Block> removeFirstInstruction = new List<Block>();
 
             foreach (Block block in blocks)
             {
@@ -502,7 +504,7 @@ namespace SharpOS.AOT.IR
                 {
                     block.ConvertFromCIL(true);
                 }
-            }
+            }*/
 
             return;
         }
@@ -2019,30 +2021,32 @@ namespace SharpOS.AOT.IR
                                     found = true;
                                     assign.Asignee.SizeType = assign.Value.SizeType;
                                 }
+                                else if (assign.Value is Operands.Call == true)
+                                {
+                                    found = true;
+                                    Operands.Call call = assign.Value as Operands.Call;
+                                    assign.Asignee.SetSizeType(call.Method.ReturnType.ReturnType.FullName);
+                                }
+                                else if (assign.Value is Operands.Boolean == true)
+                                {
+                                    found = true;
+                                    assign.Asignee.SizeType = Operand.InternalSizeType.I;
+                                }
                                 else if (assign.Value.Operands.Length > 0)
                                 {
-                                    if (assign.Value is Operands.Call == true)
+                                    foreach (Operand operand in assign.Value.Operands)
                                     {
-                                        found = true;
-                                        Operands.Call call = assign.Value as Operands.Call;
-                                        assign.Asignee.SetSizeType(call.Method.ReturnType.ReturnType.FullName);
-                                    }
-                                    else
-                                    {
-                                        foreach (Operand operand in assign.Value.Operands)
+                                        if (operand.ConvertTo != Operand.ConvertType.NotSet)
                                         {
-                                            if (operand.ConvertTo != Operand.ConvertType.NotSet)
-                                            {
-                                                found = true;
-                                                assign.Asignee.SizeType = operand.ConvertSizeType;
-                                                break;
-                                            }
-                                            else if (operand.SizeType != Operand.InternalSizeType.NotSet)
-                                            {
-                                                found = true;
-                                                assign.Asignee.SizeType = operand.SizeType;
-                                                break;
-                                            }
+                                            found = true;
+                                            assign.Asignee.SizeType = operand.ConvertSizeType;
+                                            break;
+                                        }
+                                        else if (operand.SizeType != Operand.InternalSizeType.NotSet)
+                                        {
+                                            found = true;
+                                            assign.Asignee.SizeType = operand.SizeType;
+                                            break;
                                         }
                                     }
                                 }
@@ -2101,7 +2105,7 @@ namespace SharpOS.AOT.IR
             this.ComputeLiveRanges();
             this.LinearScanRegisterAllocation();
 
-            Console.WriteLine(this.Dump(ReversePostorder()));
+            Console.WriteLine(this.Dump()); //ReversePostorder()));
 
             return;
         }

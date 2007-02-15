@@ -276,7 +276,8 @@ namespace SharpOS.AOT.X86
 
                     this.LABEL(fullname);
 
-                    if (field.FieldType.ToString().EndsWith("*") == true)
+                    if (field.FieldType.ToString().EndsWith("*") == true
+                        || field.FieldType.ToString().Equals("System.Int32") == true)
                     {
                         this.DATA((uint)0);
                     }
@@ -896,7 +897,7 @@ namespace SharpOS.AOT.X86
 
             foreach (Block block in method)
             {
-                this.LABEL(fullname + "_" + block.StartOffset.ToString());
+                this.LABEL(fullname + "_" + block.Index.ToString()); //StartOffset.ToString());
 
                 foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block)
                 {
@@ -907,7 +908,7 @@ namespace SharpOS.AOT.X86
                     }
                     else if (instruction is SharpOS.AOT.IR.Instructions.Call == true)
                     {
-                        HandleCall(method, block, instruction);
+                        HandleCall(method, block, (instruction as SharpOS.AOT.IR.Instructions.Call).Method as SharpOS.AOT.IR.Operands.Call);
                     }
                     else if (instruction is SharpOS.AOT.IR.Instructions.Assign == true)
                     {
@@ -923,7 +924,7 @@ namespace SharpOS.AOT.X86
                     }
                     else if (instruction is SharpOS.AOT.IR.Instructions.Return == true)
                     {
-                        HandleReturn(method, block, instruction);
+                        HandleReturn(method, block, instruction as SharpOS.AOT.IR.Instructions.Return);
                     }
                     else
                     {
@@ -934,6 +935,8 @@ namespace SharpOS.AOT.X86
 
             if (method.MethodDefinition.Name.StartsWith("BootSector") == false)
             {
+                this.LABEL(fullname + "_exit");
+
                 this.LEA(R32.ESP, new DWordMemory(null, R32.EBP, null, 0, -12));
                 this.POP(R32.EDI);
                 this.POP(R32.ESI);
@@ -949,7 +952,7 @@ namespace SharpOS.AOT.X86
         {
             SharpOS.AOT.IR.Instructions.ConditionalJump jump = instruction as SharpOS.AOT.IR.Instructions.ConditionalJump;
 
-            string label = method.MethodFullName + "_" + block.Outs[0].StartOffset.ToString();
+            string label = method.MethodFullName + "_" + block.Outs[0].Index.ToString(); //.StartOffset.ToString();
 
             if (jump.Value is SharpOS.AOT.IR.Operands.Boolean)
             {
@@ -1078,7 +1081,7 @@ namespace SharpOS.AOT.X86
         {
             SharpOS.AOT.IR.Instructions.Jump jump = instruction as SharpOS.AOT.IR.Instructions.Jump;
 
-            this.JMP(method.MethodFullName + "_" + block.Outs[0].StartOffset.ToString());
+            this.JMP(method.MethodFullName + "_" + block.Outs[0].Index.ToString()); //.StartOffset.ToString());
         }
 
         private void HandleAssemblyStub(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
@@ -1103,19 +1106,26 @@ namespace SharpOS.AOT.X86
             this.GetAssemblyInstruction(call.Method, parameterTypes);
         }
 
-        private void HandleCall(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+        private void HandleCall(Method method, Block block, SharpOS.AOT.IR.Operands.Call call)
         {
-            SharpOS.AOT.IR.Instructions.Call call = (instruction as SharpOS.AOT.IR.Instructions.Call);
-
-            for (int i = 0; i < call.Method.Operands.Length; i++)
+            for (int i = 0; i < call.Operands.Length; i++)
             {
-                Operand operand = call.Method.Operands[call.Method.Operands.Length - i - 1];
+                Operand operand = call.Operands[call.Operands.Length - i - 1];
 
                 if (operand is Constant == true)
                 {
                     if (this.IsFourBytes(operand) == true)
                     {
-                        this.PUSH(Convert.ToUInt32((operand as Constant).Value));
+                        Int32 value = (Int32) (operand as Constant).Value;
+
+                        this.PUSH((UInt32) value);
+                    }
+                    else if (this.IsEightBytes(operand) == true)
+                    {
+                        Int64 value = (Int64)(operand as Constant).Value;
+
+                        this.PUSH((UInt32)value & 0xFFFFFFFF);
+                        this.PUSH((UInt32)value >> 32);
                     }
                     else
                     {
@@ -1143,23 +1153,39 @@ namespace SharpOS.AOT.X86
                 }
                 else
                 {
-                    throw new Exception("'" + call.Method.Operands[i].GetType() + "' is not supported.");
+                    throw new Exception("'" + call.Operands[i].GetType() + "' is not supported.");
                 }
             }
 
-            this.CALL(call.Method.Method.DeclaringType.FullName + "." + call.Method.Method.Name);
-            this.ADD(R32.ESP, (UInt32)(4 * call.Method.Method.Parameters.Count));
+            this.CALL(call.Method.DeclaringType.FullName + "." + call.Method.Name);
+            this.ADD(R32.ESP, (UInt32)(4 * call.Method.Parameters.Count));
         }
 
         private void MovRegisterOperand(R32Type register, Operand operand)
         {
-            if (operand.IsRegisterSet)
+            if (operand is Constant == true)
+            {
+                this.MovRegisterConstant(register, operand as Constant);
+            }
+            else if (operand.IsRegisterSet)
             {
                 this.MovRegisterRegister(register, this.GetRegister(operand.Register));
             }
             else
             {
                 this.MovRegisterMemory(register, operand as Identifier);
+            }
+        }
+
+        private void MovOperandRegister(Operand operand, R32Type register)
+        {
+            if (operand.IsRegisterSet == true)
+            {
+                this.MovRegisterRegister(this.GetRegister(operand.Register), register);
+            }
+            else
+            {
+                this.MovMemoryRegister(operand as Identifier, register);
             }
         }
 
@@ -1197,6 +1223,28 @@ namespace SharpOS.AOT.X86
             {
                 throw new Exception("'" + memory.ToString() + "' is not supported.");
             }
+        }
+
+        private void MovRegisterMemory(R32Type loRegister, R32Type hiRegister, Identifier identifier)
+        {
+            Memory memory = this.GetMemoryType(identifier);
+
+            this.MOV(loRegister, memory as DWordMemory);
+
+            memory.Displacement -= 4;
+
+            this.MOV(hiRegister, memory as DWordMemory);
+        }
+
+        private void MovMemoryRegister(Identifier identifier, R32Type loRegister, R32Type hiRegister)
+        {
+            Memory memory = this.GetMemoryType(identifier);
+
+            this.MOV(memory as DWordMemory, loRegister);
+
+            memory.Displacement -= 4;
+
+            this.MOV(memory as DWordMemory, hiRegister);
         }
 
         private void MovMemoryRegister(Identifier identifier, R32Type register)
@@ -1240,56 +1288,90 @@ namespace SharpOS.AOT.X86
             Operand first = operand.Operands[0];
             Operand second = operand.Operands[1];
 
-            if (first is Constant == true)
+            if (this.IsEightBytes(first) == true
+                || this.IsEightBytes(second) == true)
             {
-                Operand temp = first;
-                first = second;
-                second = temp;
-            }
-
-            this.MovRegisterOperand(register, first);
-
-            if (second is Constant == true)
-            {
-                this.CMP(register, Convert.ToUInt32((second as Constant).Value));
-            }
-            else if (second.IsRegisterSet == true)
-            {
-                this.CMP(register, this.GetRegister(second.Register));
             }
             else
             {
-                Memory memory = this.GetMemory(second as Identifier);
-
-                this.CMP(register, memory as DWordMemory);
-            }
-
-            if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.Equal)
-            {
-                this.SETE(R8.AL);
-            }
-            else
-            {
-                throw new Exception("'" + operand.Operator + "' is not supported.");
-            }
-
-            this.MOVZX(register, R8.AL);
-        }
-
-        private void MovRegisterArithmetic(R32Type register, Arithmetic operand)
-        {
-            if (operand.Operator is Binary == true)
-            {
-                Binary.BinaryType type = (operand.Operator as Binary).Type;
-                Operand first = operand.Operands[0];
-                Operand second = operand.Operands[1];
-
                 if (first is Constant == true)
                 {
                     Operand temp = first;
                     first = second;
                     second = temp;
                 }
+
+                this.MovRegisterOperand(register, first);
+
+                if (second is Constant == true)
+                {
+                    Int32 value = (Int32)(second as Constant).Value;
+
+                    this.CMP(register, (UInt32)value);
+                }
+                else if (second.IsRegisterSet == true)
+                {
+                    this.CMP(register, this.GetRegister(second.Register));
+                }
+                else
+                {
+                    Memory memory = this.GetMemory(second as Identifier);
+
+                    this.CMP(register, memory as DWordMemory);
+                }
+
+                if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.Equal)
+                {
+                    this.SETE(R8.AL);
+                }
+                else if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThan)
+                {
+                    this.SETG(R8.AL);
+                }
+                else if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThan)
+                {
+                    this.SETL(R8.AL);
+                }
+                else
+                {
+                    // TODO implement the rest
+                    throw new Exception("'" + operand.Operator + "' is not supported.");
+                }
+
+                this.MOVZX(register, R8.AL);
+            }
+        }
+
+        private void MovRegisterArithmetic(R32Type register, Arithmetic operand)
+        {
+            if (operand.Operator is Unary == true)
+            {
+                Unary.UnaryType type = (operand.Operator as Unary).Type;
+                Operand first = operand.Operands[0];
+
+                this.MovRegisterOperand(register, first);
+
+                if (type == Operator.UnaryType.Negation)
+                {
+                    this.NEG(register);
+                }
+                else
+                {
+                    throw new Exception("'" + type + "' is not supported.");
+                }
+            }
+            else if (operand.Operator is Binary == true)
+            {
+                Binary.BinaryType type = (operand.Operator as Binary).Type;
+                Operand first = operand.Operands[0];
+                Operand second = operand.Operands[1];
+
+                /*if (first is Constant == true)
+                {
+                    Operand temp = first;
+                    first = second;
+                    second = temp;
+                }*/
 
                 this.MovRegisterOperand(register, first);
 
@@ -1330,10 +1412,70 @@ namespace SharpOS.AOT.X86
                         this.ADD(register, memory as DWordMemory);
                     }
                 }
-                /*else if (type == Binary.BinaryType.Mul)
+                else if (type == Binary.BinaryType.Sub)
                 {
-                    // TODO
-                }*/
+                    if (second is Constant == true)
+                    {
+                        UInt32 value = Convert.ToUInt32((second as Constant).Value);
+
+                        if (value == 0)
+                        {
+                            // Nothing to do
+                        }
+                        else if (value == 1)
+                        {
+                            this.DEC(register);
+                        }
+                        else if (value == 2)
+                        {
+                            this.DEC(register);
+                            this.DEC(register);
+                        }
+                        else
+                        {
+                            this.SUB(register, value);
+                        }
+                    }
+                    else if (second.IsRegisterSet == true)
+                    {
+                        this.SUB(register, this.GetRegister(second.Register));
+                    }
+                    else
+                    {
+                        Memory memory = this.GetMemory(second as Identifier);
+
+                        this.SUB(register, memory as DWordMemory);
+                    }
+                }
+                else if (type == Binary.BinaryType.Mul)
+                {
+                    if (second is Constant == true)
+                    {
+                        UInt32 value = Convert.ToUInt32((second as Constant).Value);
+
+                        this.IMUL(register, value);
+                    }
+                    else if (second.IsRegisterSet == true)
+                    {
+                        this.IMUL(register, this.GetRegister(second.Register));
+                    }
+                    else
+                    {
+                        Memory memory = this.GetMemory(second as Identifier);
+
+                        this.IMUL(register, memory as DWordMemory);
+                    }
+                }
+                else if (type == Binary.BinaryType.Div)
+                {
+                    this.MovRegisterOperand(R32.EAX, first);
+                    this.MovRegisterOperand(R32.ECX, second);
+
+                    this.CDQ();
+                    this.IDIV(R32.ECX);
+
+                    this.MOV(register, R32.EAX);
+                }
                 else
                 {
                     throw new Exception("'" + type + "' is not supported.");
@@ -1368,23 +1510,30 @@ namespace SharpOS.AOT.X86
             return label;
         }
 
-        private void MovRegisterConstant(Assign assign)
+        private void MovRegisterConstant(R32Type register, Constant operand)
         {
-            if ((assign.Value as Constant).Value.GetType().ToString().Equals("System.String") == true)
+            if (operand.Value.GetType().ToString().Equals("System.String") == true)
             {
-                this.MOV(this.GetRegister(assign.Asignee.Register), this.AddString((assign.Value as Constant).Value.ToString()));
+                this.MOV(register, this.AddString(operand.Value.ToString()));
             }
             else
             {
-                this.MovRegisterConstant(this.GetRegister(assign.Asignee.Register), Convert.ToUInt32((assign.Value as Constant).Value));
+                this.MovRegisterConstant(register, Convert.ToUInt32(operand.Value));
             }
+        }
+
+        private void MovRegisterConstant(Assign assign)
+        {
+            this.MovRegisterConstant(this.GetRegister(assign.Asignee.Register), assign.Value as Constant);
         }
 
         private void MovMemoryConstant(Assign assign)
         {
             Memory memory = this.GetMemory(assign.Asignee);
 
-            this.MovMemoryConstant(memory, Convert.ToUInt32((assign.Value as Constant).Value));
+            Int32 value = (Int32)(assign.Value as Constant).Value;
+
+            this.MovMemoryConstant(memory, (UInt32) value);
         }
 
         private Memory GetMemory(SharpOS.AOT.IR.Operands.Operand.InternalSizeType sizeType, R32Type _base, byte scale, int displacement)
@@ -1419,6 +1568,18 @@ namespace SharpOS.AOT.X86
                 || sizeType == Operand.InternalSizeType.U4
                 || sizeType == Operand.InternalSizeType.I
                 || sizeType == Operand.InternalSizeType.U)
+            {
+                if (displacement == 0)
+                {
+                    address = new DWordMemory(null, _base, null, scale);
+                }
+                else
+                {
+                    address = new DWordMemory(null, _base, null, scale, displacement);
+                }
+            }
+            else if (sizeType == Operand.InternalSizeType.I8
+                || sizeType == Operand.InternalSizeType.U8)
             {
                 if (displacement == 0)
                 {
@@ -1676,6 +1837,10 @@ namespace SharpOS.AOT.X86
                         this.FreeSpareRegister(register);
                     }
                 }
+                else if (this.IsEightBytes(assign.Asignee) == true)
+                {
+                    
+                }
                 else
                 {
                     throw new Exception("'" + instruction + "' is not supported.");
@@ -1717,7 +1882,20 @@ namespace SharpOS.AOT.X86
                 }
                 else
                 {
-                    throw new Exception("'" + instruction + "' is not supported.");
+                    this.HandleCall(method, block, call);
+                    
+                    if (this.IsFourBytes(assign.Asignee) == true)
+                    {
+                        this.MovOperandRegister(assign.Asignee, R32.EAX);
+                    }
+                    else if (this.IsEightBytes(assign.Asignee) == true)
+                    {
+                        this.MovMemoryRegister(assign.Asignee, R32.EAX, R32.EDX);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + instruction + "' is not supported.");
+                    }
                 }
             }
             else
@@ -1726,9 +1904,25 @@ namespace SharpOS.AOT.X86
             }
         }
 
-        private void HandleReturn(Method method, Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+        private void HandleReturn(Method method, Block block, SharpOS.AOT.IR.Instructions.Return instruction)
         {
-            // TODO
+            if (instruction.Value != null)
+            {
+                if (this.IsFourBytes(instruction.Value) == true)
+                {
+                    this.MovRegisterOperand(R32.EAX, instruction.Value);
+                }
+                else if (this.IsEightBytes(instruction.Value) == true)
+                {
+                    this.MovRegisterMemory(R32.EAX, R32.EDX, instruction.Value as Identifier);
+                }
+                else
+                {
+                    throw new Exception("'" + instruction + "' is not supported.");
+                }
+            }
+
+            this.JMP(method.MethodFullName + "_exit");
         }
 
         private bool IsFourBytes(Operand operand)
@@ -1741,6 +1935,17 @@ namespace SharpOS.AOT.X86
                 || operand.SizeType == Operand.InternalSizeType.U2
                 || operand.SizeType == Operand.InternalSizeType.I4
                 || operand.SizeType == Operand.InternalSizeType.U4)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool IsEightBytes(Operand operand)
+        {
+            if (operand.SizeType == Operand.InternalSizeType.I8
+                || operand.SizeType == Operand.InternalSizeType.U8)
             {
                 return true;
             }
