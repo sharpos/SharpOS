@@ -167,7 +167,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/2", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.ADC(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/2", "id"}));
+				}
 			}
 		}
 		
@@ -302,7 +309,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/0", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.ADD(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/0", "id"}));
+				}
 			}
 		}
 		
@@ -315,7 +329,17 @@ namespace SharpOS.AOT.X86
 		// ADD rmreg32,imm8
 		public void ADD (R32Type target, Byte source)
 		{
-			this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/0", "ib"}));
+			if (source == 0)
+			{
+			}
+			else if (source == 1)
+			{
+				this.INC(target);
+			}
+			else
+			{
+				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/0", "ib"}));
+			}
 		}
 		
 		// AND mem8,reg8
@@ -437,7 +461,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/4", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.AND(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/4", "id"}));
+				}
 			}
 		}
 		
@@ -1669,7 +1700,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/7", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.CMP(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/7", "id"}));
+				}
 			}
 		}
 		
@@ -4598,7 +4636,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/1", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.OR(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/1", "id"}));
+				}
 			}
 		}
 		
@@ -4826,7 +4871,14 @@ namespace SharpOS.AOT.X86
 		// PUSH imm32
 		public void PUSH (UInt32 target)
 		{
-			this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "PUSH", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"o32", "68", "id"}));
+			if ((Int32)target >= -128 && (Int32)target <= 127)
+			{
+				this.PUSH((byte)target);
+			}
+			else
+			{
+				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "PUSH", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"o32", "68", "id"}));
+			}
 		}
 		
 		// PUSH segreg
@@ -5773,7 +5825,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/3", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.SBB(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/3", "id"}));
+				}
 			}
 		}
 		
@@ -6700,7 +6759,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/5", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.SUB(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/5", "id"}));
+				}
 			}
 		}
 		
@@ -6713,7 +6779,17 @@ namespace SharpOS.AOT.X86
 		// SUB rmreg32,imm8
 		public void SUB (R32Type target, Byte source)
 		{
-			this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/5", "ib"}));
+			if (source == 0)
+			{
+			}
+			else if (source == 1)
+			{
+				this.DEC(target);
+			}
+			else
+			{
+				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/5", "ib"}));
+			}
 		}
 		
 		// SYSCALL 
@@ -6829,7 +6905,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "F7", "/0", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.TEST(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "F7", "/0", "id"}));
+				}
 			}
 		}
 		
@@ -7118,7 +7201,14 @@ namespace SharpOS.AOT.X86
 			}
 			else
 			{
-				this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/6", "id"}));
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+				{
+					this.XOR(target, (byte)source);
+				}
+				else
+				{
+					this.instructions.Add(new Instruction(true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/6", "id"}));
+				}
 			}
 		}
 		

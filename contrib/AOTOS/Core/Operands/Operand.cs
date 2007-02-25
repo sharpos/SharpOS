@@ -117,123 +117,130 @@ namespace SharpOS.AOT.IR.Operands
             set { sizeType = value; }
         }
 
-        public void SetSizeType(string type)
+        public static InternalSizeType GetSizeType(string type)
         {
+            InternalSizeType sizeType;
+
             if (type.EndsWith("*") == true)
             {
-                //type = type.Substring(0, type.Length - 1);
-                this.sizeType = InternalSizeType.U;
+                sizeType = InternalSizeType.U;
             }
             else if (type.EndsWith("[]") == true)
             {
-                //type = type.Substring(0, type.Length - 2);
-                this.sizeType = InternalSizeType.U;
+                sizeType = InternalSizeType.U;
             }
 
             else if (type.Equals("System.Boolean") == true)
             {
-                this.sizeType = InternalSizeType.U1;
+                sizeType = InternalSizeType.U1;
             }
             else if (type.Equals("bool") == true)
             {
-                this.sizeType = InternalSizeType.U1;
+                sizeType = InternalSizeType.U1;
             }
 
             else if (type.Equals("System.Byte") == true)
             {
-                this.sizeType = InternalSizeType.U1;
+                sizeType = InternalSizeType.U1;
             }
             else if (type.Equals("System.SByte") == true)
             {
-                this.sizeType = InternalSizeType.I1;
+                sizeType = InternalSizeType.I1;
             }
 
             else if (type.Equals("char") == true)
             {
-                this.sizeType = InternalSizeType.U2;
+                sizeType = InternalSizeType.U2;
             }
             else if (type.Equals("short") == true)
             {
-                this.sizeType = InternalSizeType.I2;
+                sizeType = InternalSizeType.I2;
             }
             else if (type.Equals("ushort") == true)
             {
-                this.sizeType = InternalSizeType.U2;
+                sizeType = InternalSizeType.U2;
             }
             else if (type.Equals("System.UInt16") == true)
             {
-                this.sizeType = InternalSizeType.U2;
+                sizeType = InternalSizeType.U2;
             }
             else if (type.Equals("System.Int16") == true)
             {
-                this.sizeType = InternalSizeType.I2;
+                sizeType = InternalSizeType.I2;
             }
 
             else if (type.Equals("int") == true)
             {
-                this.sizeType = InternalSizeType.I4;
+                sizeType = InternalSizeType.I4;
             }
             else if (type.Equals("uint") == true)
             {
-                this.sizeType = InternalSizeType.U4;
+                sizeType = InternalSizeType.U4;
             }
             else if (type.Equals("System.UInt32") == true)
             {
-                this.sizeType = InternalSizeType.U4;
+                sizeType = InternalSizeType.U4;
             }
             else if (type.Equals("System.Int32") == true)
             {
-                this.sizeType = InternalSizeType.I4;
+                sizeType = InternalSizeType.I4;
             }
 
             else if (type.Equals("long") == true)
             {
-                this.sizeType = InternalSizeType.I8;
+                sizeType = InternalSizeType.I8;
             }
             else if (type.Equals("ulong") == true)
             {
-                this.sizeType = InternalSizeType.U8;
+                sizeType = InternalSizeType.U8;
             }
             else if (type.Equals("System.UInt64") == true)
             {
-                this.sizeType = InternalSizeType.U8;
+                sizeType = InternalSizeType.U8;
             }
             else if (type.Equals("System.Int64") == true)
             {
-                this.sizeType = InternalSizeType.I8;
+                sizeType = InternalSizeType.I8;
             }
 
             else if (type.Equals("float") == true)
             {
-                this.sizeType = InternalSizeType.R4;
+                sizeType = InternalSizeType.R4;
             }
             else if (type.Equals("System.Single") == true)
             {
-                this.sizeType = InternalSizeType.R4;
+                sizeType = InternalSizeType.R4;
             }
 
             else if (type.Equals("double") == true)
             {
-                this.sizeType = InternalSizeType.R8;
+                sizeType = InternalSizeType.R8;
             }
             else if (type.Equals("System.Double") == true)
             {
-                this.sizeType = InternalSizeType.R8;
+                sizeType = InternalSizeType.R8;
             }
 
             else if (type.Equals("string") == true)
             {
-                this.sizeType = InternalSizeType.U;
+                sizeType = InternalSizeType.U;
             }
             else if (type.Equals("System.String") == true)
             {
-                this.sizeType = InternalSizeType.U;
+                sizeType = InternalSizeType.U;
             }
 
             else
             {
                 throw new Exception("'" + type + "' not supported.");
             }
+
+            return sizeType;
+        }
+        
+        public void SetSizeType(string type)
+        {
+            this.sizeType = Operand.GetSizeType(type);
         }
 
         public InternalSizeType ConvertSizeType

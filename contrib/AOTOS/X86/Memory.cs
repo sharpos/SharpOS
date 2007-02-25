@@ -71,6 +71,10 @@ namespace SharpOS.AOT.X86
             this.Displacement = 0;
         }
 
+        protected Memory()
+        {
+        }
+
         public Memory(string label)
         {
             this.reference = label;
@@ -119,8 +123,8 @@ namespace SharpOS.AOT.X86
             Check32Values();
         }
 
-        private Int32 displacement = 0;
-        private bool displacementSet = false;
+        protected Int32 displacement = 0;
+        protected bool displacementSet = false;
 
         internal Int32 Displacement
         {
@@ -128,18 +132,18 @@ namespace SharpOS.AOT.X86
             set { this.displacementSet = true; this.displacement = value; }
         }
 
-        private bool bits32Address = true;
-        private byte scale = 0;
-        private Register index = null, _base = null;
+        protected bool bits32Address = true;
+        protected byte scale = 0;
+        protected Register index = null, _base = null;
 
-        private string reference = string.Empty;
+        protected string reference = string.Empty;
 
         public string Reference
         {
             get { return reference; }
         }
 
-        private SegType segment;
+        protected SegType segment;
 
         public SegType Segment
         {

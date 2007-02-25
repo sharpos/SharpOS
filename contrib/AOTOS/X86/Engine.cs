@@ -11,7 +11,7 @@ namespace SharpOS.AOT.X86
 {
 	public partial class Assembly
 	{
-		private void GetAssemblyInstruction(SharpOS.AOT.IR.Operands.Call method, string parameterTypes)
+		internal void GetAssemblyInstruction(SharpOS.AOT.IR.Operands.Call method, string parameterTypes)
 		{
 			switch(method.Method.Name)
 			{

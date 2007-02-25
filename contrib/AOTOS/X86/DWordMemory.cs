@@ -50,5 +50,22 @@ namespace SharpOS.AOT.X86
             : base(segment, _base, index)
         {
         }
+
+        public DWordMemory(DWordMemory memory)
+        {
+            displacement = memory.displacement;
+            displacementSet = memory.displacementSet;
+
+
+            bits32Address = memory.bits32Address;
+            scale = memory.scale;
+            index = memory.index;
+            _base = memory._base;
+
+            reference = memory.reference;
+
+
+            segment = memory.segment;
+        }
     }
 }

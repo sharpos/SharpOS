@@ -39,6 +39,7 @@
   <ItemGroup>
     <Compile Include="Asm.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="AssemblyMethod.cs" />
     <Compile Include="Bits32Instruction.cs" />
     <Compile Include="ByteDataInstruction.cs" />
     <Compile Include="ByteMemory.cs" />
