@@ -132,6 +132,24 @@ namespace SharpOS.AOT.X86
             set { this.displacementSet = true; this.displacement = value; }
         }
 
+        protected Int32 displacementDelta = 0;
+
+        internal Int32 DisplacementDelta
+        {
+            get { return this.displacementDelta; }
+            set 
+            {
+                if (this.reference.Length == 0)
+                {
+                    this.displacement += value;
+                }
+                else
+                {
+                    this.displacementDelta = value;
+                }
+            }
+        }
+
         protected bool bits32Address = true;
         protected byte scale = 0;
         protected Register index = null, _base = null;

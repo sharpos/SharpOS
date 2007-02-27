@@ -915,11 +915,16 @@ namespace SharpOS.AOT.IR
                     instruction = new Assign(new Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldDefinition).Name, new Register(stack - 1)));
                     (instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
                 }*/
-                else if (cilInstruction.OpCode == OpCodes.Ldsfld || cilInstruction.OpCode == OpCodes.Ldsflda)
+                else if (cilInstruction.OpCode == OpCodes.Ldsfld)
+                {
+                    instruction = new Assign(new Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name));
+                    (instruction.Value as Identifier).SizeType = Operand.GetSizeType((cilInstruction.Operand as FieldReference).FieldType.FullName);
+                }
+                /*else if (cilInstruction.OpCode == OpCodes.Ldsflda)
                 {
                     instruction = new Assign(new Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name));
                     (instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-                }
+                }*/
                 /*else if (cilInstruction.OpCode == OpCodes.Stfld)
                 {
                     instruction = new Assign(new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldDefinition).Name, new Register(stack - 2)), new Register(stack - 1));
@@ -929,8 +934,8 @@ namespace SharpOS.AOT.IR
                 else if (cilInstruction.OpCode == OpCodes.Stsfld)
                 {
                     instruction = new Assign(new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name, new Register(stack - 1)), new Register(stack - 1));
-                    (instruction as Assign).Asignee.SizeType = Operand.InternalSizeType.U;
-                    (instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+                    (instruction as Assign).Asignee.SizeType = Operand.GetSizeType((cilInstruction.Operand as FieldReference).FieldType.FullName); 
+                    //(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
                 }
 
                 // Array

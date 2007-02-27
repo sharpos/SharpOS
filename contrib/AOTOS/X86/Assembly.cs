@@ -287,6 +287,11 @@ namespace SharpOS.AOT.X86
                     {
                         this.DATA((uint)0);
                     }
+                    else if (field.FieldType.ToString().Equals("System.Int64") == true)
+                    {
+                        this.DATA((uint)0);
+                        this.DATA((uint)0);
+                    }
                     else
                     {
                         throw new Exception("'" + field.FieldType + "' is not supported.");
@@ -435,7 +440,7 @@ namespace SharpOS.AOT.X86
 
                             if (instruction.RMMemory != null && instruction.RMMemory.Reference.Length > 0)
                             {
-                                instruction.RMMemory.Displacement = (int)(org + this.GetLabelAddress(instruction.RMMemory.Reference));
+                                instruction.RMMemory.Displacement = (int)(org + this.GetLabelAddress(instruction.RMMemory.Reference) + instruction.RMMemory.DisplacementDelta);
                             }
 
                             // Load End Address

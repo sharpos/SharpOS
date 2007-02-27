@@ -121,61 +121,63 @@ namespace SharpOS.AOT.X86
 
                         assembly.FreeSpareRegister(spare1);
                         assembly.FreeSpareRegister(spare2);
+
+                        SharpOS.AOT.IR.Operators.Relational relational = expression.Operator as SharpOS.AOT.IR.Operators.Relational;
+
+                        switch (relational.Type)
+                        {
+                            case Operator.RelationalType.Equal:
+                                assembly.JE(label);
+                                break;
+
+                            case Operator.RelationalType.NotEqualOrUnordered:
+                                assembly.JNE(label);
+                                break;
+
+                            case Operator.RelationalType.LessThan:
+                                assembly.JL(label);
+                                break;
+
+                            case Operator.RelationalType.LessThanOrEqual:
+                                assembly.JLE(label);
+                                break;
+
+                            case Operator.RelationalType.GreaterThan:
+                                assembly.JG(label);
+                                break;
+
+                            case Operator.RelationalType.GreaterThanOrEqual:
+                                assembly.JGE(label);
+                                break;
+
+                            case Operator.RelationalType.LessThanUnsignedOrUnordered:
+                                assembly.JB(label);
+                                break;
+
+                            case Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered:
+                                assembly.JBE(label);
+                                break;
+
+                            case Operator.RelationalType.GreaterThanUnsignedOrUnordered:
+                                assembly.JA(label);
+                                break;
+
+                            case Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered:
+                                assembly.JAE(label);
+                                break;
+
+                            default:
+                                throw new Exception("'" + relational.Type + "' is not supported.");
+                        }
                     }
                     else
                     {
-                        throw new Exception("'" + expression.Operator.GetType() + "' is not supported.");
-                    }
+                        SharpOS.AOT.IR.Operators.Boolean.RelationalType type = (expression.Operator as SharpOS.AOT.IR.Operators.Relational).Type;
+                        string errorLabel = assembly.GetCMPLabel;
 
-                    SharpOS.AOT.IR.Operators.Relational relational = expression.Operator as SharpOS.AOT.IR.Operators.Relational;
+                        this.CMP(type, expression.Operands[0], expression.Operands[1], label, errorLabel, errorLabel);
 
-                    if (relational.Type == Operator.RelationalType.Equal)
-                    {
-                        assembly.JE(label);
-                    }
-                    else if (relational.Type == Operator.RelationalType.NotEqualOrUnordered)
-                    {
-                        assembly.JNE(label);
-                    }
-
-                    else if (relational.Type == Operator.RelationalType.LessThan)
-                    {
-                        assembly.JL(label);
-                    }
-                    else if (relational.Type == Operator.RelationalType.LessThanOrEqual)
-                    {
-                        assembly.JLE(label);
-                    }
-
-                    else if (relational.Type == Operator.RelationalType.GreaterThan)
-                    {
-                        assembly.JG(label);
-                    }
-                    else if (relational.Type == Operator.RelationalType.GreaterThanOrEqual)
-                    {
-                        assembly.JGE(label);
-                    }
-
-                    else if (relational.Type == Operator.RelationalType.LessThanUnsignedOrUnordered)
-                    {
-                        assembly.JB(label);
-                    }
-                    else if (relational.Type == Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered)
-                    {
-                        assembly.JBE(label);
-                    }
-
-                    else if (relational.Type == Operator.RelationalType.GreaterThanUnsignedOrUnordered)
-                    {
-                        assembly.JA(label);
-                    }
-                    else if (relational.Type == Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered)
-                    {
-                        assembly.JAE(label);
-                    }
-                    else
-                    {
-                        throw new Exception("'" + relational.Type + "' is not supported.");
+                        assembly.LABEL(errorLabel);
                     }
                 }
                 else if (expression.Operator is SharpOS.AOT.IR.Operators.Boolean == true)
@@ -201,17 +203,18 @@ namespace SharpOS.AOT.X86
                         assembly.FreeSpareRegister(register);
                     }
 
-                    if (boolean.Type == Operator.BooleanType.True)
+                    switch (boolean.Type)
                     {
-                        assembly.JNE(label);
-                    }
-                    else if (boolean.Type == Operator.BooleanType.False)
-                    {
-                        assembly.JE(label);
-                    }
-                    else
-                    {
-                        throw new Exception("'" + expression.Operator.GetType() + "' is not supported.");
+                        case Operator.BooleanType.True:
+                            assembly.JNE(label);
+                            break;
+                    
+                        case Operator.BooleanType.False:
+                            assembly.JE(label);
+                            break;
+                        
+                        default:
+                            throw new Exception("'" + expression.Operator.GetType() + "' is not supported.");
                     }
                 }
                 else
@@ -413,7 +416,7 @@ namespace SharpOS.AOT.X86
             assembly.MOV(loRegister, memory);
 
             memory = new DWordMemory(memory);
-            memory.Displacement += 4;
+            memory.DisplacementDelta = 4;
 
             assembly.MOV(hiRegister, memory);
         }
@@ -425,7 +428,7 @@ namespace SharpOS.AOT.X86
             assembly.MOV(memory, loRegister);
 
             memory = new DWordMemory(memory);
-            memory.Displacement += 4;
+            memory.DisplacementDelta = 4;
 
             assembly.MOV(memory, hiRegister);
         }
@@ -464,6 +467,139 @@ namespace SharpOS.AOT.X86
             }
         }
 
+        private void CMP(SharpOS.AOT.IR.Operators.Boolean.RelationalType type, Operand first, Operand second, string okLabel, string errorLabel, string endLabel)
+        {
+            this.MovRegisterOperand(R32.EAX, R32.EDX, first);
+
+            if (second is Constant == true)
+            {
+                Int64 constant = (Int64)(second as Constant).Value;
+
+                assembly.CMP(R32.EDX, (UInt32)(constant >> 32));
+            }
+            else
+            {
+                DWordMemory memory = this.GetMemory(second as Identifier) as DWordMemory;
+
+                memory.DisplacementDelta = 4;
+
+                assembly.CMP(R32.EDX, memory);
+            }
+
+            switch (type)
+            {
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.Equal:
+                    assembly.JNE(errorLabel);
+                    break;
+            
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.NotEqualOrUnordered:
+                    assembly.JNE(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThan:
+                    assembly.JG(errorLabel);
+                    assembly.JL(okLabel);
+                    break;
+                
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThanUnsignedOrUnordered:
+                    assembly.JA(errorLabel);
+                    assembly.JB(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThanOrEqual:
+                    assembly.JG(errorLabel);
+                    assembly.JL(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThanOrEqualUnsignedOrUnordered:
+                    assembly.JA(errorLabel);
+                    assembly.JB(okLabel);
+                    break;
+                
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThan:
+                    assembly.JL(errorLabel);
+                    assembly.JG(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThanUnsignedOrUnordered:
+                    assembly.JB(errorLabel);
+                    assembly.JA(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThanOrEqual:
+                    assembly.JL(errorLabel);
+                    assembly.JG(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThanOrEqualUnsignedOrUnordered:
+                    assembly.JB(errorLabel);
+                    assembly.JA(okLabel);
+                    break;
+
+                default:
+                    throw new Exception("'" + type + "' is not supported.");
+            }
+
+            if (second is Constant == true)
+            {
+                Int64 constant = (Int64)(second as Constant).Value;
+
+                assembly.CMP(R32.EAX, (UInt32)(constant & 0xFFFFFFFF));
+            }
+            else
+            {
+                Memory memory = this.GetMemory(second as Identifier);
+
+                assembly.CMP(R32.EAX, memory as DWordMemory);
+            }
+
+            switch (type)
+            {
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.Equal:
+                    assembly.JE(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.NotEqualOrUnordered:
+                    assembly.JNE(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThan:
+                    assembly.JB(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThanUnsignedOrUnordered:
+                    assembly.JB(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThanOrEqual:
+                    assembly.JBE(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThanOrEqualUnsignedOrUnordered:
+                    assembly.JBE(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThan:
+                    assembly.JA(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThanUnsignedOrUnordered:
+                    assembly.JA(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThanOrEqual:
+                    assembly.JAE(okLabel);
+                    break;
+
+                case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThanOrEqualUnsignedOrUnordered:
+                    assembly.JAE(okLabel);
+                    break;
+            
+                default:
+                    throw new Exception("'" + type + "' is not supported.");
+            }
+        }
+
         private void MovRegisterBoolean(R32Type register, SharpOS.AOT.IR.Operands.Boolean operand)
         {
             SharpOS.AOT.IR.Operators.Boolean.RelationalType type = (operand.Operator as SharpOS.AOT.IR.Operators.Relational).Type;
@@ -485,55 +621,7 @@ namespace SharpOS.AOT.X86
                 string okLabel = assembly.GetCMPLabel;
                 string endLabel = assembly.GetCMPLabel;
 
-                this.MovRegisterOperand(R32.EAX, R32.EDX, first);
-
-                if (second is Constant == true)
-                {
-                    Int64 constant = (Int64)(second as Constant).Value;
-
-                    assembly.CMP(R32.EDX, (UInt32)(constant >> 32));
-                }
-                else
-                {
-                    Memory memory = this.GetMemory(second as Identifier);
-
-                    memory.Displacement += 4;
-
-                    assembly.CMP(R32.EDX, memory as DWordMemory);
-                }
-
-                if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.Equal)
-                {
-                    assembly.JNE(errorLabel);
-                }
-                else
-                {
-                    // TODO implement all
-                    throw new Exception("'" + operand.Operator + "' is not supported.");
-                }
-
-                if (second is Constant == true)
-                {
-                    Int64 constant = (Int64)(second as Constant).Value;
-
-                    assembly.CMP(R32.EAX, (UInt32)(constant & 0xFFFFFFFF));
-                }
-                else
-                {
-                    Memory memory = this.GetMemory(second as Identifier);
-
-                    assembly.CMP(R32.EAX, memory as DWordMemory);
-                }
-
-                if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.Equal)
-                {
-                    assembly.JE(okLabel);
-                }
-                else
-                {
-                    // TODO implement all
-                    throw new Exception("'" + operand.Operator + "' is not supported.");
-                }
+                this.CMP(type, first, second, okLabel, errorLabel, endLabel);
 
                 assembly.LABEL(errorLabel);
                 this.MovRegisterConstant(register, 0);
@@ -565,22 +653,30 @@ namespace SharpOS.AOT.X86
                     assembly.CMP(register, memory as DWordMemory);
                 }
 
-                if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.Equal)
+                switch (type)
                 {
-                    assembly.SETE(R8.AL);
-                }
-                else if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThan)
-                {
-                    assembly.SETG(R8.AL);
-                }
-                else if (type == SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThan)
-                {
-                    assembly.SETL(R8.AL);
-                }
-                else
-                {
-                    // TODO implement all
-                    throw new Exception("'" + operand.Operator + "' is not supported.");
+                    case SharpOS.AOT.IR.Operators.Boolean.RelationalType.Equal:
+                        assembly.SETE(R8.AL);
+                        break;
+                
+                    case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThan:
+                        assembly.SETG(R8.AL);
+                        break;
+                    
+                    case SharpOS.AOT.IR.Operators.Boolean.RelationalType.GreaterThanUnsignedOrUnordered:
+                        assembly.SETA(R8.AL);
+                        break;
+                    
+                    case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThan:
+                        assembly.SETL(R8.AL);
+                        break;
+
+                    case SharpOS.AOT.IR.Operators.Boolean.RelationalType.LessThanUnsignedOrUnordered:
+                        assembly.SETB(R8.AL);
+                        break;
+
+                    default:
+                        throw new Exception("'" + operand.Operator + "' is not supported.");
                 }
 
                 assembly.MOVZX(register, R8.AL);
@@ -635,7 +731,7 @@ namespace SharpOS.AOT.X86
                         assembly.ADD(loRegister, memory);
 
                         memory = new DWordMemory(memory);
-                        memory.Displacement += 4;
+                        memory.DisplacementDelta = 4;
 
                         assembly.ADC(hiRegister, memory);
                     }
@@ -663,9 +759,37 @@ namespace SharpOS.AOT.X86
                         assembly.SUB(loRegister, memory);
 
                         memory = new DWordMemory(memory);
-                        memory.Displacement += 4;
+                        memory.DisplacementDelta = 4;
 
                         assembly.SBB(hiRegister, memory);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + second + "' is not supported.");
+                    }
+                }
+                else if (type == Operator.BinaryType.And)
+                {
+                    if (second is Constant == true)
+                    {
+                        Int64 value = (Int64)(second as Constant).Value;
+
+                        UInt32 loConstant = (UInt32)(value & 0xFFFFFFFF);
+                        UInt32 hiConstant = (UInt32)(value >> 32);
+
+                        assembly.AND(loRegister, loConstant);
+                        assembly.AND(hiRegister, hiConstant);
+                    }
+                    else if (second.IsRegisterSet == false)
+                    {
+                        DWordMemory memory = this.GetMemoryType(second as Identifier) as DWordMemory;
+
+                        assembly.AND(loRegister, memory);
+
+                        memory = new DWordMemory(memory);
+                        memory.DisplacementDelta = 4;
+
+                        assembly.AND(hiRegister, memory);
                     }
                     else
                     {
@@ -715,7 +839,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = Convert.ToUInt32((second as Constant).Value);
+                        UInt32 value = (UInt32) ((Int32) (second as Constant).Value);
 
                         assembly.ADD(register, value);
                     }
@@ -734,7 +858,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = Convert.ToUInt32((second as Constant).Value);
+                        UInt32 value = (UInt32)((Int32)(second as Constant).Value);
                         
                         assembly.SUB(register, value);
                     }
@@ -753,7 +877,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = Convert.ToUInt32((second as Constant).Value);
+                        UInt32 value = (UInt32)((Int32)(second as Constant).Value);
 
                         assembly.IMUL(register, value);
                     }
@@ -777,6 +901,25 @@ namespace SharpOS.AOT.X86
                     assembly.IDIV(R32.ECX);
 
                     assembly.MOV(register, R32.EAX);
+                }
+                else if (type == Binary.BinaryType.And)
+                {
+                    if (second is Constant == true)
+                    {
+                        UInt32 value = (UInt32) ((Int32) (second as Constant).Value);
+
+                        assembly.AND(register, value);
+                    }
+                    else if (second.IsRegisterSet == true)
+                    {
+                        assembly.AND(register, assembly.GetRegister(second.Register));
+                    }
+                    else
+                    {
+                        Memory memory = this.GetMemory(second as Identifier);
+
+                        assembly.AND(register, memory as DWordMemory);
+                    }
                 }
                 else
                 {
@@ -821,7 +964,8 @@ namespace SharpOS.AOT.X86
 
             if (assign.Value is Constant == true)
             {
-                if (this.IsFourBytes(assign.Asignee) == true)
+                if (this.IsFourBytes(assign.Asignee) == true
+                    || this.IsEightBytes(assign.Asignee) == true)
                 {
                     if (assign.Asignee.IsRegisterSet == true)
                     {
@@ -847,7 +991,8 @@ namespace SharpOS.AOT.X86
                 else if (assign.Asignee.IsRegisterSet == false
                     && assign.Value.IsRegisterSet == false)
                 {
-                    if (this.IsFourBytes(assign.Asignee) == true)
+                    if (this.IsFourBytes(assign.Asignee) == true
+                        || this.IsEightBytes(assign.Asignee) == true)
                     {
                         this.MovMemoryMemory(assign);
                     }
@@ -1003,7 +1148,7 @@ namespace SharpOS.AOT.X86
             }
             else
             {
-                this.MovRegisterConstant(register, Convert.ToUInt32(operand.Value));
+                this.MovRegisterConstant(register, (UInt32)((Int32)operand.Value));
             }
         }
 
@@ -1014,11 +1159,34 @@ namespace SharpOS.AOT.X86
 
         private void MovMemoryConstant(Assign assign)
         {
-            Memory memory = this.GetMemory(assign.Asignee);
+            if (this.IsFourBytes(assign.Asignee) == true)
+            {
+                Memory memory = this.GetMemory(assign.Asignee);
 
-            Int32 value = (Int32)(assign.Value as Constant).Value;
+                Int32 value = (Int32)(assign.Value as Constant).Value;
 
-            this.MovMemoryConstant(memory, (UInt32)value);
+                this.MovMemoryConstant(memory, (UInt32)value);
+            }
+            else if (this.IsEightBytes(assign.Asignee) == true)
+            {
+                DWordMemory memory = this.GetMemory(assign.Asignee) as DWordMemory;
+
+                Int64 value = (Int64)(assign.Value as Constant).Value;
+
+                UInt32 loValue = (UInt32)(value & 0xFFFFFFFF);
+                UInt32 hiValue = (UInt32)(value >> 32);
+
+                this.MovMemoryConstant(memory, (UInt32)loValue);
+
+                memory = new DWordMemory(memory);
+                memory.DisplacementDelta = 4;
+
+                this.MovMemoryConstant(memory, (UInt32)hiValue);
+            }
+            else
+            {
+                throw new Exception("'" + assign.ToString() + "' not supported.");
+            }
         }
 
         private Memory GetMemory(SharpOS.AOT.IR.Operands.Operand.InternalSizeType sizeType, R32Type _base, byte scale, int displacement)
@@ -1099,7 +1267,7 @@ namespace SharpOS.AOT.X86
 
             if (operand is Field == true)
             {
-                // TODO
+                // TODO support for different sizes (less than 4 bytes)
                 address = new DWordMemory(operand.Value);
             }
             else if (operand is Reference == true)
@@ -1182,13 +1350,26 @@ namespace SharpOS.AOT.X86
 
         private void MovMemoryMemory(Assign assign)
         {
-            R32Type register = assembly.GetSpareRegister();
+            if (this.IsFourBytes(assign.Asignee) == true)
+            {
+                R32Type register = assembly.GetSpareRegister();
 
-            this.MovRegisterMemory(register, assign.Value as Identifier);
+                this.MovRegisterMemory(register, assign.Value as Identifier);
 
-            this.MovMemoryRegister(assign.Asignee, register);
+                this.MovMemoryRegister(assign.Asignee, register);
 
-            assembly.FreeSpareRegister(register);
+                assembly.FreeSpareRegister(register);
+            }
+            else if (this.IsEightBytes(assign.Asignee) == true)
+            {
+                this.MovRegisterMemory(R32.EAX, R32.EDX, assign.Value as Identifier);
+
+                this.MovMemoryRegister(assign.Asignee, R32.EAX, R32.EDX);
+            }
+            else
+            {
+                throw new Exception("'" + assign + "' not supported.");
+            }
         }
 
         private void MovMemoryConstant(Memory memory, UInt32 constant)
