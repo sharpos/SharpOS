@@ -1,11 +1,9 @@
 ﻿<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
-    <StartArguments>
-    </StartArguments>
+    <StartArguments>..\..\..\Tests\bin\Kernel.dll</StartArguments>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <StartArguments>
-    </StartArguments>
+    <StartArguments>..\..\..\Tests\bin\Kernel.dll</StartArguments>
   </PropertyGroup>
 </Project>

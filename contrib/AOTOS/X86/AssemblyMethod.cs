@@ -77,6 +77,10 @@ namespace SharpOS.AOT.X86
                     {
                         this.HandleReturn(block, instruction as SharpOS.AOT.IR.Instructions.Return);
                     }
+                    else if (instruction is SharpOS.AOT.IR.Instructions.Pop == true)
+                    {
+                        // Nothing to do
+                    }
                     else
                     {
                         throw new Exception("'" + instruction + "' is not supported.");
@@ -697,6 +701,11 @@ namespace SharpOS.AOT.X86
                     assembly.NEG(loRegister);
                     assembly.NEG(hiRegister);
                 }
+                else if (type == Operator.UnaryType.Not)
+                {
+                    assembly.NOT(loRegister);
+                    assembly.NOT(hiRegister);
+                }
                 else
                 {
                     throw new Exception("'" + type + "' is not supported.");
@@ -796,6 +805,34 @@ namespace SharpOS.AOT.X86
                         throw new Exception("'" + second + "' is not supported.");
                     }
                 }
+                else if (type == Operator.BinaryType.Or)
+                {
+                    if (second is Constant == true)
+                    {
+                        Int64 value = (Int64)(second as Constant).Value;
+
+                        UInt32 loConstant = (UInt32)(value & 0xFFFFFFFF);
+                        UInt32 hiConstant = (UInt32)(value >> 32);
+
+                        assembly.OR(loRegister, loConstant);
+                        assembly.OR(hiRegister, hiConstant);
+                    }
+                    else if (second.IsRegisterSet == false)
+                    {
+                        DWordMemory memory = this.GetMemoryType(second as Identifier) as DWordMemory;
+
+                        assembly.OR(loRegister, memory);
+
+                        memory = new DWordMemory(memory);
+                        memory.DisplacementDelta = 4;
+
+                        assembly.OR(hiRegister, memory);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + second + "' is not supported.");
+                    }
+                }
                 else
                 {
                     throw new Exception("'" + type + "' is not supported.");
@@ -819,6 +856,10 @@ namespace SharpOS.AOT.X86
                 if (type == Operator.UnaryType.Negation)
                 {
                     assembly.NEG(register);
+                }
+                else if (type == Operator.UnaryType.Not)
+                {
+                    assembly.NOT(register);
                 }
                 else
                 {
@@ -920,6 +961,31 @@ namespace SharpOS.AOT.X86
 
                         assembly.AND(register, memory as DWordMemory);
                     }
+                }
+                else if (type == Binary.BinaryType.Or)
+                {
+                    if (second is Constant == true)
+                    {
+                        UInt32 value = (UInt32)((Int32)(second as Constant).Value);
+
+                        assembly.OR(register, value);
+                    }
+                    else if (second.IsRegisterSet == true)
+                    {
+                        assembly.OR(register, assembly.GetRegister(second.Register));
+                    }
+                    else
+                    {
+                        Memory memory = this.GetMemory(second as Identifier);
+
+                        assembly.OR(register, memory as DWordMemory);
+                    }
+                }
+                else if (type == Binary.BinaryType.SHL)
+                {
+                    this.MovRegisterOperand(R32.ECX, second);
+
+                    assembly.SHL__CL(register);
                 }
                 else
                 {

@@ -365,7 +365,7 @@ namespace SharpOS.AOT.IR
                 }
                 else if (cilInstruction.OpCode == OpCodes.Not)
                 {
-                    instruction = new Assign(new Register(stack - 2), new Arithmetic(new Unary(Operator.UnaryType.Not), new Register(stack - 1)));
+                    instruction = new Assign(new Register(stack - 1), new Arithmetic(new Unary(Operator.UnaryType.Not), new Register(stack - 1)));
                 }
                 else if (cilInstruction.OpCode == OpCodes.Shl)
                 {
