@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Prebuild xmlns="http://dnpb.sourceforge.net/schemas/prebuild-1.6.xsd">
+	<Solution name="SharpOS.AOT" activeConfig="Debug">
+		<Configuration name="Debug">
+			<Options>
+				<CompilerDefines>TRACE;DEBUG</CompilerDefines>
+				<OptimizeCode>false</OptimizeCode>
+				<CheckUnderflowOverflow>false</CheckUnderflowOverflow>
+				<AllowUnsafe>false</AllowUnsafe>
+				<WarningLevel>4</WarningLevel>
+				<WarningsAsErrors>false</WarningsAsErrors>
+				<!--<SupressWarnings></SupressWarnings>-->
+				<OutputPath>bin</OutputPath>
+				<DebugInformation>true</DebugInformation>
+				<!--<XmlDocFile>name</XmlDocFile>-->
+				<RegisterComInterop>false</RegisterComInterop>
+				<IncrementalBuild>true</IncrementalBuild>
+				<BaseAddress>285212672</BaseAddress>
+				<FileAlignment>4096</FileAlignment>
+				<NoStdLib>false</NoStdLib>
+			</Options>
+		</Configuration>
+		<Configuration name="Release">
+			<Options>
+				<CompilerDefines>TRACE</CompilerDefines>
+				<OptimizeCode>true</OptimizeCode>
+				<CheckUnderflowOverflow>false</CheckUnderflowOverflow>
+				<AllowUnsafe>false</AllowUnsafe>
+				<WarningLevel>4</WarningLevel>
+				<WarningsAsErrors>false</WarningsAsErrors>
+				<!--<SupressWarnings></SupressWarnings>-->
+				<OutputPath>bin</OutputPath>
+				<DebugInformation>false</DebugInformation>
+				<!--<XmlDocFile>name</XmlDocFile>-->
+				<RegisterComInterop>false</RegisterComInterop>
+				<IncrementalBuild>true</IncrementalBuild>
+				<BaseAddress>285212672</BaseAddress>
+				<FileAlignment>4096</FileAlignment>
+				<NoStdLib>false</NoStdLib>			
+			</Options>
+		</Configuration>
+		
+		<Project name="SharpOS.AOT.Core" path="Core" type="Library" assemblyName="SharpOS.AOT.Core" 
+			 rootNamespace="SharpOS.AOT">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>../bin</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>../bin</OutputPath>
+				</Options>
+			</Configuration>
+			
+			<!-- TODO: abstract to top -->
+			<ReferencePath>../AOTOS/bin</ReferencePath>
+			
+			<Reference name="Mono.Cecil" />
+			<Reference name="System" />
+			<Reference name="System.Data" />
+			<Reference name="System.Xml" />
+			
+			<Files>
+				<Match pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+
+		<Project name="SharpOS.AOT.X86" path="X86" 
+			 type="Library" rootNamespace="SharpOS.AOT.X86">
+			<!-- TODO: move to top -->
+			<ReferencePath>../AOTOS/bin</ReferencePath>
+			<ReferencePath>../bin</ReferencePath>
+			<Reference name="Mono.Cecil" />
+			<Reference name="SharpOS.AOT.Core" />
+			<Reference name="System" />
+			<Reference name="System.Data" />
+			<Reference name="System.Xml" />
+			<Files>
+				<Match pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+
+		<Project name="SharpOS" path="SharpOS" type="Library" rootNamespace="SharpOS">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>../bin</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>../bin</OutputPath>
+				</Options>
+			</Configuration>
+			<!-- TODO: move to top -->
+			<ReferencePath>../AOTOS/bin</ReferencePath>
+			<ReferencePath>../bin</ReferencePath>
+			<Reference name="Mono.Cecil" />
+			<Reference name="SharpOS.AOT.X86" />
+			<Reference name="SharpOS.AOT.Core" />
+			<Reference name="System" />
+			<Reference name="System.Data" />
+			<Reference name="System.Xml" />
+			
+			<Files>
+				<Match pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+
+		<Project name="AOTOS" path="AOTOS" type="WinExe" assemblyName="AOTOS" 
+			 rootNamespace="SharpOS">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>../bin</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>../bin</OutputPath>
+				</Options>
+			</Configuration>
+			<ReferencePath>../AOTOS/bin</ReferencePath>
+			<ReferencePath>../bin</ReferencePath>
+			<Reference name="SharpOS.AOT.X86" localCopy="true" />
+			<Reference name="SharpOS.AOT.Core" localCopy="true" />
+			<Reference name="SharpOS" localCopy="true" />
+			<Reference name="System" />
+			<Reference name="System.Data" />
+			<Reference name="System.Xml" />
+			
+			<Files>
+				<Match pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+
+		<Project name="SharpOS.AOT.Tests" path="Tests" type="Library" assemblyName="SharpOS.AOT.Tests">
+			<Configuration name="Debug">
+				<Options>
+					<OutputPath>../bin</OutputPath>
+				</Options>
+			</Configuration>
+			<Configuration name="Release">
+				<Options>
+					<OutputPath>../bin</OutputPath>
+				</Options>
+			</Configuration>
+			<ReferencePath>../AOTOS/bin</ReferencePath>
+			<ReferencePath>../bin</ReferencePath>
+			<Reference name="SharpOS.AOT.X86" />
+			<Reference name="SharpOS.AOT.Core" />
+			<Reference name="System" />
+			<Reference name="System.Data" />
+			<Reference name="System.Xml" />
+			<Reference name="nunit.framework" />
+			
+			<Files>
+				<Match pattern="*.cs" recurse="true"/>
+			</Files>
+		</Project>
+	</Solution>
+</Prebuild>

@@ -1,0 +1,68 @@
+<?xml version="1.0" ?>
+<project name="SharpOS.AOT.X86" default="build">
+    <target name="build">
+        <echo message="Build Directory is ${project::get-base-directory()}/${build.dir}" />
+        <mkdir dir="${project::get-base-directory()}/${build.dir}" />
+        <csc target="library" debug="${build.debug}" unsafe="true" output="${project::get-base-directory()}/${build.dir}/${project::get-name()}.dll">
+            <sources failonempty="true">
+                <include name="./Assembly.cs" />
+                <include name="./DWordDataInstruction.cs" />
+                <include name="./DataInstruction.cs" />
+                <include name="./Seg.cs" />
+                <include name="./Asm.cs" />
+                <include name="./Instruction.cs" />
+                <include name="./TR.cs" />
+                <include name="./TWordMemory.cs" />
+                <include name="./R8Type.cs" />
+                <include name="./ByteMemory.cs" />
+                <include name="./ByteDataInstruction.cs" />
+                <include name="./Instructions.cs" />
+                <include name="./R32.cs" />
+                <include name="./CRType.cs" />
+                <include name="./DRType.cs" />
+                <include name="./FPType.cs" />
+                <include name="./R16.cs" />
+                <include name="./Bits32Instruction.cs" />
+                <include name="./SegType.cs" />
+                <include name="./LabelInstruction.cs" />
+                <include name="./Register.cs" />
+                <include name="./QWordMemory.cs" />
+                <include name="./TRType.cs" />
+                <include name="./OffsetInstruction.cs" />
+                <include name="./R8.cs" />
+                <include name="./OrgInstruction.cs" />
+                <include name="./AssemblyInfo.cs" />
+                <include name="./CR.cs" />
+                <include name="./WordMemory.cs" />
+                <include name="./DR.cs" />
+                <include name="./Engine.cs" />
+                <include name="./FP.cs" />
+                <include name="./WordDataInstruction.cs" />
+                <include name="./R32Type.cs" />
+                <include name="./DWordMemory.cs" />
+                <include name="./Memory.cs" />
+                <include name="./R16Type.cs" />
+                <include name="./AlignInstruction.cs" />
+                <include name="./TimesInstruction.cs" />
+            </sources>
+            <references basedir="${project::get-base-directory()}">
+                <lib>
+                    <include name="${project::get-base-directory()}" />
+                </lib>
+                <include name="../AOTOS/bin/Mono.Cecil.dll" />
+                <include name="../Core/${build.dir}/SharpOS.AOT.Core.dll" />
+                <include name="System.dll" />
+                <include name="System.Data.dll" />
+                <include name="System.Xml.dll" />
+            </references>
+            <resources>
+            </resources>
+        </csc>
+    </target>
+    <target name="clean">
+        <delete dir="${bin.dir}" failonerror="false" />
+        <delete dir="${obj.dir}" failonerror="false" />
+    </target>
+    <target name="doc" description="Creates documentation.">
+    </target>
+</project>

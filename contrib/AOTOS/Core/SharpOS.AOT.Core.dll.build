@@ -1,0 +1,67 @@
+<?xml version="1.0" ?>
+<project name="SharpOS.AOT.Core" default="build">
+    <target name="build">
+        <echo message="Build Directory is ${project::get-base-directory()}/${build.dir}" />
+        <mkdir dir="${project::get-base-directory()}/${build.dir}" />
+        <csc target="library" debug="${build.debug}" unsafe="true" output="${project::get-base-directory()}/${build.dir}/${project::get-name()}.dll">
+            <sources failonempty="true">
+                <include name="./AssemblyInfo.cs" />
+                <include name="./Engine.cs" />
+                <include name="./Block.cs" />
+                <include name="./Method.cs" />
+                <include name="./Class.cs" />
+                <include name="./IAssembly.cs" />
+                <include name="./Instructions/Call.cs" />
+                <include name="./Instructions/ExceptionValue.cs" />
+                <include name="./Instructions/Jump.cs" />
+                <include name="./Instructions/Pop.cs" />
+                <include name="./Instructions/ConditionalJump.cs" />
+                <include name="./Instructions/Return.cs" />
+                <include name="./Instructions/PHI.cs" />
+                <include name="./Instructions/Instruction.cs" />
+                <include name="./Instructions/Switch.cs" />
+                <include name="./Instructions/Assign.cs" />
+                <include name="./Instructions/System.cs" />
+                <include name="./Instructions/End.cs" />
+                <include name="./Operands/Operand.cs" />
+                <include name="./Operands/Call.cs" />
+                <include name="./Operands/Reference.cs" />
+                <include name="./Operands/Boolean.cs" />
+                <include name="./Operands/Argument.cs" />
+                <include name="./Operands/Conditional.cs" />
+                <include name="./Operands/Field.cs" />
+                <include name="./Operands/Miscellaneous.cs" />
+                <include name="./Operands/Register.cs" />
+                <include name="./Operands/ArrayElement.cs" />
+                <include name="./Operands/Arithmetic.cs" />
+                <include name="./Operands/Constant.cs" />
+                <include name="./Operands/Local.cs" />
+                <include name="./Operands/Identifier.cs" />
+                <include name="./Operators/Unary.cs" />
+                <include name="./Operators/Boolean.cs" />
+                <include name="./Operators/OperatorImplementation.cs" />
+                <include name="./Operators/Miscellaneous.cs" />
+                <include name="./Operators/Binary.cs" />
+                <include name="./Operators/Relational.cs" />
+                <include name="./Operators/Operator.cs" />
+            </sources>
+            <references basedir="${project::get-base-directory()}">
+                <lib>
+                    <include name="${project::get-base-directory()}" />
+                </lib>
+                <include name="../AOTOS/bin/Mono.Cecil.dll" />
+                <include name="System.dll" />
+                <include name="System.Data.dll" />
+                <include name="System.Xml.dll" />
+            </references>
+            <resources>
+            </resources>
+        </csc>
+    </target>
+    <target name="clean">
+        <delete dir="${bin.dir}" failonerror="false" />
+        <delete dir="${obj.dir}" failonerror="false" />
+    </target>
+    <target name="doc" description="Creates documentation.">
+    </target>
+</project>
