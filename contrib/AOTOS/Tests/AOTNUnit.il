@@ -39,56 +39,44 @@
 		.custom instance void [nunit.framework]NUnit.Framework.TestAttribute::.ctor() = (1 0 0 0)
 		.maxstack 3
 		
-		call int32 AOTTests.ADD::CMP0()
-		ldstr "AOTTests.ADD::CMP0 failed."
+		call int32 AOTTests.SHR::CMP0()
+		ldstr "AOTTests.SHR::CMP0 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.ADD::CMP1()
-		ldstr "AOTTests.ADD::CMP1 failed."
+		call int32 AOTTests.SHR::CMP1()
+		ldstr "AOTTests.SHR::CMP1 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.ADD::CMP2()
-		ldstr "AOTTests.ADD::CMP2 failed."
+		call int32 AOTTests.SHR::CMP2()
+		ldstr "AOTTests.SHR::CMP2 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.ADD::CMP3()
-		ldstr "AOTTests.ADD::CMP3 failed."
+		call int32 AOTTests.SHR::CMP3()
+		ldstr "AOTTests.SHR::CMP3 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.SHL::CMP0()
-		ldstr "AOTTests.SHL::CMP0 failed."
+		call int32 AOTTests.SHR::CMP4()
+		ldstr "AOTTests.SHR::CMP4 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.SHL::CMP1()
-		ldstr "AOTTests.SHL::CMP1 failed."
+		call int32 AOTTests.SHR.UN::CMP0()
+		ldstr "AOTTests.SHR.UN::CMP0 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.SHL::CMP2()
-		ldstr "AOTTests.SHL::CMP2 failed."
+		call int32 AOTTests.SHR.UN::CMP1()
+		ldstr "AOTTests.SHR.UN::CMP1 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.SHL::CMP3()
-		ldstr "AOTTests.SHL::CMP3 failed."
+		call int32 AOTTests.SHR.UN::CMP2()
+		ldstr "AOTTests.SHR.UN::CMP2 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.SHL::CMP4()
-		ldstr "AOTTests.SHL::CMP4 failed."
+		call int32 AOTTests.SHR.UN::CMP3()
+		ldstr "AOTTests.SHR.UN::CMP3 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
-		call int32 AOTTests.SHL::CMP5()
-		ldstr "AOTTests.SHL::CMP5 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHL::CMP6()
-		ldstr "AOTTests.SHL::CMP6 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHL::CMP7()
-		ldstr "AOTTests.SHL::CMP7 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SUB::CMP0()
-		ldstr "AOTTests.SUB::CMP0 failed."
+		call int32 AOTTests.SHR.UN::CMP4()
+		ldstr "AOTTests.SHR.UN::CMP4 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
 		ret

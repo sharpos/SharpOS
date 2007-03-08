@@ -17,20 +17,12 @@ namespace SharpOS
 {
     public class AOTOS
     {
-        public static byte value = 1;
-
-        public static string message = "test 123";
-
         static void Main(string[] args)
         {
             //try
             {
                 Engine engine = new Engine();
                 string filename = "SharpOS.dll";
-
-                Console.WriteLine(message);
-
-                float x = value + 0x12345678;
 
                 if (args.Length == 1)
                 {

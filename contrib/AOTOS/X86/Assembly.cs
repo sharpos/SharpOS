@@ -244,11 +244,122 @@ namespace SharpOS.AOT.X86
         private string END_DATA = "[END DATA]";
         private string END_STACK = "[END STACK]";
         private string THE_END = "[THE END]";
+        internal const string HELPER_LSHL = "LSHL";
+        internal const string HELPER_LSHR = "LSHR";
+        internal const string HELPER_LSAR = "LSAR";
         private Assembly data;
 
-        public bool IsKernelString(string value)
+        internal bool IsKernelString(string value)
         {
             return value.Equals(this.KERNEL_CLASS + ".String");
+        }
+
+        private void AddLSHL()
+        {
+            string end = HELPER_LSHL + "_EXIT";
+            string hiShift = HELPER_LSHL + "_HI_SHIFT";
+
+            this.LABEL(HELPER_LSHL);
+            this.MOV(R32.ECX, new DWordMemory(null, R32.ESP, null, 0, 12));
+            this.MOV(R32.EAX, new DWordMemory(null, R32.ESP, null, 0, 8));
+            this.MOV(R32.EDX, new DWordMemory(null, R32.ESP, null, 0, 4));
+
+            this.AND(R32.ECX, 63);
+
+            this.TEST(R32.ECX, R32.ECX);
+            this.JZ(end);
+
+            this.CMP(R32.ECX, 32);
+            this.JAE(hiShift);
+
+            this.PUSH(R32.EBX);
+            this.PUSH(R32.ESI);
+
+            this.MOV(R32.ESI, R32.EAX);
+            this.SHL__CL(R32.ESI);
+
+            this.SHL__CL(R32.EDX);
+
+            this.MOV(R32.EBX, 32);
+            this.SUB(R32.EBX, R32.ECX);
+            this.MOV(R32.ECX, R32.EBX);
+
+            this.SHR__CL(R32.EAX);
+
+            this.OR(R32.EDX, R32.EAX);
+
+            this.MOV(R32.EAX, R32.ESI);
+
+            this.POP(R32.ESI);
+            this.POP(R32.EBX);
+            
+            this.JMP(end);
+            this.LABEL(hiShift);
+
+            this.MOV(R32.EDX, R32.EAX);
+            this.XOR(R32.EAX, R32.EAX);
+            this.SUB(R32.ECX, 32);
+            this.SHL__CL(R32.EDX); 
+
+            this.LABEL(end);
+            this.RET();
+        }
+
+        private void AddLSHR()
+        {
+            string end = HELPER_LSHR + "_EXIT";
+            string hiShift = HELPER_LSHR + "_HI_SHIFT";
+
+            this.LABEL(HELPER_LSHR);
+            this.MOV(R32.ECX, new DWordMemory(null, R32.ESP, null, 0, 12));
+            this.MOV(R32.EAX, new DWordMemory(null, R32.ESP, null, 0, 8));
+            this.MOV(R32.EDX, new DWordMemory(null, R32.ESP, null, 0, 4));
+
+            this.AND(R32.ECX, 63);
+
+            this.TEST(R32.ECX, R32.ECX);
+            this.JZ(end);
+
+            this.CMP(R32.ECX, 32);
+            this.JAE(hiShift);
+
+            this.PUSH(R32.EBX);
+            this.PUSH(R32.ESI);
+
+            this.MOV(R32.ESI, R32.EDX);
+            this.SHR__CL(R32.ESI);
+
+            this.SHL__CL(R32.EDX);
+
+            this.MOV(R32.EBX, 32);
+            this.SUB(R32.EBX, R32.ECX);
+            this.MOV(R32.ECX, R32.EBX);
+
+            this.SHR__CL(R32.EAX);
+
+            this.OR(R32.EDX, R32.EAX);
+
+            this.MOV(R32.EAX, R32.ESI);
+
+            this.POP(R32.ESI);
+            this.POP(R32.EBX);
+
+            this.JMP(end);
+            this.LABEL(hiShift);
+
+            this.MOV(R32.EAX, R32.EDX);
+            this.XOR(R32.EDX, R32.EDX);
+            this.SUB(R32.ECX, 32);
+            this.SHR__CL(R32.EAX);
+
+            this.LABEL(end);
+            this.RET();
+        }
+
+        private void AddHelperFunctions()
+        {
+            this.AddLSHL();
+            this.AddLSHR();
         }
 
         public bool Encode(Engine engine, string target)
@@ -266,6 +377,8 @@ namespace SharpOS.AOT.X86
                     assemblyMethod.GetAssemblyCode();
                 }
             }
+
+            this.AddHelperFunctions();
 
             foreach (Class _class in engine)
             {
@@ -287,7 +400,8 @@ namespace SharpOS.AOT.X86
                     {
                         this.DATA((uint)0);
                     }
-                    else if (field.FieldType.ToString().Equals("System.Int64") == true)
+                    else if (field.FieldType.ToString().Equals("System.Int64") == true
+                        || field.FieldType.ToString().Equals("System.UInt64") == true)
                     {
                         this.DATA((uint)0);
                         this.DATA((uint)0);

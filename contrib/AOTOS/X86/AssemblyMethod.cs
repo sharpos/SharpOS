@@ -833,6 +833,55 @@ namespace SharpOS.AOT.X86
                         throw new Exception("'" + second + "' is not supported.");
                     }
                 }
+                else if (type == Operator.BinaryType.SHL
+                    || type == Operator.BinaryType.SHR
+                    || type == Operator.BinaryType.SHRUnsigned)
+                {
+                    // Only the lower 32-bit are needed for the second shift parameter
+                    if (second is Constant == true)
+                    {
+                        Int64 value = Convert.ToInt64((second as Constant).Value);
+
+                        UInt32 loConstant = (UInt32)(value & 0xFFFFFFFF);
+                        
+                        assembly.PUSH(loConstant);
+                    }
+                    else if (second.IsRegisterSet == false)
+                    {
+                        DWordMemory memory = this.GetMemoryType(second as Identifier) as DWordMemory;
+
+                        assembly.PUSH(memory);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + second + "' is not supported.");
+                    }
+
+                    assembly.PUSH(loRegister);
+                    assembly.PUSH(hiRegister);
+
+                    if (type == Operator.BinaryType.SHL)
+                    {
+                        assembly.CALL(Assembly.HELPER_LSHL);
+                    }
+                    else if (type == Operator.BinaryType.SHR)
+                    {
+                        assembly.CALL(Assembly.HELPER_LSAR);
+                    }
+                    else if (type == Operator.BinaryType.SHRUnsigned)
+                    {
+                        assembly.CALL(Assembly.HELPER_LSHR);
+                    }
+                    else
+                    {
+                        throw new Exception("'" + type + "' not supported.");
+                    }
+
+                    assembly.ADD(R32.ESP, 12);
+
+                    this.MovRegisterRegister(loRegister, R32.EAX);
+                    this.MovRegisterRegister(hiRegister, R32.EDX);
+                }
                 else
                 {
                     throw new Exception("'" + type + "' is not supported.");
@@ -986,6 +1035,18 @@ namespace SharpOS.AOT.X86
                     this.MovRegisterOperand(R32.ECX, second);
 
                     assembly.SHL__CL(register);
+                }
+                else if (type == Binary.BinaryType.SHR)
+                {
+                    this.MovRegisterOperand(R32.ECX, second);
+
+                    assembly.SAR__CL(register);
+                }
+                else if (type == Binary.BinaryType.SHRUnsigned)
+                {
+                    this.MovRegisterOperand(R32.ECX, second);
+
+                    assembly.SHR__CL(register);
                 }
                 else
                 {
