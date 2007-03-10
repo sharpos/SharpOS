@@ -203,7 +203,7 @@ namespace SharpOS.AOT.X86
             return address;
         }
 
-        public void AddMultibootHeader()
+        public void AddMultibootHeader(bool addCCTOR)
         {
             uint magic = 0x1BADB002;
             uint flags = 0x00010003; //Extra info following and retrieve memory and video modes infos
@@ -230,20 +230,27 @@ namespace SharpOS.AOT.X86
 
             this.ORG(0x00100000);
 
-            this.MOV(R32.ESP, this.END_STACK);
+            this.MOV(R32.ESP, END_STACK);
 
-            this.CALL(KERNEL_CLASS + "..cctor");
-            this.CALL(KERNEL_CLASS + ".Main");
+            if (addCCTOR == true)
+            {
+                this.CALL(KERNEL_CTOR);
+            }
+
+            this.CALL(KERNEL_MAIN);
             
             // Just hang
             this.LABEL(THE_END);
             this.JMP(THE_END);
         }
 
-        private string KERNEL_CLASS = "SharpOS.Kernel";
-        private string END_DATA = "[END DATA]";
-        private string END_STACK = "[END STACK]";
-        private string THE_END = "[THE END]";
+        private const string KERNEL_CLASS = "SharpOS.Kernel";
+        private const string KERNEL_CTOR = KERNEL_CLASS + "..cctor";
+        private const string KERNEL_MAIN = KERNEL_CLASS + ".BootEntry";
+        private const string KERNEL_STRING = KERNEL_CLASS + ".String";
+        private const string END_DATA = "[END DATA]";
+        private const string END_STACK = "[END STACK]";
+        private const string THE_END = "[THE END]";
         internal const string HELPER_LSHL = "LSHL";
         internal const string HELPER_LSHR = "LSHR";
         internal const string HELPER_LSAR = "LSAR";
@@ -251,18 +258,26 @@ namespace SharpOS.AOT.X86
 
         internal bool IsKernelString(string value)
         {
-            return value.Equals(this.KERNEL_CLASS + ".String");
+            return value.Equals(KERNEL_STRING);
         }
 
         private void AddLSHL()
         {
             string end = HELPER_LSHL + "_EXIT";
             string hiShift = HELPER_LSHL + "_HI_SHIFT";
+            string start = HELPER_LSHL + "_START";
 
             this.LABEL(HELPER_LSHL);
             this.MOV(R32.ECX, new DWordMemory(null, R32.ESP, null, 0, 12));
             this.MOV(R32.EAX, new DWordMemory(null, R32.ESP, null, 0, 8));
             this.MOV(R32.EDX, new DWordMemory(null, R32.ESP, null, 0, 4));
+
+            this.CMP(R32.ECX, 64);
+            this.JB(start);
+
+            this.OR(R32.ECX, (byte) 0x20);
+
+            this.LABEL(start);
 
             this.AND(R32.ECX, 63);
 
@@ -329,17 +344,17 @@ namespace SharpOS.AOT.X86
             this.MOV(R32.ESI, R32.EDX);
             this.SHR__CL(R32.ESI);
 
-            this.SHL__CL(R32.EDX);
+            this.SHR__CL(R32.EAX);
 
             this.MOV(R32.EBX, 32);
             this.SUB(R32.EBX, R32.ECX);
             this.MOV(R32.ECX, R32.EBX);
 
-            this.SHR__CL(R32.EAX);
+            this.SHL__CL(R32.EDX);
 
-            this.OR(R32.EDX, R32.EAX);
+            this.OR(R32.EAX, R32.EDX);
 
-            this.MOV(R32.EAX, R32.ESI);
+            this.MOV(R32.EDX, R32.ESI);
 
             this.POP(R32.ESI);
             this.POP(R32.EBX);
@@ -356,10 +371,63 @@ namespace SharpOS.AOT.X86
             this.RET();
         }
 
+        private void AddLSAR()
+        {
+            string end = HELPER_LSAR + "_EXIT";
+            string hiShift = HELPER_LSAR + "_HI_SHIFT";
+
+            this.LABEL(HELPER_LSAR);
+            this.MOV(R32.ECX, new DWordMemory(null, R32.ESP, null, 0, 12));
+            this.MOV(R32.EAX, new DWordMemory(null, R32.ESP, null, 0, 8));
+            this.MOV(R32.EDX, new DWordMemory(null, R32.ESP, null, 0, 4));
+
+            this.AND(R32.ECX, 63);
+
+            this.TEST(R32.ECX, R32.ECX);
+            this.JZ(end);
+
+            this.CMP(R32.ECX, 32);
+            this.JAE(hiShift);
+
+            this.PUSH(R32.EBX);
+            this.PUSH(R32.ESI);
+
+            this.MOV(R32.ESI, R32.EDX);
+            this.SAR__CL(R32.ESI);
+
+            this.SAR__CL(R32.EAX);
+
+            this.MOV(R32.EBX, 32);
+            this.SUB(R32.EBX, R32.ECX);
+            this.MOV(R32.ECX, R32.EBX);
+
+            this.SHL__CL(R32.EDX);
+
+            this.OR(R32.EAX, R32.EDX);
+
+            this.MOV(R32.EDX, R32.ESI);
+
+            this.POP(R32.ESI);
+            this.POP(R32.EBX);
+
+            this.JMP(end);
+            this.LABEL(hiShift);
+
+            this.MOV(R32.EAX, R32.EDX);
+            this.SUB(R32.ECX, 32);
+            this.SAR__CL(R32.EAX);
+
+            this.SAR(R32.EDX, 31);
+            
+            this.LABEL(end);
+            this.RET();
+        }
+
         private void AddHelperFunctions()
         {
             this.AddLSHL();
             this.AddLSHR();
+            this.AddLSAR();
         }
 
         public bool Encode(Engine engine, string target)
@@ -367,7 +435,26 @@ namespace SharpOS.AOT.X86
             MemoryStream memoryStream = new MemoryStream();
             data = new Assembly();
 
-            this.AddMultibootHeader();
+            bool addCTOR = false;
+
+            foreach (Class _class in engine)
+            {
+                if (_class.ClassDefinition.FullName.Equals(KERNEL_CLASS) == false)
+                {
+                    continue;
+                }
+
+                foreach (Method method in _class)
+                {
+                    if (method.MethodFullName.Equals(KERNEL_CTOR) == true)
+                    {
+                        addCTOR = true;
+                        break;
+                    }
+                }
+            }
+
+            this.AddMultibootHeader(addCTOR);
 
             foreach (Class _class in engine)
             {

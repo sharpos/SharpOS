@@ -34,49 +34,13 @@
 		ret 
 	}
 	
-	.method public void Run() cil managed
+	.method public void Run0() cil managed
 	{
 		.custom instance void [nunit.framework]NUnit.Framework.TestAttribute::.ctor() = (1 0 0 0)
 		.maxstack 3
 		
-		call int32 AOTTests.SHR::CMP0()
-		ldstr "AOTTests.SHR::CMP0 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR::CMP1()
-		ldstr "AOTTests.SHR::CMP1 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR::CMP2()
-		ldstr "AOTTests.SHR::CMP2 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR::CMP3()
-		ldstr "AOTTests.SHR::CMP3 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR::CMP4()
-		ldstr "AOTTests.SHR::CMP4 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR.UN::CMP0()
-		ldstr "AOTTests.SHR.UN::CMP0 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR.UN::CMP1()
-		ldstr "AOTTests.SHR.UN::CMP1 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR.UN::CMP2()
-		ldstr "AOTTests.SHR.UN::CMP2 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR.UN::CMP3()
-		ldstr "AOTTests.SHR.UN::CMP3 failed."
-		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
-		
-		call int32 AOTTests.SHR.UN::CMP4()
-		ldstr "AOTTests.SHR.UN::CMP4 failed."
+		call int32 AOTTests.SHL::CMP0()
+		ldstr "AOTTests.SHL::CMP0 failed."
 		call void [nunit.framework]NUnit.Framework.Assert::IsTrue(bool, string)
 		
 		ret

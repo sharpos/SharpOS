@@ -23,7 +23,7 @@ namespace SharpOS
 
         public unsafe static byte* BootMessage = String("Grub -> Booting [SharpOS] 2007 by Mircea-Cristian Racasan (\x01)");
 
-        public unsafe static void Main()
+        public unsafe static void BootEntry()
         {
             WriteMessage(BootMessage);
         }

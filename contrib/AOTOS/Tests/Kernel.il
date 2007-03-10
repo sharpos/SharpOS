@@ -28,7 +28,7 @@
     IL_0007:  ret
   } 
 
-  .method public hidebysig static void  Main() cil managed
+  .method public hidebysig static void  BootEntry() cil managed
   {
     .maxstack  8
     
