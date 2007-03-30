@@ -7,7 +7,7 @@
         *
 -->
 
-<project name="SharpOS AOT Testing Kernel" default="build" basedir="/home/johann/Projects/SharpOS/trunk/SharpOS.TestKernel/">
+<project name="SharpOS AOT Testing Kernel" default="build">
 	<description>Compiles a set of tests for the AOT compiler.</description>
 	
 	<target name="build">
@@ -24,13 +24,13 @@
 						File.Copy("TestRunnerHeader.il", "_TestRunner.il", true);
 						
 						// Open the temporary file
-						TextWriter tr = new StreamWriter(File.Open("/home/johann/Projects/SharpOS/trunk/SharpOS.TestKernel/_TestRunner.il", FileMode.Append));
+						TextWriter tr = new StreamWriter(File.Open("_TestRunner.il", FileMode.Append));
 						tr.WriteLine();
 						
 						int jump = 0; // Stores current branch label
 						
 						// Write method calls
-						foreach(string fileName in Directory.GetFiles("/home/johann/Projects/SharpOS/trunk/SharpOS.TestKernel/Tests"))
+						foreach(string fileName in Directory.GetFiles("Tests"))
 						{
 							StreamReader sReader = File.OpenText(fileName);
 							string contents = sReader.ReadToEnd();
