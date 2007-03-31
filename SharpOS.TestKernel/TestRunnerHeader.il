@@ -9,7 +9,7 @@
 {
 }
 
-.namespace SharpOS.TestKernel
+.namespace SharpOS.Kernel
 {
 	.class public auto ansi abstract sealed beforefieldinit TestRunner extends [mscorlib]System.Object
 	{

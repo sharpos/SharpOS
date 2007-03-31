@@ -4,11 +4,10 @@
 
 .assembly 'SharpOS.TestKernel'
 {
-	.hash algorithm 00008004
 	.ver 0:0:0:0
 }
 
-.namespace SharpOS.TestKernel
+.namespace SharpOS
 {
 	.class public auto ansi beforefieldinit Kernel extends [mscorlib]System.Object
 	{
@@ -20,7 +19,7 @@
 	
 			.maxstack  8
 			
-			call void SharpOS.TestKernel.TestRunner::Run()
+			call void SharpOS.Kernel.TestRunner::Run()
 		
 			ret
 		} 
@@ -105,8 +104,8 @@
 														2D 00 43 00 72 00 69 00 73 00 74 00 69 00 61 00   // -.C.r.i.s.t.i.a.
 														6E 00 20 00 52 00 61 00 63 00 61 00 73 00 61 00   // n. .R.a.c.a.s.a.
 														6E 00 20 00 28 00 01 00 29 00 )                   // n. .(...).
-			IL_0005:  call       uint8* SharpOS.TestKernel.Kernel::String(string)
-			IL_000a:  stsfld     uint8* SharpOS.TestKernel.Kernel::BootMessage
+			IL_0005:  call       uint8* SharpOS.Kernel::String(string)
+			IL_000a:  stsfld     uint8* SharpOS.Kernel::BootMessage
 			IL_000f:  ret
 		} 
 	} 

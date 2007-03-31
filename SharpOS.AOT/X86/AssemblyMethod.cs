@@ -1,7 +1,10 @@
 /**
- *  (C) 2006-2007 Mircea-Cristian Racasan <darx_kies@gmx.net>
+ *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
  * 
  *  Licensed under the terms of the GNU GPL License version 2.
+ * 
+ *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
+ *  Author: Bruce <illuminus86@gmail.com>
  * 
  */
 
@@ -271,13 +274,13 @@ namespace SharpOS.AOT.X86
                 {
                     if (this.IsFourBytes(operand) == true)
                     {
-                        Int32 value = (Int32)(operand as Constant).Value;
+                        Int32 value = Convert.ToInt32((operand as Constant).Value);
 
                         assembly.PUSH((UInt32)value);
                     }
                     else if (this.IsEightBytes(operand) == true)
                     {
-                        Int64 value = (Int64)(operand as Constant).Value;
+                        Int64 value = Convert.ToInt64((operand as Constant).Value);
 
                         assembly.PUSH((UInt32)(value >> 32));
                         assembly.PUSH((UInt32)(value & 0xFFFFFFFF));
@@ -351,7 +354,7 @@ namespace SharpOS.AOT.X86
         {
             if (operand is Constant == true)
             {
-                Int64 value = (Int64)(operand as Constant).Value;
+                Int64 value = Convert.ToInt64((operand as Constant).Value);
 
                 this.MovRegisterConstant(loRegister, hiRegister, (UInt64)value);
             }
@@ -477,7 +480,7 @@ namespace SharpOS.AOT.X86
 
             if (second is Constant == true)
             {
-                Int64 constant = (Int64)(second as Constant).Value;
+                Int64 constant = Convert.ToInt64((second as Constant).Value);
 
                 assembly.CMP(R32.EDX, (UInt32)(constant >> 32));
             }
@@ -546,7 +549,7 @@ namespace SharpOS.AOT.X86
 
             if (second is Constant == true)
             {
-                Int64 constant = (Int64)(second as Constant).Value;
+                Int64 constant = Convert.ToInt64((second as Constant).Value);
 
                 assembly.CMP(R32.EAX, (UInt32)(constant & 0xFFFFFFFF));
             }
@@ -642,7 +645,7 @@ namespace SharpOS.AOT.X86
 
                 if (second is Constant == true)
                 {
-                    Int32 value = (Int32)(second as Constant).Value;
+                    Int32 value = Convert.ToInt32((second as Constant).Value);
 
                     assembly.CMP(register, (UInt32)value);
                 }
@@ -725,7 +728,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        Int64 value = (Int64)(second as Constant).Value;
+                        Int64 value = Convert.ToInt64((second as Constant).Value);
 
                         UInt32 loConstant = (UInt32)(value & 0xFFFFFFFF);
                         UInt32 hiConstant = (UInt32)(value >> 32);
@@ -753,7 +756,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        Int64 value = (Int64)(second as Constant).Value;
+                        Int64 value = Convert.ToInt64((second as Constant).Value);
 
                         UInt32 loConstant = (UInt32)(value & 0xFFFFFFFF);
                         UInt32 hiConstant = (UInt32)(value >> 32);
@@ -781,7 +784,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        Int64 value = (Int64)(second as Constant).Value;
+                        Int64 value = Convert.ToInt64((second as Constant).Value);
 
                         UInt32 loConstant = (UInt32)(value & 0xFFFFFFFF);
                         UInt32 hiConstant = (UInt32)(value >> 32);
@@ -809,7 +812,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        Int64 value = (Int64)(second as Constant).Value;
+                        Int64 value = Convert.ToInt64((second as Constant).Value);
 
                         UInt32 loConstant = (UInt32)(value & 0xFFFFFFFF);
                         UInt32 hiConstant = (UInt32)(value >> 32);
@@ -929,9 +932,9 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = (UInt32) ((Int32) (second as Constant).Value);
+                        Int32 value = Convert.ToInt32((second as Constant).Value);
 
-                        assembly.ADD(register, value);
+                        assembly.ADD(register, (UInt32) value);
                     }
                     else if (second.IsRegisterSet == true)
                     {
@@ -948,7 +951,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = (UInt32)((Int32)(second as Constant).Value);
+                        UInt32 value = Convert.ToUInt32(Convert.ToInt32((second as Constant).Value)); 
                         
                         assembly.SUB(register, value);
                     }
@@ -967,7 +970,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = (UInt32)((Int32)(second as Constant).Value);
+                        UInt32 value = Convert.ToUInt32(Convert.ToInt32((second as Constant).Value));
 
                         assembly.IMUL(register, value);
                     }
@@ -996,7 +999,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = (UInt32) ((Int32) (second as Constant).Value);
+                        UInt32 value = Convert.ToUInt32(Convert.ToInt32((second as Constant).Value));
 
                         assembly.AND(register, value);
                     }
@@ -1015,7 +1018,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = (UInt32)((Int32)(second as Constant).Value);
+                        UInt32 value = Convert.ToUInt32(Convert.ToInt32((second as Constant).Value));
 
                         assembly.OR(register, value);
                     }
@@ -1275,7 +1278,7 @@ namespace SharpOS.AOT.X86
             }
             else
             {
-                this.MovRegisterConstant(register, (UInt32)((Int32)operand.Value));
+                this.MovRegisterConstant(register, Convert.ToUInt32(operand.Value));
             }
         }
 
@@ -1290,7 +1293,7 @@ namespace SharpOS.AOT.X86
             {
                 Memory memory = this.GetMemory(assign.Asignee);
 
-                Int32 value = (Int32)(assign.Value as Constant).Value;
+                Int32 value = Convert.ToInt32((assign.Value as Constant).Value);
 
                 this.MovMemoryConstant(memory, (UInt32)value);
             }
@@ -1298,7 +1301,7 @@ namespace SharpOS.AOT.X86
             {
                 DWordMemory memory = this.GetMemory(assign.Asignee) as DWordMemory;
 
-                Int64 value = (Int64)(assign.Value as Constant).Value;
+                Int64 value = Convert.ToInt64((assign.Value as Constant).Value);
 
                 UInt32 loValue = (UInt32)(value & 0xFFFFFFFF);
                 UInt32 hiValue = (UInt32)(value >> 32);

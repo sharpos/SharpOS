@@ -48,8 +48,8 @@
 								tr.WriteLine("ceq");
 								tr.WriteLine("brtrue _" + jump);
 								tr.WriteLine("ldstr \"" + className + "::" + methodName + " Failed\"");
-								tr.WriteLine("call uint8* SharpOS.TestKernel.Kernel::String(string)");
-								tr.WriteLine("call void SharpOS.TestKernel.Kernel::WriteMessage(uint8*)");
+								tr.WriteLine("call uint8* SharpOS.Kernel::String(string)");
+								tr.WriteLine("call void SharpOS.Kernel::WriteMessage(uint8*)");
 								tr.WriteLine("br exit");
 								
 								++jump;
@@ -62,8 +62,8 @@
 						tr.WriteLine("_" + (jump - 1) + ":");
 						tr.WriteLine("OK:");
 						tr.WriteLine("ldstr \"Ok\"");
-						tr.WriteLine("call uint8* SharpOS.TestKernel.Kernel::String(string)");
-						tr.WriteLine("call void SharpOS.TestKernel.Kernel::WriteMessage(uint8*)");
+						tr.WriteLine("call uint8* SharpOS.Kernel::String(string)");
+						tr.WriteLine("call void SharpOS.Kernel::WriteMessage(uint8*)");
 						tr.WriteLine("exit:");
 						tr.WriteLine("ret");
 						tr.WriteLine("}");
