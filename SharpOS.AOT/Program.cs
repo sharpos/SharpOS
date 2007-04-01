@@ -15,16 +15,16 @@ using SharpOS;
 using SharpOS.AOT.IR;
 using SharpOS.AOT.X86;
 
-namespace SharpOS
+namespace SharpOS.AOT
 {
-    public class AOTOS
+    public class OS
     {
         static void Main(string[] args)
         {
             //try
             {
                 Engine engine = new Engine();
-                string filename = "SharpOS.dll";
+                string filename = "SharpOS.Kernel.dll";
 
                 if (args.Length == 1)
                 {
@@ -32,7 +32,7 @@ namespace SharpOS
                 }
                 else if (args.Length > 0)
                 {
-                    Console.WriteLine("Usage: AOTOS [filename]");
+                    Console.WriteLine("Usage: SharpOS.AOT.exe [filename]");
                     
                     return;
                 }

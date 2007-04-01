@@ -10,6 +10,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -849,37 +850,85 @@ namespace SharpOS.AOT.IR
 
             return;
         }
-
-        private void AddVariable(Dictionary<SharpOS.AOT.IR.Operands.Identifier, List<Block>> identifierList, Identifier identifier, Block block)
+       
+        /*private class IdentifierBlockList
         {
-            /*if (identifier is SharpOS.AOT.IR.Operands.Register == true)
+            public IdentifierBlockList(SharpOS.AOT.IR.Operands.Identifier identifier, List<Block> list)
             {
-                return;
-            }*/
-
-            foreach (Identifier key in identifierList.Keys)
-            {
-                if (key.ID.Equals(identifier.ID) == true)
-                {
-                    if (identifierList[key].Contains(block) == false)
-                    {
-                        identifierList[key].Add(block);
-                    }
-
-                    return; ;
-                }
+                this.identifier = identifier;
+                this.list = list;
             }
 
-            List<Block> list = new List<Block>();
-            list.Add(block);
-            identifierList[identifier.Clone() as Identifier] = list;
+            public SharpOS.AOT.IR.Operands.Identifier identifier = null;
+            public List<Block> list = null;
+        }*/
 
-            return;
+        private class IdentifierBlocks : KeyedCollection<SharpOS.AOT.IR.Operands.Identifier, IdentifierBlocksItem>
+        {
+            internal IdentifierBlocks() : base() { }
+
+            protected override SharpOS.AOT.IR.Operands.Identifier GetKeyForItem(IdentifierBlocksItem item)
+            {
+                return item.key;
+            }
+
+            internal List<SharpOS.AOT.IR.Operands.Identifier> GetKeys()
+            {
+                List<SharpOS.AOT.IR.Operands.Identifier> values = new List<SharpOS.AOT.IR.Operands.Identifier>();
+
+                foreach (IdentifierBlocksItem item in this)
+                {
+                    values.Add(item.key);
+                }
+
+                return values;
+            }
+
+            internal void AddVariable(Identifier identifier, Block block)
+            {
+                /*if (identifier is SharpOS.AOT.IR.Operands.Register == true)
+                {
+                    return;
+                }*/
+
+                foreach (IdentifierBlocksItem item in this)
+                {
+                    if (item.key.ID.Equals(identifier.ID) == true)
+                    {
+                        if (item.values.Contains(block) == false)
+                        {
+                            item.values.Add(block);
+                        }
+
+                        return; ;
+                    }
+                }
+
+                List<Block> list = new List<Block>();
+                list.Add(block);
+                
+                IdentifierBlocksItem value = new IdentifierBlocksItem(identifier.Clone() as Identifier, list);
+                this.Add(value);
+
+                return;
+            }
+        }
+
+        private class IdentifierBlocksItem
+        {
+            public IdentifierBlocksItem(SharpOS.AOT.IR.Operands.Identifier key, List<Block> values)
+            {
+                this.key = key;
+                this.values = values;
+            }
+
+            public SharpOS.AOT.IR.Operands.Identifier key;
+            public List<Block> values;
         }
 
         private void TransformationToSSA()
         {
-            Dictionary<SharpOS.AOT.IR.Operands.Identifier, List<Block>> identifierList = new Dictionary<SharpOS.AOT.IR.Operands.Identifier, List<Block>>();
+            IdentifierBlocks identifierList = new IdentifierBlocks();
 
             // Find out in which blocks every variable gets defined
             foreach (Block block in blocks)
@@ -890,15 +939,17 @@ namespace SharpOS.AOT.IR
                     {
                         Assign assign = instruction as Assign;
 
-                        this.AddVariable(identifierList, assign.Asignee, block);
+                        identifierList.AddVariable(assign.Asignee, block);
                     }
                 }
             }
 
             // Insert PHI
-            foreach (Identifier identifier in identifierList.Keys)
+            foreach (IdentifierBlocksItem item in identifierList)
             {
-                List<Block> list = identifierList[identifier];
+                Console.WriteLine("PHI Identifier: {0}", item.key);
+
+                List<Block> list = item.values;
                 List<Block> everProcessed = new List<Block>();
 
                 foreach (Block block in list)
@@ -926,7 +977,7 @@ namespace SharpOS.AOT.IR
                             Assign phi = instruction as Assign;
                             string id = phi.Asignee.Value;
 
-                            if (id.Equals(identifier.Value) == true)
+                            if (id.Equals(item.key.Value) == true)
                             {
                                 found = true;
                                 break;
@@ -939,10 +990,10 @@ namespace SharpOS.AOT.IR
 
                             for (int i = 0; i < operands.Length; i++)
                             {
-                                operands[i] = identifier.Clone();
+                                operands[i] = item.key.Clone();
                             }
 
-                            PHI phi = new PHI(identifier.Clone() as Identifier, new Operands.Miscellaneous(new Operators.Miscellaneous(Operator.MiscellaneousType.InternalList), operands));
+                            PHI phi = new PHI(item.key.Clone() as Identifier, new Operands.Miscellaneous(new Operators.Miscellaneous(Operator.MiscellaneousType.InternalList), operands));
                             dominanceFrontier.InsertInstruction(0, phi);
 
                             if (everProcessed.Contains(dominanceFrontier) == false)
@@ -962,11 +1013,11 @@ namespace SharpOS.AOT.IR
                 Dictionary<string, int> count = new Dictionary<string, int>();
                 Dictionary<string, Stack<int>> stack = new Dictionary<string, Stack<int>>();
 
-                foreach (Identifier identifier in identifierList.Keys)
+                foreach (IdentifierBlocksItem item in identifierList)
                 {
-                    count[identifier.Value] = 0;
-                    stack[identifier.Value] = new Stack<int>();
-                    stack[identifier.Value].Push(0);
+                    count[item.key.Value] = 0;
+                    stack[item.key.Value] = new Stack<int>();
+                    stack[item.key.Value].Push(0);
                 }
 
                 this.SSARename(this.blocks[0], count, stack);
@@ -1099,12 +1150,46 @@ namespace SharpOS.AOT.IR
             return;
         }
 
-        Dictionary<string, List<Instructions.Instruction>> defuse;
+        private class DefUse : KeyedCollection<string, DefUseItem>
+        {
+            public DefUse() : base() { }
+
+            protected override string GetKeyForItem(DefUseItem item)
+            {
+                return item.key;
+            }
+
+            public List<string> GetKeys()
+            {
+                List<string> values = new List<string>();
+                
+                foreach (DefUseItem item in this)
+                {
+                    values.Add(item.key);
+                }
+
+                return values;
+            }
+        }
+
+        private class DefUseItem
+        {
+            public DefUseItem(string key, List<Instructions.Instruction> values)
+            {
+                this.key = key;
+                this.values = values;
+            }
+
+            public string key;
+            public List<Instructions.Instruction> values;
+        }
+
+        DefUse defuse;
 
         // The first entry in every list of each variable is the definition instruction, the others are the instructions that use the variable.
         private void GetListOfDefUse()
         {
-            defuse = new Dictionary<string, List<Instructions.Instruction>>();
+            defuse = new DefUse();
 
             foreach (Block block in this.blocks)
             {
@@ -1118,21 +1203,22 @@ namespace SharpOS.AOT.IR
                             {
                                 string id = operand.ID;
 
-                                if (defuse.ContainsKey(id) == false)
+                                if (defuse.Contains(id) == false)
                                 {
-                                    defuse[id] = new List<SharpOS.AOT.IR.Instructions.Instruction>();
-                                    defuse[id].Add(null);
+                                    DefUseItem item = new DefUseItem(id, new List<SharpOS.AOT.IR.Instructions.Instruction>());
+                                    item.values.Add(null);
+                                    defuse.Add(item);
 
                                     if (operand.Version == 0)
                                     {
-                                        defuse[id][0] = new Instructions.System(new SharpOS.AOT.IR.Operands.Miscellaneous(new Operators.Miscellaneous(Operator.MiscellaneousType.Argument)));
-                                        defuse[id][0].Block = this.blocks[0];
+                                        defuse[id].values[0] = new Instructions.System(new SharpOS.AOT.IR.Operands.Miscellaneous(new Operators.Miscellaneous(Operator.MiscellaneousType.Argument)));
+                                        defuse[id].values[0].Block = this.blocks[0];
                                     }
                                 }
 
-                                if (defuse[id].Contains(instruction) == false)
+                                if (defuse[id].values.Contains(instruction) == false)
                                 {
-                                    defuse[id].Add(instruction);
+                                    defuse[id].values.Add(instruction);
                                 }
                             }
                         }
@@ -1144,26 +1230,27 @@ namespace SharpOS.AOT.IR
 
                         if ((instruction as Assign).Asignee is Reference == true)
                         {
-                            if (defuse[id].Contains(instruction) == false)
+                            if (defuse[id].values.Contains(instruction) == false)
                             {
-                                defuse[id].Add(instruction);
+                                defuse[id].values.Add(instruction);
                             }
                         }
                         else
                         {
-                            if (defuse.ContainsKey(id) == false)
+                            if (defuse.Contains(id) == false)
                             {
-                                defuse[id] = new List<SharpOS.AOT.IR.Instructions.Instruction>();
-                                defuse[id].Add(instruction);
+                                DefUseItem item = new DefUseItem(id, new List<SharpOS.AOT.IR.Instructions.Instruction>());
+                                item.values.Add(instruction);
+                                defuse.Add(item);
                             }
                             else
                             {
-                                if (defuse[id][0] != null)
+                                if (defuse[id].values[0] != null)
                                 {
                                     throw new Exception("SSA variable '" + id + "' in '" + this.MethodFullName + "' defined a second time.");
                                 }
 
-                                defuse[id][0] = instruction;
+                                defuse[id].values[0] = instruction;
                             }
                         }
                     }
@@ -1172,9 +1259,10 @@ namespace SharpOS.AOT.IR
 
             int stamp = 0;
 
-            foreach (string key in defuse.Keys)
+            foreach (DefUseItem item in defuse)
             {
-                List<Instructions.Instruction> list = defuse[key];
+                string key = item.key;
+                List<Instructions.Instruction> list = defuse[key].values;
 
                 if (list[0] == null)
                 {
@@ -1242,9 +1330,10 @@ namespace SharpOS.AOT.IR
             Console.WriteLine("Def-Use");
             Console.WriteLine("=======================================");
 
-            foreach (string key in defuse.Keys)
+            foreach (DefUseItem item in defuse)
             {
-                List<Instructions.Instruction> list = defuse[key];
+                string key = item.key;
+                List<Instructions.Instruction> list = defuse[key].values;
 
                 Console.WriteLine(list[0].Block.Index + " : " + list[0].ToString());
 
@@ -1261,9 +1350,7 @@ namespace SharpOS.AOT.IR
 
         private void DeadCodeElimination()
         {
-            string[] values = new string[this.defuse.Keys.Count];
-            this.defuse.Keys.CopyTo(values, 0);
-            List<string> keys = new List<string>(values);
+            List<string> keys = this.defuse.GetKeys();
 
             Console.WriteLine("=======================================");
             Console.WriteLine("Dead Code Elimination");
@@ -1274,7 +1361,7 @@ namespace SharpOS.AOT.IR
                 string key = keys[0];
                 keys.RemoveAt(0);
 
-                List<Instructions.Instruction> list = this.defuse[key];
+                List<Instructions.Instruction> list = this.defuse[key].values;
                 
                 // This variable is only defined but not used
                 if (list.Count == 1
@@ -1303,7 +1390,7 @@ namespace SharpOS.AOT.IR
                                 string id = operand.ID;
 
                                 // Remove "A = B + C" from B & C
-                                this.defuse[id].Remove(definition);
+                                this.defuse[id].values.Remove(definition);
 
                                 // Add to the queue B & C to check them it they are used anywhere else
                                 if (keys.Contains(id) == false)
@@ -1321,9 +1408,7 @@ namespace SharpOS.AOT.IR
 
         private void SimpleConstantPropagation()
         {
-            string[] values = new string[this.defuse.Keys.Count];
-            this.defuse.Keys.CopyTo(values, 0);
-            List<string> keys = new List<string>(values);
+            List<string> keys = this.defuse.GetKeys();
 
             Console.WriteLine("=======================================");
             Console.WriteLine("Simple Constant Propagation");
@@ -1336,7 +1421,7 @@ namespace SharpOS.AOT.IR
                 string key = keys[0];
                 keys.RemoveAt(0);
 
-                List<Instructions.Instruction> list = this.defuse[key];
+                List<Instructions.Instruction> list = this.defuse[key].values;
 
                 Instructions.Instruction definition = list[0];
 
@@ -1366,7 +1451,7 @@ namespace SharpOS.AOT.IR
                         definition.Block.RemoveInstruction(definition);
                         definition.Block.InsertInstruction(0, assign);
 
-                        defuse[key][0] = assign;
+                        defuse[key].values[0] = assign;
                     }
                 }
                 // A = 100
@@ -1428,9 +1513,7 @@ namespace SharpOS.AOT.IR
 
         private void CopyPropagation()
         {
-            string[] values = new string[this.defuse.Keys.Count];
-            this.defuse.Keys.CopyTo(values, 0);
-            List<string> keys = new List<string>(values);
+            List<string> keys = this.defuse.GetKeys();
 
             Console.WriteLine("=======================================");
             Console.WriteLine("Copy Propagation");
@@ -1438,10 +1521,16 @@ namespace SharpOS.AOT.IR
 
             while (keys.Count > 0)
             {
+                //Console.Write("Before: "); foreach(string value in keys) Console.Write(" {0}", value); Console.WriteLine();
+
                 string key = keys[0];
                 keys.RemoveAt(0);
 
-                List<Instructions.Instruction> list = this.defuse[key];
+                //Console.Write("After: "); foreach (string value in keys) Console.Write(" {0}", value); Console.WriteLine();
+
+                Console.WriteLine("[*]Remove Key: {0}", key);
+
+                List<Instructions.Instruction> list = this.defuse[key].values;
 
                 Instructions.Instruction definition = list[0];
 
@@ -1532,6 +1621,7 @@ namespace SharpOS.AOT.IR
                         // Add to the queue 
                         if (keys.Contains(id) == false)
                         {
+                            Console.WriteLine("[*]Add Key: {0}", id);
                             keys.Add(id);
                         }
                     }
