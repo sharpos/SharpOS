@@ -15,7 +15,7 @@
 		
 		<mkdir dir="../build" />
 		
-		<csc target="exe" output="../build/SharpOS.AOT.exe">
+		<csc target="exe" output="../build/SharpOS.AOT.exe (Release)">
 			<references>
 				<include name="References/Mono.Cecil.dll" />
 			</references>
@@ -31,9 +31,32 @@
 		
 		<copy file="References/Mono.Cecil.dll" tofile="../build/Mono.Cecil.dll" />
 	</target>
+
+	<target name="debug">
+		<echo message="Building SharpOS AOT compiler (Debug)" />
+		
+		<mkdir dir="../debug" />
+		
+		<csc target="exe" output="../debug/SharpOS.AOT.exe" debug="Enable">
+			<references>
+				<include name="References/Mono.Cecil.dll" />
+			</references>
+			<sources>
+				<include name="*.cs" />
+				<include name="IR/*.cs" />
+				<include name="IR/Instructions/*.cs" />
+				<include name="IR/Operands/*.cs" />
+				<include name="IR/Operators/*.cs" />
+				<include name="X86/*.cs" />
+			</sources>
+		</csc>
+		
+		<copy file="References/Mono.Cecil.dll" tofile="../debug/Mono.Cecil.dll" />
+	</target>
 	
 	<target name="clean">
 		<delete file="../build/SharpOS.AOT.exe" failonerror="false" />
+		<delete file="../debug/SharpOS.AOT.exe" failonerror="false" />
 		<delete file="../build/Mono.Cecil.dll" failonerror="false" />
 	</target>
 </project>
