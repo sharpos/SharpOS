@@ -9,28 +9,45 @@
 
 <project name="SharpOS AOT Testing Kernel" default="build">
 	<description>Compiles a set of tests for the AOT compiler.</description>
-	
+
+	<property name="prefix" value="../build" readonly="true" />
+
 	<target name="build">
 		<echo message="Building Test Kernel" />
 		
-		<mkdir dir="../build" />
-				
-		<script language="C#">
+		<mkdir dir="${prefix}" />
+
+		<uptodate property="SharpOS.TestKernel-uptodate">
+			<sourcefiles>
+				<include name="_TestRunner.il" />
+				<include name="Tests/*.il" />
+			</sourcefiles>
+			<targetfiles>
+				<include name="${path::combine(prefix, 'SharpOS.TestKernel.exe')}" />
+			</targetfiles>
+		</uptodate>
+		<property
+			name="SharpOS.TestKernel-uptodate"
+			value="${SharpOS.TestKernel-uptodate and
+				file::get-last-write-time('../build/SharpOS.TestKernel.exe')
+					>= directory::get-last-write-time('Tests')}" />
+
+		<script language="C#" unless="${SharpOS.TestKernel-uptodate}">
 			<code>
 				<![CDATA[
 					public static void ScriptMain(Project project)
 					{
 						// Get a copy of the _TestRunnerHeader.il
-						File.Copy("TestRunnerHeader.il", "_TestRunner.il", true);
+						File.Copy(Path.Combine(project.BaseDirectory, "TestRunnerHeader.il"), Path.Combine(project.BaseDirectory, "_TestRunner.il"), true);
 						
 						// Open the temporary file
-						TextWriter tr = new StreamWriter(File.Open("_TestRunner.il", FileMode.Append));
+						TextWriter tr = new StreamWriter(File.Open(Path.Combine(project.BaseDirectory, "_TestRunner.il"), FileMode.Append));
 						tr.WriteLine();
 						
 						int jump = 0; // Stores current branch label
 						
 						// Write method calls
-						foreach(string fileName in Directory.GetFiles("Tests"))
+						foreach(string fileName in Directory.GetFiles(Path.Combine(project.BaseDirectory, "Tests")))
 						{
 							StreamReader sReader = File.OpenText(fileName);
 							string contents = sReader.ReadToEnd();
@@ -61,7 +78,7 @@
 						// Write footer
 						tr.WriteLine("_" + (jump - 1) + ":");
 						tr.WriteLine("OK:");
-						tr.WriteLine("ldstr \"Ok\"");
+						tr.WriteLine("ldstr \"All test cases have completed successfully!\"");
 						tr.WriteLine("call uint8* SharpOS.Kernel::String(string)");
 						tr.WriteLine("call void SharpOS.Kernel::WriteMessage(uint8*)");
 						tr.WriteLine("exit:");
@@ -76,7 +93,7 @@
 			</code>
 		</script>
 		
-		<ilasm target="exe" output="../build/SharpOS.TestKernel.exe">
+		<ilasm target="exe" output="${path::combine(prefix, 'SharpOS.TestKernel.exe')}">
 			<sources>
 				<include name="_TestRunner.il" />
 				<include name="Boot.il" />
@@ -86,7 +103,7 @@
 	</target>
 	
 	<target name="clean">
-		<delete file="../build/SharpOS.TestKernel.exe" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.TestKernel.exe')}" failonerror="false" />
 		<delete file="_TestRunner.il" failonerror="false" />
 	</target>
 </project>

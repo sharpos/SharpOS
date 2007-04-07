@@ -1,0 +1,58 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Johann MacDonagh <johann [at] macdonaghs [dot] com>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="SharpOS" default="build">
+	
+	<target name="build">
+		<echo message="Building projects" />
+		<nant buildfile="./SharpOS.AOT/SharpOS.AOT.build" />
+		<nant buildfile="./SharpOS.TestKernel/SharpOS.TestKernel.build" />
+	</target>
+
+	<target name="dist" depends="build">
+		<echo message="AOT Compiling TestKernel" />
+		<exec program="SharpOS.AOT.exe" basedir="build" workingdir="build">
+			<arg path="build/SharpOS.TestKernel.exe" />
+		</exec>
+
+		<echo message="Copying TestKernel to disk image" />
+		<mkdir dir="dist" />
+		<copy file="util/bochsrc.txt" tofile="dist/bochsrc.txt" />
+		<copy file="util/disk.img" tofile="dist/disk.img" />
+
+		<exec program="losetup" workingdir="dist">
+			<arg value="/dev/loop0" />
+			<arg file="dist/disk.img" />
+		</exec>
+
+		<mkdir dir="dist/mnt" />
+		<exec program="mount" workingdir="dist">
+			<arg line="/dev/loop0 -o loop mnt" />
+		</exec>
+
+		<copy file="build/SharpOS.bin" tofile="dist/mnt/SharpOS.bin" />
+
+		<exec program="umount" workingdir="dist">
+			<arg value="mnt" />
+		</exec>
+
+		<exec program="losetup" workingdir="dist">
+			<arg line="-d /dev/loop0" />
+		</exec>
+
+		<delete dir="dist/mnt" />
+	</target>
+	
+	<target name="clean">
+		<nant buildfile="./SharpOS.AOT/SharpOS.AOT.build" target="clean" />
+		<nant buildfile="./SharpOS.TestKernel/SharpOS.TestKernel.build" target="clean" />
+		<delete dir="build" />
+		<delete dir="dist" />
+	</target>
+</project>

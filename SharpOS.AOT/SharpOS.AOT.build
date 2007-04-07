@@ -9,13 +9,16 @@
 
 <project name="SharpOS AOT Compiler" default="build">
 	<description>Compiles IL assemblies into machine code.</description>
+
+	<property name="debug" value="false" />
+	<property name="prefix" value="../build" />
 	
 	<target name="build">
 		<echo message="Building SharpOS AOT compiler" />
 		
-		<mkdir dir="../build" />
+		<mkdir dir="${prefix}" />
 		
-		<csc target="exe" output="../build/SharpOS.AOT.exe (Release)">
+		<csc target="exe" output="${path::combine(prefix, 'SharpOS.AOT.exe')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="References/Mono.Cecil.dll" />
 			</references>
@@ -29,34 +32,12 @@
 			</sources>
 		</csc>
 		
-		<copy file="References/Mono.Cecil.dll" tofile="../build/Mono.Cecil.dll" />
+		<copy file="References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
 	</target>
 
-	<target name="debug">
-		<echo message="Building SharpOS AOT compiler (Debug)" />
-		
-		<mkdir dir="../debug" />
-		
-		<csc target="exe" output="../debug/SharpOS.AOT.exe" debug="Enable">
-			<references>
-				<include name="References/Mono.Cecil.dll" />
-			</references>
-			<sources>
-				<include name="*.cs" />
-				<include name="IR/*.cs" />
-				<include name="IR/Instructions/*.cs" />
-				<include name="IR/Operands/*.cs" />
-				<include name="IR/Operators/*.cs" />
-				<include name="X86/*.cs" />
-			</sources>
-		</csc>
-		
-		<copy file="References/Mono.Cecil.dll" tofile="../debug/Mono.Cecil.dll" />
-	</target>
-	
 	<target name="clean">
-		<delete file="../build/SharpOS.AOT.exe" failonerror="false" />
-		<delete file="../debug/SharpOS.AOT.exe" failonerror="false" />
-		<delete file="../build/Mono.Cecil.dll" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'Mono.Cecil.dll')}" failonerror="false" />
 	</target>
 </project>
