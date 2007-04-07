@@ -30,8 +30,20 @@ namespace SharpOS.AOT.X86
         public static readonly SegType FS = new SegType("FS", 4, 0x64);
         public static readonly SegType GS = new SegType("GS", 5, 0x65);
 
-        public static SegType GetByID(string id)
+        public static SegType GetByID(object value)
         {
+            if (value is SegType == true)
+            {
+                return value as SegType;
+            }
+
+            if (value is SharpOS.AOT.IR.Operands.Field == false)
+            {
+                throw new Exception("'" + value.ToString() + "' is not supported.");
+            }
+
+            string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+
             if (id.Equals("null") == true)
             {
                 return null;

@@ -30,5 +30,7 @@ namespace SharpOS.AOT.X86
             : base(name, index)
         {
         }
+
+        public UInt32 Value = 0;
     }
 }

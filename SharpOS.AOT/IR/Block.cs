@@ -702,10 +702,13 @@ namespace SharpOS.AOT.IR
                 }
 
                 // Load Locales
-                /*else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S)
+                else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S)
                 {
-                    instruction = new Assign(new Register(stack), this.Method.GetLocal((cilInstruction.Operand as VariableDefinition).Index));
-                }*/
+                    Reference reference = new Reference(this.Method.GetLocal((cilInstruction.Operand as VariableDefinition).Index));
+                    reference.SizeType = Operand.InternalSizeType.I;
+
+                    instruction = new Assign(new Register(stack), reference);
+                }
                 else if (cilInstruction.OpCode == OpCodes.Ldloc || cilInstruction.OpCode == OpCodes.Ldloc_S)
                 {
                     instruction = new Assign(new Register(stack), this.Method.GetLocal((cilInstruction.Operand as VariableDefinition).Index));
@@ -826,17 +829,23 @@ namespace SharpOS.AOT.IR
                 {
                     instruction = new Assign(new Register(stack), this.Method.GetArgument((cilInstruction.Operand as ParameterDefinition).Sequence));
                 }
-                /*else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S)
+                else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S)
                 {
                     if (cilInstruction.Operand is ParameterDefinition)
                     {
-                        instruction = new Assign(new Register(stack), this.Method.GetArgument((cilInstruction.Operand as ParameterDefinition).Sequence));
+                        Reference reference = new Reference(this.Method.GetArgument((cilInstruction.Operand as ParameterDefinition).Sequence));
+                        reference.SizeType = Operand.InternalSizeType.I;
+
+                        instruction = new Assign(new Register(stack), reference);
                     }
                     else
                     {
-                        instruction = new Assign(new Register(stack), this.Method.GetArgument((int)cilInstruction.Operand));
+                        Reference reference = new Reference(this.Method.GetArgument((int)cilInstruction.Operand));
+                        reference.SizeType = Operand.InternalSizeType.I;
+
+                        instruction = new Assign(new Register(stack), reference);
                     }
-                }*/
+                }
                 else if (cilInstruction.OpCode == OpCodes.Ldarg_0)
                 {
                     instruction = new Assign(new Register(stack), this.Method.GetArgument(1));
@@ -912,7 +921,13 @@ namespace SharpOS.AOT.IR
 
                     stack -= call.Parameters.Count;
                 }
-                /*else if (cilInstruction.OpCode == OpCodes.Ldfld || cilInstruction.OpCode == OpCodes.Ldflda)
+                else if (cilInstruction.OpCode == OpCodes.Ldfld)
+                {
+                    // TODO
+                    instruction = new Assign(new Register(stack - 1), new Field((cilInstruction.Operand as MemberReference).DeclaringType.FullName + "." + (cilInstruction.Operand as MemberReference).Name, new Register(stack - 1)));
+                    (instruction.Value as Identifier).SizeType = Operand.GetSizeType((cilInstruction.Operand as MemberReference).DeclaringType.FullName, this.method.Engine.Assembly); 
+                }
+                /*else if (cilInstruction.OpCode == OpCodes.Ldflda)
                 {
                     instruction = new Assign(new Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldDefinition).Name, new Register(stack - 1)));
                     (instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
@@ -920,24 +935,23 @@ namespace SharpOS.AOT.IR
                 else if (cilInstruction.OpCode == OpCodes.Ldsfld)
                 {
                     instruction = new Assign(new Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name));
-                    (instruction.Value as Identifier).SizeType = Operand.GetSizeType((cilInstruction.Operand as FieldReference).FieldType.FullName);
+                    (instruction.Value as Identifier).SizeType = Operand.GetSizeType((cilInstruction.Operand as FieldReference).FieldType.FullName, this.method.Engine.Assembly);
                 }
                 /*else if (cilInstruction.OpCode == OpCodes.Ldsflda)
                 {
                     instruction = new Assign(new Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name));
                     (instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
                 }*/
-                /*else if (cilInstruction.OpCode == OpCodes.Stfld)
+                else if (cilInstruction.OpCode == OpCodes.Stfld)
                 {
-                    instruction = new Assign(new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldDefinition).Name, new Register(stack - 2)), new Register(stack - 1));
-                    (instruction as Assign).Asignee.SizeType = Operand.InternalSizeType.U;
-                    (instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-                }*/
+                    // TODO
+                    instruction = new Assign(new Field((cilInstruction.Operand as MemberReference).DeclaringType.FullName + "." + (cilInstruction.Operand as MemberReference).Name, new Register(stack - 2)), new Register(stack - 1));
+                    (instruction as Assign).Asignee.SizeType = Operand.GetSizeType((cilInstruction.Operand as MemberReference).DeclaringType.FullName, this.method.Engine.Assembly); 
+                }
                 else if (cilInstruction.OpCode == OpCodes.Stsfld)
                 {
                     instruction = new Assign(new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name, new Register(stack - 1)), new Register(stack - 1));
-                    (instruction as Assign).Asignee.SizeType = Operand.GetSizeType((cilInstruction.Operand as FieldReference).FieldType.FullName); 
-                    //(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+                    (instruction as Assign).Asignee.SizeType = Operand.GetSizeType((cilInstruction.Operand as FieldReference).FieldType.FullName, this.method.Engine.Assembly); 
                 }
 
                 // Array

@@ -57,6 +57,14 @@ namespace SharpOS.AOT.IR.Operands
             }
         }
 
+        private bool forceSpill = false;
+
+        public bool ForceSpill
+        {
+            set { this.forceSpill = value; }
+            get { return this.forceSpill; }
+        }
+
         public override bool Equals(object obj)
         {
             return (obj is Identifier == true

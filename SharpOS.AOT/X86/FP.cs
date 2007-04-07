@@ -32,8 +32,20 @@ namespace SharpOS.AOT.X86
         public static readonly FPType ST6 = new FPType("ST6", 6);
         public static readonly FPType ST7 = new FPType("ST7", 7);
 
-        public static FPType GetByID(string id)
+        public static FPType GetByID(object value)
         {
+            if (value is FPType == true)
+            {
+                return value as FPType;
+            }
+
+            if (value is SharpOS.AOT.IR.Operands.Field == false)
+            {
+                throw new Exception("'" + value.ToString() + "' is not supported.");
+            }
+
+            string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+
             if (id.Equals("null") == true)
             {
                 return null;

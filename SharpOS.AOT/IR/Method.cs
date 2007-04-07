@@ -34,6 +34,12 @@ namespace SharpOS.AOT.IR
         }
 
         private Engine engine = null;
+
+        public Engine Engine
+        {
+            get { return this.engine; }
+        }
+
         private MethodDefinition methodDefinition = null;
 
         public MethodDefinition MethodDefinition
@@ -54,12 +60,11 @@ namespace SharpOS.AOT.IR
             set { stackSize = value; }
         }
 
-
         public Argument GetArgument(int i)
         {
             Argument argument = new Argument(i);
 
-            argument.SetSizeType(this.methodDefinition.Parameters[i - 1].ParameterType.FullName);
+            argument.SetSizeType(this.methodDefinition.Parameters[i - 1].ParameterType.FullName, this.engine.Assembly);
 
             return argument;
         }
@@ -68,7 +73,7 @@ namespace SharpOS.AOT.IR
         {
             Local local = new Local(i);
 
-            local.SetSizeType(this.methodDefinition.Body.Variables[i].VariableType.FullName);
+            local.SetSizeType(this.methodDefinition.Body.Variables[i].VariableType.FullName, this.engine.Assembly);
 
             return local;
         }
@@ -1335,13 +1340,17 @@ namespace SharpOS.AOT.IR
                 string key = item.key;
                 List<Instructions.Instruction> list = defuse[key].values;
 
+                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(list[0].Block.Index + " : " + list[0].ToString());
+                Console.ForegroundColor = ConsoleColor.Gray;
 
                 for (int i = 1; i < list.Count; i++)
                 {
                     Instructions.Instruction instruction = list[i];
 
+                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("\t" + instruction.Block.Index + " : " + instruction);
+                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
             }
 
@@ -1464,44 +1473,64 @@ namespace SharpOS.AOT.IR
 
                     // Remove the variable from the defuse list
                     defuse.Remove(key);
+                    
+                    bool _break = false;
 
-                    // "X = A" becomes "X = 100"
-                    for (int i = 1; i < list.Count; i++)
+                    // The first pass is to find out if the constant propagation can be done for current key
+                    // The second pass does the actual constant propagation
+                    for (int pass = 0; _break== false && pass < 2; pass++)
                     {
-                        Instructions.Instruction used = list[i];
-
-                        if (used.Value != null)
+                        // "X = A" becomes "X = 100"
+                        for (int i = 1; _break == false && i < list.Count; i++)
                         {
-                            for (int j = 0; j < used.Value.Operands.Length; j++)
-                            {
-                                Operand operand = used.Value.Operands[j];
+                            Instructions.Instruction used = list[i];
 
-                                // Replace A with 100
-                                if (operand is Identifier == true
-                                    && operand.ID.Equals(key) == true)
+                            if (used.Value != null)
+                            {
+                                for (int j = 0; _break == false && j < used.Value.Operands.Length; j++)
                                 {
-                                    if (used.Value is Identifier == true)
+                                    Operand operand = used.Value.Operands[j];
+
+                                    // ref(local) can't be converted to ref(123)
+                                    if (pass == 0
+                                        && operand is SharpOS.AOT.IR.Operands.Reference == true
+                                        && (operand as SharpOS.AOT.IR.Operands.Reference).Value is SharpOS.AOT.IR.Operands.Register == false)
                                     {
-                                        used.Value = definition.Value;
+                                        _break = true;
+                                        break;
                                     }
-                                    else
+
+                                    // Replace A with 100
+                                    if (pass == 1
+                                        && operand is Identifier == true
+                                        && operand.ID.Equals(key) == true)
                                     {
-                                        used.Value.Operands[j] = definition.Value;
+                                        if (used.Value is Identifier == true)
+                                        {
+                                            used.Value = definition.Value;
+                                        }
+                                        else
+                                        {
+                                            used.Value.Operands[j] = definition.Value;
+                                        }
                                     }
+                                }
+
+                                if (pass == 1)
+                                {
+                                    Console.WriteLine("\t" + definition.Block.Index + " : " + used.ToString());
                                 }
                             }
 
-                            Console.WriteLine("\t" + definition.Block.Index + " : " + used.ToString());
-                        }
-
-                        if (used is Assign == true)
-                        {
-                            string id = (used as Assign).Asignee.ID;
-
-                            // Add to the queue 
-                            if (keys.Contains(id) == false)
+                            if (pass == 1 && used is Assign == true)
                             {
-                                keys.Add(id);
+                                string id = (used as Assign).Asignee.ID;
+
+                                // Add to the queue 
+                                if (keys.Contains(id) == false)
+                                {
+                                    keys.Add(id);
+                                }
                             }
                         }
                     }
@@ -1521,14 +1550,8 @@ namespace SharpOS.AOT.IR
 
             while (keys.Count > 0)
             {
-                //Console.Write("Before: "); foreach(string value in keys) Console.Write(" {0}", value); Console.WriteLine();
-
                 string key = keys[0];
                 keys.RemoveAt(0);
-
-                //Console.Write("After: "); foreach (string value in keys) Console.Write(" {0}", value); Console.WriteLine();
-
-                Console.WriteLine("[*]Remove Key: {0}", key);
 
                 List<Instructions.Instruction> list = this.defuse[key].values;
 
@@ -1537,27 +1560,32 @@ namespace SharpOS.AOT.IR
                 // A = B
 
                 if (definition is Assign != true
-                    || list.Count == 1
-                    || (definition as Assign).Value.ConvertTo != SharpOS.AOT.IR.Operands.Operand.ConvertType.NotSet
-                    || (definition as Assign).Value is Reference == true
-                    || (definition as Assign).Value is Field == true
-                    || (definition as Assign).Value is Arithmetic == true)
+                    || list.Count == 1)
                 {
                     continue;
                 }
 
-                if ((definition as Assign).Asignee is Register == true
-                    && (definition as Assign).Value is Identifier == true
-                    && this.engine.Assembly.IsRegister(((definition as Assign).Value as Identifier).Value) == true)
+                Assign assign = definition as Assign;
+
+                if (assign.Value.ConvertTo != SharpOS.AOT.IR.Operands.Operand.ConvertType.NotSet
+                    /*|| assign.Value is Reference == true*/
+                    || (assign.Value is Field == true && this.engine.Assembly.IsRegister((assign.Value as Identifier).Value) == false)
+                    || assign.Value is Arithmetic == true)
+                {
+                    continue;
+                }
+                else if (assign.Asignee is Register == true
+                    && assign.Value is Identifier == true
+                    && this.engine.Assembly.IsRegister((assign.Value as Identifier).Value) == true)
                 {
                 }
-                else if ((definition as Assign).Asignee is Register == true
-                    && (definition as Assign).Value is Operands.Call == true
-                    && this.engine.Assembly.IsInstruction(((definition as Assign).Value as Operands.Call).Method.DeclaringType.FullName) == true)
+                else if (assign.Asignee is Register == true
+                    && assign.Value is Operands.Call == true
+                    && this.engine.Assembly.IsInstruction((assign.Value as Operands.Call).Method.DeclaringType.FullName) == true)
                 {
                 }
-                else if ((definition as Assign).Asignee is Identifier == true 
-                    && (definition as Assign).Value is Identifier == true)
+                else if (assign.Asignee is Identifier == true 
+                    && assign.Value is Identifier == true)
                 {
                 }
                 else
@@ -1891,18 +1919,28 @@ namespace SharpOS.AOT.IR
             }
         }
 
-        private void AddLineScaneValue(Dictionary<string, LiveRange> values, Identifier identifier, Instructions.Instruction instruction)
+        private void AddLineScanValue(Dictionary<string, LiveRange> values, Identifier identifier, Instructions.Instruction instruction)
         {
-            if (identifier is Argument == true
-                || identifier is Field == true
-                || identifier is Reference == true)
+            if (this.engine.Assembly.IsRegister(identifier.Value) == true)
             {
                 return;
             }
 
-            if (this.engine.Assembly.IsRegister(identifier.Value) == true)
+            bool asmCall = instruction.Value is Operands.Call == true
+                        && this.engine.Assembly.IsInstruction((instruction.Value as Operands.Call).Method.DeclaringType.FullName) == true;
+
+            if (identifier is Argument == true
+                || identifier is Field == true
+                || (identifier is Reference == true
+                    && !(asmCall == true && (identifier as Reference).Value is Argument == false)))
             {
                 return;
+            }
+
+            if (asmCall == true)
+            {
+                identifier = (identifier as Reference).Value;
+                identifier.ForceSpill = true;
             }
 
             string id = identifier.ID;
@@ -1939,14 +1977,14 @@ namespace SharpOS.AOT.IR
                         {
                             if (operand is Identifier == true)
                             {
-                                AddLineScaneValue(values, operand as Identifier, instruction);
+                                AddLineScanValue(values, operand as Identifier, instruction);
                             }
                         }
                     }
 
                     if (instruction is Assign == true)
                     {
-                        AddLineScaneValue(values, (instruction as Assign).Asignee, instruction);
+                        AddLineScanValue(values, (instruction as Assign).Asignee, instruction);
                     }
                 }
             }
@@ -2000,7 +2038,8 @@ namespace SharpOS.AOT.IR
             {
                 ExpireOldIntervals(active, registers, this.liveRanges[i]);
 
-                if (this.engine.Assembly.Spill(this.liveRanges[i].Identifier.SizeType) == true)
+                if ((this.liveRanges[i].Identifier as Identifier).ForceSpill == true 
+                    || this.engine.Assembly.Spill(this.liveRanges[i].Identifier.SizeType) == true)
                 {
                     SetNextStackPosition(this.liveRanges[i].Identifier);
                 }
@@ -2117,7 +2156,7 @@ namespace SharpOS.AOT.IR
                                 {
                                     found = true;
                                     Operands.Call call = assign.Value as Operands.Call;
-                                    assign.Asignee.SetSizeType(call.Method.ReturnType.ReturnType.FullName);
+                                    assign.Asignee.SetSizeType(call.Method.ReturnType.ReturnType.FullName, this.engine.Assembly);
                                 }
                                 else if (assign.Value is Operands.Boolean == true)
                                 {
@@ -2183,12 +2222,18 @@ namespace SharpOS.AOT.IR
             Console.WriteLine(this.Dump());
 
             this.GetListOfDefUse();
+            
+            Console.WriteLine(this.Dump());
+            
             this.DeadCodeElimination();
             this.SimpleConstantPropagation();
 
             Console.WriteLine(this.Dump());
 
             this.CopyPropagation();
+            
+            Console.WriteLine(this.Dump());
+            
             this.TransformationOutOfSSA();
 
             Console.WriteLine(this.Dump());

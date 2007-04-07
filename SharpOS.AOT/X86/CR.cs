@@ -28,8 +28,20 @@ namespace SharpOS.AOT.X86
         public static readonly CRType CR3 = new CRType("CR3", 3);
         public static readonly CRType CR4 = new CRType("CR4", 4);
 
-        public static CRType GetByID(string id)
+        public static CRType GetByID(object value)
         {
+            if (value is CRType == true)
+            {
+                return value as CRType;
+            }
+
+            if (value is SharpOS.AOT.IR.Operands.Field == false)
+            {
+                throw new Exception("'" + value.ToString() + "' is not supported.");
+            }
+
+            string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+
             if (id.Equals("null") == true)
             {
                 return null;

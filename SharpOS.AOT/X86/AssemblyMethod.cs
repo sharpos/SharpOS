@@ -247,21 +247,46 @@ namespace SharpOS.AOT.X86
             SharpOS.AOT.IR.Instructions.Call call = instruction as SharpOS.AOT.IR.Instructions.Call;
 
             string parameterTypes = string.Empty;
+            object[] operands = new object[call.Method.Method.Parameters.Count];
 
-            foreach (ParameterDefinition parameter in call.Method.Method.Parameters)
+            for (int i = 0; i < call.Method.Method.Parameters.Count; i++)
             {
+                ParameterDefinition parameter = call.Method.Method.Parameters[i];
+                
                 if (parameterTypes.Length > 0)
                 {
                     parameterTypes += " ";
                 }
 
-                parameterTypes += parameter.ParameterType.Name;
+                if (call.Value.Operands[i] is SharpOS.AOT.IR.Operands.Reference == true)
+                {
+                    Operand operand = (call.Value.Operands[i] as SharpOS.AOT.IR.Operands.Reference).Value;
+
+                    if (operand.IsRegisterSet == true)
+                    {
+                        Register register = assembly.GetRegister(operand.Register);
+                        parameterTypes += register.GetType().Name;
+                        operands[i] = register;
+                    }
+                    else
+                    {
+                        Memory memory = this.GetMemory(operand as Identifier);
+                        parameterTypes += memory.GetType().Name;
+                        operands[i] = memory;
+                    }
+                }
+                else
+                {
+                    parameterTypes += parameter.ParameterType.Name;
+
+                    operands[i] = call.Value.Operands[i];
+                }
             }
 
             parameterTypes = call.Method.Method.Name + " " + parameterTypes;
             parameterTypes = parameterTypes.Trim();
 
-            assembly.GetAssemblyInstruction(call.Method, parameterTypes);
+            assembly.GetAssemblyInstruction(call.Method, operands, parameterTypes);
         }
 
         private void HandleCall(Block block, SharpOS.AOT.IR.Operands.Call call)
@@ -321,7 +346,7 @@ namespace SharpOS.AOT.X86
 
             foreach (ParameterDefinition parameter in call.Method.Parameters)
             {
-                Operand.InternalSizeType sizeType = Operand.GetSizeType(parameter.ParameterType.ToString());
+                Operand.InternalSizeType sizeType = Operand.GetSizeType(parameter.ParameterType.ToString(), this.assembly);
 
                 if (sizeType == Operand.InternalSizeType.I8
                     || sizeType == Operand.InternalSizeType.U8
@@ -1448,7 +1473,7 @@ namespace SharpOS.AOT.X86
 
             foreach (ParameterDefinition parameter in this.method.MethodDefinition.Parameters)
             {
-                Operand.InternalSizeType sizeType = Operand.GetSizeType(parameter.ParameterType.ToString());
+                Operand.InternalSizeType sizeType = Operand.GetSizeType(parameter.ParameterType.ToString(), this.assembly);
 
                 if (++i == index)
                 {

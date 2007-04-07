@@ -29,8 +29,20 @@ namespace SharpOS.AOT.X86
         public static readonly TRType TR6 = new TRType("TR6", 6);
         public static readonly TRType TR7 = new TRType("TR7", 7);
 
-        public static TRType GetByID(string id)
+        public static TRType GetByID(object value)
         {
+            if (value is TRType == true)
+            {
+                return value as TRType;
+            }
+
+            if (value is SharpOS.AOT.IR.Operands.Field == false)
+            {
+                throw new Exception("'" + value.ToString() + "' is not supported.");
+            }
+
+            string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+
             if (id.Equals("null") == true)
             {
                 return null;

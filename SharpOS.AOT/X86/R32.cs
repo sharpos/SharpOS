@@ -73,10 +73,22 @@ namespace SharpOS.AOT.X86
         /// Given the name of an x86 32-bit register, this function returns the constant
         /// object that represents that register to the AOT
         /// </summary>
-        /// <param name="id">The name of the x86 32-bit register to retrieve</param>
+        /// <param name="value">The name of the x86 32-bit register to retrieve or a R32Type value</param>
         /// <returns>Returns an instance of R32Type that represents an x86 32-bit register</returns>
-        public static R32Type GetByID(string id)
+        public static R32Type GetByID(object value)
         {
+            if (value is R32Type == true)
+            {
+                return value as R32Type;
+            }
+
+            if (value is SharpOS.AOT.IR.Operands.Field == false)
+            {
+                throw new Exception("'" + value.ToString() + "' is not supported.");
+            }
+
+            string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+            
             if (id.Equals("null") == true)
             {
                 return null;

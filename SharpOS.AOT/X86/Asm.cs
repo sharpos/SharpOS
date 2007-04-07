@@ -38,36 +38,47 @@ namespace SharpOS.AOT.X86
 		
 		// ADC mem8,reg8
 		public static void ADC (ByteMemory target, R8Type source) {}
+		public unsafe static void ADC (byte *target, R8Type source) {}
 		
 		// ADC mem16,reg16
 		public static void ADC (WordMemory target, R16Type source) {}
+		public unsafe static void ADC (UInt16 *target, R16Type source) {}
 		
 		// ADC mem32,reg32
 		public static void ADC (DWordMemory target, R32Type source) {}
+		public unsafe static void ADC (UInt32 *target, R32Type source) {}
 		
 		// ADC reg8,mem8
 		public static void ADC (R8Type target, ByteMemory source) {}
+		public unsafe static void ADC (R8Type target, byte *source) {}
 		
 		// ADC reg16,mem16
 		public static void ADC (R16Type target, WordMemory source) {}
+		public unsafe static void ADC (R16Type target, UInt16 *source) {}
 		
 		// ADC reg32,mem32
 		public static void ADC (R32Type target, DWordMemory source) {}
+		public unsafe static void ADC (R32Type target, UInt32 *source) {}
 		
 		// ADC mem8,imm8
 		public static void ADC (ByteMemory target, Byte source) {}
+		public unsafe static void ADC (byte *target, Byte source) {}
 		
 		// ADC mem16,imm16
 		public static void ADC (WordMemory target, UInt16 source) {}
+		public unsafe static void ADC (UInt16 *target, UInt16 source) {}
 		
 		// ADC mem32,imm32
 		public static void ADC (DWordMemory target, UInt32 source) {}
+		public unsafe static void ADC (UInt32 *target, UInt32 source) {}
 		
 		// ADC mem16,imm8
 		public static void ADC (WordMemory target, Byte source) {}
+		public unsafe static void ADC (UInt16 *target, Byte source) {}
 		
 		// ADC mem32,imm8
 		public static void ADC (DWordMemory target, Byte source) {}
+		public unsafe static void ADC (UInt32 *target, Byte source) {}
 		
 		// ADC rmreg8,reg8
 		public static void ADC (R8Type target, R8Type source) {}
@@ -95,36 +106,47 @@ namespace SharpOS.AOT.X86
 		
 		// ADD mem8,reg8
 		public static void ADD (ByteMemory target, R8Type source) {}
+		public unsafe static void ADD (byte *target, R8Type source) {}
 		
 		// ADD mem16,reg16
 		public static void ADD (WordMemory target, R16Type source) {}
+		public unsafe static void ADD (UInt16 *target, R16Type source) {}
 		
 		// ADD mem32,reg32
 		public static void ADD (DWordMemory target, R32Type source) {}
+		public unsafe static void ADD (UInt32 *target, R32Type source) {}
 		
 		// ADD reg8,mem8
 		public static void ADD (R8Type target, ByteMemory source) {}
+		public unsafe static void ADD (R8Type target, byte *source) {}
 		
 		// ADD reg16,mem16
 		public static void ADD (R16Type target, WordMemory source) {}
+		public unsafe static void ADD (R16Type target, UInt16 *source) {}
 		
 		// ADD reg32,mem32
 		public static void ADD (R32Type target, DWordMemory source) {}
+		public unsafe static void ADD (R32Type target, UInt32 *source) {}
 		
 		// ADD mem8,imm8
 		public static void ADD (ByteMemory target, Byte source) {}
+		public unsafe static void ADD (byte *target, Byte source) {}
 		
 		// ADD mem16,imm16
 		public static void ADD (WordMemory target, UInt16 source) {}
+		public unsafe static void ADD (UInt16 *target, UInt16 source) {}
 		
 		// ADD mem32,imm32
 		public static void ADD (DWordMemory target, UInt32 source) {}
+		public unsafe static void ADD (UInt32 *target, UInt32 source) {}
 		
 		// ADD mem16,imm8
 		public static void ADD (WordMemory target, Byte source) {}
+		public unsafe static void ADD (UInt16 *target, Byte source) {}
 		
 		// ADD mem32,imm8
 		public static void ADD (DWordMemory target, Byte source) {}
+		public unsafe static void ADD (UInt32 *target, Byte source) {}
 		
 		// ADD rmreg8,reg8
 		public static void ADD (R8Type target, R8Type source) {}
@@ -155,36 +177,47 @@ namespace SharpOS.AOT.X86
 		
 		// AND mem8,reg8
 		public static void AND (ByteMemory target, R8Type source) {}
+		public unsafe static void AND (byte *target, R8Type source) {}
 		
 		// AND mem16,reg16
 		public static void AND (WordMemory target, R16Type source) {}
+		public unsafe static void AND (UInt16 *target, R16Type source) {}
 		
 		// AND mem32,reg32
 		public static void AND (DWordMemory target, R32Type source) {}
+		public unsafe static void AND (UInt32 *target, R32Type source) {}
 		
 		// AND reg8,mem8
 		public static void AND (R8Type target, ByteMemory source) {}
+		public unsafe static void AND (R8Type target, byte *source) {}
 		
 		// AND reg16,mem16
 		public static void AND (R16Type target, WordMemory source) {}
+		public unsafe static void AND (R16Type target, UInt16 *source) {}
 		
 		// AND reg32,mem32
 		public static void AND (R32Type target, DWordMemory source) {}
+		public unsafe static void AND (R32Type target, UInt32 *source) {}
 		
 		// AND mem8,imm8
 		public static void AND (ByteMemory target, Byte source) {}
+		public unsafe static void AND (byte *target, Byte source) {}
 		
 		// AND mem16,imm16
 		public static void AND (WordMemory target, UInt16 source) {}
+		public unsafe static void AND (UInt16 *target, UInt16 source) {}
 		
 		// AND mem32,imm32
 		public static void AND (DWordMemory target, UInt32 source) {}
+		public unsafe static void AND (UInt32 *target, UInt32 source) {}
 		
 		// AND mem16,imm8
 		public static void AND (WordMemory target, Byte source) {}
+		public unsafe static void AND (UInt16 *target, Byte source) {}
 		
 		// AND mem32,imm8
 		public static void AND (DWordMemory target, Byte source) {}
+		public unsafe static void AND (UInt32 *target, Byte source) {}
 		
 		// AND rmreg8,reg8
 		public static void AND (R8Type target, R8Type source) {}
@@ -212,6 +245,7 @@ namespace SharpOS.AOT.X86
 		
 		// ARPL mem16,reg16
 		public static void ARPL (WordMemory target, R16Type source) {}
+		public unsafe static void ARPL (UInt16 *target, R16Type source) {}
 		
 		// ARPL rmreg16,reg16
 		public static void ARPL (R16Type target, R16Type source) {}
@@ -221,15 +255,19 @@ namespace SharpOS.AOT.X86
 		
 		// BOUND reg16,mem
 		public static void BOUND (R16Type target, Memory source) {}
+		public unsafe static void BOUND (R16Type target, byte *source) {}
 		
 		// BOUND reg32,mem
 		public static void BOUND (R32Type target, Memory source) {}
+		public unsafe static void BOUND (R32Type target, byte *source) {}
 		
 		// BSF reg16,mem16
 		public static void BSF (R16Type target, WordMemory source) {}
+		public unsafe static void BSF (R16Type target, UInt16 *source) {}
 		
 		// BSF reg32,mem32
 		public static void BSF (R32Type target, DWordMemory source) {}
+		public unsafe static void BSF (R32Type target, UInt32 *source) {}
 		
 		// BSF reg16,rmreg16
 		public static void BSF (R16Type target, R16Type source) {}
@@ -239,9 +277,11 @@ namespace SharpOS.AOT.X86
 		
 		// BSR reg16,mem16
 		public static void BSR (R16Type target, WordMemory source) {}
+		public unsafe static void BSR (R16Type target, UInt16 *source) {}
 		
 		// BSR reg32,mem32
 		public static void BSR (R32Type target, DWordMemory source) {}
+		public unsafe static void BSR (R32Type target, UInt32 *source) {}
 		
 		// BSR reg16,rmreg16
 		public static void BSR (R16Type target, R16Type source) {}
@@ -254,15 +294,19 @@ namespace SharpOS.AOT.X86
 		
 		// BT mem16,reg16
 		public static void BT (WordMemory target, R16Type source) {}
+		public unsafe static void BT (UInt16 *target, R16Type source) {}
 		
 		// BT mem32,reg32
 		public static void BT (DWordMemory target, R32Type source) {}
+		public unsafe static void BT (UInt32 *target, R32Type source) {}
 		
 		// BT mem16,imm8
 		public static void BT (WordMemory target, Byte source) {}
+		public unsafe static void BT (UInt16 *target, Byte source) {}
 		
 		// BT mem32,imm8
 		public static void BT (DWordMemory target, Byte source) {}
+		public unsafe static void BT (UInt32 *target, Byte source) {}
 		
 		// BT rmreg16,reg16
 		public static void BT (R16Type target, R16Type source) {}
@@ -278,15 +322,19 @@ namespace SharpOS.AOT.X86
 		
 		// BTC mem16,reg16
 		public static void BTC (WordMemory target, R16Type source) {}
+		public unsafe static void BTC (UInt16 *target, R16Type source) {}
 		
 		// BTC mem32,reg32
 		public static void BTC (DWordMemory target, R32Type source) {}
+		public unsafe static void BTC (UInt32 *target, R32Type source) {}
 		
 		// BTC mem16,imm8
 		public static void BTC (WordMemory target, Byte source) {}
+		public unsafe static void BTC (UInt16 *target, Byte source) {}
 		
 		// BTC mem32,imm8
 		public static void BTC (DWordMemory target, Byte source) {}
+		public unsafe static void BTC (UInt32 *target, Byte source) {}
 		
 		// BTC rmreg16,reg16
 		public static void BTC (R16Type target, R16Type source) {}
@@ -302,15 +350,19 @@ namespace SharpOS.AOT.X86
 		
 		// BTR mem16,reg16
 		public static void BTR (WordMemory target, R16Type source) {}
+		public unsafe static void BTR (UInt16 *target, R16Type source) {}
 		
 		// BTR mem32,reg32
 		public static void BTR (DWordMemory target, R32Type source) {}
+		public unsafe static void BTR (UInt32 *target, R32Type source) {}
 		
 		// BTR mem16,imm8
 		public static void BTR (WordMemory target, Byte source) {}
+		public unsafe static void BTR (UInt16 *target, Byte source) {}
 		
 		// BTR mem32,imm8
 		public static void BTR (DWordMemory target, Byte source) {}
+		public unsafe static void BTR (UInt32 *target, Byte source) {}
 		
 		// BTR rmreg16,reg16
 		public static void BTR (R16Type target, R16Type source) {}
@@ -326,15 +378,19 @@ namespace SharpOS.AOT.X86
 		
 		// BTS mem16,reg16
 		public static void BTS (WordMemory target, R16Type source) {}
+		public unsafe static void BTS (UInt16 *target, R16Type source) {}
 		
 		// BTS mem32,reg32
 		public static void BTS (DWordMemory target, R32Type source) {}
+		public unsafe static void BTS (UInt32 *target, R32Type source) {}
 		
 		// BTS mem16,imm8
 		public static void BTS (WordMemory target, Byte source) {}
+		public unsafe static void BTS (UInt16 *target, Byte source) {}
 		
 		// BTS mem32,imm8
 		public static void BTS (DWordMemory target, Byte source) {}
+		public unsafe static void BTS (UInt32 *target, Byte source) {}
 		
 		// BTS rmreg16,reg16
 		public static void BTS (R16Type target, R16Type source) {}
@@ -361,17 +417,21 @@ namespace SharpOS.AOT.X86
 		
 		// CALL FAR mem16
 		public static void CALL_FAR (WordMemory target) {}
+		public unsafe static void CALL_FAR (UInt16 *target) {}
 		
 		public static void CALL_FAR (string label) {}
 		
 		// CALL FAR mem32
 		public static void CALL_FAR (DWordMemory target) {}
+		public unsafe static void CALL_FAR (UInt32 *target) {}
 		
 		// CALL mem16
 		public static void CALL (WordMemory target) {}
+		public unsafe static void CALL (UInt16 *target) {}
 		
 		// CALL mem32
 		public static void CALL (DWordMemory target) {}
+		public unsafe static void CALL (UInt32 *target) {}
 		
 		// CALL rmreg16
 		public static void CALL (R16Type target) {}
@@ -393,6 +453,7 @@ namespace SharpOS.AOT.X86
 		
 		// CLFLUSH mem
 		public static void CLFLUSH (Memory target) {}
+		public unsafe static void CLFLUSH (byte *target) {}
 		
 		// CLI 
 		public static void CLI () {}
@@ -405,9 +466,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVA reg16,mem16
 		public static void CMOVA (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVA (R16Type target, UInt16 *source) {}
 		
 		// CMOVA reg32,mem32
 		public static void CMOVA (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVA (R32Type target, UInt32 *source) {}
 		
 		// CMOVA reg16,rmreg16
 		public static void CMOVA (R16Type target, R16Type source) {}
@@ -417,9 +480,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVAE reg16,mem16
 		public static void CMOVAE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVAE (R16Type target, UInt16 *source) {}
 		
 		// CMOVAE reg32,mem32
 		public static void CMOVAE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVAE (R32Type target, UInt32 *source) {}
 		
 		// CMOVAE reg16,rmreg16
 		public static void CMOVAE (R16Type target, R16Type source) {}
@@ -429,9 +494,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVB reg16,mem16
 		public static void CMOVB (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVB (R16Type target, UInt16 *source) {}
 		
 		// CMOVB reg32,mem32
 		public static void CMOVB (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVB (R32Type target, UInt32 *source) {}
 		
 		// CMOVB reg16,rmreg16
 		public static void CMOVB (R16Type target, R16Type source) {}
@@ -441,9 +508,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVBE reg16,mem16
 		public static void CMOVBE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVBE (R16Type target, UInt16 *source) {}
 		
 		// CMOVBE reg32,mem32
 		public static void CMOVBE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVBE (R32Type target, UInt32 *source) {}
 		
 		// CMOVBE reg16,rmreg16
 		public static void CMOVBE (R16Type target, R16Type source) {}
@@ -453,9 +522,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVC reg16,mem16
 		public static void CMOVC (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVC (R16Type target, UInt16 *source) {}
 		
 		// CMOVC reg32,mem32
 		public static void CMOVC (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVC (R32Type target, UInt32 *source) {}
 		
 		// CMOVC reg16,rmreg16
 		public static void CMOVC (R16Type target, R16Type source) {}
@@ -465,9 +536,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVE reg16,mem16
 		public static void CMOVE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVE (R16Type target, UInt16 *source) {}
 		
 		// CMOVE reg32,mem32
 		public static void CMOVE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVE (R32Type target, UInt32 *source) {}
 		
 		// CMOVE reg16,rmreg16
 		public static void CMOVE (R16Type target, R16Type source) {}
@@ -477,9 +550,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVG reg16,mem16
 		public static void CMOVG (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVG (R16Type target, UInt16 *source) {}
 		
 		// CMOVG reg32,mem32
 		public static void CMOVG (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVG (R32Type target, UInt32 *source) {}
 		
 		// CMOVG reg16,rmreg16
 		public static void CMOVG (R16Type target, R16Type source) {}
@@ -489,9 +564,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVGE reg16,mem16
 		public static void CMOVGE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVGE (R16Type target, UInt16 *source) {}
 		
 		// CMOVGE reg32,mem32
 		public static void CMOVGE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVGE (R32Type target, UInt32 *source) {}
 		
 		// CMOVGE reg16,rmreg16
 		public static void CMOVGE (R16Type target, R16Type source) {}
@@ -501,9 +578,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVL reg16,mem16
 		public static void CMOVL (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVL (R16Type target, UInt16 *source) {}
 		
 		// CMOVL reg32,mem32
 		public static void CMOVL (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVL (R32Type target, UInt32 *source) {}
 		
 		// CMOVL reg16,rmreg16
 		public static void CMOVL (R16Type target, R16Type source) {}
@@ -513,9 +592,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVLE reg16,mem16
 		public static void CMOVLE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVLE (R16Type target, UInt16 *source) {}
 		
 		// CMOVLE reg32,mem32
 		public static void CMOVLE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVLE (R32Type target, UInt32 *source) {}
 		
 		// CMOVLE reg16,rmreg16
 		public static void CMOVLE (R16Type target, R16Type source) {}
@@ -525,9 +606,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNA reg16,mem16
 		public static void CMOVNA (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNA (R16Type target, UInt16 *source) {}
 		
 		// CMOVNA reg32,mem32
 		public static void CMOVNA (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNA (R32Type target, UInt32 *source) {}
 		
 		// CMOVNA reg16,rmreg16
 		public static void CMOVNA (R16Type target, R16Type source) {}
@@ -537,9 +620,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNAE reg16,mem16
 		public static void CMOVNAE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNAE (R16Type target, UInt16 *source) {}
 		
 		// CMOVNAE reg32,mem32
 		public static void CMOVNAE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNAE (R32Type target, UInt32 *source) {}
 		
 		// CMOVNAE reg16,rmreg16
 		public static void CMOVNAE (R16Type target, R16Type source) {}
@@ -549,9 +634,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNB reg16,mem16
 		public static void CMOVNB (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNB (R16Type target, UInt16 *source) {}
 		
 		// CMOVNB reg32,mem32
 		public static void CMOVNB (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNB (R32Type target, UInt32 *source) {}
 		
 		// CMOVNB reg16,rmreg16
 		public static void CMOVNB (R16Type target, R16Type source) {}
@@ -561,9 +648,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNBE reg16,mem16
 		public static void CMOVNBE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNBE (R16Type target, UInt16 *source) {}
 		
 		// CMOVNBE reg32,mem32
 		public static void CMOVNBE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNBE (R32Type target, UInt32 *source) {}
 		
 		// CMOVNBE reg16,rmreg16
 		public static void CMOVNBE (R16Type target, R16Type source) {}
@@ -573,9 +662,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNC reg16,mem16
 		public static void CMOVNC (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNC (R16Type target, UInt16 *source) {}
 		
 		// CMOVNC reg32,mem32
 		public static void CMOVNC (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNC (R32Type target, UInt32 *source) {}
 		
 		// CMOVNC reg16,rmreg16
 		public static void CMOVNC (R16Type target, R16Type source) {}
@@ -585,9 +676,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNE reg16,mem16
 		public static void CMOVNE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNE (R16Type target, UInt16 *source) {}
 		
 		// CMOVNE reg32,mem32
 		public static void CMOVNE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNE (R32Type target, UInt32 *source) {}
 		
 		// CMOVNE reg16,rmreg16
 		public static void CMOVNE (R16Type target, R16Type source) {}
@@ -597,9 +690,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNG reg16,mem16
 		public static void CMOVNG (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNG (R16Type target, UInt16 *source) {}
 		
 		// CMOVNG reg32,mem32
 		public static void CMOVNG (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNG (R32Type target, UInt32 *source) {}
 		
 		// CMOVNG reg16,rmreg16
 		public static void CMOVNG (R16Type target, R16Type source) {}
@@ -609,9 +704,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNGE reg16,mem16
 		public static void CMOVNGE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNGE (R16Type target, UInt16 *source) {}
 		
 		// CMOVNGE reg32,mem32
 		public static void CMOVNGE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNGE (R32Type target, UInt32 *source) {}
 		
 		// CMOVNGE reg16,rmreg16
 		public static void CMOVNGE (R16Type target, R16Type source) {}
@@ -621,9 +718,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNL reg16,mem16
 		public static void CMOVNL (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNL (R16Type target, UInt16 *source) {}
 		
 		// CMOVNL reg32,mem32
 		public static void CMOVNL (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNL (R32Type target, UInt32 *source) {}
 		
 		// CMOVNL reg16,rmreg16
 		public static void CMOVNL (R16Type target, R16Type source) {}
@@ -633,9 +732,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNLE reg16,mem16
 		public static void CMOVNLE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNLE (R16Type target, UInt16 *source) {}
 		
 		// CMOVNLE reg32,mem32
 		public static void CMOVNLE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNLE (R32Type target, UInt32 *source) {}
 		
 		// CMOVNLE reg16,rmreg16
 		public static void CMOVNLE (R16Type target, R16Type source) {}
@@ -645,9 +746,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNO reg16,mem16
 		public static void CMOVNO (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNO (R16Type target, UInt16 *source) {}
 		
 		// CMOVNO reg32,mem32
 		public static void CMOVNO (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNO (R32Type target, UInt32 *source) {}
 		
 		// CMOVNO reg16,rmreg16
 		public static void CMOVNO (R16Type target, R16Type source) {}
@@ -657,9 +760,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNP reg16,mem16
 		public static void CMOVNP (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNP (R16Type target, UInt16 *source) {}
 		
 		// CMOVNP reg32,mem32
 		public static void CMOVNP (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNP (R32Type target, UInt32 *source) {}
 		
 		// CMOVNP reg16,rmreg16
 		public static void CMOVNP (R16Type target, R16Type source) {}
@@ -669,9 +774,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNS reg16,mem16
 		public static void CMOVNS (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNS (R16Type target, UInt16 *source) {}
 		
 		// CMOVNS reg32,mem32
 		public static void CMOVNS (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNS (R32Type target, UInt32 *source) {}
 		
 		// CMOVNS reg16,rmreg16
 		public static void CMOVNS (R16Type target, R16Type source) {}
@@ -681,9 +788,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVNZ reg16,mem16
 		public static void CMOVNZ (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVNZ (R16Type target, UInt16 *source) {}
 		
 		// CMOVNZ reg32,mem32
 		public static void CMOVNZ (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVNZ (R32Type target, UInt32 *source) {}
 		
 		// CMOVNZ reg16,rmreg16
 		public static void CMOVNZ (R16Type target, R16Type source) {}
@@ -693,9 +802,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVO reg16,mem16
 		public static void CMOVO (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVO (R16Type target, UInt16 *source) {}
 		
 		// CMOVO reg32,mem32
 		public static void CMOVO (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVO (R32Type target, UInt32 *source) {}
 		
 		// CMOVO reg16,rmreg16
 		public static void CMOVO (R16Type target, R16Type source) {}
@@ -705,9 +816,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVP reg16,mem16
 		public static void CMOVP (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVP (R16Type target, UInt16 *source) {}
 		
 		// CMOVP reg32,mem32
 		public static void CMOVP (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVP (R32Type target, UInt32 *source) {}
 		
 		// CMOVP reg16,rmreg16
 		public static void CMOVP (R16Type target, R16Type source) {}
@@ -717,9 +830,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVPE reg16,mem16
 		public static void CMOVPE (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVPE (R16Type target, UInt16 *source) {}
 		
 		// CMOVPE reg32,mem32
 		public static void CMOVPE (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVPE (R32Type target, UInt32 *source) {}
 		
 		// CMOVPE reg16,rmreg16
 		public static void CMOVPE (R16Type target, R16Type source) {}
@@ -729,9 +844,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVPO reg16,mem16
 		public static void CMOVPO (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVPO (R16Type target, UInt16 *source) {}
 		
 		// CMOVPO reg32,mem32
 		public static void CMOVPO (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVPO (R32Type target, UInt32 *source) {}
 		
 		// CMOVPO reg16,rmreg16
 		public static void CMOVPO (R16Type target, R16Type source) {}
@@ -741,9 +858,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVS reg16,mem16
 		public static void CMOVS (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVS (R16Type target, UInt16 *source) {}
 		
 		// CMOVS reg32,mem32
 		public static void CMOVS (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVS (R32Type target, UInt32 *source) {}
 		
 		// CMOVS reg16,rmreg16
 		public static void CMOVS (R16Type target, R16Type source) {}
@@ -753,9 +872,11 @@ namespace SharpOS.AOT.X86
 		
 		// CMOVZ reg16,mem16
 		public static void CMOVZ (R16Type target, WordMemory source) {}
+		public unsafe static void CMOVZ (R16Type target, UInt16 *source) {}
 		
 		// CMOVZ reg32,mem32
 		public static void CMOVZ (R32Type target, DWordMemory source) {}
+		public unsafe static void CMOVZ (R32Type target, UInt32 *source) {}
 		
 		// CMOVZ reg16,rmreg16
 		public static void CMOVZ (R16Type target, R16Type source) {}
@@ -765,36 +886,47 @@ namespace SharpOS.AOT.X86
 		
 		// CMP mem8,reg8
 		public static void CMP (ByteMemory target, R8Type source) {}
+		public unsafe static void CMP (byte *target, R8Type source) {}
 		
 		// CMP mem16,reg16
 		public static void CMP (WordMemory target, R16Type source) {}
+		public unsafe static void CMP (UInt16 *target, R16Type source) {}
 		
 		// CMP mem32,reg32
 		public static void CMP (DWordMemory target, R32Type source) {}
+		public unsafe static void CMP (UInt32 *target, R32Type source) {}
 		
 		// CMP reg8,mem8
 		public static void CMP (R8Type target, ByteMemory source) {}
+		public unsafe static void CMP (R8Type target, byte *source) {}
 		
 		// CMP reg16,mem16
 		public static void CMP (R16Type target, WordMemory source) {}
+		public unsafe static void CMP (R16Type target, UInt16 *source) {}
 		
 		// CMP reg32,mem32
 		public static void CMP (R32Type target, DWordMemory source) {}
+		public unsafe static void CMP (R32Type target, UInt32 *source) {}
 		
 		// CMP mem8,imm8
 		public static void CMP (ByteMemory target, Byte source) {}
+		public unsafe static void CMP (byte *target, Byte source) {}
 		
 		// CMP mem16,imm16
 		public static void CMP (WordMemory target, UInt16 source) {}
+		public unsafe static void CMP (UInt16 *target, UInt16 source) {}
 		
 		// CMP mem32,imm32
 		public static void CMP (DWordMemory target, UInt32 source) {}
+		public unsafe static void CMP (UInt32 *target, UInt32 source) {}
 		
 		// CMP mem16,imm8
 		public static void CMP (WordMemory target, Byte source) {}
+		public unsafe static void CMP (UInt16 *target, Byte source) {}
 		
 		// CMP mem32,imm8
 		public static void CMP (DWordMemory target, Byte source) {}
+		public unsafe static void CMP (UInt32 *target, Byte source) {}
 		
 		// CMP rmreg8,reg8
 		public static void CMP (R8Type target, R8Type source) {}
@@ -831,12 +963,15 @@ namespace SharpOS.AOT.X86
 		
 		// CMPXCHG mem8,reg8
 		public static void CMPXCHG (ByteMemory target, R8Type source) {}
+		public unsafe static void CMPXCHG (byte *target, R8Type source) {}
 		
 		// CMPXCHG mem16,reg16
 		public static void CMPXCHG (WordMemory target, R16Type source) {}
+		public unsafe static void CMPXCHG (UInt16 *target, R16Type source) {}
 		
 		// CMPXCHG mem32,reg32
 		public static void CMPXCHG (DWordMemory target, R32Type source) {}
+		public unsafe static void CMPXCHG (UInt32 *target, R32Type source) {}
 		
 		// CMPXCHG rmreg8,reg8
 		public static void CMPXCHG (R8Type target, R8Type source) {}
@@ -849,6 +984,7 @@ namespace SharpOS.AOT.X86
 		
 		// CMPXCHG8B mem
 		public static void CMPXCHG8B (Memory target) {}
+		public unsafe static void CMPXCHG8B (byte *target) {}
 		
 		// CPUID 
 		public static void CPUID () {}
@@ -897,24 +1033,30 @@ namespace SharpOS.AOT.X86
 		
 		// DEC mem8
 		public static void DEC (ByteMemory target) {}
+		public unsafe static void DEC (byte *target) {}
 		
 		// DEC mem16
 		public static void DEC (WordMemory target) {}
+		public unsafe static void DEC (UInt16 *target) {}
 		
 		// DEC mem32
 		public static void DEC (DWordMemory target) {}
+		public unsafe static void DEC (UInt32 *target) {}
 		
 		// DEC rmreg8
 		public static void DEC (R8Type target) {}
 		
 		// DIV mem8
 		public static void DIV (ByteMemory target) {}
+		public unsafe static void DIV (byte *target) {}
 		
 		// DIV mem16
 		public static void DIV (WordMemory target) {}
+		public unsafe static void DIV (UInt16 *target) {}
 		
 		// DIV mem32
 		public static void DIV (DWordMemory target) {}
+		public unsafe static void DIV (UInt32 *target) {}
 		
 		// DIV rmreg8
 		public static void DIV (R8Type target) {}
@@ -939,6 +1081,7 @@ namespace SharpOS.AOT.X86
 		
 		// FADD mem32
 		public static void FADD (DWordMemory target) {}
+		public unsafe static void FADD (UInt32 *target) {}
 		
 		// FADD mem64
 		public static void FADD (QWordMemory target) {}
@@ -1020,6 +1163,7 @@ namespace SharpOS.AOT.X86
 		
 		// FCOM mem32
 		public static void FCOM (DWordMemory target) {}
+		public unsafe static void FCOM (UInt32 *target) {}
 		
 		// FCOM mem64
 		public static void FCOM (QWordMemory target) {}
@@ -1044,6 +1188,7 @@ namespace SharpOS.AOT.X86
 		
 		// FCOMP mem32
 		public static void FCOMP (DWordMemory target) {}
+		public unsafe static void FCOMP (UInt32 *target) {}
 		
 		// FCOMP mem64
 		public static void FCOMP (QWordMemory target) {}
@@ -1068,6 +1213,7 @@ namespace SharpOS.AOT.X86
 		
 		// FDIV mem32
 		public static void FDIV (DWordMemory target) {}
+		public unsafe static void FDIV (UInt32 *target) {}
 		
 		// FDIV mem64
 		public static void FDIV (QWordMemory target) {}
@@ -1089,6 +1235,7 @@ namespace SharpOS.AOT.X86
 		
 		// FDIVR mem32
 		public static void FDIVR (DWordMemory target) {}
+		public unsafe static void FDIVR (UInt32 *target) {}
 		
 		// FDIVR mem64
 		public static void FDIVR (QWordMemory target) {}
@@ -1119,48 +1266,62 @@ namespace SharpOS.AOT.X86
 		
 		// FIADD mem16
 		public static void FIADD (WordMemory target) {}
+		public unsafe static void FIADD (UInt16 *target) {}
 		
 		// FIADD mem32
 		public static void FIADD (DWordMemory target) {}
+		public unsafe static void FIADD (UInt32 *target) {}
 		
 		// FICOM mem16
 		public static void FICOM (WordMemory target) {}
+		public unsafe static void FICOM (UInt16 *target) {}
 		
 		// FICOM mem32
 		public static void FICOM (DWordMemory target) {}
+		public unsafe static void FICOM (UInt32 *target) {}
 		
 		// FICOMP mem16
 		public static void FICOMP (WordMemory target) {}
+		public unsafe static void FICOMP (UInt16 *target) {}
 		
 		// FICOMP mem32
 		public static void FICOMP (DWordMemory target) {}
+		public unsafe static void FICOMP (UInt32 *target) {}
 		
 		// FIDIV mem16
 		public static void FIDIV (WordMemory target) {}
+		public unsafe static void FIDIV (UInt16 *target) {}
 		
 		// FIDIV mem32
 		public static void FIDIV (DWordMemory target) {}
+		public unsafe static void FIDIV (UInt32 *target) {}
 		
 		// FIDIVR mem16
 		public static void FIDIVR (WordMemory target) {}
+		public unsafe static void FIDIVR (UInt16 *target) {}
 		
 		// FIDIVR mem32
 		public static void FIDIVR (DWordMemory target) {}
+		public unsafe static void FIDIVR (UInt32 *target) {}
 		
 		// FILD mem16
 		public static void FILD (WordMemory target) {}
+		public unsafe static void FILD (UInt16 *target) {}
 		
 		// FILD mem32
 		public static void FILD (DWordMemory target) {}
+		public unsafe static void FILD (UInt32 *target) {}
 		
 		// FILD mem64
 		public static void FILD (QWordMemory target) {}
 		
 		// FIMUL mem16
 		public static void FIMUL (WordMemory target) {}
+		public unsafe static void FIMUL (UInt16 *target) {}
 		
 		// FIMUL mem32
 		public static void FIMUL (DWordMemory target) {}
+		public unsafe static void FIMUL (UInt32 *target) {}
 		
 		// FINCSTP 
 		public static void FINCSTP () {}
@@ -1170,33 +1331,42 @@ namespace SharpOS.AOT.X86
 		
 		// FIST mem16
 		public static void FIST (WordMemory target) {}
+		public unsafe static void FIST (UInt16 *target) {}
 		
 		// FIST mem32
 		public static void FIST (DWordMemory target) {}
+		public unsafe static void FIST (UInt32 *target) {}
 		
 		// FISTP mem16
 		public static void FISTP (WordMemory target) {}
+		public unsafe static void FISTP (UInt16 *target) {}
 		
 		// FISTP mem32
 		public static void FISTP (DWordMemory target) {}
+		public unsafe static void FISTP (UInt32 *target) {}
 		
 		// FISTP mem64
 		public static void FISTP (QWordMemory target) {}
 		
 		// FISUB mem16
 		public static void FISUB (WordMemory target) {}
+		public unsafe static void FISUB (UInt16 *target) {}
 		
 		// FISUB mem32
 		public static void FISUB (DWordMemory target) {}
+		public unsafe static void FISUB (UInt32 *target) {}
 		
 		// FISUBR mem16
 		public static void FISUBR (WordMemory target) {}
+		public unsafe static void FISUBR (UInt16 *target) {}
 		
 		// FISUBR mem32
 		public static void FISUBR (DWordMemory target) {}
+		public unsafe static void FISUBR (UInt32 *target) {}
 		
 		// FLD mem32
 		public static void FLD (DWordMemory target) {}
+		public unsafe static void FLD (UInt32 *target) {}
 		
 		// FLD mem64
 		public static void FLD (QWordMemory target) {}
@@ -1212,9 +1382,11 @@ namespace SharpOS.AOT.X86
 		
 		// FLDCW mem16
 		public static void FLDCW (WordMemory target) {}
+		public unsafe static void FLDCW (UInt16 *target) {}
 		
 		// FLDENV mem
 		public static void FLDENV (Memory target) {}
+		public unsafe static void FLDENV (byte *target) {}
 		
 		// FLDL2E 
 		public static void FLDL2E () {}
@@ -1236,6 +1408,7 @@ namespace SharpOS.AOT.X86
 		
 		// FMUL mem32
 		public static void FMUL (DWordMemory target) {}
+		public unsafe static void FMUL (UInt32 *target) {}
 		
 		// FMUL mem64
 		public static void FMUL (QWordMemory target) {}
@@ -1272,15 +1445,19 @@ namespace SharpOS.AOT.X86
 		
 		// FNSAVE mem
 		public static void FNSAVE (Memory target) {}
+		public unsafe static void FNSAVE (byte *target) {}
 		
 		// FNSTCW mem16
 		public static void FNSTCW (WordMemory target) {}
+		public unsafe static void FNSTCW (UInt16 *target) {}
 		
 		// FNSTENV mem
 		public static void FNSTENV (Memory target) {}
+		public unsafe static void FNSTENV (byte *target) {}
 		
 		// FNSTSW mem16
 		public static void FNSTSW (WordMemory target) {}
+		public unsafe static void FNSTSW (UInt16 *target) {}
 		
 		// FNSTSW AX
 		public static void FNSTSW_AX () {}
@@ -1302,9 +1479,11 @@ namespace SharpOS.AOT.X86
 		
 		// FRSTOR mem
 		public static void FRSTOR (Memory target) {}
+		public unsafe static void FRSTOR (byte *target) {}
 		
 		// FSAVE mem
 		public static void FSAVE (Memory target) {}
+		public unsafe static void FSAVE (byte *target) {}
 		
 		// FSCALE 
 		public static void FSCALE () {}
@@ -1323,6 +1502,7 @@ namespace SharpOS.AOT.X86
 		
 		// FST mem32
 		public static void FST (DWordMemory target) {}
+		public unsafe static void FST (UInt32 *target) {}
 		
 		// FST mem64
 		public static void FST (QWordMemory target) {}
@@ -1332,12 +1512,15 @@ namespace SharpOS.AOT.X86
 		
 		// FSTCW mem16
 		public static void FSTCW (WordMemory target) {}
+		public unsafe static void FSTCW (UInt16 *target) {}
 		
 		// FSTENV mem
 		public static void FSTENV (Memory target) {}
+		public unsafe static void FSTENV (byte *target) {}
 		
 		// FSTP mem32
 		public static void FSTP (DWordMemory target) {}
+		public unsafe static void FSTP (UInt32 *target) {}
 		
 		// FSTP mem64
 		public static void FSTP (QWordMemory target) {}
@@ -1350,12 +1533,14 @@ namespace SharpOS.AOT.X86
 		
 		// FSTSW mem16
 		public static void FSTSW (WordMemory target) {}
+		public unsafe static void FSTSW (UInt16 *target) {}
 		
 		// FSTSW AX
 		public static void FSTSW_AX () {}
 		
 		// FSUB mem32
 		public static void FSUB (DWordMemory target) {}
+		public unsafe static void FSUB (UInt32 *target) {}
 		
 		// FSUB mem64
 		public static void FSUB (QWordMemory target) {}
@@ -1377,6 +1562,7 @@ namespace SharpOS.AOT.X86
 		
 		// FSUBR mem32
 		public static void FSUBR (DWordMemory target) {}
+		public unsafe static void FSUBR (UInt32 *target) {}
 		
 		// FSUBR mem64
 		public static void FSUBR (QWordMemory target) {}
@@ -1446,9 +1632,11 @@ namespace SharpOS.AOT.X86
 		
 		// FXRSTOR memory
 		public static void FXRSTOR (Memory target) {}
+		public unsafe static void FXRSTOR (byte *target) {}
 		
 		// FXSAVE memory
 		public static void FXSAVE (Memory target) {}
+		public unsafe static void FXSAVE (byte *target) {}
 		
 		// FXTRACT 
 		public static void FXTRACT () {}
@@ -1467,12 +1655,15 @@ namespace SharpOS.AOT.X86
 		
 		// IDIV mem8
 		public static void IDIV (ByteMemory target) {}
+		public unsafe static void IDIV (byte *target) {}
 		
 		// IDIV mem16
 		public static void IDIV (WordMemory target) {}
+		public unsafe static void IDIV (UInt16 *target) {}
 		
 		// IDIV mem32
 		public static void IDIV (DWordMemory target) {}
+		public unsafe static void IDIV (UInt32 *target) {}
 		
 		// IDIV rmreg8
 		public static void IDIV (R8Type target) {}
@@ -1485,18 +1676,23 @@ namespace SharpOS.AOT.X86
 		
 		// IMUL mem8
 		public static void IMUL (ByteMemory target) {}
+		public unsafe static void IMUL (byte *target) {}
 		
 		// IMUL mem16
 		public static void IMUL (WordMemory target) {}
+		public unsafe static void IMUL (UInt16 *target) {}
 		
 		// IMUL mem32
 		public static void IMUL (DWordMemory target) {}
+		public unsafe static void IMUL (UInt32 *target) {}
 		
 		// IMUL reg16,mem16
 		public static void IMUL (R16Type target, WordMemory source) {}
+		public unsafe static void IMUL (R16Type target, UInt16 *source) {}
 		
 		// IMUL reg32,mem32
 		public static void IMUL (R32Type target, DWordMemory source) {}
+		public unsafe static void IMUL (R32Type target, UInt32 *source) {}
 		
 		// IMUL reg16,imm8
 		public static void IMUL (R16Type target, Byte source) {}
@@ -1512,15 +1708,19 @@ namespace SharpOS.AOT.X86
 		
 		// IMUL reg16,mem16,imm8
 		public static void IMUL (R16Type target, WordMemory source, Byte value) {}
+		public unsafe static void IMUL (R16Type target, UInt16 *source, Byte value) {}
 		
 		// IMUL reg16,mem16,imm16
 		public static void IMUL (R16Type target, WordMemory source, UInt16 value) {}
+		public unsafe static void IMUL (R16Type target, UInt16 *source, UInt16 value) {}
 		
 		// IMUL reg32,mem32,imm8
 		public static void IMUL (R32Type target, DWordMemory source, Byte value) {}
+		public unsafe static void IMUL (R32Type target, UInt32 *source, Byte value) {}
 		
 		// IMUL reg32,mem32,imm32
 		public static void IMUL (R32Type target, DWordMemory source, UInt32 value) {}
+		public unsafe static void IMUL (R32Type target, UInt32 *source, UInt32 value) {}
 		
 		// IMUL rmreg8
 		public static void IMUL (R8Type target) {}
@@ -1575,12 +1775,15 @@ namespace SharpOS.AOT.X86
 		
 		// INC mem8
 		public static void INC (ByteMemory target) {}
+		public unsafe static void INC (byte *target) {}
 		
 		// INC mem16
 		public static void INC (WordMemory target) {}
+		public unsafe static void INC (UInt16 *target) {}
 		
 		// INC mem32
 		public static void INC (DWordMemory target) {}
+		public unsafe static void INC (UInt32 *target) {}
 		
 		// INC rmreg8
 		public static void INC (R8Type target) {}
@@ -1605,6 +1808,7 @@ namespace SharpOS.AOT.X86
 		
 		// INVLPG mem
 		public static void INVLPG (Memory target) {}
+		public unsafe static void INVLPG (byte *target) {}
 		
 		// IRET 
 		public static void IRET () {}
@@ -1721,17 +1925,21 @@ namespace SharpOS.AOT.X86
 		
 		// JMP FAR mem
 		public static void JMP_FAR (Memory target) {}
+		public unsafe static void JMP_FAR (byte *target) {}
 		
 		public static void JMP_FAR (string label) {}
 		
 		// JMP FAR mem32
 		public static void JMP_FAR (DWordMemory target) {}
+		public unsafe static void JMP_FAR (UInt32 *target) {}
 		
 		// JMP mem16
 		public static void JMP (WordMemory target) {}
+		public unsafe static void JMP (UInt16 *target) {}
 		
 		// JMP mem32
 		public static void JMP (DWordMemory target) {}
+		public unsafe static void JMP (UInt32 *target) {}
 		
 		// JMP rmreg16
 		public static void JMP (R16Type target) {}
@@ -1907,9 +2115,11 @@ namespace SharpOS.AOT.X86
 		
 		// LAR reg16,mem16
 		public static void LAR (R16Type target, WordMemory source) {}
+		public unsafe static void LAR (R16Type target, UInt16 *source) {}
 		
 		// LAR reg32,mem32
 		public static void LAR (R32Type target, DWordMemory source) {}
+		public unsafe static void LAR (R32Type target, UInt32 *source) {}
 		
 		// LAR reg16,rmreg16
 		public static void LAR (R16Type target, R16Type source) {}
@@ -1919,54 +2129,68 @@ namespace SharpOS.AOT.X86
 		
 		// LDS reg16,mem
 		public static void LDS (R16Type target, Memory source) {}
+		public unsafe static void LDS (R16Type target, byte *source) {}
 		
 		// LDS reg32,mem
 		public static void LDS (R32Type target, Memory source) {}
+		public unsafe static void LDS (R32Type target, byte *source) {}
 		
 		// LEA reg16,mem
 		public static void LEA (R16Type target, Memory source) {}
+		public unsafe static void LEA (R16Type target, byte *source) {}
 		
 		// LEA reg32,mem
 		public static void LEA (R32Type target, Memory source) {}
+		public unsafe static void LEA (R32Type target, byte *source) {}
 		
 		// LEAVE 
 		public static void LEAVE () {}
 		
 		// LES reg16,mem
 		public static void LES (R16Type target, Memory source) {}
+		public unsafe static void LES (R16Type target, byte *source) {}
 		
 		// LES reg32,mem
 		public static void LES (R32Type target, Memory source) {}
+		public unsafe static void LES (R32Type target, byte *source) {}
 		
 		// LFENCE 
 		public static void LFENCE () {}
 		
 		// LFS reg16,mem
 		public static void LFS (R16Type target, Memory source) {}
+		public unsafe static void LFS (R16Type target, byte *source) {}
 		
 		// LFS reg32,mem
 		public static void LFS (R32Type target, Memory source) {}
+		public unsafe static void LFS (R32Type target, byte *source) {}
 		
 		// LGDT mem
 		public static void LGDT (Memory target) {}
+		public unsafe static void LGDT (byte *target) {}
 		
 		// LGS reg16,mem
 		public static void LGS (R16Type target, Memory source) {}
+		public unsafe static void LGS (R16Type target, byte *source) {}
 		
 		// LGS reg32,mem
 		public static void LGS (R32Type target, Memory source) {}
+		public unsafe static void LGS (R32Type target, byte *source) {}
 		
 		// LIDT mem
 		public static void LIDT (Memory target) {}
+		public unsafe static void LIDT (byte *target) {}
 		
 		// LLDT mem16
 		public static void LLDT (WordMemory target) {}
+		public unsafe static void LLDT (UInt16 *target) {}
 		
 		// LLDT rmreg16
 		public static void LLDT (R16Type target) {}
 		
 		// LMSW mem16
 		public static void LMSW (WordMemory target) {}
+		public unsafe static void LMSW (UInt16 *target) {}
 		
 		// LMSW rmreg16
 		public static void LMSW (R16Type target) {}
@@ -1997,9 +2221,11 @@ namespace SharpOS.AOT.X86
 		
 		// LSL reg16,mem16
 		public static void LSL (R16Type target, WordMemory source) {}
+		public unsafe static void LSL (R16Type target, UInt16 *source) {}
 		
 		// LSL reg32,mem32
 		public static void LSL (R32Type target, DWordMemory source) {}
+		public unsafe static void LSL (R32Type target, UInt32 *source) {}
 		
 		// LSL reg16,rmreg16
 		public static void LSL (R16Type target, R16Type source) {}
@@ -2009,12 +2235,15 @@ namespace SharpOS.AOT.X86
 		
 		// LSS reg16,mem
 		public static void LSS (R16Type target, Memory source) {}
+		public unsafe static void LSS (R16Type target, byte *source) {}
 		
 		// LSS reg32,mem
 		public static void LSS (R32Type target, Memory source) {}
+		public unsafe static void LSS (R32Type target, byte *source) {}
 		
 		// LTR mem16
 		public static void LTR (WordMemory target) {}
+		public unsafe static void LTR (UInt16 *target) {}
 		
 		// LTR rmreg16
 		public static void LTR (R16Type target) {}
@@ -2024,21 +2253,27 @@ namespace SharpOS.AOT.X86
 		
 		// MOV mem8,reg8
 		public static void MOV (ByteMemory target, R8Type source) {}
+		public unsafe static void MOV (byte *target, R8Type source) {}
 		
 		// MOV mem16,reg16
 		public static void MOV (WordMemory target, R16Type source) {}
+		public unsafe static void MOV (UInt16 *target, R16Type source) {}
 		
 		// MOV mem32,reg32
 		public static void MOV (DWordMemory target, R32Type source) {}
+		public unsafe static void MOV (UInt32 *target, R32Type source) {}
 		
 		// MOV reg8,mem8
 		public static void MOV (R8Type target, ByteMemory source) {}
+		public unsafe static void MOV (R8Type target, byte *source) {}
 		
 		// MOV reg16,mem16
 		public static void MOV (R16Type target, WordMemory source) {}
+		public unsafe static void MOV (R16Type target, UInt16 *source) {}
 		
 		// MOV reg32,mem32
 		public static void MOV (R32Type target, DWordMemory source) {}
+		public unsafe static void MOV (R32Type target, UInt32 *source) {}
 		
 		// MOV reg8,imm8
 		public static void MOV (R8Type target, Byte source) {}
@@ -2051,12 +2286,15 @@ namespace SharpOS.AOT.X86
 		
 		// MOV mem8,imm8
 		public static void MOV (ByteMemory target, Byte source) {}
+		public unsafe static void MOV (byte *target, Byte source) {}
 		
 		// MOV mem16,imm16
 		public static void MOV (WordMemory target, UInt16 source) {}
+		public unsafe static void MOV (UInt16 *target, UInt16 source) {}
 		
 		// MOV mem32,imm32
 		public static void MOV (DWordMemory target, UInt32 source) {}
+		public unsafe static void MOV (UInt32 *target, UInt32 source) {}
 		
 		// MOV AL,memoffs8
 		public static void MOV_AL (byte source) {}
@@ -2078,15 +2316,19 @@ namespace SharpOS.AOT.X86
 		
 		// MOV mem16,segreg
 		public static void MOV (WordMemory target, SegType source) {}
+		public unsafe static void MOV (UInt16 *target, SegType source) {}
 		
 		// MOV mem32,segreg
 		public static void MOV (DWordMemory target, SegType source) {}
+		public unsafe static void MOV (UInt32 *target, SegType source) {}
 		
 		// MOV segreg,mem16
 		public static void MOV (SegType target, WordMemory source) {}
+		public unsafe static void MOV (SegType target, UInt16 *source) {}
 		
 		// MOV segreg,mem32
 		public static void MOV (SegType target, DWordMemory source) {}
+		public unsafe static void MOV (SegType target, UInt32 *source) {}
 		
 		// MOV reg32,CR0/2/3/4
 		public static void MOV (R32Type target, CRType source) {}
@@ -2144,12 +2386,15 @@ namespace SharpOS.AOT.X86
 		
 		// MOVSX reg16,mem8
 		public static void MOVSX (R16Type target, ByteMemory source) {}
+		public unsafe static void MOVSX (R16Type target, byte *source) {}
 		
 		// MOVSX reg32,mem8
 		public static void MOVSX (R32Type target, ByteMemory source) {}
+		public unsafe static void MOVSX (R32Type target, byte *source) {}
 		
 		// MOVSX reg32,mem16
 		public static void MOVSX (R32Type target, WordMemory source) {}
+		public unsafe static void MOVSX (R32Type target, UInt16 *source) {}
 		
 		// MOVSX reg16,rmreg8
 		public static void MOVSX (R16Type target, R8Type source) {}
@@ -2162,12 +2407,15 @@ namespace SharpOS.AOT.X86
 		
 		// MOVZX reg16,mem8
 		public static void MOVZX (R16Type target, ByteMemory source) {}
+		public unsafe static void MOVZX (R16Type target, byte *source) {}
 		
 		// MOVZX reg32,mem8
 		public static void MOVZX (R32Type target, ByteMemory source) {}
+		public unsafe static void MOVZX (R32Type target, byte *source) {}
 		
 		// MOVZX reg32,mem16
 		public static void MOVZX (R32Type target, WordMemory source) {}
+		public unsafe static void MOVZX (R32Type target, UInt16 *source) {}
 		
 		// MOVZX reg16,rmreg8
 		public static void MOVZX (R16Type target, R8Type source) {}
@@ -2180,12 +2428,15 @@ namespace SharpOS.AOT.X86
 		
 		// MUL mem8
 		public static void MUL (ByteMemory target) {}
+		public unsafe static void MUL (byte *target) {}
 		
 		// MUL mem16
 		public static void MUL (WordMemory target) {}
+		public unsafe static void MUL (UInt16 *target) {}
 		
 		// MUL mem32
 		public static void MUL (DWordMemory target) {}
+		public unsafe static void MUL (UInt32 *target) {}
 		
 		// MUL rmreg8
 		public static void MUL (R8Type target) {}
@@ -2198,12 +2449,15 @@ namespace SharpOS.AOT.X86
 		
 		// NEG mem8
 		public static void NEG (ByteMemory target) {}
+		public unsafe static void NEG (byte *target) {}
 		
 		// NEG mem16
 		public static void NEG (WordMemory target) {}
+		public unsafe static void NEG (UInt16 *target) {}
 		
 		// NEG mem32
 		public static void NEG (DWordMemory target) {}
+		public unsafe static void NEG (UInt32 *target) {}
 		
 		// NEG rmreg8
 		public static void NEG (R8Type target) {}
@@ -2219,12 +2473,15 @@ namespace SharpOS.AOT.X86
 		
 		// NOT mem8
 		public static void NOT (ByteMemory target) {}
+		public unsafe static void NOT (byte *target) {}
 		
 		// NOT mem16
 		public static void NOT (WordMemory target) {}
+		public unsafe static void NOT (UInt16 *target) {}
 		
 		// NOT mem32
 		public static void NOT (DWordMemory target) {}
+		public unsafe static void NOT (UInt32 *target) {}
 		
 		// NOT rmreg8
 		public static void NOT (R8Type target) {}
@@ -2240,36 +2497,47 @@ namespace SharpOS.AOT.X86
 		
 		// OR mem8,reg8
 		public static void OR (ByteMemory target, R8Type source) {}
+		public unsafe static void OR (byte *target, R8Type source) {}
 		
 		// OR mem16,reg16
 		public static void OR (WordMemory target, R16Type source) {}
+		public unsafe static void OR (UInt16 *target, R16Type source) {}
 		
 		// OR mem32,reg32
 		public static void OR (DWordMemory target, R32Type source) {}
+		public unsafe static void OR (UInt32 *target, R32Type source) {}
 		
 		// OR reg8,mem8
 		public static void OR (R8Type target, ByteMemory source) {}
+		public unsafe static void OR (R8Type target, byte *source) {}
 		
 		// OR reg16,mem16
 		public static void OR (R16Type target, WordMemory source) {}
+		public unsafe static void OR (R16Type target, UInt16 *source) {}
 		
 		// OR reg32,mem32
 		public static void OR (R32Type target, DWordMemory source) {}
+		public unsafe static void OR (R32Type target, UInt32 *source) {}
 		
 		// OR mem8,imm8
 		public static void OR (ByteMemory target, Byte source) {}
+		public unsafe static void OR (byte *target, Byte source) {}
 		
 		// OR mem16,imm16
 		public static void OR (WordMemory target, UInt16 source) {}
+		public unsafe static void OR (UInt16 *target, UInt16 source) {}
 		
 		// OR mem32,imm32
 		public static void OR (DWordMemory target, UInt32 source) {}
+		public unsafe static void OR (UInt32 *target, UInt32 source) {}
 		
 		// OR mem16,imm8
 		public static void OR (WordMemory target, Byte source) {}
+		public unsafe static void OR (UInt16 *target, Byte source) {}
 		
 		// OR mem32,imm8
 		public static void OR (DWordMemory target, Byte source) {}
+		public unsafe static void OR (UInt32 *target, Byte source) {}
 		
 		// OR rmreg8,reg8
 		public static void OR (R8Type target, R8Type source) {}
@@ -2336,9 +2604,11 @@ namespace SharpOS.AOT.X86
 		
 		// POP mem16
 		public static void POP (WordMemory target) {}
+		public unsafe static void POP (UInt16 *target) {}
 		
 		// POP mem32
 		public static void POP (DWordMemory target) {}
+		public unsafe static void POP (UInt32 *target) {}
 		
 		// POP segreg
 		public static void POP (SegType target) {}
@@ -2363,15 +2633,19 @@ namespace SharpOS.AOT.X86
 		
 		// PREFETCHNTA m8
 		public static void PREFETCHNTA (Memory target) {}
+		public unsafe static void PREFETCHNTA (byte *target) {}
 		
 		// PREFETCHT0 m8
 		public static void PREFETCHT0 (Memory target) {}
+		public unsafe static void PREFETCHT0 (byte *target) {}
 		
 		// PREFETCHT1 m8
 		public static void PREFETCHT1 (Memory target) {}
+		public unsafe static void PREFETCHT1 (byte *target) {}
 		
 		// PREFETCHT2 m8
 		public static void PREFETCHT2 (Memory target) {}
+		public unsafe static void PREFETCHT2 (byte *target) {}
 		
 		// PUSH reg16
 		public static void PUSH (R16Type target) {}
@@ -2381,9 +2655,11 @@ namespace SharpOS.AOT.X86
 		
 		// PUSH mem16
 		public static void PUSH (WordMemory target) {}
+		public unsafe static void PUSH (UInt16 *target) {}
 		
 		// PUSH mem32
 		public static void PUSH (DWordMemory target) {}
+		public unsafe static void PUSH (UInt32 *target) {}
 		
 		// PUSH imm8
 		public static void PUSH (Byte target) {}
@@ -2417,21 +2693,27 @@ namespace SharpOS.AOT.X86
 		
 		// RCL mem8,CL
 		public static void RCL__CL (ByteMemory target) {}
+		public unsafe static void RCL__CL (byte *target) {}
 		
 		// RCL mem8,imm8
 		public static void RCL (ByteMemory target, Byte source) {}
+		public unsafe static void RCL (byte *target, Byte source) {}
 		
 		// RCL mem16,CL
 		public static void RCL__CL (WordMemory target) {}
+		public unsafe static void RCL__CL (UInt16 *target) {}
 		
 		// RCL mem16,imm8
 		public static void RCL (WordMemory target, Byte source) {}
+		public unsafe static void RCL (UInt16 *target, Byte source) {}
 		
 		// RCL mem32,CL
 		public static void RCL__CL (DWordMemory target) {}
+		public unsafe static void RCL__CL (UInt32 *target) {}
 		
 		// RCL mem32,imm8
 		public static void RCL (DWordMemory target, Byte source) {}
+		public unsafe static void RCL (UInt32 *target, Byte source) {}
 		
 		// RCL rmreg8,CL
 		public static void RCL__CL (R8Type target) {}
@@ -2453,21 +2735,27 @@ namespace SharpOS.AOT.X86
 		
 		// RCR mem8,CL
 		public static void RCR__CL (ByteMemory target) {}
+		public unsafe static void RCR__CL (byte *target) {}
 		
 		// RCR mem8,imm8
 		public static void RCR (ByteMemory target, Byte source) {}
+		public unsafe static void RCR (byte *target, Byte source) {}
 		
 		// RCR mem16,CL
 		public static void RCR__CL (WordMemory target) {}
+		public unsafe static void RCR__CL (UInt16 *target) {}
 		
 		// RCR mem16,imm8
 		public static void RCR (WordMemory target, Byte source) {}
+		public unsafe static void RCR (UInt16 *target, Byte source) {}
 		
 		// RCR mem32,CL
 		public static void RCR__CL (DWordMemory target) {}
+		public unsafe static void RCR__CL (UInt32 *target) {}
 		
 		// RCR mem32,imm8
 		public static void RCR (DWordMemory target, Byte source) {}
+		public unsafe static void RCR (UInt32 *target, Byte source) {}
 		
 		// RCR rmreg8,CL
 		public static void RCR__CL (R8Type target) {}
@@ -2516,21 +2804,27 @@ namespace SharpOS.AOT.X86
 		
 		// ROL mem8,CL
 		public static void ROL__CL (ByteMemory target) {}
+		public unsafe static void ROL__CL (byte *target) {}
 		
 		// ROL mem8,imm8
 		public static void ROL (ByteMemory target, Byte source) {}
+		public unsafe static void ROL (byte *target, Byte source) {}
 		
 		// ROL mem16,CL
 		public static void ROL__CL (WordMemory target) {}
+		public unsafe static void ROL__CL (UInt16 *target) {}
 		
 		// ROL mem16,imm8
 		public static void ROL (WordMemory target, Byte source) {}
+		public unsafe static void ROL (UInt16 *target, Byte source) {}
 		
 		// ROL mem32,CL
 		public static void ROL__CL (DWordMemory target) {}
+		public unsafe static void ROL__CL (UInt32 *target) {}
 		
 		// ROL mem32,imm8
 		public static void ROL (DWordMemory target, Byte source) {}
+		public unsafe static void ROL (UInt32 *target, Byte source) {}
 		
 		// ROL rmreg8,CL
 		public static void ROL__CL (R8Type target) {}
@@ -2552,21 +2846,27 @@ namespace SharpOS.AOT.X86
 		
 		// ROR mem8,CL
 		public static void ROR__CL (ByteMemory target) {}
+		public unsafe static void ROR__CL (byte *target) {}
 		
 		// ROR mem8,imm8
 		public static void ROR (ByteMemory target, Byte source) {}
+		public unsafe static void ROR (byte *target, Byte source) {}
 		
 		// ROR mem16,CL
 		public static void ROR__CL (WordMemory target) {}
+		public unsafe static void ROR__CL (UInt16 *target) {}
 		
 		// ROR mem16,imm8
 		public static void ROR (WordMemory target, Byte source) {}
+		public unsafe static void ROR (UInt16 *target, Byte source) {}
 		
 		// ROR mem32,CL
 		public static void ROR__CL (DWordMemory target) {}
+		public unsafe static void ROR__CL (UInt32 *target) {}
 		
 		// ROR mem32,imm8
 		public static void ROR (DWordMemory target, Byte source) {}
+		public unsafe static void ROR (UInt32 *target, Byte source) {}
 		
 		// ROR rmreg8,CL
 		public static void ROR__CL (R8Type target) {}
@@ -2594,21 +2894,27 @@ namespace SharpOS.AOT.X86
 		
 		// SAL mem8,CL
 		public static void SAL__CL (ByteMemory target) {}
+		public unsafe static void SAL__CL (byte *target) {}
 		
 		// SAL mem8,imm8
 		public static void SAL (ByteMemory target, Byte source) {}
+		public unsafe static void SAL (byte *target, Byte source) {}
 		
 		// SAL mem16,CL
 		public static void SAL__CL (WordMemory target) {}
+		public unsafe static void SAL__CL (UInt16 *target) {}
 		
 		// SAL mem16,imm8
 		public static void SAL (WordMemory target, Byte source) {}
+		public unsafe static void SAL (UInt16 *target, Byte source) {}
 		
 		// SAL mem32,CL
 		public static void SAL__CL (DWordMemory target) {}
+		public unsafe static void SAL__CL (UInt32 *target) {}
 		
 		// SAL mem32,imm8
 		public static void SAL (DWordMemory target, Byte source) {}
+		public unsafe static void SAL (UInt32 *target, Byte source) {}
 		
 		// SAL rmreg8,CL
 		public static void SAL__CL (R8Type target) {}
@@ -2633,21 +2939,27 @@ namespace SharpOS.AOT.X86
 		
 		// SAR mem8,CL
 		public static void SAR__CL (ByteMemory target) {}
+		public unsafe static void SAR__CL (byte *target) {}
 		
 		// SAR mem8,imm8
 		public static void SAR (ByteMemory target, Byte source) {}
+		public unsafe static void SAR (byte *target, Byte source) {}
 		
 		// SAR mem16,CL
 		public static void SAR__CL (WordMemory target) {}
+		public unsafe static void SAR__CL (UInt16 *target) {}
 		
 		// SAR mem16,imm8
 		public static void SAR (WordMemory target, Byte source) {}
+		public unsafe static void SAR (UInt16 *target, Byte source) {}
 		
 		// SAR mem32,CL
 		public static void SAR__CL (DWordMemory target) {}
+		public unsafe static void SAR__CL (UInt32 *target) {}
 		
 		// SAR mem32,imm8
 		public static void SAR (DWordMemory target, Byte source) {}
+		public unsafe static void SAR (UInt32 *target, Byte source) {}
 		
 		// SAR rmreg8,CL
 		public static void SAR__CL (R8Type target) {}
@@ -2669,36 +2981,47 @@ namespace SharpOS.AOT.X86
 		
 		// SBB mem8,reg8
 		public static void SBB (ByteMemory target, R8Type source) {}
+		public unsafe static void SBB (byte *target, R8Type source) {}
 		
 		// SBB mem16,reg16
 		public static void SBB (WordMemory target, R16Type source) {}
+		public unsafe static void SBB (UInt16 *target, R16Type source) {}
 		
 		// SBB mem32,reg32
 		public static void SBB (DWordMemory target, R32Type source) {}
+		public unsafe static void SBB (UInt32 *target, R32Type source) {}
 		
 		// SBB reg8,mem8
 		public static void SBB (R8Type target, ByteMemory source) {}
+		public unsafe static void SBB (R8Type target, byte *source) {}
 		
 		// SBB reg16,mem16
 		public static void SBB (R16Type target, WordMemory source) {}
+		public unsafe static void SBB (R16Type target, UInt16 *source) {}
 		
 		// SBB reg32,mem32
 		public static void SBB (R32Type target, DWordMemory source) {}
+		public unsafe static void SBB (R32Type target, UInt32 *source) {}
 		
 		// SBB mem8,imm8
 		public static void SBB (ByteMemory target, Byte source) {}
+		public unsafe static void SBB (byte *target, Byte source) {}
 		
 		// SBB mem16,imm16
 		public static void SBB (WordMemory target, UInt16 source) {}
+		public unsafe static void SBB (UInt16 *target, UInt16 source) {}
 		
 		// SBB mem32,imm32
 		public static void SBB (DWordMemory target, UInt32 source) {}
+		public unsafe static void SBB (UInt32 *target, UInt32 source) {}
 		
 		// SBB mem16,imm8
 		public static void SBB (WordMemory target, Byte source) {}
+		public unsafe static void SBB (UInt16 *target, Byte source) {}
 		
 		// SBB mem32,imm8
 		public static void SBB (DWordMemory target, Byte source) {}
+		public unsafe static void SBB (UInt32 *target, Byte source) {}
 		
 		// SBB rmreg8,reg8
 		public static void SBB (R8Type target, R8Type source) {}
@@ -2735,180 +3058,210 @@ namespace SharpOS.AOT.X86
 		
 		// SETA mem8
 		public static void SETA (ByteMemory target) {}
+		public unsafe static void SETA (byte *target) {}
 		
 		// SETA rmreg8
 		public static void SETA (R8Type target) {}
 		
 		// SETAE mem8
 		public static void SETAE (ByteMemory target) {}
+		public unsafe static void SETAE (byte *target) {}
 		
 		// SETAE rmreg8
 		public static void SETAE (R8Type target) {}
 		
 		// SETB mem8
 		public static void SETB (ByteMemory target) {}
+		public unsafe static void SETB (byte *target) {}
 		
 		// SETB rmreg8
 		public static void SETB (R8Type target) {}
 		
 		// SETBE mem8
 		public static void SETBE (ByteMemory target) {}
+		public unsafe static void SETBE (byte *target) {}
 		
 		// SETBE rmreg8
 		public static void SETBE (R8Type target) {}
 		
 		// SETC mem8
 		public static void SETC (ByteMemory target) {}
+		public unsafe static void SETC (byte *target) {}
 		
 		// SETC rmreg8
 		public static void SETC (R8Type target) {}
 		
 		// SETE mem8
 		public static void SETE (ByteMemory target) {}
+		public unsafe static void SETE (byte *target) {}
 		
 		// SETE rmreg8
 		public static void SETE (R8Type target) {}
 		
 		// SETG mem8
 		public static void SETG (ByteMemory target) {}
+		public unsafe static void SETG (byte *target) {}
 		
 		// SETG rmreg8
 		public static void SETG (R8Type target) {}
 		
 		// SETGE mem8
 		public static void SETGE (ByteMemory target) {}
+		public unsafe static void SETGE (byte *target) {}
 		
 		// SETGE rmreg8
 		public static void SETGE (R8Type target) {}
 		
 		// SETL mem8
 		public static void SETL (ByteMemory target) {}
+		public unsafe static void SETL (byte *target) {}
 		
 		// SETL rmreg8
 		public static void SETL (R8Type target) {}
 		
 		// SETLE mem8
 		public static void SETLE (ByteMemory target) {}
+		public unsafe static void SETLE (byte *target) {}
 		
 		// SETLE rmreg8
 		public static void SETLE (R8Type target) {}
 		
 		// SETNA mem8
 		public static void SETNA (ByteMemory target) {}
+		public unsafe static void SETNA (byte *target) {}
 		
 		// SETNA rmreg8
 		public static void SETNA (R8Type target) {}
 		
 		// SETNAE mem8
 		public static void SETNAE (ByteMemory target) {}
+		public unsafe static void SETNAE (byte *target) {}
 		
 		// SETNAE rmreg8
 		public static void SETNAE (R8Type target) {}
 		
 		// SETNB mem8
 		public static void SETNB (ByteMemory target) {}
+		public unsafe static void SETNB (byte *target) {}
 		
 		// SETNB rmreg8
 		public static void SETNB (R8Type target) {}
 		
 		// SETNBE mem8
 		public static void SETNBE (ByteMemory target) {}
+		public unsafe static void SETNBE (byte *target) {}
 		
 		// SETNBE rmreg8
 		public static void SETNBE (R8Type target) {}
 		
 		// SETNC mem8
 		public static void SETNC (ByteMemory target) {}
+		public unsafe static void SETNC (byte *target) {}
 		
 		// SETNC rmreg8
 		public static void SETNC (R8Type target) {}
 		
 		// SETNE mem8
 		public static void SETNE (ByteMemory target) {}
+		public unsafe static void SETNE (byte *target) {}
 		
 		// SETNE rmreg8
 		public static void SETNE (R8Type target) {}
 		
 		// SETNG mem8
 		public static void SETNG (ByteMemory target) {}
+		public unsafe static void SETNG (byte *target) {}
 		
 		// SETNG rmreg8
 		public static void SETNG (R8Type target) {}
 		
 		// SETNGE mem8
 		public static void SETNGE (ByteMemory target) {}
+		public unsafe static void SETNGE (byte *target) {}
 		
 		// SETNGE rmreg8
 		public static void SETNGE (R8Type target) {}
 		
 		// SETNL mem8
 		public static void SETNL (ByteMemory target) {}
+		public unsafe static void SETNL (byte *target) {}
 		
 		// SETNL rmreg8
 		public static void SETNL (R8Type target) {}
 		
 		// SETNLE mem8
 		public static void SETNLE (ByteMemory target) {}
+		public unsafe static void SETNLE (byte *target) {}
 		
 		// SETNLE rmreg8
 		public static void SETNLE (R8Type target) {}
 		
 		// SETNO mem8
 		public static void SETNO (ByteMemory target) {}
+		public unsafe static void SETNO (byte *target) {}
 		
 		// SETNO rmreg8
 		public static void SETNO (R8Type target) {}
 		
 		// SETNP mem8
 		public static void SETNP (ByteMemory target) {}
+		public unsafe static void SETNP (byte *target) {}
 		
 		// SETNP rmreg8
 		public static void SETNP (R8Type target) {}
 		
 		// SETNS mem8
 		public static void SETNS (ByteMemory target) {}
+		public unsafe static void SETNS (byte *target) {}
 		
 		// SETNS rmreg8
 		public static void SETNS (R8Type target) {}
 		
 		// SETNZ mem8
 		public static void SETNZ (ByteMemory target) {}
+		public unsafe static void SETNZ (byte *target) {}
 		
 		// SETNZ rmreg8
 		public static void SETNZ (R8Type target) {}
 		
 		// SETO mem8
 		public static void SETO (ByteMemory target) {}
+		public unsafe static void SETO (byte *target) {}
 		
 		// SETO rmreg8
 		public static void SETO (R8Type target) {}
 		
 		// SETP mem8
 		public static void SETP (ByteMemory target) {}
+		public unsafe static void SETP (byte *target) {}
 		
 		// SETP rmreg8
 		public static void SETP (R8Type target) {}
 		
 		// SETPE mem8
 		public static void SETPE (ByteMemory target) {}
+		public unsafe static void SETPE (byte *target) {}
 		
 		// SETPE rmreg8
 		public static void SETPE (R8Type target) {}
 		
 		// SETPO mem8
 		public static void SETPO (ByteMemory target) {}
+		public unsafe static void SETPO (byte *target) {}
 		
 		// SETPO rmreg8
 		public static void SETPO (R8Type target) {}
 		
 		// SETS mem8
 		public static void SETS (ByteMemory target) {}
+		public unsafe static void SETS (byte *target) {}
 		
 		// SETS rmreg8
 		public static void SETS (R8Type target) {}
 		
 		// SETZ mem8
 		public static void SETZ (ByteMemory target) {}
+		public unsafe static void SETZ (byte *target) {}
 		
 		// SETZ rmreg8
 		public static void SETZ (R8Type target) {}
@@ -2918,24 +3271,31 @@ namespace SharpOS.AOT.X86
 		
 		// SGDT mem
 		public static void SGDT (Memory target) {}
+		public unsafe static void SGDT (byte *target) {}
 		
 		// SHL mem8,CL
 		public static void SHL__CL (ByteMemory target) {}
+		public unsafe static void SHL__CL (byte *target) {}
 		
 		// SHL mem8,imm8
 		public static void SHL (ByteMemory target, Byte source) {}
+		public unsafe static void SHL (byte *target, Byte source) {}
 		
 		// SHL mem16,CL
 		public static void SHL__CL (WordMemory target) {}
+		public unsafe static void SHL__CL (UInt16 *target) {}
 		
 		// SHL mem16,imm8
 		public static void SHL (WordMemory target, Byte source) {}
+		public unsafe static void SHL (UInt16 *target, Byte source) {}
 		
 		// SHL mem32,CL
 		public static void SHL__CL (DWordMemory target) {}
+		public unsafe static void SHL__CL (UInt32 *target) {}
 		
 		// SHL mem32,imm8
 		public static void SHL (DWordMemory target, Byte source) {}
+		public unsafe static void SHL (UInt32 *target, Byte source) {}
 		
 		// SHL rmreg8,CL
 		public static void SHL__CL (R8Type target) {}
@@ -2957,15 +3317,19 @@ namespace SharpOS.AOT.X86
 		
 		// SHLD mem16,reg16,imm8
 		public static void SHLD (WordMemory target, R16Type source, Byte value) {}
+		public unsafe static void SHLD (UInt16 *target, R16Type source, Byte value) {}
 		
 		// SHLD mem32,reg32,imm8
 		public static void SHLD (DWordMemory target, R32Type source, Byte value) {}
+		public unsafe static void SHLD (UInt32 *target, R32Type source, Byte value) {}
 		
 		// SHLD mem16,reg16,CL
 		public static void SHLD___CL (WordMemory target, R16Type source) {}
+		public unsafe static void SHLD___CL (UInt16 *target, R16Type source) {}
 		
 		// SHLD mem32,reg32,CL
 		public static void SHLD___CL (DWordMemory target, R32Type source) {}
+		public unsafe static void SHLD___CL (UInt32 *target, R32Type source) {}
 		
 		// SHLD rmreg16,reg16,imm8
 		public static void SHLD (R16Type target, R16Type source, Byte value) {}
@@ -2981,21 +3345,27 @@ namespace SharpOS.AOT.X86
 		
 		// SHR mem8,CL
 		public static void SHR__CL (ByteMemory target) {}
+		public unsafe static void SHR__CL (byte *target) {}
 		
 		// SHR mem8,imm8
 		public static void SHR (ByteMemory target, Byte source) {}
+		public unsafe static void SHR (byte *target, Byte source) {}
 		
 		// SHR mem16,CL
 		public static void SHR__CL (WordMemory target) {}
+		public unsafe static void SHR__CL (UInt16 *target) {}
 		
 		// SHR mem16,imm8
 		public static void SHR (WordMemory target, Byte source) {}
+		public unsafe static void SHR (UInt16 *target, Byte source) {}
 		
 		// SHR mem32,CL
 		public static void SHR__CL (DWordMemory target) {}
+		public unsafe static void SHR__CL (UInt32 *target) {}
 		
 		// SHR mem32,imm8
 		public static void SHR (DWordMemory target, Byte source) {}
+		public unsafe static void SHR (UInt32 *target, Byte source) {}
 		
 		// SHR rmreg8,CL
 		public static void SHR__CL (R8Type target) {}
@@ -3017,15 +3387,19 @@ namespace SharpOS.AOT.X86
 		
 		// SHRD mem16,reg16,imm8
 		public static void SHRD (WordMemory target, R16Type source, Byte value) {}
+		public unsafe static void SHRD (UInt16 *target, R16Type source, Byte value) {}
 		
 		// SHRD mem32,reg32,imm8
 		public static void SHRD (DWordMemory target, R32Type source, Byte value) {}
+		public unsafe static void SHRD (UInt32 *target, R32Type source, Byte value) {}
 		
 		// SHRD mem16,reg16,CL
 		public static void SHRD___CL (WordMemory target, R16Type source) {}
+		public unsafe static void SHRD___CL (UInt16 *target, R16Type source) {}
 		
 		// SHRD mem32,reg32,CL
 		public static void SHRD___CL (DWordMemory target, R32Type source) {}
+		public unsafe static void SHRD___CL (UInt32 *target, R32Type source) {}
 		
 		// SHRD rmreg16,reg16,imm8
 		public static void SHRD (R16Type target, R16Type source, Byte value) {}
@@ -3041,15 +3415,18 @@ namespace SharpOS.AOT.X86
 		
 		// SIDT mem
 		public static void SIDT (Memory target) {}
+		public unsafe static void SIDT (byte *target) {}
 		
 		// SLDT mem16
 		public static void SLDT (WordMemory target) {}
+		public unsafe static void SLDT (UInt16 *target) {}
 		
 		// SLDT rmreg16
 		public static void SLDT (R16Type target) {}
 		
 		// SMSW mem16
 		public static void SMSW (WordMemory target) {}
+		public unsafe static void SMSW (UInt16 *target) {}
 		
 		// SMSW rmreg16
 		public static void SMSW (R16Type target) {}
@@ -3074,42 +3451,54 @@ namespace SharpOS.AOT.X86
 		
 		// STR mem16
 		public static void STR (WordMemory target) {}
+		public unsafe static void STR (UInt16 *target) {}
 		
 		// STR rmreg16
 		public static void STR (R16Type target) {}
 		
 		// SUB mem8,reg8
 		public static void SUB (ByteMemory target, R8Type source) {}
+		public unsafe static void SUB (byte *target, R8Type source) {}
 		
 		// SUB mem16,reg16
 		public static void SUB (WordMemory target, R16Type source) {}
+		public unsafe static void SUB (UInt16 *target, R16Type source) {}
 		
 		// SUB mem32,reg32
 		public static void SUB (DWordMemory target, R32Type source) {}
+		public unsafe static void SUB (UInt32 *target, R32Type source) {}
 		
 		// SUB reg8,mem8
 		public static void SUB (R8Type target, ByteMemory source) {}
+		public unsafe static void SUB (R8Type target, byte *source) {}
 		
 		// SUB reg16,mem16
 		public static void SUB (R16Type target, WordMemory source) {}
+		public unsafe static void SUB (R16Type target, UInt16 *source) {}
 		
 		// SUB reg32,mem32
 		public static void SUB (R32Type target, DWordMemory source) {}
+		public unsafe static void SUB (R32Type target, UInt32 *source) {}
 		
 		// SUB mem8,imm8
 		public static void SUB (ByteMemory target, Byte source) {}
+		public unsafe static void SUB (byte *target, Byte source) {}
 		
 		// SUB mem16,imm16
 		public static void SUB (WordMemory target, UInt16 source) {}
+		public unsafe static void SUB (UInt16 *target, UInt16 source) {}
 		
 		// SUB mem32,imm32
 		public static void SUB (DWordMemory target, UInt32 source) {}
+		public unsafe static void SUB (UInt32 *target, UInt32 source) {}
 		
 		// SUB mem16,imm8
 		public static void SUB (WordMemory target, Byte source) {}
+		public unsafe static void SUB (UInt16 *target, Byte source) {}
 		
 		// SUB mem32,imm8
 		public static void SUB (DWordMemory target, Byte source) {}
+		public unsafe static void SUB (UInt32 *target, Byte source) {}
 		
 		// SUB rmreg8,reg8
 		public static void SUB (R8Type target, R8Type source) {}
@@ -3149,21 +3538,27 @@ namespace SharpOS.AOT.X86
 		
 		// TEST mem8,reg8
 		public static void TEST (ByteMemory target, R8Type source) {}
+		public unsafe static void TEST (byte *target, R8Type source) {}
 		
 		// TEST mem16,reg16
 		public static void TEST (WordMemory target, R16Type source) {}
+		public unsafe static void TEST (UInt16 *target, R16Type source) {}
 		
 		// TEST mem32,reg32
 		public static void TEST (DWordMemory target, R32Type source) {}
+		public unsafe static void TEST (UInt32 *target, R32Type source) {}
 		
 		// TEST mem8,imm8
 		public static void TEST (ByteMemory target, Byte source) {}
+		public unsafe static void TEST (byte *target, Byte source) {}
 		
 		// TEST mem16,imm16
 		public static void TEST (WordMemory target, UInt16 source) {}
+		public unsafe static void TEST (UInt16 *target, UInt16 source) {}
 		
 		// TEST mem32,imm32
 		public static void TEST (DWordMemory target, UInt32 source) {}
+		public unsafe static void TEST (UInt32 *target, UInt32 source) {}
 		
 		// TEST rmreg8,reg8
 		public static void TEST (R8Type target, R8Type source) {}
@@ -3188,12 +3583,14 @@ namespace SharpOS.AOT.X86
 		
 		// VERR mem16
 		public static void VERR (WordMemory target) {}
+		public unsafe static void VERR (UInt16 *target) {}
 		
 		// VERR rmreg16
 		public static void VERR (R16Type target) {}
 		
 		// VERW mem16
 		public static void VERW (WordMemory target) {}
+		public unsafe static void VERW (UInt16 *target) {}
 		
 		// VERW rmreg16
 		public static void VERW (R16Type target) {}
@@ -3209,12 +3606,15 @@ namespace SharpOS.AOT.X86
 		
 		// XADD mem8,reg8
 		public static void XADD (ByteMemory target, R8Type source) {}
+		public unsafe static void XADD (byte *target, R8Type source) {}
 		
 		// XADD mem16,reg16
 		public static void XADD (WordMemory target, R16Type source) {}
+		public unsafe static void XADD (UInt16 *target, R16Type source) {}
 		
 		// XADD mem32,reg32
 		public static void XADD (DWordMemory target, R32Type source) {}
+		public unsafe static void XADD (UInt32 *target, R32Type source) {}
 		
 		// XADD rmreg8,reg8
 		public static void XADD (R8Type target, R8Type source) {}
@@ -3227,21 +3627,27 @@ namespace SharpOS.AOT.X86
 		
 		// XCHG reg8,mem8
 		public static void XCHG (R8Type target, ByteMemory source) {}
+		public unsafe static void XCHG (R8Type target, byte *source) {}
 		
 		// XCHG reg16,mem16
 		public static void XCHG (R16Type target, WordMemory source) {}
+		public unsafe static void XCHG (R16Type target, UInt16 *source) {}
 		
 		// XCHG reg32,mem32
 		public static void XCHG (R32Type target, DWordMemory source) {}
+		public unsafe static void XCHG (R32Type target, UInt32 *source) {}
 		
 		// XCHG mem8,reg8
 		public static void XCHG (ByteMemory target, R8Type source) {}
+		public unsafe static void XCHG (byte *target, R8Type source) {}
 		
 		// XCHG mem16,reg16
 		public static void XCHG (WordMemory target, R16Type source) {}
+		public unsafe static void XCHG (UInt16 *target, R16Type source) {}
 		
 		// XCHG mem32,reg32
 		public static void XCHG (DWordMemory target, R32Type source) {}
+		public unsafe static void XCHG (UInt32 *target, R32Type source) {}
 		
 		// XCHG reg8,rmreg8
 		public static void XCHG (R8Type target, R8Type source) {}
@@ -3260,36 +3666,47 @@ namespace SharpOS.AOT.X86
 		
 		// XOR mem8,reg8
 		public static void XOR (ByteMemory target, R8Type source) {}
+		public unsafe static void XOR (byte *target, R8Type source) {}
 		
 		// XOR mem16,reg16
 		public static void XOR (WordMemory target, R16Type source) {}
+		public unsafe static void XOR (UInt16 *target, R16Type source) {}
 		
 		// XOR mem32,reg32
 		public static void XOR (DWordMemory target, R32Type source) {}
+		public unsafe static void XOR (UInt32 *target, R32Type source) {}
 		
 		// XOR reg8,mem8
 		public static void XOR (R8Type target, ByteMemory source) {}
+		public unsafe static void XOR (R8Type target, byte *source) {}
 		
 		// XOR reg16,mem16
 		public static void XOR (R16Type target, WordMemory source) {}
+		public unsafe static void XOR (R16Type target, UInt16 *source) {}
 		
 		// XOR reg32,mem32
 		public static void XOR (R32Type target, DWordMemory source) {}
+		public unsafe static void XOR (R32Type target, UInt32 *source) {}
 		
 		// XOR mem8,imm8
 		public static void XOR (ByteMemory target, Byte source) {}
+		public unsafe static void XOR (byte *target, Byte source) {}
 		
 		// XOR mem16,imm16
 		public static void XOR (WordMemory target, UInt16 source) {}
+		public unsafe static void XOR (UInt16 *target, UInt16 source) {}
 		
 		// XOR mem32,imm32
 		public static void XOR (DWordMemory target, UInt32 source) {}
+		public unsafe static void XOR (UInt32 *target, UInt32 source) {}
 		
 		// XOR mem16,imm8
 		public static void XOR (WordMemory target, Byte source) {}
+		public unsafe static void XOR (UInt16 *target, Byte source) {}
 		
 		// XOR mem32,imm8
 		public static void XOR (DWordMemory target, Byte source) {}
+		public unsafe static void XOR (UInt32 *target, Byte source) {}
 		
 		// XOR rmreg8,reg8
 		public static void XOR (R8Type target, R8Type source) {}

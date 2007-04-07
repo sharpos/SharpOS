@@ -66,6 +66,26 @@ namespace SharpOS.AOT.X86
             return value.StartsWith("SharpOS.AOT.X86.");
         }
 
+        public SharpOS.AOT.IR.Operands.Operand.InternalSizeType GetRegisterSizeType(string value)
+        {
+            if (value.Equals("SharpOS.AOT.X86.R8Type") == true)
+            {
+                return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U1;
+            }
+            else if (value.StartsWith("SharpOS.AOT.X86.R16Type") == true)
+            {
+                return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U2;
+            }
+            else if (value.StartsWith("SharpOS.AOT.X86.R32Type") == true)
+            {
+                return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U4;
+            }
+            else
+            {
+                throw new Exception("'" + value + "' is not supported.");
+            }
+        }
+
         public bool IsInstruction(string value)
         {
             return value.StartsWith("SharpOS.AOT.X86.");
@@ -677,8 +697,20 @@ namespace SharpOS.AOT.X86
             return true;
         }
 
-        private Memory GetMemoryInternal(SharpOS.AOT.IR.Operands.Call call)
+        private Memory GetMemoryInternal(object value)
         {
+            if (value is Memory == true)
+            {
+                return value as Memory;
+            }
+
+            if (value is SharpOS.AOT.IR.Operands.Call == false)
+            {
+                throw new Exception("'" + value.ToString() + "' is not supported.");
+            }
+
+            SharpOS.AOT.IR.Operands.Call call = value as SharpOS.AOT.IR.Operands.Call;
+
             if (call.Operands.Length == 1)
             {
                 string parameter = (call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString();
@@ -900,34 +932,34 @@ namespace SharpOS.AOT.X86
             }
         }
 
-        public Memory GetMemory(SharpOS.AOT.IR.Operands.Call call)
+        public Memory GetMemory(object value)
         {
-            return GetMemoryInternal(call);
+            return GetMemoryInternal(value);
         }
 
-        public ByteMemory GetByteMemory(SharpOS.AOT.IR.Operands.Call call)
+        public ByteMemory GetByteMemory(object value)
         {
-            return GetMemoryInternal(call) as ByteMemory;
+            return GetMemoryInternal(value) as ByteMemory;
         }
 
-        public WordMemory GetWordMemory(SharpOS.AOT.IR.Operands.Call call)
+        public WordMemory GetWordMemory(object value)
         {
-            return GetMemoryInternal(call) as WordMemory;
+            return GetMemoryInternal(value) as WordMemory;
         }
 
-        public DWordMemory GetDWordMemory(SharpOS.AOT.IR.Operands.Call call)
+        public DWordMemory GetDWordMemory(object value)
         {
-            return GetMemoryInternal(call) as DWordMemory;
+            return GetMemoryInternal(value) as DWordMemory;
         }
 
-        public QWordMemory GetQWordMemory(SharpOS.AOT.IR.Operands.Call call)
+        public QWordMemory GetQWordMemory(object value)
         {
-            return GetMemoryInternal(call) as QWordMemory;
+            return GetMemoryInternal(value) as QWordMemory;
         }
 
-        public TWordMemory GetTWordMemory(SharpOS.AOT.IR.Operands.Call call)
+        public TWordMemory GetTWordMemory(object value)
         {
-            return GetMemoryInternal(call) as TWordMemory;
+            return GetMemoryInternal(value) as TWordMemory;
         }
 
         private bool EAX = false, ECX = false, EDX = false;
@@ -1047,18 +1079,63 @@ namespace SharpOS.AOT.X86
             }
         }
 
+        enum Registers : int
+        {
+            EBX=0,
+            ESI,
+            EDI,
+            
+            EAX,
+            EDX,
+            ECX,
+
+            AX,
+            DX,
+            CX,
+
+            AH,
+            DH,
+            CH,
+
+            AL,
+            DL,
+            CL
+        }
+
+        // TODO needed anymore?
+        public int GetRegisterIndex(string value)
+        {
+            if (value.StartsWith("SharpOS.AOT.X86.R32.EAX") == true)
+            {
+                return (int) Registers.EAX;
+            }
+            else
+            {
+                throw new Exception("'" + value + "' is not supported yet.");
+            }
+        }
+
         internal SharpOS.AOT.X86.R32Type GetRegister(int i)
         {
-            switch (i)
+            switch ((Registers) i)
             {
-                case 0:
+                case Registers.EBX:
                     return R32.EBX;
 
-                case 1:
+                case Registers.ESI:
                     return R32.ESI;
 
-                case 2:
+                case Registers.EDI:
                     return R32.EDI;
+                
+                case Registers.EAX:
+                    return R32.EAX;
+
+                case Registers.EDX:
+                    return R32.EDX;
+                
+                case Registers.ECX:
+                    return R32.ECX;
 
                 default:
                     throw new Exception("'" + i.ToString() + "' is no valid register.");

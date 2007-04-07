@@ -119,7 +119,7 @@ namespace SharpOS.AOT.IR.Operands
             set { sizeType = value; }
         }
 
-        public static InternalSizeType GetSizeType(string type)
+        public static InternalSizeType GetSizeType(string type, IAssembly assembly)
         {
             InternalSizeType sizeType;
 
@@ -231,7 +231,10 @@ namespace SharpOS.AOT.IR.Operands
             {
                 sizeType = InternalSizeType.U;
             }
-
+            else if (assembly != null && assembly.IsRegister(type) == true)
+            {
+                sizeType = assembly.GetRegisterSizeType(type);
+            }
             else
             {
                 throw new Exception("'" + type + "' not supported.");
@@ -240,9 +243,9 @@ namespace SharpOS.AOT.IR.Operands
             return sizeType;
         }
         
-        public void SetSizeType(string type)
+        public void SetSizeType(string type, IAssembly assembly)
         {
-            this.sizeType = Operand.GetSizeType(type);
+            this.sizeType = Operand.GetSizeType(type, assembly);
         }
 
         public InternalSizeType ConvertSizeType

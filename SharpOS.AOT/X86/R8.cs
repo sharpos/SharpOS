@@ -32,8 +32,20 @@ namespace SharpOS.AOT.X86
         public static readonly R8Type DH = new R8Type("DH", 6);
         public static readonly R8Type BH = new R8Type("BH", 7);
 
-        public static R8Type GetByID(string id)
+        public static R8Type GetByID(object value)
         {
+            if (value is R8Type == true)
+            {
+                return value as R8Type;
+            }
+
+            if (value is SharpOS.AOT.IR.Operands.Field == false)
+            {
+                throw new Exception("'" + value.ToString() + "' is not supported.");
+            }
+
+            string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+
             if (id.Equals("null") == true)
             {
                 return null;

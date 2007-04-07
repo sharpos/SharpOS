@@ -31,8 +31,20 @@ namespace SharpOS.AOT.X86
         public static readonly DRType DR6 = new DRType("DR6", 6);
         public static readonly DRType DR7 = new DRType("DR7", 7);
 
-        public static DRType GetByID(string id)
+        public static DRType GetByID(object value)
         {
+            if (value is DRType == true)
+            {
+                return value as DRType;
+            }
+
+            if (value is SharpOS.AOT.IR.Operands.Field == false)
+            {
+                throw new Exception("'" + value.ToString() + "' is not supported.");
+            }
+
+            string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+
             if (id.Equals("null") == true)
             {
                 return null;
