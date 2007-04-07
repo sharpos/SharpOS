@@ -11,6 +11,10 @@ using System;
 
 namespace SharpOS.AOT.X86
 {
+    /// <summary>
+    /// This class encapsulates machine code stubs, that when used by kernel code, 
+    /// and then AOTed, are expressed as their respective machine language operations.
+    /// </summary>
 	public class Asm
 	{
 		

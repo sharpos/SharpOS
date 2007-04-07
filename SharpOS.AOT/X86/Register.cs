@@ -21,8 +21,17 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86
 {
+    /// <summary>
+    /// This abstract class represents a register for the x86 architecture
+    /// </summary>
     public abstract class Register
     {
+        /// <summary>
+        /// Primary constructor for derived classes to overload when instanciating a reference to
+        /// an x86 register.
+        /// </summary>
+        /// <param name="name">The name of the register that is being referred to</param>
+        /// <param name="index">An implementation-specific number used to encode this register to stream</param>
         public Register(string name, byte index)
         {
             this.name = name;
@@ -31,6 +40,9 @@ namespace SharpOS.AOT.X86
 
         private string name = string.Empty;
 
+        /// <summary>
+        /// The name of this register
+        /// </summary>
         public string Name
         {
             get { return name; }
@@ -38,11 +50,19 @@ namespace SharpOS.AOT.X86
 
         private byte index = 0;
 
+        /// <summary>
+        /// An implementation-specific value used to aid in the encoding of the reference to this register
+        /// to a stream or file.
+        /// </summary>
         public byte Index
         {
             get { return index; }
         }
 
+        /// <summary>
+        /// Returns the name of this register as a String
+        /// </summary>
+        /// <returns>A string containing the name of this register</returns>
         public override string ToString()
         {
             return this.name;

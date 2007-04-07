@@ -21,6 +21,9 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86
 {
+    /// <summary>
+    /// This class represents an x86 32-bit register
+    /// </summary>
     public class R32Type : Register
     {
         public R32Type(string name, byte index)
