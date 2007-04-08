@@ -267,8 +267,8 @@ namespace SharpOS.AOT.X86
         }
 
         private const string KERNEL_CLASS = "SharpOS.Kernel";
-        private const string KERNEL_CTOR = KERNEL_CLASS + "..cctor";
-        private const string KERNEL_MAIN = KERNEL_CLASS + ".BootEntry";
+        private const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
+        private const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry";
         private const string KERNEL_STRING = KERNEL_CLASS + ".String";
         private const string END_DATA = "[END DATA]";
         private const string END_STACK = "[END STACK]";
@@ -504,8 +504,16 @@ namespace SharpOS.AOT.X86
 
                     this.LABEL(fullname);
 
-                    if (field.FieldType.ToString().EndsWith("*") == true
-                        || field.FieldType.ToString().Equals("System.Int32") == true)
+                    // TODO implement the other types
+                    if (field.FieldType.ToString().EndsWith("byte") == true
+                        || field.FieldType.ToString().Equals("System.Byte") == true
+                        || field.FieldType.ToString().Equals("System.SByte") == true)
+                    {
+                        this.DATA((byte)0);
+                    }
+                    else if (field.FieldType.ToString().EndsWith("*") == true
+                        || field.FieldType.ToString().Equals("System.Int32") == true
+                        || field.FieldType.ToString().Equals("System.UInt32") == true)
                     {
                         this.DATA((uint)0);
                     }

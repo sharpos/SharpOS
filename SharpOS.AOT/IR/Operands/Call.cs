@@ -55,5 +55,16 @@ namespace SharpOS.AOT.IR.Operands
 
             return stringBuilder.ToString();
         }
+
+        /// <summary>
+        /// It returns the unique name of this call. (e.g. "void namespace.class.method UInt32 UInt16")
+        /// </summary>
+        public string AssemblyLabel
+        {
+            get
+            {
+                return IR.Method.GetLabel(this.Method);
+            }
+        }
     }
 }

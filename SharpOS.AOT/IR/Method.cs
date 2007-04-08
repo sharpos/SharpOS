@@ -1340,17 +1340,13 @@ namespace SharpOS.AOT.IR
                 string key = item.key;
                 List<Instructions.Instruction> list = defuse[key].values;
 
-                Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(list[0].Block.Index + " : " + list[0].ToString());
-                Console.ForegroundColor = ConsoleColor.Gray;
 
                 for (int i = 1; i < list.Count; i++)
                 {
                     Instructions.Instruction instruction = list[i];
 
-                    Console.ForegroundColor = ConsoleColor.Cyan;
                     Console.WriteLine("\t" + instruction.Block.Index + " : " + instruction);
-                    Console.ForegroundColor = ConsoleColor.Gray;
                 }
             }
 
@@ -1664,8 +1660,24 @@ namespace SharpOS.AOT.IR
         {
             get
             {
-                return this.methodDefinition.DeclaringType.FullName + "." + this.methodDefinition.Name;
+                //return this.methodDefinition.DeclaringType.FullName + "." + this.methodDefinition.Name;
+                return Method.GetLabel(this.methodDefinition);
             }
+        }
+
+        public static string GetLabel(MethodReference method)
+        {
+            StringBuilder result = new StringBuilder();
+
+            result.Append(method.ReturnType.ReturnType.FullName + " ");
+            result.Append(method.DeclaringType.FullName + "." + method.Name);
+
+            foreach (ParameterReference parameter in method.Parameters)
+            {
+                result.Append(" " + parameter.ParameterType.FullName);
+            }
+
+            return result.ToString();
         }
 
         // If a block that has many predecessors is linked to a block that has many successors 

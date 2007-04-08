@@ -316,7 +316,9 @@ namespace SharpOS.AOT.X86
                     }
                 }
                 else if (operand is Argument == true
-                    || operand is SharpOS.AOT.IR.Operands.Register == true)
+                    || operand is SharpOS.AOT.IR.Operands.Register == true
+                    || operand is Reference == true
+                    || operand is Local == true)
                 {
                     if (this.IsFourBytes(operand) == true)
                     {
@@ -326,7 +328,8 @@ namespace SharpOS.AOT.X86
                         }
                         else
                         {
-                            assembly.PUSH(this.GetMemory(operand as Identifier) as DWordMemory);
+                            this.MovRegisterMemory(R32.EAX, operand as Identifier);
+                            assembly.PUSH(R32.EAX);
                         }
                     }
                     else
@@ -340,7 +343,7 @@ namespace SharpOS.AOT.X86
                 }
             }
 
-            assembly.CALL(call.Method.DeclaringType.FullName + "." + call.Method.Name);
+            assembly.CALL(call.AssemblyLabel);
 
             int result = call.Method.Parameters.Count;
 
