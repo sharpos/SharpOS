@@ -26,24 +26,15 @@
 		<copy file="util/bochsrc.txt" tofile="dist/bochsrc.txt" />
 		<copy file="util/disk.img" tofile="dist/disk.img" />
 
-		<exec program="losetup" workingdir="dist">
-			<arg value="/dev/loop0" />
-			<arg file="dist/disk.img" />
-		</exec>
-
 		<mkdir dir="dist/mnt" />
 		<exec program="mount" workingdir="dist">
-			<arg line="/dev/loop0 -o loop mnt" />
+			<arg line="disk.img -o loop mnt" />
 		</exec>
 
 		<copy file="build/SharpOS.bin" tofile="dist/mnt/SharpOS.bin" />
 
 		<exec program="umount" workingdir="dist">
 			<arg value="mnt" />
-		</exec>
-
-		<exec program="losetup" workingdir="dist">
-			<arg line="-d /dev/loop0" />
 		</exec>
 
 		<delete dir="dist/mnt" />
