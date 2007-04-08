@@ -970,9 +970,9 @@ namespace SharpOS.AOT.X86
                     }
                     else
                     {
-                        Memory memory = this.GetMemory(second as Identifier);
-
-                        assembly.ADD(register, memory as DWordMemory);
+                        //Memory memory = this.GetMemory(second as Identifier);
+                        this.MovRegisterMemory(R32.EAX, second as Identifier);
+                        assembly.ADD(register, R32.EAX);
                     }
                 }
                 else if (type == Binary.BinaryType.Sub)
@@ -1027,7 +1027,7 @@ namespace SharpOS.AOT.X86
                 {
                     if (second is Constant == true)
                     {
-                        UInt32 value = Convert.ToUInt32(Convert.ToInt32((second as Constant).Value));
+                        UInt32 value = (UInt32) Convert.ToInt32((second as Constant).Value);
 
                         assembly.AND(register, value);
                     }
@@ -1306,7 +1306,8 @@ namespace SharpOS.AOT.X86
             }
             else
             {
-                this.MovRegisterConstant(register, Convert.ToUInt32(operand.Value));
+                Int32 value = Convert.ToInt32(operand.Value);
+                this.MovRegisterConstant(register, (UInt32) value);
             }
         }
 
@@ -1349,30 +1350,49 @@ namespace SharpOS.AOT.X86
 
         private Memory GetMemory(SharpOS.AOT.IR.Operands.Operand.InternalSizeType sizeType, R32Type _base, byte scale, int displacement)
         {
+            return GetMemory(sizeType, _base, scale, displacement, string.Empty);
+        }
+
+        private Memory GetMemory(SharpOS.AOT.IR.Operands.Operand.InternalSizeType sizeType, R32Type _base, byte scale, int displacement, string label)
+        {
             Memory address = null;
 
             if (sizeType == Operand.InternalSizeType.I1
                 || sizeType == Operand.InternalSizeType.U1)
             {
-                if (displacement == 0)
+                if (label.Length > 0)
                 {
-                    address = new ByteMemory(null, _base, null, scale);
+                    address = new ByteMemory(label);
                 }
                 else
                 {
-                    address = new ByteMemory(null, _base, null, scale, displacement);
+                    if (displacement == 0)
+                    {
+                        address = new ByteMemory(null, _base, null, scale);
+                    }
+                    else
+                    {
+                        address = new ByteMemory(null, _base, null, scale, displacement);
+                    }
                 }
             }
             else if (sizeType == Operand.InternalSizeType.I2
                 || sizeType == Operand.InternalSizeType.U2)
             {
-                if (displacement == 0)
+                if (label.Length > 0)
                 {
-                    address = new WordMemory(null, _base, null, scale);
+                    address = new WordMemory(label);
                 }
                 else
                 {
-                    address = new WordMemory(null, _base, null, scale, displacement);
+                    if (displacement == 0)
+                    {
+                        address = new WordMemory(null, _base, null, scale);
+                    }
+                    else
+                    {
+                        address = new WordMemory(null, _base, null, scale, displacement);
+                    }
                 }
             }
             else if (sizeType == Operand.InternalSizeType.I4
@@ -1380,25 +1400,39 @@ namespace SharpOS.AOT.X86
                 || sizeType == Operand.InternalSizeType.I
                 || sizeType == Operand.InternalSizeType.U)
             {
-                if (displacement == 0)
+                if (label.Length > 0)
                 {
-                    address = new DWordMemory(null, _base, null, scale);
+                    address = new DWordMemory(label);
                 }
                 else
                 {
-                    address = new DWordMemory(null, _base, null, scale, displacement);
+                    if (displacement == 0)
+                    {
+                        address = new DWordMemory(null, _base, null, scale);
+                    }
+                    else
+                    {
+                        address = new DWordMemory(null, _base, null, scale, displacement);
+                    }
                 }
             }
             else if (sizeType == Operand.InternalSizeType.I8
                 || sizeType == Operand.InternalSizeType.U8)
             {
-                if (displacement == 0)
+                if (label.Length > 0)
                 {
-                    address = new DWordMemory(null, _base, null, scale);
+                    address = new DWordMemory(label);
                 }
                 else
                 {
-                    address = new DWordMemory(null, _base, null, scale, displacement);
+                    if (displacement == 0)
+                    {
+                        address = new DWordMemory(null, _base, null, scale);
+                    }
+                    else
+                    {
+                        address = new DWordMemory(null, _base, null, scale, displacement);
+                    }
                 }
             }
             else
@@ -1425,8 +1459,7 @@ namespace SharpOS.AOT.X86
 
             if (operand is Field == true)
             {
-                // TODO support for different sizes (less than 4 bytes)
-                address = new DWordMemory(operand.Value);
+                address = this.GetMemory(operand.SizeType, null, 0, 0, operand.Value);
             }
             else if (operand is Reference == true)
             {

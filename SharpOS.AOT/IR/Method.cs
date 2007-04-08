@@ -587,6 +587,9 @@ namespace SharpOS.AOT.IR
 
         private void ReversePostorder(List<Block> visited, List<Block> active, List<Block> list, Block current)
         {
+            if (this.blocks.Count == list.Count)
+                return;
+
             if (active.Contains(current) == true)
             {
                 return;
@@ -1770,7 +1773,49 @@ namespace SharpOS.AOT.IR
                 }
             }
 
-            return;
+            // Remove the empty blocks inserted by the SSA
+            List<Block> removeBlocks = new List<Block> ();
+
+            foreach (Block block in this.blocks) {
+                if (block.Type == Block.BlockType.OneWay
+                    && block.Ins.Count == 1
+                    && block.InstructionsCount == 1) {
+
+                    removeBlocks.Add(block);
+
+                    Block _in = block.Ins [0];
+                    Block _out = block.Outs [0];
+
+                    bool found = false;
+
+                    for (int i = 0; i < _in.Outs.Count; i++) {
+                        if (_in.Outs [i] == block) {
+                            found = true;
+                            _in.Outs [i] = _out;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                        throw new Exception ("Missing In-Block in '" + this.MethodFullName + "'.");
+
+                    found = false;
+
+                    for (int i = 0; i < _out.Ins.Count; i++) {
+                        if (_out.Ins [i] == block) {
+                            found = true;
+                            _out.Ins [i] = _in;
+                            break;
+                        }
+                    }
+
+                    if (!found)
+                        throw new Exception("Missing Out-Block in '" + this.MethodFullName + "'.");
+                }
+            }
+
+            foreach (Block block in removeBlocks)
+                this.blocks.Remove(block);
         }
 
         private class LiveRange : IComparable
