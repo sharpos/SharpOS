@@ -18,26 +18,6 @@ namespace SharpOS
 {
     public class Kernel
     {
-        public enum ColorTypes : byte
-        {
-            Black = 0,
-            Blue,
-            Green,
-            Cyan,
-            Red,
-            Magenta,
-            Brown,
-            White,
-            DarkGray,
-            LightBlue,
-            LightGreen,
-            LightCyan,
-            LightRed,
-            LightMagenta,
-            Yellow,
-            BrightWhite
-        }
-
         public unsafe static void WriteProcessorInfo()
         {
             UInt32 eax = 0, ebx = 0, ecx = 0, edx = 0;
