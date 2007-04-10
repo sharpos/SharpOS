@@ -48,7 +48,6 @@ namespace SharpOS
 		SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
 
 		WriteLine (String ("SharpOS v0.0.0.0.99 (http://www.sharpos.org)"));
-		WriteLine (String ("SharpOS v0.0.0.0.99 (http://www.sharpos.org)"));
 		WriteNL ();
 		WriteCPUIDInfo ();
 

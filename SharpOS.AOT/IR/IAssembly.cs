@@ -32,6 +32,5 @@ namespace SharpOS.AOT.IR
         bool IsRegister(string value);
         bool IsInstruction(string value);
         SharpOS.AOT.IR.Operands.Operand.InternalSizeType GetRegisterSizeType(string value);
-        int GetRegisterIndex(string value);
     }
 }
