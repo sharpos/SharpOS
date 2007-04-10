@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -15,15 +15,12 @@ using System.Collections.Generic;
 using System.Runtime.Serialization.Formatters.Binary;
 using SharpOS.AOT.IR.Operands;
 
-namespace SharpOS.AOT.IR.Instructions
-{
-    [Serializable]
-    public class ConditionalJump : Jump
-    {
-        public ConditionalJump(Operands.Boolean condition)
-            : base(condition)
-        {
-        }
-
-    }
+namespace SharpOS.AOT.IR.Instructions {
+	[Serializable]
+	public class ConditionalJump : Jump {
+		public ConditionalJump (Operands.Boolean condition)
+			: base (condition)
+		{
+		}
+	}
 }

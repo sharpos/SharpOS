@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -19,38 +19,36 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-namespace SharpOS.AOT.X86
-{
-    public class TWordMemory : Memory
-    {
-        public TWordMemory(SegType segment, R32Type _base, R32Type index, byte scale, Int32 displacement)
-            : base(segment, _base, index, scale, displacement)
-        {
-        }
+namespace SharpOS.AOT.X86 {
+	public class TWordMemory : Memory {
+		public TWordMemory (SegType segment, R32Type _base, R32Type index, byte scale, Int32 displacement)
+			: base (segment, _base, index, scale, displacement)
+		{
+		}
 
-        public TWordMemory(SegType segment, R32Type _base, R32Type index, byte scale)
-            : base(segment, _base, index, scale)
-        {
-        }
+		public TWordMemory (SegType segment, R32Type _base, R32Type index, byte scale)
+			: base (segment, _base, index, scale)
+		{
+		}
 
-        public TWordMemory(SegType segment, string label)
-            : base(segment, label)
-        {
-        }
+		public TWordMemory (SegType segment, string label)
+			: base (segment, label)
+		{
+		}
 
-        public TWordMemory(string label)
-            : base(label)
-        {
-        }
+		public TWordMemory (string label)
+			: base (label)
+		{
+		}
 
-        public TWordMemory(SegType segment, R16Type _base, R16Type index, Int16 displacement)
-            : base(segment, _base, index, displacement)
-        {
-        }
+		public TWordMemory (SegType segment, R16Type _base, R16Type index, Int16 displacement)
+			: base (segment, _base, index, displacement)
+		{
+		}
 
-        public TWordMemory(SegType segment, R16Type _base, R16Type index)
-            : base(segment, _base, index)
-        {
-        }
-    }
+		public TWordMemory (SegType segment, R16Type _base, R16Type index)
+			: base (segment, _base, index)
+		{
+		}
+	}
 }

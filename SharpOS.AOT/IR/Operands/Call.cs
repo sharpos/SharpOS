@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -15,56 +15,50 @@ using System.Runtime.Serialization.Formatters.Binary;
 using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 
-namespace SharpOS.AOT.IR.Operands
-{
-    [Serializable]
-    public class Call : Operand
-    {
-        public Call(MethodReference method, Operand[] operands)
-            : base(null, operands)
-        {
-            this.method = method;
-        }
+namespace SharpOS.AOT.IR.Operands {
+	[Serializable]
+	public class Call : Operand {
+		public Call (MethodReference method, Operand[] operands)
+			: base (null, operands)
+		{
+			this.method = method;
+		}
 
-        private MethodReference method;
+		private MethodReference method;
 
-        public MethodReference Method
-        {
-            get { return method; }
-        }
+		public MethodReference Method {
+			get {
+				return method;
+			}
+		}
 
-        public override string ToString()
-        {
-            StringBuilder stringBuilder = new StringBuilder();
+		public override string ToString ()
+		{
+			StringBuilder stringBuilder = new StringBuilder();
 
-            stringBuilder.Append("Call " + this.Method.ReturnType.ReturnType.Name);
-            stringBuilder.Append(" " + this.Method.DeclaringType.FullName + "." + this.method.Name);
-            stringBuilder.Append("(");
+			stringBuilder.Append ("Call " + this.Method.ReturnType.ReturnType.Name);
+			stringBuilder.Append (" " + this.Method.DeclaringType.FullName + "." + this.method.Name);
+			stringBuilder.Append ("(");
 
-            foreach (Operand operand in this.Operands)
-            {
-                if (operand != this.Operands[0])
-                {
-                    stringBuilder.Append(", ");
-                }
+			foreach (Operand operand in this.Operands) {
+				if (operand != this.Operands[0]) 
+					stringBuilder.Append (", ");
 
-                stringBuilder.Append(operand.ToString());
-            }
+				stringBuilder.Append (operand.ToString());
+			}
 
-            stringBuilder.Append(")");
+			stringBuilder.Append (")");
 
-            return stringBuilder.ToString();
-        }
+			return stringBuilder.ToString();
+		}
 
-        /// <summary>
-        /// It returns the unique name of this call. (e.g. "void namespace.class.method UInt32 UInt16")
-        /// </summary>
-        public string AssemblyLabel
-        {
-            get
-            {
-                return IR.Method.GetLabel(this.Method);
-            }
-        }
-    }
+		/// <summary>
+		/// It returns the unique name of this call. (e.g. "void namespace.class.method UInt32 UInt16")
+		/// </summary>
+		public string AssemblyLabel {
+			get {
+				return IR.Method.GetLabel (this.Method);
+			}
+		}
+	}
 }

@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -19,21 +19,20 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-namespace SharpOS.AOT.X86
-{
-    public class SegType : Register
-    {
-        public SegType(string name, byte index, byte value)
-            : base(name, index)
-        {
-            this.value = value;
-        }
+namespace SharpOS.AOT.X86 {
+	public class SegType : Register {
+		public SegType (string name, byte index, byte value)
+			: base (name, index)
+		{
+			this.value = value;
+		}
 
-        private byte value = 0;
+		private byte value = 0;
 
-        public byte Value
-        {
-            get { return value; }
-        }
-    }
+		public byte Value {
+			get {
+				return value;
+			}
+		}
+	}
 }

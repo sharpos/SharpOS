@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -21,42 +21,39 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-namespace SharpOS.AOT.IR
-{
-    public class Class : IEnumerable<Method>
-    {
-        public Class(Engine engine, TypeDefinition classDefinition)
-        {
-            this.engine = engine;
-            this.classDefinition = classDefinition;
-        }
+namespace SharpOS.AOT.IR {
+	public class Class : IEnumerable<Method> {
+		public Class (Engine engine, TypeDefinition classDefinition)
+		{
+			this.engine = engine;
+			this.classDefinition = classDefinition;
+		}
 
-        private Engine engine = null;
-        private TypeDefinition classDefinition = null;
+		private Engine engine = null;
+		private TypeDefinition classDefinition = null;
 
-        public TypeDefinition ClassDefinition
-        {
-            get { return this.classDefinition; }
-        }
+		public TypeDefinition ClassDefinition {
+			get {
+				return this.classDefinition;
+			}
+		}
 
-        public void Add(Method method)
-        {
-            this.methods.Add(method);
-        }
+		public void Add (Method method)
+		{
+			this.methods.Add (method);
+		}
 
-        private List<Method> methods = new List<Method>();
+		private List<Method> methods = new List<Method> ();
 
-        IEnumerator<Method> IEnumerable<Method>.GetEnumerator()
-        {
-            foreach (Method method in this.methods)
-            {
-                yield return method;
-            }
-        }
+		IEnumerator<Method> IEnumerable<Method>.GetEnumerator ()
+		{
+			foreach (Method method in this.methods) 
+				yield return method;
+		}
 
-        IEnumerator IEnumerable.GetEnumerator()
-        {
-            return ((IEnumerable<Method>)this).GetEnumerator();
-        }
-    }
+		IEnumerator IEnumerable.GetEnumerator ()
+		{
+			return ( (IEnumerable<Method>) this).GetEnumerator ();
+		}
+	}
 }

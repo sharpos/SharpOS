@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -19,18 +19,14 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-namespace SharpOS.AOT.X86
-{
-    /// <summary>
-    /// This class represents an x86 32-bit register
-    /// </summary>
-    public class R32Type : Register
-    {
-        public R32Type(string name, byte index)
-            : base(name, index)
-        {
-        }
-
-        public UInt32 Value = 0;
-    }
+namespace SharpOS.AOT.X86 {
+	/// <summary>
+	/// This class represents an x86 32-bit register
+	/// </summary>
+	public class R32Type : Register {
+		public R32Type (string name, byte index)
+			: base (name, index)
+		{
+		}
+	}
 }

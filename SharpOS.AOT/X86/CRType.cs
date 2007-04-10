@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -19,13 +19,11 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-namespace SharpOS.AOT.X86
-{
-    public class CRType : Register
-    {
-        public CRType(string name, byte index)
-            : base(name, index)
-        {
-        }
-    }
+namespace SharpOS.AOT.X86 {
+	public class CRType : Register {
+		public CRType (string name, byte index)
+			: base (name, index)
+		{
+		}
+	}
 }

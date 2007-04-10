@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -19,13 +19,11 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-namespace SharpOS.AOT.X86
-{
-    internal class OffsetInstruction : Instruction
-    {
-        public OffsetInstruction(UInt32 value)
-            : base(true, string.Empty, string.Empty, "TIMES", value.ToString() + "-($-$$) DB 0", null, null, null, value, null)
-        {
-        }
-    }
+namespace SharpOS.AOT.X86  {
+	internal class OffsetInstruction : Instruction {
+		public OffsetInstruction (UInt32 value)
+			: base (true, string.Empty, string.Empty, "TIMES", value.ToString() + "-($-$$) DB 0", null, null, null, value, null)
+		{
+		}
+	}
 }

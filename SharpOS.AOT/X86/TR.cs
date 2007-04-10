@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -19,50 +19,52 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-namespace SharpOS.AOT.X86
-{
-    public class TR
-    {
-        public static readonly TRType TR3 = new TRType("TR3", 3);
-        public static readonly TRType TR4 = new TRType("TR4", 4);
-        public static readonly TRType TR5 = new TRType("TR5", 5);
-        public static readonly TRType TR6 = new TRType("TR6", 6);
-        public static readonly TRType TR7 = new TRType("TR7", 7);
+namespace SharpOS.AOT.X86 {
+	public class TR {
 
-        public static TRType GetByID(object value)
-        {
-            if (value is TRType == true)
-            {
-                return value as TRType;
-            }
+		public static readonly TRType TR3 = new TRType ("TR3", 3);
 
-            if (value is SharpOS.AOT.IR.Operands.Field == false)
-            {
-                throw new Exception("'" + value.ToString() + "' is not supported.");
-            }
+		public static readonly TRType TR4 = new TRType ("TR4", 4);
 
-            string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+		public static readonly TRType TR5 = new TRType ("TR5", 5);
 
-            if (id.Equals("null") == true)
-            {
-                return null;
-            }
+		public static readonly TRType TR6 = new TRType ("TR6", 6);
 
-            switch (id.Substring(id.Length - 3))
-            {
-                case "TR3":
-                    return TR.TR3;
-                case "TR4":
-                    return TR.TR4;
-                case "TR5":
-                    return TR.TR5;
-                case "TR6":
-                    return TR.TR6;
-                case "TR7":
-                    return TR.TR7;
-                default:
-                    throw new Exception("Unknown TR Register '" + id + "'");
-            }
-        }
-    }
+		public static readonly TRType TR7 = new TRType ("TR7", 7);
+
+		public static TRType GetByID (object value)
+		{
+			if (value is TRType == true)
+				return value as TRType;
+
+			if (value is SharpOS.AOT.IR.Operands.Field == false)
+				throw new Exception ("'" + value.ToString() + "' is not supported.");
+
+			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
+
+			if (id.Equals ("null") == true)
+				return null;
+
+			switch (id.Substring (id.Length - 3)) {
+
+				case "TR3":
+					return TR.TR3;
+
+				case "TR4":
+					return TR.TR4;
+
+				case "TR5":
+					return TR.TR5;
+
+				case "TR6":
+					return TR.TR6;
+
+				case "TR7":
+					return TR.TR7;
+
+				default:
+					throw new Exception ("Unknown TR Register '" + id + "'");
+			}
+		}
+	}
 }

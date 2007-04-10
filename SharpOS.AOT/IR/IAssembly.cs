@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -22,15 +22,13 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
 
-namespace SharpOS.AOT.IR
-{
-    public interface IAssembly
-    {
-        bool Encode(Engine engine, string target);
-        int AvailableRegistersCount { get; }
-        bool Spill(Operands.Operand.InternalSizeType type);
-        bool IsRegister(string value);
-        bool IsInstruction(string value);
-        SharpOS.AOT.IR.Operands.Operand.InternalSizeType GetRegisterSizeType(string value);
-    }
+namespace SharpOS.AOT.IR {
+	public interface IAssembly {
+		bool Encode (Engine engine, string target);
+		int AvailableRegistersCount { get; }
+		bool Spill (Operands.Operand.InternalSizeType type);
+		bool IsRegister (string value);
+		bool IsInstruction (string value);
+		SharpOS.AOT.IR.Operands.Operand.InternalSizeType GetRegisterSizeType (string value);
+	}
 }

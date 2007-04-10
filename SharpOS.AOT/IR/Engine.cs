@@ -1,10 +1,10 @@
 /**
  *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- * 
+ *
  *  Licensed under the terms of the GNU GPL License version 2.
- * 
+ *
  *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- * 
+ *
  */
 
 using System;
@@ -22,41 +22,43 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
 
-namespace SharpOS.AOT.IR
-{
+namespace SharpOS.AOT.IR {
 	public partial class Engine : IEnumerable<Class> {
-		public Engine()
+		public Engine ()
 		{
 		}
 
 		private IAssembly asm = null;
 
 		public IAssembly Assembly {
-			get { return asm; }
+			get {
+				return asm;
+			}
 		}
-	
-		public void Run (IAssembly asm, string assembly, string target) 
+
+		public void Run (IAssembly asm, string assembly, string target)
 		{
 			this.asm = asm;
 
 			AssemblyDefinition library = AssemblyFactory.GetAssembly (assembly);
-         
+
 			// We first add the data (Classes and Methods)
 			foreach (TypeDefinition type in library.MainModule.Types) {
-				Console.WriteLine(type.Name);
+				Console.WriteLine (type.Name);
 
 				if (type.Name.Equals ("<Module>"))
 					continue;
 
-				Console.WriteLine(type.FullName);
+				Console.WriteLine (type.FullName);
 
 				Class _class = new Class (this, type);
+
 				this.classes.Add (_class);
 
 				foreach (MethodDefinition entry in type.Constructors) {
-					if (!entry.Name.Equals(".cctor"))
+					if (!entry.Name.Equals (".cctor"))
 						continue;
-	                    
+
 					Method method = new Method (this, entry);
 
 					_class.Add (method);
@@ -65,6 +67,7 @@ namespace SharpOS.AOT.IR
 				}
 
 				foreach (MethodDefinition entry in type.Methods) {
+
 					if (entry.IsStatic == false || entry.ImplAttributes != MethodImplAttributes.Managed) {
 						Console.WriteLine ("Not processing '" + entry.DeclaringType.FullName + "." + entry.Name + "'");
 
@@ -76,7 +79,7 @@ namespace SharpOS.AOT.IR
 					_class.Add (method);
 				}
 			}
-			
+
 			foreach (Class _class in this.classes) {
 				foreach (Method _method in _class) {
 					_method.Process ();
@@ -93,93 +96,93 @@ namespace SharpOS.AOT.IR
 		IEnumerator<Class> IEnumerable<Class>.GetEnumerator ()
 		{
 			foreach (Class _class in this.classes)
-				yield return _class;
+			yield return _class;
 		}
 
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
-			return ((IEnumerable<Class>) this).GetEnumerator ();
+			return ( (IEnumerable<Class>) this).GetEnumerator ();
 		}
 
-		public Operands.Operand.InternalSizeType GetSizeType(string type)
+		public Operands.Operand.InternalSizeType GetSizeType (string type)
 		{
-			if (type.EndsWith("*"))
+			if (type.EndsWith ("*"))
 				return Operands.Operand.InternalSizeType.U;
-			else if (type.EndsWith("[]"))
+			else if (type.EndsWith ("[]"))
 				return Operands.Operand.InternalSizeType.U;
 
-			else if (type.Equals("System.Boolean"))
+			else if (type.Equals ("System.Boolean"))
 				return Operands.Operand.InternalSizeType.U1;
-			else if (type.Equals("bool"))
+			else if (type.Equals ("bool"))
 				return Operands.Operand.InternalSizeType.U1;
 
-			else if (type.Equals("System.Byte"))
+			else if (type.Equals ("System.Byte"))
 				return Operands.Operand.InternalSizeType.U1;
-			else if (type.Equals("System.SByte"))
+			else if (type.Equals ("System.SByte"))
 				return Operands.Operand.InternalSizeType.I1;
 
-			else if (type.Equals("char"))
+			else if (type.Equals ("char"))
 				return Operands.Operand.InternalSizeType.U2;
-			else if (type.Equals("short"))
+			else if (type.Equals ("short"))
 				return Operands.Operand.InternalSizeType.I2;
-			else if (type.Equals("ushort"))
+			else if (type.Equals ("ushort"))
 				return Operands.Operand.InternalSizeType.U2;
-			else if (type.Equals("System.UInt16"))
+			else if (type.Equals ("System.UInt16"))
 				return Operands.Operand.InternalSizeType.U2;
-			else if (type.Equals("System.Int16"))
+			else if (type.Equals ("System.Int16"))
 				return Operands.Operand.InternalSizeType.I2;
 
-			else if (type.Equals("int"))
+			else if (type.Equals ("int"))
 				return Operands.Operand.InternalSizeType.I4;
-			else if (type.Equals("uint"))
+			else if (type.Equals ("uint"))
 				return Operands.Operand.InternalSizeType.U4;
-			else if (type.Equals("System.UInt32"))
+			else if (type.Equals ("System.UInt32"))
 				return Operands.Operand.InternalSizeType.U4;
-			else if (type.Equals("System.Int32"))
+			else if (type.Equals ("System.Int32"))
 				return Operands.Operand.InternalSizeType.I4;
 
-			else if (type.Equals("long"))
+			else if (type.Equals ("long"))
 				return Operands.Operand.InternalSizeType.I8;
-			else if (type.Equals("ulong"))
+			else if (type.Equals ("ulong"))
 				return Operands.Operand.InternalSizeType.U8;
-			else if (type.Equals("System.UInt64"))
+			else if (type.Equals ("System.UInt64"))
 				return Operands.Operand.InternalSizeType.U8;
-			else if (type.Equals("System.Int64"))
+			else if (type.Equals ("System.Int64"))
 				return Operands.Operand.InternalSizeType.I8;
 
-			else if (type.Equals("float"))
+			else if (type.Equals ("float"))
 				return Operands.Operand.InternalSizeType.R4;
-			else if (type.Equals("System.Single"))
+			else if (type.Equals ("System.Single"))
 				return Operands.Operand.InternalSizeType.R4;
 
-			else if (type.Equals("double"))
+			else if (type.Equals ("double"))
 				return Operands.Operand.InternalSizeType.R8;
-			else if (type.Equals("System.Double"))
+			else if (type.Equals ("System.Double"))
 				return Operands.Operand.InternalSizeType.R8;
 
-			else if (type.Equals("string"))
+			else if (type.Equals ("string"))
 				return Operands.Operand.InternalSizeType.U;
-			else if (type.Equals("System.String"))
+			else if (type.Equals ("System.String"))
 				return Operands.Operand.InternalSizeType.U;
-			else if (this.Assembly != null && this.Assembly.IsRegister(type))
-				return this.Assembly.GetRegisterSizeType(type);
-			
+			else if (this.Assembly != null && this.Assembly.IsRegister (type))
+				return this.Assembly.GetRegisterSizeType (type);
+
 			foreach (Class _class in this.classes) {
 				if (_class.ClassDefinition.FullName.Equals (type)) {
 					if (_class.ClassDefinition.IsEnum) {
 						foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-							if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
-								return this.GetSizeType(field.FieldType.FullName);
-							}
+							if ( (field.Attributes & FieldAttributes.RTSpecialName) != 0) 
+								return this.GetSizeType (field.FieldType.FullName);
 						}
+
 					} else
 						break;
-				}									
+				}
 			}
 
-			throw new Exception("'" + type + "' not supported.");
+			throw new Exception ("'" + type + "' not supported.");
 		}
-		
+
 	}
 }
 
