@@ -45,9 +45,10 @@ namespace SharpOS
 
 	public unsafe static void BootEntry ()
 	{
-		SetAttributes (ColorTypes.Black, ColorTypes.Green);
+		SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
 
-		WriteLine (Intro);
+		WriteLine (String ("SharpOS v0.0.0.0.99 (http://www.sharpos.org)"));
+		WriteLine (String ("SharpOS v0.0.0.0.99 (http://www.sharpos.org)"));
 		WriteNL ();
 		WriteCPUIDInfo ();
 
@@ -55,7 +56,7 @@ namespace SharpOS
 		y = 24;
 
 		SetAttributes (ColorTypes.Magenta, ColorTypes.Black);
-		WriteLine (Footer);
+		WriteLine (String ("and the mandatory \"Hello World\""));
 		RestoreAttributes ();
 	}
 
@@ -101,52 +102,52 @@ namespace SharpOS
 		Asm.MOV (&edx, R32.EDX);
 		Asm.MOV (&ecx, R32.ECX);
 
-		WriteMessage (CPU_Family);
+		WriteMessage (String ("CPU Family: "));
 		SetAttributes (ColorTypes.LightCyan, ColorTypes.Black);
 		WriteByte ((byte)((eax >> 8) & 0x0F));
 		RestoreAttributes ();
 		WriteNL ();
 
-		WriteMessage (CPU_Model);
+		WriteMessage (String ("CPU Model: "));
 		SetAttributes (ColorTypes.LightCyan, ColorTypes.Black);
 		WriteByte ((byte)((eax >> 4) & 0x0F));
 		RestoreAttributes ();
 		WriteNL ();
 
-		WriteMessage (CPU_Stepping);
+		WriteMessage (String ("CPU Stepping: "));
 		SetAttributes (ColorTypes.LightCyan, ColorTypes.Black);
 		WriteByte ((byte)(eax & 0x0F));
 		RestoreAttributes ();
 		WriteNL ();
 
-		WriteMessage (CPU_Flags);
+		WriteMessage (String ("CPU Flags: "));
 		SetAttributes (ColorTypes.LightCyan, ColorTypes.Black);
 
-		if ((edx & 0x000000001) != 0) WriteMessage (CPU_FLAGS_FPU); 
-		if ((edx & 0x000000002) != 0) WriteMessage (CPU_FLAGS_VME); 
-		if ((edx & 0x000000004) != 0) WriteMessage (CPU_FLAGS_DE); 
-		if ((edx & 0x000000008) != 0) WriteMessage (CPU_FLAGS_PSE); 
-		if ((edx & 0x000000010) != 0) WriteMessage (CPU_FLAGS_TSC); 
-		if ((edx & 0x000000020) != 0) WriteMessage (CPU_FLAGS_MSR); 
-		if ((edx & 0x000000040) != 0) WriteMessage (CPU_FLAGS_PAE); 
-		if ((edx & 0x000000080) != 0) WriteMessage (CPU_FLAGS_MCE); 
-		if ((edx & 0x000000100) != 0) WriteMessage (CPU_FLAGS_CX8); 
-		if ((edx & 0x000000200) != 0) WriteMessage (CPU_FLAGS_APIC); 
-		if ((edx & 0x000000800) != 0) WriteMessage (CPU_FLAGS_SEP); 
-		if ((edx & 0x000004000) != 0) WriteMessage (CPU_FLAGS_MTRR); 
-		if ((edx & 0x000002000) != 0) WriteMessage (CPU_FLAGS_PGE); 
-		if ((edx & 0x000004000) != 0) WriteMessage (CPU_FLAGS_MCA); 
-		if ((edx & 0x000008000) != 0) WriteMessage (CPU_FLAGS_CMOV); 
-		if ((edx & 0x000010000) != 0) WriteMessage (CPU_FLAGS_PAT); 
-		if ((edx & 0x000020000) != 0) WriteMessage (CPU_FLAGS_PSE36); 
-		if ((edx & 0x000100000) != 0) WriteMessage (CPU_FLAGS_NEPP); 
-		if ((edx & 0x000400000) != 0) WriteMessage (CPU_FLAGS_MMXEXT); 
-		if ((edx & 0x000800000) != 0) WriteMessage (CPU_FLAGS_MMX); 
-		if ((edx & 0x001000000) != 0) WriteMessage (CPU_FLAGS_FXSAVE); 
-		if ((edx & 0x002000000) != 0) WriteMessage (CPU_FLAGS_FFXSAVE); 
-		if ((edx & 0x020000000) != 0) WriteMessage (CPU_FLAGS_EM64T); 
-		if ((edx & 0x040000000) != 0) WriteMessage (CPU_FLAGS_3DNOWX); 
-		if ((edx & 0x080000000) != 0) WriteMessage (CPU_FLAGS_3DNOW); 
+		if ((edx & 0x000000001) != 0) WriteMessage (String ("FPU ")); 
+		if ((edx & 0x000000002) != 0) WriteMessage (String ("VME ")); 
+		if ((edx & 0x000000004) != 0) WriteMessage (String ("DE ")); 
+		if ((edx & 0x000000008) != 0) WriteMessage (String ("PSE ")); 
+		if ((edx & 0x000000010) != 0) WriteMessage (String ("TSC ")); 
+		if ((edx & 0x000000020) != 0) WriteMessage (String ("MSR ")); 
+		if ((edx & 0x000000040) != 0) WriteMessage (String ("PAE ")); 
+		if ((edx & 0x000000080) != 0) WriteMessage (String ("MCE ")); 
+		if ((edx & 0x000000100) != 0) WriteMessage (String ("CX8 ")); 
+		if ((edx & 0x000000200) != 0) WriteMessage (String ("APIC ")); 
+		if ((edx & 0x000000800) != 0) WriteMessage (String ("SEP ")); 
+		if ((edx & 0x000004000) != 0) WriteMessage (String ("MTRR ")); 
+		if ((edx & 0x000002000) != 0) WriteMessage (String ("PGE ")); 
+		if ((edx & 0x000004000) != 0) WriteMessage (String ("MCA ")); 
+		if ((edx & 0x000008000) != 0) WriteMessage (String ("CMOV ")); 
+		if ((edx & 0x000010000) != 0) WriteMessage (String ("PAT ")); 
+		if ((edx & 0x000020000) != 0) WriteMessage (String ("PSE36 ")); 
+		if ((edx & 0x000100000) != 0) WriteMessage (String ("NEPP ")); 
+		if ((edx & 0x000400000) != 0) WriteMessage (String ("MMXEXT ")); 
+		if ((edx & 0x000800000) != 0) WriteMessage (String ("MMX ")); 
+		if ((edx & 0x001000000) != 0) WriteMessage (String ("FXSAVE ")); 
+		if ((edx & 0x002000000) != 0) WriteMessage (String ("FFXSAVE ")); 
+		if ((edx & 0x020000000) != 0) WriteMessage (String ("EM64T ")); 
+		if ((edx & 0x040000000) != 0) WriteMessage (String ("3DNOWX ")); 
+		if ((edx & 0x080000000) != 0) WriteMessage (String ("3DNOW ")); 
 
 		RestoreAttributes ();
 		WriteNL ();
@@ -155,7 +156,7 @@ namespace SharpOS
         public unsafe static void WriteNoCPUID ()
         {
 		SetAttributes (ColorTypes.LightRed, ColorTypes.Black);
-		WriteLine (NO_CPUID);
+		WriteLine (String ("No CPUID!"));
 		RestoreAttributes ();
         }
 
@@ -170,7 +171,7 @@ namespace SharpOS
 		Asm.MOV (&edx, R32.EDX);
 		Asm.MOV (&ecx, R32.ECX);
 
-		WriteMessage (CPU_Vendor);
+		WriteMessage (String ("CPU Vendor: "));
 		SetAttributes (ColorTypes.LightCyan, ColorTypes.Black);
 		WriteString (ebx);
 		WriteString (edx);
@@ -199,7 +200,7 @@ namespace SharpOS
         public unsafe static void WriteBrandName ()
         {
 		// Brand Name
-		WriteMessage (CPU_Brand);
+		WriteMessage (String ("CPU Brand: "));
 		SetAttributes (ColorTypes.LightCyan, ColorTypes.Black);
                 
 		for (uint i = 0x80000002; i <= 0x80000004; i++)
@@ -252,41 +253,6 @@ namespace SharpOS
         {
 		return null;
         }
-
-        public unsafe static byte* Intro = String("SharpOS v0.0.0.0.99 (http://www.sharpos.org)");
-        public unsafe static byte* Footer = String("and the mandatory \"Hello World\"");
-        public unsafe static byte* NO_CPUID = String("No CPUID!");
-        public unsafe static byte* CPU_Vendor = String("CPU Vendor: ");
-        public unsafe static byte* CPU_Brand = String("CPU Brand: ");
-        public unsafe static byte* CPU_Family = String("CPU Family: ");
-        public unsafe static byte* CPU_Model = String("CPU Model: ");
-        public unsafe static byte* CPU_Stepping = String("CPU Stepping: ");
-        public unsafe static byte* CPU_Flags = String("CPU Flags: ");
-        public unsafe static byte* CPU_FLAGS_FPU = String("FPU ");
-        public unsafe static byte* CPU_FLAGS_VME = String("VME ");
-        public unsafe static byte* CPU_FLAGS_DE = String("DE ");
-        public unsafe static byte* CPU_FLAGS_PSE = String("PSE ");
-        public unsafe static byte* CPU_FLAGS_TSC = String("TSC ");
-        public unsafe static byte* CPU_FLAGS_MSR = String("MSR ");
-        public unsafe static byte* CPU_FLAGS_PAE = String("PAE ");
-        public unsafe static byte* CPU_FLAGS_MCE = String("MCE ");
-        public unsafe static byte* CPU_FLAGS_CX8 = String("CX8 ");
-        public unsafe static byte* CPU_FLAGS_APIC = String("APIC ");
-        public unsafe static byte* CPU_FLAGS_SEP = String("SEP ");
-        public unsafe static byte* CPU_FLAGS_MTRR = String("MTRR ");
-        public unsafe static byte* CPU_FLAGS_PGE = String("PGE ");
-        public unsafe static byte* CPU_FLAGS_MCA = String("MCA ");
-        public unsafe static byte* CPU_FLAGS_CMOV = String("CMOV ");
-        public unsafe static byte* CPU_FLAGS_PAT = String("PAT ");
-        public unsafe static byte* CPU_FLAGS_PSE36 = String("PSE36 ");
-        public unsafe static byte* CPU_FLAGS_NEPP = String("NEPP ");
-        public unsafe static byte* CPU_FLAGS_MMXEXT = String("MMXEXT ");
-        public unsafe static byte* CPU_FLAGS_MMX = String("MMX ");
-        public unsafe static byte* CPU_FLAGS_FXSAVE = String("FXSAVE ");
-        public unsafe static byte* CPU_FLAGS_FFXSAVE = String("FFXSAVE ");
-        public unsafe static byte* CPU_FLAGS_EM64T = String("EM64T ");
-        public unsafe static byte* CPU_FLAGS_3DNOWX = String("3DNOWX ");
-        public unsafe static byte* CPU_FLAGS_3DNOW = String("3DNOW ");
 
         public unsafe static void WriteNL ()
         {

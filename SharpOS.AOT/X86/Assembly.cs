@@ -1175,16 +1175,22 @@ namespace SharpOS.AOT.X86
             return false;
         }
 
-        
+        Dictionary <string, string> strings = new Dictionary <string, string> ();
+
         internal string AddString(string value)
         {
-            string label = this.GetFreeResourceLabel;
+		if (strings.ContainsKey (value))
+			return strings [value];
+		
+		string label = this.GetFreeResourceLabel;
 
-            data.LABEL(label);
-            data.DATA(value);
-            data.DATA((byte)0);
+		strings.Add (value, label);
 
-            return label;
+		data.LABEL (label);
+		data.DATA (value);
+		data.DATA ((byte)0);
+
+		return label;
         }
 
         
