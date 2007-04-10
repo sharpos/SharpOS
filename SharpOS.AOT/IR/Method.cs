@@ -64,8 +64,7 @@ namespace SharpOS.AOT.IR
         {
             Argument argument = new Argument(i);
 
-            argument.SetSizeType(this.methodDefinition.Parameters[i - 1].ParameterType.FullName, this.engine.Assembly);
-
+	    argument.SizeType = this.engine.GetSizeType(this.methodDefinition.Parameters[i - 1].ParameterType.FullName);
             return argument;
         }
 
@@ -73,7 +72,7 @@ namespace SharpOS.AOT.IR
         {
             Local local = new Local(i);
 
-            local.SetSizeType(this.methodDefinition.Body.Variables[i].VariableType.FullName, this.engine.Assembly);
+            local.SizeType = this.engine.GetSizeType(this.methodDefinition.Body.Variables[i].VariableType.FullName);
 
             return local;
         }
@@ -2213,7 +2212,7 @@ namespace SharpOS.AOT.IR
                                 {
                                     found = true;
                                     Operands.Call call = assign.Value as Operands.Call;
-                                    assign.Asignee.SetSizeType(call.Method.ReturnType.ReturnType.FullName, this.engine.Assembly);
+				    assign.Asignee.SizeType = this.engine.GetSizeType(call.Method.ReturnType.ReturnType.FullName);
                                 }
                                 else if (assign.Value is Operands.Boolean == true)
                                 {

@@ -452,103 +452,103 @@ namespace SharpOS.AOT.X86
             this.AddLSAR();
         }
 
-        public bool Encode(Engine engine, string target)
+	public bool Encode(Engine engine, string target)
         {
-            MemoryStream memoryStream = new MemoryStream();
-            data = new Assembly();
+		MemoryStream memoryStream = new MemoryStream();
+		data = new Assembly();
 
-            bool addCTOR = false;
+		bool addCTOR = false;
 
-            foreach (Class _class in engine)
-            {
-                if (_class.ClassDefinition.FullName.Equals(KERNEL_CLASS) == false)
-                {
-                    continue;
-                }
+		foreach (Class _class in engine) {
+			if (!_class.ClassDefinition.FullName.Equals(KERNEL_CLASS))
+				continue;
 
-                foreach (Method method in _class)
-                {
-                    if (method.MethodFullName.Equals(KERNEL_CTOR) == true)
-                    {
-                        addCTOR = true;
-                        break;
-                    }
-                }
-            }
+			foreach (Method method in _class) {
+				if (method.MethodFullName.Equals(KERNEL_CTOR)) {
+					addCTOR = true;
+					break;
+				}
+			}
+			
+			if (addCTOR)
+				break;
+		}
 
-            this.AddMultibootHeader(addCTOR);
+		this.AddMultibootHeader(addCTOR);
 
-            foreach (Class _class in engine)
-            {
-                foreach (Method method in _class)
-                {
-                    AssemblyMethod assemblyMethod = new AssemblyMethod(this, method);
-                    assemblyMethod.GetAssemblyCode();
-                }
-            }
+		foreach (Class _class in engine) {
+			foreach (Method method in _class) {
+				AssemblyMethod assemblyMethod = new AssemblyMethod(this, method);
+				assemblyMethod.GetAssemblyCode();
+			}
+		}
 
-            this.AddHelperFunctions();
+		this.AddHelperFunctions();
 
-            foreach (Class _class in engine)
-            {
-                foreach (FieldDefinition field in _class.ClassDefinition.Fields)
-                {
-                    string fullname = field.DeclaringType.FullName + "." + field.Name;
+		foreach (Class _class in engine) {
+			if (_class.ClassDefinition.IsEnum)
+				continue;
+			
+			foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
+				string fullname = field.DeclaringType.FullName + "." + field.Name;
 
-                    if (field.IsStatic == false)
-                    {
-                        Console.WriteLine("Not processing '" + fullname + "'");
+				if (field.IsStatic == false) {
+					Console.WriteLine("Not processing '" + fullname + "'");
 
-                        continue;
-                    }
+					continue;
+				}
 
-                    this.LABEL(fullname);
+				this.LABEL(fullname);
 
-                    // TODO implement the other types
-                    if (field.FieldType.ToString().EndsWith("byte") == true
-                        || field.FieldType.ToString().Equals("System.Byte") == true
-                        || field.FieldType.ToString().Equals("System.SByte") == true)
-                    {
-                        this.DATA((byte)0);
-                    }
-                    else if (field.FieldType.ToString().EndsWith("*") == true
-                        || field.FieldType.ToString().Equals("System.Int32") == true
-                        || field.FieldType.ToString().Equals("System.UInt32") == true)
-                    {
-                        this.DATA((uint)0);
-                    }
-                    else if (field.FieldType.ToString().Equals("System.Int64") == true
-                        || field.FieldType.ToString().Equals("System.UInt64") == true)
-                    {
-                        this.DATA((uint)0);
-                        this.DATA((uint)0);
-                    }
-                    else
-                    {
-                        throw new Exception("'" + field.FieldType + "' is not supported.");
-                    }
-                }
-            }
+				switch (engine.GetSizeType(field.FieldType.FullName)) {
+					case Operand.InternalSizeType.I1:
+					case Operand.InternalSizeType.U1:
+						this.DATA ((byte) 0);
+						break;
+						
+					case Operand.InternalSizeType.I2:
+					case Operand.InternalSizeType.U2:
+						this.DATA ((ushort) 0);
+						break;
+						
+					case Operand.InternalSizeType.I:
+					case Operand.InternalSizeType.U:
+					case Operand.InternalSizeType.I4:
+					case Operand.InternalSizeType.U4:
+					case Operand.InternalSizeType.R4:
+						this.DATA ((uint) 0);
+						break;
+					
+					case Operand.InternalSizeType.I8:
+					case Operand.InternalSizeType.U8:
+					case Operand.InternalSizeType.R8:
+						this.DATA ((uint) 0);
+						this.DATA ((uint) 0);
+						break;
+					
+					default:
+						throw new Exception("'" + field.FieldType + "' is not supported.");
+				}
+			}
+		}	
 
-            foreach (Instruction instruction in data.instructions)
-            {
-                this.instructions.Add(instruction);
-            }
+		foreach (Instruction instruction in data.instructions) 
+			this.instructions.Add(instruction);
 
-            this.ALIGN(4096);
-            this.LABEL(END_DATA);
+		this.ALIGN(4096);
+		this.LABEL(END_DATA);
 
-            this.TIMES(8192, 0);
-            this.LABEL(END_STACK);
+		this.TIMES(8192, 0);
+		this.LABEL(END_STACK);
 
-            this.Encode(memoryStream);
+		this.Encode(memoryStream);
             
-            FileStream fileStream = new FileStream(target, FileMode.Create);
-            memoryStream.WriteTo(fileStream);
-            fileStream.Close();
+		FileStream fileStream = new FileStream (target, FileMode.Create);
+		memoryStream.WriteTo (fileStream);
+		fileStream.Close ();
             
-            return true;
-        }
+		return true;
+	}
 
         public bool Encode(MemoryStream memoryStream)
         {

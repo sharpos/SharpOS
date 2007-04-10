@@ -349,7 +349,7 @@ namespace SharpOS.AOT.X86
 
             foreach (ParameterDefinition parameter in call.Method.Parameters)
             {
-                Operand.InternalSizeType sizeType = Operand.GetSizeType(parameter.ParameterType.ToString(), this.assembly);
+		    Operand.InternalSizeType sizeType = this.method.Engine.GetSizeType(parameter.ParameterType.ToString());
 
                 if (sizeType == Operand.InternalSizeType.I8
                     || sizeType == Operand.InternalSizeType.U8
@@ -1504,29 +1504,24 @@ namespace SharpOS.AOT.X86
 
         private int GetArgumentOffset(int index)
         {
-            int i = 0;
-            int result = 2;
+		int i = 0;
+		int result = 2;
 
-            foreach (ParameterDefinition parameter in this.method.MethodDefinition.Parameters)
-            {
-                Operand.InternalSizeType sizeType = Operand.GetSizeType(parameter.ParameterType.ToString(), this.assembly);
+		foreach (ParameterDefinition parameter in this.method.MethodDefinition.Parameters) {
+			Operand.InternalSizeType sizeType = this.method.Engine.GetSizeType(parameter.ParameterType.ToString());
 
-                if (++i == index)
-                {
-                    break;
-                }
+			if (++i == index)
+				break;
 
-                result++;
+			result++;
 
-                if (sizeType == Operand.InternalSizeType.I8
-                    || sizeType == Operand.InternalSizeType.U8
-                    || sizeType == Operand.InternalSizeType.R8)
-                {
-                    result++;
-                }
-            }
+			if (sizeType == Operand.InternalSizeType.I8
+				|| sizeType == Operand.InternalSizeType.U8
+				|| sizeType == Operand.InternalSizeType.R8)
+				result++;
+		}
 
-            return result;
+		return result;
         }
 
         private void MovMemoryRegister(Assign assign)
