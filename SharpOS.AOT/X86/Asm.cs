@@ -1,6137 +1,10716 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+//
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 
-namespace SharpOS.AOT.X86
-{
+namespace SharpOS.AOT.X86 {
 	/// <summary>
-	/// This class encapsulates machine code stubs, that when used by kernel code,
+	/// This class encapsulates machine code stubs, that when used by kernel code, 
 	/// and then AOTed, are expressed as their respective machine language operations.
 	/// </summary>
-
-	public class Asm
-	{
-
-		// AAA
-
+	public class Asm {
+		
+		/// <summary>
+		/// AAA 
+		/// </summary>
 		public static void AAA ()
-		{}
-
-		// AAD
+		{
+		}
+		
+		/// <summary>
+		/// AAD 
+		/// </summary>
 		public static void AAD ()
-		{}
-
-		// AAD imm8
+		{
+		}
+		
+		/// <summary>
+		/// AAD imm8
+		/// </summary>
 		public static void AAD (Byte target)
-		{}
-
-		// AAM
+		{
+		}
+		
+		/// <summary>
+		/// AAM 
+		/// </summary>
 		public static void AAM ()
-		{}
-
-		// AAM imm8
+		{
+		}
+		
+		/// <summary>
+		/// AAM imm8
+		/// </summary>
 		public static void AAM (Byte target)
-		{}
-
-		// AAS
+		{
+		}
+		
+		/// <summary>
+		/// AAS 
+		/// </summary>
 		public static void AAS ()
-		{}
-
-		// ADC mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem8,reg8
+		/// </summary>
 		public static void ADC (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem8,reg8
+		/// </summary>
 		public unsafe static void ADC (byte *target, R8Type source)
-
-		{}
-
-		// ADC mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem16,reg16
+		/// </summary>
 		public static void ADC (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem16,reg16
+		/// </summary>
 		public unsafe static void ADC (UInt16 *target, R16Type source)
-
-		{}
-
-		// ADC mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem32,reg32
+		/// </summary>
 		public static void ADC (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem32,reg32
+		/// </summary>
 		public unsafe static void ADC (UInt32 *target, R32Type source)
-
-		{}
-
-		// ADC reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// ADC reg8,mem8
+		/// </summary>
 		public static void ADC (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC reg8,mem8
+		/// </summary>
 		public unsafe static void ADC (R8Type target, byte *source)
-
-		{}
-
-		// ADC reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// ADC reg16,mem16
+		/// </summary>
 		public static void ADC (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC reg16,mem16
+		/// </summary>
 		public unsafe static void ADC (R16Type target, UInt16 *source)
-
-		{}
-
-		// ADC reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// ADC reg32,mem32
+		/// </summary>
 		public static void ADC (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC reg32,mem32
+		/// </summary>
 		public unsafe static void ADC (R32Type target, UInt32 *source)
-
-		{}
-
-		// ADC mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem8,imm8
+		/// </summary>
 		public static void ADC (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem8,imm8
+		/// </summary>
 		public unsafe static void ADC (byte *target, Byte source)
-
-		{}
-
-		// ADC mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem16,imm16
+		/// </summary>
 		public static void ADC (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem16,imm16
+		/// </summary>
 		public unsafe static void ADC (UInt16 *target, UInt16 source)
-
-		{}
-
-		// ADC mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem32,imm32
+		/// </summary>
 		public static void ADC (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem32,imm32
+		/// </summary>
 		public unsafe static void ADC (UInt32 *target, UInt32 source)
-
-		{}
-
-		// ADC mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem16,imm8
+		/// </summary>
 		public static void ADC (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem16,imm8
+		/// </summary>
 		public unsafe static void ADC (UInt16 *target, Byte source)
-
-		{}
-
-		// ADC mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem32,imm8
+		/// </summary>
 		public static void ADC (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADC mem32,imm8
+		/// </summary>
 		public unsafe static void ADC (UInt32 *target, Byte source)
-
-		{}
-
-		// ADC rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// ADC rmreg8,reg8
+		/// </summary>
 		public static void ADC (R8Type target, R8Type source)
-		{}
-
-		// ADC rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// ADC rmreg16,reg16
+		/// </summary>
 		public static void ADC (R16Type target, R16Type source)
-		{}
-
-		// ADC rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// ADC rmreg32,reg32
+		/// </summary>
 		public static void ADC (R32Type target, R32Type source)
-		{}
-
-		// ADC rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADC rmreg8,imm8
+		/// </summary>
 		public static void ADC (R8Type target, Byte source)
-		{}
-
-		// ADC rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// ADC rmreg16,imm16
+		/// </summary>
 		public static void ADC (R16Type target, UInt16 source)
-		{}
-
-		// ADC rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// ADC rmreg32,imm32
+		/// </summary>
 		public static void ADC (R32Type target, UInt32 source)
-		{}
-
-		// ADC rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADC rmreg16,imm8
+		/// </summary>
 		public static void ADC (R16Type target, Byte source)
-		{}
-
-		// ADC rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADC rmreg32,imm8
+		/// </summary>
 		public static void ADC (R32Type target, Byte source)
-		{}
-
-		// ADD mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem8,reg8
+		/// </summary>
 		public static void ADD (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem8,reg8
+		/// </summary>
 		public unsafe static void ADD (byte *target, R8Type source)
-
-		{}
-
-		// ADD mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem16,reg16
+		/// </summary>
 		public static void ADD (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem16,reg16
+		/// </summary>
 		public unsafe static void ADD (UInt16 *target, R16Type source)
-
-		{}
-
-		// ADD mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem32,reg32
+		/// </summary>
 		public static void ADD (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem32,reg32
+		/// </summary>
 		public unsafe static void ADD (UInt32 *target, R32Type source)
-
-		{}
-
-		// ADD reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// ADD reg8,mem8
+		/// </summary>
 		public static void ADD (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD reg8,mem8
+		/// </summary>
 		public unsafe static void ADD (R8Type target, byte *source)
-
-		{}
-
-		// ADD reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// ADD reg16,mem16
+		/// </summary>
 		public static void ADD (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD reg16,mem16
+		/// </summary>
 		public unsafe static void ADD (R16Type target, UInt16 *source)
-
-		{}
-
-		// ADD reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// ADD reg32,mem32
+		/// </summary>
 		public static void ADD (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD reg32,mem32
+		/// </summary>
 		public unsafe static void ADD (R32Type target, UInt32 *source)
-
-		{}
-
-		// ADD mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem8,imm8
+		/// </summary>
 		public static void ADD (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem8,imm8
+		/// </summary>
 		public unsafe static void ADD (byte *target, Byte source)
-
-		{}
-
-		// ADD mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem16,imm16
+		/// </summary>
 		public static void ADD (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem16,imm16
+		/// </summary>
 		public unsafe static void ADD (UInt16 *target, UInt16 source)
-
-		{}
-
-		// ADD mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem32,imm32
+		/// </summary>
 		public static void ADD (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem32,imm32
+		/// </summary>
 		public unsafe static void ADD (UInt32 *target, UInt32 source)
-
-		{}
-
-		// ADD mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem16,imm8
+		/// </summary>
 		public static void ADD (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem16,imm8
+		/// </summary>
 		public unsafe static void ADD (UInt16 *target, Byte source)
-
-		{}
-
-		// ADD mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem32,imm8
+		/// </summary>
 		public static void ADD (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ADD mem32,imm8
+		/// </summary>
 		public unsafe static void ADD (UInt32 *target, Byte source)
-
-		{}
-
-		// ADD rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// ADD rmreg8,reg8
+		/// </summary>
 		public static void ADD (R8Type target, R8Type source)
-		{}
-
-		// ADD rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// ADD rmreg16,reg16
+		/// </summary>
 		public static void ADD (R16Type target, R16Type source)
-		{}
-
-		// ADD rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// ADD rmreg32,reg32
+		/// </summary>
 		public static void ADD (R32Type target, R32Type source)
-		{}
-
-		// ADD rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADD rmreg8,imm8
+		/// </summary>
 		public static void ADD (R8Type target, Byte source)
-		{}
-
-		// ADD rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// ADD rmreg16,imm16
+		/// </summary>
 		public static void ADD (R16Type target, UInt16 source)
-		{}
-
-		// ADD rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// ADD rmreg32,imm32
+		/// </summary>
 		public static void ADD (R32Type target, UInt32 source)
-		{}
-
-		// ADD rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADD rmreg16,imm8
+		/// </summary>
 		public static void ADD (R16Type target, Byte source)
-		{}
-
-		// ADD rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ADD rmreg32,imm8
+		/// </summary>
 		public static void ADD (R32Type target, Byte source)
-		{}
-
-		// ALIGN
+		{
+		}
+		
+		/// <summary>
+		/// ALIGN 
+		/// </summary>
 		public static void ALIGN (UInt32 value)
-		{}
-
-		// AND mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// AND mem8,reg8
+		/// </summary>
 		public static void AND (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND mem8,reg8
+		/// </summary>
 		public unsafe static void AND (byte *target, R8Type source)
-
-		{}
-
-		// AND mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// AND mem16,reg16
+		/// </summary>
 		public static void AND (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND mem16,reg16
+		/// </summary>
 		public unsafe static void AND (UInt16 *target, R16Type source)
-
-		{}
-
-		// AND mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// AND mem32,reg32
+		/// </summary>
 		public static void AND (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND mem32,reg32
+		/// </summary>
 		public unsafe static void AND (UInt32 *target, R32Type source)
-
-		{}
-
-		// AND reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// AND reg8,mem8
+		/// </summary>
 		public static void AND (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND reg8,mem8
+		/// </summary>
 		public unsafe static void AND (R8Type target, byte *source)
-
-		{}
-
-		// AND reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// AND reg16,mem16
+		/// </summary>
 		public static void AND (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND reg16,mem16
+		/// </summary>
 		public unsafe static void AND (R16Type target, UInt16 *source)
-
-		{}
-
-		// AND reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// AND reg32,mem32
+		/// </summary>
 		public static void AND (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND reg32,mem32
+		/// </summary>
 		public unsafe static void AND (R32Type target, UInt32 *source)
-
-		{}
-
-		// AND mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// AND mem8,imm8
+		/// </summary>
 		public static void AND (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND mem8,imm8
+		/// </summary>
 		public unsafe static void AND (byte *target, Byte source)
-
-		{}
-
-		// AND mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// AND mem16,imm16
+		/// </summary>
 		public static void AND (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND mem16,imm16
+		/// </summary>
 		public unsafe static void AND (UInt16 *target, UInt16 source)
-
-		{}
-
-		// AND mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// AND mem32,imm32
+		/// </summary>
 		public static void AND (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND mem32,imm32
+		/// </summary>
 		public unsafe static void AND (UInt32 *target, UInt32 source)
-
-		{}
-
-		// AND mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// AND mem16,imm8
+		/// </summary>
 		public static void AND (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND mem16,imm8
+		/// </summary>
 		public unsafe static void AND (UInt16 *target, Byte source)
-
-		{}
-
-		// AND mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// AND mem32,imm8
+		/// </summary>
 		public static void AND (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// AND mem32,imm8
+		/// </summary>
 		public unsafe static void AND (UInt32 *target, Byte source)
-
-		{}
-
-		// AND rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// AND rmreg8,reg8
+		/// </summary>
 		public static void AND (R8Type target, R8Type source)
-		{}
-
-		// AND rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// AND rmreg16,reg16
+		/// </summary>
 		public static void AND (R16Type target, R16Type source)
-		{}
-
-		// AND rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// AND rmreg32,reg32
+		/// </summary>
 		public static void AND (R32Type target, R32Type source)
-		{}
-
-		// AND rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// AND rmreg8,imm8
+		/// </summary>
 		public static void AND (R8Type target, Byte source)
-		{}
-
-		// AND rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// AND rmreg16,imm16
+		/// </summary>
 		public static void AND (R16Type target, UInt16 source)
-		{}
-
-		// AND rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// AND rmreg32,imm32
+		/// </summary>
 		public static void AND (R32Type target, UInt32 source)
-		{}
-
-		// AND rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// AND rmreg16,imm8
+		/// </summary>
 		public static void AND (R16Type target, Byte source)
-		{}
-
-		// AND rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// AND rmreg32,imm8
+		/// </summary>
 		public static void AND (R32Type target, Byte source)
-		{}
-
-		// ARPL mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// ARPL mem16,reg16
+		/// </summary>
 		public static void ARPL (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ARPL mem16,reg16
+		/// </summary>
 		public unsafe static void ARPL (UInt16 *target, R16Type source)
-
-		{}
-
-		// ARPL rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// ARPL rmreg16,reg16
+		/// </summary>
 		public static void ARPL (R16Type target, R16Type source)
-		{}
-
-		// BITS32
+		{
+		}
+		
+		/// <summary>
+		/// BITS32 
+		/// </summary>
 		public static void BITS32 (bool value)
-		{}
-
-		// BOUND reg16,mem
+		{
+		}
+		
+		/// <summary>
+		/// BOUND reg16,mem
+		/// </summary>
 		public static void BOUND (R16Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BOUND reg16,mem
+		/// </summary>
 		public unsafe static void BOUND (R16Type target, byte *source)
-
-		{}
-
-		// BOUND reg32,mem
+		{
+		}
+		
+		/// <summary>
+		/// BOUND reg32,mem
+		/// </summary>
 		public static void BOUND (R32Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BOUND reg32,mem
+		/// </summary>
 		public unsafe static void BOUND (R32Type target, byte *source)
-
-		{}
-
-		// BSF reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// BSF reg16,mem16
+		/// </summary>
 		public static void BSF (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BSF reg16,mem16
+		/// </summary>
 		public unsafe static void BSF (R16Type target, UInt16 *source)
-
-		{}
-
-		// BSF reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// BSF reg32,mem32
+		/// </summary>
 		public static void BSF (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BSF reg32,mem32
+		/// </summary>
 		public unsafe static void BSF (R32Type target, UInt32 *source)
-
-		{}
-
-		// BSF reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// BSF reg16,rmreg16
+		/// </summary>
 		public static void BSF (R16Type target, R16Type source)
-		{}
-
-		// BSF reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// BSF reg32,rmreg32
+		/// </summary>
 		public static void BSF (R32Type target, R32Type source)
-		{}
-
-		// BSR reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// BSR reg16,mem16
+		/// </summary>
 		public static void BSR (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BSR reg16,mem16
+		/// </summary>
 		public unsafe static void BSR (R16Type target, UInt16 *source)
-
-		{}
-
-		// BSR reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// BSR reg32,mem32
+		/// </summary>
 		public static void BSR (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BSR reg32,mem32
+		/// </summary>
 		public unsafe static void BSR (R32Type target, UInt32 *source)
-
-		{}
-
-		// BSR reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// BSR reg16,rmreg16
+		/// </summary>
 		public static void BSR (R16Type target, R16Type source)
-		{}
-
-		// BSR reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// BSR reg32,rmreg32
+		/// </summary>
 		public static void BSR (R32Type target, R32Type source)
-		{}
-
-		// BSWAP reg32
+		{
+		}
+		
+		/// <summary>
+		/// BSWAP reg32
+		/// </summary>
 		public static void BSWAP (R32Type target)
-		{}
-
-		// BT mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// BT mem16,reg16
+		/// </summary>
 		public static void BT (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BT mem16,reg16
+		/// </summary>
 		public unsafe static void BT (UInt16 *target, R16Type source)
-
-		{}
-
-		// BT mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// BT mem32,reg32
+		/// </summary>
 		public static void BT (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BT mem32,reg32
+		/// </summary>
 		public unsafe static void BT (UInt32 *target, R32Type source)
-
-		{}
-
-		// BT mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BT mem16,imm8
+		/// </summary>
 		public static void BT (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BT mem16,imm8
+		/// </summary>
 		public unsafe static void BT (UInt16 *target, Byte source)
-
-		{}
-
-		// BT mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BT mem32,imm8
+		/// </summary>
 		public static void BT (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BT mem32,imm8
+		/// </summary>
 		public unsafe static void BT (UInt32 *target, Byte source)
-
-		{}
-
-		// BT rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// BT rmreg16,reg16
+		/// </summary>
 		public static void BT (R16Type target, R16Type source)
-		{}
-
-		// BT rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// BT rmreg32,reg32
+		/// </summary>
 		public static void BT (R32Type target, R32Type source)
-		{}
-
-		// BT rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BT rmreg16,imm8
+		/// </summary>
 		public static void BT (R16Type target, Byte source)
-		{}
-
-		// BT rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BT rmreg32,imm8
+		/// </summary>
 		public static void BT (R32Type target, Byte source)
-		{}
-
-		// BTC mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// BTC mem16,reg16
+		/// </summary>
 		public static void BTC (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTC mem16,reg16
+		/// </summary>
 		public unsafe static void BTC (UInt16 *target, R16Type source)
-
-		{}
-
-		// BTC mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// BTC mem32,reg32
+		/// </summary>
 		public static void BTC (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTC mem32,reg32
+		/// </summary>
 		public unsafe static void BTC (UInt32 *target, R32Type source)
-
-		{}
-
-		// BTC mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTC mem16,imm8
+		/// </summary>
 		public static void BTC (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTC mem16,imm8
+		/// </summary>
 		public unsafe static void BTC (UInt16 *target, Byte source)
-
-		{}
-
-		// BTC mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTC mem32,imm8
+		/// </summary>
 		public static void BTC (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTC mem32,imm8
+		/// </summary>
 		public unsafe static void BTC (UInt32 *target, Byte source)
-
-		{}
-
-		// BTC rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// BTC rmreg16,reg16
+		/// </summary>
 		public static void BTC (R16Type target, R16Type source)
-		{}
-
-		// BTC rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// BTC rmreg32,reg32
+		/// </summary>
 		public static void BTC (R32Type target, R32Type source)
-		{}
-
-		// BTC rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTC rmreg16,imm8
+		/// </summary>
 		public static void BTC (R16Type target, Byte source)
-		{}
-
-		// BTC rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTC rmreg32,imm8
+		/// </summary>
 		public static void BTC (R32Type target, Byte source)
-		{}
-
-		// BTR mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// BTR mem16,reg16
+		/// </summary>
 		public static void BTR (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTR mem16,reg16
+		/// </summary>
 		public unsafe static void BTR (UInt16 *target, R16Type source)
-
-		{}
-
-		// BTR mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// BTR mem32,reg32
+		/// </summary>
 		public static void BTR (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTR mem32,reg32
+		/// </summary>
 		public unsafe static void BTR (UInt32 *target, R32Type source)
-
-		{}
-
-		// BTR mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTR mem16,imm8
+		/// </summary>
 		public static void BTR (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTR mem16,imm8
+		/// </summary>
 		public unsafe static void BTR (UInt16 *target, Byte source)
-
-		{}
-
-		// BTR mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTR mem32,imm8
+		/// </summary>
 		public static void BTR (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTR mem32,imm8
+		/// </summary>
 		public unsafe static void BTR (UInt32 *target, Byte source)
-
-		{}
-
-		// BTR rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// BTR rmreg16,reg16
+		/// </summary>
 		public static void BTR (R16Type target, R16Type source)
-		{}
-
-		// BTR rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// BTR rmreg32,reg32
+		/// </summary>
 		public static void BTR (R32Type target, R32Type source)
-		{}
-
-		// BTR rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTR rmreg16,imm8
+		/// </summary>
 		public static void BTR (R16Type target, Byte source)
-		{}
-
-		// BTR rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTR rmreg32,imm8
+		/// </summary>
 		public static void BTR (R32Type target, Byte source)
-		{}
-
-		// BTS mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// BTS mem16,reg16
+		/// </summary>
 		public static void BTS (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTS mem16,reg16
+		/// </summary>
 		public unsafe static void BTS (UInt16 *target, R16Type source)
-
-		{}
-
-		// BTS mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// BTS mem32,reg32
+		/// </summary>
 		public static void BTS (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTS mem32,reg32
+		/// </summary>
 		public unsafe static void BTS (UInt32 *target, R32Type source)
-
-		{}
-
-		// BTS mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTS mem16,imm8
+		/// </summary>
 		public static void BTS (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTS mem16,imm8
+		/// </summary>
 		public unsafe static void BTS (UInt16 *target, Byte source)
-
-		{}
-
-		// BTS mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTS mem32,imm8
+		/// </summary>
 		public static void BTS (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// BTS mem32,imm8
+		/// </summary>
 		public unsafe static void BTS (UInt32 *target, Byte source)
-
-		{}
-
-		// BTS rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// BTS rmreg16,reg16
+		/// </summary>
 		public static void BTS (R16Type target, R16Type source)
-		{}
-
-		// BTS rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// BTS rmreg32,reg32
+		/// </summary>
 		public static void BTS (R32Type target, R32Type source)
-		{}
-
-		// BTS rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTS rmreg16,imm8
+		/// </summary>
 		public static void BTS (R16Type target, Byte source)
-		{}
-
-		// BTS rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// BTS rmreg32,imm8
+		/// </summary>
 		public static void BTS (R32Type target, Byte source)
-		{}
-
-		// CALL imm
+		{
+		}
+		
+		/// <summary>
+		/// CALL imm
+		/// </summary>
 		public static void CALL (UInt32 target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CALL imm
+		/// </summary>
 		public static void CALL (string label)
-
-		{}
-
-		// CALL imm16:imm16
+		{
+		}
+		
+		/// <summary>
+		/// CALL imm16:imm16
+		/// </summary>
 		public static void CALL (UInt16 target, UInt16 source)
-		{}
-
-		// CALL imm16:imm32
+		{
+		}
+		
+		/// <summary>
+		/// CALL imm16:imm32
+		/// </summary>
 		public static void CALL (UInt16 target, UInt32 source)
-		{}
-
-		// CALL FAR mem16
+		{
+		}
+		
+		/// <summary>
+		/// CALL FAR mem16
+		/// </summary>
 		public static void CALL_FAR (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CALL FAR mem16
+		/// </summary>
 		public unsafe static void CALL_FAR (UInt16 *target)
-
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CALL FAR mem16
+		/// </summary>
 		public static void CALL_FAR (string label)
-
-		{}
-
-		// CALL FAR mem32
+		{
+		}
+		
+		/// <summary>
+		/// CALL FAR mem32
+		/// </summary>
 		public static void CALL_FAR (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CALL FAR mem32
+		/// </summary>
 		public unsafe static void CALL_FAR (UInt32 *target)
-
-		{}
-
-		// CALL mem16
+		{
+		}
+		
+		/// <summary>
+		/// CALL mem16
+		/// </summary>
 		public static void CALL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CALL mem16
+		/// </summary>
 		public unsafe static void CALL (UInt16 *target)
-
-		{}
-
-		// CALL mem32
+		{
+		}
+		
+		/// <summary>
+		/// CALL mem32
+		/// </summary>
 		public static void CALL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CALL mem32
+		/// </summary>
 		public unsafe static void CALL (UInt32 *target)
-
-		{}
-
-		// CALL rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CALL rmreg16
+		/// </summary>
 		public static void CALL (R16Type target)
-		{}
-
-		// CALL rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CALL rmreg32
+		/// </summary>
 		public static void CALL (R32Type target)
-		{}
-
-		// CBW
+		{
+		}
+		
+		/// <summary>
+		/// CBW 
+		/// </summary>
 		public static void CBW ()
-		{}
-
-		// CDQ
+		{
+		}
+		
+		/// <summary>
+		/// CDQ 
+		/// </summary>
 		public static void CDQ ()
-		{}
-
-		// CLC
+		{
+		}
+		
+		/// <summary>
+		/// CLC 
+		/// </summary>
 		public static void CLC ()
-		{}
-
-		// CLD
+		{
+		}
+		
+		/// <summary>
+		/// CLD 
+		/// </summary>
 		public static void CLD ()
-		{}
-
-		// CLFLUSH mem
+		{
+		}
+		
+		/// <summary>
+		/// CLFLUSH mem
+		/// </summary>
 		public static void CLFLUSH (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CLFLUSH mem
+		/// </summary>
 		public unsafe static void CLFLUSH (byte *target)
-
-		{}
-
-		// CLI
+		{
+		}
+		
+		/// <summary>
+		/// CLI 
+		/// </summary>
 		public static void CLI ()
-		{}
-
-		// CLTS
+		{
+		}
+		
+		/// <summary>
+		/// CLTS 
+		/// </summary>
 		public static void CLTS ()
-		{}
-
-		// CMC
+		{
+		}
+		
+		/// <summary>
+		/// CMC 
+		/// </summary>
 		public static void CMC ()
-		{}
-
-		// CMOVA reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVA reg16,mem16
+		/// </summary>
 		public static void CMOVA (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVA reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVA (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVA reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVA reg32,mem32
+		/// </summary>
 		public static void CMOVA (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVA reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVA (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVA reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVA reg16,rmreg16
+		/// </summary>
 		public static void CMOVA (R16Type target, R16Type source)
-		{}
-
-		// CMOVA reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVA reg32,rmreg32
+		/// </summary>
 		public static void CMOVA (R32Type target, R32Type source)
-		{}
-
-		// CMOVAE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVAE reg16,mem16
+		/// </summary>
 		public static void CMOVAE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVAE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVAE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVAE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVAE reg32,mem32
+		/// </summary>
 		public static void CMOVAE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVAE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVAE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVAE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVAE reg16,rmreg16
+		/// </summary>
 		public static void CMOVAE (R16Type target, R16Type source)
-		{}
-
-		// CMOVAE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVAE reg32,rmreg32
+		/// </summary>
 		public static void CMOVAE (R32Type target, R32Type source)
-		{}
-
-		// CMOVB reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVB reg16,mem16
+		/// </summary>
 		public static void CMOVB (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVB reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVB (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVB reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVB reg32,mem32
+		/// </summary>
 		public static void CMOVB (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVB reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVB (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVB reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVB reg16,rmreg16
+		/// </summary>
 		public static void CMOVB (R16Type target, R16Type source)
-		{}
-
-		// CMOVB reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVB reg32,rmreg32
+		/// </summary>
 		public static void CMOVB (R32Type target, R32Type source)
-		{}
-
-		// CMOVBE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVBE reg16,mem16
+		/// </summary>
 		public static void CMOVBE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVBE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVBE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVBE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVBE reg32,mem32
+		/// </summary>
 		public static void CMOVBE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVBE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVBE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVBE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVBE reg16,rmreg16
+		/// </summary>
 		public static void CMOVBE (R16Type target, R16Type source)
-		{}
-
-		// CMOVBE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVBE reg32,rmreg32
+		/// </summary>
 		public static void CMOVBE (R32Type target, R32Type source)
-		{}
-
-		// CMOVC reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVC reg16,mem16
+		/// </summary>
 		public static void CMOVC (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVC reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVC (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVC reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVC reg32,mem32
+		/// </summary>
 		public static void CMOVC (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVC reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVC (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVC reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVC reg16,rmreg16
+		/// </summary>
 		public static void CMOVC (R16Type target, R16Type source)
-		{}
-
-		// CMOVC reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVC reg32,rmreg32
+		/// </summary>
 		public static void CMOVC (R32Type target, R32Type source)
-		{}
-
-		// CMOVE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVE reg16,mem16
+		/// </summary>
 		public static void CMOVE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVE reg32,mem32
+		/// </summary>
 		public static void CMOVE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVE reg16,rmreg16
+		/// </summary>
 		public static void CMOVE (R16Type target, R16Type source)
-		{}
-
-		// CMOVE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVE reg32,rmreg32
+		/// </summary>
 		public static void CMOVE (R32Type target, R32Type source)
-		{}
-
-		// CMOVG reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVG reg16,mem16
+		/// </summary>
 		public static void CMOVG (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVG reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVG (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVG reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVG reg32,mem32
+		/// </summary>
 		public static void CMOVG (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVG reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVG (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVG reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVG reg16,rmreg16
+		/// </summary>
 		public static void CMOVG (R16Type target, R16Type source)
-		{}
-
-		// CMOVG reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVG reg32,rmreg32
+		/// </summary>
 		public static void CMOVG (R32Type target, R32Type source)
-		{}
-
-		// CMOVGE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVGE reg16,mem16
+		/// </summary>
 		public static void CMOVGE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVGE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVGE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVGE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVGE reg32,mem32
+		/// </summary>
 		public static void CMOVGE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVGE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVGE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVGE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVGE reg16,rmreg16
+		/// </summary>
 		public static void CMOVGE (R16Type target, R16Type source)
-		{}
-
-		// CMOVGE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVGE reg32,rmreg32
+		/// </summary>
 		public static void CMOVGE (R32Type target, R32Type source)
-		{}
-
-		// CMOVL reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVL reg16,mem16
+		/// </summary>
 		public static void CMOVL (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVL reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVL (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVL reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVL reg32,mem32
+		/// </summary>
 		public static void CMOVL (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVL reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVL (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVL reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVL reg16,rmreg16
+		/// </summary>
 		public static void CMOVL (R16Type target, R16Type source)
-		{}
-
-		// CMOVL reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVL reg32,rmreg32
+		/// </summary>
 		public static void CMOVL (R32Type target, R32Type source)
-		{}
-
-		// CMOVLE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVLE reg16,mem16
+		/// </summary>
 		public static void CMOVLE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVLE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVLE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVLE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVLE reg32,mem32
+		/// </summary>
 		public static void CMOVLE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVLE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVLE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVLE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVLE reg16,rmreg16
+		/// </summary>
 		public static void CMOVLE (R16Type target, R16Type source)
-		{}
-
-		// CMOVLE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVLE reg32,rmreg32
+		/// </summary>
 		public static void CMOVLE (R32Type target, R32Type source)
-		{}
-
-		// CMOVNA reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNA reg16,mem16
+		/// </summary>
 		public static void CMOVNA (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNA reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNA (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNA reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNA reg32,mem32
+		/// </summary>
 		public static void CMOVNA (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNA reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNA (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNA reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNA reg16,rmreg16
+		/// </summary>
 		public static void CMOVNA (R16Type target, R16Type source)
-		{}
-
-		// CMOVNA reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNA reg32,rmreg32
+		/// </summary>
 		public static void CMOVNA (R32Type target, R32Type source)
-		{}
-
-		// CMOVNAE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNAE reg16,mem16
+		/// </summary>
 		public static void CMOVNAE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNAE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNAE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNAE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNAE reg32,mem32
+		/// </summary>
 		public static void CMOVNAE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNAE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNAE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNAE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNAE reg16,rmreg16
+		/// </summary>
 		public static void CMOVNAE (R16Type target, R16Type source)
-		{}
-
-		// CMOVNAE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNAE reg32,rmreg32
+		/// </summary>
 		public static void CMOVNAE (R32Type target, R32Type source)
-		{}
-
-		// CMOVNB reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNB reg16,mem16
+		/// </summary>
 		public static void CMOVNB (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNB reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNB (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNB reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNB reg32,mem32
+		/// </summary>
 		public static void CMOVNB (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNB reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNB (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNB reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNB reg16,rmreg16
+		/// </summary>
 		public static void CMOVNB (R16Type target, R16Type source)
-		{}
-
-		// CMOVNB reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNB reg32,rmreg32
+		/// </summary>
 		public static void CMOVNB (R32Type target, R32Type source)
-		{}
-
-		// CMOVNBE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNBE reg16,mem16
+		/// </summary>
 		public static void CMOVNBE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNBE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNBE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNBE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNBE reg32,mem32
+		/// </summary>
 		public static void CMOVNBE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNBE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNBE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNBE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNBE reg16,rmreg16
+		/// </summary>
 		public static void CMOVNBE (R16Type target, R16Type source)
-		{}
-
-		// CMOVNBE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNBE reg32,rmreg32
+		/// </summary>
 		public static void CMOVNBE (R32Type target, R32Type source)
-		{}
-
-		// CMOVNC reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNC reg16,mem16
+		/// </summary>
 		public static void CMOVNC (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNC reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNC (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNC reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNC reg32,mem32
+		/// </summary>
 		public static void CMOVNC (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNC reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNC (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNC reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNC reg16,rmreg16
+		/// </summary>
 		public static void CMOVNC (R16Type target, R16Type source)
-		{}
-
-		// CMOVNC reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNC reg32,rmreg32
+		/// </summary>
 		public static void CMOVNC (R32Type target, R32Type source)
-		{}
-
-		// CMOVNE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNE reg16,mem16
+		/// </summary>
 		public static void CMOVNE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNE reg32,mem32
+		/// </summary>
 		public static void CMOVNE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNE reg16,rmreg16
+		/// </summary>
 		public static void CMOVNE (R16Type target, R16Type source)
-		{}
-
-		// CMOVNE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNE reg32,rmreg32
+		/// </summary>
 		public static void CMOVNE (R32Type target, R32Type source)
-		{}
-
-		// CMOVNG reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNG reg16,mem16
+		/// </summary>
 		public static void CMOVNG (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNG reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNG (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNG reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNG reg32,mem32
+		/// </summary>
 		public static void CMOVNG (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNG reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNG (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNG reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNG reg16,rmreg16
+		/// </summary>
 		public static void CMOVNG (R16Type target, R16Type source)
-		{}
-
-		// CMOVNG reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNG reg32,rmreg32
+		/// </summary>
 		public static void CMOVNG (R32Type target, R32Type source)
-		{}
-
-		// CMOVNGE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNGE reg16,mem16
+		/// </summary>
 		public static void CMOVNGE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNGE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNGE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNGE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNGE reg32,mem32
+		/// </summary>
 		public static void CMOVNGE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNGE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNGE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNGE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNGE reg16,rmreg16
+		/// </summary>
 		public static void CMOVNGE (R16Type target, R16Type source)
-		{}
-
-		// CMOVNGE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNGE reg32,rmreg32
+		/// </summary>
 		public static void CMOVNGE (R32Type target, R32Type source)
-		{}
-
-		// CMOVNL reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNL reg16,mem16
+		/// </summary>
 		public static void CMOVNL (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNL reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNL (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNL reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNL reg32,mem32
+		/// </summary>
 		public static void CMOVNL (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNL reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNL (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNL reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNL reg16,rmreg16
+		/// </summary>
 		public static void CMOVNL (R16Type target, R16Type source)
-		{}
-
-		// CMOVNL reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNL reg32,rmreg32
+		/// </summary>
 		public static void CMOVNL (R32Type target, R32Type source)
-		{}
-
-		// CMOVNLE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNLE reg16,mem16
+		/// </summary>
 		public static void CMOVNLE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNLE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNLE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNLE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNLE reg32,mem32
+		/// </summary>
 		public static void CMOVNLE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNLE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNLE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNLE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNLE reg16,rmreg16
+		/// </summary>
 		public static void CMOVNLE (R16Type target, R16Type source)
-		{}
-
-		// CMOVNLE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNLE reg32,rmreg32
+		/// </summary>
 		public static void CMOVNLE (R32Type target, R32Type source)
-		{}
-
-		// CMOVNO reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNO reg16,mem16
+		/// </summary>
 		public static void CMOVNO (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNO reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNO (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNO reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNO reg32,mem32
+		/// </summary>
 		public static void CMOVNO (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNO reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNO (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNO reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNO reg16,rmreg16
+		/// </summary>
 		public static void CMOVNO (R16Type target, R16Type source)
-		{}
-
-		// CMOVNO reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNO reg32,rmreg32
+		/// </summary>
 		public static void CMOVNO (R32Type target, R32Type source)
-		{}
-
-		// CMOVNP reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNP reg16,mem16
+		/// </summary>
 		public static void CMOVNP (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNP reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNP (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNP reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNP reg32,mem32
+		/// </summary>
 		public static void CMOVNP (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNP reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNP (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNP reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNP reg16,rmreg16
+		/// </summary>
 		public static void CMOVNP (R16Type target, R16Type source)
-		{}
-
-		// CMOVNP reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNP reg32,rmreg32
+		/// </summary>
 		public static void CMOVNP (R32Type target, R32Type source)
-		{}
-
-		// CMOVNS reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNS reg16,mem16
+		/// </summary>
 		public static void CMOVNS (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNS reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNS (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNS reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNS reg32,mem32
+		/// </summary>
 		public static void CMOVNS (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNS reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNS (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNS reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNS reg16,rmreg16
+		/// </summary>
 		public static void CMOVNS (R16Type target, R16Type source)
-		{}
-
-		// CMOVNS reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNS reg32,rmreg32
+		/// </summary>
 		public static void CMOVNS (R32Type target, R32Type source)
-		{}
-
-		// CMOVNZ reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNZ reg16,mem16
+		/// </summary>
 		public static void CMOVNZ (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNZ reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVNZ (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVNZ reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNZ reg32,mem32
+		/// </summary>
 		public static void CMOVNZ (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNZ reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVNZ (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVNZ reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNZ reg16,rmreg16
+		/// </summary>
 		public static void CMOVNZ (R16Type target, R16Type source)
-		{}
-
-		// CMOVNZ reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVNZ reg32,rmreg32
+		/// </summary>
 		public static void CMOVNZ (R32Type target, R32Type source)
-		{}
-
-		// CMOVO reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVO reg16,mem16
+		/// </summary>
 		public static void CMOVO (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVO reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVO (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVO reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVO reg32,mem32
+		/// </summary>
 		public static void CMOVO (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVO reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVO (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVO reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVO reg16,rmreg16
+		/// </summary>
 		public static void CMOVO (R16Type target, R16Type source)
-		{}
-
-		// CMOVO reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVO reg32,rmreg32
+		/// </summary>
 		public static void CMOVO (R32Type target, R32Type source)
-		{}
-
-		// CMOVP reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVP reg16,mem16
+		/// </summary>
 		public static void CMOVP (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVP reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVP (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVP reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVP reg32,mem32
+		/// </summary>
 		public static void CMOVP (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVP reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVP (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVP reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVP reg16,rmreg16
+		/// </summary>
 		public static void CMOVP (R16Type target, R16Type source)
-		{}
-
-		// CMOVP reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVP reg32,rmreg32
+		/// </summary>
 		public static void CMOVP (R32Type target, R32Type source)
-		{}
-
-		// CMOVPE reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPE reg16,mem16
+		/// </summary>
 		public static void CMOVPE (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPE reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVPE (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVPE reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPE reg32,mem32
+		/// </summary>
 		public static void CMOVPE (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPE reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVPE (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVPE reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPE reg16,rmreg16
+		/// </summary>
 		public static void CMOVPE (R16Type target, R16Type source)
-		{}
-
-		// CMOVPE reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPE reg32,rmreg32
+		/// </summary>
 		public static void CMOVPE (R32Type target, R32Type source)
-		{}
-
-		// CMOVPO reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPO reg16,mem16
+		/// </summary>
 		public static void CMOVPO (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPO reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVPO (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVPO reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPO reg32,mem32
+		/// </summary>
 		public static void CMOVPO (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPO reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVPO (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVPO reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPO reg16,rmreg16
+		/// </summary>
 		public static void CMOVPO (R16Type target, R16Type source)
-		{}
-
-		// CMOVPO reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVPO reg32,rmreg32
+		/// </summary>
 		public static void CMOVPO (R32Type target, R32Type source)
-		{}
-
-		// CMOVS reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVS reg16,mem16
+		/// </summary>
 		public static void CMOVS (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVS reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVS (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVS reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVS reg32,mem32
+		/// </summary>
 		public static void CMOVS (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVS reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVS (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVS reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVS reg16,rmreg16
+		/// </summary>
 		public static void CMOVS (R16Type target, R16Type source)
-		{}
-
-		// CMOVS reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVS reg32,rmreg32
+		/// </summary>
 		public static void CMOVS (R32Type target, R32Type source)
-		{}
-
-		// CMOVZ reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVZ reg16,mem16
+		/// </summary>
 		public static void CMOVZ (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVZ reg16,mem16
+		/// </summary>
 		public unsafe static void CMOVZ (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMOVZ reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVZ reg32,mem32
+		/// </summary>
 		public static void CMOVZ (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMOVZ reg32,mem32
+		/// </summary>
 		public unsafe static void CMOVZ (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMOVZ reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// CMOVZ reg16,rmreg16
+		/// </summary>
 		public static void CMOVZ (R16Type target, R16Type source)
-		{}
-
-		// CMOVZ reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// CMOVZ reg32,rmreg32
+		/// </summary>
 		public static void CMOVZ (R32Type target, R32Type source)
-		{}
-
-		// CMP mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem8,reg8
+		/// </summary>
 		public static void CMP (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem8,reg8
+		/// </summary>
 		public unsafe static void CMP (byte *target, R8Type source)
-
-		{}
-
-		// CMP mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem16,reg16
+		/// </summary>
 		public static void CMP (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem16,reg16
+		/// </summary>
 		public unsafe static void CMP (UInt16 *target, R16Type source)
-
-		{}
-
-		// CMP mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem32,reg32
+		/// </summary>
 		public static void CMP (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem32,reg32
+		/// </summary>
 		public unsafe static void CMP (UInt32 *target, R32Type source)
-
-		{}
-
-		// CMP reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// CMP reg8,mem8
+		/// </summary>
 		public static void CMP (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP reg8,mem8
+		/// </summary>
 		public unsafe static void CMP (R8Type target, byte *source)
-
-		{}
-
-		// CMP reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// CMP reg16,mem16
+		/// </summary>
 		public static void CMP (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP reg16,mem16
+		/// </summary>
 		public unsafe static void CMP (R16Type target, UInt16 *source)
-
-		{}
-
-		// CMP reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// CMP reg32,mem32
+		/// </summary>
 		public static void CMP (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP reg32,mem32
+		/// </summary>
 		public unsafe static void CMP (R32Type target, UInt32 *source)
-
-		{}
-
-		// CMP mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem8,imm8
+		/// </summary>
 		public static void CMP (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem8,imm8
+		/// </summary>
 		public unsafe static void CMP (byte *target, Byte source)
-
-		{}
-
-		// CMP mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem16,imm16
+		/// </summary>
 		public static void CMP (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem16,imm16
+		/// </summary>
 		public unsafe static void CMP (UInt16 *target, UInt16 source)
-
-		{}
-
-		// CMP mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem32,imm32
+		/// </summary>
 		public static void CMP (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem32,imm32
+		/// </summary>
 		public unsafe static void CMP (UInt32 *target, UInt32 source)
-
-		{}
-
-		// CMP mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem16,imm8
+		/// </summary>
 		public static void CMP (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem16,imm8
+		/// </summary>
 		public unsafe static void CMP (UInt16 *target, Byte source)
-
-		{}
-
-		// CMP mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem32,imm8
+		/// </summary>
 		public static void CMP (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMP mem32,imm8
+		/// </summary>
 		public unsafe static void CMP (UInt32 *target, Byte source)
-
-		{}
-
-		// CMP rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// CMP rmreg8,reg8
+		/// </summary>
 		public static void CMP (R8Type target, R8Type source)
-		{}
-
-		// CMP rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// CMP rmreg16,reg16
+		/// </summary>
 		public static void CMP (R16Type target, R16Type source)
-		{}
-
-		// CMP rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// CMP rmreg32,reg32
+		/// </summary>
 		public static void CMP (R32Type target, R32Type source)
-		{}
-
-		// CMP rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// CMP rmreg8,imm8
+		/// </summary>
 		public static void CMP (R8Type target, Byte source)
-		{}
-
-		// CMP rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// CMP rmreg16,imm16
+		/// </summary>
 		public static void CMP (R16Type target, UInt16 source)
-		{}
-
-		// CMP rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// CMP rmreg32,imm32
+		/// </summary>
 		public static void CMP (R32Type target, UInt32 source)
-		{}
-
-		// CMP rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// CMP rmreg16,imm8
+		/// </summary>
 		public static void CMP (R16Type target, Byte source)
-		{}
-
-		// CMP rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// CMP rmreg32,imm8
+		/// </summary>
 		public static void CMP (R32Type target, Byte source)
-		{}
-
-		// CMPSB
+		{
+		}
+		
+		/// <summary>
+		/// CMPSB 
+		/// </summary>
 		public static void CMPSB ()
-		{}
-
-		// CMPSD
+		{
+		}
+		
+		/// <summary>
+		/// CMPSD 
+		/// </summary>
 		public static void CMPSD ()
-		{}
-
-		// CMPSW
+		{
+		}
+		
+		/// <summary>
+		/// CMPSW 
+		/// </summary>
 		public static void CMPSW ()
-		{}
-
-		// CMPXCHG mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG mem8,reg8
+		/// </summary>
 		public static void CMPXCHG (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG mem8,reg8
+		/// </summary>
 		public unsafe static void CMPXCHG (byte *target, R8Type source)
-
-		{}
-
-		// CMPXCHG mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG mem16,reg16
+		/// </summary>
 		public static void CMPXCHG (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG mem16,reg16
+		/// </summary>
 		public unsafe static void CMPXCHG (UInt16 *target, R16Type source)
-
-		{}
-
-		// CMPXCHG mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG mem32,reg32
+		/// </summary>
 		public static void CMPXCHG (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG mem32,reg32
+		/// </summary>
 		public unsafe static void CMPXCHG (UInt32 *target, R32Type source)
-
-		{}
-
-		// CMPXCHG rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG rmreg8,reg8
+		/// </summary>
 		public static void CMPXCHG (R8Type target, R8Type source)
-		{}
-
-		// CMPXCHG rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG rmreg16,reg16
+		/// </summary>
 		public static void CMPXCHG (R16Type target, R16Type source)
-		{}
-
-		// CMPXCHG rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG rmreg32,reg32
+		/// </summary>
 		public static void CMPXCHG (R32Type target, R32Type source)
-		{}
-
-		// CMPXCHG8B mem
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG8B mem
+		/// </summary>
 		public static void CMPXCHG8B (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// CMPXCHG8B mem
+		/// </summary>
 		public unsafe static void CMPXCHG8B (byte *target)
-
-		{}
-
-		// CPUID
+		{
+		}
+		
+		/// <summary>
+		/// CPUID 
+		/// </summary>
 		public static void CPUID ()
-		{}
-
-		// CWD
+		{
+		}
+		
+		/// <summary>
+		/// CWD 
+		/// </summary>
 		public static void CWD ()
-		{}
-
-		// CWDE
+		{
+		}
+		
+		/// <summary>
+		/// CWDE 
+		/// </summary>
 		public static void CWDE ()
-		{}
-
-		// DAA
+		{
+		}
+		
+		/// <summary>
+		/// DAA 
+		/// </summary>
 		public static void DAA ()
-		{}
-
-		// DAS
+		{
+		}
+		
+		/// <summary>
+		/// DAS 
+		/// </summary>
 		public static void DAS ()
-		{}
-
-		// DATA
+		{
+		}
+		
+		/// <summary>
+		/// DATA 
+		/// </summary>
 		public static void DATA (string name, string values)
-		{}
-
-		// DATA
+		{
+		}
+		
+		/// <summary>
+		/// DATA 
+		/// </summary>
 		public static void DATA (string name, byte value)
-		{}
-
-		// DATA
+		{
+		}
+		
+		/// <summary>
+		/// DATA 
+		/// </summary>
 		public static void DATA (string name, UInt16 value)
-		{}
-
-		// DATA
+		{
+		}
+		
+		/// <summary>
+		/// DATA 
+		/// </summary>
 		public static void DATA (string name, UInt32 value)
-		{}
-
-		// DATA
+		{
+		}
+		
+		/// <summary>
+		/// DATA 
+		/// </summary>
 		public static void DATA (string values)
-		{}
-
-		// DATA
+		{
+		}
+		
+		/// <summary>
+		/// DATA 
+		/// </summary>
 		public static void DATA (byte value)
-		{}
-
-		// DATA
+		{
+		}
+		
+		/// <summary>
+		/// DATA 
+		/// </summary>
 		public static void DATA (UInt16 value)
-		{}
-
-		// DATA
+		{
+		}
+		
+		/// <summary>
+		/// DATA 
+		/// </summary>
 		public static void DATA (UInt32 value)
-		{}
-
-		// DEC reg16
+		{
+		}
+		
+		/// <summary>
+		/// DEC reg16
+		/// </summary>
 		public static void DEC (R16Type target)
-		{}
-
-		// DEC reg32
+		{
+		}
+		
+		/// <summary>
+		/// DEC reg32
+		/// </summary>
 		public static void DEC (R32Type target)
-		{}
-
-		// DEC mem8
+		{
+		}
+		
+		/// <summary>
+		/// DEC mem8
+		/// </summary>
 		public static void DEC (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// DEC mem8
+		/// </summary>
 		public unsafe static void DEC (byte *target)
-
-		{}
-
-		// DEC mem16
+		{
+		}
+		
+		/// <summary>
+		/// DEC mem16
+		/// </summary>
 		public static void DEC (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// DEC mem16
+		/// </summary>
 		public unsafe static void DEC (UInt16 *target)
-
-		{}
-
-		// DEC mem32
+		{
+		}
+		
+		/// <summary>
+		/// DEC mem32
+		/// </summary>
 		public static void DEC (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// DEC mem32
+		/// </summary>
 		public unsafe static void DEC (UInt32 *target)
-
-		{}
-
-		// DEC rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// DEC rmreg8
+		/// </summary>
 		public static void DEC (R8Type target)
-		{}
-
-		// DIV mem8
+		{
+		}
+		
+		/// <summary>
+		/// DIV mem8
+		/// </summary>
 		public static void DIV (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// DIV mem8
+		/// </summary>
 		public unsafe static void DIV (byte *target)
-
-		{}
-
-		// DIV mem16
+		{
+		}
+		
+		/// <summary>
+		/// DIV mem16
+		/// </summary>
 		public static void DIV (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// DIV mem16
+		/// </summary>
 		public unsafe static void DIV (UInt16 *target)
-
-		{}
-
-		// DIV mem32
+		{
+		}
+		
+		/// <summary>
+		/// DIV mem32
+		/// </summary>
 		public static void DIV (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// DIV mem32
+		/// </summary>
 		public unsafe static void DIV (UInt32 *target)
-
-		{}
-
-		// DIV rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// DIV rmreg8
+		/// </summary>
 		public static void DIV (R8Type target)
-		{}
-
-		// DIV rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// DIV rmreg16
+		/// </summary>
 		public static void DIV (R16Type target)
-		{}
-
-		// DIV rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// DIV rmreg32
+		/// </summary>
 		public static void DIV (R32Type target)
-		{}
-
-		// EMMS
+		{
+		}
+		
+		/// <summary>
+		/// EMMS 
+		/// </summary>
 		public static void EMMS ()
-		{}
-
-		// ENTER imm16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ENTER imm16,imm8
+		/// </summary>
 		public static void ENTER (UInt16 target, Byte source)
-		{}
-
-		// F2XM1
+		{
+		}
+		
+		/// <summary>
+		/// F2XM1 
+		/// </summary>
 		public static void F2XM1 ()
-		{}
-
-		// FABS
+		{
+		}
+		
+		/// <summary>
+		/// FABS 
+		/// </summary>
 		public static void FABS ()
-		{}
-
-		// FADD mem32
+		{
+		}
+		
+		/// <summary>
+		/// FADD mem32
+		/// </summary>
 		public static void FADD (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FADD mem32
+		/// </summary>
 		public unsafe static void FADD (UInt32 *target)
-
-		{}
-
-		// FADD mem64
+		{
+		}
+		
+		/// <summary>
+		/// FADD mem64
+		/// </summary>
 		public static void FADD (QWordMemory target)
-		{}
-
-		// FADD fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FADD fpureg
+		/// </summary>
 		public static void FADD (FPType target)
-		{}
-
-		// FADD ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FADD ST0,fpureg
+		/// </summary>
 		public static void FADD_ST0 (FPType source)
-		{}
-
-		// FADD fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FADD fpureg,ST0
+		/// </summary>
 		public static void FADD__ST0 (FPType target)
-		{}
-
-		// FADDP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FADDP fpureg
+		/// </summary>
 		public static void FADDP (FPType target)
-		{}
-
-		// FADDP fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FADDP fpureg,ST0
+		/// </summary>
 		public static void FADDP__ST0 (FPType target)
-		{}
-
-		// FBLD mem80
+		{
+		}
+		
+		/// <summary>
+		/// FBLD mem80
+		/// </summary>
 		public static void FBLD (TWordMemory target)
-		{}
-
-		// FBSTP mem80
+		{
+		}
+		
+		/// <summary>
+		/// FBSTP mem80
+		/// </summary>
 		public static void FBSTP (TWordMemory target)
-		{}
-
-		// FCHS
+		{
+		}
+		
+		/// <summary>
+		/// FCHS 
+		/// </summary>
 		public static void FCHS ()
-		{}
-
-		// FCLEX
+		{
+		}
+		
+		/// <summary>
+		/// FCLEX 
+		/// </summary>
 		public static void FCLEX ()
-		{}
-
-		// FCMOVB fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVB fpureg
+		/// </summary>
 		public static void FCMOVB (FPType target)
-		{}
-
-		// FCMOVB ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVB ST0,fpureg
+		/// </summary>
 		public static void FCMOVB_ST0 (FPType source)
-		{}
-
-		// FCMOVBE fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVBE fpureg
+		/// </summary>
 		public static void FCMOVBE (FPType target)
-		{}
-
-		// FCMOVBE ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVBE ST0,fpureg
+		/// </summary>
 		public static void FCMOVBE_ST0 (FPType source)
-		{}
-
-		// FCMOVE fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVE fpureg
+		/// </summary>
 		public static void FCMOVE (FPType target)
-		{}
-
-		// FCMOVE ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVE ST0,fpureg
+		/// </summary>
 		public static void FCMOVE_ST0 (FPType source)
-		{}
-
-		// FCMOVNB fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVNB fpureg
+		/// </summary>
 		public static void FCMOVNB (FPType target)
-		{}
-
-		// FCMOVNB ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVNB ST0,fpureg
+		/// </summary>
 		public static void FCMOVNB_ST0 (FPType source)
-		{}
-
-		// FCMOVNBE fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVNBE fpureg
+		/// </summary>
 		public static void FCMOVNBE (FPType target)
-		{}
-
-		// FCMOVNBE ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVNBE ST0,fpureg
+		/// </summary>
 		public static void FCMOVNBE_ST0 (FPType source)
-		{}
-
-		// FCMOVNE fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVNE fpureg
+		/// </summary>
 		public static void FCMOVNE (FPType target)
-		{}
-
-		// FCMOVNE ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVNE ST0,fpureg
+		/// </summary>
 		public static void FCMOVNE_ST0 (FPType source)
-		{}
-
-		// FCMOVNU fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVNU fpureg
+		/// </summary>
 		public static void FCMOVNU (FPType target)
-		{}
-
-		// FCMOVNU ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVNU ST0,fpureg
+		/// </summary>
 		public static void FCMOVNU_ST0 (FPType source)
-		{}
-
-		// FCMOVU fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVU fpureg
+		/// </summary>
 		public static void FCMOVU (FPType target)
-		{}
-
-		// FCMOVU ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCMOVU ST0,fpureg
+		/// </summary>
 		public static void FCMOVU_ST0 (FPType source)
-		{}
-
-		// FCOM mem32
+		{
+		}
+		
+		/// <summary>
+		/// FCOM mem32
+		/// </summary>
 		public static void FCOM (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FCOM mem32
+		/// </summary>
 		public unsafe static void FCOM (UInt32 *target)
-
-		{}
-
-		// FCOM mem64
+		{
+		}
+		
+		/// <summary>
+		/// FCOM mem64
+		/// </summary>
 		public static void FCOM (QWordMemory target)
-		{}
-
-		// FCOM fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCOM fpureg
+		/// </summary>
 		public static void FCOM (FPType target)
-		{}
-
-		// FCOM ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCOM ST0,fpureg
+		/// </summary>
 		public static void FCOM_ST0 (FPType source)
-		{}
-
-		// FCOMI fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCOMI fpureg
+		/// </summary>
 		public static void FCOMI (FPType target)
-		{}
-
-		// FCOMI ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCOMI ST0,fpureg
+		/// </summary>
 		public static void FCOMI_ST0 (FPType source)
-		{}
-
-		// FCOMIP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCOMIP fpureg
+		/// </summary>
 		public static void FCOMIP (FPType target)
-		{}
-
-		// FCOMIP ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCOMIP ST0,fpureg
+		/// </summary>
 		public static void FCOMIP_ST0 (FPType source)
-		{}
-
-		// FCOMP mem32
+		{
+		}
+		
+		/// <summary>
+		/// FCOMP mem32
+		/// </summary>
 		public static void FCOMP (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FCOMP mem32
+		/// </summary>
 		public unsafe static void FCOMP (UInt32 *target)
-
-		{}
-
-		// FCOMP mem64
+		{
+		}
+		
+		/// <summary>
+		/// FCOMP mem64
+		/// </summary>
 		public static void FCOMP (QWordMemory target)
-		{}
-
-		// FCOMP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCOMP fpureg
+		/// </summary>
 		public static void FCOMP (FPType target)
-		{}
-
-		// FCOMP ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FCOMP ST0,fpureg
+		/// </summary>
 		public static void FCOMP_ST0 (FPType source)
-		{}
-
-		// FCOMPP
+		{
+		}
+		
+		/// <summary>
+		/// FCOMPP 
+		/// </summary>
 		public static void FCOMPP ()
-		{}
-
-		// FCOS
+		{
+		}
+		
+		/// <summary>
+		/// FCOS 
+		/// </summary>
 		public static void FCOS ()
-		{}
-
-		// FDECSTP
+		{
+		}
+		
+		/// <summary>
+		/// FDECSTP 
+		/// </summary>
 		public static void FDECSTP ()
-		{}
-
-		// FDISI
+		{
+		}
+		
+		/// <summary>
+		/// FDISI 
+		/// </summary>
 		public static void FDISI ()
-		{}
-
-		// FDIV mem32
+		{
+		}
+		
+		/// <summary>
+		/// FDIV mem32
+		/// </summary>
 		public static void FDIV (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FDIV mem32
+		/// </summary>
 		public unsafe static void FDIV (UInt32 *target)
-
-		{}
-
-		// FDIV mem64
+		{
+		}
+		
+		/// <summary>
+		/// FDIV mem64
+		/// </summary>
 		public static void FDIV (QWordMemory target)
-		{}
-
-		// FDIV fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FDIV fpureg
+		/// </summary>
 		public static void FDIV (FPType target)
-		{}
-
-		// FDIV ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FDIV ST0,fpureg
+		/// </summary>
 		public static void FDIV_ST0 (FPType source)
-		{}
-
-		// FDIV fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FDIV fpureg,ST0
+		/// </summary>
 		public static void FDIV__ST0 (FPType target)
-		{}
-
-		// FDIVP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FDIVP fpureg
+		/// </summary>
 		public static void FDIVP (FPType target)
-		{}
-
-		// FDIVP fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FDIVP fpureg,ST0
+		/// </summary>
 		public static void FDIVP__ST0 (FPType target)
-		{}
-
-		// FDIVR mem32
+		{
+		}
+		
+		/// <summary>
+		/// FDIVR mem32
+		/// </summary>
 		public static void FDIVR (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FDIVR mem32
+		/// </summary>
 		public unsafe static void FDIVR (UInt32 *target)
-
-		{}
-
-		// FDIVR mem64
+		{
+		}
+		
+		/// <summary>
+		/// FDIVR mem64
+		/// </summary>
 		public static void FDIVR (QWordMemory target)
-		{}
-
-		// FDIVR fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FDIVR fpureg
+		/// </summary>
 		public static void FDIVR (FPType target)
-		{}
-
-		// FDIVR ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FDIVR ST0,fpureg
+		/// </summary>
 		public static void FDIVR_ST0 (FPType source)
-		{}
-
-		// FDIVR fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FDIVR fpureg,ST0
+		/// </summary>
 		public static void FDIVR__ST0 (FPType target)
-		{}
-
-		// FDIVRP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FDIVRP fpureg
+		/// </summary>
 		public static void FDIVRP (FPType target)
-		{}
-
-		// FDIVRP fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FDIVRP fpureg,ST0
+		/// </summary>
 		public static void FDIVRP__ST0 (FPType target)
-		{}
-
-		// FENI
+		{
+		}
+		
+		/// <summary>
+		/// FENI 
+		/// </summary>
 		public static void FENI ()
-		{}
-
-		// FFREE fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FFREE fpureg
+		/// </summary>
 		public static void FFREE (FPType target)
-		{}
-
-		// FFREEP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FFREEP fpureg
+		/// </summary>
 		public static void FFREEP (FPType target)
-		{}
-
-		// FIADD mem16
+		{
+		}
+		
+		/// <summary>
+		/// FIADD mem16
+		/// </summary>
 		public static void FIADD (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIADD mem16
+		/// </summary>
 		public unsafe static void FIADD (UInt16 *target)
-
-		{}
-
-		// FIADD mem32
+		{
+		}
+		
+		/// <summary>
+		/// FIADD mem32
+		/// </summary>
 		public static void FIADD (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIADD mem32
+		/// </summary>
 		public unsafe static void FIADD (UInt32 *target)
-
-		{}
-
-		// FICOM mem16
+		{
+		}
+		
+		/// <summary>
+		/// FICOM mem16
+		/// </summary>
 		public static void FICOM (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FICOM mem16
+		/// </summary>
 		public unsafe static void FICOM (UInt16 *target)
-
-		{}
-
-		// FICOM mem32
+		{
+		}
+		
+		/// <summary>
+		/// FICOM mem32
+		/// </summary>
 		public static void FICOM (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FICOM mem32
+		/// </summary>
 		public unsafe static void FICOM (UInt32 *target)
-
-		{}
-
-		// FICOMP mem16
+		{
+		}
+		
+		/// <summary>
+		/// FICOMP mem16
+		/// </summary>
 		public static void FICOMP (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FICOMP mem16
+		/// </summary>
 		public unsafe static void FICOMP (UInt16 *target)
-
-		{}
-
-		// FICOMP mem32
+		{
+		}
+		
+		/// <summary>
+		/// FICOMP mem32
+		/// </summary>
 		public static void FICOMP (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FICOMP mem32
+		/// </summary>
 		public unsafe static void FICOMP (UInt32 *target)
-
-		{}
-
-		// FIDIV mem16
+		{
+		}
+		
+		/// <summary>
+		/// FIDIV mem16
+		/// </summary>
 		public static void FIDIV (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIDIV mem16
+		/// </summary>
 		public unsafe static void FIDIV (UInt16 *target)
-
-		{}
-
-		// FIDIV mem32
+		{
+		}
+		
+		/// <summary>
+		/// FIDIV mem32
+		/// </summary>
 		public static void FIDIV (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIDIV mem32
+		/// </summary>
 		public unsafe static void FIDIV (UInt32 *target)
-
-		{}
-
-		// FIDIVR mem16
+		{
+		}
+		
+		/// <summary>
+		/// FIDIVR mem16
+		/// </summary>
 		public static void FIDIVR (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIDIVR mem16
+		/// </summary>
 		public unsafe static void FIDIVR (UInt16 *target)
-
-		{}
-
-		// FIDIVR mem32
+		{
+		}
+		
+		/// <summary>
+		/// FIDIVR mem32
+		/// </summary>
 		public static void FIDIVR (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIDIVR mem32
+		/// </summary>
 		public unsafe static void FIDIVR (UInt32 *target)
-
-		{}
-
-		// FILD mem16
+		{
+		}
+		
+		/// <summary>
+		/// FILD mem16
+		/// </summary>
 		public static void FILD (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FILD mem16
+		/// </summary>
 		public unsafe static void FILD (UInt16 *target)
-
-		{}
-
-		// FILD mem32
+		{
+		}
+		
+		/// <summary>
+		/// FILD mem32
+		/// </summary>
 		public static void FILD (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FILD mem32
+		/// </summary>
 		public unsafe static void FILD (UInt32 *target)
-
-		{}
-
-		// FILD mem64
+		{
+		}
+		
+		/// <summary>
+		/// FILD mem64
+		/// </summary>
 		public static void FILD (QWordMemory target)
-		{}
-
-		// FIMUL mem16
+		{
+		}
+		
+		/// <summary>
+		/// FIMUL mem16
+		/// </summary>
 		public static void FIMUL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIMUL mem16
+		/// </summary>
 		public unsafe static void FIMUL (UInt16 *target)
-
-		{}
-
-		// FIMUL mem32
+		{
+		}
+		
+		/// <summary>
+		/// FIMUL mem32
+		/// </summary>
 		public static void FIMUL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIMUL mem32
+		/// </summary>
 		public unsafe static void FIMUL (UInt32 *target)
-
-		{}
-
-		// FINCSTP
+		{
+		}
+		
+		/// <summary>
+		/// FINCSTP 
+		/// </summary>
 		public static void FINCSTP ()
-		{}
-
-		// FINIT
+		{
+		}
+		
+		/// <summary>
+		/// FINIT 
+		/// </summary>
 		public static void FINIT ()
-		{}
-
-		// FIST mem16
+		{
+		}
+		
+		/// <summary>
+		/// FIST mem16
+		/// </summary>
 		public static void FIST (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIST mem16
+		/// </summary>
 		public unsafe static void FIST (UInt16 *target)
-
-		{}
-
-		// FIST mem32
+		{
+		}
+		
+		/// <summary>
+		/// FIST mem32
+		/// </summary>
 		public static void FIST (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FIST mem32
+		/// </summary>
 		public unsafe static void FIST (UInt32 *target)
-
-		{}
-
-		// FISTP mem16
+		{
+		}
+		
+		/// <summary>
+		/// FISTP mem16
+		/// </summary>
 		public static void FISTP (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FISTP mem16
+		/// </summary>
 		public unsafe static void FISTP (UInt16 *target)
-
-		{}
-
-		// FISTP mem32
+		{
+		}
+		
+		/// <summary>
+		/// FISTP mem32
+		/// </summary>
 		public static void FISTP (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FISTP mem32
+		/// </summary>
 		public unsafe static void FISTP (UInt32 *target)
-
-		{}
-
-		// FISTP mem64
+		{
+		}
+		
+		/// <summary>
+		/// FISTP mem64
+		/// </summary>
 		public static void FISTP (QWordMemory target)
-		{}
-
-		// FISUB mem16
+		{
+		}
+		
+		/// <summary>
+		/// FISUB mem16
+		/// </summary>
 		public static void FISUB (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FISUB mem16
+		/// </summary>
 		public unsafe static void FISUB (UInt16 *target)
-
-		{}
-
-		// FISUB mem32
+		{
+		}
+		
+		/// <summary>
+		/// FISUB mem32
+		/// </summary>
 		public static void FISUB (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FISUB mem32
+		/// </summary>
 		public unsafe static void FISUB (UInt32 *target)
-
-		{}
-
-		// FISUBR mem16
+		{
+		}
+		
+		/// <summary>
+		/// FISUBR mem16
+		/// </summary>
 		public static void FISUBR (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FISUBR mem16
+		/// </summary>
 		public unsafe static void FISUBR (UInt16 *target)
-
-		{}
-
-		// FISUBR mem32
+		{
+		}
+		
+		/// <summary>
+		/// FISUBR mem32
+		/// </summary>
 		public static void FISUBR (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FISUBR mem32
+		/// </summary>
 		public unsafe static void FISUBR (UInt32 *target)
-
-		{}
-
-		// FLD mem32
+		{
+		}
+		
+		/// <summary>
+		/// FLD mem32
+		/// </summary>
 		public static void FLD (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FLD mem32
+		/// </summary>
 		public unsafe static void FLD (UInt32 *target)
-
-		{}
-
-		// FLD mem64
+		{
+		}
+		
+		/// <summary>
+		/// FLD mem64
+		/// </summary>
 		public static void FLD (QWordMemory target)
-		{}
-
-		// FLD mem80
+		{
+		}
+		
+		/// <summary>
+		/// FLD mem80
+		/// </summary>
 		public static void FLD (TWordMemory target)
-		{}
-
-		// FLD fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FLD fpureg
+		/// </summary>
 		public static void FLD (FPType target)
-		{}
-
-		// FLD1
+		{
+		}
+		
+		/// <summary>
+		/// FLD1 
+		/// </summary>
 		public static void FLD1 ()
-		{}
-
-		// FLDCW mem16
+		{
+		}
+		
+		/// <summary>
+		/// FLDCW mem16
+		/// </summary>
 		public static void FLDCW (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FLDCW mem16
+		/// </summary>
 		public unsafe static void FLDCW (UInt16 *target)
-
-		{}
-
-		// FLDENV mem
+		{
+		}
+		
+		/// <summary>
+		/// FLDENV mem
+		/// </summary>
 		public static void FLDENV (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FLDENV mem
+		/// </summary>
 		public unsafe static void FLDENV (byte *target)
-
-		{}
-
-		// FLDL2E
+		{
+		}
+		
+		/// <summary>
+		/// FLDL2E 
+		/// </summary>
 		public static void FLDL2E ()
-		{}
-
-		// FLDL2T
+		{
+		}
+		
+		/// <summary>
+		/// FLDL2T 
+		/// </summary>
 		public static void FLDL2T ()
-		{}
-
-		// FLDLG2
+		{
+		}
+		
+		/// <summary>
+		/// FLDLG2 
+		/// </summary>
 		public static void FLDLG2 ()
-		{}
-
-		// FLDLN2
+		{
+		}
+		
+		/// <summary>
+		/// FLDLN2 
+		/// </summary>
 		public static void FLDLN2 ()
-		{}
-
-		// FLDPI
+		{
+		}
+		
+		/// <summary>
+		/// FLDPI 
+		/// </summary>
 		public static void FLDPI ()
-		{}
-
-		// FLDZ
+		{
+		}
+		
+		/// <summary>
+		/// FLDZ 
+		/// </summary>
 		public static void FLDZ ()
-		{}
-
-		// FMUL mem32
+		{
+		}
+		
+		/// <summary>
+		/// FMUL mem32
+		/// </summary>
 		public static void FMUL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FMUL mem32
+		/// </summary>
 		public unsafe static void FMUL (UInt32 *target)
-
-		{}
-
-		// FMUL mem64
+		{
+		}
+		
+		/// <summary>
+		/// FMUL mem64
+		/// </summary>
 		public static void FMUL (QWordMemory target)
-		{}
-
-		// FMUL fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FMUL fpureg
+		/// </summary>
 		public static void FMUL (FPType target)
-		{}
-
-		// FMUL ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FMUL ST0,fpureg
+		/// </summary>
 		public static void FMUL_ST0 (FPType source)
-		{}
-
-		// FMUL fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FMUL fpureg,ST0
+		/// </summary>
 		public static void FMUL__ST0 (FPType target)
-		{}
-
-		// FMULP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FMULP fpureg
+		/// </summary>
 		public static void FMULP (FPType target)
-		{}
-
-		// FMULP fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FMULP fpureg,ST0
+		/// </summary>
 		public static void FMULP__ST0 (FPType target)
-		{}
-
-		// FNCLEX
+		{
+		}
+		
+		/// <summary>
+		/// FNCLEX 
+		/// </summary>
 		public static void FNCLEX ()
-		{}
-
-		// FNDISI
+		{
+		}
+		
+		/// <summary>
+		/// FNDISI 
+		/// </summary>
 		public static void FNDISI ()
-		{}
-
-		// FNENI
+		{
+		}
+		
+		/// <summary>
+		/// FNENI 
+		/// </summary>
 		public static void FNENI ()
-		{}
-
-		// FNINIT
+		{
+		}
+		
+		/// <summary>
+		/// FNINIT 
+		/// </summary>
 		public static void FNINIT ()
-		{}
-
-		// FNOP
+		{
+		}
+		
+		/// <summary>
+		/// FNOP 
+		/// </summary>
 		public static void FNOP ()
-		{}
-
-		// FNSAVE mem
+		{
+		}
+		
+		/// <summary>
+		/// FNSAVE mem
+		/// </summary>
 		public static void FNSAVE (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FNSAVE mem
+		/// </summary>
 		public unsafe static void FNSAVE (byte *target)
-
-		{}
-
-		// FNSTCW mem16
+		{
+		}
+		
+		/// <summary>
+		/// FNSTCW mem16
+		/// </summary>
 		public static void FNSTCW (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FNSTCW mem16
+		/// </summary>
 		public unsafe static void FNSTCW (UInt16 *target)
-
-		{}
-
-		// FNSTENV mem
+		{
+		}
+		
+		/// <summary>
+		/// FNSTENV mem
+		/// </summary>
 		public static void FNSTENV (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FNSTENV mem
+		/// </summary>
 		public unsafe static void FNSTENV (byte *target)
-
-		{}
-
-		// FNSTSW mem16
+		{
+		}
+		
+		/// <summary>
+		/// FNSTSW mem16
+		/// </summary>
 		public static void FNSTSW (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FNSTSW mem16
+		/// </summary>
 		public unsafe static void FNSTSW (UInt16 *target)
-
-		{}
-
-		// FNSTSW AX
+		{
+		}
+		
+		/// <summary>
+		/// FNSTSW AX
+		/// </summary>
 		public static void FNSTSW_AX ()
-		{}
-
-		// FPATAN
+		{
+		}
+		
+		/// <summary>
+		/// FPATAN 
+		/// </summary>
 		public static void FPATAN ()
-		{}
-
-		// FPREM
+		{
+		}
+		
+		/// <summary>
+		/// FPREM 
+		/// </summary>
 		public static void FPREM ()
-		{}
-
-		// FPREM1
+		{
+		}
+		
+		/// <summary>
+		/// FPREM1 
+		/// </summary>
 		public static void FPREM1 ()
-		{}
-
-		// FPTAN
+		{
+		}
+		
+		/// <summary>
+		/// FPTAN 
+		/// </summary>
 		public static void FPTAN ()
-		{}
-
-		// FRNDINT
+		{
+		}
+		
+		/// <summary>
+		/// FRNDINT 
+		/// </summary>
 		public static void FRNDINT ()
-		{}
-
-		// FRSTOR mem
+		{
+		}
+		
+		/// <summary>
+		/// FRSTOR mem
+		/// </summary>
 		public static void FRSTOR (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FRSTOR mem
+		/// </summary>
 		public unsafe static void FRSTOR (byte *target)
-
-		{}
-
-		// FSAVE mem
+		{
+		}
+		
+		/// <summary>
+		/// FSAVE mem
+		/// </summary>
 		public static void FSAVE (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FSAVE mem
+		/// </summary>
 		public unsafe static void FSAVE (byte *target)
-
-		{}
-
-		// FSCALE
+		{
+		}
+		
+		/// <summary>
+		/// FSCALE 
+		/// </summary>
 		public static void FSCALE ()
-		{}
-
-		// FSETPM
+		{
+		}
+		
+		/// <summary>
+		/// FSETPM 
+		/// </summary>
 		public static void FSETPM ()
-		{}
-
-		// FSIN
+		{
+		}
+		
+		/// <summary>
+		/// FSIN 
+		/// </summary>
 		public static void FSIN ()
-		{}
-
-		// FSINCOS
+		{
+		}
+		
+		/// <summary>
+		/// FSINCOS 
+		/// </summary>
 		public static void FSINCOS ()
-		{}
-
-		// FSQRT
+		{
+		}
+		
+		/// <summary>
+		/// FSQRT 
+		/// </summary>
 		public static void FSQRT ()
-		{}
-
-		// FST mem32
+		{
+		}
+		
+		/// <summary>
+		/// FST mem32
+		/// </summary>
 		public static void FST (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FST mem32
+		/// </summary>
 		public unsafe static void FST (UInt32 *target)
-
-		{}
-
-		// FST mem64
+		{
+		}
+		
+		/// <summary>
+		/// FST mem64
+		/// </summary>
 		public static void FST (QWordMemory target)
-		{}
-
-		// FST fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FST fpureg
+		/// </summary>
 		public static void FST (FPType target)
-		{}
-
-		// FSTCW mem16
+		{
+		}
+		
+		/// <summary>
+		/// FSTCW mem16
+		/// </summary>
 		public static void FSTCW (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FSTCW mem16
+		/// </summary>
 		public unsafe static void FSTCW (UInt16 *target)
-
-		{}
-
-		// FSTENV mem
+		{
+		}
+		
+		/// <summary>
+		/// FSTENV mem
+		/// </summary>
 		public static void FSTENV (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FSTENV mem
+		/// </summary>
 		public unsafe static void FSTENV (byte *target)
-
-		{}
-
-		// FSTP mem32
+		{
+		}
+		
+		/// <summary>
+		/// FSTP mem32
+		/// </summary>
 		public static void FSTP (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FSTP mem32
+		/// </summary>
 		public unsafe static void FSTP (UInt32 *target)
-
-		{}
-
-		// FSTP mem64
+		{
+		}
+		
+		/// <summary>
+		/// FSTP mem64
+		/// </summary>
 		public static void FSTP (QWordMemory target)
-		{}
-
-		// FSTP mem80
+		{
+		}
+		
+		/// <summary>
+		/// FSTP mem80
+		/// </summary>
 		public static void FSTP (TWordMemory target)
-		{}
-
-		// FSTP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FSTP fpureg
+		/// </summary>
 		public static void FSTP (FPType target)
-		{}
-
-		// FSTSW mem16
+		{
+		}
+		
+		/// <summary>
+		/// FSTSW mem16
+		/// </summary>
 		public static void FSTSW (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FSTSW mem16
+		/// </summary>
 		public unsafe static void FSTSW (UInt16 *target)
-
-		{}
-
-		// FSTSW AX
+		{
+		}
+		
+		/// <summary>
+		/// FSTSW AX
+		/// </summary>
 		public static void FSTSW_AX ()
-		{}
-
-		// FSUB mem32
+		{
+		}
+		
+		/// <summary>
+		/// FSUB mem32
+		/// </summary>
 		public static void FSUB (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FSUB mem32
+		/// </summary>
 		public unsafe static void FSUB (UInt32 *target)
-
-		{}
-
-		// FSUB mem64
+		{
+		}
+		
+		/// <summary>
+		/// FSUB mem64
+		/// </summary>
 		public static void FSUB (QWordMemory target)
-		{}
-
-		// FSUB fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FSUB fpureg
+		/// </summary>
 		public static void FSUB (FPType target)
-		{}
-
-		// FSUB ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FSUB ST0,fpureg
+		/// </summary>
 		public static void FSUB_ST0 (FPType source)
-		{}
-
-		// FSUB fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FSUB fpureg,ST0
+		/// </summary>
 		public static void FSUB__ST0 (FPType target)
-		{}
-
-		// FSUBP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FSUBP fpureg
+		/// </summary>
 		public static void FSUBP (FPType target)
-		{}
-
-		// FSUBP fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FSUBP fpureg,ST0
+		/// </summary>
 		public static void FSUBP__ST0 (FPType target)
-		{}
-
-		// FSUBR mem32
+		{
+		}
+		
+		/// <summary>
+		/// FSUBR mem32
+		/// </summary>
 		public static void FSUBR (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FSUBR mem32
+		/// </summary>
 		public unsafe static void FSUBR (UInt32 *target)
-
-		{}
-
-		// FSUBR mem64
+		{
+		}
+		
+		/// <summary>
+		/// FSUBR mem64
+		/// </summary>
 		public static void FSUBR (QWordMemory target)
-		{}
-
-		// FSUBR fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FSUBR fpureg
+		/// </summary>
 		public static void FSUBR (FPType target)
-		{}
-
-		// FSUBR ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FSUBR ST0,fpureg
+		/// </summary>
 		public static void FSUBR_ST0 (FPType source)
-		{}
-
-		// FSUBR fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FSUBR fpureg,ST0
+		/// </summary>
 		public static void FSUBR__ST0 (FPType target)
-		{}
-
-		// FSUBRP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FSUBRP fpureg
+		/// </summary>
 		public static void FSUBRP (FPType target)
-		{}
-
-		// FSUBRP fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FSUBRP fpureg,ST0
+		/// </summary>
 		public static void FSUBRP__ST0 (FPType target)
-		{}
-
-		// FTST
+		{
+		}
+		
+		/// <summary>
+		/// FTST 
+		/// </summary>
 		public static void FTST ()
-		{}
-
-		// FUCOM fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FUCOM fpureg
+		/// </summary>
 		public static void FUCOM (FPType target)
-		{}
-
-		// FUCOM ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FUCOM ST0,fpureg
+		/// </summary>
 		public static void FUCOM_ST0 (FPType source)
-		{}
-
-		// FUCOMI fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FUCOMI fpureg
+		/// </summary>
 		public static void FUCOMI (FPType target)
-		{}
-
-		// FUCOMI ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FUCOMI ST0,fpureg
+		/// </summary>
 		public static void FUCOMI_ST0 (FPType source)
-		{}
-
-		// FUCOMIP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FUCOMIP fpureg
+		/// </summary>
 		public static void FUCOMIP (FPType target)
-		{}
-
-		// FUCOMIP ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FUCOMIP ST0,fpureg
+		/// </summary>
 		public static void FUCOMIP_ST0 (FPType source)
-		{}
-
-		// FUCOMP fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FUCOMP fpureg
+		/// </summary>
 		public static void FUCOMP (FPType target)
-		{}
-
-		// FUCOMP ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FUCOMP ST0,fpureg
+		/// </summary>
 		public static void FUCOMP_ST0 (FPType source)
-		{}
-
-		// FUCOMPP
+		{
+		}
+		
+		/// <summary>
+		/// FUCOMPP 
+		/// </summary>
 		public static void FUCOMPP ()
-		{}
-
-		// FWAIT
+		{
+		}
+		
+		/// <summary>
+		/// FWAIT 
+		/// </summary>
 		public static void FWAIT ()
-		{}
-
-		// FXAM
+		{
+		}
+		
+		/// <summary>
+		/// FXAM 
+		/// </summary>
 		public static void FXAM ()
-		{}
-
-		// FXCH
+		{
+		}
+		
+		/// <summary>
+		/// FXCH 
+		/// </summary>
 		public static void FXCH ()
-		{}
-
-		// FXCH fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FXCH fpureg
+		/// </summary>
 		public static void FXCH (FPType target)
-		{}
-
-		// FXCH fpureg,ST0
+		{
+		}
+		
+		/// <summary>
+		/// FXCH fpureg,ST0
+		/// </summary>
 		public static void FXCH__ST0 (FPType target)
-		{}
-
-		// FXCH ST0,fpureg
+		{
+		}
+		
+		/// <summary>
+		/// FXCH ST0,fpureg
+		/// </summary>
 		public static void FXCH_ST0 (FPType source)
-		{}
-
-		// FXRSTOR memory
+		{
+		}
+		
+		/// <summary>
+		/// FXRSTOR memory
+		/// </summary>
 		public static void FXRSTOR (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FXRSTOR memory
+		/// </summary>
 		public unsafe static void FXRSTOR (byte *target)
-
-		{}
-
-		// FXSAVE memory
+		{
+		}
+		
+		/// <summary>
+		/// FXSAVE memory
+		/// </summary>
 		public static void FXSAVE (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// FXSAVE memory
+		/// </summary>
 		public unsafe static void FXSAVE (byte *target)
-
-		{}
-
-		// FXTRACT
+		{
+		}
+		
+		/// <summary>
+		/// FXTRACT 
+		/// </summary>
 		public static void FXTRACT ()
-		{}
-
-		// FYL2X
+		{
+		}
+		
+		/// <summary>
+		/// FYL2X 
+		/// </summary>
 		public static void FYL2X ()
-		{}
-
-		// FYL2XP1
+		{
+		}
+		
+		/// <summary>
+		/// FYL2XP1 
+		/// </summary>
 		public static void FYL2XP1 ()
-		{}
-
-		// HLT
+		{
+		}
+		
+		/// <summary>
+		/// HLT 
+		/// </summary>
 		public static void HLT ()
-		{}
-
-		// ICEBP
+		{
+		}
+		
+		/// <summary>
+		/// ICEBP 
+		/// </summary>
 		public static void ICEBP ()
-		{}
-
-		// IDIV mem8
+		{
+		}
+		
+		/// <summary>
+		/// IDIV mem8
+		/// </summary>
 		public static void IDIV (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IDIV mem8
+		/// </summary>
 		public unsafe static void IDIV (byte *target)
-
-		{}
-
-		// IDIV mem16
+		{
+		}
+		
+		/// <summary>
+		/// IDIV mem16
+		/// </summary>
 		public static void IDIV (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IDIV mem16
+		/// </summary>
 		public unsafe static void IDIV (UInt16 *target)
-
-		{}
-
-		// IDIV mem32
+		{
+		}
+		
+		/// <summary>
+		/// IDIV mem32
+		/// </summary>
 		public static void IDIV (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IDIV mem32
+		/// </summary>
 		public unsafe static void IDIV (UInt32 *target)
-
-		{}
-
-		// IDIV rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// IDIV rmreg8
+		/// </summary>
 		public static void IDIV (R8Type target)
-		{}
-
-		// IDIV rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// IDIV rmreg16
+		/// </summary>
 		public static void IDIV (R16Type target)
-		{}
-
-		// IDIV rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// IDIV rmreg32
+		/// </summary>
 		public static void IDIV (R32Type target)
-		{}
-
-		// IMUL mem8
+		{
+		}
+		
+		/// <summary>
+		/// IMUL mem8
+		/// </summary>
 		public static void IMUL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL mem8
+		/// </summary>
 		public unsafe static void IMUL (byte *target)
-
-		{}
-
-		// IMUL mem16
+		{
+		}
+		
+		/// <summary>
+		/// IMUL mem16
+		/// </summary>
 		public static void IMUL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL mem16
+		/// </summary>
 		public unsafe static void IMUL (UInt16 *target)
-
-		{}
-
-		// IMUL mem32
+		{
+		}
+		
+		/// <summary>
+		/// IMUL mem32
+		/// </summary>
 		public static void IMUL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL mem32
+		/// </summary>
 		public unsafe static void IMUL (UInt32 *target)
-
-		{}
-
-		// IMUL reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,mem16
+		/// </summary>
 		public static void IMUL (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,mem16
+		/// </summary>
 		public unsafe static void IMUL (R16Type target, UInt16 *source)
-
-		{}
-
-		// IMUL reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,mem32
+		/// </summary>
 		public static void IMUL (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,mem32
+		/// </summary>
 		public unsafe static void IMUL (R32Type target, UInt32 *source)
-
-		{}
-
-		// IMUL reg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,imm8
+		/// </summary>
 		public static void IMUL (R16Type target, Byte source)
-		{}
-
-		// IMUL reg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,imm16
+		/// </summary>
 		public static void IMUL (R16Type target, UInt16 source)
-		{}
-
-		// IMUL reg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,imm8
+		/// </summary>
 		public static void IMUL (R32Type target, Byte source)
-		{}
-
-		// IMUL reg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,imm32
+		/// </summary>
 		public static void IMUL (R32Type target, UInt32 source)
-		{}
-
-		// IMUL reg16,mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,mem16,imm8
+		/// </summary>
 		public static void IMUL (R16Type target, WordMemory source, Byte value)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,mem16,imm8
+		/// </summary>
 		public unsafe static void IMUL (R16Type target, UInt16 *source, Byte value)
-
-		{}
-
-		// IMUL reg16,mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,mem16,imm16
+		/// </summary>
 		public static void IMUL (R16Type target, WordMemory source, UInt16 value)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,mem16,imm16
+		/// </summary>
 		public unsafe static void IMUL (R16Type target, UInt16 *source, UInt16 value)
-
-		{}
-
-		// IMUL reg32,mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,mem32,imm8
+		/// </summary>
 		public static void IMUL (R32Type target, DWordMemory source, Byte value)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,mem32,imm8
+		/// </summary>
 		public unsafe static void IMUL (R32Type target, UInt32 *source, Byte value)
-
-		{}
-
-		// IMUL reg32,mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,mem32,imm32
+		/// </summary>
 		public static void IMUL (R32Type target, DWordMemory source, UInt32 value)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,mem32,imm32
+		/// </summary>
 		public unsafe static void IMUL (R32Type target, UInt32 *source, UInt32 value)
-
-		{}
-
-		// IMUL rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// IMUL rmreg8
+		/// </summary>
 		public static void IMUL (R8Type target)
-		{}
-
-		// IMUL rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// IMUL rmreg16
+		/// </summary>
 		public static void IMUL (R16Type target)
-		{}
-
-		// IMUL rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// IMUL rmreg32
+		/// </summary>
 		public static void IMUL (R32Type target)
-		{}
-
-		// IMUL reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,rmreg16
+		/// </summary>
 		public static void IMUL (R16Type target, R16Type source)
-		{}
-
-		// IMUL reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,rmreg32
+		/// </summary>
 		public static void IMUL (R32Type target, R32Type source)
-		{}
-
-		// IMUL reg16,rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,rmreg16,imm8
+		/// </summary>
 		public static void IMUL (R16Type target, R16Type source, Byte value)
-		{}
-
-		// IMUL reg16,rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg16,rmreg16,imm16
+		/// </summary>
 		public static void IMUL (R16Type target, R16Type source, UInt16 value)
-		{}
-
-		// IMUL reg32,rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,rmreg32,imm8
+		/// </summary>
 		public static void IMUL (R32Type target, R32Type source, Byte value)
-		{}
-
-		// IMUL reg32,rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// IMUL reg32,rmreg32,imm32
+		/// </summary>
 		public static void IMUL (R32Type target, R32Type source, UInt32 value)
-		{}
-
-		// IN AL,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IN AL,imm8
+		/// </summary>
 		public static void IN_AL (Byte source)
-		{}
-
-		// IN AX,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IN AX,imm8
+		/// </summary>
 		public static void IN_AX (Byte source)
-		{}
-
-		// IN EAX,imm8
+		{
+		}
+		
+		/// <summary>
+		/// IN EAX,imm8
+		/// </summary>
 		public static void IN_EAX (Byte source)
-		{}
-
-		// IN AL,DX
+		{
+		}
+		
+		/// <summary>
+		/// IN AL,DX
+		/// </summary>
 		public static void IN_AL__DX ()
-		{}
-
-		// IN AX,DX
+		{
+		}
+		
+		/// <summary>
+		/// IN AX,DX
+		/// </summary>
 		public static void IN_AX__DX ()
-		{}
-
-		// IN EAX,DX
+		{
+		}
+		
+		/// <summary>
+		/// IN EAX,DX
+		/// </summary>
 		public static void IN_EAX__DX ()
-		{}
-
-		// INC reg16
+		{
+		}
+		
+		/// <summary>
+		/// INC reg16
+		/// </summary>
 		public static void INC (R16Type target)
-		{}
-
-		// INC reg32
+		{
+		}
+		
+		/// <summary>
+		/// INC reg32
+		/// </summary>
 		public static void INC (R32Type target)
-		{}
-
-		// INC mem8
+		{
+		}
+		
+		/// <summary>
+		/// INC mem8
+		/// </summary>
 		public static void INC (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// INC mem8
+		/// </summary>
 		public unsafe static void INC (byte *target)
-
-		{}
-
-		// INC mem16
+		{
+		}
+		
+		/// <summary>
+		/// INC mem16
+		/// </summary>
 		public static void INC (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// INC mem16
+		/// </summary>
 		public unsafe static void INC (UInt16 *target)
-
-		{}
-
-		// INC mem32
+		{
+		}
+		
+		/// <summary>
+		/// INC mem32
+		/// </summary>
 		public static void INC (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// INC mem32
+		/// </summary>
 		public unsafe static void INC (UInt32 *target)
-
-		{}
-
-		// INC rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// INC rmreg8
+		/// </summary>
 		public static void INC (R8Type target)
-		{}
-
-		// INSB
+		{
+		}
+		
+		/// <summary>
+		/// INSB 
+		/// </summary>
 		public static void INSB ()
-		{}
-
-		// INSD
+		{
+		}
+		
+		/// <summary>
+		/// INSD 
+		/// </summary>
 		public static void INSD ()
-		{}
-
-		// INSW
+		{
+		}
+		
+		/// <summary>
+		/// INSW 
+		/// </summary>
 		public static void INSW ()
-		{}
-
-		// INT imm8
+		{
+		}
+		
+		/// <summary>
+		/// INT imm8
+		/// </summary>
 		public static void INT (Byte target)
-		{}
-
-		// INTO
+		{
+		}
+		
+		/// <summary>
+		/// INTO 
+		/// </summary>
 		public static void INTO ()
-		{}
-
-		// INVD
+		{
+		}
+		
+		/// <summary>
+		/// INVD 
+		/// </summary>
 		public static void INVD ()
-		{}
-
-		// INVLPG mem
+		{
+		}
+		
+		/// <summary>
+		/// INVLPG mem
+		/// </summary>
 		public static void INVLPG (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// INVLPG mem
+		/// </summary>
 		public unsafe static void INVLPG (byte *target)
-
-		{}
-
-		// IRET
+		{
+		}
+		
+		/// <summary>
+		/// IRET 
+		/// </summary>
 		public static void IRET ()
-		{}
-
-		// IRETD
+		{
+		}
+		
+		/// <summary>
+		/// IRETD 
+		/// </summary>
 		public static void IRETD ()
-		{}
-
-		// IRETW
+		{
+		}
+		
+		/// <summary>
+		/// IRETW 
+		/// </summary>
 		public static void IRETW ()
-		{}
-
-		// JA imm8
+		{
+		}
+		
+		/// <summary>
+		/// JA imm8
+		/// </summary>
 		public static void JA (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JA imm8
+		/// </summary>
 		public static void JA (string label)
-
-		{}
-
-		// JA NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JA NEAR imm
+		/// </summary>
 		public static void JA (UInt32 target)
-		{}
-
-		// JAE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JAE imm8
+		/// </summary>
 		public static void JAE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JAE imm8
+		/// </summary>
 		public static void JAE (string label)
-
-		{}
-
-		// JAE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JAE NEAR imm
+		/// </summary>
 		public static void JAE (UInt32 target)
-		{}
-
-		// JB imm8
+		{
+		}
+		
+		/// <summary>
+		/// JB imm8
+		/// </summary>
 		public static void JB (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JB imm8
+		/// </summary>
 		public static void JB (string label)
-
-		{}
-
-		// JB NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JB NEAR imm
+		/// </summary>
 		public static void JB (UInt32 target)
-		{}
-
-		// JBE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JBE imm8
+		/// </summary>
 		public static void JBE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JBE imm8
+		/// </summary>
 		public static void JBE (string label)
-
-		{}
-
-		// JBE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JBE NEAR imm
+		/// </summary>
 		public static void JBE (UInt32 target)
-		{}
-
-		// JC imm8
+		{
+		}
+		
+		/// <summary>
+		/// JC imm8
+		/// </summary>
 		public static void JC (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JC imm8
+		/// </summary>
 		public static void JC (string label)
-
-		{}
-
-		// JC NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JC NEAR imm
+		/// </summary>
 		public static void JC (UInt32 target)
-		{}
-
-		// JCXZ imm8
+		{
+		}
+		
+		/// <summary>
+		/// JCXZ imm8
+		/// </summary>
 		public static void JCXZ (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JCXZ imm8
+		/// </summary>
 		public static void JCXZ (string label)
-
-		{}
-
-		// JE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JE imm8
+		/// </summary>
 		public static void JE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JE imm8
+		/// </summary>
 		public static void JE (string label)
-
-		{}
-
-		// JE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JE NEAR imm
+		/// </summary>
 		public static void JE (UInt32 target)
-		{}
-
-		// JECXZ imm8
+		{
+		}
+		
+		/// <summary>
+		/// JECXZ imm8
+		/// </summary>
 		public static void JECXZ (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JECXZ imm8
+		/// </summary>
 		public static void JECXZ (string label)
-
-		{}
-
-		// JG imm8
+		{
+		}
+		
+		/// <summary>
+		/// JG imm8
+		/// </summary>
 		public static void JG (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JG imm8
+		/// </summary>
 		public static void JG (string label)
-
-		{}
-
-		// JG NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JG NEAR imm
+		/// </summary>
 		public static void JG (UInt32 target)
-		{}
-
-		// JGE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JGE imm8
+		/// </summary>
 		public static void JGE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JGE imm8
+		/// </summary>
 		public static void JGE (string label)
-
-		{}
-
-		// JGE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JGE NEAR imm
+		/// </summary>
 		public static void JGE (UInt32 target)
-		{}
-
-		// JL imm8
+		{
+		}
+		
+		/// <summary>
+		/// JL imm8
+		/// </summary>
 		public static void JL (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JL imm8
+		/// </summary>
 		public static void JL (string label)
-
-		{}
-
-		// JL NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JL NEAR imm
+		/// </summary>
 		public static void JL (UInt32 target)
-		{}
-
-		// JLE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JLE imm8
+		/// </summary>
 		public static void JLE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JLE imm8
+		/// </summary>
 		public static void JLE (string label)
-
-		{}
-
-		// JLE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JLE NEAR imm
+		/// </summary>
 		public static void JLE (UInt32 target)
-		{}
-
-		// JMP imm
+		{
+		}
+		
+		/// <summary>
+		/// JMP imm
+		/// </summary>
 		public static void JMP (UInt32 target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JMP imm
+		/// </summary>
 		public static void JMP (string label)
-
-		{}
-
-		// JMP imm8
+		{
+		}
+		
+		/// <summary>
+		/// JMP imm8
+		/// </summary>
 		public static void JMP (Byte target)
-		{}
-
-		// JMP imm16:imm16
+		{
+		}
+		
+		/// <summary>
+		/// JMP imm16:imm16
+		/// </summary>
 		public static void JMP (UInt16 target, UInt16 source)
-		{}
-
-		// JMP imm16:imm32
+		{
+		}
+		
+		/// <summary>
+		/// JMP imm16:imm32
+		/// </summary>
 		public static void JMP (UInt16 target, UInt32 source)
-		{}
-
-		// JMP FAR mem
+		{
+		}
+		
+		/// <summary>
+		/// JMP FAR mem
+		/// </summary>
 		public static void JMP_FAR (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JMP FAR mem
+		/// </summary>
 		public unsafe static void JMP_FAR (byte *target)
-
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JMP FAR mem
+		/// </summary>
 		public static void JMP_FAR (string label)
-
-		{}
-
-		// JMP FAR mem32
+		{
+		}
+		
+		/// <summary>
+		/// JMP FAR mem32
+		/// </summary>
 		public static void JMP_FAR (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JMP FAR mem32
+		/// </summary>
 		public unsafe static void JMP_FAR (UInt32 *target)
-
-		{}
-
-		// JMP mem16
+		{
+		}
+		
+		/// <summary>
+		/// JMP mem16
+		/// </summary>
 		public static void JMP (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JMP mem16
+		/// </summary>
 		public unsafe static void JMP (UInt16 *target)
-
-		{}
-
-		// JMP mem32
+		{
+		}
+		
+		/// <summary>
+		/// JMP mem32
+		/// </summary>
 		public static void JMP (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JMP mem32
+		/// </summary>
 		public unsafe static void JMP (UInt32 *target)
-
-		{}
-
-		// JMP rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// JMP rmreg16
+		/// </summary>
 		public static void JMP (R16Type target)
-		{}
-
-		// JMP rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// JMP rmreg32
+		/// </summary>
 		public static void JMP (R32Type target)
-		{}
-
-		// JNA imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNA imm8
+		/// </summary>
 		public static void JNA (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNA imm8
+		/// </summary>
 		public static void JNA (string label)
-
-		{}
-
-		// JNA NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNA NEAR imm
+		/// </summary>
 		public static void JNA (UInt32 target)
-		{}
-
-		// JNAE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNAE imm8
+		/// </summary>
 		public static void JNAE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNAE imm8
+		/// </summary>
 		public static void JNAE (string label)
-
-		{}
-
-		// JNAE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNAE NEAR imm
+		/// </summary>
 		public static void JNAE (UInt32 target)
-		{}
-
-		// JNB imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNB imm8
+		/// </summary>
 		public static void JNB (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNB imm8
+		/// </summary>
 		public static void JNB (string label)
-
-		{}
-
-		// JNB NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNB NEAR imm
+		/// </summary>
 		public static void JNB (UInt32 target)
-		{}
-
-		// JNBE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNBE imm8
+		/// </summary>
 		public static void JNBE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNBE imm8
+		/// </summary>
 		public static void JNBE (string label)
-
-		{}
-
-		// JNBE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNBE NEAR imm
+		/// </summary>
 		public static void JNBE (UInt32 target)
-		{}
-
-		// JNC imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNC imm8
+		/// </summary>
 		public static void JNC (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNC imm8
+		/// </summary>
 		public static void JNC (string label)
-
-		{}
-
-		// JNC NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNC NEAR imm
+		/// </summary>
 		public static void JNC (UInt32 target)
-		{}
-
-		// JNE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNE imm8
+		/// </summary>
 		public static void JNE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNE imm8
+		/// </summary>
 		public static void JNE (string label)
-
-		{}
-
-		// JNE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNE NEAR imm
+		/// </summary>
 		public static void JNE (UInt32 target)
-		{}
-
-		// JNG imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNG imm8
+		/// </summary>
 		public static void JNG (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNG imm8
+		/// </summary>
 		public static void JNG (string label)
-
-		{}
-
-		// JNG NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNG NEAR imm
+		/// </summary>
 		public static void JNG (UInt32 target)
-		{}
-
-		// JNGE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNGE imm8
+		/// </summary>
 		public static void JNGE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNGE imm8
+		/// </summary>
 		public static void JNGE (string label)
-
-		{}
-
-		// JNGE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNGE NEAR imm
+		/// </summary>
 		public static void JNGE (UInt32 target)
-		{}
-
-		// JNL imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNL imm8
+		/// </summary>
 		public static void JNL (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNL imm8
+		/// </summary>
 		public static void JNL (string label)
-
-		{}
-
-		// JNL NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNL NEAR imm
+		/// </summary>
 		public static void JNL (UInt32 target)
-		{}
-
-		// JNLE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNLE imm8
+		/// </summary>
 		public static void JNLE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNLE imm8
+		/// </summary>
 		public static void JNLE (string label)
-
-		{}
-
-		// JNLE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNLE NEAR imm
+		/// </summary>
 		public static void JNLE (UInt32 target)
-		{}
-
-		// JNO imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNO imm8
+		/// </summary>
 		public static void JNO (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNO imm8
+		/// </summary>
 		public static void JNO (string label)
-
-		{}
-
-		// JNO NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNO NEAR imm
+		/// </summary>
 		public static void JNO (UInt32 target)
-		{}
-
-		// JNP imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNP imm8
+		/// </summary>
 		public static void JNP (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNP imm8
+		/// </summary>
 		public static void JNP (string label)
-
-		{}
-
-		// JNP NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNP NEAR imm
+		/// </summary>
 		public static void JNP (UInt32 target)
-		{}
-
-		// JNS imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNS imm8
+		/// </summary>
 		public static void JNS (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNS imm8
+		/// </summary>
 		public static void JNS (string label)
-
-		{}
-
-		// JNS NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNS NEAR imm
+		/// </summary>
 		public static void JNS (UInt32 target)
-		{}
-
-		// JNZ imm8
+		{
+		}
+		
+		/// <summary>
+		/// JNZ imm8
+		/// </summary>
 		public static void JNZ (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JNZ imm8
+		/// </summary>
 		public static void JNZ (string label)
-
-		{}
-
-		// JNZ NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JNZ NEAR imm
+		/// </summary>
 		public static void JNZ (UInt32 target)
-		{}
-
-		// JO imm8
+		{
+		}
+		
+		/// <summary>
+		/// JO imm8
+		/// </summary>
 		public static void JO (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JO imm8
+		/// </summary>
 		public static void JO (string label)
-
-		{}
-
-		// JO NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JO NEAR imm
+		/// </summary>
 		public static void JO (UInt32 target)
-		{}
-
-		// JP imm8
+		{
+		}
+		
+		/// <summary>
+		/// JP imm8
+		/// </summary>
 		public static void JP (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JP imm8
+		/// </summary>
 		public static void JP (string label)
-
-		{}
-
-		// JP NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JP NEAR imm
+		/// </summary>
 		public static void JP (UInt32 target)
-		{}
-
-		// JPE imm8
+		{
+		}
+		
+		/// <summary>
+		/// JPE imm8
+		/// </summary>
 		public static void JPE (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JPE imm8
+		/// </summary>
 		public static void JPE (string label)
-
-		{}
-
-		// JPE NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JPE NEAR imm
+		/// </summary>
 		public static void JPE (UInt32 target)
-		{}
-
-		// JPO imm8
+		{
+		}
+		
+		/// <summary>
+		/// JPO imm8
+		/// </summary>
 		public static void JPO (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JPO imm8
+		/// </summary>
 		public static void JPO (string label)
-
-		{}
-
-		// JPO NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JPO NEAR imm
+		/// </summary>
 		public static void JPO (UInt32 target)
-		{}
-
-		// JS imm8
+		{
+		}
+		
+		/// <summary>
+		/// JS imm8
+		/// </summary>
 		public static void JS (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JS imm8
+		/// </summary>
 		public static void JS (string label)
-
-		{}
-
-		// JS NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JS NEAR imm
+		/// </summary>
 		public static void JS (UInt32 target)
-		{}
-
-		// JZ imm8
+		{
+		}
+		
+		/// <summary>
+		/// JZ imm8
+		/// </summary>
 		public static void JZ (Byte target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// JZ imm8
+		/// </summary>
 		public static void JZ (string label)
-
-		{}
-
-		// JZ NEAR imm
+		{
+		}
+		
+		/// <summary>
+		/// JZ NEAR imm
+		/// </summary>
 		public static void JZ (UInt32 target)
-		{}
-
-		// LABEL
+		{
+		}
+		
+		/// <summary>
+		/// LABEL 
+		/// </summary>
 		public static void LABEL (string label)
-		{}
-
-		// LAHF
+		{
+		}
+		
+		/// <summary>
+		/// LAHF 
+		/// </summary>
 		public static void LAHF ()
-		{}
-
-		// LAR reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// LAR reg16,mem16
+		/// </summary>
 		public static void LAR (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LAR reg16,mem16
+		/// </summary>
 		public unsafe static void LAR (R16Type target, UInt16 *source)
-
-		{}
-
-		// LAR reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// LAR reg32,mem32
+		/// </summary>
 		public static void LAR (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LAR reg32,mem32
+		/// </summary>
 		public unsafe static void LAR (R32Type target, UInt32 *source)
-
-		{}
-
-		// LAR reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// LAR reg16,rmreg16
+		/// </summary>
 		public static void LAR (R16Type target, R16Type source)
-		{}
-
-		// LAR reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// LAR reg32,rmreg32
+		/// </summary>
 		public static void LAR (R32Type target, R32Type source)
-		{}
-
-		// LDS reg16,mem
+		{
+		}
+		
+		/// <summary>
+		/// LDS reg16,mem
+		/// </summary>
 		public static void LDS (R16Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LDS reg16,mem
+		/// </summary>
 		public unsafe static void LDS (R16Type target, byte *source)
-
-		{}
-
-		// LDS reg32,mem
+		{
+		}
+		
+		/// <summary>
+		/// LDS reg32,mem
+		/// </summary>
 		public static void LDS (R32Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LDS reg32,mem
+		/// </summary>
 		public unsafe static void LDS (R32Type target, byte *source)
-
-		{}
-
-		// LEA reg16,mem
+		{
+		}
+		
+		/// <summary>
+		/// LEA reg16,mem
+		/// </summary>
 		public static void LEA (R16Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LEA reg16,mem
+		/// </summary>
 		public unsafe static void LEA (R16Type target, byte *source)
-
-		{}
-
-		// LEA reg32,mem
+		{
+		}
+		
+		/// <summary>
+		/// LEA reg32,mem
+		/// </summary>
 		public static void LEA (R32Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LEA reg32,mem
+		/// </summary>
 		public unsafe static void LEA (R32Type target, byte *source)
-
-		{}
-
-		// LEAVE
+		{
+		}
+		
+		/// <summary>
+		/// LEAVE 
+		/// </summary>
 		public static void LEAVE ()
-		{}
-
-		// LES reg16,mem
+		{
+		}
+		
+		/// <summary>
+		/// LES reg16,mem
+		/// </summary>
 		public static void LES (R16Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LES reg16,mem
+		/// </summary>
 		public unsafe static void LES (R16Type target, byte *source)
-
-		{}
-
-		// LES reg32,mem
+		{
+		}
+		
+		/// <summary>
+		/// LES reg32,mem
+		/// </summary>
 		public static void LES (R32Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LES reg32,mem
+		/// </summary>
 		public unsafe static void LES (R32Type target, byte *source)
-
-		{}
-
-		// LFENCE
+		{
+		}
+		
+		/// <summary>
+		/// LFENCE 
+		/// </summary>
 		public static void LFENCE ()
-		{}
-
-		// LFS reg16,mem
+		{
+		}
+		
+		/// <summary>
+		/// LFS reg16,mem
+		/// </summary>
 		public static void LFS (R16Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LFS reg16,mem
+		/// </summary>
 		public unsafe static void LFS (R16Type target, byte *source)
-
-		{}
-
-		// LFS reg32,mem
+		{
+		}
+		
+		/// <summary>
+		/// LFS reg32,mem
+		/// </summary>
 		public static void LFS (R32Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LFS reg32,mem
+		/// </summary>
 		public unsafe static void LFS (R32Type target, byte *source)
-
-		{}
-
-		// LGDT mem
+		{
+		}
+		
+		/// <summary>
+		/// LGDT mem
+		/// </summary>
 		public static void LGDT (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LGDT mem
+		/// </summary>
 		public unsafe static void LGDT (byte *target)
-
-		{}
-
-		// LGS reg16,mem
+		{
+		}
+		
+		/// <summary>
+		/// LGS reg16,mem
+		/// </summary>
 		public static void LGS (R16Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LGS reg16,mem
+		/// </summary>
 		public unsafe static void LGS (R16Type target, byte *source)
-
-		{}
-
-		// LGS reg32,mem
+		{
+		}
+		
+		/// <summary>
+		/// LGS reg32,mem
+		/// </summary>
 		public static void LGS (R32Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LGS reg32,mem
+		/// </summary>
 		public unsafe static void LGS (R32Type target, byte *source)
-
-		{}
-
-		// LIDT mem
+		{
+		}
+		
+		/// <summary>
+		/// LIDT mem
+		/// </summary>
 		public static void LIDT (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LIDT mem
+		/// </summary>
 		public unsafe static void LIDT (byte *target)
-
-		{}
-
-		// LLDT mem16
+		{
+		}
+		
+		/// <summary>
+		/// LLDT mem16
+		/// </summary>
 		public static void LLDT (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LLDT mem16
+		/// </summary>
 		public unsafe static void LLDT (UInt16 *target)
-
-		{}
-
-		// LLDT rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// LLDT rmreg16
+		/// </summary>
 		public static void LLDT (R16Type target)
-		{}
-
-		// LMSW mem16
+		{
+		}
+		
+		/// <summary>
+		/// LMSW mem16
+		/// </summary>
 		public static void LMSW (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LMSW mem16
+		/// </summary>
 		public unsafe static void LMSW (UInt16 *target)
-
-		{}
-
-		// LMSW rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// LMSW rmreg16
+		/// </summary>
 		public static void LMSW (R16Type target)
-		{}
-
-		// LODSB
+		{
+		}
+		
+		/// <summary>
+		/// LODSB 
+		/// </summary>
 		public static void LODSB ()
-		{}
-
-		// LODSD
+		{
+		}
+		
+		/// <summary>
+		/// LODSD 
+		/// </summary>
 		public static void LODSD ()
-		{}
-
-		// LODSW
+		{
+		}
+		
+		/// <summary>
+		/// LODSW 
+		/// </summary>
 		public static void LODSW ()
-		{}
-
-		// LOOP imm8
+		{
+		}
+		
+		/// <summary>
+		/// LOOP imm8
+		/// </summary>
 		public static void LOOP (Byte target)
-		{}
-
-		// LOOPE imm8
+		{
+		}
+		
+		/// <summary>
+		/// LOOPE imm8
+		/// </summary>
 		public static void LOOPE (Byte target)
-		{}
-
-		// LOOPNE imm8
+		{
+		}
+		
+		/// <summary>
+		/// LOOPNE imm8
+		/// </summary>
 		public static void LOOPNE (Byte target)
-		{}
-
-		// LOOPNZ imm8
+		{
+		}
+		
+		/// <summary>
+		/// LOOPNZ imm8
+		/// </summary>
 		public static void LOOPNZ (Byte target)
-		{}
-
-		// LOOPZ imm8
+		{
+		}
+		
+		/// <summary>
+		/// LOOPZ imm8
+		/// </summary>
 		public static void LOOPZ (Byte target)
-		{}
-
-		// LSL reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// LSL reg16,mem16
+		/// </summary>
 		public static void LSL (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LSL reg16,mem16
+		/// </summary>
 		public unsafe static void LSL (R16Type target, UInt16 *source)
-
-		{}
-
-		// LSL reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// LSL reg32,mem32
+		/// </summary>
 		public static void LSL (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LSL reg32,mem32
+		/// </summary>
 		public unsafe static void LSL (R32Type target, UInt32 *source)
-
-		{}
-
-		// LSL reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// LSL reg16,rmreg16
+		/// </summary>
 		public static void LSL (R16Type target, R16Type source)
-		{}
-
-		// LSL reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// LSL reg32,rmreg32
+		/// </summary>
 		public static void LSL (R32Type target, R32Type source)
-		{}
-
-		// LSS reg16,mem
+		{
+		}
+		
+		/// <summary>
+		/// LSS reg16,mem
+		/// </summary>
 		public static void LSS (R16Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LSS reg16,mem
+		/// </summary>
 		public unsafe static void LSS (R16Type target, byte *source)
-
-		{}
-
-		// LSS reg32,mem
+		{
+		}
+		
+		/// <summary>
+		/// LSS reg32,mem
+		/// </summary>
 		public static void LSS (R32Type target, Memory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LSS reg32,mem
+		/// </summary>
 		public unsafe static void LSS (R32Type target, byte *source)
-
-		{}
-
-		// LTR mem16
+		{
+		}
+		
+		/// <summary>
+		/// LTR mem16
+		/// </summary>
 		public static void LTR (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// LTR mem16
+		/// </summary>
 		public unsafe static void LTR (UInt16 *target)
-
-		{}
-
-		// LTR rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// LTR rmreg16
+		/// </summary>
 		public static void LTR (R16Type target)
-		{}
-
-		// MFENCE
+		{
+		}
+		
+		/// <summary>
+		/// MFENCE 
+		/// </summary>
 		public static void MFENCE ()
-		{}
-
-		// MOV mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem8,reg8
+		/// </summary>
 		public static void MOV (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem8,reg8
+		/// </summary>
 		public unsafe static void MOV (byte *target, R8Type source)
-
-		{}
-
-		// MOV mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem16,reg16
+		/// </summary>
 		public static void MOV (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem16,reg16
+		/// </summary>
 		public unsafe static void MOV (UInt16 *target, R16Type source)
-
-		{}
-
-		// MOV mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem32,reg32
+		/// </summary>
 		public static void MOV (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem32,reg32
+		/// </summary>
 		public unsafe static void MOV (UInt32 *target, R32Type source)
-
-		{}
-
-		// MOV reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg8,mem8
+		/// </summary>
 		public static void MOV (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg8,mem8
+		/// </summary>
 		public unsafe static void MOV (R8Type target, byte *source)
-
-		{}
-
-		// MOV reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg16,mem16
+		/// </summary>
 		public static void MOV (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg16,mem16
+		/// </summary>
 		public unsafe static void MOV (R16Type target, UInt16 *source)
-
-		{}
-
-		// MOV reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg32,mem32
+		/// </summary>
 		public static void MOV (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg32,mem32
+		/// </summary>
 		public unsafe static void MOV (R32Type target, UInt32 *source)
-
-		{}
-
-		// MOV reg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg8,imm8
+		/// </summary>
 		public static void MOV (R8Type target, Byte source)
-		{}
-
-		// MOV reg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg16,imm16
+		/// </summary>
 		public static void MOV (R16Type target, UInt16 source)
-		{}
-
-		// MOV reg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg32,imm32
+		/// </summary>
 		public static void MOV (R32Type target, UInt32 source)
-		{}
-
-		// MOV mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem8,imm8
+		/// </summary>
 		public static void MOV (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem8,imm8
+		/// </summary>
 		public unsafe static void MOV (byte *target, Byte source)
-
-		{}
-
-		// MOV mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem16,imm16
+		/// </summary>
 		public static void MOV (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem16,imm16
+		/// </summary>
 		public unsafe static void MOV (UInt16 *target, UInt16 source)
-
-		{}
-
-		// MOV mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem32,imm32
+		/// </summary>
 		public static void MOV (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem32,imm32
+		/// </summary>
 		public unsafe static void MOV (UInt32 *target, UInt32 source)
-
-		{}
-
-		// MOV AL,memoffs8
+		{
+		}
+		
+		/// <summary>
+		/// MOV AL,memoffs8
+		/// </summary>
 		public static void MOV_AL (byte source)
-		{}
-
-		// MOV AX,memoffs16
+		{
+		}
+		
+		/// <summary>
+		/// MOV AX,memoffs16
+		/// </summary>
 		public static void MOV_AX (UInt16 source)
-		{}
-
-		// MOV EAX,memoffs32
+		{
+		}
+		
+		/// <summary>
+		/// MOV EAX,memoffs32
+		/// </summary>
 		public static void MOV_EAX (UInt32 source)
-		{}
-
-		// MOV memoffs8,AL
+		{
+		}
+		
+		/// <summary>
+		/// MOV memoffs8,AL
+		/// </summary>
 		public static void MOV__AL (byte target)
-		{}
-
-		// MOV memoffs16,AX
+		{
+		}
+		
+		/// <summary>
+		/// MOV memoffs16,AX
+		/// </summary>
 		public static void MOV__AX (UInt16 target)
-		{}
-
-		// MOV memoffs32,EAX
+		{
+		}
+		
+		/// <summary>
+		/// MOV memoffs32,EAX
+		/// </summary>
 		public static void MOV__EAX (UInt32 target)
-		{}
-
-		// MOV mem16,segreg
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem16,segreg
+		/// </summary>
 		public static void MOV (WordMemory target, SegType source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem16,segreg
+		/// </summary>
 		public unsafe static void MOV (UInt16 *target, SegType source)
-
-		{}
-
-		// MOV mem32,segreg
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem32,segreg
+		/// </summary>
 		public static void MOV (DWordMemory target, SegType source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV mem32,segreg
+		/// </summary>
 		public unsafe static void MOV (UInt32 *target, SegType source)
-
-		{}
-
-		// MOV segreg,mem16
+		{
+		}
+		
+		/// <summary>
+		/// MOV segreg,mem16
+		/// </summary>
 		public static void MOV (SegType target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV segreg,mem16
+		/// </summary>
 		public unsafe static void MOV (SegType target, UInt16 *source)
-
-		{}
-
-		// MOV segreg,mem32
+		{
+		}
+		
+		/// <summary>
+		/// MOV segreg,mem32
+		/// </summary>
 		public static void MOV (SegType target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOV segreg,mem32
+		/// </summary>
 		public unsafe static void MOV (SegType target, UInt32 *source)
-
-		{}
-
-		// MOV reg32,CR0/2/3/4
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg32,CR0/2/3/4
+		/// </summary>
 		public static void MOV (R32Type target, CRType source)
-		{}
-
-		// MOV reg32,DR0/1/2/3/6/7
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg32,DR0/1/2/3/6/7
+		/// </summary>
 		public static void MOV (R32Type target, DRType source)
-		{}
-
-		// MOV reg32,TR3/4/5/6/7
+		{
+		}
+		
+		/// <summary>
+		/// MOV reg32,TR3/4/5/6/7
+		/// </summary>
 		public static void MOV (R32Type target, TRType source)
-		{}
-
-		// MOV CR0/2/3/4,reg32
+		{
+		}
+		
+		/// <summary>
+		/// MOV CR0/2/3/4,reg32
+		/// </summary>
 		public static void MOV (CRType target, R32Type source)
-		{}
-
-		// MOV DR0/1/2/3/6/7,reg32
+		{
+		}
+		
+		/// <summary>
+		/// MOV DR0/1/2/3/6/7,reg32
+		/// </summary>
 		public static void MOV (DRType target, R32Type source)
-		{}
-
-		// MOV TR3/4/5/6/7,reg32
+		{
+		}
+		
+		/// <summary>
+		/// MOV TR3/4/5/6/7,reg32
+		/// </summary>
 		public static void MOV (TRType target, R32Type source)
-		{}
-
-		// MOV rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// MOV rmreg8,reg8
+		/// </summary>
 		public static void MOV (R8Type target, R8Type source)
-		{}
-
-		// MOV rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// MOV rmreg16,reg16
+		/// </summary>
 		public static void MOV (R16Type target, R16Type source)
-		{}
-
-		// MOV rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// MOV rmreg32,reg32
+		/// </summary>
 		public static void MOV (R32Type target, R32Type source)
-		{}
-
-		// MOV rmreg16,segreg
+		{
+		}
+		
+		/// <summary>
+		/// MOV rmreg16,segreg
+		/// </summary>
 		public static void MOV (R16Type target, SegType source)
-		{}
-
-		// MOV rmreg32,segreg
+		{
+		}
+		
+		/// <summary>
+		/// MOV rmreg32,segreg
+		/// </summary>
 		public static void MOV (R32Type target, SegType source)
-		{}
-
-		// MOV segreg,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// MOV segreg,rmreg16
+		/// </summary>
 		public static void MOV (SegType target, R16Type source)
-		{}
-
-		// MOV segreg,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// MOV segreg,rmreg32
+		/// </summary>
 		public static void MOV (SegType target, R32Type source)
-		{}
-
-		// MOV
+		{
+		}
+		
+		/// <summary>
+		/// MOV 
+		/// </summary>
 		public static void MOV (R16Type target, string label)
-		{}
-
-		// MOV
+		{
+		}
+		
+		/// <summary>
+		/// MOV 
+		/// </summary>
 		public static void MOV (R32Type target, string label)
-		{}
-
-		// MOVSB
+		{
+		}
+		
+		/// <summary>
+		/// MOVSB 
+		/// </summary>
 		public static void MOVSB ()
-		{}
-
-		// MOVSD
+		{
+		}
+		
+		/// <summary>
+		/// MOVSD 
+		/// </summary>
 		public static void MOVSD ()
-		{}
-
-		// MOVSW
+		{
+		}
+		
+		/// <summary>
+		/// MOVSW 
+		/// </summary>
 		public static void MOVSW ()
-		{}
-
-		// MOVSX reg16,mem8
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg16,mem8
+		/// </summary>
 		public static void MOVSX (R16Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg16,mem8
+		/// </summary>
 		public unsafe static void MOVSX (R16Type target, byte *source)
-
-		{}
-
-		// MOVSX reg32,mem8
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg32,mem8
+		/// </summary>
 		public static void MOVSX (R32Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg32,mem8
+		/// </summary>
 		public unsafe static void MOVSX (R32Type target, byte *source)
-
-		{}
-
-		// MOVSX reg32,mem16
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg32,mem16
+		/// </summary>
 		public static void MOVSX (R32Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg32,mem16
+		/// </summary>
 		public unsafe static void MOVSX (R32Type target, UInt16 *source)
-
-		{}
-
-		// MOVSX reg16,rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg16,rmreg8
+		/// </summary>
 		public static void MOVSX (R16Type target, R8Type source)
-		{}
-
-		// MOVSX reg32,rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg32,rmreg8
+		/// </summary>
 		public static void MOVSX (R32Type target, R8Type source)
-		{}
-
-		// MOVSX reg32,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// MOVSX reg32,rmreg16
+		/// </summary>
 		public static void MOVSX (R32Type target, R16Type source)
-		{}
-
-		// MOVZX reg16,mem8
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg16,mem8
+		/// </summary>
 		public static void MOVZX (R16Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg16,mem8
+		/// </summary>
 		public unsafe static void MOVZX (R16Type target, byte *source)
-
-		{}
-
-		// MOVZX reg32,mem8
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg32,mem8
+		/// </summary>
 		public static void MOVZX (R32Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg32,mem8
+		/// </summary>
 		public unsafe static void MOVZX (R32Type target, byte *source)
-
-		{}
-
-		// MOVZX reg32,mem16
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg32,mem16
+		/// </summary>
 		public static void MOVZX (R32Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg32,mem16
+		/// </summary>
 		public unsafe static void MOVZX (R32Type target, UInt16 *source)
-
-		{}
-
-		// MOVZX reg16,rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg16,rmreg8
+		/// </summary>
 		public static void MOVZX (R16Type target, R8Type source)
-		{}
-
-		// MOVZX reg32,rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg32,rmreg8
+		/// </summary>
 		public static void MOVZX (R32Type target, R8Type source)
-		{}
-
-		// MOVZX reg32,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// MOVZX reg32,rmreg16
+		/// </summary>
 		public static void MOVZX (R32Type target, R16Type source)
-		{}
-
-		// MUL mem8
+		{
+		}
+		
+		/// <summary>
+		/// MUL mem8
+		/// </summary>
 		public static void MUL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MUL mem8
+		/// </summary>
 		public unsafe static void MUL (byte *target)
-
-		{}
-
-		// MUL mem16
+		{
+		}
+		
+		/// <summary>
+		/// MUL mem16
+		/// </summary>
 		public static void MUL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MUL mem16
+		/// </summary>
 		public unsafe static void MUL (UInt16 *target)
-
-		{}
-
-		// MUL mem32
+		{
+		}
+		
+		/// <summary>
+		/// MUL mem32
+		/// </summary>
 		public static void MUL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// MUL mem32
+		/// </summary>
 		public unsafe static void MUL (UInt32 *target)
-
-		{}
-
-		// MUL rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// MUL rmreg8
+		/// </summary>
 		public static void MUL (R8Type target)
-		{}
-
-		// MUL rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// MUL rmreg16
+		/// </summary>
 		public static void MUL (R16Type target)
-		{}
-
-		// MUL rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// MUL rmreg32
+		/// </summary>
 		public static void MUL (R32Type target)
-		{}
-
-		// NEG mem8
+		{
+		}
+		
+		/// <summary>
+		/// NEG mem8
+		/// </summary>
 		public static void NEG (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// NEG mem8
+		/// </summary>
 		public unsafe static void NEG (byte *target)
-
-		{}
-
-		// NEG mem16
+		{
+		}
+		
+		/// <summary>
+		/// NEG mem16
+		/// </summary>
 		public static void NEG (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// NEG mem16
+		/// </summary>
 		public unsafe static void NEG (UInt16 *target)
-
-		{}
-
-		// NEG mem32
+		{
+		}
+		
+		/// <summary>
+		/// NEG mem32
+		/// </summary>
 		public static void NEG (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// NEG mem32
+		/// </summary>
 		public unsafe static void NEG (UInt32 *target)
-
-		{}
-
-		// NEG rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// NEG rmreg8
+		/// </summary>
 		public static void NEG (R8Type target)
-		{}
-
-		// NEG rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// NEG rmreg16
+		/// </summary>
 		public static void NEG (R16Type target)
-		{}
-
-		// NEG rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// NEG rmreg32
+		/// </summary>
 		public static void NEG (R32Type target)
-		{}
-
-		// NOP
+		{
+		}
+		
+		/// <summary>
+		/// NOP 
+		/// </summary>
 		public static void NOP ()
-		{}
-
-		// NOT mem8
+		{
+		}
+		
+		/// <summary>
+		/// NOT mem8
+		/// </summary>
 		public static void NOT (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// NOT mem8
+		/// </summary>
 		public unsafe static void NOT (byte *target)
-
-		{}
-
-		// NOT mem16
+		{
+		}
+		
+		/// <summary>
+		/// NOT mem16
+		/// </summary>
 		public static void NOT (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// NOT mem16
+		/// </summary>
 		public unsafe static void NOT (UInt16 *target)
-
-		{}
-
-		// NOT mem32
+		{
+		}
+		
+		/// <summary>
+		/// NOT mem32
+		/// </summary>
 		public static void NOT (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// NOT mem32
+		/// </summary>
 		public unsafe static void NOT (UInt32 *target)
-
-		{}
-
-		// NOT rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// NOT rmreg8
+		/// </summary>
 		public static void NOT (R8Type target)
-		{}
-
-		// NOT rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// NOT rmreg16
+		/// </summary>
 		public static void NOT (R16Type target)
-		{}
-
-		// NOT rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// NOT rmreg32
+		/// </summary>
 		public static void NOT (R32Type target)
-		{}
-
-		// OFFSET
+		{
+		}
+		
+		/// <summary>
+		/// OFFSET 
+		/// </summary>
 		public static void OFFSET (UInt32 value)
-		{}
-
-		// OR mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// OR mem8,reg8
+		/// </summary>
 		public static void OR (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR mem8,reg8
+		/// </summary>
 		public unsafe static void OR (byte *target, R8Type source)
-
-		{}
-
-		// OR mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// OR mem16,reg16
+		/// </summary>
 		public static void OR (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR mem16,reg16
+		/// </summary>
 		public unsafe static void OR (UInt16 *target, R16Type source)
-
-		{}
-
-		// OR mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// OR mem32,reg32
+		/// </summary>
 		public static void OR (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR mem32,reg32
+		/// </summary>
 		public unsafe static void OR (UInt32 *target, R32Type source)
-
-		{}
-
-		// OR reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// OR reg8,mem8
+		/// </summary>
 		public static void OR (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR reg8,mem8
+		/// </summary>
 		public unsafe static void OR (R8Type target, byte *source)
-
-		{}
-
-		// OR reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// OR reg16,mem16
+		/// </summary>
 		public static void OR (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR reg16,mem16
+		/// </summary>
 		public unsafe static void OR (R16Type target, UInt16 *source)
-
-		{}
-
-		// OR reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// OR reg32,mem32
+		/// </summary>
 		public static void OR (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR reg32,mem32
+		/// </summary>
 		public unsafe static void OR (R32Type target, UInt32 *source)
-
-		{}
-
-		// OR mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// OR mem8,imm8
+		/// </summary>
 		public static void OR (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR mem8,imm8
+		/// </summary>
 		public unsafe static void OR (byte *target, Byte source)
-
-		{}
-
-		// OR mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// OR mem16,imm16
+		/// </summary>
 		public static void OR (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR mem16,imm16
+		/// </summary>
 		public unsafe static void OR (UInt16 *target, UInt16 source)
-
-		{}
-
-		// OR mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// OR mem32,imm32
+		/// </summary>
 		public static void OR (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR mem32,imm32
+		/// </summary>
 		public unsafe static void OR (UInt32 *target, UInt32 source)
-
-		{}
-
-		// OR mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// OR mem16,imm8
+		/// </summary>
 		public static void OR (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR mem16,imm8
+		/// </summary>
 		public unsafe static void OR (UInt16 *target, Byte source)
-
-		{}
-
-		// OR mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// OR mem32,imm8
+		/// </summary>
 		public static void OR (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// OR mem32,imm8
+		/// </summary>
 		public unsafe static void OR (UInt32 *target, Byte source)
-
-		{}
-
-		// OR rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// OR rmreg8,reg8
+		/// </summary>
 		public static void OR (R8Type target, R8Type source)
-		{}
-
-		// OR rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// OR rmreg16,reg16
+		/// </summary>
 		public static void OR (R16Type target, R16Type source)
-		{}
-
-		// OR rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// OR rmreg32,reg32
+		/// </summary>
 		public static void OR (R32Type target, R32Type source)
-		{}
-
-		// OR rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// OR rmreg8,imm8
+		/// </summary>
 		public static void OR (R8Type target, Byte source)
-		{}
-
-		// OR rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// OR rmreg16,imm16
+		/// </summary>
 		public static void OR (R16Type target, UInt16 source)
-		{}
-
-		// OR rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// OR rmreg32,imm32
+		/// </summary>
 		public static void OR (R32Type target, UInt32 source)
-		{}
-
-		// OR rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// OR rmreg16,imm8
+		/// </summary>
 		public static void OR (R16Type target, Byte source)
-		{}
-
-		// OR rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// OR rmreg32,imm8
+		/// </summary>
 		public static void OR (R32Type target, Byte source)
-		{}
-
-		// ORG
+		{
+		}
+		
+		/// <summary>
+		/// ORG 
+		/// </summary>
 		public static void ORG (UInt32 value)
-		{}
-
-		// OUT imm8,AL
+		{
+		}
+		
+		/// <summary>
+		/// OUT imm8,AL
+		/// </summary>
 		public static void OUT__AL (Byte target)
-		{}
-
-		// OUT imm8,AX
+		{
+		}
+		
+		/// <summary>
+		/// OUT imm8,AX
+		/// </summary>
 		public static void OUT__AX (Byte target)
-		{}
-
-		// OUT imm8,EAX
+		{
+		}
+		
+		/// <summary>
+		/// OUT imm8,EAX
+		/// </summary>
 		public static void OUT__EAX (Byte target)
-		{}
-
-		// OUT DX,AL
+		{
+		}
+		
+		/// <summary>
+		/// OUT DX,AL
+		/// </summary>
 		public static void OUT_DX__AL ()
-		{}
-
-		// OUT DX,AX
+		{
+		}
+		
+		/// <summary>
+		/// OUT DX,AX
+		/// </summary>
 		public static void OUT_DX__AX ()
-		{}
-
-		// OUT DX,EAX
+		{
+		}
+		
+		/// <summary>
+		/// OUT DX,EAX
+		/// </summary>
 		public static void OUT_DX__EAX ()
-		{}
-
-		// OUTSB
+		{
+		}
+		
+		/// <summary>
+		/// OUTSB 
+		/// </summary>
 		public static void OUTSB ()
-		{}
-
-		// OUTSD
+		{
+		}
+		
+		/// <summary>
+		/// OUTSD 
+		/// </summary>
 		public static void OUTSD ()
-		{}
-
-		// OUTSW
+		{
+		}
+		
+		/// <summary>
+		/// OUTSW 
+		/// </summary>
 		public static void OUTSW ()
-		{}
-
-		// PAUSE
+		{
+		}
+		
+		/// <summary>
+		/// PAUSE 
+		/// </summary>
 		public static void PAUSE ()
-		{}
-
-		// POP reg16
+		{
+		}
+		
+		/// <summary>
+		/// POP reg16
+		/// </summary>
 		public static void POP (R16Type target)
-		{}
-
-		// POP reg32
+		{
+		}
+		
+		/// <summary>
+		/// POP reg32
+		/// </summary>
 		public static void POP (R32Type target)
-		{}
-
-		// POP mem16
+		{
+		}
+		
+		/// <summary>
+		/// POP mem16
+		/// </summary>
 		public static void POP (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// POP mem16
+		/// </summary>
 		public unsafe static void POP (UInt16 *target)
-
-		{}
-
-		// POP mem32
+		{
+		}
+		
+		/// <summary>
+		/// POP mem32
+		/// </summary>
 		public static void POP (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// POP mem32
+		/// </summary>
 		public unsafe static void POP (UInt32 *target)
-
-		{}
-
-		// POP segreg
+		{
+		}
+		
+		/// <summary>
+		/// POP segreg
+		/// </summary>
 		public static void POP (SegType target)
-		{}
-
-		// POPA
+		{
+		}
+		
+		/// <summary>
+		/// POPA 
+		/// </summary>
 		public static void POPA ()
-		{}
-
-		// POPAD
+		{
+		}
+		
+		/// <summary>
+		/// POPAD 
+		/// </summary>
 		public static void POPAD ()
-		{}
-
-		// POPAW
+		{
+		}
+		
+		/// <summary>
+		/// POPAW 
+		/// </summary>
 		public static void POPAW ()
-		{}
-
-		// POPF
+		{
+		}
+		
+		/// <summary>
+		/// POPF 
+		/// </summary>
 		public static void POPF ()
-		{}
-
-		// POPFD
+		{
+		}
+		
+		/// <summary>
+		/// POPFD 
+		/// </summary>
 		public static void POPFD ()
-		{}
-
-		// POPFW
+		{
+		}
+		
+		/// <summary>
+		/// POPFW 
+		/// </summary>
 		public static void POPFW ()
-		{}
-
-		// PREFETCHNTA m8
+		{
+		}
+		
+		/// <summary>
+		/// PREFETCHNTA m8
+		/// </summary>
 		public static void PREFETCHNTA (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// PREFETCHNTA m8
+		/// </summary>
 		public unsafe static void PREFETCHNTA (byte *target)
-
-		{}
-
-		// PREFETCHT0 m8
+		{
+		}
+		
+		/// <summary>
+		/// PREFETCHT0 m8
+		/// </summary>
 		public static void PREFETCHT0 (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// PREFETCHT0 m8
+		/// </summary>
 		public unsafe static void PREFETCHT0 (byte *target)
-
-		{}
-
-		// PREFETCHT1 m8
+		{
+		}
+		
+		/// <summary>
+		/// PREFETCHT1 m8
+		/// </summary>
 		public static void PREFETCHT1 (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// PREFETCHT1 m8
+		/// </summary>
 		public unsafe static void PREFETCHT1 (byte *target)
-
-		{}
-
-		// PREFETCHT2 m8
+		{
+		}
+		
+		/// <summary>
+		/// PREFETCHT2 m8
+		/// </summary>
 		public static void PREFETCHT2 (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// PREFETCHT2 m8
+		/// </summary>
 		public unsafe static void PREFETCHT2 (byte *target)
-
-		{}
-
-		// PUSH reg16
+		{
+		}
+		
+		/// <summary>
+		/// PUSH reg16
+		/// </summary>
 		public static void PUSH (R16Type target)
-		{}
-
-		// PUSH reg32
+		{
+		}
+		
+		/// <summary>
+		/// PUSH reg32
+		/// </summary>
 		public static void PUSH (R32Type target)
-		{}
-
-		// PUSH mem16
+		{
+		}
+		
+		/// <summary>
+		/// PUSH mem16
+		/// </summary>
 		public static void PUSH (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// PUSH mem16
+		/// </summary>
 		public unsafe static void PUSH (UInt16 *target)
-
-		{}
-
-		// PUSH mem32
+		{
+		}
+		
+		/// <summary>
+		/// PUSH mem32
+		/// </summary>
 		public static void PUSH (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// PUSH mem32
+		/// </summary>
 		public unsafe static void PUSH (UInt32 *target)
-
-		{}
-
-		// PUSH imm8
+		{
+		}
+		
+		/// <summary>
+		/// PUSH imm8
+		/// </summary>
 		public static void PUSH (Byte target)
-		{}
-
-		// PUSH imm16
+		{
+		}
+		
+		/// <summary>
+		/// PUSH imm16
+		/// </summary>
 		public static void PUSH (UInt16 target)
-		{}
-
-		// PUSH imm32
+		{
+		}
+		
+		/// <summary>
+		/// PUSH imm32
+		/// </summary>
 		public static void PUSH (UInt32 target)
-		{}
-
-		// PUSH segreg
+		{
+		}
+		
+		/// <summary>
+		/// PUSH segreg
+		/// </summary>
 		public static void PUSH (SegType target)
-		{}
-
-		// PUSHA
+		{
+		}
+		
+		/// <summary>
+		/// PUSHA 
+		/// </summary>
 		public static void PUSHA ()
-		{}
-
-		// PUSHAD
+		{
+		}
+		
+		/// <summary>
+		/// PUSHAD 
+		/// </summary>
 		public static void PUSHAD ()
-		{}
-
-		// PUSHAW
+		{
+		}
+		
+		/// <summary>
+		/// PUSHAW 
+		/// </summary>
 		public static void PUSHAW ()
-		{}
-
-		// PUSHF
+		{
+		}
+		
+		/// <summary>
+		/// PUSHF 
+		/// </summary>
 		public static void PUSHF ()
-		{}
-
-		// PUSHFD
+		{
+		}
+		
+		/// <summary>
+		/// PUSHFD 
+		/// </summary>
 		public static void PUSHFD ()
-		{}
-
-		// PUSHFW
+		{
+		}
+		
+		/// <summary>
+		/// PUSHFW 
+		/// </summary>
 		public static void PUSHFW ()
-		{}
-
-		// RCL mem8,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem8,CL
+		/// </summary>
 		public static void RCL__CL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem8,CL
+		/// </summary>
 		public unsafe static void RCL__CL (byte *target)
-
-		{}
-
-		// RCL mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem8,imm8
+		/// </summary>
 		public static void RCL (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem8,imm8
+		/// </summary>
 		public unsafe static void RCL (byte *target, Byte source)
-
-		{}
-
-		// RCL mem16,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem16,CL
+		/// </summary>
 		public static void RCL__CL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem16,CL
+		/// </summary>
 		public unsafe static void RCL__CL (UInt16 *target)
-
-		{}
-
-		// RCL mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem16,imm8
+		/// </summary>
 		public static void RCL (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem16,imm8
+		/// </summary>
 		public unsafe static void RCL (UInt16 *target, Byte source)
-
-		{}
-
-		// RCL mem32,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem32,CL
+		/// </summary>
 		public static void RCL__CL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem32,CL
+		/// </summary>
 		public unsafe static void RCL__CL (UInt32 *target)
-
-		{}
-
-		// RCL mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem32,imm8
+		/// </summary>
 		public static void RCL (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCL mem32,imm8
+		/// </summary>
 		public unsafe static void RCL (UInt32 *target, Byte source)
-
-		{}
-
-		// RCL rmreg8,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCL rmreg8,CL
+		/// </summary>
 		public static void RCL__CL (R8Type target)
-		{}
-
-		// RCL rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCL rmreg8,imm8
+		/// </summary>
 		public static void RCL (R8Type target, Byte source)
-		{}
-
-		// RCL rmreg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCL rmreg16,CL
+		/// </summary>
 		public static void RCL__CL (R16Type target)
-		{}
-
-		// RCL rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCL rmreg16,imm8
+		/// </summary>
 		public static void RCL (R16Type target, Byte source)
-		{}
-
-		// RCL rmreg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCL rmreg32,CL
+		/// </summary>
 		public static void RCL__CL (R32Type target)
-		{}
-
-		// RCL rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCL rmreg32,imm8
+		/// </summary>
 		public static void RCL (R32Type target, Byte source)
-		{}
-
-		// RCR mem8,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem8,CL
+		/// </summary>
 		public static void RCR__CL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem8,CL
+		/// </summary>
 		public unsafe static void RCR__CL (byte *target)
-
-		{}
-
-		// RCR mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem8,imm8
+		/// </summary>
 		public static void RCR (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem8,imm8
+		/// </summary>
 		public unsafe static void RCR (byte *target, Byte source)
-
-		{}
-
-		// RCR mem16,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem16,CL
+		/// </summary>
 		public static void RCR__CL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem16,CL
+		/// </summary>
 		public unsafe static void RCR__CL (UInt16 *target)
-
-		{}
-
-		// RCR mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem16,imm8
+		/// </summary>
 		public static void RCR (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem16,imm8
+		/// </summary>
 		public unsafe static void RCR (UInt16 *target, Byte source)
-
-		{}
-
-		// RCR mem32,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem32,CL
+		/// </summary>
 		public static void RCR__CL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem32,CL
+		/// </summary>
 		public unsafe static void RCR__CL (UInt32 *target)
-
-		{}
-
-		// RCR mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem32,imm8
+		/// </summary>
 		public static void RCR (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// RCR mem32,imm8
+		/// </summary>
 		public unsafe static void RCR (UInt32 *target, Byte source)
-
-		{}
-
-		// RCR rmreg8,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCR rmreg8,CL
+		/// </summary>
 		public static void RCR__CL (R8Type target)
-		{}
-
-		// RCR rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCR rmreg8,imm8
+		/// </summary>
 		public static void RCR (R8Type target, Byte source)
-		{}
-
-		// RCR rmreg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCR rmreg16,CL
+		/// </summary>
 		public static void RCR__CL (R16Type target)
-		{}
-
-		// RCR rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCR rmreg16,imm8
+		/// </summary>
 		public static void RCR (R16Type target, Byte source)
-		{}
-
-		// RCR rmreg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// RCR rmreg32,CL
+		/// </summary>
 		public static void RCR__CL (R32Type target)
-		{}
-
-		// RCR rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// RCR rmreg32,imm8
+		/// </summary>
 		public static void RCR (R32Type target, Byte source)
-		{}
-
-		// RDMSR
+		{
+		}
+		
+		/// <summary>
+		/// RDMSR 
+		/// </summary>
 		public static void RDMSR ()
-		{}
-
-		// RDPMC
+		{
+		}
+		
+		/// <summary>
+		/// RDPMC 
+		/// </summary>
 		public static void RDPMC ()
-		{}
-
-		// RDTSC
+		{
+		}
+		
+		/// <summary>
+		/// RDTSC 
+		/// </summary>
 		public static void RDTSC ()
-		{}
-
-		// RET
+		{
+		}
+		
+		/// <summary>
+		/// RET 
+		/// </summary>
 		public static void RET ()
-		{}
-
-		// RET imm16
+		{
+		}
+		
+		/// <summary>
+		/// RET imm16
+		/// </summary>
 		public static void RET (UInt16 target)
-		{}
-
-		// RETF
+		{
+		}
+		
+		/// <summary>
+		/// RETF 
+		/// </summary>
 		public static void RETF ()
-		{}
-
-		// RETF imm16
+		{
+		}
+		
+		/// <summary>
+		/// RETF imm16
+		/// </summary>
 		public static void RETF (UInt16 target)
-		{}
-
-		// RETN
+		{
+		}
+		
+		/// <summary>
+		/// RETN 
+		/// </summary>
 		public static void RETN ()
-		{}
-
-		// RETN imm16
+		{
+		}
+		
+		/// <summary>
+		/// RETN imm16
+		/// </summary>
 		public static void RETN (UInt16 target)
-		{}
-
-		// ROL mem8,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem8,CL
+		/// </summary>
 		public static void ROL__CL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem8,CL
+		/// </summary>
 		public unsafe static void ROL__CL (byte *target)
-
-		{}
-
-		// ROL mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem8,imm8
+		/// </summary>
 		public static void ROL (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem8,imm8
+		/// </summary>
 		public unsafe static void ROL (byte *target, Byte source)
-
-		{}
-
-		// ROL mem16,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem16,CL
+		/// </summary>
 		public static void ROL__CL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem16,CL
+		/// </summary>
 		public unsafe static void ROL__CL (UInt16 *target)
-
-		{}
-
-		// ROL mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem16,imm8
+		/// </summary>
 		public static void ROL (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem16,imm8
+		/// </summary>
 		public unsafe static void ROL (UInt16 *target, Byte source)
-
-		{}
-
-		// ROL mem32,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem32,CL
+		/// </summary>
 		public static void ROL__CL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem32,CL
+		/// </summary>
 		public unsafe static void ROL__CL (UInt32 *target)
-
-		{}
-
-		// ROL mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem32,imm8
+		/// </summary>
 		public static void ROL (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROL mem32,imm8
+		/// </summary>
 		public unsafe static void ROL (UInt32 *target, Byte source)
-
-		{}
-
-		// ROL rmreg8,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROL rmreg8,CL
+		/// </summary>
 		public static void ROL__CL (R8Type target)
-		{}
-
-		// ROL rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROL rmreg8,imm8
+		/// </summary>
 		public static void ROL (R8Type target, Byte source)
-		{}
-
-		// ROL rmreg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROL rmreg16,CL
+		/// </summary>
 		public static void ROL__CL (R16Type target)
-		{}
-
-		// ROL rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROL rmreg16,imm8
+		/// </summary>
 		public static void ROL (R16Type target, Byte source)
-		{}
-
-		// ROL rmreg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROL rmreg32,CL
+		/// </summary>
 		public static void ROL__CL (R32Type target)
-		{}
-
-		// ROL rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROL rmreg32,imm8
+		/// </summary>
 		public static void ROL (R32Type target, Byte source)
-		{}
-
-		// ROR mem8,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem8,CL
+		/// </summary>
 		public static void ROR__CL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem8,CL
+		/// </summary>
 		public unsafe static void ROR__CL (byte *target)
-
-		{}
-
-		// ROR mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem8,imm8
+		/// </summary>
 		public static void ROR (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem8,imm8
+		/// </summary>
 		public unsafe static void ROR (byte *target, Byte source)
-
-		{}
-
-		// ROR mem16,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem16,CL
+		/// </summary>
 		public static void ROR__CL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem16,CL
+		/// </summary>
 		public unsafe static void ROR__CL (UInt16 *target)
-
-		{}
-
-		// ROR mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem16,imm8
+		/// </summary>
 		public static void ROR (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem16,imm8
+		/// </summary>
 		public unsafe static void ROR (UInt16 *target, Byte source)
-
-		{}
-
-		// ROR mem32,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem32,CL
+		/// </summary>
 		public static void ROR__CL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem32,CL
+		/// </summary>
 		public unsafe static void ROR__CL (UInt32 *target)
-
-		{}
-
-		// ROR mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem32,imm8
+		/// </summary>
 		public static void ROR (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// ROR mem32,imm8
+		/// </summary>
 		public unsafe static void ROR (UInt32 *target, Byte source)
-
-		{}
-
-		// ROR rmreg8,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROR rmreg8,CL
+		/// </summary>
 		public static void ROR__CL (R8Type target)
-		{}
-
-		// ROR rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROR rmreg8,imm8
+		/// </summary>
 		public static void ROR (R8Type target, Byte source)
-		{}
-
-		// ROR rmreg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROR rmreg16,CL
+		/// </summary>
 		public static void ROR__CL (R16Type target)
-		{}
-
-		// ROR rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROR rmreg16,imm8
+		/// </summary>
 		public static void ROR (R16Type target, Byte source)
-		{}
-
-		// ROR rmreg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// ROR rmreg32,CL
+		/// </summary>
 		public static void ROR__CL (R32Type target)
-		{}
-
-		// ROR rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// ROR rmreg32,imm8
+		/// </summary>
 		public static void ROR (R32Type target, Byte source)
-		{}
-
-		// RSM
+		{
+		}
+		
+		/// <summary>
+		/// RSM 
+		/// </summary>
 		public static void RSM ()
-		{}
-
-		// SAHF
+		{
+		}
+		
+		/// <summary>
+		/// SAHF 
+		/// </summary>
 		public static void SAHF ()
-		{}
-
-		// SAL mem8,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem8,CL
+		/// </summary>
 		public static void SAL__CL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem8,CL
+		/// </summary>
 		public unsafe static void SAL__CL (byte *target)
-
-		{}
-
-		// SAL mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem8,imm8
+		/// </summary>
 		public static void SAL (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem8,imm8
+		/// </summary>
 		public unsafe static void SAL (byte *target, Byte source)
-
-		{}
-
-		// SAL mem16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem16,CL
+		/// </summary>
 		public static void SAL__CL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem16,CL
+		/// </summary>
 		public unsafe static void SAL__CL (UInt16 *target)
-
-		{}
-
-		// SAL mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem16,imm8
+		/// </summary>
 		public static void SAL (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem16,imm8
+		/// </summary>
 		public unsafe static void SAL (UInt16 *target, Byte source)
-
-		{}
-
-		// SAL mem32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem32,CL
+		/// </summary>
 		public static void SAL__CL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem32,CL
+		/// </summary>
 		public unsafe static void SAL__CL (UInt32 *target)
-
-		{}
-
-		// SAL mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem32,imm8
+		/// </summary>
 		public static void SAL (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAL mem32,imm8
+		/// </summary>
 		public unsafe static void SAL (UInt32 *target, Byte source)
-
-		{}
-
-		// SAL rmreg8,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAL rmreg8,CL
+		/// </summary>
 		public static void SAL__CL (R8Type target)
-		{}
-
-		// SAL rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAL rmreg8,imm8
+		/// </summary>
 		public static void SAL (R8Type target, Byte source)
-		{}
-
-		// SAL rmreg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAL rmreg16,CL
+		/// </summary>
 		public static void SAL__CL (R16Type target)
-		{}
-
-		// SAL rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAL rmreg16,imm8
+		/// </summary>
 		public static void SAL (R16Type target, Byte source)
-		{}
-
-		// SAL rmreg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAL rmreg32,CL
+		/// </summary>
 		public static void SAL__CL (R32Type target)
-		{}
-
-		// SAL rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAL rmreg32,imm8
+		/// </summary>
 		public static void SAL (R32Type target, Byte source)
-		{}
-
-		// SALC
+		{
+		}
+		
+		/// <summary>
+		/// SALC 
+		/// </summary>
 		public static void SALC ()
-		{}
-
-		// SAR mem8,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem8,CL
+		/// </summary>
 		public static void SAR__CL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem8,CL
+		/// </summary>
 		public unsafe static void SAR__CL (byte *target)
-
-		{}
-
-		// SAR mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem8,imm8
+		/// </summary>
 		public static void SAR (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem8,imm8
+		/// </summary>
 		public unsafe static void SAR (byte *target, Byte source)
-
-		{}
-
-		// SAR mem16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem16,CL
+		/// </summary>
 		public static void SAR__CL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem16,CL
+		/// </summary>
 		public unsafe static void SAR__CL (UInt16 *target)
-
-		{}
-
-		// SAR mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem16,imm8
+		/// </summary>
 		public static void SAR (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem16,imm8
+		/// </summary>
 		public unsafe static void SAR (UInt16 *target, Byte source)
-
-		{}
-
-		// SAR mem32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem32,CL
+		/// </summary>
 		public static void SAR__CL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem32,CL
+		/// </summary>
 		public unsafe static void SAR__CL (UInt32 *target)
-
-		{}
-
-		// SAR mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem32,imm8
+		/// </summary>
 		public static void SAR (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SAR mem32,imm8
+		/// </summary>
 		public unsafe static void SAR (UInt32 *target, Byte source)
-
-		{}
-
-		// SAR rmreg8,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAR rmreg8,CL
+		/// </summary>
 		public static void SAR__CL (R8Type target)
-		{}
-
-		// SAR rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAR rmreg8,imm8
+		/// </summary>
 		public static void SAR (R8Type target, Byte source)
-		{}
-
-		// SAR rmreg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAR rmreg16,CL
+		/// </summary>
 		public static void SAR__CL (R16Type target)
-		{}
-
-		// SAR rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAR rmreg16,imm8
+		/// </summary>
 		public static void SAR (R16Type target, Byte source)
-		{}
-
-		// SAR rmreg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SAR rmreg32,CL
+		/// </summary>
 		public static void SAR__CL (R32Type target)
-		{}
-
-		// SAR rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SAR rmreg32,imm8
+		/// </summary>
 		public static void SAR (R32Type target, Byte source)
-		{}
-
-		// SBB mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem8,reg8
+		/// </summary>
 		public static void SBB (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem8,reg8
+		/// </summary>
 		public unsafe static void SBB (byte *target, R8Type source)
-
-		{}
-
-		// SBB mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem16,reg16
+		/// </summary>
 		public static void SBB (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem16,reg16
+		/// </summary>
 		public unsafe static void SBB (UInt16 *target, R16Type source)
-
-		{}
-
-		// SBB mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem32,reg32
+		/// </summary>
 		public static void SBB (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem32,reg32
+		/// </summary>
 		public unsafe static void SBB (UInt32 *target, R32Type source)
-
-		{}
-
-		// SBB reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// SBB reg8,mem8
+		/// </summary>
 		public static void SBB (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB reg8,mem8
+		/// </summary>
 		public unsafe static void SBB (R8Type target, byte *source)
-
-		{}
-
-		// SBB reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// SBB reg16,mem16
+		/// </summary>
 		public static void SBB (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB reg16,mem16
+		/// </summary>
 		public unsafe static void SBB (R16Type target, UInt16 *source)
-
-		{}
-
-		// SBB reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// SBB reg32,mem32
+		/// </summary>
 		public static void SBB (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB reg32,mem32
+		/// </summary>
 		public unsafe static void SBB (R32Type target, UInt32 *source)
-
-		{}
-
-		// SBB mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem8,imm8
+		/// </summary>
 		public static void SBB (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem8,imm8
+		/// </summary>
 		public unsafe static void SBB (byte *target, Byte source)
-
-		{}
-
-		// SBB mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem16,imm16
+		/// </summary>
 		public static void SBB (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem16,imm16
+		/// </summary>
 		public unsafe static void SBB (UInt16 *target, UInt16 source)
-
-		{}
-
-		// SBB mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem32,imm32
+		/// </summary>
 		public static void SBB (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem32,imm32
+		/// </summary>
 		public unsafe static void SBB (UInt32 *target, UInt32 source)
-
-		{}
-
-		// SBB mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem16,imm8
+		/// </summary>
 		public static void SBB (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem16,imm8
+		/// </summary>
 		public unsafe static void SBB (UInt16 *target, Byte source)
-
-		{}
-
-		// SBB mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem32,imm8
+		/// </summary>
 		public static void SBB (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SBB mem32,imm8
+		/// </summary>
 		public unsafe static void SBB (UInt32 *target, Byte source)
-
-		{}
-
-		// SBB rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// SBB rmreg8,reg8
+		/// </summary>
 		public static void SBB (R8Type target, R8Type source)
-		{}
-
-		// SBB rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// SBB rmreg16,reg16
+		/// </summary>
 		public static void SBB (R16Type target, R16Type source)
-		{}
-
-		// SBB rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// SBB rmreg32,reg32
+		/// </summary>
 		public static void SBB (R32Type target, R32Type source)
-		{}
-
-		// SBB rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SBB rmreg8,imm8
+		/// </summary>
 		public static void SBB (R8Type target, Byte source)
-		{}
-
-		// SBB rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// SBB rmreg16,imm16
+		/// </summary>
 		public static void SBB (R16Type target, UInt16 source)
-		{}
-
-		// SBB rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// SBB rmreg32,imm32
+		/// </summary>
 		public static void SBB (R32Type target, UInt32 source)
-		{}
-
-		// SBB rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SBB rmreg16,imm8
+		/// </summary>
 		public static void SBB (R16Type target, Byte source)
-		{}
-
-		// SBB rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SBB rmreg32,imm8
+		/// </summary>
 		public static void SBB (R32Type target, Byte source)
-		{}
-
-		// SCASB
+		{
+		}
+		
+		/// <summary>
+		/// SCASB 
+		/// </summary>
 		public static void SCASB ()
-		{}
-
-		// SCASD
+		{
+		}
+		
+		/// <summary>
+		/// SCASD 
+		/// </summary>
 		public static void SCASD ()
-		{}
-
-		// SCASW
+		{
+		}
+		
+		/// <summary>
+		/// SCASW 
+		/// </summary>
 		public static void SCASW ()
-		{}
-
-		// SETA mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETA mem8
+		/// </summary>
 		public static void SETA (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETA mem8
+		/// </summary>
 		public unsafe static void SETA (byte *target)
-
-		{}
-
-		// SETA rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETA rmreg8
+		/// </summary>
 		public static void SETA (R8Type target)
-		{}
-
-		// SETAE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETAE mem8
+		/// </summary>
 		public static void SETAE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETAE mem8
+		/// </summary>
 		public unsafe static void SETAE (byte *target)
-
-		{}
-
-		// SETAE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETAE rmreg8
+		/// </summary>
 		public static void SETAE (R8Type target)
-		{}
-
-		// SETB mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETB mem8
+		/// </summary>
 		public static void SETB (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETB mem8
+		/// </summary>
 		public unsafe static void SETB (byte *target)
-
-		{}
-
-		// SETB rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETB rmreg8
+		/// </summary>
 		public static void SETB (R8Type target)
-		{}
-
-		// SETBE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETBE mem8
+		/// </summary>
 		public static void SETBE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETBE mem8
+		/// </summary>
 		public unsafe static void SETBE (byte *target)
-
-		{}
-
-		// SETBE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETBE rmreg8
+		/// </summary>
 		public static void SETBE (R8Type target)
-		{}
-
-		// SETC mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETC mem8
+		/// </summary>
 		public static void SETC (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETC mem8
+		/// </summary>
 		public unsafe static void SETC (byte *target)
-
-		{}
-
-		// SETC rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETC rmreg8
+		/// </summary>
 		public static void SETC (R8Type target)
-		{}
-
-		// SETE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETE mem8
+		/// </summary>
 		public static void SETE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETE mem8
+		/// </summary>
 		public unsafe static void SETE (byte *target)
-
-		{}
-
-		// SETE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETE rmreg8
+		/// </summary>
 		public static void SETE (R8Type target)
-		{}
-
-		// SETG mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETG mem8
+		/// </summary>
 		public static void SETG (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETG mem8
+		/// </summary>
 		public unsafe static void SETG (byte *target)
-
-		{}
-
-		// SETG rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETG rmreg8
+		/// </summary>
 		public static void SETG (R8Type target)
-		{}
-
-		// SETGE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETGE mem8
+		/// </summary>
 		public static void SETGE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETGE mem8
+		/// </summary>
 		public unsafe static void SETGE (byte *target)
-
-		{}
-
-		// SETGE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETGE rmreg8
+		/// </summary>
 		public static void SETGE (R8Type target)
-		{}
-
-		// SETL mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETL mem8
+		/// </summary>
 		public static void SETL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETL mem8
+		/// </summary>
 		public unsafe static void SETL (byte *target)
-
-		{}
-
-		// SETL rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETL rmreg8
+		/// </summary>
 		public static void SETL (R8Type target)
-		{}
-
-		// SETLE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETLE mem8
+		/// </summary>
 		public static void SETLE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETLE mem8
+		/// </summary>
 		public unsafe static void SETLE (byte *target)
-
-		{}
-
-		// SETLE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETLE rmreg8
+		/// </summary>
 		public static void SETLE (R8Type target)
-		{}
-
-		// SETNA mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNA mem8
+		/// </summary>
 		public static void SETNA (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNA mem8
+		/// </summary>
 		public unsafe static void SETNA (byte *target)
-
-		{}
-
-		// SETNA rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNA rmreg8
+		/// </summary>
 		public static void SETNA (R8Type target)
-		{}
-
-		// SETNAE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNAE mem8
+		/// </summary>
 		public static void SETNAE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNAE mem8
+		/// </summary>
 		public unsafe static void SETNAE (byte *target)
-
-		{}
-
-		// SETNAE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNAE rmreg8
+		/// </summary>
 		public static void SETNAE (R8Type target)
-		{}
-
-		// SETNB mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNB mem8
+		/// </summary>
 		public static void SETNB (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNB mem8
+		/// </summary>
 		public unsafe static void SETNB (byte *target)
-
-		{}
-
-		// SETNB rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNB rmreg8
+		/// </summary>
 		public static void SETNB (R8Type target)
-		{}
-
-		// SETNBE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNBE mem8
+		/// </summary>
 		public static void SETNBE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNBE mem8
+		/// </summary>
 		public unsafe static void SETNBE (byte *target)
-
-		{}
-
-		// SETNBE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNBE rmreg8
+		/// </summary>
 		public static void SETNBE (R8Type target)
-		{}
-
-		// SETNC mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNC mem8
+		/// </summary>
 		public static void SETNC (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNC mem8
+		/// </summary>
 		public unsafe static void SETNC (byte *target)
-
-		{}
-
-		// SETNC rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNC rmreg8
+		/// </summary>
 		public static void SETNC (R8Type target)
-		{}
-
-		// SETNE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNE mem8
+		/// </summary>
 		public static void SETNE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNE mem8
+		/// </summary>
 		public unsafe static void SETNE (byte *target)
-
-		{}
-
-		// SETNE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNE rmreg8
+		/// </summary>
 		public static void SETNE (R8Type target)
-		{}
-
-		// SETNG mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNG mem8
+		/// </summary>
 		public static void SETNG (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNG mem8
+		/// </summary>
 		public unsafe static void SETNG (byte *target)
-
-		{}
-
-		// SETNG rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNG rmreg8
+		/// </summary>
 		public static void SETNG (R8Type target)
-		{}
-
-		// SETNGE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNGE mem8
+		/// </summary>
 		public static void SETNGE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNGE mem8
+		/// </summary>
 		public unsafe static void SETNGE (byte *target)
-
-		{}
-
-		// SETNGE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNGE rmreg8
+		/// </summary>
 		public static void SETNGE (R8Type target)
-		{}
-
-		// SETNL mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNL mem8
+		/// </summary>
 		public static void SETNL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNL mem8
+		/// </summary>
 		public unsafe static void SETNL (byte *target)
-
-		{}
-
-		// SETNL rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNL rmreg8
+		/// </summary>
 		public static void SETNL (R8Type target)
-		{}
-
-		// SETNLE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNLE mem8
+		/// </summary>
 		public static void SETNLE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNLE mem8
+		/// </summary>
 		public unsafe static void SETNLE (byte *target)
-
-		{}
-
-		// SETNLE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNLE rmreg8
+		/// </summary>
 		public static void SETNLE (R8Type target)
-		{}
-
-		// SETNO mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNO mem8
+		/// </summary>
 		public static void SETNO (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNO mem8
+		/// </summary>
 		public unsafe static void SETNO (byte *target)
-
-		{}
-
-		// SETNO rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNO rmreg8
+		/// </summary>
 		public static void SETNO (R8Type target)
-		{}
-
-		// SETNP mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNP mem8
+		/// </summary>
 		public static void SETNP (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNP mem8
+		/// </summary>
 		public unsafe static void SETNP (byte *target)
-
-		{}
-
-		// SETNP rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNP rmreg8
+		/// </summary>
 		public static void SETNP (R8Type target)
-		{}
-
-		// SETNS mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNS mem8
+		/// </summary>
 		public static void SETNS (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNS mem8
+		/// </summary>
 		public unsafe static void SETNS (byte *target)
-
-		{}
-
-		// SETNS rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNS rmreg8
+		/// </summary>
 		public static void SETNS (R8Type target)
-		{}
-
-		// SETNZ mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETNZ mem8
+		/// </summary>
 		public static void SETNZ (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETNZ mem8
+		/// </summary>
 		public unsafe static void SETNZ (byte *target)
-
-		{}
-
-		// SETNZ rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETNZ rmreg8
+		/// </summary>
 		public static void SETNZ (R8Type target)
-		{}
-
-		// SETO mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETO mem8
+		/// </summary>
 		public static void SETO (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETO mem8
+		/// </summary>
 		public unsafe static void SETO (byte *target)
-
-		{}
-
-		// SETO rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETO rmreg8
+		/// </summary>
 		public static void SETO (R8Type target)
-		{}
-
-		// SETP mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETP mem8
+		/// </summary>
 		public static void SETP (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETP mem8
+		/// </summary>
 		public unsafe static void SETP (byte *target)
-
-		{}
-
-		// SETP rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETP rmreg8
+		/// </summary>
 		public static void SETP (R8Type target)
-		{}
-
-		// SETPE mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETPE mem8
+		/// </summary>
 		public static void SETPE (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETPE mem8
+		/// </summary>
 		public unsafe static void SETPE (byte *target)
-
-		{}
-
-		// SETPE rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETPE rmreg8
+		/// </summary>
 		public static void SETPE (R8Type target)
-		{}
-
-		// SETPO mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETPO mem8
+		/// </summary>
 		public static void SETPO (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETPO mem8
+		/// </summary>
 		public unsafe static void SETPO (byte *target)
-
-		{}
-
-		// SETPO rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETPO rmreg8
+		/// </summary>
 		public static void SETPO (R8Type target)
-		{}
-
-		// SETS mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETS mem8
+		/// </summary>
 		public static void SETS (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETS mem8
+		/// </summary>
 		public unsafe static void SETS (byte *target)
-
-		{}
-
-		// SETS rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETS rmreg8
+		/// </summary>
 		public static void SETS (R8Type target)
-		{}
-
-		// SETZ mem8
+		{
+		}
+		
+		/// <summary>
+		/// SETZ mem8
+		/// </summary>
 		public static void SETZ (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SETZ mem8
+		/// </summary>
 		public unsafe static void SETZ (byte *target)
-
-		{}
-
-		// SETZ rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// SETZ rmreg8
+		/// </summary>
 		public static void SETZ (R8Type target)
-		{}
-
-		// SFENCE
+		{
+		}
+		
+		/// <summary>
+		/// SFENCE 
+		/// </summary>
 		public static void SFENCE ()
-		{}
-
-		// SGDT mem
+		{
+		}
+		
+		/// <summary>
+		/// SGDT mem
+		/// </summary>
 		public static void SGDT (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SGDT mem
+		/// </summary>
 		public unsafe static void SGDT (byte *target)
-
-		{}
-
-		// SHL mem8,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem8,CL
+		/// </summary>
 		public static void SHL__CL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem8,CL
+		/// </summary>
 		public unsafe static void SHL__CL (byte *target)
-
-		{}
-
-		// SHL mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem8,imm8
+		/// </summary>
 		public static void SHL (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem8,imm8
+		/// </summary>
 		public unsafe static void SHL (byte *target, Byte source)
-
-		{}
-
-		// SHL mem16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem16,CL
+		/// </summary>
 		public static void SHL__CL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem16,CL
+		/// </summary>
 		public unsafe static void SHL__CL (UInt16 *target)
-
-		{}
-
-		// SHL mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem16,imm8
+		/// </summary>
 		public static void SHL (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem16,imm8
+		/// </summary>
 		public unsafe static void SHL (UInt16 *target, Byte source)
-
-		{}
-
-		// SHL mem32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem32,CL
+		/// </summary>
 		public static void SHL__CL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem32,CL
+		/// </summary>
 		public unsafe static void SHL__CL (UInt32 *target)
-
-		{}
-
-		// SHL mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem32,imm8
+		/// </summary>
 		public static void SHL (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHL mem32,imm8
+		/// </summary>
 		public unsafe static void SHL (UInt32 *target, Byte source)
-
-		{}
-
-		// SHL rmreg8,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHL rmreg8,CL
+		/// </summary>
 		public static void SHL__CL (R8Type target)
-		{}
-
-		// SHL rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHL rmreg8,imm8
+		/// </summary>
 		public static void SHL (R8Type target, Byte source)
-		{}
-
-		// SHL rmreg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHL rmreg16,CL
+		/// </summary>
 		public static void SHL__CL (R16Type target)
-		{}
-
-		// SHL rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHL rmreg16,imm8
+		/// </summary>
 		public static void SHL (R16Type target, Byte source)
-		{}
-
-		// SHL rmreg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHL rmreg32,CL
+		/// </summary>
 		public static void SHL__CL (R32Type target)
-		{}
-
-		// SHL rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHL rmreg32,imm8
+		/// </summary>
 		public static void SHL (R32Type target, Byte source)
-		{}
-
-		// SHLD mem16,reg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHLD mem16,reg16,imm8
+		/// </summary>
 		public static void SHLD (WordMemory target, R16Type source, Byte value)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHLD mem16,reg16,imm8
+		/// </summary>
 		public unsafe static void SHLD (UInt16 *target, R16Type source, Byte value)
-
-		{}
-
-		// SHLD mem32,reg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHLD mem32,reg32,imm8
+		/// </summary>
 		public static void SHLD (DWordMemory target, R32Type source, Byte value)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHLD mem32,reg32,imm8
+		/// </summary>
 		public unsafe static void SHLD (UInt32 *target, R32Type source, Byte value)
-
-		{}
-
-		// SHLD mem16,reg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHLD mem16,reg16,CL
+		/// </summary>
 		public static void SHLD___CL (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHLD mem16,reg16,CL
+		/// </summary>
 		public unsafe static void SHLD___CL (UInt16 *target, R16Type source)
-
-		{}
-
-		// SHLD mem32,reg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHLD mem32,reg32,CL
+		/// </summary>
 		public static void SHLD___CL (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHLD mem32,reg32,CL
+		/// </summary>
 		public unsafe static void SHLD___CL (UInt32 *target, R32Type source)
-
-		{}
-
-		// SHLD rmreg16,reg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHLD rmreg16,reg16,imm8
+		/// </summary>
 		public static void SHLD (R16Type target, R16Type source, Byte value)
-		{}
-
-		// SHLD rmreg32,reg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHLD rmreg32,reg32,imm8
+		/// </summary>
 		public static void SHLD (R32Type target, R32Type source, Byte value)
-		{}
-
-		// SHLD rmreg16,reg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHLD rmreg16,reg16,CL
+		/// </summary>
 		public static void SHLD___CL (R16Type target, R16Type source)
-		{}
-
-		// SHLD rmreg32,reg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHLD rmreg32,reg32,CL
+		/// </summary>
 		public static void SHLD___CL (R32Type target, R32Type source)
-		{}
-
-		// SHR mem8,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem8,CL
+		/// </summary>
 		public static void SHR__CL (ByteMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem8,CL
+		/// </summary>
 		public unsafe static void SHR__CL (byte *target)
-
-		{}
-
-		// SHR mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem8,imm8
+		/// </summary>
 		public static void SHR (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem8,imm8
+		/// </summary>
 		public unsafe static void SHR (byte *target, Byte source)
-
-		{}
-
-		// SHR mem16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem16,CL
+		/// </summary>
 		public static void SHR__CL (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem16,CL
+		/// </summary>
 		public unsafe static void SHR__CL (UInt16 *target)
-
-		{}
-
-		// SHR mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem16,imm8
+		/// </summary>
 		public static void SHR (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem16,imm8
+		/// </summary>
 		public unsafe static void SHR (UInt16 *target, Byte source)
-
-		{}
-
-		// SHR mem32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem32,CL
+		/// </summary>
 		public static void SHR__CL (DWordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem32,CL
+		/// </summary>
 		public unsafe static void SHR__CL (UInt32 *target)
-
-		{}
-
-		// SHR mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem32,imm8
+		/// </summary>
 		public static void SHR (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHR mem32,imm8
+		/// </summary>
 		public unsafe static void SHR (UInt32 *target, Byte source)
-
-		{}
-
-		// SHR rmreg8,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHR rmreg8,CL
+		/// </summary>
 		public static void SHR__CL (R8Type target)
-		{}
-
-		// SHR rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHR rmreg8,imm8
+		/// </summary>
 		public static void SHR (R8Type target, Byte source)
-		{}
-
-		// SHR rmreg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHR rmreg16,CL
+		/// </summary>
 		public static void SHR__CL (R16Type target)
-		{}
-
-		// SHR rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHR rmreg16,imm8
+		/// </summary>
 		public static void SHR (R16Type target, Byte source)
-		{}
-
-		// SHR rmreg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHR rmreg32,CL
+		/// </summary>
 		public static void SHR__CL (R32Type target)
-		{}
-
-		// SHR rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHR rmreg32,imm8
+		/// </summary>
 		public static void SHR (R32Type target, Byte source)
-		{}
-
-		// SHRD mem16,reg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHRD mem16,reg16,imm8
+		/// </summary>
 		public static void SHRD (WordMemory target, R16Type source, Byte value)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHRD mem16,reg16,imm8
+		/// </summary>
 		public unsafe static void SHRD (UInt16 *target, R16Type source, Byte value)
-
-		{}
-
-		// SHRD mem32,reg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHRD mem32,reg32,imm8
+		/// </summary>
 		public static void SHRD (DWordMemory target, R32Type source, Byte value)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHRD mem32,reg32,imm8
+		/// </summary>
 		public unsafe static void SHRD (UInt32 *target, R32Type source, Byte value)
-
-		{}
-
-		// SHRD mem16,reg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHRD mem16,reg16,CL
+		/// </summary>
 		public static void SHRD___CL (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHRD mem16,reg16,CL
+		/// </summary>
 		public unsafe static void SHRD___CL (UInt16 *target, R16Type source)
-
-		{}
-
-		// SHRD mem32,reg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHRD mem32,reg32,CL
+		/// </summary>
 		public static void SHRD___CL (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SHRD mem32,reg32,CL
+		/// </summary>
 		public unsafe static void SHRD___CL (UInt32 *target, R32Type source)
-
-		{}
-
-		// SHRD rmreg16,reg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHRD rmreg16,reg16,imm8
+		/// </summary>
 		public static void SHRD (R16Type target, R16Type source, Byte value)
-		{}
-
-		// SHRD rmreg32,reg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SHRD rmreg32,reg32,imm8
+		/// </summary>
 		public static void SHRD (R32Type target, R32Type source, Byte value)
-		{}
-
-		// SHRD rmreg16,reg16,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHRD rmreg16,reg16,CL
+		/// </summary>
 		public static void SHRD___CL (R16Type target, R16Type source)
-		{}
-
-		// SHRD rmreg32,reg32,CL
+		{
+		}
+		
+		/// <summary>
+		/// SHRD rmreg32,reg32,CL
+		/// </summary>
 		public static void SHRD___CL (R32Type target, R32Type source)
-		{}
-
-		// SIDT mem
+		{
+		}
+		
+		/// <summary>
+		/// SIDT mem
+		/// </summary>
 		public static void SIDT (Memory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SIDT mem
+		/// </summary>
 		public unsafe static void SIDT (byte *target)
-
-		{}
-
-		// SLDT mem16
+		{
+		}
+		
+		/// <summary>
+		/// SLDT mem16
+		/// </summary>
 		public static void SLDT (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SLDT mem16
+		/// </summary>
 		public unsafe static void SLDT (UInt16 *target)
-
-		{}
-
-		// SLDT rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// SLDT rmreg16
+		/// </summary>
 		public static void SLDT (R16Type target)
-		{}
-
-		// SMSW mem16
+		{
+		}
+		
+		/// <summary>
+		/// SMSW mem16
+		/// </summary>
 		public static void SMSW (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SMSW mem16
+		/// </summary>
 		public unsafe static void SMSW (UInt16 *target)
-
-		{}
-
-		// SMSW rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// SMSW rmreg16
+		/// </summary>
 		public static void SMSW (R16Type target)
-		{}
-
-		// STC
+		{
+		}
+		
+		/// <summary>
+		/// STC 
+		/// </summary>
 		public static void STC ()
-		{}
-
-		// STD
+		{
+		}
+		
+		/// <summary>
+		/// STD 
+		/// </summary>
 		public static void STD ()
-		{}
-
-		// STI
+		{
+		}
+		
+		/// <summary>
+		/// STI 
+		/// </summary>
 		public static void STI ()
-		{}
-
-		// STOSB
+		{
+		}
+		
+		/// <summary>
+		/// STOSB 
+		/// </summary>
 		public static void STOSB ()
-		{}
-
-		// STOSD
+		{
+		}
+		
+		/// <summary>
+		/// STOSD 
+		/// </summary>
 		public static void STOSD ()
-		{}
-
-		// STOSW
+		{
+		}
+		
+		/// <summary>
+		/// STOSW 
+		/// </summary>
 		public static void STOSW ()
-		{}
-
-		// STR mem16
+		{
+		}
+		
+		/// <summary>
+		/// STR mem16
+		/// </summary>
 		public static void STR (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// STR mem16
+		/// </summary>
 		public unsafe static void STR (UInt16 *target)
-
-		{}
-
-		// STR rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// STR rmreg16
+		/// </summary>
 		public static void STR (R16Type target)
-		{}
-
-		// SUB mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem8,reg8
+		/// </summary>
 		public static void SUB (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem8,reg8
+		/// </summary>
 		public unsafe static void SUB (byte *target, R8Type source)
-
-		{}
-
-		// SUB mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem16,reg16
+		/// </summary>
 		public static void SUB (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem16,reg16
+		/// </summary>
 		public unsafe static void SUB (UInt16 *target, R16Type source)
-
-		{}
-
-		// SUB mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem32,reg32
+		/// </summary>
 		public static void SUB (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem32,reg32
+		/// </summary>
 		public unsafe static void SUB (UInt32 *target, R32Type source)
-
-		{}
-
-		// SUB reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// SUB reg8,mem8
+		/// </summary>
 		public static void SUB (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB reg8,mem8
+		/// </summary>
 		public unsafe static void SUB (R8Type target, byte *source)
-
-		{}
-
-		// SUB reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// SUB reg16,mem16
+		/// </summary>
 		public static void SUB (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB reg16,mem16
+		/// </summary>
 		public unsafe static void SUB (R16Type target, UInt16 *source)
-
-		{}
-
-		// SUB reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// SUB reg32,mem32
+		/// </summary>
 		public static void SUB (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB reg32,mem32
+		/// </summary>
 		public unsafe static void SUB (R32Type target, UInt32 *source)
-
-		{}
-
-		// SUB mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem8,imm8
+		/// </summary>
 		public static void SUB (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem8,imm8
+		/// </summary>
 		public unsafe static void SUB (byte *target, Byte source)
-
-		{}
-
-		// SUB mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem16,imm16
+		/// </summary>
 		public static void SUB (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem16,imm16
+		/// </summary>
 		public unsafe static void SUB (UInt16 *target, UInt16 source)
-
-		{}
-
-		// SUB mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem32,imm32
+		/// </summary>
 		public static void SUB (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem32,imm32
+		/// </summary>
 		public unsafe static void SUB (UInt32 *target, UInt32 source)
-
-		{}
-
-		// SUB mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem16,imm8
+		/// </summary>
 		public static void SUB (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem16,imm8
+		/// </summary>
 		public unsafe static void SUB (UInt16 *target, Byte source)
-
-		{}
-
-		// SUB mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem32,imm8
+		/// </summary>
 		public static void SUB (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// SUB mem32,imm8
+		/// </summary>
 		public unsafe static void SUB (UInt32 *target, Byte source)
-
-		{}
-
-		// SUB rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// SUB rmreg8,reg8
+		/// </summary>
 		public static void SUB (R8Type target, R8Type source)
-		{}
-
-		// SUB rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// SUB rmreg16,reg16
+		/// </summary>
 		public static void SUB (R16Type target, R16Type source)
-		{}
-
-		// SUB rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// SUB rmreg32,reg32
+		/// </summary>
 		public static void SUB (R32Type target, R32Type source)
-		{}
-
-		// SUB rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SUB rmreg8,imm8
+		/// </summary>
 		public static void SUB (R8Type target, Byte source)
-		{}
-
-		// SUB rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// SUB rmreg16,imm16
+		/// </summary>
 		public static void SUB (R16Type target, UInt16 source)
-		{}
-
-		// SUB rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// SUB rmreg32,imm32
+		/// </summary>
 		public static void SUB (R32Type target, UInt32 source)
-		{}
-
-		// SUB rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SUB rmreg16,imm8
+		/// </summary>
 		public static void SUB (R16Type target, Byte source)
-		{}
-
-		// SUB rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// SUB rmreg32,imm8
+		/// </summary>
 		public static void SUB (R32Type target, Byte source)
-		{}
-
-		// SYSCALL
+		{
+		}
+		
+		/// <summary>
+		/// SYSCALL 
+		/// </summary>
 		public static void SYSCALL ()
-		{}
-
-		// SYSENTER
+		{
+		}
+		
+		/// <summary>
+		/// SYSENTER 
+		/// </summary>
 		public static void SYSENTER ()
-		{}
-
-		// SYSEXIT
+		{
+		}
+		
+		/// <summary>
+		/// SYSEXIT 
+		/// </summary>
 		public static void SYSEXIT ()
-		{}
-
-		// SYSRET
+		{
+		}
+		
+		/// <summary>
+		/// SYSRET 
+		/// </summary>
 		public static void SYSRET ()
-		{}
-
-		// TEST mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem8,reg8
+		/// </summary>
 		public static void TEST (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem8,reg8
+		/// </summary>
 		public unsafe static void TEST (byte *target, R8Type source)
-
-		{}
-
-		// TEST mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem16,reg16
+		/// </summary>
 		public static void TEST (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem16,reg16
+		/// </summary>
 		public unsafe static void TEST (UInt16 *target, R16Type source)
-
-		{}
-
-		// TEST mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem32,reg32
+		/// </summary>
 		public static void TEST (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem32,reg32
+		/// </summary>
 		public unsafe static void TEST (UInt32 *target, R32Type source)
-
-		{}
-
-		// TEST mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem8,imm8
+		/// </summary>
 		public static void TEST (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem8,imm8
+		/// </summary>
 		public unsafe static void TEST (byte *target, Byte source)
-
-		{}
-
-		// TEST mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem16,imm16
+		/// </summary>
 		public static void TEST (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem16,imm16
+		/// </summary>
 		public unsafe static void TEST (UInt16 *target, UInt16 source)
-
-		{}
-
-		// TEST mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem32,imm32
+		/// </summary>
 		public static void TEST (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// TEST mem32,imm32
+		/// </summary>
 		public unsafe static void TEST (UInt32 *target, UInt32 source)
-
-		{}
-
-		// TEST rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// TEST rmreg8,reg8
+		/// </summary>
 		public static void TEST (R8Type target, R8Type source)
-		{}
-
-		// TEST rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// TEST rmreg16,reg16
+		/// </summary>
 		public static void TEST (R16Type target, R16Type source)
-		{}
-
-		// TEST rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// TEST rmreg32,reg32
+		/// </summary>
 		public static void TEST (R32Type target, R32Type source)
-		{}
-
-		// TEST rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// TEST rmreg8,imm8
+		/// </summary>
 		public static void TEST (R8Type target, Byte source)
-		{}
-
-		// TEST rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// TEST rmreg16,imm16
+		/// </summary>
 		public static void TEST (R16Type target, UInt16 source)
-		{}
-
-		// TEST rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// TEST rmreg32,imm32
+		/// </summary>
 		public static void TEST (R32Type target, UInt32 source)
-		{}
-
-		// TIMES
+		{
+		}
+		
+		/// <summary>
+		/// TIMES 
+		/// </summary>
 		public static void TIMES (UInt32 length, Byte value)
-		{}
-
-		// VERR mem16
+		{
+		}
+		
+		/// <summary>
+		/// VERR mem16
+		/// </summary>
 		public static void VERR (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// VERR mem16
+		/// </summary>
 		public unsafe static void VERR (UInt16 *target)
-
-		{}
-
-		// VERR rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// VERR rmreg16
+		/// </summary>
 		public static void VERR (R16Type target)
-		{}
-
-		// VERW mem16
+		{
+		}
+		
+		/// <summary>
+		/// VERW mem16
+		/// </summary>
 		public static void VERW (WordMemory target)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// VERW mem16
+		/// </summary>
 		public unsafe static void VERW (UInt16 *target)
-
-		{}
-
-		// VERW rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// VERW rmreg16
+		/// </summary>
 		public static void VERW (R16Type target)
-		{}
-
-		// WAIT
+		{
+		}
+		
+		/// <summary>
+		/// WAIT 
+		/// </summary>
 		public static void WAIT ()
-		{}
-
-		// WBINVD
+		{
+		}
+		
+		/// <summary>
+		/// WBINVD 
+		/// </summary>
 		public static void WBINVD ()
-		{}
-
-		// WRMSR
+		{
+		}
+		
+		/// <summary>
+		/// WRMSR 
+		/// </summary>
 		public static void WRMSR ()
-		{}
-
-		// XADD mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// XADD mem8,reg8
+		/// </summary>
 		public static void XADD (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XADD mem8,reg8
+		/// </summary>
 		public unsafe static void XADD (byte *target, R8Type source)
-
-		{}
-
-		// XADD mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// XADD mem16,reg16
+		/// </summary>
 		public static void XADD (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XADD mem16,reg16
+		/// </summary>
 		public unsafe static void XADD (UInt16 *target, R16Type source)
-
-		{}
-
-		// XADD mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// XADD mem32,reg32
+		/// </summary>
 		public static void XADD (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XADD mem32,reg32
+		/// </summary>
 		public unsafe static void XADD (UInt32 *target, R32Type source)
-
-		{}
-
-		// XADD rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// XADD rmreg8,reg8
+		/// </summary>
 		public static void XADD (R8Type target, R8Type source)
-		{}
-
-		// XADD rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// XADD rmreg16,reg16
+		/// </summary>
 		public static void XADD (R16Type target, R16Type source)
-		{}
-
-		// XADD rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// XADD rmreg32,reg32
+		/// </summary>
 		public static void XADD (R32Type target, R32Type source)
-		{}
-
-		// XCHG reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg8,mem8
+		/// </summary>
 		public static void XCHG (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg8,mem8
+		/// </summary>
 		public unsafe static void XCHG (R8Type target, byte *source)
-
-		{}
-
-		// XCHG reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg16,mem16
+		/// </summary>
 		public static void XCHG (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg16,mem16
+		/// </summary>
 		public unsafe static void XCHG (R16Type target, UInt16 *source)
-
-		{}
-
-		// XCHG reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg32,mem32
+		/// </summary>
 		public static void XCHG (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg32,mem32
+		/// </summary>
 		public unsafe static void XCHG (R32Type target, UInt32 *source)
-
-		{}
-
-		// XCHG mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// XCHG mem8,reg8
+		/// </summary>
 		public static void XCHG (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XCHG mem8,reg8
+		/// </summary>
 		public unsafe static void XCHG (byte *target, R8Type source)
-
-		{}
-
-		// XCHG mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// XCHG mem16,reg16
+		/// </summary>
 		public static void XCHG (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XCHG mem16,reg16
+		/// </summary>
 		public unsafe static void XCHG (UInt16 *target, R16Type source)
-
-		{}
-
-		// XCHG mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// XCHG mem32,reg32
+		/// </summary>
 		public static void XCHG (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XCHG mem32,reg32
+		/// </summary>
 		public unsafe static void XCHG (UInt32 *target, R32Type source)
-
-		{}
-
-		// XCHG reg8,rmreg8
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg8,rmreg8
+		/// </summary>
 		public static void XCHG (R8Type target, R8Type source)
-		{}
-
-		// XCHG reg16,rmreg16
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg16,rmreg16
+		/// </summary>
 		public static void XCHG (R16Type target, R16Type source)
-		{}
-
-		// XCHG reg32,rmreg32
+		{
+		}
+		
+		/// <summary>
+		/// XCHG reg32,rmreg32
+		/// </summary>
 		public static void XCHG (R32Type target, R32Type source)
-		{}
-
-		// XLAT
+		{
+		}
+		
+		/// <summary>
+		/// XLAT 
+		/// </summary>
 		public static void XLAT ()
-		{}
-
-		// XLATB
+		{
+		}
+		
+		/// <summary>
+		/// XLATB 
+		/// </summary>
 		public static void XLATB ()
-		{}
-
-		// XOR mem8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem8,reg8
+		/// </summary>
 		public static void XOR (ByteMemory target, R8Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem8,reg8
+		/// </summary>
 		public unsafe static void XOR (byte *target, R8Type source)
-
-		{}
-
-		// XOR mem16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem16,reg16
+		/// </summary>
 		public static void XOR (WordMemory target, R16Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem16,reg16
+		/// </summary>
 		public unsafe static void XOR (UInt16 *target, R16Type source)
-
-		{}
-
-		// XOR mem32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem32,reg32
+		/// </summary>
 		public static void XOR (DWordMemory target, R32Type source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem32,reg32
+		/// </summary>
 		public unsafe static void XOR (UInt32 *target, R32Type source)
-
-		{}
-
-		// XOR reg8,mem8
+		{
+		}
+		
+		/// <summary>
+		/// XOR reg8,mem8
+		/// </summary>
 		public static void XOR (R8Type target, ByteMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR reg8,mem8
+		/// </summary>
 		public unsafe static void XOR (R8Type target, byte *source)
-
-		{}
-
-		// XOR reg16,mem16
+		{
+		}
+		
+		/// <summary>
+		/// XOR reg16,mem16
+		/// </summary>
 		public static void XOR (R16Type target, WordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR reg16,mem16
+		/// </summary>
 		public unsafe static void XOR (R16Type target, UInt16 *source)
-
-		{}
-
-		// XOR reg32,mem32
+		{
+		}
+		
+		/// <summary>
+		/// XOR reg32,mem32
+		/// </summary>
 		public static void XOR (R32Type target, DWordMemory source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR reg32,mem32
+		/// </summary>
 		public unsafe static void XOR (R32Type target, UInt32 *source)
-
-		{}
-
-		// XOR mem8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem8,imm8
+		/// </summary>
 		public static void XOR (ByteMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem8,imm8
+		/// </summary>
 		public unsafe static void XOR (byte *target, Byte source)
-
-		{}
-
-		// XOR mem16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem16,imm16
+		/// </summary>
 		public static void XOR (WordMemory target, UInt16 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem16,imm16
+		/// </summary>
 		public unsafe static void XOR (UInt16 *target, UInt16 source)
-
-		{}
-
-		// XOR mem32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem32,imm32
+		/// </summary>
 		public static void XOR (DWordMemory target, UInt32 source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem32,imm32
+		/// </summary>
 		public unsafe static void XOR (UInt32 *target, UInt32 source)
-
-		{}
-
-		// XOR mem16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem16,imm8
+		/// </summary>
 		public static void XOR (WordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem16,imm8
+		/// </summary>
 		public unsafe static void XOR (UInt16 *target, Byte source)
-
-		{}
-
-		// XOR mem32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem32,imm8
+		/// </summary>
 		public static void XOR (DWordMemory target, Byte source)
-		{}
-
+		{
+		}
+		
+		/// <summary>
+		/// XOR mem32,imm8
+		/// </summary>
 		public unsafe static void XOR (UInt32 *target, Byte source)
-
-		{}
-
-		// XOR rmreg8,reg8
+		{
+		}
+		
+		/// <summary>
+		/// XOR rmreg8,reg8
+		/// </summary>
 		public static void XOR (R8Type target, R8Type source)
-		{}
-
-		// XOR rmreg16,reg16
+		{
+		}
+		
+		/// <summary>
+		/// XOR rmreg16,reg16
+		/// </summary>
 		public static void XOR (R16Type target, R16Type source)
-		{}
-
-		// XOR rmreg32,reg32
+		{
+		}
+		
+		/// <summary>
+		/// XOR rmreg32,reg32
+		/// </summary>
 		public static void XOR (R32Type target, R32Type source)
-		{}
-
-		// XOR rmreg8,imm8
+		{
+		}
+		
+		/// <summary>
+		/// XOR rmreg8,imm8
+		/// </summary>
 		public static void XOR (R8Type target, Byte source)
-		{}
-
-		// XOR rmreg16,imm16
+		{
+		}
+		
+		/// <summary>
+		/// XOR rmreg16,imm16
+		/// </summary>
 		public static void XOR (R16Type target, UInt16 source)
-		{}
-
-		// XOR rmreg32,imm32
+		{
+		}
+		
+		/// <summary>
+		/// XOR rmreg32,imm32
+		/// </summary>
 		public static void XOR (R32Type target, UInt32 source)
-		{}
-
-		// XOR rmreg16,imm8
+		{
+		}
+		
+		/// <summary>
+		/// XOR rmreg16,imm8
+		/// </summary>
 		public static void XOR (R16Type target, Byte source)
-		{}
-
-		// XOR rmreg32,imm8
+		{
+		}
+		
+		/// <summary>
+		/// XOR rmreg32,imm8
+		/// </summary>
 		public static void XOR (R32Type target, Byte source)
-		{}
-
+		{
+		}
 	}
-
+	
 }

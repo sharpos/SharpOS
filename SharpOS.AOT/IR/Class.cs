@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.Collections;
@@ -23,6 +23,11 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
 	public class Class : IEnumerable<Method> {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Class"/> class.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="classDefinition">The class definition.</param>
 		public Class (Engine engine, TypeDefinition classDefinition)
 		{
 			this.engine = engine;
@@ -32,12 +37,20 @@ namespace SharpOS.AOT.IR {
 		private Engine engine = null;
 		private TypeDefinition classDefinition = null;
 
+		/// <summary>
+		/// Gets the class definition.
+		/// </summary>
+		/// <value>The class definition.</value>
 		public TypeDefinition ClassDefinition {
 			get {
 				return this.classDefinition;
 			}
 		}
 
+		/// <summary>
+		/// Adds the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public void Add (Method method)
 		{
 			this.methods.Add (method);
@@ -45,12 +58,24 @@ namespace SharpOS.AOT.IR {
 
 		private List<Method> methods = new List<Method> ();
 
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+		/// </returns>
 		IEnumerator<Method> IEnumerable<Method>.GetEnumerator ()
 		{
 			foreach (Method method in this.methods) 
 				yield return method;
 		}
 
+		/// <summary>
+		/// Returns an enumerator that iterates through a collection.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
+		/// </returns>
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return ( (IEnumerable<Method>) this).GetEnumerator ();

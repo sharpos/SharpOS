@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.Collections;
@@ -24,18 +24,31 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
 	public partial class Engine : IEnumerable<Class> {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Engine"/> class.
+		/// </summary>
 		public Engine ()
 		{
 		}
 
 		private IAssembly asm = null;
 
+		/// <summary>
+		/// Gets the assembly.
+		/// </summary>
+		/// <value>The assembly.</value>
 		public IAssembly Assembly {
 			get {
 				return asm;
 			}
 		}
 
+		/// <summary>
+		/// Runs the specified asm.
+		/// </summary>
+		/// <param name="asm">The asm.</param>
+		/// <param name="assembly">The assembly.</param>
+		/// <param name="target">The target.</param>
 		public void Run (IAssembly asm, string assembly, string target)
 		{
 			this.asm = asm;
@@ -44,12 +57,12 @@ namespace SharpOS.AOT.IR {
 
 			// We first add the data (Classes and Methods)
 			foreach (TypeDefinition type in library.MainModule.Types) {
-				Console.WriteLine (type.Name);
+				this.WriteLine (type.Name);
 
 				if (type.Name.Equals ("<Module>"))
 					continue;
 
-				Console.WriteLine (type.FullName);
+				this.WriteLine (type.FullName);
 
 				Class _class = new Class (this, type);
 
@@ -68,8 +81,8 @@ namespace SharpOS.AOT.IR {
 
 				foreach (MethodDefinition entry in type.Methods) {
 
-					if (entry.IsStatic == false || entry.ImplAttributes != MethodImplAttributes.Managed) {
-						Console.WriteLine ("Not processing '" + entry.DeclaringType.FullName + "." + entry.Name + "'");
+					if (!entry.IsStatic || entry.ImplAttributes != MethodImplAttributes.Managed) {
+						this.WriteLine ("Not processing '" + entry.DeclaringType.FullName + "." + entry.Name + "'");
 
 						continue;
 					}
@@ -80,11 +93,9 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
-			foreach (Class _class in this.classes) {
-				foreach (Method _method in _class) {
+			foreach (Class _class in this.classes)
+				foreach (Method _method in _class) 
 					_method.Process ();
-				}
-			}
 
 			asm.Encode (this, target);
 
@@ -93,18 +104,97 @@ namespace SharpOS.AOT.IR {
 
 		private List<Class> classes = new List<Class> ();
 
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+		/// </returns>
 		IEnumerator<Class> IEnumerable<Class>.GetEnumerator ()
 		{
 			foreach (Class _class in this.classes)
-			yield return _class;
+				yield return _class;
 		}
 
+		/// <summary>
+		/// Returns an enumerator that iterates through a collection.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
+		/// </returns>
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return ( (IEnumerable<Class>) this).GetEnumerator ();
 		}
 
-		public Operands.Operand.InternalSizeType GetSizeType (string type)
+		/// <summary>
+		/// Gets the size of the type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
+		public int GetTypeSize (string type)
+		{
+			Operands.Operand.InternalSizeType sizeType = GetInternalType (type);
+
+			switch (sizeType) {
+				case Operand.InternalSizeType.I1:
+				case Operand.InternalSizeType.U1:
+					return 1;
+
+				case Operand.InternalSizeType.I2:
+				case Operand.InternalSizeType.U2:
+					return 2;
+
+				case Operand.InternalSizeType.I4:
+				case Operand.InternalSizeType.U4:
+				case Operand.InternalSizeType.I:
+				case Operand.InternalSizeType.U:
+					return 4;
+
+				case Operand.InternalSizeType.I8:
+				case Operand.InternalSizeType.U8:
+					return 8;
+
+				case Operand.InternalSizeType.R4:
+					return 4;
+
+				case Operand.InternalSizeType.R8:
+					return 8;
+
+				case Operand.InternalSizeType.Object:
+					foreach (Class _class in this.classes) {
+						if (_class.ClassDefinition.FullName.Equals (type)) {
+							if (_class.ClassDefinition.IsEnum) {
+								foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
+									if ( (field.Attributes & FieldAttributes.RTSpecialName) != 0) 
+										return this.GetTypeSize (field.FieldType.FullName);
+								}
+
+							} if (_class.ClassDefinition.IsValueType) {
+								int result = 0;
+
+								foreach (FieldReference field in _class.ClassDefinition.Fields)
+									result += this.GetTypeSize (field.FieldType.FullName);
+
+								return result;
+
+							} else
+								break;
+						}
+					}
+
+					break;
+			}
+
+			throw new Exception ("'" + type + "' not supported.");
+		}
+
+		/// <summary>
+		/// Gets the type of the internal.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
+		public Operands.Operand.InternalSizeType GetInternalType (string type)
 		{
 			if (type.EndsWith ("*"))
 				return Operands.Operand.InternalSizeType.U;
@@ -172,17 +262,22 @@ namespace SharpOS.AOT.IR {
 					if (_class.ClassDefinition.IsEnum) {
 						foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
 							if ( (field.Attributes & FieldAttributes.RTSpecialName) != 0) 
-								return this.GetSizeType (field.FieldType.FullName);
+								return this.GetInternalType (field.FieldType.FullName);
 						}
 
 					} else
-						break;
+						return Operands.Operand.InternalSizeType.Object;
 				}
 			}
 
-			throw new Exception ("'" + type + "' not supported.");
+			//throw new Exception ("'" + type + "' not supported.");
+			return Operand.InternalSizeType.NotSet;
 		}
 
+		internal void WriteLine (string value)
+		{
+			Console.WriteLine ("[*] " + value);
+		}
 	}
 }
 

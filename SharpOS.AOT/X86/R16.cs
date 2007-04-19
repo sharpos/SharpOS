@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -39,17 +39,22 @@ namespace SharpOS.AOT.X86 {
 		public static readonly R16Type DI = new R16Type ("DI", 7);
 
 
+		/// <summary>
+		/// Gets the by ID.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public static R16Type GetByID (object value)
 		{
-			if (value is R16Type == true)
+			if (value is R16Type)
 				return value as R16Type;
 
-			if (value is SharpOS.AOT.IR.Operands.Field == false)
+			if (!(value is SharpOS.AOT.IR.Operands.Field))
 				throw new Exception ("'" + value.ToString() + "' is not supported.");
 
 			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
 
-			if (id.Equals ("null") == true)
+			if (id.Equals ("null"))
 				return null;
 
 			switch (id.Substring (id.Length - 2)) {

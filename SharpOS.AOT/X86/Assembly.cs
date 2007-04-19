@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -21,10 +21,17 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	public partial class Assembly : IAssembly {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Assembly"/> class.
+		/// </summary>
 		public Assembly ()
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Assembly"/> class.
+		/// </summary>
+		/// <param name="bits32">if set to <c>true</c> [bits32].</param>
 		public Assembly (bool bits32)
 		{
 			this.bits32 = bits32;
@@ -32,6 +39,10 @@ namespace SharpOS.AOT.X86 {
 
 		private bool bits32 = true;
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Assembly"/> is bits32.
+		/// </summary>
+		/// <value><c>true</c> if bits32; otherwise, <c>false</c>.</value>
 		public bool Bits32 {
 			get {
 				return bits32;
@@ -40,12 +51,22 @@ namespace SharpOS.AOT.X86 {
 
 		protected List<Instruction> instructions = new List<Instruction> ();
 
+		/// <summary>
+		/// Gets the <see cref="SharpOS.AOT.X86.Instruction"/> at the specified index.
+		/// </summary>
+		/// <value></value>
 		public Instruction this [int index] {
 			get {
 				return this.instructions [index];
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override string ToString ()
 		{
 			StringBuilder stringBuilder = new StringBuilder ();
@@ -56,113 +77,218 @@ namespace SharpOS.AOT.X86 {
 			return stringBuilder.ToString ();
 		}
 
+		/// <summary>
+		/// Determines whether the specified value is register.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value is register; otherwise, <c>false</c>.
+		/// </returns>
 		public bool IsRegister (string value)
 		{
 			return value.StartsWith ("SharpOS.AOT.X86.");
 		}
 
+		/// <summary>
+		/// Gets the type of the register size.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public SharpOS.AOT.IR.Operands.Operand.InternalSizeType GetRegisterSizeType (string value)
 		{
 			if (value.Equals ("SharpOS.AOT.X86.R8Type"))
 				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U1;
+
 			else if (value.StartsWith ("SharpOS.AOT.X86.R16Type"))
 				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U2;
+
 			else if (value.StartsWith ("SharpOS.AOT.X86.R32Type"))
 				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U4;
+
 			else
 				throw new Exception ("'" + value + "' is not supported.");
 		}
 
+		/// <summary>
+		/// Determines whether the specified value is instruction.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value is instruction; otherwise, <c>false</c>.
+		/// </returns>
 		public bool IsInstruction (string value)
 		{
 			return value.StartsWith ("SharpOS.AOT.X86.");
 		}
 
+		/// <summary>
+		/// Determines whether [is assembly stub] [the specified value].
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if [is assembly stub] [the specified value]; otherwise, <c>false</c>.
+		/// </returns>
 		internal bool IsAssemblyStub (string value)
 		{
 			return value.Equals ("SharpOS.AOT.X86.Asm");
 		}
 
+		/// <summary>
+		/// BITs the S32.
+		/// </summary>
+		/// <param name="value">if set to <c>true</c> [value].</param>
 		public void BITS32 (bool value)
 		{
 			this.instructions.Add (new Bits32Instruction (value));
 		}
 
+		/// <summary>
+		/// DATAs the specified name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="values">The values.</param>
 		public void DATA (string name, string values)
 		{
 			this.instructions.Add (new ByteDataInstruction (name, values));
 		}
 
+		/// <summary>
+		/// DATAs the specified name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="value">The value.</param>
 		public void DATA (string name, byte value)
 		{
 			this.instructions.Add (new ByteDataInstruction (name, value));
 		}
 
+		/// <summary>
+		/// DATAs the specified name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="value">The value.</param>
 		public void DATA (string name, UInt16 value)
 		{
 			this.instructions.Add (new WordDataInstruction (name, value));
 		}
 
+		/// <summary>
+		/// DATAs the specified name.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="value">The value.</param>
 		public void DATA (string name, UInt32 value)
 		{
 			this.instructions.Add (new DWordDataInstruction (name, value));
 		}
 
+		/// <summary>
+		/// DATAs the specified values.
+		/// </summary>
+		/// <param name="values">The values.</param>
 		public void DATA (string values)
 		{
 			this.instructions.Add (new ByteDataInstruction (values));
 		}
 
+		/// <summary>
+		/// DATAs the specified value.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public void DATA (byte value)
 		{
 			this.instructions.Add (new ByteDataInstruction (value));
 		}
 
+		/// <summary>
+		/// DATAs the specified value.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public void DATA (UInt16 value)
 		{
 			this.instructions.Add (new WordDataInstruction (value));
 		}
 
+		/// <summary>
+		/// DATAs the specified value.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public void DATA (UInt32 value)
 		{
 			this.instructions.Add (new DWordDataInstruction (value));
 		}
 
+		/// <summary>
+		/// OFFSETs the specified value.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public void OFFSET (UInt32 value)
 		{
 			this.instructions.Add (new OffsetInstruction (value));
 		}
 
+		/// <summary>
+		/// ORGs the specified value.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public void ORG (UInt32 value)
 		{
 			this.instructions.Add (new OrgInstruction (value));
 		}
 
+		/// <summary>
+		/// ALIGNs the specified value.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public void ALIGN (UInt32 value)
 		{
 			this.instructions.Add (new AlignInstruction (value));
 		}
 
+		/// <summary>
+		/// TIMESs the specified length.
+		/// </summary>
+		/// <param name="length">The length.</param>
+		/// <param name="value">The value.</param>
 		public void TIMES (UInt32 length, Byte value)
 		{
 			this.instructions.Add (new TimesInstruction (length, value));
 		}
 
+		/// <summary>
+		/// LABELs the specified label.
+		/// </summary>
+		/// <param name="label">The label.</param>
 		public void LABEL (string label)
 		{
 			this.instructions.Add (new LabelInstruction (label));
 		}
 
+		/// <summary>
+		/// MOVs the specified target.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="label">The label.</param>
 		public void MOV (R16Type target, string label)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + label, null, null, target, new UInt32[] { 0 }, new string[] { "o16", "B8+r", "iw" }));
 		}
 
+		/// <summary>
+		/// MOVs the specified target.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <param name="label">The label.</param>
 		public void MOV (R32Type target, string label)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + label, null, null, target, new UInt32[] { 0 }, new string[] { "o32", "B8+r", "id" }));
 		}
 
+		/// <summary>
+		/// Gets the label address.
+		/// </summary>
+		/// <param name="label">The label.</param>
+		/// <returns></returns>
 		private UInt32 GetLabelAddress (string label)
 		{
 			UInt32 address = 0;
@@ -198,11 +324,15 @@ namespace SharpOS.AOT.X86 {
 			return address;
 		}
 
+		/// <summary>
+		/// Adds the multiboot header.
+		/// </summary>
+		/// <param name="addCCTOR">if set to <c>true</c> [add CCTOR].</param>
 		public void AddMultibootHeader (bool addCCTOR)
 		{
 			uint magic = 0x1BADB002;
 			uint flags = 0x00010003; //Extra info following and retrieve memory and video modes infos
-			uint checksum = (uint) (- (magic + flags));
+			uint checksum = (uint) ((int)( (-(magic + flags))));
 
 			this.DATA (magic);
 			this.DATA (flags);
@@ -260,11 +390,21 @@ namespace SharpOS.AOT.X86 {
 
 		private Assembly data;
 
+		/// <summary>
+		/// Determines whether [is kernel string] [the specified value].
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if [is kernel string] [the specified value]; otherwise, <c>false</c>.
+		/// </returns>
 		internal bool IsKernelString (string value)
 		{
 			return value.Equals (KERNEL_STRING);
 		}
 
+		/// <summary>
+		/// Adds the LSHL.
+		/// </summary>
 		private void AddLSHL ()
 		{
 			string end = HELPER_LSHL + "_EXIT";
@@ -324,6 +464,9 @@ namespace SharpOS.AOT.X86 {
 			this.RET ();
 		}
 
+		/// <summary>
+		/// Adds the LSHR.
+		/// </summary>
 		private void AddLSHR ()
 		{
 			string end = HELPER_LSHR + "_EXIT";
@@ -375,6 +518,9 @@ namespace SharpOS.AOT.X86 {
 			this.RET ();
 		}
 
+		/// <summary>
+		/// Adds the LSAR.
+		/// </summary>
 		private void AddLSAR ()
 		{
 			string end = HELPER_LSAR + "_EXIT";
@@ -427,6 +573,9 @@ namespace SharpOS.AOT.X86 {
 			this.RET ();
 		}
 
+		/// <summary>
+		/// Adds the helper functions.
+		/// </summary>
 		private void AddHelperFunctions ()
 		{
 			this.AddLSHL ();
@@ -434,6 +583,12 @@ namespace SharpOS.AOT.X86 {
 			this.AddLSAR ();
 		}
 
+		/// <summary>
+		/// Encodes the specified engine.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="target">The target.</param>
+		/// <returns></returns>
 		public bool Encode (Engine engine, string target)
 		{
 			MemoryStream memoryStream = new MemoryStream ();
@@ -456,6 +611,7 @@ namespace SharpOS.AOT.X86 {
 					break;
 			}
 
+			// TODO add the other CCTOR calls
 			this.AddMultibootHeader (addCTOR);
 
 			foreach (Class _class in engine) {
@@ -471,10 +627,13 @@ namespace SharpOS.AOT.X86 {
 				if (_class.ClassDefinition.IsEnum)
 					continue;
 
-				foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-					string fullname = field.DeclaringType.FullName + "." + field.Name;
+				if (_class.ClassDefinition.IsValueType)
+					continue;
 
-					if (field.IsStatic == false) {
+				foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
+					string fullname = field.DeclaringType.FullName + "::" + field.Name;
+
+					if (!field.IsStatic) {
 						Console.WriteLine ("Not processing '" + fullname + "'");
 
 						continue;
@@ -482,44 +641,30 @@ namespace SharpOS.AOT.X86 {
 
 					this.LABEL (fullname);
 
-					switch (engine.GetSizeType (field.FieldType.FullName)) {
-
+					switch (engine.GetInternalType (field.FieldType.FullName)) {
 						case Operand.InternalSizeType.I1:
-
 						case Operand.InternalSizeType.U1:
 							this.DATA ( (byte) 0);
-
 							break;
 
 						case Operand.InternalSizeType.I2:
-
 						case Operand.InternalSizeType.U2:
 							this.DATA ( (ushort) 0);
-
 							break;
 
 						case Operand.InternalSizeType.I:
-
 						case Operand.InternalSizeType.U:
-
 						case Operand.InternalSizeType.I4:
-
 						case Operand.InternalSizeType.U4:
-
 						case Operand.InternalSizeType.R4:
 							this.DATA ( (uint) 0);
-
 							break;
 
 						case Operand.InternalSizeType.I8:
-
 						case Operand.InternalSizeType.U8:
-
 						case Operand.InternalSizeType.R8:
 							this.DATA ( (uint) 0);
-
 							this.DATA ( (uint) 0);
-
 							break;
 
 						default:
@@ -546,6 +691,11 @@ namespace SharpOS.AOT.X86 {
 			return true;
 		}
 
+		/// <summary>
+		/// Encodes the specified memory stream.
+		/// </summary>
+		/// <param name="memoryStream">The memory stream.</param>
+		/// <returns></returns>
 		public bool Encode (MemoryStream memoryStream)
 		{
 			UInt32 org = 0;
@@ -575,14 +725,14 @@ namespace SharpOS.AOT.X86 {
 							if (offset < binaryWriter.BaseStream.Length)
 								throw new Exception ("Wrong offset '" + offset.ToString () + "'.");
 
-							while (pass == 1 && bss == false && binaryWriter.BaseStream.Length < offset)
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
 								binaryWriter.Write ( (byte) 0);
 
 						} else if (instruction is AlignInstruction) {
 							if (offset % (UInt32) instruction.Value != 0)
 								offset += ( (UInt32) instruction.Value - offset % (UInt32) instruction.Value);
 
-							while (pass == 1 && bss == false && binaryWriter.BaseStream.Length < offset)
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
 								binaryWriter.Write ( (byte) 0);
 
 						} else if (instruction is TimesInstruction) {
@@ -590,7 +740,7 @@ namespace SharpOS.AOT.X86 {
 
 							offset += times.Length;
 
-							while (pass == 1 && bss == false && binaryWriter.BaseStream.Length < offset)
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
 								binaryWriter.Write ( (byte) times.Value);
 						}
 
@@ -598,35 +748,35 @@ namespace SharpOS.AOT.X86 {
 							if (instruction.Reference.Length > 0) {
 								instruction.Value = new UInt32[] { this.GetLabelAddress (instruction.Reference) };
 
-								if (instruction.Relative == false)
-									( (UInt32[]) instruction.Value) [0] += org;
+								if (!instruction.Relative)
+									((UInt32 []) instruction.Value) [0] += org;
 								else {
-									int delta = (int) ( ( (UInt32[]) instruction.Value) [0] - offset);
+									int delta = (int) (((UInt32 []) instruction.Value) [0] - offset);
 
 									if (delta >= -128 && delta <= 127) {
 										Assembly temp = new Assembly ();
 
 										if (instruction.Name.Equals ("JMP")
-												&& instruction.Encoding[0] == "E9") {
-											temp.JMP ( (byte) 0);
+												&& instruction.Encoding [0] == "E9") {
+											temp.JMP ((byte) 0);
 
-											instruction.Set (temp[0]);
+											instruction.Set (temp [0]);
 
 											changed = true;
 
 										} else if (instruction.Name.Equals ("JNZ")
-												&& instruction.Encoding[1] == "85") {
-											temp.JNZ ( (byte) 0);
+												&& instruction.Encoding [1] == "85") {
+											temp.JNZ ((byte) 0);
 
-											instruction.Set (temp[0]);
+											instruction.Set (temp [0]);
 
 											changed = true;
 
 										} else if (instruction.Name.Equals ("JNE")
-												&& instruction.Encoding[1] == "85") {
-											temp.JNE ( (byte) 0);
+												&& instruction.Encoding [1] == "85") {
+											temp.JNE ((byte) 0);
 
-											instruction.Set (temp[0]);
+											instruction.Set (temp [0]);
 
 											changed = true;
 										}
@@ -651,7 +801,7 @@ namespace SharpOS.AOT.X86 {
 								this.instructions[6].Value = org + offset;
 
 						} else {
-							if (bss == false)
+							if (!bss)
 								instruction.Encode (this.bits32, binaryWriter);
 						}
 
@@ -664,15 +814,18 @@ namespace SharpOS.AOT.X86 {
 			return true;
 		}
 
+		/// <summary>
+		/// Gets the memory internal.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		private Memory GetMemoryInternal (object value)
 		{
-			if (value is Memory) {
+			if (value is Memory)
 				return value as Memory;
-			}
 
-			if (value is SharpOS.AOT.IR.Operands.Call == false) {
+			if (!(value is SharpOS.AOT.IR.Operands.Call))
 				throw new Exception ("'" + value.ToString () + "' is not supported.");
-			}
 
 			SharpOS.AOT.IR.Operands.Call call = value as SharpOS.AOT.IR.Operands.Call;
 
@@ -847,31 +1000,61 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Gets the memory.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public Memory GetMemory (object value)
 		{
 			return GetMemoryInternal (value);
 		}
 
+		/// <summary>
+		/// Gets the byte memory.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public ByteMemory GetByteMemory (object value)
 		{
 			return GetMemoryInternal (value) as ByteMemory;
 		}
 
+		/// <summary>
+		/// Gets the word memory.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public WordMemory GetWordMemory (object value)
 		{
 			return GetMemoryInternal (value) as WordMemory;
 		}
 
+		/// <summary>
+		/// Gets the D word memory.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public DWordMemory GetDWordMemory (object value)
 		{
 			return GetMemoryInternal (value) as DWordMemory;
 		}
 
+		/// <summary>
+		/// Gets the Q word memory.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public QWordMemory GetQWordMemory (object value)
 		{
 			return GetMemoryInternal (value) as QWordMemory;
 		}
 
+		/// <summary>
+		/// Gets the T word memory.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public TWordMemory GetTWordMemory (object value)
 		{
 			return GetMemoryInternal (value) as TWordMemory;
@@ -879,6 +1062,10 @@ namespace SharpOS.AOT.X86 {
 
 		private bool EAX = false, ECX = false, EDX = false;
 
+		/// <summary>
+		/// Gets the spare register.
+		/// </summary>
+		/// <returns></returns>
 		internal SharpOS.AOT.X86.R32Type GetSpareRegister ()
 		{
 			if (!EAX) {
@@ -900,6 +1087,10 @@ namespace SharpOS.AOT.X86 {
 				throw new Exception ("No spare registers.");
 		}
 
+		/// <summary>
+		/// Frees the spare register.
+		/// </summary>
+		/// <param name="register">The register.</param>
 		internal void FreeSpareRegister (SharpOS.AOT.X86.R32Type register)
 		{
 			if (register == R32.EAX) {
@@ -926,30 +1117,48 @@ namespace SharpOS.AOT.X86 {
 			}*/
 		}
 
+		/// <summary>
+		/// Get8s the bit register.
+		/// </summary>
+		/// <param name="register">The register.</param>
+		/// <returns></returns>
 		internal R8Type Get8BitRegister (SharpOS.AOT.X86.R32Type register)
 		{
 			if (register == R32.EAX)
 				return R8.AL;
+
 			else if (register == R32.ECX)
 				return R8.CL;
+
 			else if (register == R32.EDX)
 				return R8.DL;
+
 			else if (register == R32.EBX)
 				return R8.BL;
+
 			else
 				throw new Exception ("'" + register + "' has no 8-Bit register.");
 		}
 
+		/// <summary>
+		/// Get16s the bit register.
+		/// </summary>
+		/// <param name="register">The register.</param>
+		/// <returns></returns>
 		internal R16Type Get16BitRegister (SharpOS.AOT.X86.R32Type register)
 		{
 			if (register == R32.EAX)
 				return R16.AX;
+
 			else if (register == R32.ECX)
 				return R16.CX;
+
 			else if (register == R32.EDX)
 				return R16.DX;
+
 			else if (register == R32.EBX)
 				return R16.BX;
+
 			else
 				throw new Exception ("'" + register + "' has no 16-Bit register.");
 		}
@@ -976,6 +1185,11 @@ namespace SharpOS.AOT.X86 {
 			CL
 		}
 
+		/// <summary>
+		/// Gets the register.
+		/// </summary>
+		/// <param name="i">The i.</param>
+		/// <returns></returns>
 		internal SharpOS.AOT.X86.R32Type GetRegister (int i)
 		{
 			switch ( (Registers) i) {
@@ -1003,12 +1217,21 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Gets the available registers count.
+		/// </summary>
+		/// <value>The available registers count.</value>
 		public int AvailableRegistersCount {
 			get {
 				return 3;
 			}
 		}
 
+		/// <summary>
+		/// Spills the specified type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
 		public bool Spill (Operand.InternalSizeType type)
 		{
 			if (type == Operand.InternalSizeType.NotSet)
@@ -1024,6 +1247,11 @@ namespace SharpOS.AOT.X86 {
 
 		Dictionary <string, string> strings = new Dictionary <string, string> ();
 
+		/// <summary>
+		/// Adds the string.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		internal string AddString (string value)
 		{
 			if (strings.ContainsKey (value))
@@ -1045,6 +1273,10 @@ namespace SharpOS.AOT.X86 {
 
 		private int resourceCounter = 0;
 
+		/// <summary>
+		/// Gets the get free resource label.
+		/// </summary>
+		/// <value>The get free resource label.</value>
 		internal string GetFreeResourceLabel {
 			get {
 				return "Resource_" + this.resourceCounter++;
@@ -1053,6 +1285,10 @@ namespace SharpOS.AOT.X86 {
 
 		private int cmpCounter = 0;
 
+		/// <summary>
+		/// Gets the get CMP label.
+		/// </summary>
+		/// <value>The get CMP label.</value>
 		internal string GetCMPLabel {
 			get {
 				return "CMP_" + this.cmpCounter++;

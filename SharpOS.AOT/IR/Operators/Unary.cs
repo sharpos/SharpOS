@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.Collections.Generic;
@@ -14,6 +14,10 @@ using System.Text;
 namespace SharpOS.AOT.IR.Operators {
 	[Serializable]
 	public class Unary : OperatorImplementation<Operator.UnaryType> {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Unary"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
 		public Unary (Operator.UnaryType type)
 			: base (type)
 		{

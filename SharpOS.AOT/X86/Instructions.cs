@@ -1,7031 +1,9240 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+//
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 
-namespace SharpOS.AOT.X86
-{
-
-	public partial class Assembly
-	{
-
-		// AAA
+namespace SharpOS.AOT.X86 {
+	public partial class Assembly {
+		
+		/// <summary>
+		/// AAA 
+		/// </summary>
 		public void AAA ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAA", "", null, null, null, null, new string[] {"37"}));
 		}
-
-		// AAD
+		
+		/// <summary>
+		/// AAD 
+		/// </summary>
 		public void AAD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAD", "", null, null, null, null, new string[] {"D5", "0A"}));
 		}
-
-		// AAD imm8
+		
+		/// <summary>
+		/// AAD imm8
+		/// </summary>
 		public void AAD (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAD", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"D5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAD", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"D5", "ib"}));
 		}
-
-		// AAM
+		
+		/// <summary>
+		/// AAM 
+		/// </summary>
 		public void AAM ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAM", "", null, null, null, null, new string[] {"D4", "0A"}));
 		}
-
-		// AAM imm8
+		
+		/// <summary>
+		/// AAM imm8
+		/// </summary>
 		public void AAM (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAM", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"D4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAM", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"D4", "ib"}));
 		}
-
-		// AAS
+		
+		/// <summary>
+		/// AAS 
+		/// </summary>
 		public void AAS ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAS", "", null, null, null, null, new string[] {"3F"}));
 		}
-
-		// ADC mem8,reg8
+		
+		/// <summary>
+		/// ADC mem8,reg8
+		/// </summary>
 		public void ADC (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"10", "/r"}));
 		}
-
-		// ADC mem16,reg16
+		
+		/// <summary>
+		/// ADC mem16,reg16
+		/// </summary>
 		public void ADC (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "11", "/r"}));
 		}
-
-		// ADC mem32,reg32
+		
+		/// <summary>
+		/// ADC mem32,reg32
+		/// </summary>
 		public void ADC (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "11", "/r"}));
 		}
-
-		// ADC reg8,mem8
+		
+		/// <summary>
+		/// ADC reg8,mem8
+		/// </summary>
 		public void ADC (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"12", "/r"}));
 		}
-
-		// ADC reg16,mem16
+		
+		/// <summary>
+		/// ADC reg16,mem16
+		/// </summary>
 		public void ADC (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "13", "/r"}));
 		}
-
-		// ADC reg32,mem32
+		
+		/// <summary>
+		/// ADC reg32,mem32
+		/// </summary>
 		public void ADC (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "13", "/r"}));
 		}
-
-		// ADC mem8,imm8
+		
+		/// <summary>
+		/// ADC mem8,imm8
+		/// </summary>
 		public void ADC (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/2", "ib"}));
 		}
-
-		// ADC mem16,imm16
+		
+		/// <summary>
+		/// ADC mem16,imm16
+		/// </summary>
 		public void ADC (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/2", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/2", "iw"}));
 		}
-
-		// ADC mem32,imm32
+		
+		/// <summary>
+		/// ADC mem32,imm32
+		/// </summary>
 		public void ADC (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/2", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/2", "id"}));
 		}
-
-		// ADC mem16,imm8
+		
+		/// <summary>
+		/// ADC mem16,imm8
+		/// </summary>
 		public void ADC (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/2", "ib"}));
 		}
-
-		// ADC mem32,imm8
+		
+		/// <summary>
+		/// ADC mem32,imm8
+		/// </summary>
 		public void ADC (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/2", "ib"}));
 		}
-
-		// ADC rmreg8,reg8
+		
+		/// <summary>
+		/// ADC rmreg8,reg8
+		/// </summary>
 		public void ADC (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"10", "/r"}));
 		}
-
-		// ADC rmreg16,reg16
+		
+		/// <summary>
+		/// ADC rmreg16,reg16
+		/// </summary>
 		public void ADC (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "11", "/r"}));
 		}
-
-		// ADC rmreg32,reg32
+		
+		/// <summary>
+		/// ADC rmreg32,reg32
+		/// </summary>
 		public void ADC (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "11", "/r"}));
 		}
-
-		// ADC rmreg8,imm8
+		
+		/// <summary>
+		/// ADC rmreg8,imm8
+		/// </summary>
 		public void ADC (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"14", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/2", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"14", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/2", "ib"}));
 			}
 		}
-
-		// ADC rmreg16,imm16
+		
+		/// <summary>
+		/// ADC rmreg16,imm16
+		/// </summary>
 		public void ADC (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "15", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/2", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "15", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/2", "iw"}));
 			}
 		}
-
-		// ADC rmreg32,imm32
+		
+		/// <summary>
+		/// ADC rmreg32,imm32
+		/// </summary>
 		public void ADC (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "15", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.ADC (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/2", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "15", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.ADC (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/2", "id"}));
 				}
 			}
 		}
-
-		// ADC rmreg16,imm8
+		
+		/// <summary>
+		/// ADC rmreg16,imm8
+		/// </summary>
 		public void ADC (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/2", "ib"}));
 		}
-
-		// ADC rmreg32,imm8
+		
+		/// <summary>
+		/// ADC rmreg32,imm8
+		/// </summary>
 		public void ADC (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/2", "ib"}));
 		}
-
-		// ADD mem8,reg8
+		
+		/// <summary>
+		/// ADD mem8,reg8
+		/// </summary>
 		public void ADD (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"00", "/r"}));
 		}
-
-		// ADD mem16,reg16
+		
+		/// <summary>
+		/// ADD mem16,reg16
+		/// </summary>
 		public void ADD (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "01", "/r"}));
 		}
-
-		// ADD mem32,reg32
+		
+		/// <summary>
+		/// ADD mem32,reg32
+		/// </summary>
 		public void ADD (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "01", "/r"}));
 		}
-
-		// ADD reg8,mem8
+		
+		/// <summary>
+		/// ADD reg8,mem8
+		/// </summary>
 		public void ADD (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"02", "/r"}));
 		}
-
-		// ADD reg16,mem16
+		
+		/// <summary>
+		/// ADD reg16,mem16
+		/// </summary>
 		public void ADD (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "03", "/r"}));
 		}
-
-		// ADD reg32,mem32
+		
+		/// <summary>
+		/// ADD reg32,mem32
+		/// </summary>
 		public void ADD (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "03", "/r"}));
 		}
-
-		// ADD mem8,imm8
+		
+		/// <summary>
+		/// ADD mem8,imm8
+		/// </summary>
 		public void ADD (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/0", "ib"}));
 		}
-
-		// ADD mem16,imm16
+		
+		/// <summary>
+		/// ADD mem16,imm16
+		/// </summary>
 		public void ADD (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/0", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/0", "iw"}));
 		}
-
-		// ADD mem32,imm32
+		
+		/// <summary>
+		/// ADD mem32,imm32
+		/// </summary>
 		public void ADD (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/0", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/0", "id"}));
 		}
-
-		// ADD mem16,imm8
+		
+		/// <summary>
+		/// ADD mem16,imm8
+		/// </summary>
 		public void ADD (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/0", "ib"}));
 		}
-
-		// ADD mem32,imm8
+		
+		/// <summary>
+		/// ADD mem32,imm8
+		/// </summary>
 		public void ADD (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/0", "ib"}));
 		}
-
-		// ADD rmreg8,reg8
+		
+		/// <summary>
+		/// ADD rmreg8,reg8
+		/// </summary>
 		public void ADD (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"00", "/r"}));
 		}
-
-		// ADD rmreg16,reg16
+		
+		/// <summary>
+		/// ADD rmreg16,reg16
+		/// </summary>
 		public void ADD (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "01", "/r"}));
 		}
-
-		// ADD rmreg32,reg32
+		
+		/// <summary>
+		/// ADD rmreg32,reg32
+		/// </summary>
 		public void ADD (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "01", "/r"}));
 		}
-
-		// ADD rmreg8,imm8
+		
+		/// <summary>
+		/// ADD rmreg8,imm8
+		/// </summary>
 		public void ADD (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"04", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/0", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"04", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/0", "ib"}));
 			}
 		}
-
-		// ADD rmreg16,imm16
+		
+		/// <summary>
+		/// ADD rmreg16,imm16
+		/// </summary>
 		public void ADD (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "05", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/0", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "05", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/0", "iw"}));
 			}
 		}
-
-		// ADD rmreg32,imm32
+		
+		/// <summary>
+		/// ADD rmreg32,imm32
+		/// </summary>
 		public void ADD (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "05", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.ADD (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/0", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "05", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.ADD (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/0", "id"}));
 				}
 			}
 		}
-
-		// ADD rmreg16,imm8
+		
+		/// <summary>
+		/// ADD rmreg16,imm8
+		/// </summary>
 		public void ADD (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/0", "ib"}));
 		}
-
-		// ADD rmreg32,imm8
+		
+		/// <summary>
+		/// ADD rmreg32,imm8
+		/// </summary>
 		public void ADD (R32Type target, Byte source)
 		{
-			if (source == 0) {}
-			else if (source == 1) {
+			if (source == 0)
+			{
+			}
+			else if (source == 1)
+			{
 				this.INC (target);
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/0", "ib"}));
+			}
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/0", "ib"}));
 			}
 		}
-
-		// AND mem8,reg8
+		
+		/// <summary>
+		/// AND mem8,reg8
+		/// </summary>
 		public void AND (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"20", "/r"}));
 		}
-
-		// AND mem16,reg16
+		
+		/// <summary>
+		/// AND mem16,reg16
+		/// </summary>
 		public void AND (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "21", "/r"}));
 		}
-
-		// AND mem32,reg32
+		
+		/// <summary>
+		/// AND mem32,reg32
+		/// </summary>
 		public void AND (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "21", "/r"}));
 		}
-
-		// AND reg8,mem8
+		
+		/// <summary>
+		/// AND reg8,mem8
+		/// </summary>
 		public void AND (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"22", "/r"}));
 		}
-
-		// AND reg16,mem16
+		
+		/// <summary>
+		/// AND reg16,mem16
+		/// </summary>
 		public void AND (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "23", "/r"}));
 		}
-
-		// AND reg32,mem32
+		
+		/// <summary>
+		/// AND reg32,mem32
+		/// </summary>
 		public void AND (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "23", "/r"}));
 		}
-
-		// AND mem8,imm8
+		
+		/// <summary>
+		/// AND mem8,imm8
+		/// </summary>
 		public void AND (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/4", "ib"}));
 		}
-
-		// AND mem16,imm16
+		
+		/// <summary>
+		/// AND mem16,imm16
+		/// </summary>
 		public void AND (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/4", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/4", "iw"}));
 		}
-
-		// AND mem32,imm32
+		
+		/// <summary>
+		/// AND mem32,imm32
+		/// </summary>
 		public void AND (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/4", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/4", "id"}));
 		}
-
-		// AND mem16,imm8
+		
+		/// <summary>
+		/// AND mem16,imm8
+		/// </summary>
 		public void AND (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/4", "ib"}));
 		}
-
-		// AND mem32,imm8
+		
+		/// <summary>
+		/// AND mem32,imm8
+		/// </summary>
 		public void AND (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/4", "ib"}));
 		}
-
-		// AND rmreg8,reg8
+		
+		/// <summary>
+		/// AND rmreg8,reg8
+		/// </summary>
 		public void AND (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"20", "/r"}));
 		}
-
-		// AND rmreg16,reg16
+		
+		/// <summary>
+		/// AND rmreg16,reg16
+		/// </summary>
 		public void AND (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "21", "/r"}));
 		}
-
-		// AND rmreg32,reg32
+		
+		/// <summary>
+		/// AND rmreg32,reg32
+		/// </summary>
 		public void AND (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "21", "/r"}));
 		}
-
-		// AND rmreg8,imm8
+		
+		/// <summary>
+		/// AND rmreg8,imm8
+		/// </summary>
 		public void AND (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"24", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/4", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"24", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/4", "ib"}));
 			}
 		}
-
-		// AND rmreg16,imm16
+		
+		/// <summary>
+		/// AND rmreg16,imm16
+		/// </summary>
 		public void AND (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "25", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/4", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "25", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/4", "iw"}));
 			}
 		}
-
-		// AND rmreg32,imm32
+		
+		/// <summary>
+		/// AND rmreg32,imm32
+		/// </summary>
 		public void AND (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "25", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.AND (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/4", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "25", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.AND (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/4", "id"}));
 				}
 			}
 		}
-
-		// AND rmreg16,imm8
+		
+		/// <summary>
+		/// AND rmreg16,imm8
+		/// </summary>
 		public void AND (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/4", "ib"}));
 		}
-
-		// AND rmreg32,imm8
+		
+		/// <summary>
+		/// AND rmreg32,imm8
+		/// </summary>
 		public void AND (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/4", "ib"}));
 		}
-
-		// ARPL mem16,reg16
+		
+		/// <summary>
+		/// ARPL mem16,reg16
+		/// </summary>
 		public void ARPL (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ARPL", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"63", "/r"}));
 		}
-
-		// ARPL rmreg16,reg16
+		
+		/// <summary>
+		/// ARPL rmreg16,reg16
+		/// </summary>
 		public void ARPL (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ARPL", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"63", "/r"}));
 		}
-
-		// BOUND reg16,mem
+		
+		/// <summary>
+		/// BOUND reg16,mem
+		/// </summary>
 		public void BOUND (R16Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BOUND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "62", "/r"}));
 		}
-
-		// BOUND reg32,mem
+		
+		/// <summary>
+		/// BOUND reg32,mem
+		/// </summary>
 		public void BOUND (R32Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BOUND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "62", "/r"}));
 		}
-
-		// BSF reg16,mem16
+		
+		/// <summary>
+		/// BSF reg16,mem16
+		/// </summary>
 		public void BSF (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "BC", "/r"}));
 		}
-
-		// BSF reg32,mem32
+		
+		/// <summary>
+		/// BSF reg32,mem32
+		/// </summary>
 		public void BSF (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "BC", "/r"}));
 		}
-
-		// BSF reg16,rmreg16
+		
+		/// <summary>
+		/// BSF reg16,rmreg16
+		/// </summary>
 		public void BSF (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "BC", "/r"}));
 		}
-
-		// BSF reg32,rmreg32
+		
+		/// <summary>
+		/// BSF reg32,rmreg32
+		/// </summary>
 		public void BSF (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "BC", "/r"}));
 		}
-
-		// BSR reg16,mem16
+		
+		/// <summary>
+		/// BSR reg16,mem16
+		/// </summary>
 		public void BSR (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "BD", "/r"}));
 		}
-
-		// BSR reg32,mem32
+		
+		/// <summary>
+		/// BSR reg32,mem32
+		/// </summary>
 		public void BSR (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "BD", "/r"}));
 		}
-
-		// BSR reg16,rmreg16
+		
+		/// <summary>
+		/// BSR reg16,rmreg16
+		/// </summary>
 		public void BSR (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "BD", "/r"}));
 		}
-
-		// BSR reg32,rmreg32
+		
+		/// <summary>
+		/// BSR reg32,rmreg32
+		/// </summary>
 		public void BSR (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "BD", "/r"}));
 		}
-
-		// BSWAP reg32
+		
+		/// <summary>
+		/// BSWAP reg32
+		/// </summary>
 		public void BSWAP (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSWAP", target.ToString(), null, null, target, null, new string[] {"o32", "0F", "C8+r"}));
 		}
-
-		// BT mem16,reg16
+		
+		/// <summary>
+		/// BT mem16,reg16
+		/// </summary>
 		public void BT (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "A3", "/r"}));
 		}
-
-		// BT mem32,reg32
+		
+		/// <summary>
+		/// BT mem32,reg32
+		/// </summary>
 		public void BT (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "A3", "/r"}));
 		}
-
-		// BT mem16,imm8
+		
+		/// <summary>
+		/// BT mem16,imm8
+		/// </summary>
 		public void BT (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/4", "ib"}));
 		}
-
-		// BT mem32,imm8
+		
+		/// <summary>
+		/// BT mem32,imm8
+		/// </summary>
 		public void BT (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/4", "ib"}));
 		}
-
-		// BT rmreg16,reg16
+		
+		/// <summary>
+		/// BT rmreg16,reg16
+		/// </summary>
 		public void BT (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "A3", "/r"}));
 		}
-
-		// BT rmreg32,reg32
+		
+		/// <summary>
+		/// BT rmreg32,reg32
+		/// </summary>
 		public void BT (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "A3", "/r"}));
 		}
-
-		// BT rmreg16,imm8
+		
+		/// <summary>
+		/// BT rmreg16,imm8
+		/// </summary>
 		public void BT (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/4", "ib"}));
 		}
-
-		// BT rmreg32,imm8
+		
+		/// <summary>
+		/// BT rmreg32,imm8
+		/// </summary>
 		public void BT (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/4", "ib"}));
 		}
-
-		// BTC mem16,reg16
+		
+		/// <summary>
+		/// BTC mem16,reg16
+		/// </summary>
 		public void BTC (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "BB", "/r"}));
 		}
-
-		// BTC mem32,reg32
+		
+		/// <summary>
+		/// BTC mem32,reg32
+		/// </summary>
 		public void BTC (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "BB", "/r"}));
 		}
-
-		// BTC mem16,imm8
+		
+		/// <summary>
+		/// BTC mem16,imm8
+		/// </summary>
 		public void BTC (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/7", "ib"}));
 		}
-
-		// BTC mem32,imm8
+		
+		/// <summary>
+		/// BTC mem32,imm8
+		/// </summary>
 		public void BTC (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/7", "ib"}));
 		}
-
-		// BTC rmreg16,reg16
+		
+		/// <summary>
+		/// BTC rmreg16,reg16
+		/// </summary>
 		public void BTC (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "BB", "/r"}));
 		}
-
-		// BTC rmreg32,reg32
+		
+		/// <summary>
+		/// BTC rmreg32,reg32
+		/// </summary>
 		public void BTC (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "BB", "/r"}));
 		}
-
-		// BTC rmreg16,imm8
+		
+		/// <summary>
+		/// BTC rmreg16,imm8
+		/// </summary>
 		public void BTC (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/7", "ib"}));
 		}
-
-		// BTC rmreg32,imm8
+		
+		/// <summary>
+		/// BTC rmreg32,imm8
+		/// </summary>
 		public void BTC (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/7", "ib"}));
 		}
-
-		// BTR mem16,reg16
+		
+		/// <summary>
+		/// BTR mem16,reg16
+		/// </summary>
 		public void BTR (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "B3", "/r"}));
 		}
-
-		// BTR mem32,reg32
+		
+		/// <summary>
+		/// BTR mem32,reg32
+		/// </summary>
 		public void BTR (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "B3", "/r"}));
 		}
-
-		// BTR mem16,imm8
+		
+		/// <summary>
+		/// BTR mem16,imm8
+		/// </summary>
 		public void BTR (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/6", "ib"}));
 		}
-
-		// BTR mem32,imm8
+		
+		/// <summary>
+		/// BTR mem32,imm8
+		/// </summary>
 		public void BTR (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/6", "ib"}));
 		}
-
-		// BTR rmreg16,reg16
+		
+		/// <summary>
+		/// BTR rmreg16,reg16
+		/// </summary>
 		public void BTR (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "B3", "/r"}));
 		}
-
-		// BTR rmreg32,reg32
+		
+		/// <summary>
+		/// BTR rmreg32,reg32
+		/// </summary>
 		public void BTR (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "B3", "/r"}));
 		}
-
-		// BTR rmreg16,imm8
+		
+		/// <summary>
+		/// BTR rmreg16,imm8
+		/// </summary>
 		public void BTR (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/6", "ib"}));
 		}
-
-		// BTR rmreg32,imm8
+		
+		/// <summary>
+		/// BTR rmreg32,imm8
+		/// </summary>
 		public void BTR (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/6", "ib"}));
 		}
-
-		// BTS mem16,reg16
+		
+		/// <summary>
+		/// BTS mem16,reg16
+		/// </summary>
 		public void BTS (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "AB", "/r"}));
 		}
-
-		// BTS mem32,reg32
+		
+		/// <summary>
+		/// BTS mem32,reg32
+		/// </summary>
 		public void BTS (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "AB", "/r"}));
 		}
-
-		// BTS mem16,imm8
+		
+		/// <summary>
+		/// BTS mem16,imm8
+		/// </summary>
 		public void BTS (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/5", "ib"}));
 		}
-
-		// BTS mem32,imm8
+		
+		/// <summary>
+		/// BTS mem32,imm8
+		/// </summary>
 		public void BTS (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/5", "ib"}));
 		}
-
-		// BTS rmreg16,reg16
+		
+		/// <summary>
+		/// BTS rmreg16,reg16
+		/// </summary>
 		public void BTS (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "AB", "/r"}));
 		}
-
-		// BTS rmreg32,reg32
+		
+		/// <summary>
+		/// BTS rmreg32,reg32
+		/// </summary>
 		public void BTS (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "AB", "/r"}));
 		}
-
-		// BTS rmreg16,imm8
+		
+		/// <summary>
+		/// BTS rmreg16,imm8
+		/// </summary>
 		public void BTS (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/5", "ib"}));
 		}
-
-		// BTS rmreg32,imm8
+		
+		/// <summary>
+		/// BTS rmreg32,imm8
+		/// </summary>
 		public void BTS (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/5", "ib"}));
 		}
-
-		// CALL imm
+		
+		/// <summary>
+		/// CALL imm
+		/// </summary>
 		public void CALL (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E8", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E8", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// CALL imm
+		/// </summary>
 		public void CALL (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "CALL", label, null, null, null, new UInt32[] {0}, new string[] {"E8", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "CALL", label, null, null, null, new UInt32[] {0}, new string[] {"E8", "rw/rd"}));
 		}
-
-		// CALL imm16:imm16
+		
+		/// <summary>
+		/// CALL imm16:imm16
+		/// </summary>
 		public void CALL (UInt16 target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o16", "9A", "iw", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o16", "9A", "iw", "iw"}));
 		}
-
-		// CALL imm16:imm32
+		
+		/// <summary>
+		/// CALL imm16:imm32
+		/// </summary>
 		public void CALL (UInt16 target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o32", "9A", "id", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o32", "9A", "id", "iw"}));
 		}
-
-		// CALL FAR mem16
+		
+		/// <summary>
+		/// CALL FAR mem16
+		/// </summary>
 		public void CALL_FAR (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL_FAR", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/3"}));
 		}
-
-		// CALL FAR mem32
+		
+		/// <summary>
+		/// CALL FAR mem32
+		/// </summary>
 		public void CALL_FAR (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL_FAR", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/3"}));
 		}
-
-		// CALL mem16
+		
+		/// <summary>
+		/// CALL mem16
+		/// </summary>
 		public void CALL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/2"}));
 		}
-
-		// CALL mem32
+		
+		/// <summary>
+		/// CALL mem32
+		/// </summary>
 		public void CALL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/2"}));
 		}
-
-		// CALL rmreg16
+		
+		/// <summary>
+		/// CALL rmreg16
+		/// </summary>
 		public void CALL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString(), null, target, null, null, new string[] {"o16", "FF", "/2"}));
 		}
-
-		// CALL rmreg32
+		
+		/// <summary>
+		/// CALL rmreg32
+		/// </summary>
 		public void CALL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString(), null, target, null, null, new string[] {"o32", "FF", "/2"}));
 		}
-
-		// CBW
+		
+		/// <summary>
+		/// CBW 
+		/// </summary>
 		public void CBW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CBW", "", null, null, null, null, new string[] {"o16", "98"}));
 		}
-
-		// CDQ
+		
+		/// <summary>
+		/// CDQ 
+		/// </summary>
 		public void CDQ ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CDQ", "", null, null, null, null, new string[] {"o32", "99"}));
 		}
-
-		// CLC
+		
+		/// <summary>
+		/// CLC 
+		/// </summary>
 		public void CLC ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLC", "", null, null, null, null, new string[] {"F8"}));
 		}
-
-		// CLD
+		
+		/// <summary>
+		/// CLD 
+		/// </summary>
 		public void CLD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLD", "", null, null, null, null, new string[] {"FC"}));
 		}
-
-		// CLFLUSH mem
+		
+		/// <summary>
+		/// CLFLUSH mem
+		/// </summary>
 		public void CLFLUSH (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLFLUSH", target.ToString(), target, null, null, null, new string[] {"0F", "AE", "/7"}));
 		}
-
-		// CLI
+		
+		/// <summary>
+		/// CLI 
+		/// </summary>
 		public void CLI ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLI", "", null, null, null, null, new string[] {"FA"}));
 		}
-
-		// CLTS
+		
+		/// <summary>
+		/// CLTS 
+		/// </summary>
 		public void CLTS ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLTS", "", null, null, null, null, new string[] {"0F", "06"}));
 		}
-
-		// CMC
+		
+		/// <summary>
+		/// CMC 
+		/// </summary>
 		public void CMC ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMC", "", null, null, null, null, new string[] {"F5"}));
 		}
-
-		// CMOVA reg16,mem16
+		
+		/// <summary>
+		/// CMOVA reg16,mem16
+		/// </summary>
 		public void CMOVA (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "47", "/r"}));
 		}
-
-		// CMOVA reg32,mem32
+		
+		/// <summary>
+		/// CMOVA reg32,mem32
+		/// </summary>
 		public void CMOVA (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "47", "/r"}));
 		}
-
-		// CMOVA reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVA reg16,rmreg16
+		/// </summary>
 		public void CMOVA (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "47", "/r"}));
 		}
-
-		// CMOVA reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVA reg32,rmreg32
+		/// </summary>
 		public void CMOVA (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "47", "/r"}));
 		}
-
-		// CMOVAE reg16,mem16
+		
+		/// <summary>
+		/// CMOVAE reg16,mem16
+		/// </summary>
 		public void CMOVAE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "43", "/r"}));
 		}
-
-		// CMOVAE reg32,mem32
+		
+		/// <summary>
+		/// CMOVAE reg32,mem32
+		/// </summary>
 		public void CMOVAE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "43", "/r"}));
 		}
-
-		// CMOVAE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVAE reg16,rmreg16
+		/// </summary>
 		public void CMOVAE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "43", "/r"}));
 		}
-
-		// CMOVAE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVAE reg32,rmreg32
+		/// </summary>
 		public void CMOVAE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "43", "/r"}));
 		}
-
-		// CMOVB reg16,mem16
+		
+		/// <summary>
+		/// CMOVB reg16,mem16
+		/// </summary>
 		public void CMOVB (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "42", "/r"}));
 		}
-
-		// CMOVB reg32,mem32
+		
+		/// <summary>
+		/// CMOVB reg32,mem32
+		/// </summary>
 		public void CMOVB (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "42", "/r"}));
 		}
-
-		// CMOVB reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVB reg16,rmreg16
+		/// </summary>
 		public void CMOVB (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "42", "/r"}));
 		}
-
-		// CMOVB reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVB reg32,rmreg32
+		/// </summary>
 		public void CMOVB (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "42", "/r"}));
 		}
-
-		// CMOVBE reg16,mem16
+		
+		/// <summary>
+		/// CMOVBE reg16,mem16
+		/// </summary>
 		public void CMOVBE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "46", "/r"}));
 		}
-
-		// CMOVBE reg32,mem32
+		
+		/// <summary>
+		/// CMOVBE reg32,mem32
+		/// </summary>
 		public void CMOVBE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "46", "/r"}));
 		}
-
-		// CMOVBE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVBE reg16,rmreg16
+		/// </summary>
 		public void CMOVBE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "46", "/r"}));
 		}
-
-		// CMOVBE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVBE reg32,rmreg32
+		/// </summary>
 		public void CMOVBE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "46", "/r"}));
 		}
-
-		// CMOVC reg16,mem16
+		
+		/// <summary>
+		/// CMOVC reg16,mem16
+		/// </summary>
 		public void CMOVC (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "42", "/r"}));
 		}
-
-		// CMOVC reg32,mem32
+		
+		/// <summary>
+		/// CMOVC reg32,mem32
+		/// </summary>
 		public void CMOVC (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "42", "/r"}));
 		}
-
-		// CMOVC reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVC reg16,rmreg16
+		/// </summary>
 		public void CMOVC (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "42", "/r"}));
 		}
-
-		// CMOVC reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVC reg32,rmreg32
+		/// </summary>
 		public void CMOVC (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "42", "/r"}));
 		}
-
-		// CMOVE reg16,mem16
+		
+		/// <summary>
+		/// CMOVE reg16,mem16
+		/// </summary>
 		public void CMOVE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "44", "/r"}));
 		}
-
-		// CMOVE reg32,mem32
+		
+		/// <summary>
+		/// CMOVE reg32,mem32
+		/// </summary>
 		public void CMOVE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "44", "/r"}));
 		}
-
-		// CMOVE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVE reg16,rmreg16
+		/// </summary>
 		public void CMOVE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "44", "/r"}));
 		}
-
-		// CMOVE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVE reg32,rmreg32
+		/// </summary>
 		public void CMOVE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "44", "/r"}));
 		}
-
-		// CMOVG reg16,mem16
+		
+		/// <summary>
+		/// CMOVG reg16,mem16
+		/// </summary>
 		public void CMOVG (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4F", "/r"}));
 		}
-
-		// CMOVG reg32,mem32
+		
+		/// <summary>
+		/// CMOVG reg32,mem32
+		/// </summary>
 		public void CMOVG (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4F", "/r"}));
 		}
-
-		// CMOVG reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVG reg16,rmreg16
+		/// </summary>
 		public void CMOVG (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4F", "/r"}));
 		}
-
-		// CMOVG reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVG reg32,rmreg32
+		/// </summary>
 		public void CMOVG (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4F", "/r"}));
 		}
-
-		// CMOVGE reg16,mem16
+		
+		/// <summary>
+		/// CMOVGE reg16,mem16
+		/// </summary>
 		public void CMOVGE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4D", "/r"}));
 		}
-
-		// CMOVGE reg32,mem32
+		
+		/// <summary>
+		/// CMOVGE reg32,mem32
+		/// </summary>
 		public void CMOVGE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4D", "/r"}));
 		}
-
-		// CMOVGE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVGE reg16,rmreg16
+		/// </summary>
 		public void CMOVGE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4D", "/r"}));
 		}
-
-		// CMOVGE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVGE reg32,rmreg32
+		/// </summary>
 		public void CMOVGE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4D", "/r"}));
 		}
-
-		// CMOVL reg16,mem16
+		
+		/// <summary>
+		/// CMOVL reg16,mem16
+		/// </summary>
 		public void CMOVL (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4C", "/r"}));
 		}
-
-		// CMOVL reg32,mem32
+		
+		/// <summary>
+		/// CMOVL reg32,mem32
+		/// </summary>
 		public void CMOVL (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4C", "/r"}));
 		}
-
-		// CMOVL reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVL reg16,rmreg16
+		/// </summary>
 		public void CMOVL (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4C", "/r"}));
 		}
-
-		// CMOVL reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVL reg32,rmreg32
+		/// </summary>
 		public void CMOVL (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4C", "/r"}));
 		}
-
-		// CMOVLE reg16,mem16
+		
+		/// <summary>
+		/// CMOVLE reg16,mem16
+		/// </summary>
 		public void CMOVLE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4E", "/r"}));
 		}
-
-		// CMOVLE reg32,mem32
+		
+		/// <summary>
+		/// CMOVLE reg32,mem32
+		/// </summary>
 		public void CMOVLE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4E", "/r"}));
 		}
-
-		// CMOVLE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVLE reg16,rmreg16
+		/// </summary>
 		public void CMOVLE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4E", "/r"}));
 		}
-
-		// CMOVLE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVLE reg32,rmreg32
+		/// </summary>
 		public void CMOVLE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4E", "/r"}));
 		}
-
-		// CMOVNA reg16,mem16
+		
+		/// <summary>
+		/// CMOVNA reg16,mem16
+		/// </summary>
 		public void CMOVNA (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "46", "/r"}));
 		}
-
-		// CMOVNA reg32,mem32
+		
+		/// <summary>
+		/// CMOVNA reg32,mem32
+		/// </summary>
 		public void CMOVNA (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "46", "/r"}));
 		}
-
-		// CMOVNA reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNA reg16,rmreg16
+		/// </summary>
 		public void CMOVNA (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "46", "/r"}));
 		}
-
-		// CMOVNA reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNA reg32,rmreg32
+		/// </summary>
 		public void CMOVNA (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "46", "/r"}));
 		}
-
-		// CMOVNAE reg16,mem16
+		
+		/// <summary>
+		/// CMOVNAE reg16,mem16
+		/// </summary>
 		public void CMOVNAE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "42", "/r"}));
 		}
-
-		// CMOVNAE reg32,mem32
+		
+		/// <summary>
+		/// CMOVNAE reg32,mem32
+		/// </summary>
 		public void CMOVNAE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "42", "/r"}));
 		}
-
-		// CMOVNAE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNAE reg16,rmreg16
+		/// </summary>
 		public void CMOVNAE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "42", "/r"}));
 		}
-
-		// CMOVNAE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNAE reg32,rmreg32
+		/// </summary>
 		public void CMOVNAE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "42", "/r"}));
 		}
-
-		// CMOVNB reg16,mem16
+		
+		/// <summary>
+		/// CMOVNB reg16,mem16
+		/// </summary>
 		public void CMOVNB (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "43", "/r"}));
 		}
-
-		// CMOVNB reg32,mem32
+		
+		/// <summary>
+		/// CMOVNB reg32,mem32
+		/// </summary>
 		public void CMOVNB (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "43", "/r"}));
 		}
-
-		// CMOVNB reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNB reg16,rmreg16
+		/// </summary>
 		public void CMOVNB (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "43", "/r"}));
 		}
-
-		// CMOVNB reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNB reg32,rmreg32
+		/// </summary>
 		public void CMOVNB (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "43", "/r"}));
 		}
-
-		// CMOVNBE reg16,mem16
+		
+		/// <summary>
+		/// CMOVNBE reg16,mem16
+		/// </summary>
 		public void CMOVNBE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "47", "/r"}));
 		}
-
-		// CMOVNBE reg32,mem32
+		
+		/// <summary>
+		/// CMOVNBE reg32,mem32
+		/// </summary>
 		public void CMOVNBE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "47", "/r"}));
 		}
-
-		// CMOVNBE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNBE reg16,rmreg16
+		/// </summary>
 		public void CMOVNBE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "47", "/r"}));
 		}
-
-		// CMOVNBE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNBE reg32,rmreg32
+		/// </summary>
 		public void CMOVNBE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "47", "/r"}));
 		}
-
-		// CMOVNC reg16,mem16
+		
+		/// <summary>
+		/// CMOVNC reg16,mem16
+		/// </summary>
 		public void CMOVNC (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "43", "/r"}));
 		}
-
-		// CMOVNC reg32,mem32
+		
+		/// <summary>
+		/// CMOVNC reg32,mem32
+		/// </summary>
 		public void CMOVNC (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "43", "/r"}));
 		}
-
-		// CMOVNC reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNC reg16,rmreg16
+		/// </summary>
 		public void CMOVNC (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "43", "/r"}));
 		}
-
-		// CMOVNC reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNC reg32,rmreg32
+		/// </summary>
 		public void CMOVNC (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "43", "/r"}));
 		}
-
-		// CMOVNE reg16,mem16
+		
+		/// <summary>
+		/// CMOVNE reg16,mem16
+		/// </summary>
 		public void CMOVNE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "45", "/r"}));
 		}
-
-		// CMOVNE reg32,mem32
+		
+		/// <summary>
+		/// CMOVNE reg32,mem32
+		/// </summary>
 		public void CMOVNE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "45", "/r"}));
 		}
-
-		// CMOVNE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNE reg16,rmreg16
+		/// </summary>
 		public void CMOVNE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "45", "/r"}));
 		}
-
-		// CMOVNE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNE reg32,rmreg32
+		/// </summary>
 		public void CMOVNE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "45", "/r"}));
 		}
-
-		// CMOVNG reg16,mem16
+		
+		/// <summary>
+		/// CMOVNG reg16,mem16
+		/// </summary>
 		public void CMOVNG (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4E", "/r"}));
 		}
-
-		// CMOVNG reg32,mem32
+		
+		/// <summary>
+		/// CMOVNG reg32,mem32
+		/// </summary>
 		public void CMOVNG (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4E", "/r"}));
 		}
-
-		// CMOVNG reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNG reg16,rmreg16
+		/// </summary>
 		public void CMOVNG (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4E", "/r"}));
 		}
-
-		// CMOVNG reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNG reg32,rmreg32
+		/// </summary>
 		public void CMOVNG (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4E", "/r"}));
 		}
-
-		// CMOVNGE reg16,mem16
+		
+		/// <summary>
+		/// CMOVNGE reg16,mem16
+		/// </summary>
 		public void CMOVNGE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4C", "/r"}));
 		}
-
-		// CMOVNGE reg32,mem32
+		
+		/// <summary>
+		/// CMOVNGE reg32,mem32
+		/// </summary>
 		public void CMOVNGE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4C", "/r"}));
 		}
-
-		// CMOVNGE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNGE reg16,rmreg16
+		/// </summary>
 		public void CMOVNGE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4C", "/r"}));
 		}
-
-		// CMOVNGE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNGE reg32,rmreg32
+		/// </summary>
 		public void CMOVNGE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4C", "/r"}));
 		}
-
-		// CMOVNL reg16,mem16
+		
+		/// <summary>
+		/// CMOVNL reg16,mem16
+		/// </summary>
 		public void CMOVNL (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4D", "/r"}));
 		}
-
-		// CMOVNL reg32,mem32
+		
+		/// <summary>
+		/// CMOVNL reg32,mem32
+		/// </summary>
 		public void CMOVNL (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4D", "/r"}));
 		}
-
-		// CMOVNL reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNL reg16,rmreg16
+		/// </summary>
 		public void CMOVNL (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4D", "/r"}));
 		}
-
-		// CMOVNL reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNL reg32,rmreg32
+		/// </summary>
 		public void CMOVNL (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4D", "/r"}));
 		}
-
-		// CMOVNLE reg16,mem16
+		
+		/// <summary>
+		/// CMOVNLE reg16,mem16
+		/// </summary>
 		public void CMOVNLE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4F", "/r"}));
 		}
-
-		// CMOVNLE reg32,mem32
+		
+		/// <summary>
+		/// CMOVNLE reg32,mem32
+		/// </summary>
 		public void CMOVNLE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4F", "/r"}));
 		}
-
-		// CMOVNLE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNLE reg16,rmreg16
+		/// </summary>
 		public void CMOVNLE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4F", "/r"}));
 		}
-
-		// CMOVNLE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNLE reg32,rmreg32
+		/// </summary>
 		public void CMOVNLE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4F", "/r"}));
 		}
-
-		// CMOVNO reg16,mem16
+		
+		/// <summary>
+		/// CMOVNO reg16,mem16
+		/// </summary>
 		public void CMOVNO (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "41", "/r"}));
 		}
-
-		// CMOVNO reg32,mem32
+		
+		/// <summary>
+		/// CMOVNO reg32,mem32
+		/// </summary>
 		public void CMOVNO (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "41", "/r"}));
 		}
-
-		// CMOVNO reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNO reg16,rmreg16
+		/// </summary>
 		public void CMOVNO (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "41", "/r"}));
 		}
-
-		// CMOVNO reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNO reg32,rmreg32
+		/// </summary>
 		public void CMOVNO (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "41", "/r"}));
 		}
-
-		// CMOVNP reg16,mem16
+		
+		/// <summary>
+		/// CMOVNP reg16,mem16
+		/// </summary>
 		public void CMOVNP (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4B", "/r"}));
 		}
-
-		// CMOVNP reg32,mem32
+		
+		/// <summary>
+		/// CMOVNP reg32,mem32
+		/// </summary>
 		public void CMOVNP (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4B", "/r"}));
 		}
-
-		// CMOVNP reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNP reg16,rmreg16
+		/// </summary>
 		public void CMOVNP (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4B", "/r"}));
 		}
-
-		// CMOVNP reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNP reg32,rmreg32
+		/// </summary>
 		public void CMOVNP (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4B", "/r"}));
 		}
-
-		// CMOVNS reg16,mem16
+		
+		/// <summary>
+		/// CMOVNS reg16,mem16
+		/// </summary>
 		public void CMOVNS (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "49", "/r"}));
 		}
-
-		// CMOVNS reg32,mem32
+		
+		/// <summary>
+		/// CMOVNS reg32,mem32
+		/// </summary>
 		public void CMOVNS (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "49", "/r"}));
 		}
-
-		// CMOVNS reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNS reg16,rmreg16
+		/// </summary>
 		public void CMOVNS (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "49", "/r"}));
 		}
-
-		// CMOVNS reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNS reg32,rmreg32
+		/// </summary>
 		public void CMOVNS (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "49", "/r"}));
 		}
-
-		// CMOVNZ reg16,mem16
+		
+		/// <summary>
+		/// CMOVNZ reg16,mem16
+		/// </summary>
 		public void CMOVNZ (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "45", "/r"}));
 		}
-
-		// CMOVNZ reg32,mem32
+		
+		/// <summary>
+		/// CMOVNZ reg32,mem32
+		/// </summary>
 		public void CMOVNZ (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "45", "/r"}));
 		}
-
-		// CMOVNZ reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVNZ reg16,rmreg16
+		/// </summary>
 		public void CMOVNZ (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "45", "/r"}));
 		}
-
-		// CMOVNZ reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVNZ reg32,rmreg32
+		/// </summary>
 		public void CMOVNZ (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "45", "/r"}));
 		}
-
-		// CMOVO reg16,mem16
+		
+		/// <summary>
+		/// CMOVO reg16,mem16
+		/// </summary>
 		public void CMOVO (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "40", "/r"}));
 		}
-
-		// CMOVO reg32,mem32
+		
+		/// <summary>
+		/// CMOVO reg32,mem32
+		/// </summary>
 		public void CMOVO (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "40", "/r"}));
 		}
-
-		// CMOVO reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVO reg16,rmreg16
+		/// </summary>
 		public void CMOVO (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "40", "/r"}));
 		}
-
-		// CMOVO reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVO reg32,rmreg32
+		/// </summary>
 		public void CMOVO (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "40", "/r"}));
 		}
-
-		// CMOVP reg16,mem16
+		
+		/// <summary>
+		/// CMOVP reg16,mem16
+		/// </summary>
 		public void CMOVP (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4A", "/r"}));
 		}
-
-		// CMOVP reg32,mem32
+		
+		/// <summary>
+		/// CMOVP reg32,mem32
+		/// </summary>
 		public void CMOVP (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4A", "/r"}));
 		}
-
-		// CMOVP reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVP reg16,rmreg16
+		/// </summary>
 		public void CMOVP (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4A", "/r"}));
 		}
-
-		// CMOVP reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVP reg32,rmreg32
+		/// </summary>
 		public void CMOVP (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4A", "/r"}));
 		}
-
-		// CMOVPE reg16,mem16
+		
+		/// <summary>
+		/// CMOVPE reg16,mem16
+		/// </summary>
 		public void CMOVPE (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4A", "/r"}));
 		}
-
-		// CMOVPE reg32,mem32
+		
+		/// <summary>
+		/// CMOVPE reg32,mem32
+		/// </summary>
 		public void CMOVPE (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4A", "/r"}));
 		}
-
-		// CMOVPE reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVPE reg16,rmreg16
+		/// </summary>
 		public void CMOVPE (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4A", "/r"}));
 		}
-
-		// CMOVPE reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVPE reg32,rmreg32
+		/// </summary>
 		public void CMOVPE (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4A", "/r"}));
 		}
-
-		// CMOVPO reg16,mem16
+		
+		/// <summary>
+		/// CMOVPO reg16,mem16
+		/// </summary>
 		public void CMOVPO (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4B", "/r"}));
 		}
-
-		// CMOVPO reg32,mem32
+		
+		/// <summary>
+		/// CMOVPO reg32,mem32
+		/// </summary>
 		public void CMOVPO (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4B", "/r"}));
 		}
-
-		// CMOVPO reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVPO reg16,rmreg16
+		/// </summary>
 		public void CMOVPO (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4B", "/r"}));
 		}
-
-		// CMOVPO reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVPO reg32,rmreg32
+		/// </summary>
 		public void CMOVPO (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4B", "/r"}));
 		}
-
-		// CMOVS reg16,mem16
+		
+		/// <summary>
+		/// CMOVS reg16,mem16
+		/// </summary>
 		public void CMOVS (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "48", "/r"}));
 		}
-
-		// CMOVS reg32,mem32
+		
+		/// <summary>
+		/// CMOVS reg32,mem32
+		/// </summary>
 		public void CMOVS (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "48", "/r"}));
 		}
-
-		// CMOVS reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVS reg16,rmreg16
+		/// </summary>
 		public void CMOVS (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "48", "/r"}));
 		}
-
-		// CMOVS reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVS reg32,rmreg32
+		/// </summary>
 		public void CMOVS (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "48", "/r"}));
 		}
-
-		// CMOVZ reg16,mem16
+		
+		/// <summary>
+		/// CMOVZ reg16,mem16
+		/// </summary>
 		public void CMOVZ (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "44", "/r"}));
 		}
-
-		// CMOVZ reg32,mem32
+		
+		/// <summary>
+		/// CMOVZ reg32,mem32
+		/// </summary>
 		public void CMOVZ (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "44", "/r"}));
 		}
-
-		// CMOVZ reg16,rmreg16
+		
+		/// <summary>
+		/// CMOVZ reg16,rmreg16
+		/// </summary>
 		public void CMOVZ (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "44", "/r"}));
 		}
-
-		// CMOVZ reg32,rmreg32
+		
+		/// <summary>
+		/// CMOVZ reg32,rmreg32
+		/// </summary>
 		public void CMOVZ (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "44", "/r"}));
 		}
-
-		// CMP mem8,reg8
+		
+		/// <summary>
+		/// CMP mem8,reg8
+		/// </summary>
 		public void CMP (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"38", "/r"}));
 		}
-
-		// CMP mem16,reg16
+		
+		/// <summary>
+		/// CMP mem16,reg16
+		/// </summary>
 		public void CMP (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "39", "/r"}));
 		}
-
-		// CMP mem32,reg32
+		
+		/// <summary>
+		/// CMP mem32,reg32
+		/// </summary>
 		public void CMP (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "39", "/r"}));
 		}
-
-		// CMP reg8,mem8
+		
+		/// <summary>
+		/// CMP reg8,mem8
+		/// </summary>
 		public void CMP (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"3A", "/r"}));
 		}
-
-		// CMP reg16,mem16
+		
+		/// <summary>
+		/// CMP reg16,mem16
+		/// </summary>
 		public void CMP (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "3B", "/r"}));
 		}
-
-		// CMP reg32,mem32
+		
+		/// <summary>
+		/// CMP reg32,mem32
+		/// </summary>
 		public void CMP (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "3B", "/r"}));
 		}
-
-		// CMP mem8,imm8
+		
+		/// <summary>
+		/// CMP mem8,imm8
+		/// </summary>
 		public void CMP (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/7", "ib"}));
 		}
-
-		// CMP mem16,imm16
+		
+		/// <summary>
+		/// CMP mem16,imm16
+		/// </summary>
 		public void CMP (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/7", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/7", "iw"}));
 		}
-
-		// CMP mem32,imm32
+		
+		/// <summary>
+		/// CMP mem32,imm32
+		/// </summary>
 		public void CMP (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/7", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/7", "id"}));
 		}
-
-		// CMP mem16,imm8
+		
+		/// <summary>
+		/// CMP mem16,imm8
+		/// </summary>
 		public void CMP (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/7", "ib"}));
 		}
-
-		// CMP mem32,imm8
+		
+		/// <summary>
+		/// CMP mem32,imm8
+		/// </summary>
 		public void CMP (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/7", "ib"}));
 		}
-
-		// CMP rmreg8,reg8
+		
+		/// <summary>
+		/// CMP rmreg8,reg8
+		/// </summary>
 		public void CMP (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"38", "/r"}));
 		}
-
-		// CMP rmreg16,reg16
+		
+		/// <summary>
+		/// CMP rmreg16,reg16
+		/// </summary>
 		public void CMP (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "39", "/r"}));
 		}
-
-		// CMP rmreg32,reg32
+		
+		/// <summary>
+		/// CMP rmreg32,reg32
+		/// </summary>
 		public void CMP (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "39", "/r"}));
 		}
-
-		// CMP rmreg8,imm8
+		
+		/// <summary>
+		/// CMP rmreg8,imm8
+		/// </summary>
 		public void CMP (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"3C", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/7", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"3C", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/7", "ib"}));
 			}
 		}
-
-		// CMP rmreg16,imm16
+		
+		/// <summary>
+		/// CMP rmreg16,imm16
+		/// </summary>
 		public void CMP (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "3D", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/7", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "3D", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/7", "iw"}));
 			}
 		}
-
-		// CMP rmreg32,imm32
+		
+		/// <summary>
+		/// CMP rmreg32,imm32
+		/// </summary>
 		public void CMP (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "3D", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.CMP (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/7", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "3D", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.CMP (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/7", "id"}));
 				}
 			}
 		}
-
-		// CMP rmreg16,imm8
+		
+		/// <summary>
+		/// CMP rmreg16,imm8
+		/// </summary>
 		public void CMP (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/7", "ib"}));
 		}
-
-		// CMP rmreg32,imm8
+		
+		/// <summary>
+		/// CMP rmreg32,imm8
+		/// </summary>
 		public void CMP (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/7", "ib"}));
 		}
-
-		// CMPSB
+		
+		/// <summary>
+		/// CMPSB 
+		/// </summary>
 		public void CMPSB ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSB", "", null, null, null, null, new string[] {"A6"}));
 		}
-
-		// CMPSD
+		
+		/// <summary>
+		/// CMPSD 
+		/// </summary>
 		public void CMPSD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSD", "", null, null, null, null, new string[] {"o32", "A7"}));
 		}
-
-		// CMPSW
+		
+		/// <summary>
+		/// CMPSW 
+		/// </summary>
 		public void CMPSW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSW", "", null, null, null, null, new string[] {"o16", "A7"}));
 		}
-
-		// CMPXCHG mem8,reg8
+		
+		/// <summary>
+		/// CMPXCHG mem8,reg8
+		/// </summary>
 		public void CMPXCHG (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"0F", "B0", "/r"}));
 		}
-
-		// CMPXCHG mem16,reg16
+		
+		/// <summary>
+		/// CMPXCHG mem16,reg16
+		/// </summary>
 		public void CMPXCHG (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "B1", "/r"}));
 		}
-
-		// CMPXCHG mem32,reg32
+		
+		/// <summary>
+		/// CMPXCHG mem32,reg32
+		/// </summary>
 		public void CMPXCHG (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "B1", "/r"}));
 		}
-
-		// CMPXCHG rmreg8,reg8
+		
+		/// <summary>
+		/// CMPXCHG rmreg8,reg8
+		/// </summary>
 		public void CMPXCHG (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "B0", "/r"}));
 		}
-
-		// CMPXCHG rmreg16,reg16
+		
+		/// <summary>
+		/// CMPXCHG rmreg16,reg16
+		/// </summary>
 		public void CMPXCHG (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "B1", "/r"}));
 		}
-
-		// CMPXCHG rmreg32,reg32
+		
+		/// <summary>
+		/// CMPXCHG rmreg32,reg32
+		/// </summary>
 		public void CMPXCHG (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "B1", "/r"}));
 		}
-
-		// CMPXCHG8B mem
+		
+		/// <summary>
+		/// CMPXCHG8B mem
+		/// </summary>
 		public void CMPXCHG8B (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG8B", target.ToString(), target, null, null, null, new string[] {"0F", "C7", "/1"}));
 		}
-
-		// CPUID
+		
+		/// <summary>
+		/// CPUID 
+		/// </summary>
 		public void CPUID ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CPUID", "", null, null, null, null, new string[] {"0F", "A2"}));
 		}
-
-		// CWD
+		
+		/// <summary>
+		/// CWD 
+		/// </summary>
 		public void CWD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CWD", "", null, null, null, null, new string[] {"o16", "99"}));
 		}
-
-		// CWDE
+		
+		/// <summary>
+		/// CWDE 
+		/// </summary>
 		public void CWDE ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CWDE", "", null, null, null, null, new string[] {"o32", "98"}));
 		}
-
-		// DAA
+		
+		/// <summary>
+		/// DAA 
+		/// </summary>
 		public void DAA ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DAA", "", null, null, null, null, new string[] {"27"}));
 		}
-
-		// DAS
+		
+		/// <summary>
+		/// DAS 
+		/// </summary>
 		public void DAS ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DAS", "", null, null, null, null, new string[] {"2F"}));
 		}
-
-		// DEC reg16
+		
+		/// <summary>
+		/// DEC reg16
+		/// </summary>
 		public void DEC (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), null, null, target, null, new string[] {"o16", "48+r"}));
 		}
-
-		// DEC reg32
+		
+		/// <summary>
+		/// DEC reg32
+		/// </summary>
 		public void DEC (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), null, null, target, null, new string[] {"o32", "48+r"}));
 		}
-
-		// DEC mem8
+		
+		/// <summary>
+		/// DEC mem8
+		/// </summary>
 		public void DEC (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), target, null, null, null, new string[] {"FE", "/1"}));
 		}
-
-		// DEC mem16
+		
+		/// <summary>
+		/// DEC mem16
+		/// </summary>
 		public void DEC (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/1"}));
 		}
-
-		// DEC mem32
+		
+		/// <summary>
+		/// DEC mem32
+		/// </summary>
 		public void DEC (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/1"}));
 		}
-
-		// DEC rmreg8
+		
+		/// <summary>
+		/// DEC rmreg8
+		/// </summary>
 		public void DEC (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), null, target, null, null, new string[] {"FE", "/1"}));
 		}
-
-		// DIV mem8
+		
+		/// <summary>
+		/// DIV mem8
+		/// </summary>
 		public void DIV (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), target, null, null, null, new string[] {"F6", "/6"}));
 		}
-
-		// DIV mem16
+		
+		/// <summary>
+		/// DIV mem16
+		/// </summary>
 		public void DIV (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/6"}));
 		}
-
-		// DIV mem32
+		
+		/// <summary>
+		/// DIV mem32
+		/// </summary>
 		public void DIV (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/6"}));
 		}
-
-		// DIV rmreg8
+		
+		/// <summary>
+		/// DIV rmreg8
+		/// </summary>
 		public void DIV (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), null, target, null, null, new string[] {"F6", "/6"}));
 		}
-
-		// DIV rmreg16
+		
+		/// <summary>
+		/// DIV rmreg16
+		/// </summary>
 		public void DIV (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/6"}));
 		}
-
-		// DIV rmreg32
+		
+		/// <summary>
+		/// DIV rmreg32
+		/// </summary>
 		public void DIV (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/6"}));
 		}
-
-		// EMMS
+		
+		/// <summary>
+		/// EMMS 
+		/// </summary>
 		public void EMMS ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "EMMS", "", null, null, null, null, new string[] {"0F", "77"}));
 		}
-
-		// ENTER imm16,imm8
+		
+		/// <summary>
+		/// ENTER imm16,imm8
+		/// </summary>
 		public void ENTER (UInt16 target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ENTER", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {target, source}, new string[] {"C8", "iw", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ENTER", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {target, source}, new string[] {"C8", "iw", "ib"}));
 		}
-
-		// F2XM1
+		
+		/// <summary>
+		/// F2XM1 
+		/// </summary>
 		public void F2XM1 ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "F2XM1", "", null, null, null, null, new string[] {"D9", "F0"}));
 		}
-
-		// FABS
+		
+		/// <summary>
+		/// FABS 
+		/// </summary>
 		public void FABS ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FABS", "", null, null, null, null, new string[] {"D9", "E1"}));
 		}
-
-		// FADD mem32
+		
+		/// <summary>
+		/// FADD mem32
+		/// </summary>
 		public void FADD (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString(), target, null, null, null, new string[] {"D8", "/0"}));
 		}
-
-		// FADD mem64
+		
+		/// <summary>
+		/// FADD mem64
+		/// </summary>
 		public void FADD (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString(), target, null, null, null, new string[] {"DC", "/0"}));
 		}
-
-		// FADD fpureg
+		
+		/// <summary>
+		/// FADD fpureg
+		/// </summary>
 		public void FADD (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString(), null, null, target, null, new string[] {"D8", "C0+r"}));
 		}
-
-		// FADD ST0,fpureg
+		
+		/// <summary>
+		/// FADD ST0,fpureg
+		/// </summary>
 		public void FADD_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "C0+r"}));
 		}
-
-		// FADD fpureg,ST0
+		
+		/// <summary>
+		/// FADD fpureg,ST0
+		/// </summary>
 		public void FADD__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "C0+r"}));
 		}
-
-		// FADDP fpureg
+		
+		/// <summary>
+		/// FADDP fpureg
+		/// </summary>
 		public void FADDP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADDP", target.ToString(), null, null, target, null, new string[] {"DE", "C0+r"}));
 		}
-
-		// FADDP fpureg,ST0
+		
+		/// <summary>
+		/// FADDP fpureg,ST0
+		/// </summary>
 		public void FADDP__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADDP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "C0+r"}));
 		}
-
-		// FBLD mem80
+		
+		/// <summary>
+		/// FBLD mem80
+		/// </summary>
 		public void FBLD (TWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FBLD", target.ToString(), target, null, null, null, new string[] {"DF", "/4"}));
 		}
-
-		// FBSTP mem80
+		
+		/// <summary>
+		/// FBSTP mem80
+		/// </summary>
 		public void FBSTP (TWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FBSTP", target.ToString(), target, null, null, null, new string[] {"DF", "/6"}));
 		}
-
-		// FCHS
+		
+		/// <summary>
+		/// FCHS 
+		/// </summary>
 		public void FCHS ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCHS", "", null, null, null, null, new string[] {"D9", "E0"}));
 		}
-
-		// FCLEX
+		
+		/// <summary>
+		/// FCLEX 
+		/// </summary>
 		public void FCLEX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCLEX", "", null, null, null, null, new string[] {"9B", "DB", "E2"}));
 		}
-
-		// FCMOVB fpureg
+		
+		/// <summary>
+		/// FCMOVB fpureg
+		/// </summary>
 		public void FCMOVB (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVB", target.ToString(), null, null, target, null, new string[] {"DA", "C0+r"}));
 		}
-
-		// FCMOVB ST0,fpureg
+		
+		/// <summary>
+		/// FCMOVB ST0,fpureg
+		/// </summary>
 		public void FCMOVB_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVB_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DA", "C0+r"}));
 		}
-
-		// FCMOVBE fpureg
+		
+		/// <summary>
+		/// FCMOVBE fpureg
+		/// </summary>
 		public void FCMOVBE (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVBE", target.ToString(), null, null, target, null, new string[] {"DA", "D0+r"}));
 		}
-
-		// FCMOVBE ST0,fpureg
+		
+		/// <summary>
+		/// FCMOVBE ST0,fpureg
+		/// </summary>
 		public void FCMOVBE_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVBE_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DA", "D0+r"}));
 		}
-
-		// FCMOVE fpureg
+		
+		/// <summary>
+		/// FCMOVE fpureg
+		/// </summary>
 		public void FCMOVE (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVE", target.ToString(), null, null, target, null, new string[] {"DA", "C8+r"}));
 		}
-
-		// FCMOVE ST0,fpureg
+		
+		/// <summary>
+		/// FCMOVE ST0,fpureg
+		/// </summary>
 		public void FCMOVE_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVE_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DA", "C8+r"}));
 		}
-
-		// FCMOVNB fpureg
+		
+		/// <summary>
+		/// FCMOVNB fpureg
+		/// </summary>
 		public void FCMOVNB (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNB", target.ToString(), null, null, target, null, new string[] {"DB", "C0+r"}));
 		}
-
-		// FCMOVNB ST0,fpureg
+		
+		/// <summary>
+		/// FCMOVNB ST0,fpureg
+		/// </summary>
 		public void FCMOVNB_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNB_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "C0+r"}));
 		}
-
-		// FCMOVNBE fpureg
+		
+		/// <summary>
+		/// FCMOVNBE fpureg
+		/// </summary>
 		public void FCMOVNBE (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNBE", target.ToString(), null, null, target, null, new string[] {"DB", "D0+r"}));
 		}
-
-		// FCMOVNBE ST0,fpureg
+		
+		/// <summary>
+		/// FCMOVNBE ST0,fpureg
+		/// </summary>
 		public void FCMOVNBE_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNBE_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "D0+r"}));
 		}
-
-		// FCMOVNE fpureg
+		
+		/// <summary>
+		/// FCMOVNE fpureg
+		/// </summary>
 		public void FCMOVNE (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNE", target.ToString(), null, null, target, null, new string[] {"DB", "C8+r"}));
 		}
-
-		// FCMOVNE ST0,fpureg
+		
+		/// <summary>
+		/// FCMOVNE ST0,fpureg
+		/// </summary>
 		public void FCMOVNE_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNE_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "C8+r"}));
 		}
-
-		// FCMOVNU fpureg
+		
+		/// <summary>
+		/// FCMOVNU fpureg
+		/// </summary>
 		public void FCMOVNU (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNU", target.ToString(), null, null, target, null, new string[] {"DB", "D8+r"}));
 		}
-
-		// FCMOVNU ST0,fpureg
+		
+		/// <summary>
+		/// FCMOVNU ST0,fpureg
+		/// </summary>
 		public void FCMOVNU_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNU_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "D8+r"}));
 		}
-
-		// FCMOVU fpureg
+		
+		/// <summary>
+		/// FCMOVU fpureg
+		/// </summary>
 		public void FCMOVU (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVU", target.ToString(), null, null, target, null, new string[] {"DA", "D8+r"}));
 		}
-
-		// FCMOVU ST0,fpureg
+		
+		/// <summary>
+		/// FCMOVU ST0,fpureg
+		/// </summary>
 		public void FCMOVU_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVU_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DA", "D8+r"}));
 		}
-
-		// FCOM mem32
+		
+		/// <summary>
+		/// FCOM mem32
+		/// </summary>
 		public void FCOM (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString(), target, null, null, null, new string[] {"D8", "/2"}));
 		}
-
-		// FCOM mem64
+		
+		/// <summary>
+		/// FCOM mem64
+		/// </summary>
 		public void FCOM (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString(), target, null, null, null, new string[] {"DC", "/2"}));
 		}
-
-		// FCOM fpureg
+		
+		/// <summary>
+		/// FCOM fpureg
+		/// </summary>
 		public void FCOM (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString(), null, null, target, null, new string[] {"D8", "D0+r"}));
 		}
-
-		// FCOM ST0,fpureg
+		
+		/// <summary>
+		/// FCOM ST0,fpureg
+		/// </summary>
 		public void FCOM_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "D0+r"}));
 		}
-
-		// FCOMI fpureg
+		
+		/// <summary>
+		/// FCOMI fpureg
+		/// </summary>
 		public void FCOMI (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMI", target.ToString(), null, null, target, null, new string[] {"DB", "F0+r"}));
 		}
-
-		// FCOMI ST0,fpureg
+		
+		/// <summary>
+		/// FCOMI ST0,fpureg
+		/// </summary>
 		public void FCOMI_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMI_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "F0+r"}));
 		}
-
-		// FCOMIP fpureg
+		
+		/// <summary>
+		/// FCOMIP fpureg
+		/// </summary>
 		public void FCOMIP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMIP", target.ToString(), null, null, target, null, new string[] {"DF", "F0+r"}));
 		}
-
-		// FCOMIP ST0,fpureg
+		
+		/// <summary>
+		/// FCOMIP ST0,fpureg
+		/// </summary>
 		public void FCOMIP_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMIP_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DF", "F0+r"}));
 		}
-
-		// FCOMP mem32
+		
+		/// <summary>
+		/// FCOMP mem32
+		/// </summary>
 		public void FCOMP (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString(), target, null, null, null, new string[] {"D8", "/3"}));
 		}
-
-		// FCOMP mem64
+		
+		/// <summary>
+		/// FCOMP mem64
+		/// </summary>
 		public void FCOMP (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString(), target, null, null, null, new string[] {"DC", "/3"}));
 		}
-
-		// FCOMP fpureg
+		
+		/// <summary>
+		/// FCOMP fpureg
+		/// </summary>
 		public void FCOMP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString(), null, null, target, null, new string[] {"D8", "D8+r"}));
 		}
-
-		// FCOMP ST0,fpureg
+		
+		/// <summary>
+		/// FCOMP ST0,fpureg
+		/// </summary>
 		public void FCOMP_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "D8+r"}));
 		}
-
-		// FCOMPP
+		
+		/// <summary>
+		/// FCOMPP 
+		/// </summary>
 		public void FCOMPP ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMPP", "", null, null, null, null, new string[] {"DE", "D9"}));
 		}
-
-		// FCOS
+		
+		/// <summary>
+		/// FCOS 
+		/// </summary>
 		public void FCOS ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOS", "", null, null, null, null, new string[] {"D9", "FF"}));
 		}
-
-		// FDECSTP
+		
+		/// <summary>
+		/// FDECSTP 
+		/// </summary>
 		public void FDECSTP ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDECSTP", "", null, null, null, null, new string[] {"D9", "F6"}));
 		}
-
-		// FDISI
+		
+		/// <summary>
+		/// FDISI 
+		/// </summary>
 		public void FDISI ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDISI", "", null, null, null, null, new string[] {"9B", "DB", "E1"}));
 		}
-
-		// FDIV mem32
+		
+		/// <summary>
+		/// FDIV mem32
+		/// </summary>
 		public void FDIV (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString(), target, null, null, null, new string[] {"D8", "/6"}));
 		}
-
-		// FDIV mem64
+		
+		/// <summary>
+		/// FDIV mem64
+		/// </summary>
 		public void FDIV (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString(), target, null, null, null, new string[] {"DC", "/6"}));
 		}
-
-		// FDIV fpureg
+		
+		/// <summary>
+		/// FDIV fpureg
+		/// </summary>
 		public void FDIV (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString(), null, null, target, null, new string[] {"D8", "F0+r"}));
 		}
-
-		// FDIV ST0,fpureg
+		
+		/// <summary>
+		/// FDIV ST0,fpureg
+		/// </summary>
 		public void FDIV_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "F0+r"}));
 		}
-
-		// FDIV fpureg,ST0
+		
+		/// <summary>
+		/// FDIV fpureg,ST0
+		/// </summary>
 		public void FDIV__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "F8+r"}));
 		}
-
-		// FDIVP fpureg
+		
+		/// <summary>
+		/// FDIVP fpureg
+		/// </summary>
 		public void FDIVP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVP", target.ToString(), null, null, target, null, new string[] {"DE", "F8+r"}));
 		}
-
-		// FDIVP fpureg,ST0
+		
+		/// <summary>
+		/// FDIVP fpureg,ST0
+		/// </summary>
 		public void FDIVP__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "F8+r"}));
 		}
-
-		// FDIVR mem32
+		
+		/// <summary>
+		/// FDIVR mem32
+		/// </summary>
 		public void FDIVR (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString(), target, null, null, null, new string[] {"D8", "/7"}));
 		}
-
-		// FDIVR mem64
+		
+		/// <summary>
+		/// FDIVR mem64
+		/// </summary>
 		public void FDIVR (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString(), target, null, null, null, new string[] {"DC", "/7"}));
 		}
-
-		// FDIVR fpureg
+		
+		/// <summary>
+		/// FDIVR fpureg
+		/// </summary>
 		public void FDIVR (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString(), null, null, target, null, new string[] {"D8", "F8+r"}));
 		}
-
-		// FDIVR ST0,fpureg
+		
+		/// <summary>
+		/// FDIVR ST0,fpureg
+		/// </summary>
 		public void FDIVR_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "F8+r"}));
 		}
-
-		// FDIVR fpureg,ST0
+		
+		/// <summary>
+		/// FDIVR fpureg,ST0
+		/// </summary>
 		public void FDIVR__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "F0+r"}));
 		}
-
-		// FDIVRP fpureg
+		
+		/// <summary>
+		/// FDIVRP fpureg
+		/// </summary>
 		public void FDIVRP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVRP", target.ToString(), null, null, target, null, new string[] {"DE", "F0+r"}));
 		}
-
-		// FDIVRP fpureg,ST0
+		
+		/// <summary>
+		/// FDIVRP fpureg,ST0
+		/// </summary>
 		public void FDIVRP__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVRP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "F0+r"}));
 		}
-
-		// FENI
+		
+		/// <summary>
+		/// FENI 
+		/// </summary>
 		public void FENI ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FENI", "", null, null, null, null, new string[] {"9B", "DB", "E0"}));
 		}
-
-		// FFREE fpureg
+		
+		/// <summary>
+		/// FFREE fpureg
+		/// </summary>
 		public void FFREE (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FFREE", target.ToString(), null, null, target, null, new string[] {"DD", "C0+r"}));
 		}
-
-		// FFREEP fpureg
+		
+		/// <summary>
+		/// FFREEP fpureg
+		/// </summary>
 		public void FFREEP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FFREEP", target.ToString(), null, null, target, null, new string[] {"DF", "C0+r"}));
 		}
-
-		// FIADD mem16
+		
+		/// <summary>
+		/// FIADD mem16
+		/// </summary>
 		public void FIADD (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIADD", target.ToString(), target, null, null, null, new string[] {"DE", "/0"}));
 		}
-
-		// FIADD mem32
+		
+		/// <summary>
+		/// FIADD mem32
+		/// </summary>
 		public void FIADD (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIADD", target.ToString(), target, null, null, null, new string[] {"DA", "/0"}));
 		}
-
-		// FICOM mem16
+		
+		/// <summary>
+		/// FICOM mem16
+		/// </summary>
 		public void FICOM (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOM", target.ToString(), target, null, null, null, new string[] {"DE", "/2"}));
 		}
-
-		// FICOM mem32
+		
+		/// <summary>
+		/// FICOM mem32
+		/// </summary>
 		public void FICOM (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOM", target.ToString(), target, null, null, null, new string[] {"DA", "/2"}));
 		}
-
-		// FICOMP mem16
+		
+		/// <summary>
+		/// FICOMP mem16
+		/// </summary>
 		public void FICOMP (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOMP", target.ToString(), target, null, null, null, new string[] {"DE", "/3"}));
 		}
-
-		// FICOMP mem32
+		
+		/// <summary>
+		/// FICOMP mem32
+		/// </summary>
 		public void FICOMP (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOMP", target.ToString(), target, null, null, null, new string[] {"DA", "/3"}));
 		}
-
-		// FIDIV mem16
+		
+		/// <summary>
+		/// FIDIV mem16
+		/// </summary>
 		public void FIDIV (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIV", target.ToString(), target, null, null, null, new string[] {"DE", "/6"}));
 		}
-
-		// FIDIV mem32
+		
+		/// <summary>
+		/// FIDIV mem32
+		/// </summary>
 		public void FIDIV (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIV", target.ToString(), target, null, null, null, new string[] {"DA", "/6"}));
 		}
-
-		// FIDIVR mem16
+		
+		/// <summary>
+		/// FIDIVR mem16
+		/// </summary>
 		public void FIDIVR (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIVR", target.ToString(), target, null, null, null, new string[] {"DE", "/7"}));
 		}
-
-		// FIDIVR mem32
+		
+		/// <summary>
+		/// FIDIVR mem32
+		/// </summary>
 		public void FIDIVR (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIVR", target.ToString(), target, null, null, null, new string[] {"DA", "/7"}));
 		}
-
-		// FILD mem16
+		
+		/// <summary>
+		/// FILD mem16
+		/// </summary>
 		public void FILD (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString(), target, null, null, null, new string[] {"DF", "/0"}));
 		}
-
-		// FILD mem32
+		
+		/// <summary>
+		/// FILD mem32
+		/// </summary>
 		public void FILD (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString(), target, null, null, null, new string[] {"DB", "/0"}));
 		}
-
-		// FILD mem64
+		
+		/// <summary>
+		/// FILD mem64
+		/// </summary>
 		public void FILD (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString(), target, null, null, null, new string[] {"DF", "/5"}));
 		}
-
-		// FIMUL mem16
+		
+		/// <summary>
+		/// FIMUL mem16
+		/// </summary>
 		public void FIMUL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIMUL", target.ToString(), target, null, null, null, new string[] {"DE", "/1"}));
 		}
-
-		// FIMUL mem32
+		
+		/// <summary>
+		/// FIMUL mem32
+		/// </summary>
 		public void FIMUL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIMUL", target.ToString(), target, null, null, null, new string[] {"DA", "/1"}));
 		}
-
-		// FINCSTP
+		
+		/// <summary>
+		/// FINCSTP 
+		/// </summary>
 		public void FINCSTP ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FINCSTP", "", null, null, null, null, new string[] {"D9", "F7"}));
 		}
-
-		// FINIT
+		
+		/// <summary>
+		/// FINIT 
+		/// </summary>
 		public void FINIT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FINIT", "", null, null, null, null, new string[] {"9B", "DB", "E3"}));
 		}
-
-		// FIST mem16
+		
+		/// <summary>
+		/// FIST mem16
+		/// </summary>
 		public void FIST (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIST", target.ToString(), target, null, null, null, new string[] {"DF", "/2"}));
 		}
-
-		// FIST mem32
+		
+		/// <summary>
+		/// FIST mem32
+		/// </summary>
 		public void FIST (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIST", target.ToString(), target, null, null, null, new string[] {"DB", "/2"}));
 		}
-
-		// FISTP mem16
+		
+		/// <summary>
+		/// FISTP mem16
+		/// </summary>
 		public void FISTP (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString(), target, null, null, null, new string[] {"DF", "/3"}));
 		}
-
-		// FISTP mem32
+		
+		/// <summary>
+		/// FISTP mem32
+		/// </summary>
 		public void FISTP (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString(), target, null, null, null, new string[] {"DB", "/3"}));
 		}
-
-		// FISTP mem64
+		
+		/// <summary>
+		/// FISTP mem64
+		/// </summary>
 		public void FISTP (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString(), target, null, null, null, new string[] {"DF", "/7"}));
 		}
-
-		// FISUB mem16
+		
+		/// <summary>
+		/// FISUB mem16
+		/// </summary>
 		public void FISUB (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUB", target.ToString(), target, null, null, null, new string[] {"DE", "/4"}));
 		}
-
-		// FISUB mem32
+		
+		/// <summary>
+		/// FISUB mem32
+		/// </summary>
 		public void FISUB (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUB", target.ToString(), target, null, null, null, new string[] {"DA", "/4"}));
 		}
-
-		// FISUBR mem16
+		
+		/// <summary>
+		/// FISUBR mem16
+		/// </summary>
 		public void FISUBR (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUBR", target.ToString(), target, null, null, null, new string[] {"DE", "/5"}));
 		}
-
-		// FISUBR mem32
+		
+		/// <summary>
+		/// FISUBR mem32
+		/// </summary>
 		public void FISUBR (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUBR", target.ToString(), target, null, null, null, new string[] {"DA", "/5"}));
 		}
-
-		// FLD mem32
+		
+		/// <summary>
+		/// FLD mem32
+		/// </summary>
 		public void FLD (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString(), target, null, null, null, new string[] {"D9", "/0"}));
 		}
-
-		// FLD mem64
+		
+		/// <summary>
+		/// FLD mem64
+		/// </summary>
 		public void FLD (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString(), target, null, null, null, new string[] {"DD", "/0"}));
 		}
-
-		// FLD mem80
+		
+		/// <summary>
+		/// FLD mem80
+		/// </summary>
 		public void FLD (TWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString(), target, null, null, null, new string[] {"DB", "/5"}));
 		}
-
-		// FLD fpureg
+		
+		/// <summary>
+		/// FLD fpureg
+		/// </summary>
 		public void FLD (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString(), null, null, target, null, new string[] {"D9", "C0+r"}));
 		}
-
-		// FLD1
+		
+		/// <summary>
+		/// FLD1 
+		/// </summary>
 		public void FLD1 ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD1", "", null, null, null, null, new string[] {"D9", "E8"}));
 		}
-
-		// FLDCW mem16
+		
+		/// <summary>
+		/// FLDCW mem16
+		/// </summary>
 		public void FLDCW (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDCW", target.ToString(), target, null, null, null, new string[] {"D9", "/5"}));
 		}
-
-		// FLDENV mem
+		
+		/// <summary>
+		/// FLDENV mem
+		/// </summary>
 		public void FLDENV (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDENV", target.ToString(), target, null, null, null, new string[] {"D9", "/4"}));
 		}
-
-		// FLDL2E
+		
+		/// <summary>
+		/// FLDL2E 
+		/// </summary>
 		public void FLDL2E ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDL2E", "", null, null, null, null, new string[] {"D9", "EA"}));
 		}
-
-		// FLDL2T
+		
+		/// <summary>
+		/// FLDL2T 
+		/// </summary>
 		public void FLDL2T ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDL2T", "", null, null, null, null, new string[] {"D9", "E9"}));
 		}
-
-		// FLDLG2
+		
+		/// <summary>
+		/// FLDLG2 
+		/// </summary>
 		public void FLDLG2 ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDLG2", "", null, null, null, null, new string[] {"D9", "EC"}));
 		}
-
-		// FLDLN2
+		
+		/// <summary>
+		/// FLDLN2 
+		/// </summary>
 		public void FLDLN2 ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDLN2", "", null, null, null, null, new string[] {"D9", "ED"}));
 		}
-
-		// FLDPI
+		
+		/// <summary>
+		/// FLDPI 
+		/// </summary>
 		public void FLDPI ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDPI", "", null, null, null, null, new string[] {"D9", "EB"}));
 		}
-
-		// FLDZ
+		
+		/// <summary>
+		/// FLDZ 
+		/// </summary>
 		public void FLDZ ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDZ", "", null, null, null, null, new string[] {"D9", "EE"}));
 		}
-
-		// FMUL mem32
+		
+		/// <summary>
+		/// FMUL mem32
+		/// </summary>
 		public void FMUL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString(), target, null, null, null, new string[] {"D8", "/1"}));
 		}
-
-		// FMUL mem64
+		
+		/// <summary>
+		/// FMUL mem64
+		/// </summary>
 		public void FMUL (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString(), target, null, null, null, new string[] {"DC", "/1"}));
 		}
-
-		// FMUL fpureg
+		
+		/// <summary>
+		/// FMUL fpureg
+		/// </summary>
 		public void FMUL (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString(), null, null, target, null, new string[] {"D8", "C8+r"}));
 		}
-
-		// FMUL ST0,fpureg
+		
+		/// <summary>
+		/// FMUL ST0,fpureg
+		/// </summary>
 		public void FMUL_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "C8+r"}));
 		}
-
-		// FMUL fpureg,ST0
+		
+		/// <summary>
+		/// FMUL fpureg,ST0
+		/// </summary>
 		public void FMUL__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "C8+r"}));
 		}
-
-		// FMULP fpureg
+		
+		/// <summary>
+		/// FMULP fpureg
+		/// </summary>
 		public void FMULP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMULP", target.ToString(), null, null, target, null, new string[] {"DE", "C8+r"}));
 		}
-
-		// FMULP fpureg,ST0
+		
+		/// <summary>
+		/// FMULP fpureg,ST0
+		/// </summary>
 		public void FMULP__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMULP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "C8+r"}));
 		}
-
-		// FNCLEX
+		
+		/// <summary>
+		/// FNCLEX 
+		/// </summary>
 		public void FNCLEX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNCLEX", "", null, null, null, null, new string[] {"DB", "E2"}));
 		}
-
-		// FNDISI
+		
+		/// <summary>
+		/// FNDISI 
+		/// </summary>
 		public void FNDISI ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNDISI", "", null, null, null, null, new string[] {"DB", "E1"}));
 		}
-
-		// FNENI
+		
+		/// <summary>
+		/// FNENI 
+		/// </summary>
 		public void FNENI ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNENI", "", null, null, null, null, new string[] {"DB", "E0"}));
 		}
-
-		// FNINIT
+		
+		/// <summary>
+		/// FNINIT 
+		/// </summary>
 		public void FNINIT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNINIT", "", null, null, null, null, new string[] {"DB", "E3"}));
 		}
-
-		// FNOP
+		
+		/// <summary>
+		/// FNOP 
+		/// </summary>
 		public void FNOP ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNOP", "", null, null, null, null, new string[] {"D9", "D0"}));
 		}
-
-		// FNSAVE mem
+		
+		/// <summary>
+		/// FNSAVE mem
+		/// </summary>
 		public void FNSAVE (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSAVE", target.ToString(), target, null, null, null, new string[] {"DD", "/6"}));
 		}
-
-		// FNSTCW mem16
+		
+		/// <summary>
+		/// FNSTCW mem16
+		/// </summary>
 		public void FNSTCW (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTCW", target.ToString(), target, null, null, null, new string[] {"D9", "/7"}));
 		}
-
-		// FNSTENV mem
+		
+		/// <summary>
+		/// FNSTENV mem
+		/// </summary>
 		public void FNSTENV (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTENV", target.ToString(), target, null, null, null, new string[] {"D9", "/6"}));
 		}
-
-		// FNSTSW mem16
+		
+		/// <summary>
+		/// FNSTSW mem16
+		/// </summary>
 		public void FNSTSW (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTSW", target.ToString(), target, null, null, null, new string[] {"DD", "/7"}));
 		}
-
-		// FNSTSW AX
+		
+		/// <summary>
+		/// FNSTSW AX
+		/// </summary>
 		public void FNSTSW_AX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTSW_AX", "AX", null, null, null, null, new string[] {"DF", "E0"}));
 		}
-
-		// FPATAN
+		
+		/// <summary>
+		/// FPATAN 
+		/// </summary>
 		public void FPATAN ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPATAN", "", null, null, null, null, new string[] {"D9", "F3"}));
 		}
-
-		// FPREM
+		
+		/// <summary>
+		/// FPREM 
+		/// </summary>
 		public void FPREM ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPREM", "", null, null, null, null, new string[] {"D9", "F8"}));
 		}
-
-		// FPREM1
+		
+		/// <summary>
+		/// FPREM1 
+		/// </summary>
 		public void FPREM1 ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPREM1", "", null, null, null, null, new string[] {"D9", "F5"}));
 		}
-
-		// FPTAN
+		
+		/// <summary>
+		/// FPTAN 
+		/// </summary>
 		public void FPTAN ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPTAN", "", null, null, null, null, new string[] {"D9", "F2"}));
 		}
-
-		// FRNDINT
+		
+		/// <summary>
+		/// FRNDINT 
+		/// </summary>
 		public void FRNDINT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FRNDINT", "", null, null, null, null, new string[] {"D9", "FC"}));
 		}
-
-		// FRSTOR mem
+		
+		/// <summary>
+		/// FRSTOR mem
+		/// </summary>
 		public void FRSTOR (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FRSTOR", target.ToString(), target, null, null, null, new string[] {"DD", "/4"}));
 		}
-
-		// FSAVE mem
+		
+		/// <summary>
+		/// FSAVE mem
+		/// </summary>
 		public void FSAVE (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSAVE", target.ToString(), target, null, null, null, new string[] {"9B", "DD", "/6"}));
 		}
-
-		// FSCALE
+		
+		/// <summary>
+		/// FSCALE 
+		/// </summary>
 		public void FSCALE ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSCALE", "", null, null, null, null, new string[] {"D9", "FD"}));
 		}
-
-		// FSETPM
+		
+		/// <summary>
+		/// FSETPM 
+		/// </summary>
 		public void FSETPM ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSETPM", "", null, null, null, null, new string[] {"DB", "E4"}));
 		}
-
-		// FSIN
+		
+		/// <summary>
+		/// FSIN 
+		/// </summary>
 		public void FSIN ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSIN", "", null, null, null, null, new string[] {"D9", "FE"}));
 		}
-
-		// FSINCOS
+		
+		/// <summary>
+		/// FSINCOS 
+		/// </summary>
 		public void FSINCOS ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSINCOS", "", null, null, null, null, new string[] {"D9", "FB"}));
 		}
-
-		// FSQRT
+		
+		/// <summary>
+		/// FSQRT 
+		/// </summary>
 		public void FSQRT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSQRT", "", null, null, null, null, new string[] {"D9", "FA"}));
 		}
-
-		// FST mem32
+		
+		/// <summary>
+		/// FST mem32
+		/// </summary>
 		public void FST (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString(), target, null, null, null, new string[] {"D9", "/2"}));
 		}
-
-		// FST mem64
+		
+		/// <summary>
+		/// FST mem64
+		/// </summary>
 		public void FST (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString(), target, null, null, null, new string[] {"DD", "/2"}));
 		}
-
-		// FST fpureg
+		
+		/// <summary>
+		/// FST fpureg
+		/// </summary>
 		public void FST (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString(), null, null, target, null, new string[] {"DD", "D0+r"}));
 		}
-
-		// FSTCW mem16
+		
+		/// <summary>
+		/// FSTCW mem16
+		/// </summary>
 		public void FSTCW (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTCW", target.ToString(), target, null, null, null, new string[] {"9B", "D9", "/7"}));
 		}
-
-		// FSTENV mem
+		
+		/// <summary>
+		/// FSTENV mem
+		/// </summary>
 		public void FSTENV (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTENV", target.ToString(), target, null, null, null, new string[] {"9B", "D9", "/6"}));
 		}
-
-		// FSTP mem32
+		
+		/// <summary>
+		/// FSTP mem32
+		/// </summary>
 		public void FSTP (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString(), target, null, null, null, new string[] {"D9", "/3"}));
 		}
-
-		// FSTP mem64
+		
+		/// <summary>
+		/// FSTP mem64
+		/// </summary>
 		public void FSTP (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString(), target, null, null, null, new string[] {"DD", "/3"}));
 		}
-
-		// FSTP mem80
+		
+		/// <summary>
+		/// FSTP mem80
+		/// </summary>
 		public void FSTP (TWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString(), target, null, null, null, new string[] {"DB", "/7"}));
 		}
-
-		// FSTP fpureg
+		
+		/// <summary>
+		/// FSTP fpureg
+		/// </summary>
 		public void FSTP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString(), null, null, target, null, new string[] {"DD", "D8+r"}));
 		}
-
-		// FSTSW mem16
+		
+		/// <summary>
+		/// FSTSW mem16
+		/// </summary>
 		public void FSTSW (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTSW", target.ToString(), target, null, null, null, new string[] {"9B", "DD", "/7"}));
 		}
-
-		// FSTSW AX
+		
+		/// <summary>
+		/// FSTSW AX
+		/// </summary>
 		public void FSTSW_AX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTSW_AX", "AX", null, null, null, null, new string[] {"9B", "DF", "E0"}));
 		}
-
-		// FSUB mem32
+		
+		/// <summary>
+		/// FSUB mem32
+		/// </summary>
 		public void FSUB (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString(), target, null, null, null, new string[] {"D8", "/4"}));
 		}
-
-		// FSUB mem64
+		
+		/// <summary>
+		/// FSUB mem64
+		/// </summary>
 		public void FSUB (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString(), target, null, null, null, new string[] {"DC", "/4"}));
 		}
-
-		// FSUB fpureg
+		
+		/// <summary>
+		/// FSUB fpureg
+		/// </summary>
 		public void FSUB (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString(), null, null, target, null, new string[] {"D8", "E0+r"}));
 		}
-
-		// FSUB ST0,fpureg
+		
+		/// <summary>
+		/// FSUB ST0,fpureg
+		/// </summary>
 		public void FSUB_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "E0+r"}));
 		}
-
-		// FSUB fpureg,ST0
+		
+		/// <summary>
+		/// FSUB fpureg,ST0
+		/// </summary>
 		public void FSUB__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "E8+r"}));
 		}
-
-		// FSUBP fpureg
+		
+		/// <summary>
+		/// FSUBP fpureg
+		/// </summary>
 		public void FSUBP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBP", target.ToString(), null, null, target, null, new string[] {"DE", "E8+r"}));
 		}
-
-		// FSUBP fpureg,ST0
+		
+		/// <summary>
+		/// FSUBP fpureg,ST0
+		/// </summary>
 		public void FSUBP__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "E8+r"}));
 		}
-
-		// FSUBR mem32
+		
+		/// <summary>
+		/// FSUBR mem32
+		/// </summary>
 		public void FSUBR (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString(), target, null, null, null, new string[] {"D8", "/5"}));
 		}
-
-		// FSUBR mem64
+		
+		/// <summary>
+		/// FSUBR mem64
+		/// </summary>
 		public void FSUBR (QWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString(), target, null, null, null, new string[] {"DC", "/5"}));
 		}
-
-		// FSUBR fpureg
+		
+		/// <summary>
+		/// FSUBR fpureg
+		/// </summary>
 		public void FSUBR (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString(), null, null, target, null, new string[] {"D8", "E8+r"}));
 		}
-
-		// FSUBR ST0,fpureg
+		
+		/// <summary>
+		/// FSUBR ST0,fpureg
+		/// </summary>
 		public void FSUBR_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "E8+r"}));
 		}
-
-		// FSUBR fpureg,ST0
+		
+		/// <summary>
+		/// FSUBR fpureg,ST0
+		/// </summary>
 		public void FSUBR__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "E0+r"}));
 		}
-
-		// FSUBRP fpureg
+		
+		/// <summary>
+		/// FSUBRP fpureg
+		/// </summary>
 		public void FSUBRP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBRP", target.ToString(), null, null, target, null, new string[] {"DE", "E0+r"}));
 		}
-
-		// FSUBRP fpureg,ST0
+		
+		/// <summary>
+		/// FSUBRP fpureg,ST0
+		/// </summary>
 		public void FSUBRP__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBRP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "E0+r"}));
 		}
-
-		// FTST
+		
+		/// <summary>
+		/// FTST 
+		/// </summary>
 		public void FTST ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FTST", "", null, null, null, null, new string[] {"D9", "E4"}));
 		}
-
-		// FUCOM fpureg
+		
+		/// <summary>
+		/// FUCOM fpureg
+		/// </summary>
 		public void FUCOM (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOM", target.ToString(), null, null, target, null, new string[] {"DD", "E0+r"}));
 		}
-
-		// FUCOM ST0,fpureg
+		
+		/// <summary>
+		/// FUCOM ST0,fpureg
+		/// </summary>
 		public void FUCOM_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOM_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DD", "E0+r"}));
 		}
-
-		// FUCOMI fpureg
+		
+		/// <summary>
+		/// FUCOMI fpureg
+		/// </summary>
 		public void FUCOMI (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMI", target.ToString(), null, null, target, null, new string[] {"DB", "E8+r"}));
 		}
-
-		// FUCOMI ST0,fpureg
+		
+		/// <summary>
+		/// FUCOMI ST0,fpureg
+		/// </summary>
 		public void FUCOMI_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMI_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "E8+r"}));
 		}
-
-		// FUCOMIP fpureg
+		
+		/// <summary>
+		/// FUCOMIP fpureg
+		/// </summary>
 		public void FUCOMIP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMIP", target.ToString(), null, null, target, null, new string[] {"DF", "E8+r"}));
 		}
-
-		// FUCOMIP ST0,fpureg
+		
+		/// <summary>
+		/// FUCOMIP ST0,fpureg
+		/// </summary>
 		public void FUCOMIP_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMIP_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DF", "E8+r"}));
 		}
-
-		// FUCOMP fpureg
+		
+		/// <summary>
+		/// FUCOMP fpureg
+		/// </summary>
 		public void FUCOMP (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMP", target.ToString(), null, null, target, null, new string[] {"DD", "E8+r"}));
 		}
-
-		// FUCOMP ST0,fpureg
+		
+		/// <summary>
+		/// FUCOMP ST0,fpureg
+		/// </summary>
 		public void FUCOMP_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMP_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DD", "E8+r"}));
 		}
-
-		// FUCOMPP
+		
+		/// <summary>
+		/// FUCOMPP 
+		/// </summary>
 		public void FUCOMPP ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMPP", "", null, null, null, null, new string[] {"DA", "E9"}));
 		}
-
-		// FWAIT
+		
+		/// <summary>
+		/// FWAIT 
+		/// </summary>
 		public void FWAIT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FWAIT", "", null, null, null, null, new string[] {"9B"}));
 		}
-
-		// FXAM
+		
+		/// <summary>
+		/// FXAM 
+		/// </summary>
 		public void FXAM ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXAM", "", null, null, null, null, new string[] {"D9", "E5"}));
 		}
-
-		// FXCH
+		
+		/// <summary>
+		/// FXCH 
+		/// </summary>
 		public void FXCH ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH", "", null, null, null, null, new string[] {"D9", "C9"}));
 		}
-
-		// FXCH fpureg
+		
+		/// <summary>
+		/// FXCH fpureg
+		/// </summary>
 		public void FXCH (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH", target.ToString(), null, null, target, null, new string[] {"D9", "C8+r"}));
 		}
-
-		// FXCH fpureg,ST0
+		
+		/// <summary>
+		/// FXCH fpureg,ST0
+		/// </summary>
 		public void FXCH__ST0 (FPType target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"D9", "C8+r"}));
 		}
-
-		// FXCH ST0,fpureg
+		
+		/// <summary>
+		/// FXCH ST0,fpureg
+		/// </summary>
 		public void FXCH_ST0 (FPType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D9", "C8+r"}));
 		}
-
-		// FXRSTOR memory
+		
+		/// <summary>
+		/// FXRSTOR memory
+		/// </summary>
 		public void FXRSTOR (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXRSTOR", target.ToString(), target, null, null, null, new string[] {"0F", "AE", "/1"}));
 		}
-
-		// FXSAVE memory
+		
+		/// <summary>
+		/// FXSAVE memory
+		/// </summary>
 		public void FXSAVE (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXSAVE", target.ToString(), target, null, null, null, new string[] {"0F", "AE", "/0"}));
 		}
-
-		// FXTRACT
+		
+		/// <summary>
+		/// FXTRACT 
+		/// </summary>
 		public void FXTRACT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXTRACT", "", null, null, null, null, new string[] {"D9", "F4"}));
 		}
-
-		// FYL2X
+		
+		/// <summary>
+		/// FYL2X 
+		/// </summary>
 		public void FYL2X ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FYL2X", "", null, null, null, null, new string[] {"D9", "F1"}));
 		}
-
-		// FYL2XP1
+		
+		/// <summary>
+		/// FYL2XP1 
+		/// </summary>
 		public void FYL2XP1 ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FYL2XP1", "", null, null, null, null, new string[] {"D9", "F9"}));
 		}
-
-		// HLT
+		
+		/// <summary>
+		/// HLT 
+		/// </summary>
 		public void HLT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "HLT", "", null, null, null, null, new string[] {"F4"}));
 		}
-
-		// ICEBP
+		
+		/// <summary>
+		/// ICEBP 
+		/// </summary>
 		public void ICEBP ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ICEBP", "", null, null, null, null, new string[] {"F1"}));
 		}
-
-		// IDIV mem8
+		
+		/// <summary>
+		/// IDIV mem8
+		/// </summary>
 		public void IDIV (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), target, null, null, null, new string[] {"F6", "/7"}));
 		}
-
-		// IDIV mem16
+		
+		/// <summary>
+		/// IDIV mem16
+		/// </summary>
 		public void IDIV (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/7"}));
 		}
-
-		// IDIV mem32
+		
+		/// <summary>
+		/// IDIV mem32
+		/// </summary>
 		public void IDIV (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/7"}));
 		}
-
-		// IDIV rmreg8
+		
+		/// <summary>
+		/// IDIV rmreg8
+		/// </summary>
 		public void IDIV (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), null, target, null, null, new string[] {"F6", "/7"}));
 		}
-
-		// IDIV rmreg16
+		
+		/// <summary>
+		/// IDIV rmreg16
+		/// </summary>
 		public void IDIV (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/7"}));
 		}
-
-		// IDIV rmreg32
+		
+		/// <summary>
+		/// IDIV rmreg32
+		/// </summary>
 		public void IDIV (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/7"}));
 		}
-
-		// IMUL mem8
+		
+		/// <summary>
+		/// IMUL mem8
+		/// </summary>
 		public void IMUL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), target, null, null, null, new string[] {"F6", "/5"}));
 		}
-
-		// IMUL mem16
+		
+		/// <summary>
+		/// IMUL mem16
+		/// </summary>
 		public void IMUL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/5"}));
 		}
-
-		// IMUL mem32
+		
+		/// <summary>
+		/// IMUL mem32
+		/// </summary>
 		public void IMUL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/5"}));
 		}
-
-		// IMUL reg16,mem16
+		
+		/// <summary>
+		/// IMUL reg16,mem16
+		/// </summary>
 		public void IMUL (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "AF", "/r"}));
 		}
-
-		// IMUL reg32,mem32
+		
+		/// <summary>
+		/// IMUL reg32,mem32
+		/// </summary>
 		public void IMUL (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "AF", "/r"}));
 		}
-
-		// IMUL reg16,imm8
+		
+		/// <summary>
+		/// IMUL reg16,imm8
+		/// </summary>
 		public void IMUL (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "6B", "/r", "ib"}));
 		}
-
-		// IMUL reg16,imm16
+		
+		/// <summary>
+		/// IMUL reg16,imm16
+		/// </summary>
 		public void IMUL (R16Type target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "69", "/r", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "69", "/r", "iw"}));
 		}
-
-		// IMUL reg32,imm8
+		
+		/// <summary>
+		/// IMUL reg32,imm8
+		/// </summary>
 		public void IMUL (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "6B", "/r", "ib"}));
 		}
-
-		// IMUL reg32,imm32
+		
+		/// <summary>
+		/// IMUL reg32,imm32
+		/// </summary>
 		public void IMUL (R32Type target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "69", "/r", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "69", "/r", "id"}));
 		}
-
-		// IMUL reg16,mem16,imm8
+		
+		/// <summary>
+		/// IMUL reg16,mem16,imm8
+		/// </summary>
 		public void IMUL (R16Type target, WordMemory source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o16", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o16", "6B", "/r", "ib"}));
 		}
-
-		// IMUL reg16,mem16,imm16
+		
+		/// <summary>
+		/// IMUL reg16,mem16,imm16
+		/// </summary>
 		public void IMUL (R16Type target, WordMemory source, UInt16 value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o16", "69", "/r", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o16", "69", "/r", "iw"}));
 		}
-
-		// IMUL reg32,mem32,imm8
+		
+		/// <summary>
+		/// IMUL reg32,mem32,imm8
+		/// </summary>
 		public void IMUL (R32Type target, DWordMemory source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o32", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o32", "6B", "/r", "ib"}));
 		}
-
-		// IMUL reg32,mem32,imm32
+		
+		/// <summary>
+		/// IMUL reg32,mem32,imm32
+		/// </summary>
 		public void IMUL (R32Type target, DWordMemory source, UInt32 value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o32", "69", "/r", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o32", "69", "/r", "id"}));
 		}
-
-		// IMUL rmreg8
+		
+		/// <summary>
+		/// IMUL rmreg8
+		/// </summary>
 		public void IMUL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), null, target, null, null, new string[] {"F6", "/5"}));
 		}
-
-		// IMUL rmreg16
+		
+		/// <summary>
+		/// IMUL rmreg16
+		/// </summary>
 		public void IMUL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/5"}));
 		}
-
-		// IMUL rmreg32
+		
+		/// <summary>
+		/// IMUL rmreg32
+		/// </summary>
 		public void IMUL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/5"}));
 		}
-
-		// IMUL reg16,rmreg16
+		
+		/// <summary>
+		/// IMUL reg16,rmreg16
+		/// </summary>
 		public void IMUL (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "AF", "/r"}));
 		}
-
-		// IMUL reg32,rmreg32
+		
+		/// <summary>
+		/// IMUL reg32,rmreg32
+		/// </summary>
 		public void IMUL (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "AF", "/r"}));
 		}
-
-		// IMUL reg16,rmreg16,imm8
+		
+		/// <summary>
+		/// IMUL reg16,rmreg16,imm8
+		/// </summary>
 		public void IMUL (R16Type target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o16", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o16", "6B", "/r", "ib"}));
 		}
-
-		// IMUL reg16,rmreg16,imm16
+		
+		/// <summary>
+		/// IMUL reg16,rmreg16,imm16
+		/// </summary>
 		public void IMUL (R16Type target, R16Type source, UInt16 value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o16", "69", "/r", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o16", "69", "/r", "iw"}));
 		}
-
-		// IMUL reg32,rmreg32,imm8
+		
+		/// <summary>
+		/// IMUL reg32,rmreg32,imm8
+		/// </summary>
 		public void IMUL (R32Type target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o32", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o32", "6B", "/r", "ib"}));
 		}
-
-		// IMUL reg32,rmreg32,imm32
+		
+		/// <summary>
+		/// IMUL reg32,rmreg32,imm32
+		/// </summary>
 		public void IMUL (R32Type target, R32Type source, UInt32 value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o32", "69", "/r", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o32", "69", "/r", "id"}));
 		}
-
-		// IN AL,imm8
+		
+		/// <summary>
+		/// IN AL,imm8
+		/// </summary>
 		public void IN_AL (Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"E4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"E4", "ib"}));
 		}
-
-		// IN AX,imm8
+		
+		/// <summary>
+		/// IN AX,imm8
+		/// </summary>
 		public void IN_AX (Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "E5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "E5", "ib"}));
 		}
-
-		// IN EAX,imm8
+		
+		/// <summary>
+		/// IN EAX,imm8
+		/// </summary>
 		public void IN_EAX (Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "E5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "E5", "ib"}));
 		}
-
-		// IN AL,DX
+		
+		/// <summary>
+		/// IN AL,DX
+		/// </summary>
 		public void IN_AL__DX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AL__DX", "AL" + ", " + "DX", null, null, null, null, new string[] {"EC"}));
 		}
-
-		// IN AX,DX
+		
+		/// <summary>
+		/// IN AX,DX
+		/// </summary>
 		public void IN_AX__DX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AX__DX", "AX" + ", " + "DX", null, null, null, null, new string[] {"o16", "ED"}));
 		}
-
-		// IN EAX,DX
+		
+		/// <summary>
+		/// IN EAX,DX
+		/// </summary>
 		public void IN_EAX__DX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_EAX__DX", "EAX" + ", " + "DX", null, null, null, null, new string[] {"o32", "ED"}));
 		}
-
-		// INC reg16
+		
+		/// <summary>
+		/// INC reg16
+		/// </summary>
 		public void INC (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), null, null, target, null, new string[] {"o16", "40+r"}));
 		}
-
-		// INC reg32
+		
+		/// <summary>
+		/// INC reg32
+		/// </summary>
 		public void INC (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), null, null, target, null, new string[] {"o32", "40+r"}));
 		}
-
-		// INC mem8
+		
+		/// <summary>
+		/// INC mem8
+		/// </summary>
 		public void INC (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), target, null, null, null, new string[] {"FE", "/0"}));
 		}
-
-		// INC mem16
+		
+		/// <summary>
+		/// INC mem16
+		/// </summary>
 		public void INC (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/0"}));
 		}
-
-		// INC mem32
+		
+		/// <summary>
+		/// INC mem32
+		/// </summary>
 		public void INC (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/0"}));
 		}
-
-		// INC rmreg8
+		
+		/// <summary>
+		/// INC rmreg8
+		/// </summary>
 		public void INC (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), null, target, null, null, new string[] {"FE", "/0"}));
 		}
-
-		// INSB
+		
+		/// <summary>
+		/// INSB 
+		/// </summary>
 		public void INSB ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSB", "", null, null, null, null, new string[] {"6C"}));
 		}
-
-		// INSD
+		
+		/// <summary>
+		/// INSD 
+		/// </summary>
 		public void INSD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSD", "", null, null, null, null, new string[] {"o32", "6D"}));
 		}
-
-		// INSW
+		
+		/// <summary>
+		/// INSW 
+		/// </summary>
 		public void INSW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSW", "", null, null, null, null, new string[] {"o16", "6D"}));
 		}
-
-		// INT imm8
+		
+		/// <summary>
+		/// INT imm8
+		/// </summary>
 		public void INT (Byte target)
 		{
-			if (target == 1) {
+			if (target == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT_1", "1", null, null, null, null, new string[] {"F1"}));
-
-			} else if (target == 3) {
+			else if (target == 3)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT_3", "3", null, null, null, null, new string[] {"CC"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"CD", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"CD", "ib"}));
 			}
 		}
-
-		// INTO
+		
+		/// <summary>
+		/// INTO 
+		/// </summary>
 		public void INTO ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INTO", "", null, null, null, null, new string[] {"CE"}));
 		}
-
-		// INVD
+		
+		/// <summary>
+		/// INVD 
+		/// </summary>
 		public void INVD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INVD", "", null, null, null, null, new string[] {"0F", "08"}));
 		}
-
-		// INVLPG mem
+		
+		/// <summary>
+		/// INVLPG mem
+		/// </summary>
 		public void INVLPG (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INVLPG", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/7"}));
 		}
-
-		// IRET
+		
+		/// <summary>
+		/// IRET 
+		/// </summary>
 		public void IRET ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRET", "", null, null, null, null, new string[] {"CF"}));
 		}
-
-		// IRETD
+		
+		/// <summary>
+		/// IRETD 
+		/// </summary>
 		public void IRETD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRETD", "", null, null, null, null, new string[] {"o32", "CF"}));
 		}
-
-		// IRETW
+		
+		/// <summary>
+		/// IRETW 
+		/// </summary>
 		public void IRETW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRETW", "", null, null, null, null, new string[] {"o16", "CF"}));
 		}
-
-		// JA imm8
+		
+		/// <summary>
+		/// JA imm8
+		/// </summary>
 		public void JA (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JA", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"77", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JA", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"77", "rb"}));
 		}
-
-		// JA NEAR imm
+		
+		/// <summary>
+		/// JA NEAR imm
+		/// </summary>
 		public void JA (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JA", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JA", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "87", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JA NEAR imm
+		/// </summary>
 		public void JA (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JA", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JA", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
 		}
-
-		// JAE imm8
+		
+		/// <summary>
+		/// JAE imm8
+		/// </summary>
 		public void JAE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JAE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JAE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
 		}
-
-		// JAE NEAR imm
+		
+		/// <summary>
+		/// JAE NEAR imm
+		/// </summary>
 		public void JAE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JAE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JAE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JAE NEAR imm
+		/// </summary>
 		public void JAE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JAE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JAE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
 		}
-
-		// JB imm8
+		
+		/// <summary>
+		/// JB imm8
+		/// </summary>
 		public void JB (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JB", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JB", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
 		}
-
-		// JB NEAR imm
+		
+		/// <summary>
+		/// JB NEAR imm
+		/// </summary>
 		public void JB (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JB", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JB", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JB NEAR imm
+		/// </summary>
 		public void JB (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JB", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JB", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
 		}
-
-		// JBE imm8
+		
+		/// <summary>
+		/// JBE imm8
+		/// </summary>
 		public void JBE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JBE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"76", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JBE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"76", "rb"}));
 		}
-
-		// JBE NEAR imm
+		
+		/// <summary>
+		/// JBE NEAR imm
+		/// </summary>
 		public void JBE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JBE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JBE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "86", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JBE NEAR imm
+		/// </summary>
 		public void JBE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JBE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JBE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
 		}
-
-		// JC imm8
+		
+		/// <summary>
+		/// JC imm8
+		/// </summary>
 		public void JC (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JC", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JC", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
 		}
-
-		// JC NEAR imm
+		
+		/// <summary>
+		/// JC NEAR imm
+		/// </summary>
 		public void JC (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JC", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JC", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JC NEAR imm
+		/// </summary>
 		public void JC (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JC", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JC", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
 		}
-
-		// JCXZ imm8
+		
+		/// <summary>
+		/// JCXZ imm8
+		/// </summary>
 		public void JCXZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JCXZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"a16", "E3", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JCXZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"a16", "E3", "rb"}));
 		}
-
-		// JE imm8
+		
+		/// <summary>
+		/// JE imm8
+		/// </summary>
 		public void JE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"74", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"74", "rb"}));
 		}
-
-		// JE NEAR imm
+		
+		/// <summary>
+		/// JE NEAR imm
+		/// </summary>
 		public void JE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "84", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JE NEAR imm
+		/// </summary>
 		public void JE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
 		}
-
-		// JECXZ imm8
+		
+		/// <summary>
+		/// JECXZ imm8
+		/// </summary>
 		public void JECXZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JECXZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"a32", "E3", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JECXZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"a32", "E3", "rb"}));
 		}
-
-		// JG imm8
+		
+		/// <summary>
+		/// JG imm8
+		/// </summary>
 		public void JG (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JG", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7F", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JG", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7F", "rb"}));
 		}
-
-		// JG NEAR imm
+		
+		/// <summary>
+		/// JG NEAR imm
+		/// </summary>
 		public void JG (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JG", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JG", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8F", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JG NEAR imm
+		/// </summary>
 		public void JG (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JG", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JG", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
 		}
-
-		// JGE imm8
+		
+		/// <summary>
+		/// JGE imm8
+		/// </summary>
 		public void JGE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JGE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7D", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JGE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7D", "rb"}));
 		}
-
-		// JGE NEAR imm
+		
+		/// <summary>
+		/// JGE NEAR imm
+		/// </summary>
 		public void JGE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JGE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JGE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8D", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JGE NEAR imm
+		/// </summary>
 		public void JGE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JGE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JGE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
 		}
-
-		// JL imm8
+		
+		/// <summary>
+		/// JL imm8
+		/// </summary>
 		public void JL (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JL", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7C", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7C", "rb"}));
 		}
-
-		// JL NEAR imm
+		
+		/// <summary>
+		/// JL NEAR imm
+		/// </summary>
 		public void JL (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JL", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8C", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JL NEAR imm
+		/// </summary>
 		public void JL (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JL", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JL", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
 		}
-
-		// JLE imm8
+		
+		/// <summary>
+		/// JLE imm8
+		/// </summary>
 		public void JLE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JLE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7E", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JLE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7E", "rb"}));
 		}
-
-		// JLE NEAR imm
+		
+		/// <summary>
+		/// JLE NEAR imm
+		/// </summary>
 		public void JLE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JLE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JLE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8E", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JLE NEAR imm
+		/// </summary>
 		public void JLE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JLE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JLE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
 		}
-
-		// JMP imm
+		
+		/// <summary>
+		/// JMP imm
+		/// </summary>
 		public void JMP (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E9", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E9", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JMP imm
+		/// </summary>
 		public void JMP (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JMP", label, null, null, null, new UInt32[] {0}, new string[] {"E9", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JMP", label, null, null, null, new UInt32[] {0}, new string[] {"E9", "rw/rd"}));
 		}
-
-		// JMP imm8
+		
+		/// <summary>
+		/// JMP imm8
+		/// </summary>
 		public void JMP (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"EB", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"EB", "rb"}));
 		}
-
-		// JMP imm16:imm16
+		
+		/// <summary>
+		/// JMP imm16:imm16
+		/// </summary>
 		public void JMP (UInt16 target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o16", "EA", "iw", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o16", "EA", "iw", "iw"}));
 		}
-
-		// JMP imm16:imm32
+		
+		/// <summary>
+		/// JMP imm16:imm32
+		/// </summary>
 		public void JMP (UInt16 target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o32", "EA", "id", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o32", "EA", "id", "iw"}));
 		}
-
-		// JMP FAR mem
+		
+		/// <summary>
+		/// JMP FAR mem
+		/// </summary>
 		public void JMP_FAR (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP_FAR", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/5"}));
 		}
-
-		// JMP FAR mem32
+		
+		/// <summary>
+		/// JMP FAR mem32
+		/// </summary>
 		public void JMP_FAR (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP_FAR", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/5"}));
 		}
-
-		// JMP mem16
+		
+		/// <summary>
+		/// JMP mem16
+		/// </summary>
 		public void JMP (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/4"}));
 		}
-
-		// JMP mem32
+		
+		/// <summary>
+		/// JMP mem32
+		/// </summary>
 		public void JMP (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/4"}));
 		}
-
-		// JMP rmreg16
+		
+		/// <summary>
+		/// JMP rmreg16
+		/// </summary>
 		public void JMP (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString(), null, target, null, null, new string[] {"o16", "FF", "/4"}));
 		}
-
-		// JMP rmreg32
+		
+		/// <summary>
+		/// JMP rmreg32
+		/// </summary>
 		public void JMP (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString(), null, target, null, null, new string[] {"o32", "FF", "/4"}));
 		}
-
-		// JNA imm8
+		
+		/// <summary>
+		/// JNA imm8
+		/// </summary>
 		public void JNA (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNA", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"76", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNA", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"76", "rb"}));
 		}
-
-		// JNA NEAR imm
+		
+		/// <summary>
+		/// JNA NEAR imm
+		/// </summary>
 		public void JNA (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNA", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNA", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "86", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNA NEAR imm
+		/// </summary>
 		public void JNA (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNA", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNA", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
 		}
-
-		// JNAE imm8
+		
+		/// <summary>
+		/// JNAE imm8
+		/// </summary>
 		public void JNAE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNAE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNAE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
 		}
-
-		// JNAE NEAR imm
+		
+		/// <summary>
+		/// JNAE NEAR imm
+		/// </summary>
 		public void JNAE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNAE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNAE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNAE NEAR imm
+		/// </summary>
 		public void JNAE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNAE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNAE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
 		}
-
-		// JNB imm8
+		
+		/// <summary>
+		/// JNB imm8
+		/// </summary>
 		public void JNB (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNB", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNB", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
 		}
-
-		// JNB NEAR imm
+		
+		/// <summary>
+		/// JNB NEAR imm
+		/// </summary>
 		public void JNB (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNB", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNB", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNB NEAR imm
+		/// </summary>
 		public void JNB (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNB", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNB", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
 		}
-
-		// JNBE imm8
+		
+		/// <summary>
+		/// JNBE imm8
+		/// </summary>
 		public void JNBE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNBE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"77", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNBE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"77", "rb"}));
 		}
-
-		// JNBE NEAR imm
+		
+		/// <summary>
+		/// JNBE NEAR imm
+		/// </summary>
 		public void JNBE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNBE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNBE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "87", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNBE NEAR imm
+		/// </summary>
 		public void JNBE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNBE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNBE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
 		}
-
-		// JNC imm8
+		
+		/// <summary>
+		/// JNC imm8
+		/// </summary>
 		public void JNC (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNC", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNC", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
 		}
-
-		// JNC NEAR imm
+		
+		/// <summary>
+		/// JNC NEAR imm
+		/// </summary>
 		public void JNC (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNC", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNC", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNC NEAR imm
+		/// </summary>
 		public void JNC (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNC", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNC", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
 		}
-
-		// JNE imm8
+		
+		/// <summary>
+		/// JNE imm8
+		/// </summary>
 		public void JNE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"75", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"75", "rb"}));
 		}
-
-		// JNE NEAR imm
+		
+		/// <summary>
+		/// JNE NEAR imm
+		/// </summary>
 		public void JNE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "85", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNE NEAR imm
+		/// </summary>
 		public void JNE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
 		}
-
-		// JNG imm8
+		
+		/// <summary>
+		/// JNG imm8
+		/// </summary>
 		public void JNG (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNG", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7E", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNG", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7E", "rb"}));
 		}
-
-		// JNG NEAR imm
+		
+		/// <summary>
+		/// JNG NEAR imm
+		/// </summary>
 		public void JNG (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNG", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNG", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8E", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNG NEAR imm
+		/// </summary>
 		public void JNG (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNG", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNG", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
 		}
-
-		// JNGE imm8
+		
+		/// <summary>
+		/// JNGE imm8
+		/// </summary>
 		public void JNGE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNGE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7C", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNGE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7C", "rb"}));
 		}
-
-		// JNGE NEAR imm
+		
+		/// <summary>
+		/// JNGE NEAR imm
+		/// </summary>
 		public void JNGE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNGE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNGE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8C", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNGE NEAR imm
+		/// </summary>
 		public void JNGE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNGE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNGE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
 		}
-
-		// JNL imm8
+		
+		/// <summary>
+		/// JNL imm8
+		/// </summary>
 		public void JNL (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNL", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7D", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7D", "rb"}));
 		}
-
-		// JNL NEAR imm
+		
+		/// <summary>
+		/// JNL NEAR imm
+		/// </summary>
 		public void JNL (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNL", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8D", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNL NEAR imm
+		/// </summary>
 		public void JNL (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNL", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNL", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
 		}
-
-		// JNLE imm8
+		
+		/// <summary>
+		/// JNLE imm8
+		/// </summary>
 		public void JNLE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNLE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7F", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNLE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7F", "rb"}));
 		}
-
-		// JNLE NEAR imm
+		
+		/// <summary>
+		/// JNLE NEAR imm
+		/// </summary>
 		public void JNLE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNLE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNLE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8F", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNLE NEAR imm
+		/// </summary>
 		public void JNLE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNLE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNLE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
 		}
-
-		// JNO imm8
+		
+		/// <summary>
+		/// JNO imm8
+		/// </summary>
 		public void JNO (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNO", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"71", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"71", "rb"}));
 		}
-
-		// JNO NEAR imm
+		
+		/// <summary>
+		/// JNO NEAR imm
+		/// </summary>
 		public void JNO (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNO", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "81", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "81", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNO NEAR imm
+		/// </summary>
 		public void JNO (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "81", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "81", "rw/rd"}));
 		}
-
-		// JNP imm8
+		
+		/// <summary>
+		/// JNP imm8
+		/// </summary>
 		public void JNP (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNP", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7B", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7B", "rb"}));
 		}
-
-		// JNP NEAR imm
+		
+		/// <summary>
+		/// JNP NEAR imm
+		/// </summary>
 		public void JNP (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNP", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8B", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNP NEAR imm
+		/// </summary>
 		public void JNP (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNP", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNP", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
 		}
-
-		// JNS imm8
+		
+		/// <summary>
+		/// JNS imm8
+		/// </summary>
 		public void JNS (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNS", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"79", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNS", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"79", "rb"}));
 		}
-
-		// JNS NEAR imm
+		
+		/// <summary>
+		/// JNS NEAR imm
+		/// </summary>
 		public void JNS (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNS", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "89", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNS", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "89", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNS NEAR imm
+		/// </summary>
 		public void JNS (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNS", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "89", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNS", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "89", "rw/rd"}));
 		}
-
-		// JNZ imm8
+		
+		/// <summary>
+		/// JNZ imm8
+		/// </summary>
 		public void JNZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"75", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"75", "rb"}));
 		}
-
-		// JNZ NEAR imm
+		
+		/// <summary>
+		/// JNZ NEAR imm
+		/// </summary>
 		public void JNZ (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "85", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JNZ NEAR imm
+		/// </summary>
 		public void JNZ (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JNZ", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JNZ", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
 		}
-
-		// JO imm8
+		
+		/// <summary>
+		/// JO imm8
+		/// </summary>
 		public void JO (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JO", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"70", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"70", "rb"}));
 		}
-
-		// JO NEAR imm
+		
+		/// <summary>
+		/// JO NEAR imm
+		/// </summary>
 		public void JO (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JO", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "80", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "80", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JO NEAR imm
+		/// </summary>
 		public void JO (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "80", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "80", "rw/rd"}));
 		}
-
-		// JP imm8
+		
+		/// <summary>
+		/// JP imm8
+		/// </summary>
 		public void JP (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JP", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7A", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7A", "rb"}));
 		}
-
-		// JP NEAR imm
+		
+		/// <summary>
+		/// JP NEAR imm
+		/// </summary>
 		public void JP (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JP", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8A", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JP NEAR imm
+		/// </summary>
 		public void JP (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JP", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JP", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
 		}
-
-		// JPE imm8
+		
+		/// <summary>
+		/// JPE imm8
+		/// </summary>
 		public void JPE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7A", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7A", "rb"}));
 		}
-
-		// JPE NEAR imm
+		
+		/// <summary>
+		/// JPE NEAR imm
+		/// </summary>
 		public void JPE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8A", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JPE NEAR imm
+		/// </summary>
 		public void JPE (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JPE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JPE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
 		}
-
-		// JPO imm8
+		
+		/// <summary>
+		/// JPO imm8
+		/// </summary>
 		public void JPO (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPO", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7B", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7B", "rb"}));
 		}
-
-		// JPO NEAR imm
+		
+		/// <summary>
+		/// JPO NEAR imm
+		/// </summary>
 		public void JPO (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPO", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8B", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JPO NEAR imm
+		/// </summary>
 		public void JPO (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JPO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JPO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
 		}
-
-		// JS imm8
+		
+		/// <summary>
+		/// JS imm8
+		/// </summary>
 		public void JS (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JS", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"78", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JS", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"78", "rb"}));
 		}
-
-		// JS NEAR imm
+		
+		/// <summary>
+		/// JS NEAR imm
+		/// </summary>
 		public void JS (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JS", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "88", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JS", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "88", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JS NEAR imm
+		/// </summary>
 		public void JS (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JS", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "88", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JS", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "88", "rw/rd"}));
 		}
-
-		// JZ imm8
+		
+		/// <summary>
+		/// JZ imm8
+		/// </summary>
 		public void JZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"74", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"74", "rb"}));
 		}
-
-		// JZ NEAR imm
+		
+		/// <summary>
+		/// JZ NEAR imm
+		/// </summary>
 		public void JZ (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "84", "rw/rd"}));
 		}
-
+		
+		/// <summary>
+		/// JZ NEAR imm
+		/// </summary>
 		public void JZ (string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "JZ", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, label, "JZ", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
 		}
-
-		// LAHF
+		
+		/// <summary>
+		/// LAHF 
+		/// </summary>
 		public void LAHF ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAHF", "", null, null, null, null, new string[] {"9F"}));
 		}
-
-		// LAR reg16,mem16
+		
+		/// <summary>
+		/// LAR reg16,mem16
+		/// </summary>
 		public void LAR (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "02", "/r"}));
 		}
-
-		// LAR reg32,mem32
+		
+		/// <summary>
+		/// LAR reg32,mem32
+		/// </summary>
 		public void LAR (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "02", "/r"}));
 		}
-
-		// LAR reg16,rmreg16
+		
+		/// <summary>
+		/// LAR reg16,rmreg16
+		/// </summary>
 		public void LAR (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "02", "/r"}));
 		}
-
-		// LAR reg32,rmreg32
+		
+		/// <summary>
+		/// LAR reg32,rmreg32
+		/// </summary>
 		public void LAR (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "02", "/r"}));
 		}
-
-		// LDS reg16,mem
+		
+		/// <summary>
+		/// LDS reg16,mem
+		/// </summary>
 		public void LDS (R16Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LDS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "C5", "/r"}));
 		}
-
-		// LDS reg32,mem
+		
+		/// <summary>
+		/// LDS reg32,mem
+		/// </summary>
 		public void LDS (R32Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LDS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "C5", "/r"}));
 		}
-
-		// LEA reg16,mem
+		
+		/// <summary>
+		/// LEA reg16,mem
+		/// </summary>
 		public void LEA (R16Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "8D", "/r"}));
 		}
-
-		// LEA reg32,mem
+		
+		/// <summary>
+		/// LEA reg32,mem
+		/// </summary>
 		public void LEA (R32Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "8D", "/r"}));
 		}
-
-		// LEAVE
+		
+		/// <summary>
+		/// LEAVE 
+		/// </summary>
 		public void LEAVE ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEAVE", "", null, null, null, null, new string[] {"C9"}));
 		}
-
-		// LES reg16,mem
+		
+		/// <summary>
+		/// LES reg16,mem
+		/// </summary>
 		public void LES (R16Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LES", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "C4", "/r"}));
 		}
-
-		// LES reg32,mem
+		
+		/// <summary>
+		/// LES reg32,mem
+		/// </summary>
 		public void LES (R32Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LES", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "C4", "/r"}));
 		}
-
-		// LFENCE
+		
+		/// <summary>
+		/// LFENCE 
+		/// </summary>
 		public void LFENCE ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFENCE", "", null, null, null, null, new string[] {"0F", "AE", "/5"}));
 		}
-
-		// LFS reg16,mem
+		
+		/// <summary>
+		/// LFS reg16,mem
+		/// </summary>
 		public void LFS (R16Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "B4", "/r"}));
 		}
-
-		// LFS reg32,mem
+		
+		/// <summary>
+		/// LFS reg32,mem
+		/// </summary>
 		public void LFS (R32Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B4", "/r"}));
 		}
-
-		// LGDT mem
+		
+		/// <summary>
+		/// LGDT mem
+		/// </summary>
 		public void LGDT (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGDT", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/2"}));
 		}
-
-		// LGS reg16,mem
+		
+		/// <summary>
+		/// LGS reg16,mem
+		/// </summary>
 		public void LGS (R16Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "B5", "/r"}));
 		}
-
-		// LGS reg32,mem
+		
+		/// <summary>
+		/// LGS reg32,mem
+		/// </summary>
 		public void LGS (R32Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B5", "/r"}));
 		}
-
-		// LIDT mem
+		
+		/// <summary>
+		/// LIDT mem
+		/// </summary>
 		public void LIDT (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LIDT", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/3"}));
 		}
-
-		// LLDT mem16
+		
+		/// <summary>
+		/// LLDT mem16
+		/// </summary>
 		public void LLDT (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LLDT", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/2"}));
 		}
-
-		// LLDT rmreg16
+		
+		/// <summary>
+		/// LLDT rmreg16
+		/// </summary>
 		public void LLDT (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LLDT", target.ToString(), null, target, null, null, new string[] {"0F", "00", "/2"}));
 		}
-
-		// LMSW mem16
+		
+		/// <summary>
+		/// LMSW mem16
+		/// </summary>
 		public void LMSW (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LMSW", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/6"}));
 		}
-
-		// LMSW rmreg16
+		
+		/// <summary>
+		/// LMSW rmreg16
+		/// </summary>
 		public void LMSW (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LMSW", target.ToString(), null, target, null, null, new string[] {"0F", "01", "/6"}));
 		}
-
-		// LODSB
+		
+		/// <summary>
+		/// LODSB 
+		/// </summary>
 		public void LODSB ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSB", "", null, null, null, null, new string[] {"AC"}));
 		}
-
-		// LODSD
+		
+		/// <summary>
+		/// LODSD 
+		/// </summary>
 		public void LODSD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSD", "", null, null, null, null, new string[] {"o32", "AD"}));
 		}
-
-		// LODSW
+		
+		/// <summary>
+		/// LODSW 
+		/// </summary>
 		public void LODSW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSW", "", null, null, null, null, new string[] {"o16", "AD"}));
 		}
-
-		// LOOP imm8
+		
+		/// <summary>
+		/// LOOP imm8
+		/// </summary>
 		public void LOOP (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOP", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E2", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E2", "rb"}));
 		}
-
-		// LOOPE imm8
+		
+		/// <summary>
+		/// LOOPE imm8
+		/// </summary>
 		public void LOOPE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E1", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E1", "rb"}));
 		}
-
-		// LOOPNE imm8
+		
+		/// <summary>
+		/// LOOPNE imm8
+		/// </summary>
 		public void LOOPNE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPNE", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E0", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPNE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E0", "rb"}));
 		}
-
-		// LOOPNZ imm8
+		
+		/// <summary>
+		/// LOOPNZ imm8
+		/// </summary>
 		public void LOOPNZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPNZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E0", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPNZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E0", "rb"}));
 		}
-
-		// LOOPZ imm8
+		
+		/// <summary>
+		/// LOOPZ imm8
+		/// </summary>
 		public void LOOPZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E1", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E1", "rb"}));
 		}
-
-		// LSL reg16,mem16
+		
+		/// <summary>
+		/// LSL reg16,mem16
+		/// </summary>
 		public void LSL (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "03", "/r"}));
 		}
-
-		// LSL reg32,mem32
+		
+		/// <summary>
+		/// LSL reg32,mem32
+		/// </summary>
 		public void LSL (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "03", "/r"}));
 		}
-
-		// LSL reg16,rmreg16
+		
+		/// <summary>
+		/// LSL reg16,rmreg16
+		/// </summary>
 		public void LSL (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "03", "/r"}));
 		}
-
-		// LSL reg32,rmreg32
+		
+		/// <summary>
+		/// LSL reg32,rmreg32
+		/// </summary>
 		public void LSL (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "03", "/r"}));
 		}
-
-		// LSS reg16,mem
+		
+		/// <summary>
+		/// LSS reg16,mem
+		/// </summary>
 		public void LSS (R16Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "B2", "/r"}));
 		}
-
-		// LSS reg32,mem
+		
+		/// <summary>
+		/// LSS reg32,mem
+		/// </summary>
 		public void LSS (R32Type target, Memory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B2", "/r"}));
 		}
-
-		// LTR mem16
+		
+		/// <summary>
+		/// LTR mem16
+		/// </summary>
 		public void LTR (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LTR", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/3"}));
 		}
-
-		// LTR rmreg16
+		
+		/// <summary>
+		/// LTR rmreg16
+		/// </summary>
 		public void LTR (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LTR", target.ToString(), null, target, null, null, new string[] {"0F", "00", "/3"}));
 		}
-
-		// MFENCE
+		
+		/// <summary>
+		/// MFENCE 
+		/// </summary>
 		public void MFENCE ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MFENCE", "", null, null, null, null, new string[] {"0F", "AE", "/6"}));
 		}
-
-		// MOV mem8,reg8
+		
+		/// <summary>
+		/// MOV mem8,reg8
+		/// </summary>
 		public void MOV (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"88", "/r"}));
 		}
-
-		// MOV mem16,reg16
+		
+		/// <summary>
+		/// MOV mem16,reg16
+		/// </summary>
 		public void MOV (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "89", "/r"}));
 		}
-
-		// MOV mem32,reg32
+		
+		/// <summary>
+		/// MOV mem32,reg32
+		/// </summary>
 		public void MOV (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "89", "/r"}));
 		}
-
-		// MOV reg8,mem8
+		
+		/// <summary>
+		/// MOV reg8,mem8
+		/// </summary>
 		public void MOV (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"8A", "/r"}));
 		}
-
-		// MOV reg16,mem16
+		
+		/// <summary>
+		/// MOV reg16,mem16
+		/// </summary>
 		public void MOV (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "8B", "/r"}));
 		}
-
-		// MOV reg32,mem32
+		
+		/// <summary>
+		/// MOV reg32,mem32
+		/// </summary>
 		public void MOV (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "8B", "/r"}));
 		}
-
-		// MOV reg8,imm8
+		
+		/// <summary>
+		/// MOV reg8,imm8
+		/// </summary>
 		public void MOV (R8Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"B0+r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"B0+r", "ib"}));
 		}
-
-		// MOV reg16,imm16
+		
+		/// <summary>
+		/// MOV reg16,imm16
+		/// </summary>
 		public void MOV (R16Type target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "B8+r", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "B8+r", "iw"}));
 		}
-
-		// MOV reg32,imm32
+		
+		/// <summary>
+		/// MOV reg32,imm32
+		/// </summary>
 		public void MOV (R32Type target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "B8+r", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "B8+r", "id"}));
 		}
-
-		// MOV mem8,imm8
+		
+		/// <summary>
+		/// MOV mem8,imm8
+		/// </summary>
 		public void MOV (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C6", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C6", "/0", "ib"}));
 		}
-
-		// MOV mem16,imm16
+		
+		/// <summary>
+		/// MOV mem16,imm16
+		/// </summary>
 		public void MOV (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C7", "/0", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C7", "/0", "iw"}));
 		}
-
-		// MOV mem32,imm32
+		
+		/// <summary>
+		/// MOV mem32,imm32
+		/// </summary>
 		public void MOV (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C7", "/0", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C7", "/0", "id"}));
 		}
-
-		// MOV AL,memoffs8
+		
+		/// <summary>
+		/// MOV AL,memoffs8
+		/// </summary>
 		public void MOV_AL (byte source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_AL", "AL" + ", " + source.ToString(), null, null, null, new UInt32[] {source}, new string[] {"A0", "ow/od"}));
 		}
-
-		// MOV AX,memoffs16
+		
+		/// <summary>
+		/// MOV AX,memoffs16
+		/// </summary>
 		public void MOV_AX (UInt16 source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_AX", "AX" + ", " + source.ToString(), null, null, null, new UInt32[] {source}, new string[] {"o16", "A1", "ow/od"}));
 		}
-
-		// MOV EAX,memoffs32
+		
+		/// <summary>
+		/// MOV EAX,memoffs32
+		/// </summary>
 		public void MOV_EAX (UInt32 source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_EAX", "EAX" + ", " + source.ToString(), null, null, null, new UInt32[] {source}, new string[] {"o32", "A1", "ow/od"}));
 		}
-
-		// MOV memoffs8,AL
+		
+		/// <summary>
+		/// MOV memoffs8,AL
+		/// </summary>
 		public void MOV__AL (byte target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__AL", target.ToString() + ", " + "AL", null, null, null, new UInt32[] {target}, new string[] {"A2", "ow/od"}));
 		}
-
-		// MOV memoffs16,AX
+		
+		/// <summary>
+		/// MOV memoffs16,AX
+		/// </summary>
 		public void MOV__AX (UInt16 target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__AX", target.ToString() + ", " + "AX", null, null, null, new UInt32[] {target}, new string[] {"o16", "A3", "ow/od"}));
 		}
-
-		// MOV memoffs32,EAX
+		
+		/// <summary>
+		/// MOV memoffs32,EAX
+		/// </summary>
 		public void MOV__EAX (UInt32 target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__EAX", target.ToString() + ", " + "EAX", null, null, null, new UInt32[] {target}, new string[] {"o32", "A3", "ow/od"}));
 		}
-
-		// MOV mem16,segreg
+		
+		/// <summary>
+		/// MOV mem16,segreg
+		/// </summary>
 		public void MOV (WordMemory target, SegType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"8C", "/r"}));
 		}
-
-		// MOV mem32,segreg
+		
+		/// <summary>
+		/// MOV mem32,segreg
+		/// </summary>
 		public void MOV (DWordMemory target, SegType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "8C", "/r"}));
 		}
-
-		// MOV segreg,mem16
+		
+		/// <summary>
+		/// MOV segreg,mem16
+		/// </summary>
 		public void MOV (SegType target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"8E", "/r"}));
 		}
-
-		// MOV segreg,mem32
+		
+		/// <summary>
+		/// MOV segreg,mem32
+		/// </summary>
 		public void MOV (SegType target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "8E", "/r"}));
 		}
-
-		// MOV reg32,CR0/2/3/4
+		
+		/// <summary>
+		/// MOV reg32,CR0/2/3/4
+		/// </summary>
 		public void MOV (R32Type target, CRType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "20", "/r"}));
 		}
-
-		// MOV reg32,DR0/1/2/3/6/7
+		
+		/// <summary>
+		/// MOV reg32,DR0/1/2/3/6/7
+		/// </summary>
 		public void MOV (R32Type target, DRType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "21", "/r"}));
 		}
-
-		// MOV reg32,TR3/4/5/6/7
+		
+		/// <summary>
+		/// MOV reg32,TR3/4/5/6/7
+		/// </summary>
 		public void MOV (R32Type target, TRType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "24", "/r"}));
 		}
-
-		// MOV CR0/2/3/4,reg32
+		
+		/// <summary>
+		/// MOV CR0/2/3/4,reg32
+		/// </summary>
 		public void MOV (CRType target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"0F", "22", "/r"}));
 		}
-
-		// MOV DR0/1/2/3/6/7,reg32
+		
+		/// <summary>
+		/// MOV DR0/1/2/3/6/7,reg32
+		/// </summary>
 		public void MOV (DRType target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"0F", "23", "/r"}));
 		}
-
-		// MOV TR3/4/5/6/7,reg32
+		
+		/// <summary>
+		/// MOV TR3/4/5/6/7,reg32
+		/// </summary>
 		public void MOV (TRType target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"0F", "26", "/r"}));
 		}
-
-		// MOV rmreg8,reg8
+		
+		/// <summary>
+		/// MOV rmreg8,reg8
+		/// </summary>
 		public void MOV (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"88", "/r"}));
 		}
-
-		// MOV rmreg16,reg16
+		
+		/// <summary>
+		/// MOV rmreg16,reg16
+		/// </summary>
 		public void MOV (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "89", "/r"}));
 		}
-
-		// MOV rmreg32,reg32
+		
+		/// <summary>
+		/// MOV rmreg32,reg32
+		/// </summary>
 		public void MOV (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "89", "/r"}));
 		}
-
-		// MOV rmreg16,segreg
+		
+		/// <summary>
+		/// MOV rmreg16,segreg
+		/// </summary>
 		public void MOV (R16Type target, SegType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "8C", "/r"}));
 		}
-
-		// MOV rmreg32,segreg
+		
+		/// <summary>
+		/// MOV rmreg32,segreg
+		/// </summary>
 		public void MOV (R32Type target, SegType source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "8C", "/r"}));
 		}
-
-		// MOV segreg,rmreg16
+		
+		/// <summary>
+		/// MOV segreg,rmreg16
+		/// </summary>
 		public void MOV (SegType target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"8E", "/r"}));
 		}
-
-		// MOV segreg,rmreg32
+		
+		/// <summary>
+		/// MOV segreg,rmreg32
+		/// </summary>
 		public void MOV (SegType target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "8E", "/r"}));
 		}
-
-		// MOVSB
+		
+		/// <summary>
+		/// MOVSB 
+		/// </summary>
 		public void MOVSB ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSB", "", null, null, null, null, new string[] {"A4"}));
 		}
-
-		// MOVSD
+		
+		/// <summary>
+		/// MOVSD 
+		/// </summary>
 		public void MOVSD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSD", "", null, null, null, null, new string[] {"o32", "A5"}));
 		}
-
-		// MOVSW
+		
+		/// <summary>
+		/// MOVSW 
+		/// </summary>
 		public void MOVSW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSW", "", null, null, null, null, new string[] {"o16", "A5"}));
 		}
-
-		// MOVSX reg16,mem8
+		
+		/// <summary>
+		/// MOVSX reg16,mem8
+		/// </summary>
 		public void MOVSX (R16Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "BE", "/r"}));
 		}
-
-		// MOVSX reg32,mem8
+		
+		/// <summary>
+		/// MOVSX reg32,mem8
+		/// </summary>
 		public void MOVSX (R32Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "BE", "/r"}));
 		}
-
-		// MOVSX reg32,mem16
+		
+		/// <summary>
+		/// MOVSX reg32,mem16
+		/// </summary>
 		public void MOVSX (R32Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "BF", "/r"}));
 		}
-
-		// MOVSX reg16,rmreg8
+		
+		/// <summary>
+		/// MOVSX reg16,rmreg8
+		/// </summary>
 		public void MOVSX (R16Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "BE", "/r"}));
 		}
-
-		// MOVSX reg32,rmreg8
+		
+		/// <summary>
+		/// MOVSX reg32,rmreg8
+		/// </summary>
 		public void MOVSX (R32Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "BE", "/r"}));
 		}
-
-		// MOVSX reg32,rmreg16
+		
+		/// <summary>
+		/// MOVSX reg32,rmreg16
+		/// </summary>
 		public void MOVSX (R32Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "BF", "/r"}));
 		}
-
-		// MOVZX reg16,mem8
+		
+		/// <summary>
+		/// MOVZX reg16,mem8
+		/// </summary>
 		public void MOVZX (R16Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "B6", "/r"}));
 		}
-
-		// MOVZX reg32,mem8
+		
+		/// <summary>
+		/// MOVZX reg32,mem8
+		/// </summary>
 		public void MOVZX (R32Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B6", "/r"}));
 		}
-
-		// MOVZX reg32,mem16
+		
+		/// <summary>
+		/// MOVZX reg32,mem16
+		/// </summary>
 		public void MOVZX (R32Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B7", "/r"}));
 		}
-
-		// MOVZX reg16,rmreg8
+		
+		/// <summary>
+		/// MOVZX reg16,rmreg8
+		/// </summary>
 		public void MOVZX (R16Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "B6", "/r"}));
 		}
-
-		// MOVZX reg32,rmreg8
+		
+		/// <summary>
+		/// MOVZX reg32,rmreg8
+		/// </summary>
 		public void MOVZX (R32Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "B6", "/r"}));
 		}
-
-		// MOVZX reg32,rmreg16
+		
+		/// <summary>
+		/// MOVZX reg32,rmreg16
+		/// </summary>
 		public void MOVZX (R32Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "B7", "/r"}));
 		}
-
-		// MUL mem8
+		
+		/// <summary>
+		/// MUL mem8
+		/// </summary>
 		public void MUL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), target, null, null, null, new string[] {"F6", "/4"}));
 		}
-
-		// MUL mem16
+		
+		/// <summary>
+		/// MUL mem16
+		/// </summary>
 		public void MUL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/4"}));
 		}
-
-		// MUL mem32
+		
+		/// <summary>
+		/// MUL mem32
+		/// </summary>
 		public void MUL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/4"}));
 		}
-
-		// MUL rmreg8
+		
+		/// <summary>
+		/// MUL rmreg8
+		/// </summary>
 		public void MUL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), null, target, null, null, new string[] {"F6", "/4"}));
 		}
-
-		// MUL rmreg16
+		
+		/// <summary>
+		/// MUL rmreg16
+		/// </summary>
 		public void MUL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/4"}));
 		}
-
-		// MUL rmreg32
+		
+		/// <summary>
+		/// MUL rmreg32
+		/// </summary>
 		public void MUL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/4"}));
 		}
-
-		// NEG mem8
+		
+		/// <summary>
+		/// NEG mem8
+		/// </summary>
 		public void NEG (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), target, null, null, null, new string[] {"F6", "/3"}));
 		}
-
-		// NEG mem16
+		
+		/// <summary>
+		/// NEG mem16
+		/// </summary>
 		public void NEG (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/3"}));
 		}
-
-		// NEG mem32
+		
+		/// <summary>
+		/// NEG mem32
+		/// </summary>
 		public void NEG (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/3"}));
 		}
-
-		// NEG rmreg8
+		
+		/// <summary>
+		/// NEG rmreg8
+		/// </summary>
 		public void NEG (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), null, target, null, null, new string[] {"F6", "/3"}));
 		}
-
-		// NEG rmreg16
+		
+		/// <summary>
+		/// NEG rmreg16
+		/// </summary>
 		public void NEG (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/3"}));
 		}
-
-		// NEG rmreg32
+		
+		/// <summary>
+		/// NEG rmreg32
+		/// </summary>
 		public void NEG (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/3"}));
 		}
-
-		// NOP
+		
+		/// <summary>
+		/// NOP 
+		/// </summary>
 		public void NOP ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOP", "", null, null, null, null, new string[] {"90"}));
 		}
-
-		// NOT mem8
+		
+		/// <summary>
+		/// NOT mem8
+		/// </summary>
 		public void NOT (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), target, null, null, null, new string[] {"F6", "/2"}));
 		}
-
-		// NOT mem16
+		
+		/// <summary>
+		/// NOT mem16
+		/// </summary>
 		public void NOT (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/2"}));
 		}
-
-		// NOT mem32
+		
+		/// <summary>
+		/// NOT mem32
+		/// </summary>
 		public void NOT (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/2"}));
 		}
-
-		// NOT rmreg8
+		
+		/// <summary>
+		/// NOT rmreg8
+		/// </summary>
 		public void NOT (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), null, target, null, null, new string[] {"F6", "/2"}));
 		}
-
-		// NOT rmreg16
+		
+		/// <summary>
+		/// NOT rmreg16
+		/// </summary>
 		public void NOT (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/2"}));
 		}
-
-		// NOT rmreg32
+		
+		/// <summary>
+		/// NOT rmreg32
+		/// </summary>
 		public void NOT (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/2"}));
 		}
-
-		// OR mem8,reg8
+		
+		/// <summary>
+		/// OR mem8,reg8
+		/// </summary>
 		public void OR (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"08", "/r"}));
 		}
-
-		// OR mem16,reg16
+		
+		/// <summary>
+		/// OR mem16,reg16
+		/// </summary>
 		public void OR (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "09", "/r"}));
 		}
-
-		// OR mem32,reg32
+		
+		/// <summary>
+		/// OR mem32,reg32
+		/// </summary>
 		public void OR (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "09", "/r"}));
 		}
-
-		// OR reg8,mem8
+		
+		/// <summary>
+		/// OR reg8,mem8
+		/// </summary>
 		public void OR (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"0A", "/r"}));
 		}
-
-		// OR reg16,mem16
+		
+		/// <summary>
+		/// OR reg16,mem16
+		/// </summary>
 		public void OR (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0B", "/r"}));
 		}
-
-		// OR reg32,mem32
+		
+		/// <summary>
+		/// OR reg32,mem32
+		/// </summary>
 		public void OR (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0B", "/r"}));
 		}
-
-		// OR mem8,imm8
+		
+		/// <summary>
+		/// OR mem8,imm8
+		/// </summary>
 		public void OR (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/1", "ib"}));
 		}
-
-		// OR mem16,imm16
+		
+		/// <summary>
+		/// OR mem16,imm16
+		/// </summary>
 		public void OR (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/1", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/1", "iw"}));
 		}
-
-		// OR mem32,imm32
+		
+		/// <summary>
+		/// OR mem32,imm32
+		/// </summary>
 		public void OR (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/1", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/1", "id"}));
 		}
-
-		// OR mem16,imm8
+		
+		/// <summary>
+		/// OR mem16,imm8
+		/// </summary>
 		public void OR (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/1", "ib"}));
 		}
-
-		// OR mem32,imm8
+		
+		/// <summary>
+		/// OR mem32,imm8
+		/// </summary>
 		public void OR (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/1", "ib"}));
 		}
-
-		// OR rmreg8,reg8
+		
+		/// <summary>
+		/// OR rmreg8,reg8
+		/// </summary>
 		public void OR (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"08", "/r"}));
 		}
-
-		// OR rmreg16,reg16
+		
+		/// <summary>
+		/// OR rmreg16,reg16
+		/// </summary>
 		public void OR (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "09", "/r"}));
 		}
-
-		// OR rmreg32,reg32
+		
+		/// <summary>
+		/// OR rmreg32,reg32
+		/// </summary>
 		public void OR (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "09", "/r"}));
 		}
-
-		// OR rmreg8,imm8
+		
+		/// <summary>
+		/// OR rmreg8,imm8
+		/// </summary>
 		public void OR (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"0C", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/1", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"0C", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/1", "ib"}));
 			}
 		}
-
-		// OR rmreg16,imm16
+		
+		/// <summary>
+		/// OR rmreg16,imm16
+		/// </summary>
 		public void OR (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "0D", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/1", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "0D", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/1", "iw"}));
 			}
 		}
-
-		// OR rmreg32,imm32
+		
+		/// <summary>
+		/// OR rmreg32,imm32
+		/// </summary>
 		public void OR (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "0D", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.OR (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/1", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "0D", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.OR (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/1", "id"}));
 				}
 			}
 		}
-
-		// OR rmreg16,imm8
+		
+		/// <summary>
+		/// OR rmreg16,imm8
+		/// </summary>
 		public void OR (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/1", "ib"}));
 		}
-
-		// OR rmreg32,imm8
+		
+		/// <summary>
+		/// OR rmreg32,imm8
+		/// </summary>
 		public void OR (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/1", "ib"}));
 		}
-
-		// OUT imm8,AL
+		
+		/// <summary>
+		/// OUT imm8,AL
+		/// </summary>
 		public void OUT__AL (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__AL", string.Format ("0x{0:x}", target) + ", " + "AL", null, null, null, new UInt32[] {target}, new string[] {"E6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__AL", string.Format("0x{0:x}", target) + ", " + "AL", null, null, null, new UInt32[] {target}, new string[] {"E6", "ib"}));
 		}
-
-		// OUT imm8,AX
+		
+		/// <summary>
+		/// OUT imm8,AX
+		/// </summary>
 		public void OUT__AX (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__AX", string.Format ("0x{0:x}", target) + ", " + "AX", null, null, null, new UInt32[] {target}, new string[] {"o16", "E7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__AX", string.Format("0x{0:x}", target) + ", " + "AX", null, null, null, new UInt32[] {target}, new string[] {"o16", "E7", "ib"}));
 		}
-
-		// OUT imm8,EAX
+		
+		/// <summary>
+		/// OUT imm8,EAX
+		/// </summary>
 		public void OUT__EAX (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__EAX", string.Format ("0x{0:x}", target) + ", " + "EAX", null, null, null, new UInt32[] {target}, new string[] {"o32", "E7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__EAX", string.Format("0x{0:x}", target) + ", " + "EAX", null, null, null, new UInt32[] {target}, new string[] {"o32", "E7", "ib"}));
 		}
-
-		// OUT DX,AL
+		
+		/// <summary>
+		/// OUT DX,AL
+		/// </summary>
 		public void OUT_DX__AL ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__AL", "DX" + ", " + "AL", null, null, null, null, new string[] {"EE"}));
 		}
-
-		// OUT DX,AX
+		
+		/// <summary>
+		/// OUT DX,AX
+		/// </summary>
 		public void OUT_DX__AX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__AX", "DX" + ", " + "AX", null, null, null, null, new string[] {"o16", "EF"}));
 		}
-
-		// OUT DX,EAX
+		
+		/// <summary>
+		/// OUT DX,EAX
+		/// </summary>
 		public void OUT_DX__EAX ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__EAX", "DX" + ", " + "EAX", null, null, null, null, new string[] {"o32", "EF"}));
 		}
-
-		// OUTSB
+		
+		/// <summary>
+		/// OUTSB 
+		/// </summary>
 		public void OUTSB ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSB", "", null, null, null, null, new string[] {"6E"}));
 		}
-
-		// OUTSD
+		
+		/// <summary>
+		/// OUTSD 
+		/// </summary>
 		public void OUTSD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSD", "", null, null, null, null, new string[] {"o32", "6F"}));
 		}
-
-		// OUTSW
+		
+		/// <summary>
+		/// OUTSW 
+		/// </summary>
 		public void OUTSW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSW", "", null, null, null, null, new string[] {"o16", "6F"}));
 		}
-
-		// PAUSE
+		
+		/// <summary>
+		/// PAUSE 
+		/// </summary>
 		public void PAUSE ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PAUSE", "", null, null, null, null, new string[] {"F3", "90"}));
 		}
-
-		// POP reg16
+		
+		/// <summary>
+		/// POP reg16
+		/// </summary>
 		public void POP (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString(), null, null, target, null, new string[] {"o16", "58+r"}));
 		}
-
-		// POP reg32
+		
+		/// <summary>
+		/// POP reg32
+		/// </summary>
 		public void POP (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString(), null, null, target, null, new string[] {"o32", "58+r"}));
 		}
-
-		// POP mem16
+		
+		/// <summary>
+		/// POP mem16
+		/// </summary>
 		public void POP (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString(), target, null, null, null, new string[] {"o16", "8F", "/0"}));
 		}
-
-		// POP mem32
+		
+		/// <summary>
+		/// POP mem32
+		/// </summary>
 		public void POP (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString(), target, null, null, null, new string[] {"o32", "8F", "/0"}));
 		}
-
-		// POP segreg
+		
+		/// <summary>
+		/// POP segreg
+		/// </summary>
 		public void POP (SegType target)
 		{
-			if (target == Seg.GS) {
+			if (target == Seg.GS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_GS", "GS", null, null, null, null, new string[] {"0F", "A9"}));
-
-			} else if (target == Seg.FS) {
+			else if (target == Seg.FS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_FS", "FS", null, null, null, null, new string[] {"0F", "A1"}));
-
-			} else if (target == Seg.ES) {
+			else if (target == Seg.ES)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_ES", "ES", null, null, null, null, new string[] {"07"}));
-
-			} else if (target == Seg.DS) {
+			else if (target == Seg.DS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_DS", "DS", null, null, null, null, new string[] {"1F"}));
-
-			} else if (target == Seg.SS) {
+			else if (target == Seg.SS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_SS", "SS", null, null, null, null, new string[] {"17"}));
-
-			} else {
+			else
+			{
 				throw new Exception ("Parameters not supported.");
 			}
 		}
-
-		// POPA
+		
+		/// <summary>
+		/// POPA 
+		/// </summary>
 		public void POPA ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPA", "", null, null, null, null, new string[] {"61"}));
 		}
-
-		// POPAD
+		
+		/// <summary>
+		/// POPAD 
+		/// </summary>
 		public void POPAD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPAD", "", null, null, null, null, new string[] {"o32", "61"}));
 		}
-
-		// POPAW
+		
+		/// <summary>
+		/// POPAW 
+		/// </summary>
 		public void POPAW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPAW", "", null, null, null, null, new string[] {"o16", "61"}));
 		}
-
-		// POPF
+		
+		/// <summary>
+		/// POPF 
+		/// </summary>
 		public void POPF ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPF", "", null, null, null, null, new string[] {"9D"}));
 		}
-
-		// POPFD
+		
+		/// <summary>
+		/// POPFD 
+		/// </summary>
 		public void POPFD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPFD", "", null, null, null, null, new string[] {"o32", "9D"}));
 		}
-
-		// POPFW
+		
+		/// <summary>
+		/// POPFW 
+		/// </summary>
 		public void POPFW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPFW", "", null, null, null, null, new string[] {"o16", "9D"}));
 		}
-
-		// PREFETCHNTA m8
+		
+		/// <summary>
+		/// PREFETCHNTA m8
+		/// </summary>
 		public void PREFETCHNTA (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHNTA", target.ToString(), target, null, null, null, new string[] {"0F", "18", "/0"}));
 		}
-
-		// PREFETCHT0 m8
+		
+		/// <summary>
+		/// PREFETCHT0 m8
+		/// </summary>
 		public void PREFETCHT0 (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT0", target.ToString(), target, null, null, null, new string[] {"0F", "18", "/1"}));
 		}
-
-		// PREFETCHT1 m8
+		
+		/// <summary>
+		/// PREFETCHT1 m8
+		/// </summary>
 		public void PREFETCHT1 (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT1", target.ToString(), target, null, null, null, new string[] {"0F", "18", "/2"}));
 		}
-
-		// PREFETCHT2 m8
+		
+		/// <summary>
+		/// PREFETCHT2 m8
+		/// </summary>
 		public void PREFETCHT2 (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT2", target.ToString(), target, null, null, null, new string[] {"0F", "18", "/3"}));
 		}
-
-		// PUSH reg16
+		
+		/// <summary>
+		/// PUSH reg16
+		/// </summary>
 		public void PUSH (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString(), null, null, target, null, new string[] {"o16", "50+r"}));
 		}
-
-		// PUSH reg32
+		
+		/// <summary>
+		/// PUSH reg32
+		/// </summary>
 		public void PUSH (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString(), null, null, target, null, new string[] {"o32", "50+r"}));
 		}
-
-		// PUSH mem16
+		
+		/// <summary>
+		/// PUSH mem16
+		/// </summary>
 		public void PUSH (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/6"}));
 		}
-
-		// PUSH mem32
+		
+		/// <summary>
+		/// PUSH mem32
+		/// </summary>
 		public void PUSH (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/6"}));
 		}
-
-		// PUSH imm8
+		
+		/// <summary>
+		/// PUSH imm8
+		/// </summary>
 		public void PUSH (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"6A", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"6A", "ib"}));
 		}
-
-		// PUSH imm16
+		
+		/// <summary>
+		/// PUSH imm16
+		/// </summary>
 		public void PUSH (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"o16", "68", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"o16", "68", "iw"}));
 		}
-
-		// PUSH imm32
+		
+		/// <summary>
+		/// PUSH imm32
+		/// </summary>
 		public void PUSH (UInt32 target)
 		{
-			if ( (Int32) target >= -128 && (Int32) target <= 127) {
-				this.PUSH ( (byte) target);
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"o32", "68", "id"}));
+			if ((Int32) target >= -128 && (Int32 )target <= 127)
+			{
+				this.PUSH ((byte) target);
+			}
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"o32", "68", "id"}));
 			}
 		}
-
-		// PUSH segreg
+		
+		/// <summary>
+		/// PUSH segreg
+		/// </summary>
 		public void PUSH (SegType target)
 		{
-			if (target == Seg.CS) {
+			if (target == Seg.CS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_CS", "CS", null, null, null, null, new string[] {"0E"}));
-
-			} else if (target == Seg.GS) {
+			else if (target == Seg.GS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_GS", "GS", null, null, null, null, new string[] {"0F", "A8"}));
-
-			} else if (target == Seg.ES) {
+			else if (target == Seg.ES)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_ES", "ES", null, null, null, null, new string[] {"06"}));
-
-			} else if (target == Seg.DS) {
+			else if (target == Seg.DS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_DS", "DS", null, null, null, null, new string[] {"1E"}));
-
-			} else if (target == Seg.SS) {
+			else if (target == Seg.SS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_SS", "SS", null, null, null, null, new string[] {"16"}));
-
-			} else if (target == Seg.FS) {
+			else if (target == Seg.FS)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_FS", "FS", null, null, null, null, new string[] {"0F", "A0"}));
-
-			} else {
+			else
+			{
 				throw new Exception ("Parameters not supported.");
 			}
 		}
-
-		// PUSHA
+		
+		/// <summary>
+		/// PUSHA 
+		/// </summary>
 		public void PUSHA ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHA", "", null, null, null, null, new string[] {"60"}));
 		}
-
-		// PUSHAD
+		
+		/// <summary>
+		/// PUSHAD 
+		/// </summary>
 		public void PUSHAD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHAD", "", null, null, null, null, new string[] {"o32", "60"}));
 		}
-
-		// PUSHAW
+		
+		/// <summary>
+		/// PUSHAW 
+		/// </summary>
 		public void PUSHAW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHAW", "", null, null, null, null, new string[] {"o16", "60"}));
 		}
-
-		// PUSHF
+		
+		/// <summary>
+		/// PUSHF 
+		/// </summary>
 		public void PUSHF ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHF", "", null, null, null, null, new string[] {"9C"}));
 		}
-
-		// PUSHFD
+		
+		/// <summary>
+		/// PUSHFD 
+		/// </summary>
 		public void PUSHFD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHFD", "", null, null, null, null, new string[] {"o32", "9C"}));
 		}
-
-		// PUSHFW
+		
+		/// <summary>
+		/// PUSHFW 
+		/// </summary>
 		public void PUSHFW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHFW", "", null, null, null, null, new string[] {"o16", "9C"}));
 		}
-
-		// RCL mem8,CL
+		
+		/// <summary>
+		/// RCL mem8,CL
+		/// </summary>
 		public void RCL__CL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/2"}));
 		}
-
-		// RCL mem8,imm8
+		
+		/// <summary>
+		/// RCL mem8,imm8
+		/// </summary>
 		public void RCL (ByteMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/2"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/2", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/2", "ib"}));
 			}
 		}
-
-		// RCL mem16,CL
+		
+		/// <summary>
+		/// RCL mem16,CL
+		/// </summary>
 		public void RCL__CL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/2"}));
 		}
-
-		// RCL mem16,imm8
+		
+		/// <summary>
+		/// RCL mem16,imm8
+		/// </summary>
 		public void RCL (WordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/2"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/2", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/2", "ib"}));
 			}
 		}
-
-		// RCL mem32,CL
+		
+		/// <summary>
+		/// RCL mem32,CL
+		/// </summary>
 		public void RCL__CL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/2"}));
 		}
-
-		// RCL mem32,imm8
+		
+		/// <summary>
+		/// RCL mem32,imm8
+		/// </summary>
 		public void RCL (DWordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/2"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/2", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/2", "ib"}));
 			}
 		}
-
-		// RCL rmreg8,CL
+		
+		/// <summary>
+		/// RCL rmreg8,CL
+		/// </summary>
 		public void RCL__CL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/2"}));
 		}
-
-		// RCL rmreg8,imm8
+		
+		/// <summary>
+		/// RCL rmreg8,imm8
+		/// </summary>
 		public void RCL (R8Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/2"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/2", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/2", "ib"}));
 			}
 		}
-
-		// RCL rmreg16,CL
+		
+		/// <summary>
+		/// RCL rmreg16,CL
+		/// </summary>
 		public void RCL__CL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/2"}));
 		}
-
-		// RCL rmreg16,imm8
+		
+		/// <summary>
+		/// RCL rmreg16,imm8
+		/// </summary>
 		public void RCL (R16Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/2"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/2", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/2", "ib"}));
 			}
 		}
-
-		// RCL rmreg32,CL
+		
+		/// <summary>
+		/// RCL rmreg32,CL
+		/// </summary>
 		public void RCL__CL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/2"}));
 		}
-
-		// RCL rmreg32,imm8
+		
+		/// <summary>
+		/// RCL rmreg32,imm8
+		/// </summary>
 		public void RCL (R32Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/2"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/2", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/2", "ib"}));
 			}
 		}
-
-		// RCR mem8,CL
+		
+		/// <summary>
+		/// RCR mem8,CL
+		/// </summary>
 		public void RCR__CL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/3"}));
 		}
-
-		// RCR mem8,imm8
+		
+		/// <summary>
+		/// RCR mem8,imm8
+		/// </summary>
 		public void RCR (ByteMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/3"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/3", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/3", "ib"}));
 			}
 		}
-
-		// RCR mem16,CL
+		
+		/// <summary>
+		/// RCR mem16,CL
+		/// </summary>
 		public void RCR__CL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/3"}));
 		}
-
-		// RCR mem16,imm8
+		
+		/// <summary>
+		/// RCR mem16,imm8
+		/// </summary>
 		public void RCR (WordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/3"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/3", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/3", "ib"}));
 			}
 		}
-
-		// RCR mem32,CL
+		
+		/// <summary>
+		/// RCR mem32,CL
+		/// </summary>
 		public void RCR__CL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/3"}));
 		}
-
-		// RCR mem32,imm8
+		
+		/// <summary>
+		/// RCR mem32,imm8
+		/// </summary>
 		public void RCR (DWordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/3"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/3", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/3", "ib"}));
 			}
 		}
-
-		// RCR rmreg8,CL
+		
+		/// <summary>
+		/// RCR rmreg8,CL
+		/// </summary>
 		public void RCR__CL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/3"}));
 		}
-
-		// RCR rmreg8,imm8
+		
+		/// <summary>
+		/// RCR rmreg8,imm8
+		/// </summary>
 		public void RCR (R8Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/3"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/3", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/3", "ib"}));
 			}
 		}
-
-		// RCR rmreg16,CL
+		
+		/// <summary>
+		/// RCR rmreg16,CL
+		/// </summary>
 		public void RCR__CL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/3"}));
 		}
-
-		// RCR rmreg16,imm8
+		
+		/// <summary>
+		/// RCR rmreg16,imm8
+		/// </summary>
 		public void RCR (R16Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/3"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/3", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/3", "ib"}));
 			}
 		}
-
-		// RCR rmreg32,CL
+		
+		/// <summary>
+		/// RCR rmreg32,CL
+		/// </summary>
 		public void RCR__CL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/3"}));
 		}
-
-		// RCR rmreg32,imm8
+		
+		/// <summary>
+		/// RCR rmreg32,imm8
+		/// </summary>
 		public void RCR (R32Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/3"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/3", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/3", "ib"}));
 			}
 		}
-
-		// RDMSR
+		
+		/// <summary>
+		/// RDMSR 
+		/// </summary>
 		public void RDMSR ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDMSR", "", null, null, null, null, new string[] {"0F", "32"}));
 		}
-
-		// RDPMC
+		
+		/// <summary>
+		/// RDPMC 
+		/// </summary>
 		public void RDPMC ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDPMC", "", null, null, null, null, new string[] {"0F", "33"}));
 		}
-
-		// RDTSC
+		
+		/// <summary>
+		/// RDTSC 
+		/// </summary>
 		public void RDTSC ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDTSC", "", null, null, null, null, new string[] {"0F", "31"}));
 		}
-
-		// RET
+		
+		/// <summary>
+		/// RET 
+		/// </summary>
 		public void RET ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RET", "", null, null, null, null, new string[] {"C3"}));
 		}
-
-		// RET imm16
+		
+		/// <summary>
+		/// RET imm16
+		/// </summary>
 		public void RET (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RET", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"C2", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RET", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"C2", "iw"}));
 		}
-
-		// RETF
+		
+		/// <summary>
+		/// RETF 
+		/// </summary>
 		public void RETF ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETF", "", null, null, null, null, new string[] {"CB"}));
 		}
-
-		// RETF imm16
+		
+		/// <summary>
+		/// RETF imm16
+		/// </summary>
 		public void RETF (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETF", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"CA", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETF", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"CA", "iw"}));
 		}
-
-		// RETN
+		
+		/// <summary>
+		/// RETN 
+		/// </summary>
 		public void RETN ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETN", "", null, null, null, null, new string[] {"C3"}));
 		}
-
-		// RETN imm16
+		
+		/// <summary>
+		/// RETN imm16
+		/// </summary>
 		public void RETN (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETN", string.Format ("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"C2", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETN", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"C2", "iw"}));
 		}
-
-		// ROL mem8,CL
+		
+		/// <summary>
+		/// ROL mem8,CL
+		/// </summary>
 		public void ROL__CL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/0"}));
 		}
-
-		// ROL mem8,imm8
+		
+		/// <summary>
+		/// ROL mem8,imm8
+		/// </summary>
 		public void ROL (ByteMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/0"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/0", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/0", "ib"}));
 			}
 		}
-
-		// ROL mem16,CL
+		
+		/// <summary>
+		/// ROL mem16,CL
+		/// </summary>
 		public void ROL__CL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/0"}));
 		}
-
-		// ROL mem16,imm8
+		
+		/// <summary>
+		/// ROL mem16,imm8
+		/// </summary>
 		public void ROL (WordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/0"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/0", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/0", "ib"}));
 			}
 		}
-
-		// ROL mem32,CL
+		
+		/// <summary>
+		/// ROL mem32,CL
+		/// </summary>
 		public void ROL__CL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/0"}));
 		}
-
-		// ROL mem32,imm8
+		
+		/// <summary>
+		/// ROL mem32,imm8
+		/// </summary>
 		public void ROL (DWordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/0"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/0", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/0", "ib"}));
 			}
 		}
-
-		// ROL rmreg8,CL
+		
+		/// <summary>
+		/// ROL rmreg8,CL
+		/// </summary>
 		public void ROL__CL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/0"}));
 		}
-
-		// ROL rmreg8,imm8
+		
+		/// <summary>
+		/// ROL rmreg8,imm8
+		/// </summary>
 		public void ROL (R8Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/0"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/0", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/0", "ib"}));
 			}
 		}
-
-		// ROL rmreg16,CL
+		
+		/// <summary>
+		/// ROL rmreg16,CL
+		/// </summary>
 		public void ROL__CL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/0"}));
 		}
-
-		// ROL rmreg16,imm8
+		
+		/// <summary>
+		/// ROL rmreg16,imm8
+		/// </summary>
 		public void ROL (R16Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/0"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/0", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/0", "ib"}));
 			}
 		}
-
-		// ROL rmreg32,CL
+		
+		/// <summary>
+		/// ROL rmreg32,CL
+		/// </summary>
 		public void ROL__CL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/0"}));
 		}
-
-		// ROL rmreg32,imm8
+		
+		/// <summary>
+		/// ROL rmreg32,imm8
+		/// </summary>
 		public void ROL (R32Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/0"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/0", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/0", "ib"}));
 			}
 		}
-
-		// ROR mem8,CL
+		
+		/// <summary>
+		/// ROR mem8,CL
+		/// </summary>
 		public void ROR__CL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/1"}));
 		}
-
-		// ROR mem8,imm8
+		
+		/// <summary>
+		/// ROR mem8,imm8
+		/// </summary>
 		public void ROR (ByteMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/1"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/1", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/1", "ib"}));
 			}
 		}
-
-		// ROR mem16,CL
+		
+		/// <summary>
+		/// ROR mem16,CL
+		/// </summary>
 		public void ROR__CL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/1"}));
 		}
-
-		// ROR mem16,imm8
+		
+		/// <summary>
+		/// ROR mem16,imm8
+		/// </summary>
 		public void ROR (WordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/1"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/1", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/1", "ib"}));
 			}
 		}
-
-		// ROR mem32,CL
+		
+		/// <summary>
+		/// ROR mem32,CL
+		/// </summary>
 		public void ROR__CL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/1"}));
 		}
-
-		// ROR mem32,imm8
+		
+		/// <summary>
+		/// ROR mem32,imm8
+		/// </summary>
 		public void ROR (DWordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/1"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/1", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/1", "ib"}));
 			}
 		}
-
-		// ROR rmreg8,CL
+		
+		/// <summary>
+		/// ROR rmreg8,CL
+		/// </summary>
 		public void ROR__CL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/1"}));
 		}
-
-		// ROR rmreg8,imm8
+		
+		/// <summary>
+		/// ROR rmreg8,imm8
+		/// </summary>
 		public void ROR (R8Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/1"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/1", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/1", "ib"}));
 			}
 		}
-
-		// ROR rmreg16,CL
+		
+		/// <summary>
+		/// ROR rmreg16,CL
+		/// </summary>
 		public void ROR__CL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/1"}));
 		}
-
-		// ROR rmreg16,imm8
+		
+		/// <summary>
+		/// ROR rmreg16,imm8
+		/// </summary>
 		public void ROR (R16Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/1"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/1", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/1", "ib"}));
 			}
 		}
-
-		// ROR rmreg32,CL
+		
+		/// <summary>
+		/// ROR rmreg32,CL
+		/// </summary>
 		public void ROR__CL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/1"}));
 		}
-
-		// ROR rmreg32,imm8
+		
+		/// <summary>
+		/// ROR rmreg32,imm8
+		/// </summary>
 		public void ROR (R32Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/1"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/1", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/1", "ib"}));
 			}
 		}
-
-		// RSM
+		
+		/// <summary>
+		/// RSM 
+		/// </summary>
 		public void RSM ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RSM", "", null, null, null, null, new string[] {"0F", "AA"}));
 		}
-
-		// SAHF
+		
+		/// <summary>
+		/// SAHF 
+		/// </summary>
 		public void SAHF ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAHF", "", null, null, null, null, new string[] {"9E"}));
 		}
-
-		// SAL mem8,CL
+		
+		/// <summary>
+		/// SAL mem8,CL
+		/// </summary>
 		public void SAL__CL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/4"}));
 		}
-
-		// SAL mem8,imm8
+		
+		/// <summary>
+		/// SAL mem8,imm8
+		/// </summary>
 		public void SAL (ByteMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
 			}
 		}
-
-		// SAL mem16,CL
+		
+		/// <summary>
+		/// SAL mem16,CL
+		/// </summary>
 		public void SAL__CL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/4"}));
 		}
-
-		// SAL mem16,imm8
+		
+		/// <summary>
+		/// SAL mem16,imm8
+		/// </summary>
 		public void SAL (WordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
 			}
 		}
-
-		// SAL mem32,CL
+		
+		/// <summary>
+		/// SAL mem32,CL
+		/// </summary>
 		public void SAL__CL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/4"}));
 		}
-
-		// SAL mem32,imm8
+		
+		/// <summary>
+		/// SAL mem32,imm8
+		/// </summary>
 		public void SAL (DWordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
 			}
 		}
-
-		// SAL rmreg8,CL
+		
+		/// <summary>
+		/// SAL rmreg8,CL
+		/// </summary>
 		public void SAL__CL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/4"}));
 		}
-
-		// SAL rmreg8,imm8
+		
+		/// <summary>
+		/// SAL rmreg8,imm8
+		/// </summary>
 		public void SAL (R8Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
 			}
 		}
-
-		// SAL rmreg16,CL
+		
+		/// <summary>
+		/// SAL rmreg16,CL
+		/// </summary>
 		public void SAL__CL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/4"}));
 		}
-
-		// SAL rmreg16,imm8
+		
+		/// <summary>
+		/// SAL rmreg16,imm8
+		/// </summary>
 		public void SAL (R16Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
 			}
 		}
-
-		// SAL rmreg32,CL
+		
+		/// <summary>
+		/// SAL rmreg32,CL
+		/// </summary>
 		public void SAL__CL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/4"}));
 		}
-
-		// SAL rmreg32,imm8
+		
+		/// <summary>
+		/// SAL rmreg32,imm8
+		/// </summary>
 		public void SAL (R32Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
 			}
 		}
-
-		// SALC
+		
+		/// <summary>
+		/// SALC 
+		/// </summary>
 		public void SALC ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SALC", "", null, null, null, null, new string[] {"D6"}));
 		}
-
-		// SAR mem8,CL
+		
+		/// <summary>
+		/// SAR mem8,CL
+		/// </summary>
 		public void SAR__CL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/7"}));
 		}
-
-		// SAR mem8,imm8
+		
+		/// <summary>
+		/// SAR mem8,imm8
+		/// </summary>
 		public void SAR (ByteMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/7"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/7", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/7", "ib"}));
 			}
 		}
-
-		// SAR mem16,CL
+		
+		/// <summary>
+		/// SAR mem16,CL
+		/// </summary>
 		public void SAR__CL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/7"}));
 		}
-
-		// SAR mem16,imm8
+		
+		/// <summary>
+		/// SAR mem16,imm8
+		/// </summary>
 		public void SAR (WordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/7"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/7", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/7", "ib"}));
 			}
 		}
-
-		// SAR mem32,CL
+		
+		/// <summary>
+		/// SAR mem32,CL
+		/// </summary>
 		public void SAR__CL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/7"}));
 		}
-
-		// SAR mem32,imm8
+		
+		/// <summary>
+		/// SAR mem32,imm8
+		/// </summary>
 		public void SAR (DWordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/7"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/7", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/7", "ib"}));
 			}
 		}
-
-		// SAR rmreg8,CL
+		
+		/// <summary>
+		/// SAR rmreg8,CL
+		/// </summary>
 		public void SAR__CL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/7"}));
 		}
-
-		// SAR rmreg8,imm8
+		
+		/// <summary>
+		/// SAR rmreg8,imm8
+		/// </summary>
 		public void SAR (R8Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/7"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/7", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/7", "ib"}));
 			}
 		}
-
-		// SAR rmreg16,CL
+		
+		/// <summary>
+		/// SAR rmreg16,CL
+		/// </summary>
 		public void SAR__CL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/7"}));
 		}
-
-		// SAR rmreg16,imm8
+		
+		/// <summary>
+		/// SAR rmreg16,imm8
+		/// </summary>
 		public void SAR (R16Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/7"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/7", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/7", "ib"}));
 			}
 		}
-
-		// SAR rmreg32,CL
+		
+		/// <summary>
+		/// SAR rmreg32,CL
+		/// </summary>
 		public void SAR__CL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/7"}));
 		}
-
-		// SAR rmreg32,imm8
+		
+		/// <summary>
+		/// SAR rmreg32,imm8
+		/// </summary>
 		public void SAR (R32Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/7"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/7", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/7", "ib"}));
 			}
 		}
-
-		// SBB mem8,reg8
+		
+		/// <summary>
+		/// SBB mem8,reg8
+		/// </summary>
 		public void SBB (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"18", "/r"}));
 		}
-
-		// SBB mem16,reg16
+		
+		/// <summary>
+		/// SBB mem16,reg16
+		/// </summary>
 		public void SBB (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "19", "/r"}));
 		}
-
-		// SBB mem32,reg32
+		
+		/// <summary>
+		/// SBB mem32,reg32
+		/// </summary>
 		public void SBB (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "19", "/r"}));
 		}
-
-		// SBB reg8,mem8
+		
+		/// <summary>
+		/// SBB reg8,mem8
+		/// </summary>
 		public void SBB (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"1A", "/r"}));
 		}
-
-		// SBB reg16,mem16
+		
+		/// <summary>
+		/// SBB reg16,mem16
+		/// </summary>
 		public void SBB (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "1B", "/r"}));
 		}
-
-		// SBB reg32,mem32
+		
+		/// <summary>
+		/// SBB reg32,mem32
+		/// </summary>
 		public void SBB (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "1B", "/r"}));
 		}
-
-		// SBB mem8,imm8
+		
+		/// <summary>
+		/// SBB mem8,imm8
+		/// </summary>
 		public void SBB (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/3", "ib"}));
 		}
-
-		// SBB mem16,imm16
+		
+		/// <summary>
+		/// SBB mem16,imm16
+		/// </summary>
 		public void SBB (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/3", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/3", "iw"}));
 		}
-
-		// SBB mem32,imm32
+		
+		/// <summary>
+		/// SBB mem32,imm32
+		/// </summary>
 		public void SBB (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/3", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/3", "id"}));
 		}
-
-		// SBB mem16,imm8
+		
+		/// <summary>
+		/// SBB mem16,imm8
+		/// </summary>
 		public void SBB (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/3", "ib"}));
 		}
-
-		// SBB mem32,imm8
+		
+		/// <summary>
+		/// SBB mem32,imm8
+		/// </summary>
 		public void SBB (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/3", "ib"}));
 		}
-
-		// SBB rmreg8,reg8
+		
+		/// <summary>
+		/// SBB rmreg8,reg8
+		/// </summary>
 		public void SBB (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"18", "/r"}));
 		}
-
-		// SBB rmreg16,reg16
+		
+		/// <summary>
+		/// SBB rmreg16,reg16
+		/// </summary>
 		public void SBB (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "19", "/r"}));
 		}
-
-		// SBB rmreg32,reg32
+		
+		/// <summary>
+		/// SBB rmreg32,reg32
+		/// </summary>
 		public void SBB (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "19", "/r"}));
 		}
-
-		// SBB rmreg8,imm8
+		
+		/// <summary>
+		/// SBB rmreg8,imm8
+		/// </summary>
 		public void SBB (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"1C", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/3", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"1C", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/3", "ib"}));
 			}
 		}
-
-		// SBB rmreg16,imm16
+		
+		/// <summary>
+		/// SBB rmreg16,imm16
+		/// </summary>
 		public void SBB (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "1D", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/3", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "1D", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/3", "iw"}));
 			}
 		}
-
-		// SBB rmreg32,imm32
+		
+		/// <summary>
+		/// SBB rmreg32,imm32
+		/// </summary>
 		public void SBB (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "1D", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.SBB (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/3", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "1D", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.SBB (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/3", "id"}));
 				}
 			}
 		}
-
-		// SBB rmreg16,imm8
+		
+		/// <summary>
+		/// SBB rmreg16,imm8
+		/// </summary>
 		public void SBB (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/3", "ib"}));
 		}
-
-		// SBB rmreg32,imm8
+		
+		/// <summary>
+		/// SBB rmreg32,imm8
+		/// </summary>
 		public void SBB (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/3", "ib"}));
 		}
-
-		// SCASB
+		
+		/// <summary>
+		/// SCASB 
+		/// </summary>
 		public void SCASB ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASB", "", null, null, null, null, new string[] {"AE"}));
 		}
-
-		// SCASD
+		
+		/// <summary>
+		/// SCASD 
+		/// </summary>
 		public void SCASD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASD", "", null, null, null, null, new string[] {"o32", "AF"}));
 		}
-
-		// SCASW
+		
+		/// <summary>
+		/// SCASW 
+		/// </summary>
 		public void SCASW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASW", "", null, null, null, null, new string[] {"o16", "AF"}));
 		}
-
-		// SETA mem8
+		
+		/// <summary>
+		/// SETA mem8
+		/// </summary>
 		public void SETA (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETA", target.ToString(), target, null, null, null, new string[] {"0F", "97", "/0"}));
 		}
-
-		// SETA rmreg8
+		
+		/// <summary>
+		/// SETA rmreg8
+		/// </summary>
 		public void SETA (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETA", target.ToString(), null, target, null, null, new string[] {"0F", "97", "/0"}));
 		}
-
-		// SETAE mem8
+		
+		/// <summary>
+		/// SETAE mem8
+		/// </summary>
 		public void SETAE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETAE", target.ToString(), target, null, null, null, new string[] {"0F", "93", "/0"}));
 		}
-
-		// SETAE rmreg8
+		
+		/// <summary>
+		/// SETAE rmreg8
+		/// </summary>
 		public void SETAE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETAE", target.ToString(), null, target, null, null, new string[] {"0F", "93", "/0"}));
 		}
-
-		// SETB mem8
+		
+		/// <summary>
+		/// SETB mem8
+		/// </summary>
 		public void SETB (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETB", target.ToString(), target, null, null, null, new string[] {"0F", "92", "/0"}));
 		}
-
-		// SETB rmreg8
+		
+		/// <summary>
+		/// SETB rmreg8
+		/// </summary>
 		public void SETB (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETB", target.ToString(), null, target, null, null, new string[] {"0F", "92", "/0"}));
 		}
-
-		// SETBE mem8
+		
+		/// <summary>
+		/// SETBE mem8
+		/// </summary>
 		public void SETBE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETBE", target.ToString(), target, null, null, null, new string[] {"0F", "96", "/0"}));
 		}
-
-		// SETBE rmreg8
+		
+		/// <summary>
+		/// SETBE rmreg8
+		/// </summary>
 		public void SETBE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETBE", target.ToString(), null, target, null, null, new string[] {"0F", "96", "/0"}));
 		}
-
-		// SETC mem8
+		
+		/// <summary>
+		/// SETC mem8
+		/// </summary>
 		public void SETC (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETC", target.ToString(), target, null, null, null, new string[] {"0F", "92", "/0"}));
 		}
-
-		// SETC rmreg8
+		
+		/// <summary>
+		/// SETC rmreg8
+		/// </summary>
 		public void SETC (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETC", target.ToString(), null, target, null, null, new string[] {"0F", "92", "/0"}));
 		}
-
-		// SETE mem8
+		
+		/// <summary>
+		/// SETE mem8
+		/// </summary>
 		public void SETE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETE", target.ToString(), target, null, null, null, new string[] {"0F", "94", "/0"}));
 		}
-
-		// SETE rmreg8
+		
+		/// <summary>
+		/// SETE rmreg8
+		/// </summary>
 		public void SETE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETE", target.ToString(), null, target, null, null, new string[] {"0F", "94", "/0"}));
 		}
-
-		// SETG mem8
+		
+		/// <summary>
+		/// SETG mem8
+		/// </summary>
 		public void SETG (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETG", target.ToString(), target, null, null, null, new string[] {"0F", "9F", "/0"}));
 		}
-
-		// SETG rmreg8
+		
+		/// <summary>
+		/// SETG rmreg8
+		/// </summary>
 		public void SETG (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETG", target.ToString(), null, target, null, null, new string[] {"0F", "9F", "/0"}));
 		}
-
-		// SETGE mem8
+		
+		/// <summary>
+		/// SETGE mem8
+		/// </summary>
 		public void SETGE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETGE", target.ToString(), target, null, null, null, new string[] {"0F", "9D", "/0"}));
 		}
-
-		// SETGE rmreg8
+		
+		/// <summary>
+		/// SETGE rmreg8
+		/// </summary>
 		public void SETGE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETGE", target.ToString(), null, target, null, null, new string[] {"0F", "9D", "/0"}));
 		}
-
-		// SETL mem8
+		
+		/// <summary>
+		/// SETL mem8
+		/// </summary>
 		public void SETL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETL", target.ToString(), target, null, null, null, new string[] {"0F", "9C", "/0"}));
 		}
-
-		// SETL rmreg8
+		
+		/// <summary>
+		/// SETL rmreg8
+		/// </summary>
 		public void SETL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETL", target.ToString(), null, target, null, null, new string[] {"0F", "9C", "/0"}));
 		}
-
-		// SETLE mem8
+		
+		/// <summary>
+		/// SETLE mem8
+		/// </summary>
 		public void SETLE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETLE", target.ToString(), target, null, null, null, new string[] {"0F", "9E", "/0"}));
 		}
-
-		// SETLE rmreg8
+		
+		/// <summary>
+		/// SETLE rmreg8
+		/// </summary>
 		public void SETLE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETLE", target.ToString(), null, target, null, null, new string[] {"0F", "9E", "/0"}));
 		}
-
-		// SETNA mem8
+		
+		/// <summary>
+		/// SETNA mem8
+		/// </summary>
 		public void SETNA (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNA", target.ToString(), target, null, null, null, new string[] {"0F", "96", "/0"}));
 		}
-
-		// SETNA rmreg8
+		
+		/// <summary>
+		/// SETNA rmreg8
+		/// </summary>
 		public void SETNA (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNA", target.ToString(), null, target, null, null, new string[] {"0F", "96", "/0"}));
 		}
-
-		// SETNAE mem8
+		
+		/// <summary>
+		/// SETNAE mem8
+		/// </summary>
 		public void SETNAE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNAE", target.ToString(), target, null, null, null, new string[] {"0F", "92", "/0"}));
 		}
-
-		// SETNAE rmreg8
+		
+		/// <summary>
+		/// SETNAE rmreg8
+		/// </summary>
 		public void SETNAE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNAE", target.ToString(), null, target, null, null, new string[] {"0F", "92", "/0"}));
 		}
-
-		// SETNB mem8
+		
+		/// <summary>
+		/// SETNB mem8
+		/// </summary>
 		public void SETNB (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNB", target.ToString(), target, null, null, null, new string[] {"0F", "93", "/0"}));
 		}
-
-		// SETNB rmreg8
+		
+		/// <summary>
+		/// SETNB rmreg8
+		/// </summary>
 		public void SETNB (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNB", target.ToString(), null, target, null, null, new string[] {"0F", "93", "/0"}));
 		}
-
-		// SETNBE mem8
+		
+		/// <summary>
+		/// SETNBE mem8
+		/// </summary>
 		public void SETNBE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNBE", target.ToString(), target, null, null, null, new string[] {"0F", "97", "/0"}));
 		}
-
-		// SETNBE rmreg8
+		
+		/// <summary>
+		/// SETNBE rmreg8
+		/// </summary>
 		public void SETNBE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNBE", target.ToString(), null, target, null, null, new string[] {"0F", "97", "/0"}));
 		}
-
-		// SETNC mem8
+		
+		/// <summary>
+		/// SETNC mem8
+		/// </summary>
 		public void SETNC (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNC", target.ToString(), target, null, null, null, new string[] {"0F", "93", "/0"}));
 		}
-
-		// SETNC rmreg8
+		
+		/// <summary>
+		/// SETNC rmreg8
+		/// </summary>
 		public void SETNC (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNC", target.ToString(), null, target, null, null, new string[] {"0F", "93", "/0"}));
 		}
-
-		// SETNE mem8
+		
+		/// <summary>
+		/// SETNE mem8
+		/// </summary>
 		public void SETNE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNE", target.ToString(), target, null, null, null, new string[] {"0F", "95", "/0"}));
 		}
-
-		// SETNE rmreg8
+		
+		/// <summary>
+		/// SETNE rmreg8
+		/// </summary>
 		public void SETNE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNE", target.ToString(), null, target, null, null, new string[] {"0F", "95", "/0"}));
 		}
-
-		// SETNG mem8
+		
+		/// <summary>
+		/// SETNG mem8
+		/// </summary>
 		public void SETNG (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNG", target.ToString(), target, null, null, null, new string[] {"0F", "9E", "/0"}));
 		}
-
-		// SETNG rmreg8
+		
+		/// <summary>
+		/// SETNG rmreg8
+		/// </summary>
 		public void SETNG (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNG", target.ToString(), null, target, null, null, new string[] {"0F", "9E", "/0"}));
 		}
-
-		// SETNGE mem8
+		
+		/// <summary>
+		/// SETNGE mem8
+		/// </summary>
 		public void SETNGE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNGE", target.ToString(), target, null, null, null, new string[] {"0F", "9C", "/0"}));
 		}
-
-		// SETNGE rmreg8
+		
+		/// <summary>
+		/// SETNGE rmreg8
+		/// </summary>
 		public void SETNGE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNGE", target.ToString(), null, target, null, null, new string[] {"0F", "9C", "/0"}));
 		}
-
-		// SETNL mem8
+		
+		/// <summary>
+		/// SETNL mem8
+		/// </summary>
 		public void SETNL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNL", target.ToString(), target, null, null, null, new string[] {"0F", "9D", "/0"}));
 		}
-
-		// SETNL rmreg8
+		
+		/// <summary>
+		/// SETNL rmreg8
+		/// </summary>
 		public void SETNL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNL", target.ToString(), null, target, null, null, new string[] {"0F", "9D", "/0"}));
 		}
-
-		// SETNLE mem8
+		
+		/// <summary>
+		/// SETNLE mem8
+		/// </summary>
 		public void SETNLE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNLE", target.ToString(), target, null, null, null, new string[] {"0F", "9F", "/0"}));
 		}
-
-		// SETNLE rmreg8
+		
+		/// <summary>
+		/// SETNLE rmreg8
+		/// </summary>
 		public void SETNLE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNLE", target.ToString(), null, target, null, null, new string[] {"0F", "9F", "/0"}));
 		}
-
-		// SETNO mem8
+		
+		/// <summary>
+		/// SETNO mem8
+		/// </summary>
 		public void SETNO (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNO", target.ToString(), target, null, null, null, new string[] {"0F", "91", "/0"}));
 		}
-
-		// SETNO rmreg8
+		
+		/// <summary>
+		/// SETNO rmreg8
+		/// </summary>
 		public void SETNO (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNO", target.ToString(), null, target, null, null, new string[] {"0F", "91", "/0"}));
 		}
-
-		// SETNP mem8
+		
+		/// <summary>
+		/// SETNP mem8
+		/// </summary>
 		public void SETNP (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNP", target.ToString(), target, null, null, null, new string[] {"0F", "9B", "/0"}));
 		}
-
-		// SETNP rmreg8
+		
+		/// <summary>
+		/// SETNP rmreg8
+		/// </summary>
 		public void SETNP (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNP", target.ToString(), null, target, null, null, new string[] {"0F", "9B", "/0"}));
 		}
-
-		// SETNS mem8
+		
+		/// <summary>
+		/// SETNS mem8
+		/// </summary>
 		public void SETNS (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNS", target.ToString(), target, null, null, null, new string[] {"0F", "99", "/0"}));
 		}
-
-		// SETNS rmreg8
+		
+		/// <summary>
+		/// SETNS rmreg8
+		/// </summary>
 		public void SETNS (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNS", target.ToString(), null, target, null, null, new string[] {"0F", "99", "/0"}));
 		}
-
-		// SETNZ mem8
+		
+		/// <summary>
+		/// SETNZ mem8
+		/// </summary>
 		public void SETNZ (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNZ", target.ToString(), target, null, null, null, new string[] {"0F", "95", "/0"}));
 		}
-
-		// SETNZ rmreg8
+		
+		/// <summary>
+		/// SETNZ rmreg8
+		/// </summary>
 		public void SETNZ (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNZ", target.ToString(), null, target, null, null, new string[] {"0F", "95", "/0"}));
 		}
-
-		// SETO mem8
+		
+		/// <summary>
+		/// SETO mem8
+		/// </summary>
 		public void SETO (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETO", target.ToString(), target, null, null, null, new string[] {"0F", "90", "/0"}));
 		}
-
-		// SETO rmreg8
+		
+		/// <summary>
+		/// SETO rmreg8
+		/// </summary>
 		public void SETO (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETO", target.ToString(), null, target, null, null, new string[] {"0F", "90", "/0"}));
 		}
-
-		// SETP mem8
+		
+		/// <summary>
+		/// SETP mem8
+		/// </summary>
 		public void SETP (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETP", target.ToString(), target, null, null, null, new string[] {"0F", "9A", "/0"}));
 		}
-
-		// SETP rmreg8
+		
+		/// <summary>
+		/// SETP rmreg8
+		/// </summary>
 		public void SETP (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETP", target.ToString(), null, target, null, null, new string[] {"0F", "9A", "/0"}));
 		}
-
-		// SETPE mem8
+		
+		/// <summary>
+		/// SETPE mem8
+		/// </summary>
 		public void SETPE (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPE", target.ToString(), target, null, null, null, new string[] {"0F", "9A", "/0"}));
 		}
-
-		// SETPE rmreg8
+		
+		/// <summary>
+		/// SETPE rmreg8
+		/// </summary>
 		public void SETPE (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPE", target.ToString(), null, target, null, null, new string[] {"0F", "9A", "/0"}));
 		}
-
-		// SETPO mem8
+		
+		/// <summary>
+		/// SETPO mem8
+		/// </summary>
 		public void SETPO (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPO", target.ToString(), target, null, null, null, new string[] {"0F", "9B", "/0"}));
 		}
-
-		// SETPO rmreg8
+		
+		/// <summary>
+		/// SETPO rmreg8
+		/// </summary>
 		public void SETPO (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPO", target.ToString(), null, target, null, null, new string[] {"0F", "9B", "/0"}));
 		}
-
-		// SETS mem8
+		
+		/// <summary>
+		/// SETS mem8
+		/// </summary>
 		public void SETS (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETS", target.ToString(), target, null, null, null, new string[] {"0F", "98", "/0"}));
 		}
-
-		// SETS rmreg8
+		
+		/// <summary>
+		/// SETS rmreg8
+		/// </summary>
 		public void SETS (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETS", target.ToString(), null, target, null, null, new string[] {"0F", "98", "/0"}));
 		}
-
-		// SETZ mem8
+		
+		/// <summary>
+		/// SETZ mem8
+		/// </summary>
 		public void SETZ (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETZ", target.ToString(), target, null, null, null, new string[] {"0F", "94", "/0"}));
 		}
-
-		// SETZ rmreg8
+		
+		/// <summary>
+		/// SETZ rmreg8
+		/// </summary>
 		public void SETZ (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETZ", target.ToString(), null, target, null, null, new string[] {"0F", "94", "/0"}));
 		}
-
-		// SFENCE
+		
+		/// <summary>
+		/// SFENCE 
+		/// </summary>
 		public void SFENCE ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SFENCE", "", null, null, null, null, new string[] {"0F", "AE", "/7"}));
 		}
-
-		// SGDT mem
+		
+		/// <summary>
+		/// SGDT mem
+		/// </summary>
 		public void SGDT (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SGDT", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/0"}));
 		}
-
-		// SHL mem8,CL
+		
+		/// <summary>
+		/// SHL mem8,CL
+		/// </summary>
 		public void SHL__CL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/4"}));
 		}
-
-		// SHL mem8,imm8
+		
+		/// <summary>
+		/// SHL mem8,imm8
+		/// </summary>
 		public void SHL (ByteMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
 			}
 		}
-
-		// SHL mem16,CL
+		
+		/// <summary>
+		/// SHL mem16,CL
+		/// </summary>
 		public void SHL__CL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/4"}));
 		}
-
-		// SHL mem16,imm8
+		
+		/// <summary>
+		/// SHL mem16,imm8
+		/// </summary>
 		public void SHL (WordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
 			}
 		}
-
-		// SHL mem32,CL
+		
+		/// <summary>
+		/// SHL mem32,CL
+		/// </summary>
 		public void SHL__CL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/4"}));
 		}
-
-		// SHL mem32,imm8
+		
+		/// <summary>
+		/// SHL mem32,imm8
+		/// </summary>
 		public void SHL (DWordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
 			}
 		}
-
-		// SHL rmreg8,CL
+		
+		/// <summary>
+		/// SHL rmreg8,CL
+		/// </summary>
 		public void SHL__CL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/4"}));
 		}
-
-		// SHL rmreg8,imm8
+		
+		/// <summary>
+		/// SHL rmreg8,imm8
+		/// </summary>
 		public void SHL (R8Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
 			}
 		}
-
-		// SHL rmreg16,CL
+		
+		/// <summary>
+		/// SHL rmreg16,CL
+		/// </summary>
 		public void SHL__CL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/4"}));
 		}
-
-		// SHL rmreg16,imm8
+		
+		/// <summary>
+		/// SHL rmreg16,imm8
+		/// </summary>
 		public void SHL (R16Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
 			}
 		}
-
-		// SHL rmreg32,CL
+		
+		/// <summary>
+		/// SHL rmreg32,CL
+		/// </summary>
 		public void SHL__CL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/4"}));
 		}
-
-		// SHL rmreg32,imm8
+		
+		/// <summary>
+		/// SHL rmreg32,imm8
+		/// </summary>
 		public void SHL (R32Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/4"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
 			}
 		}
-
-		// SHLD mem16,reg16,imm8
+		
+		/// <summary>
+		/// SHLD mem16,reg16,imm8
+		/// </summary>
 		public void SHLD (WordMemory target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o16", "0F", "A4", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o16", "0F", "A4", "/r", "ib"}));
 		}
-
-		// SHLD mem32,reg32,imm8
+		
+		/// <summary>
+		/// SHLD mem32,reg32,imm8
+		/// </summary>
 		public void SHLD (DWordMemory target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o32", "0F", "A4", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o32", "0F", "A4", "/r", "ib"}));
 		}
-
-		// SHLD mem16,reg16,CL
+		
+		/// <summary>
+		/// SHLD mem16,reg16,CL
+		/// </summary>
 		public void SHLD___CL (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", target, null, source, null, new string[] {"o16", "0F", "A5", "/r"}));
 		}
-
-		// SHLD mem32,reg32,CL
+		
+		/// <summary>
+		/// SHLD mem32,reg32,CL
+		/// </summary>
 		public void SHLD___CL (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", target, null, source, null, new string[] {"o32", "0F", "A5", "/r"}));
 		}
-
-		// SHLD rmreg16,reg16,imm8
+		
+		/// <summary>
+		/// SHLD rmreg16,reg16,imm8
+		/// </summary>
 		public void SHLD (R16Type target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o16", "0F", "A4", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o16", "0F", "A4", "/r", "ib"}));
 		}
-
-		// SHLD rmreg32,reg32,imm8
+		
+		/// <summary>
+		/// SHLD rmreg32,reg32,imm8
+		/// </summary>
 		public void SHLD (R32Type target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o32", "0F", "A4", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o32", "0F", "A4", "/r", "ib"}));
 		}
-
-		// SHLD rmreg16,reg16,CL
+		
+		/// <summary>
+		/// SHLD rmreg16,reg16,CL
+		/// </summary>
 		public void SHLD___CL (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", null, target, source, null, new string[] {"o16", "0F", "A5", "/r"}));
 		}
-
-		// SHLD rmreg32,reg32,CL
+		
+		/// <summary>
+		/// SHLD rmreg32,reg32,CL
+		/// </summary>
 		public void SHLD___CL (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", null, target, source, null, new string[] {"o32", "0F", "A5", "/r"}));
 		}
-
-		// SHR mem8,CL
+		
+		/// <summary>
+		/// SHR mem8,CL
+		/// </summary>
 		public void SHR__CL (ByteMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/5"}));
 		}
-
-		// SHR mem8,imm8
+		
+		/// <summary>
+		/// SHR mem8,imm8
+		/// </summary>
 		public void SHR (ByteMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/5"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/5", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/5", "ib"}));
 			}
 		}
-
-		// SHR mem16,CL
+		
+		/// <summary>
+		/// SHR mem16,CL
+		/// </summary>
 		public void SHR__CL (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/5"}));
 		}
-
-		// SHR mem16,imm8
+		
+		/// <summary>
+		/// SHR mem16,imm8
+		/// </summary>
 		public void SHR (WordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/5"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/5", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/5", "ib"}));
 			}
 		}
-
-		// SHR mem32,CL
+		
+		/// <summary>
+		/// SHR mem32,CL
+		/// </summary>
 		public void SHR__CL (DWordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/5"}));
 		}
-
-		// SHR mem32,imm8
+		
+		/// <summary>
+		/// SHR mem32,imm8
+		/// </summary>
 		public void SHR (DWordMemory target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/5"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/5", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/5", "ib"}));
 			}
 		}
-
-		// SHR rmreg8,CL
+		
+		/// <summary>
+		/// SHR rmreg8,CL
+		/// </summary>
 		public void SHR__CL (R8Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/5"}));
 		}
-
-		// SHR rmreg8,imm8
+		
+		/// <summary>
+		/// SHR rmreg8,imm8
+		/// </summary>
 		public void SHR (R8Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/5"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/5", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/5", "ib"}));
 			}
 		}
-
-		// SHR rmreg16,CL
+		
+		/// <summary>
+		/// SHR rmreg16,CL
+		/// </summary>
 		public void SHR__CL (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/5"}));
 		}
-
-		// SHR rmreg16,imm8
+		
+		/// <summary>
+		/// SHR rmreg16,imm8
+		/// </summary>
 		public void SHR (R16Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/5"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/5", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/5", "ib"}));
 			}
 		}
-
-		// SHR rmreg32,CL
+		
+		/// <summary>
+		/// SHR rmreg32,CL
+		/// </summary>
 		public void SHR__CL (R32Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/5"}));
 		}
-
-		// SHR rmreg32,imm8
+		
+		/// <summary>
+		/// SHR rmreg32,imm8
+		/// </summary>
 		public void SHR (R32Type target, Byte source)
 		{
-			if (source == 1) {
+			if (source == 1)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/5"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/5", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/5", "ib"}));
 			}
 		}
-
-		// SHRD mem16,reg16,imm8
+		
+		/// <summary>
+		/// SHRD mem16,reg16,imm8
+		/// </summary>
 		public void SHRD (WordMemory target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o16", "0F", "AC", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o16", "0F", "AC", "/r", "ib"}));
 		}
-
-		// SHRD mem32,reg32,imm8
+		
+		/// <summary>
+		/// SHRD mem32,reg32,imm8
+		/// </summary>
 		public void SHRD (DWordMemory target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o32", "0F", "AC", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o32", "0F", "AC", "/r", "ib"}));
 		}
-
-		// SHRD mem16,reg16,CL
+		
+		/// <summary>
+		/// SHRD mem16,reg16,CL
+		/// </summary>
 		public void SHRD___CL (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", target, null, source, null, new string[] {"o16", "0F", "AD", "/r"}));
 		}
-
-		// SHRD mem32,reg32,CL
+		
+		/// <summary>
+		/// SHRD mem32,reg32,CL
+		/// </summary>
 		public void SHRD___CL (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", target, null, source, null, new string[] {"o32", "0F", "AD", "/r"}));
 		}
-
-		// SHRD rmreg16,reg16,imm8
+		
+		/// <summary>
+		/// SHRD rmreg16,reg16,imm8
+		/// </summary>
 		public void SHRD (R16Type target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o16", "0F", "AC", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o16", "0F", "AC", "/r", "ib"}));
 		}
-
-		// SHRD rmreg32,reg32,imm8
+		
+		/// <summary>
+		/// SHRD rmreg32,reg32,imm8
+		/// </summary>
 		public void SHRD (R32Type target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format ("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o32", "0F", "AC", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o32", "0F", "AC", "/r", "ib"}));
 		}
-
-		// SHRD rmreg16,reg16,CL
+		
+		/// <summary>
+		/// SHRD rmreg16,reg16,CL
+		/// </summary>
 		public void SHRD___CL (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", null, target, source, null, new string[] {"o16", "0F", "AD", "/r"}));
 		}
-
-		// SHRD rmreg32,reg32,CL
+		
+		/// <summary>
+		/// SHRD rmreg32,reg32,CL
+		/// </summary>
 		public void SHRD___CL (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", null, target, source, null, new string[] {"o32", "0F", "AD", "/r"}));
 		}
-
-		// SIDT mem
+		
+		/// <summary>
+		/// SIDT mem
+		/// </summary>
 		public void SIDT (Memory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SIDT", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/1"}));
 		}
-
-		// SLDT mem16
+		
+		/// <summary>
+		/// SLDT mem16
+		/// </summary>
 		public void SLDT (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SLDT", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/0"}));
 		}
-
-		// SLDT rmreg16
+		
+		/// <summary>
+		/// SLDT rmreg16
+		/// </summary>
 		public void SLDT (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SLDT", target.ToString(), null, target, null, null, new string[] {"o16", "0F", "00", "/0"}));
 		}
-
-		// SMSW mem16
+		
+		/// <summary>
+		/// SMSW mem16
+		/// </summary>
 		public void SMSW (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SMSW", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/4"}));
 		}
-
-		// SMSW rmreg16
+		
+		/// <summary>
+		/// SMSW rmreg16
+		/// </summary>
 		public void SMSW (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SMSW", target.ToString(), null, target, null, null, new string[] {"o16", "0F", "01", "/4"}));
 		}
-
-		// STC
+		
+		/// <summary>
+		/// STC 
+		/// </summary>
 		public void STC ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STC", "", null, null, null, null, new string[] {"F9"}));
 		}
-
-		// STD
+		
+		/// <summary>
+		/// STD 
+		/// </summary>
 		public void STD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STD", "", null, null, null, null, new string[] {"FD"}));
 		}
-
-		// STI
+		
+		/// <summary>
+		/// STI 
+		/// </summary>
 		public void STI ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STI", "", null, null, null, null, new string[] {"FB"}));
 		}
-
-		// STOSB
+		
+		/// <summary>
+		/// STOSB 
+		/// </summary>
 		public void STOSB ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSB", "", null, null, null, null, new string[] {"AA"}));
 		}
-
-		// STOSD
+		
+		/// <summary>
+		/// STOSD 
+		/// </summary>
 		public void STOSD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSD", "", null, null, null, null, new string[] {"o32", "AB"}));
 		}
-
-		// STOSW
+		
+		/// <summary>
+		/// STOSW 
+		/// </summary>
 		public void STOSW ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSW", "", null, null, null, null, new string[] {"o16", "AB"}));
 		}
-
-		// STR mem16
+		
+		/// <summary>
+		/// STR mem16
+		/// </summary>
 		public void STR (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STR", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/1"}));
 		}
-
-		// STR rmreg16
+		
+		/// <summary>
+		/// STR rmreg16
+		/// </summary>
 		public void STR (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STR", target.ToString(), null, target, null, null, new string[] {"o16", "0F", "00", "/1"}));
 		}
-
-		// SUB mem8,reg8
+		
+		/// <summary>
+		/// SUB mem8,reg8
+		/// </summary>
 		public void SUB (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"28", "/r"}));
 		}
-
-		// SUB mem16,reg16
+		
+		/// <summary>
+		/// SUB mem16,reg16
+		/// </summary>
 		public void SUB (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "29", "/r"}));
 		}
-
-		// SUB mem32,reg32
+		
+		/// <summary>
+		/// SUB mem32,reg32
+		/// </summary>
 		public void SUB (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "29", "/r"}));
 		}
-
-		// SUB reg8,mem8
+		
+		/// <summary>
+		/// SUB reg8,mem8
+		/// </summary>
 		public void SUB (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"2A", "/r"}));
 		}
-
-		// SUB reg16,mem16
+		
+		/// <summary>
+		/// SUB reg16,mem16
+		/// </summary>
 		public void SUB (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "2B", "/r"}));
 		}
-
-		// SUB reg32,mem32
+		
+		/// <summary>
+		/// SUB reg32,mem32
+		/// </summary>
 		public void SUB (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "2B", "/r"}));
 		}
-
-		// SUB mem8,imm8
+		
+		/// <summary>
+		/// SUB mem8,imm8
+		/// </summary>
 		public void SUB (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/5", "ib"}));
 		}
-
-		// SUB mem16,imm16
+		
+		/// <summary>
+		/// SUB mem16,imm16
+		/// </summary>
 		public void SUB (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/5", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/5", "iw"}));
 		}
-
-		// SUB mem32,imm32
+		
+		/// <summary>
+		/// SUB mem32,imm32
+		/// </summary>
 		public void SUB (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/5", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/5", "id"}));
 		}
-
-		// SUB mem16,imm8
+		
+		/// <summary>
+		/// SUB mem16,imm8
+		/// </summary>
 		public void SUB (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/5", "ib"}));
 		}
-
-		// SUB mem32,imm8
+		
+		/// <summary>
+		/// SUB mem32,imm8
+		/// </summary>
 		public void SUB (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/5", "ib"}));
 		}
-
-		// SUB rmreg8,reg8
+		
+		/// <summary>
+		/// SUB rmreg8,reg8
+		/// </summary>
 		public void SUB (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"28", "/r"}));
 		}
-
-		// SUB rmreg16,reg16
+		
+		/// <summary>
+		/// SUB rmreg16,reg16
+		/// </summary>
 		public void SUB (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "29", "/r"}));
 		}
-
-		// SUB rmreg32,reg32
+		
+		/// <summary>
+		/// SUB rmreg32,reg32
+		/// </summary>
 		public void SUB (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "29", "/r"}));
 		}
-
-		// SUB rmreg8,imm8
+		
+		/// <summary>
+		/// SUB rmreg8,imm8
+		/// </summary>
 		public void SUB (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"2C", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/5", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"2C", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/5", "ib"}));
 			}
 		}
-
-		// SUB rmreg16,imm16
+		
+		/// <summary>
+		/// SUB rmreg16,imm16
+		/// </summary>
 		public void SUB (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "2D", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/5", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "2D", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/5", "iw"}));
 			}
 		}
-
-		// SUB rmreg32,imm32
+		
+		/// <summary>
+		/// SUB rmreg32,imm32
+		/// </summary>
 		public void SUB (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "2D", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.SUB (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/5", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "2D", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.SUB (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/5", "id"}));
 				}
 			}
 		}
-
-		// SUB rmreg16,imm8
+		
+		/// <summary>
+		/// SUB rmreg16,imm8
+		/// </summary>
 		public void SUB (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/5", "ib"}));
 		}
-
-		// SUB rmreg32,imm8
+		
+		/// <summary>
+		/// SUB rmreg32,imm8
+		/// </summary>
 		public void SUB (R32Type target, Byte source)
 		{
-			if (source == 0) {}
-			else if (source == 1) {
+			if (source == 0)
+			{
+			}
+			else if (source == 1)
+			{
 				this.DEC (target);
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/5", "ib"}));
+			}
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/5", "ib"}));
 			}
 		}
-
-		// SYSCALL
+		
+		/// <summary>
+		/// SYSCALL 
+		/// </summary>
 		public void SYSCALL ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSCALL", "", null, null, null, null, new string[] {"0F", "05"}));
 		}
-
-		// SYSENTER
+		
+		/// <summary>
+		/// SYSENTER 
+		/// </summary>
 		public void SYSENTER ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSENTER", "", null, null, null, null, new string[] {"0F", "34"}));
 		}
-
-		// SYSEXIT
+		
+		/// <summary>
+		/// SYSEXIT 
+		/// </summary>
 		public void SYSEXIT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSEXIT", "", null, null, null, null, new string[] {"0F", "35"}));
 		}
-
-		// SYSRET
+		
+		/// <summary>
+		/// SYSRET 
+		/// </summary>
 		public void SYSRET ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSRET", "", null, null, null, null, new string[] {"0F", "07"}));
 		}
-
-		// TEST mem8,reg8
+		
+		/// <summary>
+		/// TEST mem8,reg8
+		/// </summary>
 		public void TEST (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"84", "/r"}));
 		}
-
-		// TEST mem16,reg16
+		
+		/// <summary>
+		/// TEST mem16,reg16
+		/// </summary>
 		public void TEST (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "85", "/r"}));
 		}
-
-		// TEST mem32,reg32
+		
+		/// <summary>
+		/// TEST mem32,reg32
+		/// </summary>
 		public void TEST (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "85", "/r"}));
 		}
-
-		// TEST mem8,imm8
+		
+		/// <summary>
+		/// TEST mem8,imm8
+		/// </summary>
 		public void TEST (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"F6", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"F6", "/0", "ib"}));
 		}
-
-		// TEST mem16,imm16
+		
+		/// <summary>
+		/// TEST mem16,imm16
+		/// </summary>
 		public void TEST (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "F7", "/0", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "F7", "/0", "iw"}));
 		}
-
-		// TEST mem32,imm32
+		
+		/// <summary>
+		/// TEST mem32,imm32
+		/// </summary>
 		public void TEST (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "F7", "/0", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "F7", "/0", "id"}));
 		}
-
-		// TEST rmreg8,reg8
+		
+		/// <summary>
+		/// TEST rmreg8,reg8
+		/// </summary>
 		public void TEST (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"84", "/r"}));
 		}
-
-		// TEST rmreg16,reg16
+		
+		/// <summary>
+		/// TEST rmreg16,reg16
+		/// </summary>
 		public void TEST (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "85", "/r"}));
 		}
-
-		// TEST rmreg32,reg32
+		
+		/// <summary>
+		/// TEST rmreg32,reg32
+		/// </summary>
 		public void TEST (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "85", "/r"}));
 		}
-
-		// TEST rmreg8,imm8
+		
+		/// <summary>
+		/// TEST rmreg8,imm8
+		/// </summary>
 		public void TEST (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"A8", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"F6", "/0", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"A8", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"F6", "/0", "ib"}));
 			}
 		}
-
-		// TEST rmreg16,imm16
+		
+		/// <summary>
+		/// TEST rmreg16,imm16
+		/// </summary>
 		public void TEST (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "A9", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "F7", "/0", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "A9", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "F7", "/0", "iw"}));
 			}
 		}
-
-		// TEST rmreg32,imm32
+		
+		/// <summary>
+		/// TEST rmreg32,imm32
+		/// </summary>
 		public void TEST (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "A9", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.TEST (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "F7", "/0", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "A9", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.TEST (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "F7", "/0", "id"}));
 				}
 			}
 		}
-
-		// VERR mem16
+		
+		/// <summary>
+		/// VERR mem16
+		/// </summary>
 		public void VERR (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERR", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/4"}));
 		}
-
-		// VERR rmreg16
+		
+		/// <summary>
+		/// VERR rmreg16
+		/// </summary>
 		public void VERR (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERR", target.ToString(), null, target, null, null, new string[] {"0F", "00", "/4"}));
 		}
-
-		// VERW mem16
+		
+		/// <summary>
+		/// VERW mem16
+		/// </summary>
 		public void VERW (WordMemory target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERW", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/5"}));
 		}
-
-		// VERW rmreg16
+		
+		/// <summary>
+		/// VERW rmreg16
+		/// </summary>
 		public void VERW (R16Type target)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERW", target.ToString(), null, target, null, null, new string[] {"0F", "00", "/5"}));
 		}
-
-		// WAIT
+		
+		/// <summary>
+		/// WAIT 
+		/// </summary>
 		public void WAIT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WAIT", "", null, null, null, null, new string[] {"9B"}));
 		}
-
-		// WBINVD
+		
+		/// <summary>
+		/// WBINVD 
+		/// </summary>
 		public void WBINVD ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WBINVD", "", null, null, null, null, new string[] {"0F", "09"}));
 		}
-
-		// WRMSR
+		
+		/// <summary>
+		/// WRMSR 
+		/// </summary>
 		public void WRMSR ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WRMSR", "", null, null, null, null, new string[] {"0F", "30"}));
 		}
-
-		// XADD mem8,reg8
+		
+		/// <summary>
+		/// XADD mem8,reg8
+		/// </summary>
 		public void XADD (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"0F", "C0", "/r"}));
 		}
-
-		// XADD mem16,reg16
+		
+		/// <summary>
+		/// XADD mem16,reg16
+		/// </summary>
 		public void XADD (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "C1", "/r"}));
 		}
-
-		// XADD mem32,reg32
+		
+		/// <summary>
+		/// XADD mem32,reg32
+		/// </summary>
 		public void XADD (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "C1", "/r"}));
 		}
-
-		// XADD rmreg8,reg8
+		
+		/// <summary>
+		/// XADD rmreg8,reg8
+		/// </summary>
 		public void XADD (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "C0", "/r"}));
 		}
-
-		// XADD rmreg16,reg16
+		
+		/// <summary>
+		/// XADD rmreg16,reg16
+		/// </summary>
 		public void XADD (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "C1", "/r"}));
 		}
-
-		// XADD rmreg32,reg32
+		
+		/// <summary>
+		/// XADD rmreg32,reg32
+		/// </summary>
 		public void XADD (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "C1", "/r"}));
 		}
-
-		// XCHG reg8,mem8
+		
+		/// <summary>
+		/// XCHG reg8,mem8
+		/// </summary>
 		public void XCHG (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"86", "/r"}));
 		}
-
-		// XCHG reg16,mem16
+		
+		/// <summary>
+		/// XCHG reg16,mem16
+		/// </summary>
 		public void XCHG (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "87", "/r"}));
 		}
-
-		// XCHG reg32,mem32
+		
+		/// <summary>
+		/// XCHG reg32,mem32
+		/// </summary>
 		public void XCHG (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "87", "/r"}));
 		}
-
-		// XCHG mem8,reg8
+		
+		/// <summary>
+		/// XCHG mem8,reg8
+		/// </summary>
 		public void XCHG (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"86", "/r"}));
 		}
-
-		// XCHG mem16,reg16
+		
+		/// <summary>
+		/// XCHG mem16,reg16
+		/// </summary>
 		public void XCHG (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "87", "/r"}));
 		}
-
-		// XCHG mem32,reg32
+		
+		/// <summary>
+		/// XCHG mem32,reg32
+		/// </summary>
 		public void XCHG (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "87", "/r"}));
 		}
-
-		// XCHG reg8,rmreg8
+		
+		/// <summary>
+		/// XCHG reg8,rmreg8
+		/// </summary>
 		public void XCHG (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"86", "/r"}));
 		}
-
-		// XCHG reg16,rmreg16
+		
+		/// <summary>
+		/// XCHG reg16,rmreg16
+		/// </summary>
 		public void XCHG (R16Type target, R16Type source)
 		{
-			if (target == R16.AX) {
+			if (target == R16.AX)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG_AX", "AX" + ", " + source.ToString(), null, null, source, null, new string[] {"o16", "90+r"}));
-
-			} else if (source == R16.AX) {
+			else if (source == R16.AX)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG__AX", target.ToString() + ", " + "AX", null, null, target, null, new string[] {"o16", "90+r"}));
-
-			} else {
+			else
+			{
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "87", "/r"}));
 			}
 		}
-
-		// XCHG reg32,rmreg32
+		
+		/// <summary>
+		/// XCHG reg32,rmreg32
+		/// </summary>
 		public void XCHG (R32Type target, R32Type source)
 		{
-			if (target == R32.EAX) {
+			if (target == R32.EAX)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG_EAX", "EAX" + ", " + source.ToString(), null, null, source, null, new string[] {"o32", "90+r"}));
-
-			} else if (source == R32.EAX) {
+			else if (source == R32.EAX)
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG__EAX", target.ToString() + ", " + "EAX", null, null, target, null, new string[] {"o32", "90+r"}));
-
-			} else {
+			else
+			{
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "87", "/r"}));
 			}
 		}
-
-		// XLAT
+		
+		/// <summary>
+		/// XLAT 
+		/// </summary>
 		public void XLAT ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XLAT", "", null, null, null, null, new string[] {"D7"}));
 		}
-
-		// XLATB
+		
+		/// <summary>
+		/// XLATB 
+		/// </summary>
 		public void XLATB ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XLATB", "", null, null, null, null, new string[] {"D7"}));
 		}
-
-		// XOR mem8,reg8
+		
+		/// <summary>
+		/// XOR mem8,reg8
+		/// </summary>
 		public void XOR (ByteMemory target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"30", "/r"}));
 		}
-
-		// XOR mem16,reg16
+		
+		/// <summary>
+		/// XOR mem16,reg16
+		/// </summary>
 		public void XOR (WordMemory target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "31", "/r"}));
 		}
-
-		// XOR mem32,reg32
+		
+		/// <summary>
+		/// XOR mem32,reg32
+		/// </summary>
 		public void XOR (DWordMemory target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "31", "/r"}));
 		}
-
-		// XOR reg8,mem8
+		
+		/// <summary>
+		/// XOR reg8,mem8
+		/// </summary>
 		public void XOR (R8Type target, ByteMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"32", "/r"}));
 		}
-
-		// XOR reg16,mem16
+		
+		/// <summary>
+		/// XOR reg16,mem16
+		/// </summary>
 		public void XOR (R16Type target, WordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "33", "/r"}));
 		}
-
-		// XOR reg32,mem32
+		
+		/// <summary>
+		/// XOR reg32,mem32
+		/// </summary>
 		public void XOR (R32Type target, DWordMemory source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "33", "/r"}));
 		}
-
-		// XOR mem8,imm8
+		
+		/// <summary>
+		/// XOR mem8,imm8
+		/// </summary>
 		public void XOR (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/6", "ib"}));
 		}
-
-		// XOR mem16,imm16
+		
+		/// <summary>
+		/// XOR mem16,imm16
+		/// </summary>
 		public void XOR (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/6", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/6", "iw"}));
 		}
-
-		// XOR mem32,imm32
+		
+		/// <summary>
+		/// XOR mem32,imm32
+		/// </summary>
 		public void XOR (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/6", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/6", "id"}));
 		}
-
-		// XOR mem16,imm8
+		
+		/// <summary>
+		/// XOR mem16,imm8
+		/// </summary>
 		public void XOR (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/6", "ib"}));
 		}
-
-		// XOR mem32,imm8
+		
+		/// <summary>
+		/// XOR mem32,imm8
+		/// </summary>
 		public void XOR (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/6", "ib"}));
 		}
-
-		// XOR rmreg8,reg8
+		
+		/// <summary>
+		/// XOR rmreg8,reg8
+		/// </summary>
 		public void XOR (R8Type target, R8Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"30", "/r"}));
 		}
-
-		// XOR rmreg16,reg16
+		
+		/// <summary>
+		/// XOR rmreg16,reg16
+		/// </summary>
 		public void XOR (R16Type target, R16Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "31", "/r"}));
 		}
-
-		// XOR rmreg32,reg32
+		
+		/// <summary>
+		/// XOR rmreg32,reg32
+		/// </summary>
 		public void XOR (R32Type target, R32Type source)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "31", "/r"}));
 		}
-
-		// XOR rmreg8,imm8
+		
+		/// <summary>
+		/// XOR rmreg8,imm8
+		/// </summary>
 		public void XOR (R8Type target, Byte source)
 		{
-			if (target == R8.AL) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"34", "ib"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/6", "ib"}));
+			if (target == R8.AL)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"34", "ib"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/6", "ib"}));
 			}
 		}
-
-		// XOR rmreg16,imm16
+		
+		/// <summary>
+		/// XOR rmreg16,imm16
+		/// </summary>
 		public void XOR (R16Type target, UInt16 source)
 		{
-			if (target == R16.AX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "35", "iw"}));
-
-			} else {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/6", "iw"}));
+			if (target == R16.AX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "35", "iw"}));
+			else
+			{
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/6", "iw"}));
 			}
 		}
-
-		// XOR rmreg32,imm32
+		
+		/// <summary>
+		/// XOR rmreg32,imm32
+		/// </summary>
 		public void XOR (R32Type target, UInt32 source)
 		{
-			if (target == R32.EAX) {
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "35", "id"}));
-
-			} else {
-				if ( (Int32) source >= -128 && (Int32) source <= 127) {
-					this.XOR (target, (byte) source);
-
-				} else {
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/6", "id"}));
+			if (target == R32.EAX)
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "35", "id"}));
+			else
+			{
+				if ((Int32)source >= -128 && (Int32)source <= 127)
+					this.XOR (target, (byte)source);
+				else
+				{
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/6", "id"}));
 				}
 			}
 		}
-
-		// XOR rmreg16,imm8
+		
+		/// <summary>
+		/// XOR rmreg16,imm8
+		/// </summary>
 		public void XOR (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/6", "ib"}));
 		}
-
-		// XOR rmreg32,imm8
+		
+		/// <summary>
+		/// XOR rmreg32,imm8
+		/// </summary>
 		public void XOR (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/6", "ib"}));
 		}
 	}
-
+	
 }

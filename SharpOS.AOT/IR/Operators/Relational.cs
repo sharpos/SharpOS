@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.Collections.Generic;
@@ -14,11 +14,19 @@ using System.Text;
 namespace SharpOS.AOT.IR.Operators {
 	[Serializable]
 	public class Relational : OperatorImplementation<Operator.RelationalType> {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Relational"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
 		public Relational (Operator.RelationalType type)
 			: base (type)
 		{
 		}
 
+		/// <summary>
+		/// Negates this instance.
+		/// </summary>
+		/// <returns></returns>
 		public Relational Negate ()
 		{
 			Relational result = null;

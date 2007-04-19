@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -19,64 +19,72 @@ namespace SharpOS.AOT.IR.Operands {
 	[Serializable]
 	public abstract class Operand {
 		public enum ConvertType {
-			NotSet
-			, Conv_I
-			, Conv_I1
-			, Conv_I2
-			, Conv_I4
-			, Conv_I8
-			, Conv_Ovf_I
-			, Conv_Ovf_I_Un
-			, Conv_Ovf_I1
-			, Conv_Ovf_I1_Un
-			, Conv_Ovf_I2
-			, Conv_Ovf_I2_Un
-			, Conv_Ovf_I4
-			, Conv_Ovf_I4_Un
-			, Conv_Ovf_I8
-			, Conv_Ovf_I8_Un
-			, Conv_Ovf_U
-			, Conv_Ovf_U_Un
-			, Conv_Ovf_U1
-			, Conv_Ovf_U1_Un
-			, Conv_Ovf_U2
-			, Conv_Ovf_U2_Un
-			, Conv_Ovf_U4
-			, Conv_Ovf_U4_Un
-			, Conv_Ovf_U8
-			, Conv_Ovf_U8_Un
-			, Conv_R_Un
-			, Conv_R4
-			, Conv_R8
-			, Conv_U
-			, Conv_U1
-			, Conv_U2
-			, Conv_U4
-			, Conv_U8
+			NotSet, 
+			Conv_I, 
+			Conv_I1, 
+			Conv_I2, 
+			Conv_I4, 
+			Conv_I8, 
+			Conv_Ovf_I, 
+			Conv_Ovf_I_Un, 
+			Conv_Ovf_I1, 
+			Conv_Ovf_I1_Un, 
+			Conv_Ovf_I2, 
+			Conv_Ovf_I2_Un, 
+			Conv_Ovf_I4, 
+			Conv_Ovf_I4_Un, 
+			Conv_Ovf_I8, 
+			Conv_Ovf_I8_Un, 
+			Conv_Ovf_U, 
+			Conv_Ovf_U_Un, 
+			Conv_Ovf_U1, 
+			Conv_Ovf_U1_Un, 
+			Conv_Ovf_U2, 
+			Conv_Ovf_U2_Un, 
+			Conv_Ovf_U4, 
+			Conv_Ovf_U4_Un, 
+			Conv_Ovf_U8, 
+			Conv_Ovf_U8_Un, 
+			Conv_R_Un, 
+			Conv_R4, 
+			Conv_R8, 
+			Conv_U, 
+			Conv_U1, 
+			Conv_U2, 
+			Conv_U4, 
+			Conv_U8
 		}
 
 		public enum InternalSizeType {
-			NotSet
-			, I
-			, U
-			, I1
-			, U1
-			, I2
-			, U2
-			, I4
-			, U4
-			, I8
-			, U8
-			, R4
-			, R8
+			NotSet, 
+			I, 
+			U, 
+			I1, 
+			U1, 
+			I2, 
+			U2, 
+			I4, 
+			U4, 
+			I8, 
+			U8, 
+			R4, 
+			R8, 
+			Object
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Operand"/> class.
+		/// </summary>
 		public Operand ()
 		{
 		}
 
 		private int register = int.MinValue;
 
+		/// <summary>
+		/// Gets or sets the register.
+		/// </summary>
+		/// <value>The register.</value>
 		public int Register {
 			get {
 				return register;
@@ -86,6 +94,12 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is register set.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is register set; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsRegisterSet {
 			get {
 				return register != int.MinValue;
@@ -94,6 +108,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private int stack = int.MinValue;
 
+		/// <summary>
+		/// Gets or sets the stack.
+		/// </summary>
+		/// <value>The stack.</value>
 		public int Stack {
 			get {
 				return stack;
@@ -105,6 +123,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private ConvertType convertTo = ConvertType.NotSet;
 
+		/// <summary>
+		/// Gets or sets the convert to.
+		/// </summary>
+		/// <value>The convert to.</value>
 		public ConvertType ConvertTo {
 			get {
 				return convertTo;
@@ -116,6 +138,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private InternalSizeType sizeType = InternalSizeType.NotSet;
 
+		/// <summary>
+		/// Gets or sets the type of the size.
+		/// </summary>
+		/// <value>The type of the size.</value>
 		public InternalSizeType SizeType {
 			get {
 				return sizeType;
@@ -125,12 +151,21 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Gets the type of the convert size.
+		/// </summary>
+		/// <value>The type of the convert size.</value>
 		public InternalSizeType ConvertSizeType {
 			get {
 				return Operand.GetType (this.convertTo);
 			}
 		}
 
+		/// <summary>
+		/// Gets the type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
 		public static InternalSizeType GetType (ConvertType type)
 		{
 			switch (type) {
@@ -216,6 +251,11 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Operand"/> class.
+		/// </summary>
+		/// <param name="_operator">The _operator.</param>
+		/// <param name="operands">The operands.</param>
 		public Operand (Operator _operator, Operand[] operands)
 		{
 			this._operator = _operator;
@@ -224,6 +264,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private Operator _operator = null;
 
+		/// <summary>
+		/// Gets the operator.
+		/// </summary>
+		/// <value>The operator.</value>
 		public Operator Operator {
 			get {
 				return _operator;
@@ -232,6 +276,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		protected Operand[] operands = null;
 
+		/// <summary>
+		/// Gets or sets the operands.
+		/// </summary>
+		/// <value>The operands.</value>
 		public virtual Operand[] Operands {
 			get {
 				return operands;
@@ -243,6 +291,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private int stamp = int.MinValue;
 
+		/// <summary>
+		/// Gets or sets the stamp.
+		/// </summary>
+		/// <value>The stamp.</value>
 		public int Stamp {
 			get {
 				return stamp;
@@ -255,6 +307,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private int version = 0;
 
+		/// <summary>
+		/// Gets or sets the version.
+		/// </summary>
+		/// <value>The version.</value>
 		public int Version {
 			get {
 				return version;
@@ -264,6 +320,10 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Replaces the specified register values.
+		/// </summary>
+		/// <param name="registerValues">The register values.</param>
 		public void Replace (Dictionary<string, Operand> registerValues)
 		{
 			if (this.operands == null) 
@@ -274,12 +334,16 @@ namespace SharpOS.AOT.IR.Operands {
 
 				operand.Replace (registerValues);
 
-				if (operand is Register && registerValues.ContainsKey (operand.ToString()) == true) 
+				if (operand is Register && registerValues.ContainsKey (operand.ToString())) 
 					this.operands[i] = registerValues[operand.ToString() ];
 			}
 		}
 
-		public SharpOS.AOT.IR.Operands.Operand Clone()
+		/// <summary>
+		/// Clones this instance.
+		/// </summary>
+		/// <returns></returns>
+		public SharpOS.AOT.IR.Operands.Operand Clone ()
 		{
 			BinaryFormatter binaryFormatter = new BinaryFormatter();
 			MemoryStream memoryStream = new MemoryStream();
@@ -292,12 +356,22 @@ namespace SharpOS.AOT.IR.Operands {
 			return operand;
 		}
 
+		/// <summary>
+		/// Gets the ID.
+		/// </summary>
+		/// <value>The ID.</value>
 		public virtual string ID {
 			get {
 				return this.ToString ();
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override string ToString () {
 			StringBuilder stringBuilder = new StringBuilder ();
 			string operatorValue = string.Empty;

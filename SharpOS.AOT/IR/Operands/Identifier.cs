@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -18,18 +18,32 @@ using Mono.Cecil;
 namespace SharpOS.AOT.IR.Operands {
 	[Serializable]
 	public class Identifier : Operand {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Identifier"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="index">The index.</param>
 		public Identifier (string name, int index)
 		{
 			this.index = index;
 			this.value = name;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Identifier"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="operands">The operands.</param>
 		public Identifier (string name, Operand[] operands)
 			: base (null, operands)
 		{
 			this.value = name;
 		}
 
+		/// <summary>
+		/// Gets or sets the operands.
+		/// </summary>
+		/// <value>The operands.</value>
 		public override Operand[] Operands {
 			get {
 				return new Operand[] { this };
@@ -38,6 +52,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private int index = 0;
 
+		/// <summary>
+		/// Gets the index.
+		/// </summary>
+		/// <value>The index.</value>
 		public int Index {
 			get {
 				return this.index;
@@ -46,6 +64,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private string value;
 
+		/// <summary>
+		/// Gets the value.
+		/// </summary>
+		/// <value>The value.</value>
 		public string Value {
 			get {
 				return this.value;
@@ -54,6 +76,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private bool forceSpill = false;
 
+		/// <summary>
+		/// Gets or sets a value indicating whether [force spill].
+		/// </summary>
+		/// <value><c>true</c> if [force spill]; otherwise, <c>false</c>.</value>
 		public bool ForceSpill {
 			set {
 				this.forceSpill = value;
@@ -63,17 +89,34 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Determines whether the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <param name="obj">The <see cref="T:System.Object"></see> to compare with the current <see cref="T:System.Object"></see>.</param>
+		/// <returns>
+		/// true if the specified <see cref="T:System.Object"></see> is equal to the current <see cref="T:System.Object"></see>; otherwise, false.
+		/// </returns>
 		public override bool Equals (object obj)
 		{
-			return (obj is Identifier == true
-				&& this.ToString().Equals ( (obj as Identifier).ToString()) == true);
+			return (obj is Identifier
+				&& this.ToString().Equals ( (obj as Identifier).ToString()));
 		}
 
+		/// <summary>
+		/// Serves as a hash function for a particular type. <see cref="M:System.Object.GetHashCode"></see> is suitable for use in hashing algorithms and data structures like a hash table.
+		/// </summary>
+		/// <returns>
+		/// A hash code for the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override int GetHashCode()
 		{
 			return base.GetHashCode();
 		}
 
+		/// <summary>
+		/// Gets the ID.
+		/// </summary>
+		/// <value>The ID.</value>
 		public override string ID {
 			get {
 				StringBuilder stringBuilder = new StringBuilder();
@@ -86,6 +129,12 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override string ToString ()
 		{
 			StringBuilder stringBuilder = new StringBuilder();

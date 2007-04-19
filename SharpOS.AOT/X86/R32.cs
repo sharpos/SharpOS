@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -77,15 +77,15 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>Returns an instance of R32Type that represents an x86 32-bit register</returns>
 		public static R32Type GetByID (object value)
 		{
-			if (value is R32Type == true)
+			if (value is R32Type)
 				return value as R32Type;
 
-			if (value is SharpOS.AOT.IR.Operands.Field == false)
+			if (!(value is SharpOS.AOT.IR.Operands.Field))
 				throw new Exception ("'" + value.ToString() + "' is not supported.");
 
 			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
 
-			if (id.Equals ("null") == true)
+			if (id.Equals ("null"))
 				return null;
 
 			switch (id.Substring (id.Length - 3)) {

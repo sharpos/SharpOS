@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -21,6 +21,11 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	public class R16Type : Register {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="R16Type"/> class.
+		/// </summary>
+		/// <param name="name">The name of the register that is being referred to</param>
+		/// <param name="index">An implementation-specific number used to encode this register to stream</param>
 		public R16Type (string name, byte index)
 			: base (name, index)
 		{

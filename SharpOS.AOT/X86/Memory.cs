@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -21,6 +21,9 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	public class Memory {
+		/// <summary>
+		/// Check32s the values.
+		/// </summary>
 		private void Check32Values ()
 		{
 			if ( (index == R32.ESP && scale > 0) || (index == R32.ESP && scale == 0 && _base == R32.ESP))
@@ -29,10 +32,13 @@ namespace SharpOS.AOT.X86 {
 			if (scale > 3) 
 				throw new Exception ("The Scale can be 0, 1, 2 or 3.");
 
-			if (_base == null && index == null && this.displacementSet == false)
+			if (_base == null && index == null && !this.displacementSet)
 				throw new Exception ("No valid 32bit address.");
 		}
 
+		/// <summary>
+		/// Check16s the values.
+		/// </summary>
 		private void Check16Values ()
 		{
 			if (_base != null) {
@@ -45,10 +51,15 @@ namespace SharpOS.AOT.X86 {
 			} else if (index != null)
 				throw new Exception ("16bit Index Register is defined and the Base Register is missing.");
 
-			if (_base == null && index == null && displacementSet == false)
+			if (_base == null && index == null && !displacementSet)
 				throw new Exception ("No valid 16bit address.");
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Memory"/> class.
+		/// </summary>
+		/// <param name="segment">The segment.</param>
+		/// <param name="label">The label.</param>
 		public Memory (SegType segment, string label)
 		{
 			this.segment = segment;
@@ -56,16 +67,30 @@ namespace SharpOS.AOT.X86 {
 			this.Displacement = 0;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Memory"/> class.
+		/// </summary>
 		protected Memory ()
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Memory"/> class.
+		/// </summary>
+		/// <param name="label">The label.</param>
 		public Memory (string label)
 		{
 			this.reference = label;
 			this.Displacement = 0;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Memory"/> class.
+		/// </summary>
+		/// <param name="segment">The segment.</param>
+		/// <param name="_base">The _base.</param>
+		/// <param name="index">The index.</param>
+		/// <param name="displacement">The displacement.</param>
 		public Memory (SegType segment, R16Type _base, R16Type index, Int16 displacement)
 		{
 			this.bits32Address = false;
@@ -77,6 +102,12 @@ namespace SharpOS.AOT.X86 {
 			this.Check16Values ();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Memory"/> class.
+		/// </summary>
+		/// <param name="segment">The segment.</param>
+		/// <param name="_base">The _base.</param>
+		/// <param name="index">The index.</param>
 		public Memory (SegType segment, R16Type _base, R16Type index)
 		{
 			this.bits32Address = false;
@@ -87,6 +118,14 @@ namespace SharpOS.AOT.X86 {
 			this.Check16Values ();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Memory"/> class.
+		/// </summary>
+		/// <param name="segment">The segment.</param>
+		/// <param name="_base">The _base.</param>
+		/// <param name="index">The index.</param>
+		/// <param name="scale">The scale.</param>
+		/// <param name="displacement">The displacement.</param>
 		public Memory (SegType segment, R32Type _base, R32Type index, byte scale, Int32 displacement)
 		{
 			this.segment = segment;
@@ -98,6 +137,13 @@ namespace SharpOS.AOT.X86 {
 			Check32Values ();
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Memory"/> class.
+		/// </summary>
+		/// <param name="segment">The segment.</param>
+		/// <param name="_base">The _base.</param>
+		/// <param name="index">The index.</param>
+		/// <param name="scale">The scale.</param>
 		public Memory (SegType segment, R32Type _base, R32Type index, byte scale)
 		{
 			this.segment = segment;
@@ -111,6 +157,10 @@ namespace SharpOS.AOT.X86 {
 		protected Int32 displacement = 0;
 		protected bool displacementSet = false;
 
+		/// <summary>
+		/// Gets or sets the displacement.
+		/// </summary>
+		/// <value>The displacement.</value>
 		internal Int32 Displacement {
 			get {
 				return this.displacement;
@@ -123,6 +173,10 @@ namespace SharpOS.AOT.X86 {
 
 		protected Int32 displacementDelta = 0;
 
+		/// <summary>
+		/// Gets or sets the displacement delta.
+		/// </summary>
+		/// <value>The displacement delta.</value>
 		internal Int32 DisplacementDelta {
 			get {
 				return this.displacementDelta;
@@ -141,6 +195,10 @@ namespace SharpOS.AOT.X86 {
 
 		protected string reference = string.Empty;
 
+		/// <summary>
+		/// Gets the reference.
+		/// </summary>
+		/// <value>The reference.</value>
 		public string Reference {
 			get {
 				return reference;
@@ -149,12 +207,23 @@ namespace SharpOS.AOT.X86 {
 
 		protected SegType segment;
 
+		/// <summary>
+		/// Gets the segment.
+		/// </summary>
+		/// <value>The segment.</value>
 		public SegType Segment {
 			get {
 				return segment;
 			}
 		}
 
+		/// <summary>
+		/// Encodes the specified bits32.
+		/// </summary>
+		/// <param name="bits32">if set to <c>true</c> [bits32].</param>
+		/// <param name="spareRegister">The spare register.</param>
+		/// <param name="binaryWriter">The binary writer.</param>
+		/// <returns></returns>
 		public bool Encode (bool bits32, byte spareRegister, BinaryWriter binaryWriter)
 		{
 			byte value = (byte) (spareRegister * 8);
@@ -162,7 +231,7 @@ namespace SharpOS.AOT.X86 {
 			if (bits32 != this.bits32Address && (this._base != null || this.index != null))
 				throw new Exception ("Wrong kind of address. (16bit/32bit mix not allowed)");
 
-			if (bits32 == true) {
+			if (bits32) {
 				R32Type _base = (R32Type) this._base, index = (R32Type) this.index;
 				Int32 displacement = this.displacement;
 				bool displacementSet = this.displacementSet;
@@ -181,7 +250,7 @@ namespace SharpOS.AOT.X86 {
 
 				bool fixEBP = false;
 
-				if (displacementSet == false && _base == R32.EBP) // && index == null) || (_base == null && index == R32.EBP)))
+				if (!displacementSet && _base == R32.EBP) // && index == null) || (_base == null && index == R32.EBP)))
 				{
 					fixEBP = true;
 					displacementSet = true;
@@ -201,7 +270,7 @@ namespace SharpOS.AOT.X86 {
 						return true;
 
 					} else if (_base != null) {
-						if (fixEBP == true || (displacement >= -0x80 && displacement <= 0x7f)) {
+						if (fixEBP || (displacement >= -0x80 && displacement <= 0x7f)) {
 							shortDisplacement = true;
 							value += 1 * 64; // 8bit
 
@@ -239,18 +308,16 @@ namespace SharpOS.AOT.X86 {
 
 					binaryWriter.Write (value);
 
-					if (this.displacementSet == false && _base == null) {
-						binaryWriter.Write ( (UInt32) 0);
-					}
+					if (!this.displacementSet && _base == null)
+						binaryWriter.Write ((UInt32) 0);
 				}
 
-				if (displacementSet != false) {
-					if (fixEBP == true || shortDisplacement == true) //(displacement >= -0x80 && displacement <= 0x7f))
-					{
-						binaryWriter.Write ( (byte) displacement);
-					} else {
-						binaryWriter.Write ( (UInt32) displacement);
-					}
+				if (displacementSet) {
+					if (fixEBP || shortDisplacement) //(displacement >= -0x80 && displacement <= 0x7f))
+						binaryWriter.Write ((byte) displacement);
+
+					else
+						binaryWriter.Write ((UInt32) displacement);
 				}
 
 			} else {
@@ -278,10 +345,10 @@ namespace SharpOS.AOT.X86 {
 				} else if (this._base == R16.BP && this.index == null) {
 					rm = 6;
 
-					if (displacementSet == false) {
+					if (!displacementSet) {
 						value += 0x46;
 						binaryWriter.Write (value);
-						binaryWriter.Write ( (byte) 0);
+						binaryWriter.Write ((byte) 0);
 						return true;
 					}
 
@@ -320,6 +387,12 @@ namespace SharpOS.AOT.X86 {
 			return true;
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override string ToString ()
 		{
 			StringBuilder stringBuilder = new StringBuilder();

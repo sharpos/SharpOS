@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -18,6 +18,11 @@ using Mono.Cecil;
 namespace SharpOS.AOT.IR.Operands {
 	[Serializable]
 	public class Call : Operand {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Call"/> class.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		/// <param name="operands">The operands.</param>
 		public Call (MethodReference method, Operand[] operands)
 			: base (null, operands)
 		{
@@ -26,12 +31,22 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private MethodReference method;
 
+		/// <summary>
+		/// Gets the method.
+		/// </summary>
+		/// <value>The method.</value>
 		public MethodReference Method {
 			get {
 				return method;
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override string ToString ()
 		{
 			StringBuilder stringBuilder = new StringBuilder();

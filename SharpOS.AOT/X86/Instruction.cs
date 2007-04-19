@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -21,6 +21,19 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	public class Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Instruction"/> class.
+		/// </summary>
+		/// <param name="indent">if set to <c>true</c> [indent].</param>
+		/// <param name="label">The label.</param>
+		/// <param name="reference">The reference.</param>
+		/// <param name="name">The name.</param>
+		/// <param name="parameters">The parameters.</param>
+		/// <param name="rmMemory">The rm memory.</param>
+		/// <param name="rmRegister">The rm register.</param>
+		/// <param name="register">The register.</param>
+		/// <param name="value">The value.</param>
+		/// <param name="encoding">The encoding.</param>
 		public Instruction (bool indent, string label, string reference, string name, string parameters, Memory rmMemory, Register rmRegister, Register register, object value, string[] encoding)
 		{
 			this.label = label;
@@ -39,12 +52,20 @@ namespace SharpOS.AOT.X86 {
 		private Register rmRegister = null;
 		private string[] encoding = null;
 
+		/// <summary>
+		/// Gets the encoding.
+		/// </summary>
+		/// <value>The encoding.</value>
 		public string[] Encoding {
 			get {
 				return this.encoding;
 			}
 		}
 
+		/// <summary>
+		/// Sets the specified instruction.
+		/// </summary>
+		/// <param name="instruction">The instruction.</param>
 		public void Set (Instruction instruction)
 		{
 			this.encoding = instruction.encoding;
@@ -52,6 +73,10 @@ namespace SharpOS.AOT.X86 {
 
 		private Memory rmMemory = null;
 
+		/// <summary>
+		/// Gets the RM memory.
+		/// </summary>
+		/// <value>The RM memory.</value>
 		public Memory RMMemory {
 			get {
 				return this.rmMemory;
@@ -60,6 +85,10 @@ namespace SharpOS.AOT.X86 {
 
 		private object value = null;
 
+		/// <summary>
+		/// Gets or sets the value.
+		/// </summary>
+		/// <value>The value.</value>
 		public object Value {
 			get {
 				return value;
@@ -71,6 +100,10 @@ namespace SharpOS.AOT.X86 {
 
 		private string reference = string.Empty;
 
+		/// <summary>
+		/// Gets the reference.
+		/// </summary>
+		/// <value>The reference.</value>
 		public string Reference {
 			get {
 				return reference;
@@ -79,6 +112,10 @@ namespace SharpOS.AOT.X86 {
 
 		private string label = string.Empty;
 
+		/// <summary>
+		/// Gets the label.
+		/// </summary>
+		/// <value>The label.</value>
 		public string Label {
 			get {
 				return label;
@@ -87,12 +124,20 @@ namespace SharpOS.AOT.X86 {
 
 		private string name = string.Empty;
 
-		public string Name{
+		/// <summary>
+		/// Gets the name.
+		/// </summary>
+		/// <value>The name.</value>
+		public string Name {
 			get {
 				return name;
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the short.
+		/// </summary>
+		/// <value>The name of the short.</value>
 		public string ShortName {
 			get {
 				string result = name;
@@ -109,6 +154,10 @@ namespace SharpOS.AOT.X86 {
 
 		private string parameters = string.Empty;
 
+		/// <summary>
+		/// Gets the parameters.
+		/// </summary>
+		/// <value>The parameters.</value>
 		public string Parameters {
 			get {
 				return parameters;
@@ -117,18 +166,26 @@ namespace SharpOS.AOT.X86 {
 
 		private bool indent = true;
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Instruction"/> is indent.
+		/// </summary>
+		/// <value><c>true</c> if indent; otherwise, <c>false</c>.</value>
 		public bool Indent {
 			get {
 				return indent;
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Instruction"/> is relative.
+		/// </summary>
+		/// <value><c>true</c> if relative; otherwise, <c>false</c>.</value>
 		public bool Relative {
 			get {
 				bool relative = false;
 
 				foreach (string encodingValue in this.encoding) {
-					if (encodingValue.StartsWith ("r") == true) {
+					if (encodingValue.StartsWith ("r")) {
 						relative = true;
 						break;
 					}
@@ -138,13 +195,19 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override string ToString ()
 		{
 			StringBuilder stringBuilder = new StringBuilder();
 
 			int indentSize = 20;
 
-			if (this.indent == true) {
+			if (this.indent) {
 				stringBuilder.Append (string.Empty.PadRight (indentSize));
 
 				stringBuilder.Append (this.ShortName + " " + this.parameters);
@@ -157,6 +220,11 @@ namespace SharpOS.AOT.X86 {
 			return stringBuilder.ToString ();
 		}
 
+		/// <summary>
+		/// Sizes the specified bits32.
+		/// </summary>
+		/// <param name="bits32">if set to <c>true</c> [bits32].</param>
+		/// <returns></returns>
 		public UInt32 Size (bool bits32)
 		{
 			MemoryStream memoryStream = new MemoryStream();
@@ -167,6 +235,12 @@ namespace SharpOS.AOT.X86 {
 			return (UInt32) memoryStream.Length;
 		}
 
+		/// <summary>
+		/// Encodes the specified bits32.
+		/// </summary>
+		/// <param name="bits32">if set to <c>true</c> [bits32].</param>
+		/// <param name="binaryWriter">The binary writer.</param>
+		/// <returns></returns>
 		public virtual bool Encode (bool bits32, BinaryWriter binaryWriter)
 		{
 			int i = 0;
@@ -183,16 +257,16 @@ namespace SharpOS.AOT.X86 {
 			for (; i < this.encoding.Length; i++) {
 				string token = this.encoding[i].ToUpper();
 
-				if (token.Equals ("O16") == true || token.Equals ("O32") == true) {
-					if ( (bits32 == true && token == "O16")
-							|| (bits32 == false && token == "O32")) {
-						binaryWriter.Write ( (byte) 0x66);
+				if (token.Equals ("O16") || token.Equals ("O32")) {
+					if ( (bits32 && token == "O16")
+							|| (!bits32 && token == "O32")) {
+						binaryWriter.Write ((byte) 0x66);
 					}
 
-				} else if (token.Equals ("A16") == true || token.Equals ("A32") == true) {
-					if ( (bits32 == true && token == "A16")
-							|| (bits32 == false && token == "A32")) {
-						binaryWriter.Write ( (byte) 0x67);
+				} else if (token.Equals ("A16") || token.Equals ("A32")) {
+					if ( (bits32 && token == "A16")
+							|| (!bits32 && token == "A32")) {
+						binaryWriter.Write ((byte) 0x67);
 					}
 
 				} else if (token.Length == 2
@@ -203,7 +277,7 @@ namespace SharpOS.AOT.X86 {
 					binaryWriter.Write (value);
 
 				} else if (token == "RW/RD") {
-					if (bits32 == true) {
+					if (bits32) {
 						binaryWriter.Write ( (UInt32) ( (UInt32) ( (UInt32[]) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 4));
 
 					} else {
@@ -211,7 +285,7 @@ namespace SharpOS.AOT.X86 {
 					}
 
 				} else if (token == "OW/OD") {
-					if (bits32 == true) {
+					if (bits32) {
 						binaryWriter.Write ( (UInt32) ( (UInt32) ( (UInt32[]) this.value) [valueIndex++]));
 
 					} else {
@@ -236,14 +310,14 @@ namespace SharpOS.AOT.X86 {
 				} else if (token == "RD") {
 					binaryWriter.Write ( (UInt32) ( (UInt32) ( (UInt32[]) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 4));
 
-				} else if (token.EndsWith ("+R") == true) {
+				} else if (token.EndsWith ("+R")) {
 					token = token.Substring (0, token.Length - 2);
 
 					byte value = (byte) (hex.IndexOf (token[0]) * 16 + hex.IndexOf (token[1]));
 
 					binaryWriter.Write ( (byte) (value + this.register.Index));
 
-				} else if (token.Equals ("/R") == true) {
+				} else if (token.Equals ("/R")) {
 					if (this.register != null && this.rmRegister != null) {
 						byte value = (byte) (0xC0 + this.register.Index * 8 + this.rmRegister.Index);
 
@@ -258,7 +332,7 @@ namespace SharpOS.AOT.X86 {
 						binaryWriter.Write (value);
 					}
 
-				} else if (token.StartsWith ("/") == true) {
+				} else if (token.StartsWith ("/")) {
 					token = token.Substring (1);
 
 					if (this.value != null) {

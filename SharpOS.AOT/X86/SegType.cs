@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -21,6 +21,12 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	public class SegType : Register {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SegType"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="index">The index.</param>
+		/// <param name="value">The value.</param>
 		public SegType (string name, byte index, byte value)
 			: base (name, index)
 		{
@@ -29,6 +35,10 @@ namespace SharpOS.AOT.X86 {
 
 		private byte value = 0;
 
+		/// <summary>
+		/// Gets the value.
+		/// </summary>
+		/// <value>The value.</value>
 		public byte Value {
 			get {
 				return value;

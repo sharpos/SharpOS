@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.IO;
@@ -19,6 +19,9 @@ using Mono.Cecil;
 namespace SharpOS.AOT.IR.Instructions {
 	[Serializable]
 	public class ExceptionValue : Identifier {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ExceptionValue"/> class.
+		/// </summary>
 		public ExceptionValue ()
 			: base ("ExceptionValue", 0)
 		{

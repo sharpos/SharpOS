@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.Text;
@@ -20,6 +20,9 @@ namespace SharpOS.AOT.IR.Instructions {
 	public class End : SharpOS.AOT.IR.Instructions.Instruction {
 		public static readonly End END = new End ();
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="End"/> class.
+		/// </summary>
 		private End ()
 			: base (null)
 		{

@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.Collections;
@@ -21,29 +21,52 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
 	public class Block : IEnumerable<SharpOS.AOT.IR.Instructions.Instruction> {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Block"/> class.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public Block (Method method)
 		{
 			this.method = method;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Block"/> class.
+		/// </summary>
 		public Block ()
 		{
 		}
 
 		private Method method = null;
 
+		/// <summary>
+		/// Gets the method.
+		/// </summary>
+		/// <value>The method.</value>
 		public Method Method {
 			get {
 				return method;
 			}
 		}
 
+		/// <summary>
+		/// Returns an enumerator that iterates through the collection.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+		/// </returns>
 		IEnumerator<SharpOS.AOT.IR.Instructions.Instruction> IEnumerable<SharpOS.AOT.IR.Instructions.Instruction>.GetEnumerator ()
 		{
 			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.instructions) 
 				yield return instruction;
 		}
 
+		/// <summary>
+		/// Returns an enumerator that iterates through a collection.
+		/// </summary>
+		/// <returns>
+		/// An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
+		/// </returns>
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return ((IEnumerable<SharpOS.AOT.IR.Instructions.Instruction>) this).GetEnumerator ();
@@ -51,6 +74,10 @@ namespace SharpOS.AOT.IR {
 
 		public delegate void BlockVisitor (Block block);
 
+		/// <summary>
+		/// Visits the specified visitor.
+		/// </summary>
+		/// <param name="visitor">The visitor.</param>
 		public void Visit (BlockVisitor visitor)
 		{
 			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.instructions) 
@@ -59,6 +86,11 @@ namespace SharpOS.AOT.IR {
 			visitor (this);
 		}
 
+		/// <summary>
+		/// Gets the stack delta.
+		/// </summary>
+		/// <param name="instruction">The instruction.</param>
+		/// <returns></returns>
 		private int GetStackDelta (Mono.Cecil.Cil.Instruction instruction)
 		{
 			int result = 0;
@@ -143,6 +175,11 @@ namespace SharpOS.AOT.IR {
 			return result;
 		}
 
+		/// <summary>
+		/// Converts the specified type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
 		private SharpOS.AOT.IR.Instructions.Instruction Convert (Operands.Operand.ConvertType type)
 		{
 			//this.instructions[this.instructions.Count - 1].Value.ConvertTo = type;
@@ -153,6 +190,10 @@ namespace SharpOS.AOT.IR {
 			return instruction;
 		}
 
+		/// <summary>
+		/// Converts from CIL.
+		/// </summary>
+		/// <param name="secondPass">if set to <c>true</c> [second pass].</param>
 		public void ConvertFromCIL (bool secondPass)
 		{
 			stack = 0;
@@ -401,16 +442,14 @@ namespace SharpOS.AOT.IR {
 
 				// Misc
 				else if (cilInstruction.OpCode == OpCodes.Ret) {
-
-					if (this.method.MethodDefinition.ReturnType.ReturnType.FullName.Equals ("System.Void") == true) {
+					if (this.method.MethodDefinition.ReturnType.ReturnType.FullName.Equals ("System.Void"))
 						instruction = new Return();
 
-					} else if (stack > 0) {
+					else if (stack > 0)
 						instruction = new Return (new Register (stack - 1));
 
-					} else {
+					else
 						instruction = new Return (new Register (0));
-					}
 
 				} else if (cilInstruction.OpCode == OpCodes.Switch) {
 					instruction = new Switch (new Register (stack - 1));
@@ -420,6 +459,15 @@ namespace SharpOS.AOT.IR {
 
 				} else if (cilInstruction.OpCode == OpCodes.Dup) {
 					instruction = new Assign (new Register (stack), new Register (stack - 1));
+
+				} else if (cilInstruction.OpCode == OpCodes.Sizeof) {
+					instruction = new Assign (new Register (stack), new Constant (this.method.Engine.GetTypeSize (cilInstruction.Operand.ToString())));
+					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
+
+				} else if (cilInstruction.OpCode == OpCodes.Localloc) {
+					instruction = new Assign (new Register (stack - 1), new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Localloc), new Register (stack - 1)));
+					(instruction as Assign).Assignee.SizeType = Operand.InternalSizeType.U;
+
 				}
 
 				// Check
@@ -452,7 +500,7 @@ namespace SharpOS.AOT.IR {
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldstr) {
 					//instruction = new Assign(new Register(stack), new Constant("\"" + cilInstruction.Operand.ToString() + "\""));
-					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand.ToString()));
+					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand.ToString ()));
 				}
 
 				// Load Constants
@@ -611,13 +659,13 @@ namespace SharpOS.AOT.IR {
 
 				// Load Locales
 				else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S) {
-					Reference reference = new Reference (this.Method.GetLocal ( (cilInstruction.Operand as VariableDefinition).Index));
+					Reference reference = new Reference (this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
 					reference.SizeType = Operand.InternalSizeType.I;
 
 					instruction = new Assign (new Register (stack), reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldloc || cilInstruction.OpCode == OpCodes.Ldloc_S) {
-					instruction = new Assign (new Register (stack), this.Method.GetLocal ( (cilInstruction.Operand as VariableDefinition).Index));
+					instruction = new Assign (new Register (stack), this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldloc_0) {
 					instruction = new Assign (new Register (stack), this.Method.GetLocal (0));
@@ -699,7 +747,7 @@ namespace SharpOS.AOT.IR {
 
 				// Store Locales
 				else if (cilInstruction.OpCode == OpCodes.Stloc || cilInstruction.OpCode == OpCodes.Stloc_S) {
-					instruction = new Assign (this.Method.GetLocal ( (cilInstruction.Operand as VariableDefinition).Index), new Register (stack - 1));
+					instruction = new Assign (this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index), new Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Stloc_0) {
 					instruction = new Assign (this.Method.GetLocal (0), new Register (stack - 1));
@@ -716,17 +764,17 @@ namespace SharpOS.AOT.IR {
 
 				// Arguments Load
 				else if (cilInstruction.OpCode == OpCodes.Ldarg || cilInstruction.OpCode == OpCodes.Ldarg_S) {
-					instruction = new Assign (new Register (stack), this.Method.GetArgument ( (cilInstruction.Operand as ParameterDefinition).Sequence));
+					instruction = new Assign (new Register (stack), this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S) {
 					if (cilInstruction.Operand is ParameterDefinition) {
-						Reference reference = new Reference (this.Method.GetArgument ( (cilInstruction.Operand as ParameterDefinition).Sequence));
+						Reference reference = new Reference (this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
 						reference.SizeType = Operand.InternalSizeType.I;
 
 						instruction = new Assign (new Register (stack), reference);
 
 					} else {
-						Reference reference = new Reference (this.Method.GetArgument ( (int) cilInstruction.Operand));
+						Reference reference = new Reference (this.Method.GetArgument ((int) cilInstruction.Operand));
 						reference.SizeType = Operand.InternalSizeType.I;
 
 						instruction = new Assign (new Register (stack), reference);
@@ -747,7 +795,7 @@ namespace SharpOS.AOT.IR {
 
 				// Argument Store
 				else if (cilInstruction.OpCode == OpCodes.Starg || cilInstruction.OpCode == OpCodes.Starg_S) {
-					instruction = new Assign (this.Method.GetArgument ( (cilInstruction.Operand as ParameterDefinition).Sequence), new Register (stack - 1));
+					instruction = new Assign (this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence), new Register (stack - 1));
 				}
 
 				// Call
@@ -756,22 +804,22 @@ namespace SharpOS.AOT.IR {
 						|| cilInstruction.OpCode == OpCodes.Jmp) {
 					MethodReference call = (cilInstruction.Operand as MethodReference);
 
-					Operand[] operands;
+					Operand [] operands;
 
 					// If it is not static include the register of the instance into the operands
 
-					if (call.HasThis == true) {
-						operands = new Operand[call.Parameters.Count + 1];
+					if (call.HasThis) {
+						operands = new Operand [call.Parameters.Count + 1];
 
 					} else {
-						operands = new Operand[call.Parameters.Count];
+						operands = new Operand [call.Parameters.Count];
 					}
 
 					for (int i = 0; i < operands.Length; i++) {
-						operands[i] = new Register (stack - operands.Length + i);
+						operands [i] = new Register (stack - operands.Length + i);
 					}
 
-					if (call.ReturnType.ReturnType.FullName.Equals ("System.Void") == true) {
+					if (call.ReturnType.ReturnType.FullName.Equals ("System.Void")) {
 						instruction = new SharpOS.AOT.IR.Instructions.Call (new SharpOS.AOT.IR.Operands.Call (call, operands));
 
 						stack--;
@@ -785,45 +833,67 @@ namespace SharpOS.AOT.IR {
 				} else if (cilInstruction.OpCode == OpCodes.Newobj) {
 					MethodReference call = (cilInstruction.Operand as MethodReference);
 
-					Operand[] operands = new Operand[call.Parameters.Count];
+					Operand [] operands = new Operand [call.Parameters.Count];
 
 					for (int i = 0; i < call.Parameters.Count; i++) {
-						operands[i] = new Register (stack - call.Parameters.Count + i);
+						operands [i] = new Register (stack - call.Parameters.Count + i);
 					}
 
 					instruction = new Assign (new Register (stack - call.Parameters.Count), new SharpOS.AOT.IR.Operands.Call (call, operands));
 
 					stack -= call.Parameters.Count;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldfld) {
-					// TODO
-					instruction = new Assign (new Register (stack - 1), new Field ( (cilInstruction.Operand as MemberReference).DeclaringType.FullName + "." + (cilInstruction.Operand as MemberReference).Name, new Register (stack - 1)));
-					(instruction.Value as Identifier).SizeType = this.method.Engine.GetSizeType ( (cilInstruction.Operand as MemberReference).DeclaringType.FullName);
 				}
 
+				// Field
+				else if (cilInstruction.OpCode == OpCodes.Ldfld) {
+					MemberReference field = cilInstruction.Operand as MemberReference;
+					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+					
+					if ((field as FieldDefinition).IsStatic)
+						instruction = new Assign (new Register (stack - 1), new Field (fieldName));					
+
+					else
+						instruction = new Assign (new Register (stack - 1), new Field (fieldName, new Register (stack - 1)));
+
+					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType ((cilInstruction.Operand as MemberReference).DeclaringType.FullName);
+				}
 				/*else if (cilInstruction.OpCode == OpCodes.Ldflda)
 				{
-				    instruction = new Assign(new Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldDefinition).Name, new Register(stack - 1)));
-				    (instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+					instruction = new Assign(new Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, new Register(stack - 1)));
+					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+				 * 
 				}*/
 				else if (cilInstruction.OpCode == OpCodes.Ldsfld) {
-					instruction = new Assign (new Register (stack), new Field ( (cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name));
-					(instruction.Value as Identifier).SizeType = this.method.Engine.GetSizeType ( (cilInstruction.Operand as FieldReference).FieldType.FullName);
-				}
+					FieldReference field = cilInstruction.Operand as FieldReference;
+					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
 
+					instruction = new Assign (new Register (stack), new Field (fieldName));
+					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
+				}
 				/*else if (cilInstruction.OpCode == OpCodes.Ldsflda)
 				{
-				    instruction = new Assign(new Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name));
-				    (instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+					instruction = new Assign(new Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name));
+					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+				 * 
 				}*/
 				else if (cilInstruction.OpCode == OpCodes.Stfld) {
-					// TODO
-					instruction = new Assign (new Field ( (cilInstruction.Operand as MemberReference).DeclaringType.FullName + "." + (cilInstruction.Operand as MemberReference).Name, new Register (stack - 2)), new Register (stack - 1));
-					(instruction as Assign).Asignee.SizeType = this.method.Engine.GetSizeType ( (cilInstruction.Operand as MemberReference).DeclaringType.FullName);
+					MemberReference field = cilInstruction.Operand as MemberReference;
+					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+
+					if ((field as FieldDefinition).IsStatic)
+						instruction = new Assign (new Field (fieldName), new Register (stack - 1));
+
+					else
+						instruction = new Assign (new Field (fieldName, new Register (stack - 2)), new Register (stack - 1));
+
+					(instruction as Assign).Assignee.SizeType = this.method.Engine.GetInternalType ((cilInstruction.Operand as MemberReference).DeclaringType.FullName);
 
 				} else if (cilInstruction.OpCode == OpCodes.Stsfld) {
-					instruction = new Assign (new Field ( (cilInstruction.Operand as FieldReference).DeclaringType.FullName + "." + (cilInstruction.Operand as FieldReference).Name, new Register (stack - 1)), new Register (stack - 1));
-					(instruction as Assign).Asignee.SizeType = this.method.Engine.GetSizeType ( (cilInstruction.Operand as FieldReference).FieldType.FullName);
+					FieldReference field = cilInstruction.Operand as FieldReference;
+					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+
+					instruction = new Assign (new Field (fieldName), new Register (stack - 1));
+					(instruction as Assign).Assignee.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
 				}
 
 				// Array
@@ -856,32 +926,22 @@ namespace SharpOS.AOT.IR {
 						|| cilInstruction.OpCode == OpCodes.Ldelema) {
 					// TODO Signed/Unsigned
 					instruction = new Assign (new Register (stack - 1), new ArrayElement (new Register (stack - 2), new Register (stack - 1)));
-				}
 
-				else {
-					throw new Exception ("Instruction '" + cilInstruction.OpCode.Name + "' is not implemented. (Found in '" + this.method.MethodFullName  + "')");
-				}
+				} else
+					throw new Exception ("Instruction '" + cilInstruction.OpCode.Name + "' is not implemented. (Found in '" + this.method.MethodFullName + "')");
 
 				if (instruction != null) {
 					this.AddInstruction (instruction);
 				}
 
-
-				/*Console.WriteLine("--------------------------------");
-				Console.WriteLine(cilInstruction.OpCode.Name);
-				Console.WriteLine(instruction.ToString());*/
-
-
 				stack += GetStackDelta (cilInstruction);
 			}
-
-			// TODO remove me
-			/*if (secondPass == true && stack != 0 && !(stack == 1 && this.type == BlockType.Return && this[this.InstructionsCount - 1].Value != null))
-			{
-			    throw new Exception("Could not fix the stack in '" + this.method.ToString() + "'.");
-			}*/
 		}
 
+		/// <summary>
+		/// Merges the specified block.
+		/// </summary>
+		/// <param name="block">The block.</param>
 		public void Merge (Block block)
 		{
 			if (this.type == BlockType.OneWay) 
@@ -897,53 +957,31 @@ namespace SharpOS.AOT.IR {
 
 		private int stack = 0;
 
+		/// <summary>
+		/// Gets the stack.
+		/// </summary>
+		/// <value>The stack.</value>
 		public int Stack {
 			get {
 				return stack;
 			}
 		}
 
-
-		/*private int backwardBranches = 0;
-		private void visited = false;
-		private void active = false;
-		private int index = 0;
-
-		public void Visit(ref int index)
-		{
-		    if (this.visited == false)
-		    {
-		        this.visited = true;
-		        this.active = true;
-
-		        this.index = index++;
-
-		        foreach (Block block in this.outs)
-		        {
-		            block.Visit(ref index);
-		        }
-
-		        this.active = false;
-		    }
-		    else if (this.active == true)
-		    {
-		        this.backwardBranches++;
-		    }
-
-		    return;
-		}*/
-
 		public enum BlockType {
-			Return
-			, Throw
-			, OneWay
-			, TwoWay
-			, NWay
-			, Fall
+			Return, 
+			Throw, 
+			OneWay, 
+			TwoWay, 
+			NWay, 
+			Fall
 		}
 
 		private List<Mono.Cecil.Cil.Instruction> cil = new List<Mono.Cecil.Cil.Instruction>();
 
+		/// <summary>
+		/// Gets or sets the CIL.
+		/// </summary>
+		/// <value>The CIL.</value>
 		public List<Mono.Cecil.Cil.Instruction> CIL {
 			get {
 				return cil;
@@ -955,12 +993,21 @@ namespace SharpOS.AOT.IR {
 
 		private List<SharpOS.AOT.IR.Instructions.Instruction> instructions = new List<SharpOS.AOT.IR.Instructions.Instruction>();
 
+		/// <summary>
+		/// Gets the <see cref="SharpOS.AOT.IR.Instructions.Instruction"/> at the specified index.
+		/// </summary>
+		/// <value></value>
 		public SharpOS.AOT.IR.Instructions.Instruction this [int index] {
 			get {
 				return this.instructions[index];
 			}
 		}
 
+		/// <summary>
+		/// Inserts the instruction.
+		/// </summary>
+		/// <param name="position">The position.</param>
+		/// <param name="instruction">The instruction.</param>
 		public void InsertInstruction (int position, SharpOS.AOT.IR.Instructions.Instruction instruction)
 		{
 			instruction.Block = this;
@@ -968,6 +1015,11 @@ namespace SharpOS.AOT.IR {
 			this.instructions.Insert (position, instruction);
 		}
 
+		/// <summary>
+		/// Sets the instruction.
+		/// </summary>
+		/// <param name="position">The position.</param>
+		/// <param name="instruction">The instruction.</param>
 		public void SetInstruction (int position, SharpOS.AOT.IR.Instructions.Instruction instruction)
 		{
 			instruction.Block = this;
@@ -982,6 +1034,10 @@ namespace SharpOS.AOT.IR {
 			this.instructions[position] = instruction;
 		}
 
+		/// <summary>
+		/// Adds the instruction.
+		/// </summary>
+		/// <param name="instruction">The instruction.</param>
 		public void AddInstruction (SharpOS.AOT.IR.Instructions.Instruction instruction)
 		{
 			instruction.Block = this;
@@ -989,16 +1045,28 @@ namespace SharpOS.AOT.IR {
 			this.instructions.Add (instruction);
 		}
 
+		/// <summary>
+		/// Removes the instruction.
+		/// </summary>
+		/// <param name="instruction">The instruction.</param>
 		public void RemoveInstruction (SharpOS.AOT.IR.Instructions.Instruction instruction)
 		{
 			this.instructions.Remove (instruction);
 		}
 
+		/// <summary>
+		/// Removes the instruction.
+		/// </summary>
+		/// <param name="position">The position.</param>
 		public void RemoveInstruction (int position)
 		{
 			this.instructions.RemoveAt (position);
 		}
 
+		/// <summary>
+		/// Gets the instructions count.
+		/// </summary>
+		/// <value>The instructions count.</value>
 		public int InstructionsCount {
 			get {
 				return this.instructions.Count;
@@ -1007,6 +1075,10 @@ namespace SharpOS.AOT.IR {
 
 		private BlockType type;
 
+		/// <summary>
+		/// Gets or sets the type.
+		/// </summary>
+		/// <value>The type.</value>
 		public BlockType Type {
 			get {
 				return type;
@@ -1018,6 +1090,10 @@ namespace SharpOS.AOT.IR {
 
 		private List<Block> ins = new List<Block> ();
 
+		/// <summary>
+		/// Gets the ins.
+		/// </summary>
+		/// <value>The ins.</value>
 		public List<Block> Ins {
 			get {
 				return ins;
@@ -1026,6 +1102,10 @@ namespace SharpOS.AOT.IR {
 
 		private List<Block> outs = new List<Block> ();
 
+		/// <summary>
+		/// Gets the outs.
+		/// </summary>
+		/// <value>The outs.</value>
 		public List<Block> Outs {
 			get {
 				return outs;
@@ -1034,6 +1114,10 @@ namespace SharpOS.AOT.IR {
 
 		private List<Block> dominators = new List<Block>();
 
+		/// <summary>
+		/// Gets or sets the dominators.
+		/// </summary>
+		/// <value>The dominators.</value>
 		public List<Block> Dominators {
 			get {
 				return dominators;
@@ -1045,6 +1129,10 @@ namespace SharpOS.AOT.IR {
 
 		private Block immediateDominator = null;
 
+		/// <summary>
+		/// Gets or sets the immediate dominator.
+		/// </summary>
+		/// <value>The immediate dominator.</value>
 		public Block ImmediateDominator {
 			get {
 				return immediateDominator;
@@ -1056,6 +1144,10 @@ namespace SharpOS.AOT.IR {
 
 		private List<Block> immediateDominatorOf = new List<Block> ();
 
+		/// <summary>
+		/// Gets or sets the immediate dominator of.
+		/// </summary>
+		/// <value>The immediate dominator of.</value>
 		public List<Block> ImmediateDominatorOf {
 			get {
 				return immediateDominatorOf;
@@ -1067,6 +1159,10 @@ namespace SharpOS.AOT.IR {
 
 		private List<Block> dominanceFrontiers = new List<Block> ();
 
+		/// <summary>
+		/// Gets or sets the dominance frontiers.
+		/// </summary>
+		/// <value>The dominance frontiers.</value>
 		public List<Block> DominanceFrontiers {
 			get {
 				return dominanceFrontiers;
@@ -1078,6 +1174,10 @@ namespace SharpOS.AOT.IR {
 
 		private int index = 0;
 
+		/// <summary>
+		/// Gets or sets the index.
+		/// </summary>
+		/// <value>The index.</value>
 		public int Index {
 			get {
 				return index;
@@ -1087,6 +1187,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the start offset.
+		/// </summary>
+		/// <value>The start offset.</value>
 		public long StartOffset {
 			get {
 				if (this.cil.Count > 0) 
@@ -1099,6 +1203,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the end offset.
+		/// </summary>
+		/// <value>The end offset.</value>
 		public long EndOffset {
 			get {
 				if (this.cil.Count > 0) 
@@ -1111,6 +1219,12 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override string ToString ()
 		{
 			StringBuilder stringBuilder = new StringBuilder ();
@@ -1120,18 +1234,25 @@ namespace SharpOS.AOT.IR {
 			return stringBuilder.ToString ();
 		}
 
+		/// <summary>
+		/// Updates the index.
+		/// </summary>
 		public void UpdateIndex ()
 		{
 			int index = 0;
 
-			SharpOS.AOT.IR.Instructions.Instruction.InstructionVisitor visitor = delegate (SharpOS.AOT.IR.Instructions.Instruction instruction) {
-												     instruction.Index = index++;
-											     };
+			Instructions.Instruction.InstructionVisitor visitor = delegate (Instructions.Instruction instruction) {
+				instruction.Index = index++;
+			};
 
 			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this) 
 				instruction.VisitInstruction (visitor);
 		}
 
+		/// <summary>
+		/// Dumps the specified string builder.
+		/// </summary>
+		/// <param name="stringBuilder">The string builder.</param>
 		public void Dump (StringBuilder stringBuilder)
 		{
 			this.UpdateIndex ();
@@ -1139,6 +1260,11 @@ namespace SharpOS.AOT.IR {
 			this.Dump (string.Empty, stringBuilder);
 		}
 
+		/// <summary>
+		/// Dumps the specified prefix.
+		/// </summary>
+		/// <param name="prefix">The prefix.</param>
+		/// <param name="stringBuilder">The string builder.</param>
 		public void Dump (string prefix, StringBuilder stringBuilder)
 		{
 			string ins = string.Empty;
