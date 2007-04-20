@@ -971,6 +971,12 @@ namespace SharpOS.AOT.IR {
 
 								identifier.Version = GetSSAStackValue (stack, identifier.Value);
 
+							} else if (operand is Field) {
+								Identifier identifier = (operand as Field).Instance;
+
+								if (identifier != null)
+									identifier.Version = GetSSAStackValue (stack, identifier.Value);
+
 							} else if (operand is Identifier) {
 								Identifier identifier = operand as Identifier;
 
@@ -1127,6 +1133,10 @@ namespace SharpOS.AOT.IR {
 
 							string id = operand.ID;
 
+							if (operand is Field
+									&& (operand as Field).Instance != null)
+								id = (operand as Field).Instance.ID;
+
 							if (!defuse.Contains (id)) {
 								DefUseItem item = new DefUseItem (id, new List<SharpOS.AOT.IR.Instructions.Instruction>());
 								item.values.Add (null);
@@ -1183,7 +1193,7 @@ namespace SharpOS.AOT.IR {
 
 			foreach (DefUseItem item in defuse) {
 				string key = item.key;
-				List<Instructions.Instruction> list = defuse[key].values;
+				List<Instructions.Instruction> list = defuse [key].values;
 
 				if (list [0] == null)
 					throw new Exception ("Def statement for '" + key + "' in '" + this.MethodFullName + "' not found.");
@@ -1198,12 +1208,22 @@ namespace SharpOS.AOT.IR {
 				for (int i = 1; i < list.Count; i++) {
 					Instructions.Instruction instruction = list [i];
 
-					if (instruction is Assign
-							&& (instruction as Assign).Assignee is Reference) {
-						Reference reference = (instruction as Assign).Assignee as Reference;
+					if (instruction is Assign) {
+						Assign assign = instruction as Assign;
+						
+						if (assign.Assignee is Reference) {
+							Reference reference = assign.Assignee as Reference;
 
-						if (reference.Value.ID.Equals (definition.Assignee.ID))
-							reference.Value = definition.Assignee;
+							if (reference.Value.ID.Equals (definition.Assignee.ID))
+								reference.Value = definition.Assignee;
+
+						} else if (assign.Assignee is Field) {
+							Field field = (instruction as Assign).Assignee as Field;
+
+							if (field.Instance != null
+									&& field.Instance.ID.Equals (definition.Assignee.ID))
+								field.Instance = definition.Assignee;
+						}
 					}
 
 					if (instruction.Value == null)
@@ -1217,6 +1237,10 @@ namespace SharpOS.AOT.IR {
 
 						string id = operand.ID;
 
+						if (operand is Field
+								&& (operand as Field).Instance != null)
+							id = (operand as Field).Instance.ID;
+
 						if (!definition.Assignee.ID.Equals (id)) 
 							continue;
 
@@ -1224,6 +1248,12 @@ namespace SharpOS.AOT.IR {
 							Reference reference = instruction.Value as Reference;
 
 							reference.Value = definition.Assignee;
+
+						} else if (instruction.Value is Field) {
+							Field field = instruction.Value as Field;
+
+							if (field.Instance != null)
+								field.Instance = definition.Assignee;
 
 						} else if (instruction.Value is Identifier)
 							instruction.Value = definition.Assignee;

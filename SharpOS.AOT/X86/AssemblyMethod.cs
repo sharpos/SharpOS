@@ -1132,6 +1132,7 @@ namespace SharpOS.AOT.X86 {
 
 					else
 						this.MovMemoryConstant (assign);
+
 				} else
 					throw new Exception ("'" + instruction + "' is not supported.");
 
@@ -1159,24 +1160,22 @@ namespace SharpOS.AOT.X86 {
 
 				} else if (assign.Assignee.IsRegisterSet
 						&& !assign.Value.IsRegisterSet) {
-					if (this.IsFourBytes (assign.Assignee)) {
+					if (this.IsFourBytes (assign.Assignee))
 						this.MovRegisterMemory (assign);
 
-					} else {
+					else
 						throw new Exception ("'" + instruction + "' is not supported.");
-					}
 
-				} else {
+				} else
 					// Just in case....
 					throw new Exception ("'" + instruction + "' is not supported.");
-				}
 
 			} else if (assign.Value is Arithmetic) {
 				if (this.IsFourBytes (assign.Assignee)) {
-					if (assign.Assignee.IsRegisterSet) {
+					if (assign.Assignee.IsRegisterSet)
 						this.MovRegisterArithmetic (assembly.GetRegister (assign.Assignee.Register), assign.Value as Arithmetic);
 
-					} else {
+					else {
 						R32Type register = assembly.GetSpareRegister();
 
 						this.MovRegisterArithmetic (register, assign.Value as Arithmetic);
@@ -1209,9 +1208,8 @@ namespace SharpOS.AOT.X86 {
 						assembly.FreeSpareRegister (register);
 					}
 
-				} else {
+				} else
 					throw new Exception ("'" + instruction + "' is not supported.");
-				}
 
 			} else if (assign.Value is SharpOS.AOT.IR.Operands.Call) {
 				SharpOS.AOT.IR.Operands.Call call = assign.Value as SharpOS.AOT.IR.Operands.Call;
@@ -1248,7 +1246,11 @@ namespace SharpOS.AOT.X86 {
 					if (size > 4096)
 						throw new Exception ("'" + instruction + "' has an invalid size value. (Bigger than 4096 bytes)");
 
+					if (size % 4 != 0)
+						size = ((size / 4) + 1) * 4;
 
+					this.assembly.SUB (R32.ESP, (uint) size);
+					this.MovOperandRegister (assign.Assignee, R32.ESP);
 
 				} else
 					throw new Exception ("'" + instruction + "' is not supported.");
@@ -1456,7 +1458,16 @@ namespace SharpOS.AOT.X86 {
 			Memory address = null;
 
 			if (operand is Field) {
-				address = this.GetMemory (operand.SizeType, null, 0, 0, operand.Value);
+				Field field = operand as Field;
+
+				if (field.Instance != null) {
+					this.MovRegisterOperand (R32.ECX, field.Instance);
+
+					// TODO get the offset of the field
+					address = this.GetMemory (operand.SizeType, R32.ECX, 0, 0);
+
+				} else
+					address = this.GetMemory (operand.SizeType, null, 0, 0, operand.Value);
 
 			} else if (operand is Reference) {
 				Identifier identifier = (operand as Reference).Value as Identifier;

@@ -1,11 +1,11 @@
-/**
- *  (C) 2006-2007 The SharpOS Project Team - http://www.sharpos.org
- *
- *  Licensed under the terms of the GNU GPL License version 2.
- *
- *  Author: Mircea-Cristian Racasan <darx_kies@gmx.net>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 using System.Collections.Generic;
@@ -47,22 +47,22 @@ namespace SharpOS {
 
 		static byte oldAttributes = 0;
 
-		/*struct TestStrut {
+		struct TestStrut {
 			public uint FirstValue;
 			public byte SecondValue;
-		}*/
+		}
 
 		public unsafe static void BootEntry ()
 		{
-			/*TestStrut* values = stackalloc TestStrut [10];
+			TestStrut* values = stackalloc TestStrut [10];
 			values [3].FirstValue = 1;
 			values [3].SecondValue = 2;
 
-			x = values [3].SecondValue;*/
+			x = values [3].SecondValue;
 
 			SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
 
-			WriteLine (String ("xSharpOS v0.0.0.0.99 (http://www.sharpos.org)"));
+			WriteLine (String ("SharpOS v0.0.0.0.99 (http://www.sharpos.org)"));
 			WriteNL ();
 			WriteCPUIDInfo ();
 

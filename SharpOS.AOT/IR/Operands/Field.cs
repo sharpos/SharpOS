@@ -43,6 +43,12 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <value>The instance.</value>
 		public Identifier Instance
 		{
+			set {
+				if (this.operands == null || this.operands.Length == 0)
+					this.operands = new Operand [1];
+
+				this.operands [0] = value;
+			}
 			get {
 				if (this.operands != null && this.operands.Length > 0)
 					return this.operands [0] as Identifier;

@@ -201,7 +201,6 @@ namespace SharpOS.AOT.IR {
 			this.instructions = new List<SharpOS.AOT.IR.Instructions.Instruction>();
 
 			// Catch
-
 			if (this.method.MethodDefinition.Body.ExceptionHandlers.Count > 0 && this.cil.Count > 0) {
 				foreach (ExceptionHandler exceptionHandler in this.method.MethodDefinition.Body.ExceptionHandlers) {
 					if (exceptionHandler.CatchType != null
@@ -855,7 +854,7 @@ namespace SharpOS.AOT.IR {
 					else
 						instruction = new Assign (new Register (stack - 1), new Field (fieldName, new Register (stack - 1)));
 
-					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType ((cilInstruction.Operand as MemberReference).DeclaringType.FullName);
+					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (fieldName);
 				}
 				/*else if (cilInstruction.OpCode == OpCodes.Ldflda)
 				{
@@ -886,7 +885,7 @@ namespace SharpOS.AOT.IR {
 					else
 						instruction = new Assign (new Field (fieldName, new Register (stack - 2)), new Register (stack - 1));
 
-					(instruction as Assign).Assignee.SizeType = this.method.Engine.GetInternalType ((cilInstruction.Operand as MemberReference).DeclaringType.FullName);
+					(instruction as Assign).Assignee.SizeType = this.method.Engine.GetInternalType (fieldName);
 
 				} else if (cilInstruction.OpCode == OpCodes.Stsfld) {
 					FieldReference field = cilInstruction.Operand as FieldReference;

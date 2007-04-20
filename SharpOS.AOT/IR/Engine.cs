@@ -257,16 +257,31 @@ namespace SharpOS.AOT.IR {
 			else if (this.Assembly != null && this.Assembly.IsRegister (type))
 				return this.Assembly.GetRegisterSizeType (type);
 
-			foreach (Class _class in this.classes) {
-				if (_class.ClassDefinition.FullName.Equals (type)) {
-					if (_class.ClassDefinition.IsEnum) {
+			if (type.IndexOf ("::") != -1) {
+				string objectName = type.Substring (0, type.IndexOf ("::"));
+				string fieldName = type.Substring (type.IndexOf ("::") + 2);
+
+				foreach (Class _class in this.classes) {
+					if (_class.ClassDefinition.FullName.Equals (objectName)) {
 						foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-							if ( (field.Attributes & FieldAttributes.RTSpecialName) != 0) 
+							if (field.Name.Equals (fieldName))
 								return this.GetInternalType (field.FieldType.FullName);
 						}
+					}
+				}
 
-					} else
-						return Operands.Operand.InternalSizeType.Object;
+			} else {
+				foreach (Class _class in this.classes) {
+					if (_class.ClassDefinition.FullName.Equals (type)) {
+						if (_class.ClassDefinition.IsEnum) {
+							foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
+								if ((field.Attributes & FieldAttributes.RTSpecialName) != 0)
+									return this.GetInternalType (field.FieldType.FullName);
+							}
+
+						} else
+							return Operands.Operand.InternalSizeType.Object;
+					}
 				}
 			}
 
