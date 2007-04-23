@@ -466,7 +466,6 @@ namespace SharpOS.AOT.IR {
 				} else if (cilInstruction.OpCode == OpCodes.Localloc) {
 					instruction = new Assign (new Register (stack - 1), new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Localloc), new Register (stack - 1)));
 					(instruction as Assign).Assignee.SizeType = Operand.InternalSizeType.U;
-
 				}
 
 				// Check
@@ -656,8 +655,20 @@ namespace SharpOS.AOT.IR {
 					instruction = new Assign (register, reference);
 				}
 
+				// Object
+				else if (cilInstruction.OpCode == OpCodes.Ldobj) {
+					Operands.Object _object = new Operands.Object ((cilInstruction.Operand as TypeReference).FullName, new Register (stack - 1));
+					_object.SizeType = Operand.InternalSizeType.Object;
+
+					Register register = new Register (stack - 1);
+					register.SizeType = Operand.InternalSizeType.Object;
+
+					instruction = new Assign (register, _object);
+				}
+				
 				// Load Locales
 				else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S) {
+					// TODO use the Address() instead of Reference()?
 					Reference reference = new Reference (this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
 					reference.SizeType = Operand.InternalSizeType.I;
 
@@ -767,16 +778,16 @@ namespace SharpOS.AOT.IR {
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S) {
 					if (cilInstruction.Operand is ParameterDefinition) {
-						Reference reference = new Reference (this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
-						reference.SizeType = Operand.InternalSizeType.I;
+						Address address = new Address (this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
+						address.SizeType = Operand.InternalSizeType.I;
 
-						instruction = new Assign (new Register (stack), reference);
+						instruction = new Assign (new Register (stack), address);
 
 					} else {
-						Reference reference = new Reference (this.Method.GetArgument ((int) cilInstruction.Operand));
-						reference.SizeType = Operand.InternalSizeType.I;
+						Address address = new Address (this.Method.GetArgument ((int) cilInstruction.Operand));
+						address.SizeType = Operand.InternalSizeType.I;
 
-						instruction = new Assign (new Register (stack), reference);
+						instruction = new Assign (new Register (stack), address);
 					}
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarg_0) {
@@ -806,26 +817,22 @@ namespace SharpOS.AOT.IR {
 					Operand [] operands;
 
 					// If it is not static include the register of the instance into the operands
-
-					if (call.HasThis) {
+					if (call.HasThis)
 						operands = new Operand [call.Parameters.Count + 1];
 
-					} else {
+					else
 						operands = new Operand [call.Parameters.Count];
-					}
 
-					for (int i = 0; i < operands.Length; i++) {
+					for (int i = 0; i < operands.Length; i++)
 						operands [i] = new Register (stack - operands.Length + i);
-					}
 
 					if (call.ReturnType.ReturnType.FullName.Equals ("System.Void")) {
 						instruction = new SharpOS.AOT.IR.Instructions.Call (new SharpOS.AOT.IR.Operands.Call (call, operands));
 
 						stack--;
 
-					} else {
+					} else
 						instruction = new Assign (new Register (stack - operands.Length), new SharpOS.AOT.IR.Operands.Call (call, operands));
-					}
 
 					stack -= operands.Length;
 
@@ -834,9 +841,8 @@ namespace SharpOS.AOT.IR {
 
 					Operand [] operands = new Operand [call.Parameters.Count];
 
-					for (int i = 0; i < call.Parameters.Count; i++) {
+					for (int i = 0; i < call.Parameters.Count; i++)
 						operands [i] = new Register (stack - call.Parameters.Count + i);
-					}
 
 					instruction = new Assign (new Register (stack - call.Parameters.Count), new SharpOS.AOT.IR.Operands.Call (call, operands));
 
@@ -847,9 +853,9 @@ namespace SharpOS.AOT.IR {
 				else if (cilInstruction.OpCode == OpCodes.Ldfld) {
 					MemberReference field = cilInstruction.Operand as MemberReference;
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
-					
+
 					if ((field as FieldDefinition).IsStatic)
-						instruction = new Assign (new Register (stack - 1), new Field (fieldName));					
+						instruction = new Assign (new Register (stack - 1), new Field (fieldName));
 
 					else
 						instruction = new Assign (new Register (stack - 1), new Field (fieldName, new Register (stack - 1)));
@@ -860,7 +866,6 @@ namespace SharpOS.AOT.IR {
 				{
 					instruction = new Assign(new Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, new Register(stack - 1)));
 					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-				 * 
 				}*/
 				else if (cilInstruction.OpCode == OpCodes.Ldsfld) {
 					FieldReference field = cilInstruction.Operand as FieldReference;
@@ -873,7 +878,6 @@ namespace SharpOS.AOT.IR {
 				{
 					instruction = new Assign(new Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name));
 					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-				 * 
 				}*/
 				else if (cilInstruction.OpCode == OpCodes.Stfld) {
 					MemberReference field = cilInstruction.Operand as MemberReference;
@@ -924,14 +928,14 @@ namespace SharpOS.AOT.IR {
 						|| cilInstruction.OpCode == OpCodes.Ldelem_Any
 						|| cilInstruction.OpCode == OpCodes.Ldelema) {
 					// TODO Signed/Unsigned
+					// TODO ldelema -> new Address()
 					instruction = new Assign (new Register (stack - 1), new ArrayElement (new Register (stack - 2), new Register (stack - 1)));
 
 				} else
 					throw new Exception ("Instruction '" + cilInstruction.OpCode.Name + "' is not implemented. (Found in '" + this.method.MethodFullName + "')");
 
-				if (instruction != null) {
+				if (instruction != null)
 					this.AddInstruction (instruction);
-				}
 
 				stack += GetStackDelta (cilInstruction);
 			}

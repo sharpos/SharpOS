@@ -24,6 +24,7 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
 	public partial class Engine : IEnumerable<Class> {
+		const string dumpFilename = "SharpOS.AOT.txt";
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Engine"/> class.
 		/// </summary>
@@ -51,6 +52,8 @@ namespace SharpOS.AOT.IR {
 		/// <param name="target">The target.</param>
 		public void Run (IAssembly asm, string assembly, string target)
 		{
+			File.Delete (dumpFilename);
+
 			this.asm = asm;
 
 			AssemblyDefinition library = AssemblyFactory.GetAssembly (assembly);
@@ -134,11 +137,25 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public int GetTypeSize (string type)
 		{
+			return GetTypeSize (type, false);
+		}
+
+		/// <summary>
+		/// Gets the size of the type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="align">if set to <c>true</c> [align].</param>
+		/// <returns></returns>
+		public int GetTypeSize (string type, bool align)
+		{
 			Operands.Operand.InternalSizeType sizeType = GetInternalType (type);
 
 			switch (sizeType) {
 				case Operand.InternalSizeType.I1:
 				case Operand.InternalSizeType.U1:
+					if (align)
+						return 2;
+
 					return 1;
 
 				case Operand.InternalSizeType.I2:
@@ -147,8 +164,11 @@ namespace SharpOS.AOT.IR {
 
 				case Operand.InternalSizeType.I4:
 				case Operand.InternalSizeType.U4:
+					return 4;
+
 				case Operand.InternalSizeType.I:
 				case Operand.InternalSizeType.U:
+					// TODO this is architecture specific so it should get retrieved from the assembly class
 					return 4;
 
 				case Operand.InternalSizeType.I8:
@@ -170,11 +190,14 @@ namespace SharpOS.AOT.IR {
 										return this.GetTypeSize (field.FieldType.FullName);
 								}
 
-							} if (_class.ClassDefinition.IsValueType) {
+							} else if (_class.ClassDefinition.IsValueType) {
 								int result = 0;
 
 								foreach (FieldReference field in _class.ClassDefinition.Fields)
-									result += this.GetTypeSize (field.FieldType.FullName);
+									result += this.GetTypeSize (field.FieldType.FullName, true);
+
+								if (result % 4 != 0)
+									result = ((result / 4) + 1) * 4;
 
 								return result;
 
@@ -291,6 +314,10 @@ namespace SharpOS.AOT.IR {
 
 		internal void WriteLine (string value)
 		{
+			StreamWriter writer = new StreamWriter (dumpFilename, true);
+			writer.WriteLine (value);
+			writer.Close ();
+
 			Console.WriteLine ("[*] " + value);
 		}
 	}

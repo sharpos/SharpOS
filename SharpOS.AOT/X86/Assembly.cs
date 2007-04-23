@@ -21,6 +21,8 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	public partial class Assembly : IAssembly {
+		Engine engine;
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Assembly"/> class.
 		/// </summary>
@@ -284,6 +286,38 @@ namespace SharpOS.AOT.X86 {
 			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + label, null, null, target, new UInt32[] { 0 }, new string[] { "o32", "B8+r", "id" }));
 		}
 
+
+		/// <summary>
+		/// Gets the field offset.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
+		public int GetFieldOffset (string value)
+		{
+			int result = 0;
+
+			if (value.IndexOf ("::") == -1)
+				throw new Exception ("'" + value + "' is no field definition.");
+
+			string objectName = value.Substring (0, value.IndexOf ("::"));
+			string fieldName = value.Substring (value.IndexOf ("::") + 2);
+
+			foreach (Class _class in this.engine) {
+				if (_class.ClassDefinition.FullName.Equals (objectName)) {
+					foreach (FieldReference field in _class.ClassDefinition.Fields) {
+						if (field.Name.Equals (fieldName))
+							break;
+
+						result += this.engine.GetTypeSize (field.FieldType.FullName, true);
+					}
+
+					return result;
+				}
+			}
+
+			throw new Exception ("'" + value + "' has not been found.");
+		}
+
 		/// <summary>
 		/// Gets the label address.
 		/// </summary>
@@ -305,9 +339,10 @@ namespace SharpOS.AOT.X86 {
 
 				if (instruction is OffsetInstruction)
 					address = (UInt32) instruction.Value;
+
 				else if (instruction is AlignInstruction) {
 					if (address % (UInt32) instruction.Value != 0)
-						address += ( (UInt32) instruction.Value - address % (UInt32) instruction.Value);
+						address += ((UInt32) instruction.Value - address % (UInt32) instruction.Value);
 
 				} else if (instruction is TimesInstruction) {
 					TimesInstruction times = instruction as TimesInstruction;
@@ -592,7 +627,8 @@ namespace SharpOS.AOT.X86 {
 		public bool Encode (Engine engine, string target)
 		{
 			MemoryStream memoryStream = new MemoryStream ();
-			data = new Assembly ();
+			this.data = new Assembly ();
+			this.engine = engine;
 
 			bool addCTOR = false;
 
@@ -616,6 +652,8 @@ namespace SharpOS.AOT.X86 {
 
 			foreach (Class _class in engine) {
 				foreach (Method method in _class) {
+					this.engine.WriteLine ("Processing '" + method.MethodFullName + "'.");
+
 					AssemblyMethod assemblyMethod = new AssemblyMethod (this, method);
 					assemblyMethod.GetAssemblyCode ();
 				}
@@ -713,7 +751,7 @@ namespace SharpOS.AOT.X86 {
 					bool bss = false;
 
 					for (int i = 0; i < this.instructions.Count; i++) {
-						Instruction instruction = this.instructions[i];
+						Instruction instruction = this.instructions [i];
 
 						if (instruction is OrgInstruction)
 							org = (UInt32) instruction.Value;
@@ -750,6 +788,7 @@ namespace SharpOS.AOT.X86 {
 
 								if (!instruction.Relative)
 									((UInt32 []) instruction.Value) [0] += org;
+
 								else {
 									int delta = (int) (((UInt32 []) instruction.Value) [0] - offset);
 

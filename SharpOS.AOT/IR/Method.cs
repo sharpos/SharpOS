@@ -976,6 +976,11 @@ namespace SharpOS.AOT.IR {
 
 								if (identifier != null)
 									identifier.Version = GetSSAStackValue (stack, identifier.Value);
+							
+							} else if (operand is Operands.Object) {
+								Identifier identifier = (operand as Operands.Object).Address;
+
+								identifier.Version = GetSSAStackValue (stack, identifier.Value);
 
 							} else if (operand is Identifier) {
 								Identifier identifier = operand as Identifier;
@@ -1005,6 +1010,11 @@ namespace SharpOS.AOT.IR {
 
 						if (identifier != null)
 							identifier.Version = GetSSAStackValue (stack, identifier.Value);
+
+					} else if (assign.Assignee is Operands.Object) {
+						Identifier identifier = (assign.Assignee as Operands.Object).Address;
+						
+						identifier.Version = GetSSAStackValue (stack, identifier.Value);
 
 					} else {
 						string id = assign.Assignee.Value;
@@ -1057,7 +1067,7 @@ namespace SharpOS.AOT.IR {
 
 				Assign assign = instruction as Assign;
 
-				if (!(assign.Assignee is Reference || assign.Assignee is Field))
+				if (!(assign.Assignee is Reference || assign.Assignee is Field || assign.Assignee is Operands.Object))
 					stack [assign.Assignee.Value].Pop();
 			}
 
@@ -1136,6 +1146,9 @@ namespace SharpOS.AOT.IR {
 							if (operand is Field
 									&& (operand as Field).Instance != null)
 								id = (operand as Field).Instance.ID;
+
+							if (operand is Operands.Object)
+								id = (operand as Operands.Object).Address.ID;
 
 							if (!defuse.Contains (id)) {
 								DefUseItem item = new DefUseItem (id, new List<SharpOS.AOT.IR.Instructions.Instruction>());
@@ -1241,6 +1254,9 @@ namespace SharpOS.AOT.IR {
 								&& (operand as Field).Instance != null)
 							id = (operand as Field).Instance.ID;
 
+						if (operand is Operands.Object)
+							id = (operand as Operands.Object).Address.ID;
+
 						if (!definition.Assignee.ID.Equals (id)) 
 							continue;
 
@@ -1254,6 +1270,11 @@ namespace SharpOS.AOT.IR {
 
 							if (field.Instance != null)
 								field.Instance = definition.Assignee;
+						
+						} else if (instruction.Value is Operands.Object) {
+							Operands.Object _object = instruction.Value as Operands.Object;
+
+							_object.Address = definition.Assignee;
 
 						} else if (instruction.Value is Identifier)
 							instruction.Value = definition.Assignee;
@@ -1405,33 +1426,30 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void ConstantPropagation()
 		{
-			List<string> keys = this.defuse.GetKeys();
+			List<string> keys = this.defuse.GetKeys ();
 
 			this.engine.WriteLine ("=======================================");
 			this.engine.WriteLine ("Constant Propagation");
 			this.engine.WriteLine ("=======================================");
 
-			keys.Sort();
+			keys.Sort ();
 
 			while (keys.Count > 0) {
-				string key = keys[0];
+				string key = keys [0];
 				keys.RemoveAt (0);
 
-				List<Instructions.Instruction> list = this.defuse[key].values;
+				List<Instructions.Instruction> list = this.defuse [key].values;
 
-				Instructions.Instruction definition = list[0];
-
-				this.engine.WriteLine (definition.Block.Index + " : " + definition.ToString ());
+				Instructions.Instruction definition = list [0];
 
 				// v2 = PHI(v1, v1)
-
 				if (definition is PHI) {
-					Operand sample = definition.Value.Operands[0];
+					Operand sample = definition.Value.Operands [0];
 
 					bool equal = true;
 
 					for (int i = 1; i < definition.Value.Operands.Length; i++) {
-						if (!sample.ID.Equals (definition.Value.Operands[i].ID)) {
+						if (!sample.ID.Equals (definition.Value.Operands [i].ID)) {
 							equal = false;
 							break;
 						}
@@ -1453,12 +1471,6 @@ namespace SharpOS.AOT.IR {
 				else if (definition is Assign
 						&& (definition as Assign).Value is Constant
 						&& !((definition as Assign).Assignee is Field)) {
-					// Remove the instruction from the block that it is containing it
-					definition.Block.RemoveInstruction (definition);
-
-					// Remove the variable from the defuse list
-					defuse.Remove (key);
-
 					bool _break = false;
 
 					// The first pass is to find out if the constant propagation can be done for current key
@@ -1469,8 +1481,10 @@ namespace SharpOS.AOT.IR {
 							Instructions.Instruction used = list[i];
 
 							if (used.Value != null) {
-								if (pass == 1)
+								if (pass == 1) {
+									this.engine.WriteLine (definition.Block.Index + " : " + definition.ToString ());
 									this.engine.WriteLine ("\t >> " + definition.Block.Index + " : " + used.ToString ());
+								}
 
 								for (int j = 0; !_break && j < used.Value.Operands.Length; j++) {
 									Operand operand = used.Value.Operands[j];
@@ -1505,11 +1519,18 @@ namespace SharpOS.AOT.IR {
 
 								// Add to the queue
 								if (!keys.Contains (id)
-									&& !(assignee is Reference
-									|| assignee is Field))
+										&& !(assignee is Reference || assignee is Field))
 									keys.Add (id);
 							}
 						}
+					}
+
+					if (!_break) {
+						// Remove the instruction from the block that it is containing it
+						definition.Block.RemoveInstruction (definition);
+
+						// Remove the variable from the defuse list
+						defuse.Remove (key);
 					}
 				}
 			}
@@ -1542,76 +1563,97 @@ namespace SharpOS.AOT.IR {
 				Assign assign = definition as Assign;
 
 				if (assign.Value.ConvertTo != SharpOS.AOT.IR.Operands.Operand.ConvertType.NotSet
-					/*|| assign.Value is Reference*/
-					|| (assign.Value is Field && !this.engine.Assembly.IsRegister ((assign.Value as Identifier).Value))
-					|| assign.Value is Arithmetic) {
+						/*|| assign.Value is Reference*/
+						|| (assign.Value is Field && !this.engine.Assembly.IsRegister ((assign.Value as Identifier).Value))
+						|| assign.Value is Arithmetic) {
 					continue;
 
 				} else if (assign.Assignee is Register
-					&& assign.Value is Identifier
-					&& this.engine.Assembly.IsRegister ( (assign.Value as Identifier).Value)) {
+						&& assign.Value is Identifier
+						&& this.engine.Assembly.IsRegister ( (assign.Value as Identifier).Value)) {
 
 				} else if (assign.Assignee is Register
-					&& assign.Value is Operands.Call
-					&& this.engine.Assembly.IsInstruction ( (assign.Value as Operands.Call).Method.DeclaringType.FullName)) {
+						&& assign.Value is Operands.Call
+						&& this.engine.Assembly.IsInstruction ((assign.Value as Operands.Call).Method.DeclaringType.FullName)) {
 
 				} else if (assign.Assignee is Identifier
-					&& assign.Value is Identifier) {
+						&& assign.Value is Identifier) {
 
 				} else
 					continue;
 
 				this.engine.WriteLine (definition.Block.Index + " : " + definition.ToString ());
 
-				// Remove the instruction from the block that it is containing it
-				definition.Block.RemoveInstruction (definition);
+				bool _break = false;
 
-				// Remove the variable from the defuse list
-				defuse.Remove (key);
+				// The first pass is to find out if the copy propagation can be done for current key
+				// The second pass does the actual copy propagation
+				for (int pass = 0; !_break && pass < 2; pass++) {
+					// "X = A" becomes "X = B"
+					for (int i = 1; !_break && i < list.Count; i++) {
+						Instructions.Instruction used = list [i];
 
-				// "X = A" becomes "X = B"
-				for (int i = 1; i < list.Count; i++) {
-					Instructions.Instruction used = list[i];
+						if (pass == 1 && used is Assign
+								&& (used as Assign).Assignee is Reference) {
+							Reference reference = (used as Assign).Assignee as Reference;
 
-					if (used is Assign
-							&& (used as Assign).Assignee is Reference) {
-						Reference reference = (used as Assign).Assignee as Reference;
-
-						if (reference.ID.Equals (key)) 
-							reference.Value = definition.Value as Identifier;
-					}
-
-					if (used.Value != null) {
-						for (int j = 0; j < used.Value.Operands.Length; j++) {
-							Operand operand = used.Value.Operands[j];
-
-							// Replace A with B
-							if (!(operand is Identifier
-									&& operand.ID.Equals (key)))
-								continue;
-								
-							if (used.Value is Identifier) 
-								used.Value = definition.Value;
-
-							else
-								used.Value.Operands[j] = definition.Value;
+							if (reference.ID.Equals (key))
+								reference.Value = definition.Value as Identifier;
 						}
 
-						this.engine.WriteLine ("\t" + definition.Block.Index + " : " + used.ToString());
-					}
+						if (used.Value != null && used.Value.Operands != null) {
+							int replacements = 0;
 
-					if (used is Assign && !((used as Assign).Assignee is Reference)) {
-						Identifier assignee = (used as Assign).Assignee;
-						string id = assignee.ID;
+							for (int j = 0; j < used.Value.Operands.Length; j++) {
+								Operand operand = used.Value.Operands [j];
 
-						// Add to the queue
-						if (!keys.Contains (id)
-							&& !(assignee is Reference
-							|| assignee is Field)) {
-							this.engine.WriteLine (string.Format ("[*]Add Key: {0}", id));
-							keys.Add (id);
+								// Replace A with B
+								if (!(operand is Identifier
+										&& operand.ID.Equals (key)))
+									continue;
+
+								if (pass == 1) {
+									if (used.Value is Identifier)
+										used.Value = definition.Value;
+
+									else
+										used.Value.Operands [j] = definition.Value;
+								}
+
+								replacements++;
+							}
+
+							if (pass == 0 && replacements == 0) {
+								_break = true;
+								break;
+							}
+							
+							if (pass == 1)
+								this.engine.WriteLine ("\t" + definition.Block.Index + " : " + used.ToString ());
+						}
+
+						if (pass == 1 && used is Assign) {
+							Identifier assignee = (used as Assign).Assignee;
+							string id = assignee.ID;
+
+							// Add to the queue
+							if (!keys.Contains (id)
+									&& !(assignee is Reference || assignee is Field)) {
+								this.engine.WriteLine (string.Format ("[*]Add Key: {0}", id));
+
+								keys.Add (id);
+							}
 						}
 					}
+
+				}
+
+				if (!_break) {
+					// Remove the instruction from the block that it is containing it
+					definition.Block.RemoveInstruction (definition);
+
+					// Remove the variable from the defuse list
+					defuse.Remove (key);
 				}
 			}
 
@@ -1983,7 +2025,7 @@ namespace SharpOS.AOT.IR {
 			if (identifier is Argument
 					|| identifier is Field
 					|| (identifier is Reference
-					    && !(asmCall && !((identifier as Reference).Value is Argument))))
+						&& !(asmCall && !((identifier as Reference).Value is Argument))))
 				return;
 
 			if (asmCall) {

@@ -28,6 +28,16 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 
 		/// <summary>
+		/// Initializes a new instance of the <see cref="Reference"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="operand">The operand.</param>
+		protected Reference (string name, Operand operand)
+			: base (name, new Operand [] { operand })
+		{
+		}
+
+		/// <summary>
 		/// Gets the ID.
 		/// </summary>
 		/// <value>The ID.</value>

@@ -306,19 +306,19 @@ namespace SharpOS.AOT.X86 {
 		private void HandleCall (Block block, SharpOS.AOT.IR.Operands.Call call)
 		{
 			for (int i = 0; i < call.Operands.Length; i++) {
-				Operand operand = call.Operands[call.Operands.Length - i - 1];
+				Operand operand = call.Operands [call.Operands.Length - i - 1];
 
 				if (operand is Constant) {
 					if (this.IsFourBytes (operand)) {
-						Int32 value = Convert.ToInt32 ( (operand as Constant).Value);
+						Int32 value = Convert.ToInt32 ((operand as Constant).Value);
 
-						assembly.PUSH ( (UInt32) value);
+						assembly.PUSH ((UInt32) value);
 
 					} else if (this.IsEightBytes (operand)) {
-						Int64 value = Convert.ToInt64 ( (operand as Constant).Value);
+						Int64 value = Convert.ToInt64 ((operand as Constant).Value);
 
-						assembly.PUSH ( (UInt32) (value >> 32));
-						assembly.PUSH ( (UInt32) (value & 0xFFFFFFFF));
+						assembly.PUSH ((UInt32) (value >> 32));
+						assembly.PUSH ((UInt32) (value & 0xFFFFFFFF));
 
 					} else
 						throw new Exception ("'" + operand + "' is not supported.");
@@ -328,10 +328,10 @@ namespace SharpOS.AOT.X86 {
 						|| operand is Reference
 						|| operand is Local) {
 					if (this.IsFourBytes (operand)) {
-						if (operand.IsRegisterSet) {
+						if (operand.IsRegisterSet)
 							assembly.PUSH (assembly.GetRegister (operand.Register));
 
-						} else {
+						else {
 							this.MovRegisterMemory (R32.EAX, operand as Identifier);
 							assembly.PUSH (R32.EAX);
 						}
@@ -339,8 +339,27 @@ namespace SharpOS.AOT.X86 {
 					} else
 						throw new Exception ("'" + operand + "' is not supported.");
 
+				} else if (operand is SharpOS.AOT.IR.Operands.Object) {
+					SharpOS.AOT.IR.Operands.Object _object = operand as SharpOS.AOT.IR.Operands.Object;
+
+					int size = this.method.Engine.GetTypeSize (_object.Value);
+					
+					this.assembly.SUB (R32.ESP, (uint) size);
+
+					this.assembly.PUSH (R32.ESI);
+					this.assembly.PUSH (R32.EDI);
+					this.assembly.PUSH (R32.ECX);
+
+					this.assembly.MOV (R32.ECX, (uint) (size / 4));
+					this.assembly.CLD ();
+					this.assembly.MOVSD ();
+
+					this.assembly.POP (R32.ECX);
+					this.assembly.POP (R32.EDI);
+					this.assembly.POP (R32.ESI);
+
 				} else
-					throw new Exception ("'" + call.Operands[i].GetType() + "' is not supported.");
+					throw new Exception ("'" + call.Operands [i].GetType () + "' is not supported.");
 			}
 
 			assembly.CALL (call.AssemblyLabel);
@@ -348,13 +367,12 @@ namespace SharpOS.AOT.X86 {
 			int result = call.Method.Parameters.Count;
 
 			foreach (ParameterDefinition parameter in call.Method.Parameters) {
-				Operand.InternalSizeType sizeType = this.method.Engine.GetInternalType (parameter.ParameterType.ToString());
+				Operand.InternalSizeType sizeType = this.method.Engine.GetInternalType (parameter.ParameterType.ToString ());
 
 				if (sizeType == Operand.InternalSizeType.I8
 						|| sizeType == Operand.InternalSizeType.U8
-						|| sizeType == Operand.InternalSizeType.R8) {
+						|| sizeType == Operand.InternalSizeType.R8)
 					result++;
-				}
 			}
 
 			assembly.ADD (R32.ESP, (UInt32) (4 * result));
@@ -373,9 +391,8 @@ namespace SharpOS.AOT.X86 {
 			} else if (operand.IsRegisterSet) {
 				this.MovRegisterRegister (register, assembly.GetRegister (operand.Register));
 
-			} else {
+			} else
 				this.MovRegisterMemory (register, operand as Identifier);
-			}
 		}
 
 		/// <summary>
@@ -387,16 +404,15 @@ namespace SharpOS.AOT.X86 {
 		private void MovRegisterOperand (R32Type loRegister, R32Type hiRegister, Operand operand)
 		{
 			if (operand is Constant) {
-				Int64 value = Convert.ToInt64 ( (operand as Constant).Value);
+				Int64 value = Convert.ToInt64 ((operand as Constant).Value);
 
 				this.MovRegisterConstant (loRegister, hiRegister, (UInt64) value);
 
 			} else if (!operand.IsRegisterSet) {
 				this.MovRegisterMemory (loRegister, hiRegister, operand as Identifier);
 
-			} else {
+			} else
 				throw new Exception ("'" + operand + "' not supported.");
-			}
 		}
 
 		/// <summary>
@@ -406,12 +422,11 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="register">The register.</param>
 		private void MovOperandRegister (Operand operand, R32Type register)
 		{
-			if (operand.IsRegisterSet) {
+			if (operand.IsRegisterSet)
 				this.MovRegisterRegister (assembly.GetRegister (operand.Register), register);
 
-			} else {
+			else
 				this.MovMemoryRegister (operand as Identifier, register);
-			}
 		}
 
 		/// <summary>
@@ -423,28 +438,28 @@ namespace SharpOS.AOT.X86 {
 		{
 			Memory memory = this.GetMemory (identifier);
 
-			if (memory is DWordMemory) {
+			if (identifier.SizeType == Operand.InternalSizeType.Object)
+				assembly.LEA (register, memory);
+
+			else if (memory is DWordMemory)
 				assembly.MOV (register, memory as DWordMemory);
 
-			} else if (memory is WordMemory) {
-				if (this.IsSigned (identifier)) {
+			else if (memory is WordMemory) {
+				if (this.IsSigned (identifier))
 					assembly.MOVSX (register, memory as WordMemory);
 
-				} else {
+				else
 					assembly.MOVZX (register, memory as WordMemory);
-				}
 
 			} else if (memory is ByteMemory) {
-				if (this.IsSigned (identifier)) {
+				if (this.IsSigned (identifier))
 					assembly.MOVSX (register, memory as ByteMemory);
 
-				} else {
+				else
 					assembly.MOVZX (register, memory as ByteMemory);
-				}
 
-			} else {
-				throw new Exception ("'" + memory.ToString() + "' is not supported.");
-			}
+			} else
+				throw new Exception ("'" + memory.ToString () + "' is not supported.");
 		}
 
 		/// <summary>
@@ -1366,16 +1381,15 @@ namespace SharpOS.AOT.X86 {
 
 			if (sizeType == Operand.InternalSizeType.I1
 					|| sizeType == Operand.InternalSizeType.U1) {
-				if (label.Length > 0) {
+				if (label.Length > 0)
 					address = new ByteMemory (label);
 
-				} else {
-					if (displacement == 0) {
+				else {
+					if (displacement == 0)
 						address = new ByteMemory (null, _base, null, scale);
 
-					} else {
+					else
 						address = new ByteMemory (null, _base, null, scale, displacement);
-					}
 				}
 
 			} else if (sizeType == Operand.InternalSizeType.I2
@@ -1384,45 +1398,44 @@ namespace SharpOS.AOT.X86 {
 					address = new WordMemory (label);
 
 				} else {
-					if (displacement == 0) {
+					if (displacement == 0)
 						address = new WordMemory (null, _base, null, scale);
 
-					} else
+					else
 						address = new WordMemory (null, _base, null, scale, displacement);
 				}
 
 			} else if (sizeType == Operand.InternalSizeType.I4
 					|| sizeType == Operand.InternalSizeType.U4
 					|| sizeType == Operand.InternalSizeType.I
-					|| sizeType == Operand.InternalSizeType.U) {
-				if (label.Length > 0) {
+					|| sizeType == Operand.InternalSizeType.U
+					|| sizeType == Operand.InternalSizeType.Object) {
+				if (label.Length > 0)
 					address = new DWordMemory (label);
 
-				} else {
-					if (displacement == 0) {
+				else {
+					if (displacement == 0)
 						address = new DWordMemory (null, _base, null, scale);
 
-					} else
+					else
 						address = new DWordMemory (null, _base, null, scale, displacement);
 				}
 
 			} else if (sizeType == Operand.InternalSizeType.I8
 					|| sizeType == Operand.InternalSizeType.U8) {
-				if (label.Length > 0) {
+				if (label.Length > 0)
 					address = new DWordMemory (label);
 
-				} else {
-					if (displacement == 0) {
+				else {
+					if (displacement == 0)
 						address = new DWordMemory (null, _base, null, scale);
 
-					} else {
+					else
 						address = new DWordMemory (null, _base, null, scale, displacement);
-					}
 				}
 
-			} else {
+			} else
 				throw new Exception ("'" + sizeType + "' not supported.");
-			}
 
 			return address;
 		}
@@ -1463,8 +1476,7 @@ namespace SharpOS.AOT.X86 {
 				if (field.Instance != null) {
 					this.MovRegisterOperand (R32.ECX, field.Instance);
 
-					// TODO get the offset of the field
-					address = this.GetMemory (operand.SizeType, R32.ECX, 0, 0);
+					address = this.GetMemory (operand.SizeType, R32.ECX, 0, this.assembly.GetFieldOffset (field.Value));
 
 				} else
 					address = this.GetMemory (operand.SizeType, null, 0, 0, operand.Value);
@@ -1473,15 +1485,14 @@ namespace SharpOS.AOT.X86 {
 				Identifier identifier = (operand as Reference).Value as Identifier;
 				R32Type register;
 
-				if (identifier.IsRegisterSet) {
+				if (identifier.IsRegisterSet)
 					register = assembly.GetRegister (identifier.Register);
 
-				} else {
+				else {
 					register = assembly.GetSpareRegister();
 
-					if (emit) {
+					if (emit) 
 						this.MovRegisterMemory (register, identifier);
-					}
 				}
 
 				address = this.GetMemory (operand.SizeType, register, 0, 0);
