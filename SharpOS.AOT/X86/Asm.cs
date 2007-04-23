@@ -6226,6 +6226,13 @@ namespace SharpOS.AOT.X86 {
 		}
 		
 		/// <summary>
+		/// LOCK 
+		/// </summary>
+		public static void LOCK ()
+		{
+		}
+		
+		/// <summary>
 		/// LODSB 
 		/// </summary>
 		public static void LODSB ()
@@ -7895,6 +7902,41 @@ namespace SharpOS.AOT.X86 {
 		/// RDTSC 
 		/// </summary>
 		public static void RDTSC ()
+		{
+		}
+		
+		/// <summary>
+		/// REP 
+		/// </summary>
+		public static void REP ()
+		{
+		}
+		
+		/// <summary>
+		/// REPE 
+		/// </summary>
+		public static void REPE ()
+		{
+		}
+		
+		/// <summary>
+		/// REPNE 
+		/// </summary>
+		public static void REPNE ()
+		{
+		}
+		
+		/// <summary>
+		/// REPNZ 
+		/// </summary>
+		public static void REPNZ ()
+		{
+		}
+		
+		/// <summary>
+		/// REPZ 
+		/// </summary>
+		public static void REPZ ()
 		{
 		}
 		

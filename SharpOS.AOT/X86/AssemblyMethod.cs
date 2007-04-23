@@ -352,6 +352,7 @@ namespace SharpOS.AOT.X86 {
 
 					this.assembly.MOV (R32.ECX, (uint) (size / 4));
 					this.assembly.CLD ();
+					this.assembly.REP ();
 					this.assembly.MOVSD ();
 
 					this.assembly.POP (R32.ECX);

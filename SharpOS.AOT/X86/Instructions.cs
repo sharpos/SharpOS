@@ -5294,6 +5294,14 @@ namespace SharpOS.AOT.X86 {
 		}
 		
 		/// <summary>
+		/// LOCK 
+		/// </summary>
+		public void LOCK ()
+		{
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOCK", "", null, null, null, null, new string[] {"F0"}));
+		}
+		
+		/// <summary>
 		/// LODSB 
 		/// </summary>
 		public void LODSB ()
@@ -6774,6 +6782,46 @@ namespace SharpOS.AOT.X86 {
 		public void RDTSC ()
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDTSC", "", null, null, null, null, new string[] {"0F", "31"}));
+		}
+		
+		/// <summary>
+		/// REP 
+		/// </summary>
+		public void REP ()
+		{
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REP", "", null, null, null, null, new string[] {"F3"}));
+		}
+		
+		/// <summary>
+		/// REPE 
+		/// </summary>
+		public void REPE ()
+		{
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPE", "", null, null, null, null, new string[] {"F3"}));
+		}
+		
+		/// <summary>
+		/// REPNE 
+		/// </summary>
+		public void REPNE ()
+		{
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPNE", "", null, null, null, null, new string[] {"F2"}));
+		}
+		
+		/// <summary>
+		/// REPNZ 
+		/// </summary>
+		public void REPNZ ()
+		{
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPNZ", "", null, null, null, null, new string[] {"F2"}));
+		}
+		
+		/// <summary>
+		/// REPZ 
+		/// </summary>
+		public void REPZ ()
+		{
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPZ", "", null, null, null, null, new string[] {"F3"}));
 		}
 		
 		/// <summary>

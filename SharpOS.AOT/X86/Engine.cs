@@ -4623,6 +4623,17 @@ namespace SharpOS.AOT.X86 {
 					}
 					break;
 				
+				case "LOCK":
+					switch (parameterTypes) {
+						case "LOCK":
+							this.LOCK ();
+							break;
+						
+						default:
+							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
 				case "LODSB":
 					switch (parameterTypes) {
 						case "LODSB":
@@ -5778,6 +5789,61 @@ namespace SharpOS.AOT.X86 {
 					switch (parameterTypes) {
 						case "RDTSC":
 							this.RDTSC ();
+							break;
+						
+						default:
+							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
+				case "REP":
+					switch (parameterTypes) {
+						case "REP":
+							this.REP ();
+							break;
+						
+						default:
+							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
+				case "REPE":
+					switch (parameterTypes) {
+						case "REPE":
+							this.REPE ();
+							break;
+						
+						default:
+							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
+				case "REPNE":
+					switch (parameterTypes) {
+						case "REPNE":
+							this.REPNE ();
+							break;
+						
+						default:
+							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
+				case "REPNZ":
+					switch (parameterTypes) {
+						case "REPNZ":
+							this.REPNZ ();
+							break;
+						
+						default:
+							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
+				case "REPZ":
+					switch (parameterTypes) {
+						case "REPZ":
+							this.REPZ ();
 							break;
 						
 						default:
