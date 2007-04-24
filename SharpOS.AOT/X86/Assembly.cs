@@ -308,7 +308,7 @@ namespace SharpOS.AOT.X86 {
 						if (field.Name.Equals (fieldName))
 							break;
 
-						result += this.engine.GetTypeSize (field.FieldType.FullName, true);
+						result += this.engine.GetFieldSize (field.FieldType.FullName);
 					}
 
 					return result;
@@ -1263,6 +1263,16 @@ namespace SharpOS.AOT.X86 {
 		public int AvailableRegistersCount {
 			get {
 				return 3;
+			}
+		}
+
+		/// <summary>
+		/// Gets the size of the int.
+		/// </summary>
+		/// <value>The size of the int.</value>
+		public int IntSize {
+			get {
+				return 4;
 			}
 		}
 

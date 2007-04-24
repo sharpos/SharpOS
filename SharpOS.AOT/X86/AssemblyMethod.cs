@@ -81,9 +81,8 @@ namespace SharpOS.AOT.X86 {
 					} else if (instruction is SharpOS.AOT.IR.Instructions.Pop) {
 						// Nothing to do
 
-					} else {
+					} else
 						throw new Exception ("'" + instruction + "' is not supported.");
-					}
 				}
 			}
 
@@ -342,7 +341,7 @@ namespace SharpOS.AOT.X86 {
 				} else if (operand is SharpOS.AOT.IR.Operands.Object) {
 					SharpOS.AOT.IR.Operands.Object _object = operand as SharpOS.AOT.IR.Operands.Object;
 
-					int size = this.method.Engine.GetTypeSize (_object.Value);
+					int size = this.method.Engine.GetObjectSize (_object.Value);
 					
 					this.assembly.SUB (R32.ESP, (uint) size);
 
@@ -350,7 +349,20 @@ namespace SharpOS.AOT.X86 {
 					this.assembly.PUSH (R32.EDI);
 					this.assembly.PUSH (R32.ECX);
 
+					if (this.IsFourBytes (_object.Address)) {
+						if (_object.Address.IsRegisterSet)
+							this.MovRegisterRegister (R32.ESI, assembly.GetRegister (_object.Address.Register));
+
+						else
+							this.assembly.LEA (R32.ESI, this.GetMemory (_object.Address as Identifier));
+
+					} else
+						throw new Exception ("'" + _object.Address + "' is not supported.");
+
+					// The 3 push above changed the ESP so we need a LEA = ESP + 12
+					this.assembly.LEA (R32.EDI, new Memory (null, R32.ESP, null, 0, 12));
 					this.assembly.MOV (R32.ECX, (uint) (size / 4));
+
 					this.assembly.CLD ();
 					this.assembly.REP ();
 					this.assembly.MOVSD ();
@@ -365,18 +377,12 @@ namespace SharpOS.AOT.X86 {
 
 			assembly.CALL (call.AssemblyLabel);
 
-			int result = call.Method.Parameters.Count;
+			uint result = 0;
 
-			foreach (ParameterDefinition parameter in call.Method.Parameters) {
-				Operand.InternalSizeType sizeType = this.method.Engine.GetInternalType (parameter.ParameterType.ToString ());
+			foreach (ParameterDefinition parameter in call.Method.Parameters)
+				result += (uint) this.method.Engine.GetTypeSize (parameter.ParameterType.ToString (), 4);
 
-				if (sizeType == Operand.InternalSizeType.I8
-						|| sizeType == Operand.InternalSizeType.U8
-						|| sizeType == Operand.InternalSizeType.R8)
-					result++;
-			}
-
-			assembly.ADD (R32.ESP, (UInt32) (4 * result));
+			assembly.ADD (R32.ESP, result);
 		}
 
 		/// <summary>
@@ -437,6 +443,18 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="identifier">The identifier.</param>
 		private void MovRegisterMemory (R32Type register, Identifier identifier)
 		{
+			if (identifier is SharpOS.AOT.IR.Operands.Address) {
+				SharpOS.AOT.IR.Operands.Address address = identifier as SharpOS.AOT.IR.Operands.Address;
+
+				if (address.Value.IsRegisterSet)
+					assembly.MOV (register, this.assembly.GetRegister (address.Value.Register));
+
+				else
+					assembly.LEA (register, this.GetMemory (address.Value));
+
+				return;
+			}
+
 			Memory memory = this.GetMemory (identifier);
 
 			if (identifier.SizeType == Operand.InternalSizeType.Object)

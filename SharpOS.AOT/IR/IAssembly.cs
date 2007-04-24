@@ -39,6 +39,12 @@ namespace SharpOS.AOT.IR {
 		int AvailableRegistersCount { get; }
 
 		/// <summary>
+		/// Gets the size of the int.
+		/// </summary>
+		/// <value>The size of the int.</value>
+		int IntSize { get; }
+
+		/// <summary>
 		/// Spills the specified type.
 		/// </summary>
 		/// <param name="type">The type.</param>

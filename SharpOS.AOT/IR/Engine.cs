@@ -127,7 +127,7 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
-			return ( (IEnumerable<Class>) this).GetEnumerator ();
+			return ((IEnumerable<Class>) this).GetEnumerator ();
 		}
 
 		/// <summary>
@@ -137,69 +137,88 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public int GetTypeSize (string type)
 		{
-			return GetTypeSize (type, false);
+			return this.GetTypeSize (type, 0);
+		}
+
+		/// <summary>
+		/// Gets the size of the field type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
+		public int GetFieldSize (string type)
+		{
+			return this.GetTypeSize (type, 2);
+		}
+
+		/// <summary>
+		/// Gets the size of the object.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
+		public int GetObjectSize (string type)
+		{
+			return this.GetTypeSize (type, 4);
 		}
 
 		/// <summary>
 		/// Gets the size of the type.
 		/// </summary>
 		/// <param name="type">The type.</param>
-		/// <param name="align">if set to <c>true</c> [align].</param>
+		/// <param name="align">if set to 0 there will be no alignment.</param>
 		/// <returns></returns>
-		public int GetTypeSize (string type, bool align)
+		public int GetTypeSize (string type, int align)
 		{
+			int result = 0;
 			Operands.Operand.InternalSizeType sizeType = GetInternalType (type);
 
 			switch (sizeType) {
 				case Operand.InternalSizeType.I1:
 				case Operand.InternalSizeType.U1:
-					if (align)
-						return 2;
-
-					return 1;
+					result = 1;
+					break;
 
 				case Operand.InternalSizeType.I2:
 				case Operand.InternalSizeType.U2:
-					return 2;
+					result = 2;
+					break;
 
 				case Operand.InternalSizeType.I4:
 				case Operand.InternalSizeType.U4:
-					return 4;
+					result = 4;
+					break;
 
 				case Operand.InternalSizeType.I:
 				case Operand.InternalSizeType.U:
-					// TODO this is architecture specific so it should get retrieved from the assembly class
-					return 4;
+					result = this.asm.IntSize;
+					break;
 
 				case Operand.InternalSizeType.I8:
 				case Operand.InternalSizeType.U8:
-					return 8;
+					result = 8;
+					break;
 
 				case Operand.InternalSizeType.R4:
-					return 4;
+					result = 4;
+					break;
 
 				case Operand.InternalSizeType.R8:
-					return 8;
+					result = 8;
+					break;
 
 				case Operand.InternalSizeType.Object:
 					foreach (Class _class in this.classes) {
 						if (_class.ClassDefinition.FullName.Equals (type)) {
 							if (_class.ClassDefinition.IsEnum) {
 								foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-									if ( (field.Attributes & FieldAttributes.RTSpecialName) != 0) 
-										return this.GetTypeSize (field.FieldType.FullName);
+									if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
+										result = this.GetTypeSize (field.FieldType.FullName);
+										break;
+									}
 								}
 
 							} else if (_class.ClassDefinition.IsValueType) {
-								int result = 0;
-
 								foreach (FieldReference field in _class.ClassDefinition.Fields)
-									result += this.GetTypeSize (field.FieldType.FullName, true);
-
-								if (result % 4 != 0)
-									result = ((result / 4) + 1) * 4;
-
-								return result;
+									result += this.GetFieldSize (field.FieldType.FullName);
 
 							} else
 								break;
@@ -209,7 +228,13 @@ namespace SharpOS.AOT.IR {
 					break;
 			}
 
-			throw new Exception ("'" + type + "' not supported.");
+			if (result == 0)
+				throw new Exception ("'" + type + "' not supported.");
+
+			if (align != 0 && result % align != 0)
+				result = ((result / align) + 1) * align;
+
+			return result;
 		}
 
 		/// <summary>
