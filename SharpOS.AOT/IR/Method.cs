@@ -89,7 +89,16 @@ namespace SharpOS.AOT.IR {
 		{
 			Argument argument = new Argument (i);
 
-			argument.SizeType = this.engine.GetInternalType (this.methodDefinition.Parameters[i - 1].ParameterType.FullName);
+			if (this.methodDefinition.HasThis) {
+				if (i == 1)
+					argument.SizeType = this.engine.GetInternalType (this.methodDefinition.DeclaringType.FullName);
+				
+				else
+					argument.SizeType = this.engine.GetInternalType (this.methodDefinition.Parameters [i - 2].ParameterType.FullName);
+
+			} else
+				argument.SizeType = this.engine.GetInternalType (this.methodDefinition.Parameters [i - 1].ParameterType.FullName);
+
 			return argument;
 		}
 

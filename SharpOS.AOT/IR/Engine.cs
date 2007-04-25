@@ -84,7 +84,7 @@ namespace SharpOS.AOT.IR {
 
 				foreach (MethodDefinition entry in type.Methods) {
 
-					if (!entry.IsStatic || entry.ImplAttributes != MethodImplAttributes.Managed) {
+					if (entry.ImplAttributes != MethodImplAttributes.Managed) {
 						this.WriteLine ("Not processing '" + entry.DeclaringType.FullName + "." + entry.Name + "'");
 
 						continue;

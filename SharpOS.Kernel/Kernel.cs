@@ -50,6 +50,11 @@ namespace SharpOS {
 		public struct TestStruct {
 			public uint FirstValue;
 			public byte SecondValue;
+
+			public int TestStructMethod (int value)
+			{
+				return (int) (this.FirstValue + this.SecondValue + value);
+			}
 		}
 
 		public unsafe static int TestStructProc (TestStruct value)
@@ -63,7 +68,11 @@ namespace SharpOS {
 			values [3].FirstValue = 1;
 			values [3].SecondValue = 2;
 
-			return TestStructProc (values [3]);
+			int result = TestStructProc (values [3]);
+
+			result += values [3].TestStructMethod (2);
+
+			return result;
 		}
 
 		public unsafe static void BootEntry ()

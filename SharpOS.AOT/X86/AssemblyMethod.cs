@@ -457,10 +457,18 @@ namespace SharpOS.AOT.X86 {
 
 			Memory memory = this.GetMemory (identifier);
 
-			if (identifier.SizeType == Operand.InternalSizeType.Object)
-				assembly.LEA (register, memory);
+			if (identifier.SizeType == Operand.InternalSizeType.Object) {
+				// If it is "this" we need the address stored on the stack
+				if (this.method.MethodDefinition.HasThis 
+						&& identifier is Argument 
+						&& (identifier as Argument).Index == 1)
+					assembly.MOV (register, memory as DWordMemory);
 
-			else if (memory is DWordMemory)
+				else
+					// If it is a Value Type we need only the address of the beginning of the object on the stack
+					assembly.LEA (register, memory);
+
+			} else if (memory is DWordMemory)
 				assembly.MOV (register, memory as DWordMemory);
 
 			else if (memory is WordMemory) {
@@ -1676,7 +1684,8 @@ namespace SharpOS.AOT.X86 {
 					|| operand.SizeType == Operand.InternalSizeType.I2
 					|| operand.SizeType == Operand.InternalSizeType.U2
 					|| operand.SizeType == Operand.InternalSizeType.I4
-					|| operand.SizeType == Operand.InternalSizeType.U4) {
+					|| operand.SizeType == Operand.InternalSizeType.U4
+					|| operand.SizeType == Operand.InternalSizeType.Object) {
 				return true;
 			}
 
