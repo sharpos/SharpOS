@@ -456,8 +456,8 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void ConvertFromCIL ()
 		{
-			foreach (Block block in blocks) 
-				block.ConvertFromCIL (false);
+			foreach (Block block in this.Preorder ()) 
+				block.ConvertFromCIL ();
 
 			return;
 		}
@@ -1115,22 +1115,141 @@ namespace SharpOS.AOT.IR {
 
 				return values;
 			}
+
+			/// <summary>
+			/// Gets the item.
+			/// </summary>
+			/// <param name="key">The key.</param>
+			/// <returns></returns>
+			private DefUseItem GetItem (string key)
+			{
+				if (!this.Contains (key))
+					this.Add (new DefUseItem (key));
+
+				return this [key];
+			}
+
+			/// <summary>
+			/// Sets the definition.
+			/// </summary>
+			/// <param name="key">The key.</param>
+			/// <param name="value">The value.</param>
+			public void SetDefinition (string key, Instructions.Instruction value)
+			{
+				this.GetItem (key).SetDefinition (value);
+			}
+
+			/// <summary>
+			/// Adds the usage.
+			/// </summary>
+			/// <param name="key">The key.</param>
+			/// <param name="value">The value.</param>
+			public void AddUsage (string key, Instructions.Instruction value)
+			{
+				this.GetItem (key).AddUsage (value);
+			}
+
+			/// <summary>
+			/// Removes the usage.
+			/// </summary>
+			/// <param name="key">The key.</param>
+			/// <param name="value">The value.</param>
+			public void RemoveUsage (string key, Instructions.Instruction value)
+			{
+				this.GetItem (key).RemoveUsage (value);
+			}
 		}
 
-		private class DefUseItem {
+		private class DefUseItem : IEnumerable<SharpOS.AOT.IR.Instructions.Instruction> {
+			public string key;
+			Instructions.Instruction definition = null;
+			List<Instructions.Instruction> usage = new List<Instructions.Instruction> ();
+
+			/// <summary>
+			/// Gets the definition of the current key.
+			/// </summary>
+			/// <value>The definition.</value>
+			public Instructions.Instruction Definition {
+				get {
+					return this.definition;
+				}
+			}
+
+			/// <summary>
+			/// Gets the number of instructions where the current key is being used.
+			/// </summary>
+			/// <value>The count.</value>
+			public int Count {
+				get {
+					return this.usage.Count;
+				}
+			}
+
 			/// <summary>
 			/// Initializes a new instance of the <see cref="DefUseItem"/> class.
 			/// </summary>
 			/// <param name="key">The key.</param>
 			/// <param name="values">The values.</param>
-			public DefUseItem (string key, List<Instructions.Instruction> values)
+			public DefUseItem (string key)
 			{
 				this.key = key;
-				this.values = values;
 			}
 
-			public string key;
-			public List<Instructions.Instruction> values;
+			/// <summary>
+			/// Sets the definition.
+			/// </summary>
+			/// <param name="value">The value.</param>
+			public void SetDefinition (Instructions.Instruction value)
+			{
+				if (this.definition == null)
+					this.definition = value;
+
+				else if (!(value is Instructions.System))
+					throw new Exception ("'" + value + "' is defined again.");
+			}
+
+			/// <summary>
+			/// Adds the usage.
+			/// </summary>
+			/// <param name="value">The value.</param>
+			public void AddUsage (Instructions.Instruction value)
+			{
+				if (!this.usage.Contains (value))
+					this.usage.Add (value);
+				
+				// TODO else log?
+			}
+
+			public void RemoveUsage (Instructions.Instruction value)
+			{
+				if (this.usage.Contains (value))
+					this.usage.Remove (value);
+
+				// TODO else log?
+			}
+
+			/// <summary>
+			/// Returns an enumerator that iterates through the collection.
+			/// </summary>
+			/// <returns>
+			/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+			/// </returns>
+			IEnumerator<SharpOS.AOT.IR.Instructions.Instruction> IEnumerable<SharpOS.AOT.IR.Instructions.Instruction>.GetEnumerator ()
+			{
+				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.usage)
+					yield return instruction;
+			}
+
+			/// <summary>
+			/// Returns an enumerator that iterates through a collection.
+			/// </summary>
+			/// <returns>
+			/// An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
+			/// </returns>
+			IEnumerator IEnumerable.GetEnumerator ()
+			{
+				return ((IEnumerable<SharpOS.AOT.IR.Instructions.Instruction>) this).GetEnumerator ();
+			}
 		}
 
 		DefUse defuse;
@@ -1159,19 +1278,15 @@ namespace SharpOS.AOT.IR {
 							if (operand is Operands.Object)
 								id = (operand as Operands.Object).Address.ID;
 
-							if (!defuse.Contains (id)) {
-								DefUseItem item = new DefUseItem (id, new List<SharpOS.AOT.IR.Instructions.Instruction>());
-								item.values.Add (null);
-								defuse.Add (item);
-
-								if (operand.Version == 0) {
-									defuse [id].values [0] = new Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Argument)));
-									defuse [id].values [0].Block = this.blocks [0];
-								}
+							if (operand.Version == 0) {
+								Instructions.System argument = new Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Argument)));
+								
+								argument.Block = this.blocks [0];
+								
+								defuse.SetDefinition (id, argument);
 							}
 
-							if (!defuse [id].values.Contains (instruction))
-								defuse [id].values.Add (instruction);
+							defuse.AddUsage (id, instruction);
 						}
 					}
 
@@ -1180,33 +1295,17 @@ namespace SharpOS.AOT.IR {
 
 						string id = assign.Assignee.ID;
 
-						if (assign.Assignee is Reference) {
-							if (!defuse [id].values.Contains (instruction))
-								defuse [id].values.Add (instruction);
+						if (assign.Assignee is Reference)
+							defuse.AddUsage (id, instruction);
 
-						} else if (assign.Assignee is Field) {
+						else if (assign.Assignee is Field) {
 							Field field = assign.Assignee as Field;
 
-							if (field.Instance != null) {
-								id = field.Instance.ID;
+							if (field.Instance != null)
+								defuse.AddUsage (field.Instance.ID, instruction);
 
-								if (!defuse [id].values.Contains (instruction))
-									defuse [id].values.Add (instruction);
-							}
-
-						} else {
-							if (!defuse.Contains (id)) {
-								DefUseItem item = new DefUseItem (id, new List<SharpOS.AOT.IR.Instructions.Instruction> ());
-								item.values.Add (instruction);
-								defuse.Add (item);
-
-							} else {
-								if (defuse [id].values [0] != null)
-									throw new Exception ("SSA variable '" + id + "' in '" + this.MethodFullName + "' defined a second time.");
-
-								defuse [id].values [0] = instruction;
-							}
-						}
+						} else
+							defuse.SetDefinition (id, instruction);
 					}
 				}
 			}
@@ -1215,20 +1314,18 @@ namespace SharpOS.AOT.IR {
 
 			foreach (DefUseItem item in defuse) {
 				string key = item.key;
-				List<Instructions.Instruction> list = defuse [key].values;
 
-				if (list [0] == null)
+				if (item.Definition == null)
 					throw new Exception ("Def statement for '" + key + "' in '" + this.MethodFullName + "' not found.");
 
-				Assign definition = list [0] as Assign;
+				Assign definition = item.Definition as Assign;
 
 				if (definition == null)
 					continue;
 
 				definition.Assignee.Stamp = stamp++;
 
-				for (int i = 1; i < list.Count; i++) {
-					Instructions.Instruction instruction = list [i];
+				foreach (Instructions.Instruction instruction in item) {
 
 					if (instruction is Assign) {
 						Assign assign = instruction as Assign;
@@ -1300,15 +1397,11 @@ namespace SharpOS.AOT.IR {
 
 			foreach (DefUseItem item in defuse) {
 				string key = item.key;
-				List<Instructions.Instruction> list = defuse [key].values;
 
-				this.engine.WriteLine (list [0].Block.Index + " : " + list [0].ToString ());
+				this.engine.WriteLine (item.Definition.Block.Index + " : " + item.Definition.ToString ());
 
-				for (int i = 1; i < list.Count; i++) {
-					Instructions.Instruction instruction = list[i];
-
+				foreach (Instructions.Instruction instruction in item) 
 					this.engine.WriteLine ("\t" + instruction.Block.Index + " : " + instruction);
-				}
 			}
 
 			return;
@@ -1329,15 +1422,14 @@ namespace SharpOS.AOT.IR {
 				string key = keys [0];
 				keys.RemoveAt (0);
 
-				List<Instructions.Instruction> list = this.defuse [key].values;
+				DefUseItem item = this.defuse [key];
 
 				// This variable is only defined but not used
-
-				if (list.Count == 1
-					&& !(list [0] is Assign
-						&& (list [0] as Assign).Assignee is Field)) {
+				if (item.Count == 0
+					&& !(item.Definition is Assign
+						&& (item.Definition as Assign).Assignee is Field)) {
 					// A = B + C;
-					Instructions.Instruction definition = list [0];
+					Instructions.Instruction definition = item.Definition; 
 
 					this.engine.WriteLine (definition.Block.Index + " : " + definition.ToString ());
 
@@ -1357,7 +1449,7 @@ namespace SharpOS.AOT.IR {
 							string id = operand.ID;
 
 							// Remove "A = B + C" from B & C
-							this.defuse [id].values.Remove (definition);
+							this.defuse.RemoveUsage (id, definition);
 
 							// Add to the queue B & C to check them it they are used anywhere else
 							if (!keys.Contains (id))
@@ -1447,9 +1539,9 @@ namespace SharpOS.AOT.IR {
 				string key = keys [0];
 				keys.RemoveAt (0);
 
-				List<Instructions.Instruction> list = this.defuse [key].values;
+				DefUseItem item = this.defuse [key];
 
-				Instructions.Instruction definition = list [0];
+				Instructions.Instruction definition = item.Definition;
 
 				// v2 = PHI(v1, v1)
 				if (definition is PHI) {
@@ -1473,7 +1565,7 @@ namespace SharpOS.AOT.IR {
 					definition.Block.RemoveInstruction (definition);
 					definition.Block.InsertInstruction (0, assign);
 
-					defuse[key].values[0] = assign;
+					this.defuse.SetDefinition (key, assign);
 				}
 
 				// A = 100
@@ -1486,8 +1578,9 @@ namespace SharpOS.AOT.IR {
 					// The second pass does the actual constant propagation
 					for (int pass = 0; !_break && pass < 2; pass++) {
 						// "X = A" becomes "X = 100"
-						for (int i = 1; !_break && i < list.Count; i++) {
-							Instructions.Instruction used = list[i];
+						foreach (Instructions.Instruction used in item) {
+							if (_break)
+								break;
 
 							if (used.Value != null) {
 								if (pass == 1) {
@@ -1561,12 +1654,12 @@ namespace SharpOS.AOT.IR {
 				string key = keys[0];
 				keys.RemoveAt (0);
 
-				List<Instructions.Instruction> list = this.defuse [key].values;
+				DefUseItem item = this.defuse [key];
 
-				Instructions.Instruction definition = list [0];
+				Instructions.Instruction definition = item.Definition;
 
 				// A = B
-				if (!(definition is Assign) || list.Count == 1)
+				if (!(definition is Assign) || item.Count == 0)
 					continue;
 
 				Assign assign = definition as Assign;
@@ -1599,8 +1692,9 @@ namespace SharpOS.AOT.IR {
 				// The second pass does the actual copy propagation
 				for (int pass = 0; !_break && pass < 2; pass++) {
 					// "X = A" becomes "X = B"
-					for (int i = 1; !_break && i < list.Count; i++) {
-						Instructions.Instruction used = list [i];
+					foreach (Instructions.Instruction used in item) {
+						if (_break)
+							break;
 
 						if (pass == 1 && used is Assign
 								&& (used as Assign).Assignee is Reference) {
@@ -1611,6 +1705,9 @@ namespace SharpOS.AOT.IR {
 						}
 
 						if (used.Value != null && used.Value.Operands != null) {
+							if (pass == 1)
+								this.engine.WriteLine ("\t >> " + definition.Block.Index + " : " + used.ToString ());
+
 							int replacements = 0;
 
 							for (int j = 0; j < used.Value.Operands.Length; j++) {
@@ -1638,7 +1735,7 @@ namespace SharpOS.AOT.IR {
 							}
 							
 							if (pass == 1)
-								this.engine.WriteLine ("\t" + definition.Block.Index + " : " + used.ToString ());
+								this.engine.WriteLine ("\t << " + definition.Block.Index + " : " + used.ToString ());
 						}
 
 						if (pass == 1 && used is Assign) {
@@ -1658,11 +1755,20 @@ namespace SharpOS.AOT.IR {
 				}
 
 				if (!_break) {
+					// If A = B and B is still in the queue we remove A = B from the B usage list
+					// and add all the "usage" items from A to the B "usage" list.
+					if (keys.Contains (assign.Value.ID) == true) {
+						this.defuse.RemoveUsage (assign.Value.ID, assign);
+
+						foreach (Instructions.Instruction usage in this.defuse [key])
+							this.defuse.AddUsage (assign.Value.ID, usage);
+					}
+
 					// Remove the instruction from the block that it is containing it
 					definition.Block.RemoveInstruction (definition);
 
 					// Remove the variable from the defuse list
-					defuse.Remove (key);
+					this.defuse.Remove (key);
 				}
 			}
 
@@ -1706,33 +1812,34 @@ namespace SharpOS.AOT.IR {
 		public void EdgeSplit()
 		{
 			foreach (Block block in Preorder()) {
-				if (block.Ins.Count > 1) {
-					for (int i = 0; i < block.Ins.Count; i++) {
-						Block predecessor = block.Ins[i];
+				if (block.Ins.Count <= 1)
+					continue;
 
-						if (predecessor.Outs.Count > 1) {
-							int position = 0;
+				for (int i = 0; i < block.Ins.Count; i++) {
+					Block predecessor = block.Ins[i];
 
-							for (; position < predecessor.Outs.Count && predecessor.Outs[position] != block; position++) ;
+					if (predecessor.Outs.Count <= 1)
+						continue;
+					
+					int position = 0;
 
-							if (position == predecessor.Outs.Count) {
-								throw new Exception ("In '" + this.MethodFullName + "' Block " + predecessor.Index + " is not linked to the Block " + block.Index + ".");
-							}
+					for (; position < predecessor.Outs.Count && predecessor.Outs [position] != block; position++);
 
-							Block split = new Block();
+					if (position == predecessor.Outs.Count)
+						throw new Exception ("In '" + this.MethodFullName + "' Block " + predecessor.Index + " is not linked to the Block " + block.Index + ".");
 
-							split.Index = this.blocks[this.blocks.Count - 1].Index + 1;
-							split.Type = Block.BlockType.OneWay;
-							split.InsertInstruction (0, new Jump());
-							split.Ins.Add (predecessor);
-							split.Outs.Add (block);
+					Block split = new Block();
 
-							predecessor.Outs[position] = split;
-							block.Ins[i] = split;
+					split.Index = this.blocks[this.blocks.Count - 1].Index + 1;
+					split.Type = Block.BlockType.OneWay;
+					split.InsertInstruction (0, new Jump());
+					split.Ins.Add (predecessor);
+					split.Outs.Add (block);
 
-							this.blocks.Add (split);
-						}
-					}
+					predecessor.Outs[position] = split;
+					block.Ins[i] = split;
+
+					this.blocks.Add (split);
 				}
 			}
 		}
@@ -1747,9 +1854,8 @@ namespace SharpOS.AOT.IR {
 				List<Instructions.Instruction> remove = new List<SharpOS.AOT.IR.Instructions.Instruction>();
 
 				foreach (Instructions.Instruction instruction in block) {
-					if (!(instruction is PHI)) {
+					if (!(instruction is PHI))
 						break;
-					}
 
 					PHI phi = instruction as PHI;
 
@@ -2033,8 +2139,8 @@ namespace SharpOS.AOT.IR {
 
 			if (identifier is Argument
 					|| identifier is Field
-					|| (identifier is Reference
-						&& !(asmCall && !((identifier as Reference).Value is Argument))))
+					/*|| (identifier is Reference
+						&& !(asmCall && !((identifier as Reference).Value is Argument)))*/)
 				return;
 
 			if (asmCall) {

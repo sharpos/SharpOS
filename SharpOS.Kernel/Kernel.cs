@@ -47,7 +47,7 @@ namespace SharpOS {
 
 		static byte oldAttributes = 0;
 
-		public struct TestStruct {
+		/*public struct TestStruct {
 			public uint FirstValue;
 			public byte SecondValue;
 
@@ -73,16 +73,59 @@ namespace SharpOS {
 			result += values [3].TestStructMethod (2);
 
 			return result;
+		}*/
+
+		public unsafe static void WriteNumber (bool hex, int value)
+		{
+			byte* buffer = stackalloc byte [32];
+			uint uvalue = (uint) value;
+			ushort divisor = hex ? (ushort) 16 : (ushort) 10;
+			int length = 0;
+
+			if (!hex && value < 0) {
+				buffer [length++] = (byte) '-';
+
+				uvalue = (uint) -value;
+			}
+
+			do {
+				uint remainder = uvalue % divisor;
+
+				if (remainder < 10)
+					buffer [length++] = (byte) ('0' + remainder);
+
+				else
+					buffer [length++] = (byte) ('A' + remainder - 10);
+
+			} while ((uvalue /= divisor) != 0);
+
+			while (length > 0)
+				WriteChar (buffer [--length]);
 		}
 
-		public unsafe static void BootEntry ()
+		public unsafe static void BootEntry (uint magic, uint pointer)
 		{
-			x = NewTestStruct ();
+			//x = NewTestStruct ();
 
 			SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
 
 			WriteLine (String ("SharpOS v0.0.0.0.99 (http://www.sharpos.org)"));
 			WriteNL ();
+
+			if (magic != (uint) SharpOS.Multiboot.Magic.BootLoader) {
+				SetAttributes (ColorTypes.Red, ColorTypes.Black);
+				WriteLine (String ("Invalid magic number."));
+
+				return;
+			}
+
+			Multiboot.Info* multibootInfo = (Multiboot.Info*) pointer;
+
+			WriteNumber (true, (int) SharpOS.Multiboot.Magic.BootLoader);
+			WriteChar ((byte) ' ');
+			WriteNumber (false, (int) 12345678);
+			WriteChar ((byte) ' ');
+
 			WriteCPUIDInfo ();
 
 			x = 0;

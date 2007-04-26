@@ -21,7 +21,20 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	public partial class Assembly : IAssembly {
+		const string KERNEL_CLASS = "SharpOS.Kernel";
+		const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
+		const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry System.UInt32 System.UInt32";
+		const string KERNEL_STRING = KERNEL_CLASS + ".String";
+		const string END_DATA = "[END DATA]";
+		const string END_STACK = "[END STACK]";
+		const string THE_END = "[THE END]";
+
+		internal const string HELPER_LSHL = "LSHL";
+		internal const string HELPER_LSHR = "LSHR";
+		internal const string HELPER_LSAR = "LSAR";
 		Engine engine;
+		Assembly data;
+
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Assembly"/> class.
@@ -392,6 +405,15 @@ namespace SharpOS.AOT.X86 {
 
 			this.MOV (R32.ESP, END_STACK);
 
+			this.PUSH ((uint) 0);
+			this.POPF ();
+
+			// Pointer to the Multiboot Info 
+			this.PUSH (R32.EBX);
+
+			// The magic value
+			this.PUSH (R32.EAX);
+
 			if (addCCTOR)
 				this.CALL (KERNEL_CTOR);
 
@@ -402,28 +424,6 @@ namespace SharpOS.AOT.X86 {
 
 			this.JMP (THE_END);
 		}
-
-		private const string KERNEL_CLASS = "SharpOS.Kernel";
-
-		private const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
-
-		private const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry";
-
-		private const string KERNEL_STRING = KERNEL_CLASS + ".String";
-
-		private const string END_DATA = "[END DATA]";
-
-		private const string END_STACK = "[END STACK]";
-
-		private const string THE_END = "[THE END]";
-
-		internal const string HELPER_LSHL = "LSHL";
-
-		internal const string HELPER_LSHR = "LSHR";
-
-		internal const string HELPER_LSAR = "LSAR";
-
-		private Assembly data;
 
 		/// <summary>
 		/// Determines whether [is kernel string] [the specified value].
@@ -712,7 +712,7 @@ namespace SharpOS.AOT.X86 {
 			}
 
 			foreach (Instruction instruction in data.instructions)
-			this.instructions.Add (instruction);
+				this.instructions.Add (instruction);
 
 			this.ALIGN (4096);
 			this.LABEL (END_DATA);
@@ -722,9 +722,8 @@ namespace SharpOS.AOT.X86 {
 
 			this.Encode (memoryStream);
 
-			FileStream fileStream = new FileStream (target, FileMode.Create);
-			memoryStream.WriteTo (fileStream);
-			fileStream.Close ();
+			using (FileStream fileStream = new FileStream (target, FileMode.Create))
+				memoryStream.WriteTo (fileStream);
 
 			return true;
 		}
@@ -755,8 +754,10 @@ namespace SharpOS.AOT.X86 {
 
 						if (instruction is OrgInstruction)
 							org = (UInt32) instruction.Value;
+
 						else if (instruction is Bits32Instruction)
 							this.bits32 = (bool) instruction.Value;
+
 						else if (instruction is OffsetInstruction) {
 							offset = (UInt32) instruction.Value;
 
@@ -764,14 +765,14 @@ namespace SharpOS.AOT.X86 {
 								throw new Exception ("Wrong offset '" + offset.ToString () + "'.");
 
 							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
-								binaryWriter.Write ( (byte) 0);
+								binaryWriter.Write ((byte) 0);
 
 						} else if (instruction is AlignInstruction) {
 							if (offset % (UInt32) instruction.Value != 0)
-								offset += ( (UInt32) instruction.Value - offset % (UInt32) instruction.Value);
+								offset += ((UInt32) instruction.Value - offset % (UInt32) instruction.Value);
 
 							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
-								binaryWriter.Write ( (byte) 0);
+								binaryWriter.Write ((byte) 0);
 
 						} else if (instruction is TimesInstruction) {
 							TimesInstruction times = instruction as TimesInstruction;
@@ -779,19 +780,19 @@ namespace SharpOS.AOT.X86 {
 							offset += times.Length;
 
 							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
-								binaryWriter.Write ( (byte) times.Value);
+								binaryWriter.Write ((byte) times.Value);
 						}
 
 						if (pass == 0) {
 							if (instruction.Reference.Length > 0) {
-								instruction.Value = new UInt32[] { this.GetLabelAddress (instruction.Reference) };
+								instruction.Value = new UInt32 [] { this.GetLabelAddress (instruction.Reference) };
 
 								if (!instruction.Relative)
 									((UInt32 []) instruction.Value) [0] += org;
 
 								else {
-									int delta = (int) (((UInt32 []) instruction.Value) [0] - offset);
-
+									int delta = (int) (((UInt32 []) instruction.Value) [0] - offset - 2);
+									
 									if (delta >= -128 && delta <= 127) {
 										Assembly temp = new Assembly ();
 

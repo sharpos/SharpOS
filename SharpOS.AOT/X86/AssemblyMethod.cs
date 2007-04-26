@@ -1072,6 +1072,33 @@ namespace SharpOS.AOT.X86 {
 
 					assembly.MOV (register, R32.EAX);
 
+				} else if (type == Binary.BinaryType.DivUnsigned) {
+					this.MovRegisterOperand (R32.EAX, first);
+					this.MovRegisterOperand (R32.ECX, second);
+
+					assembly.CDQ ();
+					assembly.DIV (R32.ECX);
+
+					assembly.MOV (register, R32.EAX);
+
+				} else if (type == Operator.BinaryType.Remainder) {
+					this.MovRegisterOperand (R32.EAX, first);
+					this.MovRegisterOperand (R32.ECX, second);
+
+					assembly.CDQ ();
+					assembly.IDIV (R32.ECX);
+
+					assembly.MOV (register, R32.EDX);
+
+				} else if (type == Operator.BinaryType.RemainderUnsigned) {
+					this.MovRegisterOperand (R32.EAX, first);
+					this.MovRegisterOperand (R32.ECX, second);
+
+					assembly.CDQ ();
+					assembly.DIV (R32.ECX);
+
+					assembly.MOV (register, R32.EDX);
+
 				} else if (type == Binary.BinaryType.And) {
 					if (second is Constant) {
 						UInt32 value = (UInt32) Convert.ToInt32 ( (second as Constant).Value);
@@ -1117,13 +1144,11 @@ namespace SharpOS.AOT.X86 {
 
 					assembly.SHR__CL (register);
 
-				} else {
+				} else
 					throw new Exception ("'" + type + "' is not supported.");
-				}
 
-			} else {
+			} else
 				throw new Exception ("'" + operand.Operator + "' is not supported.");
-			}
 		}
 
 		/// <summary>

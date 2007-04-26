@@ -302,13 +302,13 @@ namespace SharpOS.AOT.X86 {
 					binaryWriter.Write ( (UInt32) ( (UInt32[]) this.value) [valueIndex++]);
 
 				} else if (token == "RB") {
-					binaryWriter.Write ( (byte) ( (byte) ( (UInt32[]) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 1));
+					binaryWriter.Write ((byte) ((byte) ((UInt32 []) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 1));
 
 				} else if (token == "RW") {
-					binaryWriter.Write ( (UInt16) ( (UInt16) ( (UInt32[]) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 2));
+					binaryWriter.Write ((UInt16) ((UInt16) ((UInt32 []) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 2));
 
 				} else if (token == "RD") {
-					binaryWriter.Write ( (UInt32) ( (UInt32) ( (UInt32[]) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 4));
+					binaryWriter.Write ((UInt32) ((UInt32) ((UInt32 []) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 4));
 
 				} else if (token.EndsWith ("+R")) {
 					token = token.Substring (0, token.Length - 2);

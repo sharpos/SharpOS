@@ -21,6 +21,235 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
 	public class Block : IEnumerable<SharpOS.AOT.IR.Instructions.Instruction> {
+		public enum BlockType {
+			Return,
+			Throw,
+			OneWay,
+			TwoWay,
+			NWay,
+			Fall
+		}
+
+		private int stack = 0;
+
+		/// <summary>
+		/// Gets the stack.
+		/// </summary>
+		/// <value>The stack.</value>
+		public int Stack {
+			get {
+				return stack;
+			}
+		}
+
+		private Method method = null;
+
+		/// <summary>
+		/// Gets the method.
+		/// </summary>
+		/// <value>The method.</value>
+		public Method Method {
+			get {
+				return method;
+			}
+		}
+
+		private List<Mono.Cecil.Cil.Instruction> cil = new List<Mono.Cecil.Cil.Instruction> ();
+
+		/// <summary>
+		/// Gets or sets the CIL.
+		/// </summary>
+		/// <value>The CIL.</value>
+		public List<Mono.Cecil.Cil.Instruction> CIL {
+			get {
+				return cil;
+			}
+			set {
+				cil = value;
+			}
+		}
+
+		bool converted = false;
+
+		/// <summary>
+		/// Gets a value indicating whether this <see cref="Block"/> has been converted to IR.
+		/// </summary>
+		/// <value><c>true</c> if converted; otherwise, <c>false</c>.</value>
+		public bool Converted {
+			get {
+				return converted;
+			}
+		}
+
+		private List<SharpOS.AOT.IR.Instructions.Instruction> instructions = new List<SharpOS.AOT.IR.Instructions.Instruction> ();
+
+		/// <summary>
+		/// Gets the <see cref="SharpOS.AOT.IR.Instructions.Instruction"/> at the specified index.
+		/// </summary>
+		/// <value></value>
+		public SharpOS.AOT.IR.Instructions.Instruction this [int index] {
+			get {
+				return this.instructions [index];
+			}
+		}
+
+
+		/// <summary>
+		/// Gets the instructions count.
+		/// </summary>
+		/// <value>The instructions count.</value>
+		public int InstructionsCount {
+			get {
+				return this.instructions.Count;
+			}
+		}
+
+		private BlockType type;
+
+		/// <summary>
+		/// Gets or sets the type.
+		/// </summary>
+		/// <value>The type.</value>
+		public BlockType Type {
+			get {
+				return type;
+			}
+			set {
+				type = value;
+			}
+		}
+
+		private List<Block> ins = new List<Block> ();
+
+		/// <summary>
+		/// Gets the ins.
+		/// </summary>
+		/// <value>The ins.</value>
+		public List<Block> Ins {
+			get {
+				return ins;
+			}
+		}
+
+		private List<Block> outs = new List<Block> ();
+
+		/// <summary>
+		/// Gets the outs.
+		/// </summary>
+		/// <value>The outs.</value>
+		public List<Block> Outs {
+			get {
+				return outs;
+			}
+		}
+
+		private List<Block> dominators = new List<Block> ();
+
+		/// <summary>
+		/// Gets or sets the dominators.
+		/// </summary>
+		/// <value>The dominators.</value>
+		public List<Block> Dominators {
+			get {
+				return dominators;
+			}
+			set {
+				dominators = value;
+			}
+		}
+
+		private Block immediateDominator = null;
+
+		/// <summary>
+		/// Gets or sets the immediate dominator.
+		/// </summary>
+		/// <value>The immediate dominator.</value>
+		public Block ImmediateDominator {
+			get {
+				return immediateDominator;
+			}
+			set {
+				immediateDominator = value;
+			}
+		}
+
+		private List<Block> immediateDominatorOf = new List<Block> ();
+
+		/// <summary>
+		/// Gets or sets the immediate dominator of.
+		/// </summary>
+		/// <value>The immediate dominator of.</value>
+		public List<Block> ImmediateDominatorOf {
+			get {
+				return immediateDominatorOf;
+			}
+			set {
+				immediateDominatorOf = value;
+			}
+		}
+
+		private List<Block> dominanceFrontiers = new List<Block> ();
+
+		/// <summary>
+		/// Gets or sets the dominance frontiers.
+		/// </summary>
+		/// <value>The dominance frontiers.</value>
+		public List<Block> DominanceFrontiers {
+			get {
+				return dominanceFrontiers;
+			}
+			set {
+				dominanceFrontiers = value;
+			}
+		}
+
+		private int index = 0;
+
+		/// <summary>
+		/// Gets or sets the index.
+		/// </summary>
+		/// <value>The index.</value>
+		public int Index {
+			get {
+				return index;
+			}
+			set {
+				index = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets the start offset.
+		/// </summary>
+		/// <value>The start offset.</value>
+		public long StartOffset {
+			get {
+				if (this.cil.Count > 0)
+					return this.cil [0].Offset;
+
+				if (this.InstructionsCount > 0)
+					return this [0].StartOffset;
+
+				return 0;
+			}
+		}
+
+		/// <summary>
+		/// Gets the end offset.
+		/// </summary>
+		/// <value>The end offset.</value>
+		public long EndOffset {
+			get {
+				if (this.cil.Count > 0)
+					return this.cil [this.cil.Count - 1].Offset;
+
+				if (this.InstructionsCount > 0)
+					return this [this.InstructionsCount - 1].EndOffset;
+
+				return 0;
+			}
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Block"/> class.
 		/// </summary>
@@ -35,18 +264,6 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public Block ()
 		{
-		}
-
-		private Method method = null;
-
-		/// <summary>
-		/// Gets the method.
-		/// </summary>
-		/// <value>The method.</value>
-		public Method Method {
-			get {
-				return method;
-			}
 		}
 
 		/// <summary>
@@ -184,28 +401,48 @@ namespace SharpOS.AOT.IR {
 		{
 			//this.instructions[this.instructions.Count - 1].Value.ConvertTo = type;
 
-			SharpOS.AOT.IR.Instructions.Instruction instruction = new Assign (new Register (stack - 1), new Register (stack - 1));
+			SharpOS.AOT.IR.Instructions.Instruction instruction = new Assign (this.Register (stack - 1), this.Register (stack - 1));
 			instruction.Value.ConvertTo = type;
 
 			return instruction;
 		}
 
+		private Register Register (int value)
+		{
+			if (value < 0)
+				throw new Exception ("The register number may not be negative. ('" + this.method.MethodFullName + "')");
+
+			return new Register (value);
+		}
+
+
 		/// <summary>
 		/// Converts from CIL.
 		/// </summary>
-		/// <param name="secondPass">if set to <c>true</c> [second pass].</param>
-		public void ConvertFromCIL (bool secondPass)
+		public void ConvertFromCIL ()
 		{
-			stack = 0;
+			this.stack = 0;
+			bool found = false;
 
-			this.instructions = new List<SharpOS.AOT.IR.Instructions.Instruction>();
+			// We get the number of stack values from one of the blocks that has been processed and lead to the current one.
+			foreach (Block _in in this.ins)
+				if (_in.converted) {
+					found = true;
+
+					this.stack = _in.stack;
+				}
+
+			if (!found && this.ins.Count > 0)
+				throw new Exception ("The conversion from CIL in '" + this.method.MethodFullName + "' for block #'" + this.index + "' failed.");
+
+			this.instructions = new List <SharpOS.AOT.IR.Instructions.Instruction> ();
 
 			// Catch
 			if (this.method.MethodDefinition.Body.ExceptionHandlers.Count > 0 && this.cil.Count > 0) {
 				foreach (ExceptionHandler exceptionHandler in this.method.MethodDefinition.Body.ExceptionHandlers) {
 					if (exceptionHandler.CatchType != null
 							&& exceptionHandler.HandlerStart == this.cil[0]) {
-						this.AddInstruction (new Assign (new Register (stack++), new ExceptionValue()));
+						this.AddInstruction (new Assign (this.Register (stack++), new ExceptionValue()));
 						break;
 					}
 				}
@@ -322,107 +559,107 @@ namespace SharpOS.AOT.IR {
 
 				// Arithmetic
 				else if (cilInstruction.OpCode == OpCodes.Add) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Add), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Add), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Add_Ovf) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.AddSignedWithOverflowCheck), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.AddSignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Add_Ovf_Un) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.AddUnsignedWithOverflowCheck), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.AddUnsignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Sub) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Sub), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Sub), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Sub_Ovf) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SubSignedWithOverflowCheck), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SubSignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Sub_Ovf_Un) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SubUnsignedWithOverflowCheck), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SubUnsignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Mul) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Mul), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Mul), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Mul_Ovf) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.MulSignedWithOverflowCheck), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.MulSignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Mul_Ovf_Un) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.MulUnsignedWithOverflowCheck), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.MulUnsignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Div) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Div), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Div), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Div_Un) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.DivUnsigned), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.DivUnsigned), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Rem) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Remainder), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Remainder), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Rem_Un) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.RemainderUnsigned), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.RemainderUnsigned), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Neg) {
-					instruction = new Assign (new Register (stack - 1), new Arithmetic (new Unary (Operator.UnaryType.Negation), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 1), new Arithmetic (new Unary (Operator.UnaryType.Negation), this.Register (stack - 1)));
 				}
 
 				// Bitwise
 				else if (cilInstruction.OpCode == OpCodes.And) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.And), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.And), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Or) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Or), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Or), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Xor) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Xor), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Xor), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Not) {
-					instruction = new Assign (new Register (stack - 1), new Arithmetic (new Unary (Operator.UnaryType.Not), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 1), new Arithmetic (new Unary (Operator.UnaryType.Not), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Shl) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHL), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHL), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Shr) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHR), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHR), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Shr_Un) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHRUnsigned), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHRUnsigned), this.Register (stack - 2), this.Register (stack - 1)));
 				}
 
 				// Branch
 				else if (cilInstruction.OpCode == OpCodes.Beq || cilInstruction.OpCode == OpCodes.Beq_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.Equal), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.Equal), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Bge || cilInstruction.OpCode == OpCodes.Bge_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqual), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqual), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Bge_Un || cilInstruction.OpCode == OpCodes.Bge_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Bgt || cilInstruction.OpCode == OpCodes.Bgt_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThan), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThan), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Bgt_Un || cilInstruction.OpCode == OpCodes.Bgt_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ble || cilInstruction.OpCode == OpCodes.Ble_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqual), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqual), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ble_Un || cilInstruction.OpCode == OpCodes.Ble_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Blt || cilInstruction.OpCode == OpCodes.Blt_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThan), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThan), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Blt_Un || cilInstruction.OpCode == OpCodes.Blt_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Bne_Un || cilInstruction.OpCode == OpCodes.Bne_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.NotEqualOrUnordered), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.NotEqualOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Brfalse || cilInstruction.OpCode == OpCodes.Brfalse_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.False), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.False), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Brtrue || cilInstruction.OpCode == OpCodes.Brtrue_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.True), new Register (stack - 1)));
+					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.True), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Br || cilInstruction.OpCode == OpCodes.Br_S) {
 					instruction = new Jump();
@@ -433,7 +670,7 @@ namespace SharpOS.AOT.IR {
 					instruction = new Jump();
 
 				} else if (cilInstruction.OpCode == OpCodes.Throw) {
-					instruction = new SharpOS.AOT.IR.Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.Throw), new Register (stack - 1)));
+					instruction = new SharpOS.AOT.IR.Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.Throw), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Rethrow) {
 					instruction = new SharpOS.AOT.IR.Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.Throw)));
@@ -445,211 +682,211 @@ namespace SharpOS.AOT.IR {
 						instruction = new Return();
 
 					else if (stack > 0)
-						instruction = new Return (new Register (stack - 1));
+						instruction = new Return (this.Register (stack - 1));
 
 					else
-						instruction = new Return (new Register (0));
+						instruction = new Return (this.Register (0));
 
 				} else if (cilInstruction.OpCode == OpCodes.Switch) {
-					instruction = new Switch (new Register (stack - 1));
+					instruction = new Switch (this.Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Pop) {
-					instruction = new Pop (new Register (stack - 1));
+					instruction = new Pop (this.Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Dup) {
-					instruction = new Assign (new Register (stack), new Register (stack - 1));
+					instruction = new Assign (this.Register (stack), this.Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Sizeof) {
-					instruction = new Assign (new Register (stack), new Constant (this.method.Engine.GetTypeSize (cilInstruction.Operand.ToString())));
+					instruction = new Assign (this.Register (stack), new Constant (this.method.Engine.GetTypeSize (cilInstruction.Operand.ToString())));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Localloc) {
-					instruction = new Assign (new Register (stack - 1), new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Localloc), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 1), new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Localloc), this.Register (stack - 1)));
 					(instruction as Assign).Assignee.SizeType = Operand.InternalSizeType.U;
 				}
 
 				// Check
 				else if (cilInstruction.OpCode == OpCodes.Ceq) {
-					instruction = new Assign (new Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.Equal), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.Equal), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Cgt) {
-					instruction = new Assign (new Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.GreaterThan), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.GreaterThan), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Cgt_Un) {
-					instruction = new Assign (new Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Clt) {
-					instruction = new Assign (new Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.LessThan), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.LessThan), this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Clt_Un) {
-					instruction = new Assign (new Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
 				}
 
 				// Load
 				else if (cilInstruction.OpCode == OpCodes.Ldlen) {
-					instruction = new Assign (new Register (stack - 2), new Arithmetic (new Unary (Operator.UnaryType.ArraySize), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Unary (Operator.UnaryType.ArraySize), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldtoken) {
-					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand));
+					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldnull) {
 					// TODO change that to something else not "null"
-					instruction = new Assign (new Register (stack), new Constant ("null"));
+					instruction = new Assign (this.Register (stack), new Constant ("null"));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldstr) {
-					//instruction = new Assign(new Register(stack), new Constant("\"" + cilInstruction.Operand.ToString() + "\""));
-					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand.ToString ()));
+					//instruction = new Assign(this.Register(stack), new Constant("\"" + cilInstruction.Operand.ToString() + "\""));
+					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand.ToString ()));
 				}
 
 				// Load Constants
 				else if (cilInstruction.OpCode == OpCodes.Ldc_I4_0) {
-					instruction = new Assign (new Register (stack), new Constant (0));
+					instruction = new Assign (this.Register (stack), new Constant (0));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_1) {
-					instruction = new Assign (new Register (stack), new Constant (1));
+					instruction = new Assign (this.Register (stack), new Constant (1));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_2) {
-					instruction = new Assign (new Register (stack), new Constant (2));
+					instruction = new Assign (this.Register (stack), new Constant (2));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_3) {
-					instruction = new Assign (new Register (stack), new Constant (3));
+					instruction = new Assign (this.Register (stack), new Constant (3));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_4) {
-					instruction = new Assign (new Register (stack), new Constant (4));
+					instruction = new Assign (this.Register (stack), new Constant (4));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_5) {
-					instruction = new Assign (new Register (stack), new Constant (5));
+					instruction = new Assign (this.Register (stack), new Constant (5));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_6) {
-					instruction = new Assign (new Register (stack), new Constant (6));
+					instruction = new Assign (this.Register (stack), new Constant (6));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_7) {
-					instruction = new Assign (new Register (stack), new Constant (7));
+					instruction = new Assign (this.Register (stack), new Constant (7));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_8) {
-					instruction = new Assign (new Register (stack), new Constant (8));
+					instruction = new Assign (this.Register (stack), new Constant (8));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_M1) {
-					instruction = new Assign (new Register (stack), new Constant (-1));
+					instruction = new Assign (this.Register (stack), new Constant (-1));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_S) {
-					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand));
+					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4) {
-					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand));
+					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_I8) {
-					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand));
+					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I8;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_R4) {
-					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand));
+					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.R4;
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldc_R8) {
-					instruction = new Assign (new Register (stack), new Constant (cilInstruction.Operand));
+					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
 					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.R8;
 				}
 
 				// Indirect Load
 				else if (cilInstruction.OpCode == OpCodes.Ldind_I) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.I;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_I1) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.I1;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I1;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_I2) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.I2;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I2;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_I4) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.I4;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I4;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_I8) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.I8;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I8;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_R4) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.R4;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.R4;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_R8) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.R8;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.R8;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_U1) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.U1;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.U1;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_U2) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.U2;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.U2;
 
 					instruction = new Assign (register, reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldind_U4) {
-					Reference reference = new Reference (new Register (stack - 1));
+					Reference reference = new Reference (this.Register (stack - 1));
 					reference.SizeType = Operand.InternalSizeType.U4;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.U4;
 
 					instruction = new Assign (register, reference);
@@ -657,10 +894,10 @@ namespace SharpOS.AOT.IR {
 
 				// Object
 				else if (cilInstruction.OpCode == OpCodes.Ldobj) {
-					Operands.Object _object = new Operands.Object ((cilInstruction.Operand as TypeReference).FullName, new Register (stack - 1));
+					Operands.Object _object = new Operands.Object ((cilInstruction.Operand as TypeReference).FullName, this.Register (stack - 1));
 					_object.SizeType = Operand.InternalSizeType.Object;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.Object;
 
 					instruction = new Assign (register, _object);
@@ -672,84 +909,84 @@ namespace SharpOS.AOT.IR {
 					Reference reference = new Reference (this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
 					reference.SizeType = Operand.InternalSizeType.I;
 
-					instruction = new Assign (new Register (stack), reference);
+					instruction = new Assign (this.Register (stack), reference);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldloc || cilInstruction.OpCode == OpCodes.Ldloc_S) {
-					instruction = new Assign (new Register (stack), this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
+					instruction = new Assign (this.Register (stack), this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldloc_0) {
-					instruction = new Assign (new Register (stack), this.Method.GetLocal (0));
+					instruction = new Assign (this.Register (stack), this.Method.GetLocal (0));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldloc_1) {
-					instruction = new Assign (new Register (stack), this.Method.GetLocal (1));
+					instruction = new Assign (this.Register (stack), this.Method.GetLocal (1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldloc_2) {
-					instruction = new Assign (new Register (stack), this.Method.GetLocal (2));
+					instruction = new Assign (this.Register (stack), this.Method.GetLocal (2));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldloc_3) {
-					instruction = new Assign (new Register (stack), this.Method.GetLocal (3));
+					instruction = new Assign (this.Register (stack), this.Method.GetLocal (3));
 				}
 
 				// Indirect Store
 				else if (cilInstruction.OpCode == OpCodes.Stind_I) {
-					Reference reference = new Reference (new Register (stack - 2));
+					Reference reference = new Reference (this.Register (stack - 2));
 					reference.SizeType = Operand.InternalSizeType.I;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I;
 
 					instruction = new Assign (reference, register);
 
 				} else if (cilInstruction.OpCode == OpCodes.Stind_I1) {
-					Reference reference = new Reference (new Register (stack - 2));
+					Reference reference = new Reference (this.Register (stack - 2));
 					reference.SizeType = Operand.InternalSizeType.I1;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I1;
 
 					instruction = new Assign (reference, register);
 
 				} else if (cilInstruction.OpCode == OpCodes.Stind_I2) {
-					Reference reference = new Reference (new Register (stack - 2));
+					Reference reference = new Reference (this.Register (stack - 2));
 					reference.SizeType = Operand.InternalSizeType.I2;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I2;
 
 					instruction = new Assign (reference, register);
 
 				} else if (cilInstruction.OpCode == OpCodes.Stind_I4) {
-					Reference reference = new Reference (new Register (stack - 2));
+					Reference reference = new Reference (this.Register (stack - 2));
 					reference.SizeType = Operand.InternalSizeType.I4;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I4;
 
 					instruction = new Assign (reference, register);
 
 				} else if (cilInstruction.OpCode == OpCodes.Stind_I8) {
-					Reference reference = new Reference (new Register (stack - 2));
+					Reference reference = new Reference (this.Register (stack - 2));
 					reference.SizeType = Operand.InternalSizeType.I8;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.I8;
 
 					instruction = new Assign (reference, register);
 
 				} else if (cilInstruction.OpCode == OpCodes.Stind_R4) {
-					Reference reference = new Reference (new Register (stack - 2));
+					Reference reference = new Reference (this.Register (stack - 2));
 					reference.SizeType = Operand.InternalSizeType.R4;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.R4;
 
 					instruction = new Assign (reference, register);
 
 				} else if (cilInstruction.OpCode == OpCodes.Stind_R8) {
-					Reference reference = new Reference (new Register (stack - 2));
+					Reference reference = new Reference (this.Register (stack - 2));
 					reference.SizeType = Operand.InternalSizeType.R8;
 
-					Register register = new Register (stack - 1);
+					Register register = this.Register (stack - 1);
 					register.SizeType = Operand.InternalSizeType.R8;
 
 					instruction = new Assign (reference, register);
@@ -757,55 +994,55 @@ namespace SharpOS.AOT.IR {
 
 				// Store Locales
 				else if (cilInstruction.OpCode == OpCodes.Stloc || cilInstruction.OpCode == OpCodes.Stloc_S) {
-					instruction = new Assign (this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index), new Register (stack - 1));
+					instruction = new Assign (this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index), this.Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Stloc_0) {
-					instruction = new Assign (this.Method.GetLocal (0), new Register (stack - 1));
+					instruction = new Assign (this.Method.GetLocal (0), this.Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Stloc_1) {
-					instruction = new Assign (this.Method.GetLocal (1), new Register (stack - 1));
+					instruction = new Assign (this.Method.GetLocal (1), this.Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Stloc_2) {
-					instruction = new Assign (this.Method.GetLocal (2), new Register (stack - 1));
+					instruction = new Assign (this.Method.GetLocal (2), this.Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Stloc_3) {
-					instruction = new Assign (this.Method.GetLocal (3), new Register (stack - 1));
+					instruction = new Assign (this.Method.GetLocal (3), this.Register (stack - 1));
 				}
 
 				// Arguments Load
 				else if (cilInstruction.OpCode == OpCodes.Ldarg || cilInstruction.OpCode == OpCodes.Ldarg_S) {
-					instruction = new Assign (new Register (stack), this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
+					instruction = new Assign (this.Register (stack), this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S) {
 					if (cilInstruction.Operand is ParameterDefinition) {
 						Address address = new Address (this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
 						address.SizeType = Operand.InternalSizeType.I;
 
-						instruction = new Assign (new Register (stack), address);
+						instruction = new Assign (this.Register (stack), address);
 
 					} else {
 						Address address = new Address (this.Method.GetArgument ((int) cilInstruction.Operand));
 						address.SizeType = Operand.InternalSizeType.I;
 
-						instruction = new Assign (new Register (stack), address);
+						instruction = new Assign (this.Register (stack), address);
 					}
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarg_0) {
-					instruction = new Assign (new Register (stack), this.Method.GetArgument (1));
+					instruction = new Assign (this.Register (stack), this.Method.GetArgument (1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarg_1) {
-					instruction = new Assign (new Register (stack), this.Method.GetArgument (2));
+					instruction = new Assign (this.Register (stack), this.Method.GetArgument (2));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarg_2) {
-					instruction = new Assign (new Register (stack), this.Method.GetArgument (3));
+					instruction = new Assign (this.Register (stack), this.Method.GetArgument (3));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarg_3) {
-					instruction = new Assign (new Register (stack), this.Method.GetArgument (4));
+					instruction = new Assign (this.Register (stack), this.Method.GetArgument (4));
 				}
 
 				// Argument Store
 				else if (cilInstruction.OpCode == OpCodes.Starg || cilInstruction.OpCode == OpCodes.Starg_S) {
-					instruction = new Assign (this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence), new Register (stack - 1));
+					instruction = new Assign (this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence), this.Register (stack - 1));
 				}
 
 				// Call
@@ -824,7 +1061,7 @@ namespace SharpOS.AOT.IR {
 						operands = new Operand [call.Parameters.Count];
 
 					for (int i = 0; i < operands.Length; i++)
-						operands [i] = new Register (stack - operands.Length + i);
+						operands [i] = this.Register (stack - operands.Length + i);
 
 					if (call.ReturnType.ReturnType.FullName.Equals ("System.Void")) {
 						instruction = new SharpOS.AOT.IR.Instructions.Call (new SharpOS.AOT.IR.Operands.Call (call, operands));
@@ -832,7 +1069,7 @@ namespace SharpOS.AOT.IR {
 						stack--;
 
 					} else
-						instruction = new Assign (new Register (stack - operands.Length), new SharpOS.AOT.IR.Operands.Call (call, operands));
+						instruction = new Assign (this.Register (stack - operands.Length), new SharpOS.AOT.IR.Operands.Call (call, operands));
 
 					stack -= operands.Length;
 
@@ -842,9 +1079,9 @@ namespace SharpOS.AOT.IR {
 					Operand [] operands = new Operand [call.Parameters.Count];
 
 					for (int i = 0; i < call.Parameters.Count; i++)
-						operands [i] = new Register (stack - call.Parameters.Count + i);
+						operands [i] = this.Register (stack - call.Parameters.Count + i);
 
-					instruction = new Assign (new Register (stack - call.Parameters.Count), new SharpOS.AOT.IR.Operands.Call (call, operands));
+					instruction = new Assign (this.Register (stack - call.Parameters.Count), new SharpOS.AOT.IR.Operands.Call (call, operands));
 
 					stack -= call.Parameters.Count;
 				}
@@ -855,28 +1092,28 @@ namespace SharpOS.AOT.IR {
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
 
 					if ((field as FieldDefinition).IsStatic)
-						instruction = new Assign (new Register (stack - 1), new Field (fieldName));
+						instruction = new Assign (this.Register (stack - 1), new Field (fieldName));
 
 					else
-						instruction = new Assign (new Register (stack - 1), new Field (fieldName, new Register (stack - 1)));
+						instruction = new Assign (this.Register (stack - 1), new Field (fieldName, this.Register (stack - 1)));
 
 					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (fieldName);
 				}
 				/*else if (cilInstruction.OpCode == OpCodes.Ldflda)
 				{
-					instruction = new Assign(new Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, new Register(stack - 1)));
+					instruction = new Assign(this.Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, this.Register(stack - 1)));
 					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
 				}*/
 				else if (cilInstruction.OpCode == OpCodes.Ldsfld) {
 					FieldReference field = cilInstruction.Operand as FieldReference;
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
 
-					instruction = new Assign (new Register (stack), new Field (fieldName));
+					instruction = new Assign (this.Register (stack), new Field (fieldName));
 					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
 				}
 				/*else if (cilInstruction.OpCode == OpCodes.Ldsflda)
 				{
-					instruction = new Assign(new Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name));
+					instruction = new Assign(this.Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name));
 					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
 				}*/
 				else if (cilInstruction.OpCode == OpCodes.Stfld) {
@@ -884,10 +1121,10 @@ namespace SharpOS.AOT.IR {
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
 
 					if ((field as FieldDefinition).IsStatic)
-						instruction = new Assign (new Field (fieldName), new Register (stack - 1));
+						instruction = new Assign (new Field (fieldName), this.Register (stack - 1));
 
 					else
-						instruction = new Assign (new Field (fieldName, new Register (stack - 2)), new Register (stack - 1));
+						instruction = new Assign (new Field (fieldName, this.Register (stack - 2)), this.Register (stack - 1));
 
 					(instruction as Assign).Assignee.SizeType = this.method.Engine.GetInternalType (fieldName);
 
@@ -895,13 +1132,13 @@ namespace SharpOS.AOT.IR {
 					FieldReference field = cilInstruction.Operand as FieldReference;
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
 
-					instruction = new Assign (new Field (fieldName), new Register (stack - 1));
+					instruction = new Assign (new Field (fieldName), this.Register (stack - 1));
 					(instruction as Assign).Assignee.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
 				}
 
 				// Array
 				else if (cilInstruction.OpCode == OpCodes.Newarr) {
-					instruction = new Assign (new Register (stack - 2), new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.NewArray), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.NewArray), this.Register (stack - 1)));
 
 				} else if (cilInstruction.OpCode == OpCodes.Stelem_Ref
 						|| cilInstruction.OpCode == OpCodes.Stelem_Any
@@ -912,7 +1149,7 @@ namespace SharpOS.AOT.IR {
 						|| cilInstruction.OpCode == OpCodes.Stelem_I8
 						|| cilInstruction.OpCode == OpCodes.Stelem_R4
 						|| cilInstruction.OpCode == OpCodes.Stelem_R8) {
-					instruction = new Assign (new ArrayElement (new Register (stack - 3), new Register (stack - 2)), new Register (stack - 1));
+					instruction = new Assign (new ArrayElement (this.Register (stack - 3), this.Register (stack - 2)), this.Register (stack - 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldelem_Ref
 						|| cilInstruction.OpCode == OpCodes.Ldelem_I
@@ -929,7 +1166,7 @@ namespace SharpOS.AOT.IR {
 						|| cilInstruction.OpCode == OpCodes.Ldelema) {
 					// TODO Signed/Unsigned
 					// TODO ldelema -> new Address()
-					instruction = new Assign (new Register (stack - 1), new ArrayElement (new Register (stack - 2), new Register (stack - 1)));
+					instruction = new Assign (this.Register (stack - 1), new ArrayElement (this.Register (stack - 2), this.Register (stack - 1)));
 
 				} else
 					throw new Exception ("Instruction '" + cilInstruction.OpCode.Name + "' is not implemented. (Found in '" + this.method.MethodFullName + "')");
@@ -937,8 +1174,10 @@ namespace SharpOS.AOT.IR {
 				if (instruction != null)
 					this.AddInstruction (instruction);
 
-				stack += GetStackDelta (cilInstruction);
+				this.stack += GetStackDelta (cilInstruction);
 			}
+
+			this.converted = true;
 		}
 
 		/// <summary>
@@ -956,54 +1195,6 @@ namespace SharpOS.AOT.IR {
 
 			foreach (Mono.Cecil.Cil.Instruction instruction in block.cil) 
 				this.cil.Add (instruction);
-		}
-
-		private int stack = 0;
-
-		/// <summary>
-		/// Gets the stack.
-		/// </summary>
-		/// <value>The stack.</value>
-		public int Stack {
-			get {
-				return stack;
-			}
-		}
-
-		public enum BlockType {
-			Return, 
-			Throw, 
-			OneWay, 
-			TwoWay, 
-			NWay, 
-			Fall
-		}
-
-		private List<Mono.Cecil.Cil.Instruction> cil = new List<Mono.Cecil.Cil.Instruction>();
-
-		/// <summary>
-		/// Gets or sets the CIL.
-		/// </summary>
-		/// <value>The CIL.</value>
-		public List<Mono.Cecil.Cil.Instruction> CIL {
-			get {
-				return cil;
-			}
-			set {
-				cil = value;
-			}
-		}
-
-		private List<SharpOS.AOT.IR.Instructions.Instruction> instructions = new List<SharpOS.AOT.IR.Instructions.Instruction>();
-
-		/// <summary>
-		/// Gets the <see cref="SharpOS.AOT.IR.Instructions.Instruction"/> at the specified index.
-		/// </summary>
-		/// <value></value>
-		public SharpOS.AOT.IR.Instructions.Instruction this [int index] {
-			get {
-				return this.instructions[index];
-			}
 		}
 
 		/// <summary>
@@ -1066,161 +1257,6 @@ namespace SharpOS.AOT.IR {
 			this.instructions.RemoveAt (position);
 		}
 
-		/// <summary>
-		/// Gets the instructions count.
-		/// </summary>
-		/// <value>The instructions count.</value>
-		public int InstructionsCount {
-			get {
-				return this.instructions.Count;
-			}
-		}
-
-		private BlockType type;
-
-		/// <summary>
-		/// Gets or sets the type.
-		/// </summary>
-		/// <value>The type.</value>
-		public BlockType Type {
-			get {
-				return type;
-			}
-			set {
-				type = value;
-			}
-		}
-
-		private List<Block> ins = new List<Block> ();
-
-		/// <summary>
-		/// Gets the ins.
-		/// </summary>
-		/// <value>The ins.</value>
-		public List<Block> Ins {
-			get {
-				return ins;
-			}
-		}
-
-		private List<Block> outs = new List<Block> ();
-
-		/// <summary>
-		/// Gets the outs.
-		/// </summary>
-		/// <value>The outs.</value>
-		public List<Block> Outs {
-			get {
-				return outs;
-			}
-		}
-
-		private List<Block> dominators = new List<Block>();
-
-		/// <summary>
-		/// Gets or sets the dominators.
-		/// </summary>
-		/// <value>The dominators.</value>
-		public List<Block> Dominators {
-			get {
-				return dominators;
-			}
-			set {
-				dominators = value;
-			}
-		}
-
-		private Block immediateDominator = null;
-
-		/// <summary>
-		/// Gets or sets the immediate dominator.
-		/// </summary>
-		/// <value>The immediate dominator.</value>
-		public Block ImmediateDominator {
-			get {
-				return immediateDominator;
-			}
-			set {
-				immediateDominator = value;
-			}
-		}
-
-		private List<Block> immediateDominatorOf = new List<Block> ();
-
-		/// <summary>
-		/// Gets or sets the immediate dominator of.
-		/// </summary>
-		/// <value>The immediate dominator of.</value>
-		public List<Block> ImmediateDominatorOf {
-			get {
-				return immediateDominatorOf;
-			}
-			set {
-				immediateDominatorOf = value;
-			}
-		}
-
-		private List<Block> dominanceFrontiers = new List<Block> ();
-
-		/// <summary>
-		/// Gets or sets the dominance frontiers.
-		/// </summary>
-		/// <value>The dominance frontiers.</value>
-		public List<Block> DominanceFrontiers {
-			get {
-				return dominanceFrontiers;
-			}
-			set {
-				dominanceFrontiers = value;
-			}
-		}
-
-		private int index = 0;
-
-		/// <summary>
-		/// Gets or sets the index.
-		/// </summary>
-		/// <value>The index.</value>
-		public int Index {
-			get {
-				return index;
-			}
-			set {
-				index = value;
-			}
-		}
-
-		/// <summary>
-		/// Gets the start offset.
-		/// </summary>
-		/// <value>The start offset.</value>
-		public long StartOffset {
-			get {
-				if (this.cil.Count > 0) 
-					return this.cil[0].Offset;
-
-				if (this.InstructionsCount > 0) 
-					return this[0].StartOffset;
-
-				return 0;
-			}
-		}
-
-		/// <summary>
-		/// Gets the end offset.
-		/// </summary>
-		/// <value>The end offset.</value>
-		public long EndOffset {
-			get {
-				if (this.cil.Count > 0) 
-					return this.cil [this.cil.Count - 1].Offset;
-
-				if (this.InstructionsCount > 0) 
-					return this [this.InstructionsCount - 1].EndOffset;
-
-				return 0;
-			}
-		}
 
 		/// <summary>
 		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
