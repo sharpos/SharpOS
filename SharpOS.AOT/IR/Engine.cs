@@ -205,7 +205,7 @@ namespace SharpOS.AOT.IR {
 					result = 8;
 					break;
 
-				case Operand.InternalSizeType.Object:
+				case Operand.InternalSizeType.ValueType:
 					foreach (Class _class in this.classes) {
 						if (_class.ClassDefinition.FullName.Equals (type)) {
 							if (_class.ClassDefinition.IsEnum) {
@@ -328,7 +328,7 @@ namespace SharpOS.AOT.IR {
 							}
 
 						} else
-							return Operands.Operand.InternalSizeType.Object;
+							return Operands.Operand.InternalSizeType.ValueType;
 					}
 				}
 			}

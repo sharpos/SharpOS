@@ -65,8 +65,8 @@ namespace SharpOS.Multiboot {
 		
 		[Interop.FieldOffset(32)]
 		public AOUTSymbolTable AOUTSym;
-		[Interop.FieldOffset(32)]
-		public ElfSectionHeaderTable ElfSec;
+		/*[Interop.FieldOffset(32)]
+		public ElfSectionHeaderTable ElfSec;*/
 			
 		[Interop.FieldOffset(36)]
 		public uint MMapLen;

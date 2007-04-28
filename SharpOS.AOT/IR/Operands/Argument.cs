@@ -21,10 +21,24 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Argument"/> class.
 		/// </summary>
-		/// <param name="i">The i.</param>
-		public Argument (int i)
+		/// <param name="i">The index.</param>
+		/// <param name="typeName">Name of the type.</param>
+		public Argument (int i, string typeName)
 			: base ("Arg" + i, i)
 		{
+			this.typeName = typeName;
+		}
+
+		string typeName;
+
+		/// <summary>
+		/// Gets the name of the type.
+		/// </summary>
+		/// <value>The name of the type.</value>
+		public string TypeName {
+			get {
+				return this.typeName;
+			}
 		}
 	}
 }

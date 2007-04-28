@@ -75,6 +75,67 @@ namespace SharpOS {
 			return result;
 		}*/
 
+		public unsafe static void WriteMultibootInfoMMap (Multiboot.Info info)
+		{
+			Multiboot.MemoryMap* mmap = (Multiboot.MemoryMap*) info.MMapAddr;
+
+			while ((uint) mmap < info.MMapAddr + info.MMapLen) {
+				WriteMessage (String ("Size = 0x"));
+				WriteNumber (true, (int) mmap->Size);
+				WriteMessage (String (", Base Address = 0x"));
+				WriteNumber (true, (int) mmap->BaseAddrHigh);
+				WriteNumber (true, (int) mmap->BaseAddrLow);
+				WriteMessage (String (", Length = 0x"));
+				WriteNumber (true, (int) mmap->LengthHigh);
+				WriteNumber (true, (int) mmap->LengthLow);
+				WriteMessage (String (", Type = 0x"));
+				WriteNumber (true, (int) mmap->Type);
+				WriteNL ();
+
+				// FIXME the 4 at the end is arch specific
+				mmap = (Multiboot.MemoryMap*) ((uint) mmap + mmap->Size + 4);
+			}
+		}
+
+		public unsafe static void WriteMultibootInfo (Multiboot.Info info)
+		{
+			WriteMessage (String ("Boot Drive: 0x"));
+			WriteNumber (true, (int) info.BootDevice);
+			WriteNL ();
+
+			WriteMessage (String ("Flags: 0x"));
+			WriteNumber (true, (int) info.Flags);
+			WriteNL ();
+
+			WriteMessage (String ("Command Line: "));
+			WriteMessage ((byte*) info.CmdLine);
+			WriteNL ();
+
+			if ((info.Flags & 0x01) != 0) {
+				WriteMessage (String ("Memory Lower: 0x"));
+				WriteNumber (true, (int) info.MemLower);
+				WriteNL ();
+
+				WriteMessage (String ("Memory Upper: 0x"));
+				WriteNumber (true, (int) info.MemUpper);
+				WriteNL ();
+			}
+
+			if ((info.Flags & 0x40) != 0) {
+				WriteMessage (String ("MMap Address: 0x"));
+				WriteNumber (true, (int) info.MMapAddr);
+				WriteNL ();
+
+				WriteMessage (String ("MMap Length: 0x"));
+				WriteNumber (true, (int) info.MMapLen);
+				WriteNL ();
+
+				WriteMultibootInfoMMap (info);
+			}
+
+			WriteNL ();
+		}
+
 		public unsafe static void WriteNumber (bool hex, int value)
 		{
 			byte* buffer = stackalloc byte [32];
@@ -109,7 +170,7 @@ namespace SharpOS {
 
 			SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
 
-			WriteLine (String ("SharpOS v0.0.0.0.99 (http://www.sharpos.org)"));
+			WriteLine (String ("SharpOS v0.0.0.75 (http://www.sharpos.org)"));
 			WriteNL ();
 
 			if (magic != (uint) SharpOS.Multiboot.Magic.BootLoader) {
@@ -121,18 +182,16 @@ namespace SharpOS {
 
 			Multiboot.Info* multibootInfo = (Multiboot.Info*) pointer;
 
-			WriteNumber (true, (int) SharpOS.Multiboot.Magic.BootLoader);
-			WriteChar ((byte) ' ');
-			WriteNumber (false, (int) 12345678);
-			WriteChar ((byte) ' ');
-
+			WriteMultibootInfo (*multibootInfo);
+			
 			WriteCPUIDInfo ();
 
 			x = 0;
-			y = 24;
+			y = 23;
 
-			SetAttributes (ColorTypes.Magenta, ColorTypes.Black);
-			WriteLine (String ("and the mandatory \"Hello World\""));
+			SetAttributes (ColorTypes.LightGreen, ColorTypes.Black);
+			WriteLine (String ("Pinky: What are we gonna do tonight, Brain?"));
+			WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
 			RestoreAttributes ();
 		}
 

@@ -895,10 +895,10 @@ namespace SharpOS.AOT.IR {
 				// Object
 				else if (cilInstruction.OpCode == OpCodes.Ldobj) {
 					Operands.Object _object = new Operands.Object ((cilInstruction.Operand as TypeReference).FullName, this.Register (stack - 1));
-					_object.SizeType = Operand.InternalSizeType.Object;
+					_object.SizeType = Operand.InternalSizeType.ValueType;
 
 					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.Object;
+					register.SizeType = Operand.InternalSizeType.ValueType;
 
 					instruction = new Assign (register, _object);
 				}

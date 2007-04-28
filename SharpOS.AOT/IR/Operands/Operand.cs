@@ -69,7 +69,7 @@ namespace SharpOS.AOT.IR.Operands {
 			U8, 
 			R4, 
 			R8, 
-			Object
+			ValueType
 		}
 
 		/// <summary>

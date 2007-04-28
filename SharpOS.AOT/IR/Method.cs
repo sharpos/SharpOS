@@ -87,17 +87,19 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Argument GetArgument (int i)
 		{
-			Argument argument = new Argument (i);
+			Argument argument;
 
 			if (this.methodDefinition.HasThis) {
 				if (i == 1)
-					argument.SizeType = this.engine.GetInternalType (this.methodDefinition.DeclaringType.FullName);
-				
+					argument = new Argument (i, this.methodDefinition.DeclaringType.FullName);
+
 				else
-					argument.SizeType = this.engine.GetInternalType (this.methodDefinition.Parameters [i - 2].ParameterType.FullName);
+					argument = new Argument (i, this.methodDefinition.Parameters [i - 2].ParameterType.FullName);
 
 			} else
-				argument.SizeType = this.engine.GetInternalType (this.methodDefinition.Parameters [i - 1].ParameterType.FullName);
+				argument = new Argument (i, this.methodDefinition.Parameters [i - 1].ParameterType.FullName);
+
+			argument.SizeType = this.engine.GetInternalType (argument.TypeName);
 
 			return argument;
 		}
@@ -2134,6 +2136,9 @@ namespace SharpOS.AOT.IR {
 			if (this.engine.Assembly.IsRegister (identifier.Value))
 				return;
 
+			if (identifier is Address)
+				identifier = (identifier as Address).Value;
+
 			bool asmCall = instruction.Value is Operands.Call
 				       && this.engine.Assembly.IsInstruction ( (instruction.Value as Operands.Call).Method.DeclaringType.FullName);
 
@@ -2236,9 +2241,11 @@ namespace SharpOS.AOT.IR {
 				if ( (this.liveRanges[i].Identifier as Identifier).ForceSpill
 						|| this.engine.Assembly.Spill (this.liveRanges[i].Identifier.SizeType))
 					SetNextStackPosition (this.liveRanges[i].Identifier);
+
 				else {
 					if (active.Count == this.engine.Assembly.AvailableRegistersCount)
 						SpillAtInterval (active, registers, ref stackPosition, this.liveRanges[i]);
+
 					else {
 						int register = registers[0];
 						registers.RemoveAt (0);
