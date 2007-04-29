@@ -25,16 +25,34 @@ namespace SharpOS.AOT.X86 {
 		const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
 		const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry System.UInt32 System.UInt32";
 		const string AOT_ATTRIBUTES = "SharpOS.AOT.Attributes";
+		
 		const string END_DATA = "[END DATA]";
 		const string END_STACK = "[END STACK]";
 		const string THE_END = "[THE END]";
+		const string KERNEL_ENTRY_POINT = "[KERNEL ENTRY POINT]";
+
+		const string MULTIBOOT_HEADER_ADDRESS = "[MULTIBOOT HEADER ADDRESS]";
+		const string MULTIBOOT_LOAD_END_ADDRESS = "[MULTIBOOT LOAD END ADDRESS]";
+		const string MULTIBOOT_BSS_END_ADDRESS = "[MULTIBOOT BSS END ADDRESS]";
+		const string MULTIBOOT_ENTRY_POINT = "[MULTIBOOT ENTRY POINT]";
+		
+		const string PE_ADRESS_OFFSET = "[PE ADRESS OFFSET]";
+		const string PE_HEADER = "[PE HEADER]";
+		const string PE_POINTER_TO_SYMBOL_TABLE = "[PE POINTER TO SYMBOL TABLE]";
+		const string PE_NUMBER_OF_SYMBOLS = "[PE NUMBER OF SYMBOLS]";
+		const string PE_SIZE_OF_OPTIONAL_HEADER = "[PE SIZE OF OPTIONAL HEADER]";
+
+		const uint BASE_ADDRESS = 0x00100000;
 
 		internal const string HELPER_LSHL = "LSHL";
 		internal const string HELPER_LSHR = "LSHR";
 		internal const string HELPER_LSAR = "LSAR";
+
 		Engine engine;
 		Assembly data;
 
+		uint multibootBSSEndAddress = 0;
+		uint multibootLoadEndAddress = 0;
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Assembly"/> class.
@@ -64,7 +82,7 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
-		protected List<Instruction> instructions = new List<Instruction> ();
+		List<Instruction> instructions = new List<Instruction> ();
 
 		/// <summary>
 		/// Gets the <see cref="SharpOS.AOT.X86.Instruction"/> at the specified index.
@@ -87,7 +105,7 @@ namespace SharpOS.AOT.X86 {
 			StringBuilder stringBuilder = new StringBuilder ();
 
 			foreach (Instruction instruction in this.instructions)
-			stringBuilder.Append (instruction.ToString () + "\n");
+				stringBuilder.Append (instruction.ToString () + "\n");
 
 			return stringBuilder.ToString ();
 		}
@@ -373,62 +391,9 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Adds the multiboot header.
-		/// </summary>
-		/// <param name="addCCTOR">if set to <c>true</c> [add CCTOR].</param>
-		public void AddMultibootHeader (bool addCCTOR)
-		{
-			uint magic = 0x1BADB002;
-			uint flags = 0x00010003; //Extra info following and retrieve memory and video modes infos
-			uint checksum = (uint) ((int)( (-(magic + flags))));
-
-			this.DATA (magic);
-			this.DATA (flags);
-			this.DATA (checksum);
-
-			// Header Address
-			this.DATA (0x00100000);
-
-			// Load Address
-			this.DATA (0x00100000);
-
-			// Load End Address
-			this.DATA ( (uint) 0);
-
-			// BSS End Address
-			this.DATA ( (uint) 0);
-
-			// Entry End Address (Just after this header)
-			this.DATA (0x00100020);
-
-			this.ORG (0x00100000);
-
-			this.MOV (R32.ESP, END_STACK);
-
-			this.PUSH ((uint) 0);
-			this.POPF ();
-
-			// Pointer to the Multiboot Info 
-			this.PUSH (R32.EBX);
-
-			// The magic value
-			this.PUSH (R32.EAX);
-
-			if (addCCTOR)
-				this.CALL (KERNEL_CTOR);
-
-			this.CALL (KERNEL_MAIN);
-
-			// Just hang
-			this.LABEL (THE_END);
-
-			this.JMP (THE_END);
-		}
-
-		/// <summary>
 		/// Determines whether [is kernel string] [the specified value].
 		/// </summary>
-		/// <param name="value">The value.</param>
+		/// <param name="call">The call.</param>
 		/// <returns>
 		/// 	<c>true</c> if [is kernel string] [the specified value]; otherwise, <c>false</c>.
 		/// </returns>
@@ -446,13 +411,438 @@ namespace SharpOS.AOT.X86 {
 
 				if (call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
 						&& call.Method.Parameters.Count == 1
-						&& call.Method.Parameters[0].ParameterType.FullName.Equals ("System.String"))
+						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String"))
 					return true;
 
 				throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'String' method.");
 			}
 
-			return false; 
+			return false;
+		}
+
+		/// <summary>
+		/// Patches the specified memory stream.
+		/// </summary>
+		/// <param name="memoryStream">The memory stream.</param>
+		private void Patch (MemoryStream memoryStream)
+		{
+			BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
+			
+
+			uint offset = this.GetLabelAddress (MULTIBOOT_ENTRY_POINT);
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			uint value = BASE_ADDRESS + this.GetLabelAddress (KERNEL_ENTRY_POINT);
+			binaryWriter.Write ((int) value);
+
+
+			offset = this.GetLabelAddress (MULTIBOOT_HEADER_ADDRESS);
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			value = BASE_ADDRESS + offset - 0x0C;
+			binaryWriter.Write ((int) value);
+
+
+			offset = this.GetLabelAddress (MULTIBOOT_LOAD_END_ADDRESS);
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) this.multibootLoadEndAddress);
+
+
+			offset = this.GetLabelAddress (MULTIBOOT_BSS_END_ADDRESS);
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) this.multibootBSSEndAddress);
+
+			
+			offset = this.GetLabelAddress (PE_ADRESS_OFFSET);
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			value = this.GetLabelAddress (PE_HEADER);
+			binaryWriter.Write ((int) value);
+
+
+			binaryWriter.Seek (0, SeekOrigin.End);
+		}
+
+		private void AddPEHeader ()
+		{
+			// DOS Header
+			byte[] data = new byte [] {
+				0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 
+				0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
+				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
+			
+			foreach (byte value in data)
+				this.DATA (value);
+			
+			this.LABEL (PE_ADRESS_OFFSET);
+
+			this.DATA ((uint) 0);
+
+			// DOS Code 
+			data = new byte [] { 
+				0x0e, 0x1f, 0xba, 0x0e, 0x00, 0xb4, 0x09, 0xcd, 0x21, 0xb8, 0x01, 0x4c, 0xcd, 0x21, 0x54, 0x68, 
+				0x69, 0x73, 0x20, 0x70, 0x72, 0x6f, 0x67, 0x72, 0x61, 0x6d, 0x20, 0x63, 0x61, 0x6e, 0x6e, 0x6f, 
+				0x74, 0x20, 0x62, 0x65, 0x20, 0x72, 0x75, 0x6e, 0x20, 0x69, 0x6e, 0x20, 0x44, 0x4f, 0x53, 0x20, 
+				0x6d, 0x6f, 0x64, 0x65, 0x2e, 0x0d, 0x0d, 0x0a, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+
+			foreach (byte value in data)
+				this.DATA (value);
+
+			this.AddMultibootHeader ();
+
+			this.ALIGN (16);
+
+			this.LABEL (PE_HEADER);
+
+			// PE\0\0 (PE Signature)
+			this.DATA ((uint) 0x00004550);
+			
+			// Machine (Intel 386)
+			this.DATA ((ushort) 0x014C);
+
+			// Number of Sections
+			this.DATA ((ushort) 0x0005);
+
+			// Time Date Stamp
+			this.DATA ((uint) 0x4634F185);
+
+			// Pointer to Symbol Table
+			this.LABEL (PE_POINTER_TO_SYMBOL_TABLE);
+			this.DATA ((uint) 0);
+
+			// Number of Symbols
+			this.LABEL (PE_NUMBER_OF_SYMBOLS);
+			this.DATA ((uint) 0);
+
+			// Size of Optional Header
+			this.LABEL (PE_SIZE_OF_OPTIONAL_HEADER);
+			this.DATA ((ushort) 0);
+
+			// Characteristics
+			this.DATA ((ushort) 0x1305);
+
+		}
+
+		/// <summary>
+		/// Adds the multiboot header.
+		/// </summary>
+		private void AddMultibootHeader ()
+		{
+			uint magic = 0x1BADB002;
+			uint flags = 0x00010003; //Extra info following and retrieve memory and video modes infos
+			uint checksum = (uint) ((int)( (-(magic + flags))));
+
+			this.ALIGN (4);
+
+			this.DATA (magic);
+			this.DATA (flags);
+			this.DATA (checksum);
+
+			// Header Address
+			this.LABEL (MULTIBOOT_HEADER_ADDRESS);
+			this.DATA ((uint) 0);
+
+			// Load Address
+			this.DATA (BASE_ADDRESS);
+
+			// Load End Address
+			this.LABEL (MULTIBOOT_LOAD_END_ADDRESS);
+			this.DATA ((uint) 0);
+
+			// BSS End Address
+			this.LABEL (MULTIBOOT_BSS_END_ADDRESS);
+			this.DATA ((uint) 0);
+			
+			// Entry Address (It will get patched later)
+			this.LABEL (MULTIBOOT_ENTRY_POINT);
+			this.DATA ((uint) 0); 
+		}
+
+		/// <summary>
+		/// Adds the entry point.
+		/// </summary>
+		private void AddEntryPoint ()
+		{
+			this.ORG (0x00100000);
+
+			this.LABEL (KERNEL_ENTRY_POINT);
+
+			this.MOV (R32.ESP, END_STACK);
+
+			this.PUSH (0);
+			this.POPF ();
+
+			// Pointer to the Multiboot Info 
+			this.PUSH (R32.EBX);
+
+			// The magic value
+			this.PUSH (R32.EAX);
+
+			foreach (Class _class in engine) {
+				foreach (Method method in _class) {
+					if (method.MethodFullName.IndexOf (".cctor") == -1)
+						continue;
+
+					this.CALL (method.MethodFullName);
+				}
+			}
+
+			this.CALL (KERNEL_MAIN);
+
+			// Just hang
+			this.LABEL (THE_END);
+
+			this.JMP (THE_END);
+		}
+
+		/// <summary>
+		/// Adds the data.
+		/// </summary>
+		private void AddData ()
+		{
+			foreach (Class _class in engine) {
+				if (_class.ClassDefinition.IsEnum)
+					continue;
+
+				if (_class.ClassDefinition.IsValueType)
+					continue;
+
+				foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
+					string fullname = field.DeclaringType.FullName + "::" + field.Name;
+
+					if (!field.IsStatic) {
+						Console.WriteLine ("Not processing '" + fullname + "'");
+
+						continue;
+					}
+
+					this.LABEL (fullname);
+
+					switch (engine.GetInternalType (field.FieldType.FullName)) {
+						case Operand.InternalSizeType.I1:
+						case Operand.InternalSizeType.U1:
+							this.DATA ( (byte) 0);
+							break;
+
+						case Operand.InternalSizeType.I2:
+						case Operand.InternalSizeType.U2:
+							this.DATA ( (ushort) 0);
+							break;
+
+						case Operand.InternalSizeType.I:
+						case Operand.InternalSizeType.U:
+						case Operand.InternalSizeType.I4:
+						case Operand.InternalSizeType.U4:
+						case Operand.InternalSizeType.R4:
+							this.DATA ( (uint) 0);
+							break;
+
+						case Operand.InternalSizeType.I8:
+						case Operand.InternalSizeType.U8:
+						case Operand.InternalSizeType.R8:
+							this.DATA ( (uint) 0);
+							this.DATA ( (uint) 0);
+							break;
+
+						default:
+							throw new Exception ("'" + field.FieldType + "' is not supported.");
+					}
+				}
+			}
+
+			foreach (Instruction instruction in data.instructions)
+				this.instructions.Add (instruction);
+
+			this.ALIGN (4096);
+			this.LABEL (END_DATA);
+		}
+
+		/// <summary>
+		/// Adds the stack.
+		/// </summary>
+		private void AddStack ()
+		{
+			this.TIMES (8192, 0);
+			this.LABEL (END_STACK);
+		}
+
+		
+		/// <summary>
+		/// Encodes the specified engine.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="target">The target.</param>
+		/// <returns></returns>
+		public bool Encode (Engine engine, string target)
+		{
+			this.data = new Assembly ();
+			this.engine = engine;
+
+			this.AddPEHeader ();
+
+			this.AddEntryPoint ();
+
+			foreach (Class _class in engine) {
+				foreach (Method method in _class) {
+					this.engine.WriteLine ("Processing '" + method.MethodFullName + "'.");
+
+					AssemblyMethod assemblyMethod = new AssemblyMethod (this, method);
+					assemblyMethod.GetAssemblyCode ();
+				}
+			}
+
+			this.AddHelperFunctions ();
+
+			this.AddData ();
+
+			this.AddStack ();
+
+			this.Save (target);
+			
+			return true;
+		}
+
+		/// <summary>
+		/// Saves the specified target.
+		/// </summary>
+		/// <param name="target">The target.</param>
+		/// <returns></returns>
+		private bool Save (string target)
+		{
+			MemoryStream memoryStream = new MemoryStream ();
+
+			this.Encode (memoryStream);
+
+			this.Patch (memoryStream);
+
+			using (FileStream fileStream = new FileStream (target, FileMode.Create))
+				memoryStream.WriteTo (fileStream);
+
+			return true;
+		}
+
+		/// <summary>
+		/// Encodes the specified memory stream.
+		/// </summary>
+		/// <param name="memoryStream">The memory stream.</param>
+		/// <returns></returns>
+		public bool Encode (MemoryStream memoryStream)
+		{
+			UInt32 org = 0;
+
+			BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
+
+			// The first pass does the optimization
+			// The second pass writes the content
+			for (int pass = 0; pass < 2; pass++) {
+				bool changed;
+
+				do {
+					changed = false;
+					UInt32 offset = 0;
+					bool bss = false;
+
+					for (int i = 0; i < this.instructions.Count; i++) {
+						Instruction instruction = this.instructions [i];
+
+						if (instruction is OrgInstruction)
+							org = (UInt32) instruction.Value;
+
+						else if (instruction is Bits32Instruction)
+							this.bits32 = (bool) instruction.Value;
+
+						else if (instruction is OffsetInstruction) {
+							offset = (UInt32) instruction.Value;
+
+							if (offset < binaryWriter.BaseStream.Length)
+								throw new Exception ("Wrong offset '" + offset.ToString () + "'.");
+
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
+								binaryWriter.Write ((byte) 0);
+
+						} else if (instruction is AlignInstruction) {
+							if (offset % (UInt32) instruction.Value != 0)
+								offset += ((UInt32) instruction.Value - offset % (UInt32) instruction.Value);
+
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
+								binaryWriter.Write ((byte) 0);
+
+						} else if (instruction is TimesInstruction) {
+							TimesInstruction times = instruction as TimesInstruction;
+
+							offset += times.Length;
+
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
+								binaryWriter.Write ((byte) times.Value);
+						}
+
+						if (pass == 0) {
+							if (instruction.Reference.Length > 0) {
+								instruction.Value = new UInt32 [] { this.GetLabelAddress (instruction.Reference) };
+
+								if (!instruction.Relative)
+									((UInt32 []) instruction.Value) [0] += org;
+
+								else {
+									int delta = (int) (((UInt32 []) instruction.Value) [0] - offset - 2);
+									
+									if (delta >= -128 && delta <= 127) {
+										Assembly temp = new Assembly ();
+
+										if (instruction.Name.Equals ("JMP")
+												&& instruction.Encoding [0] == "E9") {
+											temp.JMP ((byte) 0);
+
+											instruction.Set (temp [0]);
+
+											changed = true;
+
+										} else if (instruction.Name.Equals ("JNZ")
+												&& instruction.Encoding [1] == "85") {
+											temp.JNZ ((byte) 0);
+
+											instruction.Set (temp [0]);
+
+											changed = true;
+
+										} else if (instruction.Name.Equals ("JNE")
+												&& instruction.Encoding [1] == "85") {
+											temp.JNE ((byte) 0);
+
+											instruction.Set (temp [0]);
+
+											changed = true;
+										}
+
+										// TODO optimizations for the other jump instructions
+									}
+								}
+							}
+
+							if (instruction.RMMemory != null && instruction.RMMemory.Reference.Length > 0)
+								instruction.RMMemory.Displacement = (int) (org + this.GetLabelAddress (instruction.RMMemory.Reference) + instruction.RMMemory.DisplacementDelta);
+
+							// Load End Address
+							if (instruction.Label.Equals (END_DATA)) {
+								bss = true;
+
+								this.multibootLoadEndAddress = org + offset;
+							}
+
+							// BSS End Address
+							if (instruction.Label.Equals (END_STACK))
+								this.multibootBSSEndAddress = org + offset;
+
+						} else {
+							if (!bss)
+								instruction.Encode (this.bits32, binaryWriter);
+						}
+
+						offset += instruction.Size (this.bits32);
+					}
+
+				} while (changed);
+			}
+
+			return true;
 		}
 
 		/// <summary>
@@ -634,242 +1024,6 @@ namespace SharpOS.AOT.X86 {
 			this.AddLSHL ();
 			this.AddLSHR ();
 			this.AddLSAR ();
-		}
-
-		/// <summary>
-		/// Encodes the specified engine.
-		/// </summary>
-		/// <param name="engine">The engine.</param>
-		/// <param name="target">The target.</param>
-		/// <returns></returns>
-		public bool Encode (Engine engine, string target)
-		{
-			MemoryStream memoryStream = new MemoryStream ();
-			this.data = new Assembly ();
-			this.engine = engine;
-
-			bool addCTOR = false;
-
-			foreach (Class _class in engine) {
-				if (!_class.ClassDefinition.FullName.Equals (KERNEL_CLASS))
-					continue;
-
-				foreach (Method method in _class) {
-					if (method.MethodFullName.Equals (KERNEL_CTOR)) {
-						addCTOR = true;
-						break;
-					}
-				}
-
-				if (addCTOR)
-					break;
-			}
-
-			// TODO add the other CCTOR calls
-			this.AddMultibootHeader (addCTOR);
-
-			foreach (Class _class in engine) {
-				foreach (Method method in _class) {
-					this.engine.WriteLine ("Processing '" + method.MethodFullName + "'.");
-
-					AssemblyMethod assemblyMethod = new AssemblyMethod (this, method);
-					assemblyMethod.GetAssemblyCode ();
-				}
-			}
-
-			this.AddHelperFunctions ();
-
-			foreach (Class _class in engine) {
-				if (_class.ClassDefinition.IsEnum)
-					continue;
-
-				if (_class.ClassDefinition.IsValueType)
-					continue;
-
-				foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-					string fullname = field.DeclaringType.FullName + "::" + field.Name;
-
-					if (!field.IsStatic) {
-						Console.WriteLine ("Not processing '" + fullname + "'");
-
-						continue;
-					}
-
-					this.LABEL (fullname);
-
-					switch (engine.GetInternalType (field.FieldType.FullName)) {
-						case Operand.InternalSizeType.I1:
-						case Operand.InternalSizeType.U1:
-							this.DATA ( (byte) 0);
-							break;
-
-						case Operand.InternalSizeType.I2:
-						case Operand.InternalSizeType.U2:
-							this.DATA ( (ushort) 0);
-							break;
-
-						case Operand.InternalSizeType.I:
-						case Operand.InternalSizeType.U:
-						case Operand.InternalSizeType.I4:
-						case Operand.InternalSizeType.U4:
-						case Operand.InternalSizeType.R4:
-							this.DATA ( (uint) 0);
-							break;
-
-						case Operand.InternalSizeType.I8:
-						case Operand.InternalSizeType.U8:
-						case Operand.InternalSizeType.R8:
-							this.DATA ( (uint) 0);
-							this.DATA ( (uint) 0);
-							break;
-
-						default:
-							throw new Exception ("'" + field.FieldType + "' is not supported.");
-					}
-				}
-			}
-
-			foreach (Instruction instruction in data.instructions)
-				this.instructions.Add (instruction);
-
-			this.ALIGN (4096);
-			this.LABEL (END_DATA);
-
-			this.TIMES (8192, 0);
-			this.LABEL (END_STACK);
-
-			this.Encode (memoryStream);
-
-			using (FileStream fileStream = new FileStream (target, FileMode.Create))
-				memoryStream.WriteTo (fileStream);
-
-			return true;
-		}
-
-		/// <summary>
-		/// Encodes the specified memory stream.
-		/// </summary>
-		/// <param name="memoryStream">The memory stream.</param>
-		/// <returns></returns>
-		public bool Encode (MemoryStream memoryStream)
-		{
-			UInt32 org = 0;
-
-			BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
-
-			// The first pass does the optimization
-			// The second pass writes the content
-			for (int pass = 0; pass < 2; pass++) {
-				bool changed;
-
-				do {
-					changed = false;
-					UInt32 offset = 0;
-					bool bss = false;
-
-					for (int i = 0; i < this.instructions.Count; i++) {
-						Instruction instruction = this.instructions [i];
-
-						if (instruction is OrgInstruction)
-							org = (UInt32) instruction.Value;
-
-						else if (instruction is Bits32Instruction)
-							this.bits32 = (bool) instruction.Value;
-
-						else if (instruction is OffsetInstruction) {
-							offset = (UInt32) instruction.Value;
-
-							if (offset < binaryWriter.BaseStream.Length)
-								throw new Exception ("Wrong offset '" + offset.ToString () + "'.");
-
-							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
-								binaryWriter.Write ((byte) 0);
-
-						} else if (instruction is AlignInstruction) {
-							if (offset % (UInt32) instruction.Value != 0)
-								offset += ((UInt32) instruction.Value - offset % (UInt32) instruction.Value);
-
-							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
-								binaryWriter.Write ((byte) 0);
-
-						} else if (instruction is TimesInstruction) {
-							TimesInstruction times = instruction as TimesInstruction;
-
-							offset += times.Length;
-
-							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
-								binaryWriter.Write ((byte) times.Value);
-						}
-
-						if (pass == 0) {
-							if (instruction.Reference.Length > 0) {
-								instruction.Value = new UInt32 [] { this.GetLabelAddress (instruction.Reference) };
-
-								if (!instruction.Relative)
-									((UInt32 []) instruction.Value) [0] += org;
-
-								else {
-									int delta = (int) (((UInt32 []) instruction.Value) [0] - offset - 2);
-									
-									if (delta >= -128 && delta <= 127) {
-										Assembly temp = new Assembly ();
-
-										if (instruction.Name.Equals ("JMP")
-												&& instruction.Encoding [0] == "E9") {
-											temp.JMP ((byte) 0);
-
-											instruction.Set (temp [0]);
-
-											changed = true;
-
-										} else if (instruction.Name.Equals ("JNZ")
-												&& instruction.Encoding [1] == "85") {
-											temp.JNZ ((byte) 0);
-
-											instruction.Set (temp [0]);
-
-											changed = true;
-
-										} else if (instruction.Name.Equals ("JNE")
-												&& instruction.Encoding [1] == "85") {
-											temp.JNE ((byte) 0);
-
-											instruction.Set (temp [0]);
-
-											changed = true;
-										}
-
-										// TODO optimizations for the other jump instructions
-									}
-								}
-							}
-
-							if (instruction.RMMemory != null && instruction.RMMemory.Reference.Length > 0)
-								instruction.RMMemory.Displacement = (int) (org + this.GetLabelAddress (instruction.RMMemory.Reference) + instruction.RMMemory.DisplacementDelta);
-
-							// Load End Address
-							if (instruction.Label.Equals (END_DATA)) {
-								bss = true;
-
-								this.instructions[5].Value = org + offset;
-							}
-
-							// BSS End Address
-							if (instruction.Label.Equals (END_STACK))
-								this.instructions[6].Value = org + offset;
-
-						} else {
-							if (!bss)
-								instruction.Encode (this.bits32, binaryWriter);
-						}
-
-						offset += instruction.Size (this.bits32);
-					}
-
-				} while (changed);
-			}
-
-			return true;
 		}
 
 		/// <summary>

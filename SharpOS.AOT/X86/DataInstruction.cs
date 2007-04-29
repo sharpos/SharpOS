@@ -51,16 +51,16 @@ namespace SharpOS.AOT.X86 {
 				string value = (string) this.Value;
 
 				for (int i = 0; i < value.Length; i++)
-					binaryWriter.Write (value[i]);
+					binaryWriter.Write (value [i]);
 
 			} else if (this.Value is byte) {
-				binaryWriter.Write ( (byte) this.Value);
+				binaryWriter.Write ((byte) this.Value);
 
 			} else if (this.Value is UInt16) {
-				binaryWriter.Write ( (UInt16) this.Value);
+				binaryWriter.Write ((UInt16) this.Value);
 
 			} else if (this.Value is UInt32) {
-				binaryWriter.Write ( (UInt32) this.Value);
+				binaryWriter.Write ((UInt32) this.Value);
 
 			} else
 				throw new Exception ("Wrong data type.");
