@@ -24,7 +24,7 @@ namespace SharpOS.AOT.X86 {
 		const string KERNEL_CLASS = "SharpOS.Kernel";
 		const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
 		const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry System.UInt32 System.UInt32";
-		const string KERNEL_STRING = KERNEL_CLASS + ".String";
+		const string AOT_ATTRIBUTES = "SharpOS.AOT.Attributes";
 		const string END_DATA = "[END DATA]";
 		const string END_STACK = "[END STACK]";
 		const string THE_END = "[THE END]";
@@ -432,9 +432,27 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if [is kernel string] [the specified value]; otherwise, <c>false</c>.
 		/// </returns>
-		internal bool IsKernelString (string value)
+		internal bool IsKernelString (SharpOS.AOT.IR.Operands.Call call)
 		{
-			return value.Equals (KERNEL_STRING);
+			//string name = call.Method.DeclaringType.FullName + "." + call.Method.Name;
+			//name.Equals (KERNEL_STRING);
+
+			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (AOT_ATTRIBUTES + ".StringAttribute"))
+					continue;
+
+				if (call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+						&& call.Method.Parameters.Count == 1
+						&& call.Method.Parameters[0].ParameterType.FullName.Equals ("System.String"))
+					return true;
+
+				throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'String' method.");
+			}
+
+			return false; 
 		}
 
 		/// <summary>

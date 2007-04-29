@@ -436,6 +436,7 @@ namespace SharpOS {
 			}
 		}
 
+		[SharpOS.AOT.Attributes.String]
 		public unsafe static byte* String (string value)
 		{
 			return null;
@@ -443,12 +444,12 @@ namespace SharpOS {
 
 		public unsafe static void WriteNL ()
 		{
-			WriteChar ( (byte) '\n');
+			WriteChar ((byte) '\n');
 		}
 
 		public unsafe static void WriteByte (byte value)
 		{
-			WriteHex ( (byte) (value >> 4));
+			WriteHex ((byte) (value >> 4));
 			WriteHex ( (byte) (value & 0x0F));
 		}
 

@@ -1306,9 +1306,7 @@ namespace SharpOS.AOT.X86 {
 			} else if (assign.Value is SharpOS.AOT.IR.Operands.Call) {
 				SharpOS.AOT.IR.Operands.Call call = assign.Value as SharpOS.AOT.IR.Operands.Call;
 
-				string name = call.Method.DeclaringType.FullName + "." + call.Method.Name;
-
-				if (assembly.IsKernelString (name)) {
+				if (assembly.IsKernelString (call)) {
 					this.HandleAssign (block, new Assign (assign.Assignee, call.Operands[0]));
 
 				} else {
