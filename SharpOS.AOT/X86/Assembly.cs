@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -564,7 +565,7 @@ namespace SharpOS.AOT.X86 {
 			this.ORG (0x00100000);
 
 			this.LABEL (KERNEL_ENTRY_POINT);
-
+	
 			this.MOV (R32.ESP, END_STACK);
 
 			this.PUSH (0);
@@ -575,12 +576,12 @@ namespace SharpOS.AOT.X86 {
 
 			// The magic value
 			this.PUSH (R32.EAX);
-
+			
 			foreach (Class _class in engine) {
-				foreach (Method method in _class) {
+				foreach (Method method in _class) {		
 					if (method.MethodFullName.IndexOf (".cctor") == -1)
 						continue;
-
+						
 					this.CALL (method.MethodFullName);
 				}
 			}
@@ -598,6 +599,8 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		private void AddData ()
 		{
+			this.engine.Dump.Section (DumpSection.DataEncode);
+			
 			foreach (Class _class in engine) {
 				if (_class.ClassDefinition.IsEnum)
 					continue;
@@ -609,7 +612,8 @@ namespace SharpOS.AOT.X86 {
 					string fullname = field.DeclaringType.FullName + "::" + field.Name;
 
 					if (!field.IsStatic) {
-						Console.WriteLine ("Not processing '" + fullname + "'");
+						this.engine.Dump.IgnoreMember (fullname, 
+								"Non-static field");
 
 						continue;
 					}
@@ -648,6 +652,8 @@ namespace SharpOS.AOT.X86 {
 				}
 			}
 
+			this.engine.Dump.FinishElement ();	// section: DataEncode
+			
 			foreach (Instruction instruction in data.instructions)
 				this.instructions.Add (instruction);
 
@@ -675,19 +681,24 @@ namespace SharpOS.AOT.X86 {
 		{
 			this.data = new Assembly ();
 			this.engine = engine;
-
+			
+			this.engine.Dump.Section (DumpSection.Encoding);
+			
 			this.AddPEHeader ();
 
 			this.AddEntryPoint ();
-
+			
+			this.engine.Dump.Section (DumpSection.MethodEncode);
+			
 			foreach (Class _class in engine) {
 				foreach (Method method in _class) {
-					this.engine.WriteLine ("Processing '" + method.MethodFullName + "'.");
+					this.engine.Dump.MethodEncode (method);
 
-					AssemblyMethod assemblyMethod = new AssemblyMethod (this, method);
-					assemblyMethod.GetAssemblyCode ();
+					new AssemblyMethod (this, method).GetAssemblyCode ();
 				}
 			}
+			
+			this.engine.Dump.FinishElement();
 
 			this.AddHelperFunctions ();
 
@@ -715,7 +726,9 @@ namespace SharpOS.AOT.X86 {
 
 			using (FileStream fileStream = new FileStream (target, FileMode.Create))
 				memoryStream.WriteTo (fileStream);
-
+			
+			this.engine.Dump.FinishElement();
+			
 			return true;
 		}
 

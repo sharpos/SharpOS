@@ -10,7 +10,7 @@
 <project name="SharpOS AOT Compiler" default="build">
 	<description>Compiles IL assemblies into machine code.</description>
 
-	<property name="debug" value="false" />
+	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../build" />
 	
 	<target name="build">
@@ -18,21 +18,37 @@
 		
 		<mkdir dir="${prefix}" />
 		
-		<csc target="exe" output="${path::combine(prefix, 'SharpOS.AOT.exe')}" debug="${debug}" unsafe="true">
+		<csc target="library" output="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" 
+				debug="${debug}" unsafe="true">
 			<references>
 				<include name="References/Mono.Cecil.dll" />
 			</references>
 			<sources>
-				<include name="*.cs" />
+				<include name="Core.AssemblyInfo.cs" />
 				<include name="IR/*.cs" />
 				<include name="IR/Instructions/*.cs" />
 				<include name="IR/Operands/*.cs" />
 				<include name="IR/Operators/*.cs" />
+				<include name="Attributes/*.cs" />
 				<include name="X86/*.cs" />
 			</sources>
 		</csc>
 		
+		<csc target="exe" output="${path::combine(prefix, 'SharpOS.AOT.exe')}" debug="${debug}" 
+				unsafe="true">
+			<references>
+				<include name="References/Mono.GetOptions.dll" />
+				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
+			</references>
+			<sources>
+				<include name="Program.cs" />
+				<include name="AssemblyInfo.cs" />
+			</sources>
+		</csc>
+		
 		<copy file="References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
+		<copy file="References/Mono.GetOptions.dll" 
+				tofile="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 	</target>
 
 	<target name="clean">

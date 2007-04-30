@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -21,19 +22,38 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-
 namespace SharpOS.AOT.IR {
+	public class EngineOptions {
+		public string[] Assemblies = null;
+		public string OutputFilename = "SharpOS.Kernel.bin";
+		public string CPU = "X86";
+		public bool Verbose = false;
+		public string DumpFile = null;
+		public bool TextDump = false;
+		public int DumpVerbosity = 1;
+		
+		public bool Dump {
+			get {
+				return DumpFile != null;
+			}
+		}
+	}
+	
 	public partial class Engine : IEnumerable<Class> {
-		const string dumpFilename = "SharpOS.AOT.txt";
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Engine"/> class.
 		/// </summary>
-		public Engine ()
+		public Engine (EngineOptions opts)
 		{
+			options = opts;
 		}
 
+		public const string EngineVersion = "svn";
+		
+		private EngineOptions options = null;
 		private IAssembly asm = null;
-
+		private DumpProcessor dump = null;
+		
 		/// <summary>
 		/// Gets the assembly.
 		/// </summary>
@@ -43,65 +63,142 @@ namespace SharpOS.AOT.IR {
 				return asm;
 			}
 		}
-
+		
+		public EngineOptions Options {
+			get {
+				return options;
+			}
+		}
+		
+		public DumpProcessor Dump {
+			get {
+				return dump;
+			}
+		}
+		
+		public void Message(uint lvl, string msg, params object[] prms)
+		{
+			if (lvl > 0 && options.Verbose)
+				Console.WriteLine(msg, prms);
+		}
+		
+		public void Run ()
+		{
+			DumpType dumpType = DumpType.XML;
+			
+			if (options.TextDump)
+				dumpType = DumpType.Text;
+			
+			IAssembly asm = null;
+			
+			switch (options.CPU) {
+				case "X86":
+					asm = new SharpOS.AOT.X86.Assembly();
+				break;
+				default:
+					Console.Error.WriteLine("Error: processor type `{0}' not supported", options.CPU);
+					Environment.Exit(1);
+				break;
+			}
+			
+			Message(1, "AOT compiling for processor `{0}'", options.CPU);
+			Run(asm);
+		}
+		
 		/// <summary>
 		/// Runs the specified asm.
 		/// </summary>
 		/// <param name="asm">The asm.</param>
 		/// <param name="assembly">The assembly.</param>
 		/// <param name="target">The target.</param>
-		public void Run (IAssembly asm, string assembly, string target)
+		public void Run (IAssembly asm)
 		{
-			File.Delete (dumpFilename);
-
+			if (asm == null)
+				throw new ArgumentNullException("asm");
+			
+			DumpType dumpType = DumpType.XML;
+			
+			if (options.TextDump)
+				dumpType = DumpType.Text;
+			
+			dump = new DumpProcessor(dumpType);
+			
+			dump.Section(DumpSection.Root);
+			
 			this.asm = asm;
 
-			AssemblyDefinition library = AssemblyFactory.GetAssembly (assembly);
-
-			// We first add the data (Classes and Methods)
-			foreach (TypeDefinition type in library.MainModule.Types) {
-				this.WriteLine (type.Name);
-
-				if (type.Name.Equals ("<Module>"))
-					continue;
-
-				this.WriteLine (type.FullName);
-
-				Class _class = new Class (this, type);
-
-				this.classes.Add (_class);
-
-				foreach (MethodDefinition entry in type.Constructors) {
-					if (!entry.Name.Equals (".cctor"))
+			foreach (string assemblyFile in options.Assemblies) {
+				Message(1, "Loading assembly `{0}'", assemblyFile);
+				
+				AssemblyDefinition library = AssemblyFactory.GetAssembly (assemblyFile);
+				
+				Dump.Element(library, assemblyFile);
+				Message(1, "Generating IR for assembly types...");
+		
+				// We first add the data (Classes and Methods)
+				foreach (TypeDefinition type in library.MainModule.Types) {
+					if (type.Name.Equals ("<Module>"))
 						continue;
-
-					Method method = new Method (this, entry);
-
-					_class.Add (method);
-
-					break;
-				}
-
-				foreach (MethodDefinition entry in type.Methods) {
-
-					if (entry.ImplAttributes != MethodImplAttributes.Managed) {
-						this.WriteLine ("Not processing '" + entry.DeclaringType.FullName + "." + entry.Name + "'");
-
-						continue;
+	
+					Dump.Element(type);
+	
+					Class _class = new Class (this, type);
+	
+					this.classes.Add (_class);
+	
+					foreach (MethodDefinition entry in type.Constructors) {
+						if (!entry.Name.Equals (".cctor"))
+							continue;
+	
+						Method method = new Method (this, entry);
+	
+						_class.Add (method);
+	
+						break;
 					}
-
-					Method method = new Method (this, entry);
-
-					_class.Add (method);
+	
+					foreach (MethodDefinition entry in type.Methods) {
+						if (entry.ImplAttributes != MethodImplAttributes.Managed) {
+							Dump.IgnoreMember(entry.Name, 
+									"Method is unmanaged");
+	
+							continue;
+						}
+	
+						Method method = new Method (this, entry);
+	
+						_class.Add (method);
+					}
+					
+					Dump.FinishElement();
 				}
+				
+				Dump.FinishElement();
 			}
-
+			
+			Message(1, "Processing IR methods...");
+			
 			foreach (Class _class in this.classes)
 				foreach (Method _method in _class) 
 					_method.Process ();
 
-			asm.Encode (this, target);
+			Message(1, "Encoding output for `{0}' to `{1}'...", options.CPU, 
+					options.OutputFilename);
+			
+			asm.Encode (this, options.OutputFilename);
 
+			Dump.FinishElement();
+			
+			if (options.DumpFile != null) {
+				if (options.DumpFile == "-")
+					Console.WriteLine(Dump.RenderDump(true));
+				else {
+					Message(1, "Creating dump file `{0}'", options.DumpFile);
+					using (StreamWriter sw = new StreamWriter(options.DumpFile))
+						sw.Write(Dump.RenderDump(true));
+				}
+			}
+			
 			return;
 		}
 
@@ -335,15 +432,6 @@ namespace SharpOS.AOT.IR {
 
 			//throw new Exception ("'" + type + "' not supported.");
 			return Operand.InternalSizeType.NotSet;
-		}
-
-		internal void WriteLine (string value)
-		{
-			StreamWriter writer = new StreamWriter (dumpFilename, true);
-			writer.WriteLine (value);
-			writer.Close ();
-
-			Console.WriteLine ("[*] " + value);
 		}
 	}
 }

@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -173,39 +174,18 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
-		/// <summary>
-		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
-		/// </returns>
 		public override string ToString ()
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			DumpProcessor p = new DumpProcessor(DumpType.Text);
+			
+			Dump (p);
 
-			Dump (string.Empty, stringBuilder);
-
-			string value = stringBuilder.ToString().Trim();
-
-			int position = value.IndexOf (" ");
-
-			/*if (position != -1)
-			{
-			    value = value.Substring(position + 1);
-			}*/
-
-			return value;
+			return p.RenderDump(false).Trim('\n');
 		}
 
-		/// <summary>
-		/// Dumps the specified prefix.
-		/// </summary>
-		/// <param name="prefix">The prefix.</param>
-		/// <param name="stringBuilder">The string builder.</param>
-		public virtual void Dump (string prefix, StringBuilder stringBuilder)
+		public virtual void Dump (DumpProcessor d)
 		{
-			if (this.value != null) 
-				stringBuilder.Append (prefix + this.FormatedIndex + this.value.ToString() + "\n");
+			d.Element(this);
 		}
 
 		/// <summary>

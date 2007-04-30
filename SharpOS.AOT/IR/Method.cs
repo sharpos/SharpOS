@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -57,12 +58,12 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Dumps this instance.
+		/// Dumps a representation of the blocks that comprise this method
 		/// </summary>
 		/// <returns></returns>
-		public string Dump ()
+		public void DumpBlocks ()
 		{
-			return Dump (blocks);
+			DumpBlocks (blocks, this.engine.Dump);
 		}
 
 		private int stackSize = 0;
@@ -81,7 +82,8 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the argument.
+		/// Gets an Argument object that represents the numbered method 
+		/// argument named by <paramref name="i"/>. 
 		/// </summary>
 		/// <param name="i">The i.</param>
 		/// <returns></returns>
@@ -105,9 +107,9 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the local.
+		/// Gets a local variable with the index given by <paramref name="i" />.
 		/// </summary>
-		/// <param name="i">The i.</param>
+		/// <param name="i">The index of the local variable.</param>
 		/// <returns></returns>
 		public Local GetLocal (int i)
 		{
@@ -119,28 +121,10 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Dumps the specified list.
+		/// Determines whether the specified instruction is a branch.
 		/// </summary>
-		/// <param name="list">The list.</param>
-		/// <returns></returns>
-		public string Dump (List<Block> list)
-		{
-			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.Append ("===============================\n");
-			stringBuilder.Append ("->" + this.methodDefinition.Name + "\n");
-			stringBuilder.Append ("===============================\n");
-
-			foreach (Block block in list) 
-				block.Dump (string.Empty, stringBuilder);
-
-			return stringBuilder.ToString();
-		}
-
-		/// <summary>
-		/// Determines whether the specified instruction is branch.
-		/// </summary>
-		/// <param name="instruction">The instruction.</param>
-		/// <param name="all">if set to <c>true</c> [all].</param>
+		/// <param name="instruction">The instruction to check.</param>
+		/// <param name="all">if set to <c>true</c> [all]. FIXME</param>
 		/// <returns>
 		/// 	<c>true</c> if the specified instruction is branch; otherwise, <c>false</c>.
 		/// </returns>
@@ -316,10 +300,14 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Fills the outs.
+		/// Fills the 'outs' list on the code block <paramref name="destination" />
+		/// with any entries which pertain to this method. The 'outs' list should 
+		/// contain a list of blocks which could be executed immediately after the
+		/// given block.
 		/// </summary>
-		/// <param name="destination">The destination.</param>
-		/// <param name="instructions">The instructions.</param>
+		/// <param name="destination">The code block that contains the list of 
+		/// instructions.</param>
+		/// <param name="instructions">The instructions to check.</param>
 		private void FillOuts (Block destination, Mono.Cecil.Cil.Instruction[] instructions)
 		{
 			foreach (Mono.Cecil.Cil.Instruction instruction in instructions) {
@@ -343,7 +331,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Classifies the and link blocks.
+		/// Classifies the and link blocks. FIXME
 		/// </summary>
 		private void ClassifyAndLinkBlocks ()
 		{
@@ -703,79 +691,9 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Dominator");
-			this.engine.WriteLine ("=======================================");
-
-			foreach (Block block in this.blocks) {
-				StringBuilder stringBuilder = new StringBuilder();
-
-				if (block.ImmediateDominator == null)
-					stringBuilder.Append ("<>");
-				else
-					stringBuilder.Append ("<" + block.ImmediateDominator.Index + ">");
-
-				stringBuilder.Append (" " + block.Index + " -> [");
-
-				foreach (Block dominator in block.Dominators) {
-					if (dominator != block.Dominators[0])
-						stringBuilder.Append (", ");
-
-					stringBuilder.Append (dominator.Index);
-				}
-
-				stringBuilder.Append ("]");
-
-				this.engine.WriteLine (stringBuilder.ToString());
-			}
-
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Dominator Tree");
-			this.engine.WriteLine ("=======================================");
-
-			foreach (Block parent in blocks) {
-				if (parent.ImmediateDominatorOf.Count > 0) {
-					StringBuilder stringBuilder = new StringBuilder();
-
-					stringBuilder.Append (parent.Index + " -> [");
-
-					foreach (Block child in parent.ImmediateDominatorOf) {
-						if (child != parent.ImmediateDominatorOf[0])
-							stringBuilder.Append (", ");
-
-						stringBuilder.Append (child.Index);
-					}
-
-					stringBuilder.Append ("]");
-
-					this.engine.WriteLine (stringBuilder.ToString());
-				}
-			}
-
-
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Dominance Frontiers");
-			this.engine.WriteLine ("=======================================");
-
-			foreach (Block parent in blocks) {
-				if (parent.DominanceFrontiers.Count > 0) {
-					StringBuilder stringBuilder = new StringBuilder();
-
-					stringBuilder.Append (parent.Index + " -> [");
-
-					foreach (Block child in parent.DominanceFrontiers) {
-						if (child != parent.DominanceFrontiers[0])
-							stringBuilder.Append (", ");
-
-						stringBuilder.Append (child.Index);
-					}
-
-					stringBuilder.Append ("]");
-
-					this.engine.WriteLine (stringBuilder.ToString());
-				}
-			}
-
+			if (engine.Options.Dump)
+				engine.Dump.Dominance(this.blocks);
+			
 			return;
 		}
 
@@ -881,9 +799,11 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
+			this.engine.Dump.Section(DumpSection.SSATransform);
+			
 			// Insert PHI
 			foreach (IdentifierBlocksItem item in identifierList) {
-				this.engine.WriteLine (String.Format("PHI Identifier: {0}", item.key));
+				this.engine.Dump.Phi(item.key.ToString());
 
 				List<Block> list = item.values;
 				List<Block> everProcessed = new List<Block> ();
@@ -930,8 +850,10 @@ namespace SharpOS.AOT.IR {
 						}
 					}
 
-				} while (list.Count > 0);
+				} while (list.Count > 0);	
 			}
+			
+			this.engine.Dump.FinishElement();
 
 			// Rename the Variables
 			foreach (Block block in blocks) {
@@ -1162,7 +1084,7 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		private class DefUseItem : IEnumerable<SharpOS.AOT.IR.Instructions.Instruction> {
+		public class DefUseItem : IEnumerable<SharpOS.AOT.IR.Instructions.Instruction> {
 			public string key;
 			Instructions.Instruction definition = null;
 			List<Instructions.Instruction> usage = new List<Instructions.Instruction> ();
@@ -1393,19 +1315,15 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Def-Use");
-			this.engine.WriteLine ("=======================================");
-
-			foreach (DefUseItem item in defuse) {
-				string key = item.key;
-
-				this.engine.WriteLine (item.Definition.Block.Index + " : " + item.Definition.ToString ());
-
-				foreach (Instructions.Instruction instruction in item) 
-					this.engine.WriteLine ("\t" + instruction.Block.Index + " : " + instruction);
+			if (this.engine.Options.Dump) {
+				this.engine.Dump.Section(DumpSection.DefineUse);
+	
+				foreach (DefUseItem item in defuse)
+					this.engine.Dump.Element(item);
+				
+				this.engine.Dump.FinishElement();
 			}
-
+			
 			return;
 		}
 
@@ -1415,10 +1333,8 @@ namespace SharpOS.AOT.IR {
 		private void DeadCodeElimination ()
 		{
 			List<string> keys = this.defuse.GetKeys ();
-
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Dead Code Elimination");
-			this.engine.WriteLine ("=======================================");
+			
+			this.engine.Dump.Section(DumpSection.DeadCodeElimination);
 
 			while (keys.Count > 0) {
 				string key = keys [0];
@@ -1433,7 +1349,8 @@ namespace SharpOS.AOT.IR {
 					// A = B + C;
 					Instructions.Instruction definition = item.Definition; 
 
-					this.engine.WriteLine (definition.Block.Index + " : " + definition.ToString ());
+					if (engine.Options.Dump)
+						engine.Dump.Element(definition);
 
 					// Remove the instruction from the block that it is containing it
 					definition.Block.RemoveInstruction (definition);
@@ -1461,6 +1378,8 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
+			this.engine.Dump.FinishElement();
+			
 			return;
 		}
 		/// <summary>
@@ -1470,9 +1389,7 @@ namespace SharpOS.AOT.IR {
 		/// <returns>It returns true if one of the instructions got changed.</returns>
 		private bool ConstantFolding ()
 		{
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Constant Folding");
-			this.engine.WriteLine ("=======================================");
+			this.engine.Dump.Section(DumpSection.ConstantFolding);
 
 			bool changed = false;
 
@@ -1499,7 +1416,7 @@ namespace SharpOS.AOT.IR {
 					Constant constant1 = arithmetic.Operands [0] as Constant;
 					Constant constant2 = arithmetic.Operands [1] as Constant;
 
-					this.engine.WriteLine (assign.Block.Index + " : " + assign.ToString ());
+					this.engine.Dump.Element(assign);
 
 					// TODO implement all the other operators
 					if (binary.Type == Operator.BinaryType.Mul) {
@@ -1516,11 +1433,13 @@ namespace SharpOS.AOT.IR {
 							instruction.Value.SizeType = Operand.InternalSizeType.I4;
 						}
 					}
-
-					this.engine.WriteLine ("\t" + assign.Block.Index + " : " + assign.ToString ());
+					
+					this.engine.Dump.Element(assign);
 				}
 			}
 
+			this.engine.Dump.FinishElement();	// section: constant-folding
+			
 			return changed;
 		}
 
@@ -1531,9 +1450,7 @@ namespace SharpOS.AOT.IR {
 		{
 			List<string> keys = this.defuse.GetKeys ();
 
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Constant Propagation");
-			this.engine.WriteLine ("=======================================");
+			this.engine.Dump.Section(DumpSection.ConstantPropagation);
 
 			keys.Sort ();
 
@@ -1585,11 +1502,12 @@ namespace SharpOS.AOT.IR {
 								break;
 
 							if (used.Value != null) {
-								if (pass == 1) {
-									this.engine.WriteLine (definition.Block.Index + " : " + definition.ToString ());
-									this.engine.WriteLine ("\t >> " + definition.Block.Index + " : " + used.ToString ());
+								if (pass == 1 && this.engine.Options.Dump) {
+									this.engine.Dump.Item();
+									this.engine.Dump.Element(definition);
+									this.engine.Dump.Element(used);
 								}
-
+								
 								for (int j = 0; !_break && j < used.Value.Operands.Length; j++) {
 									Operand operand = used.Value.Operands[j];
 
@@ -1612,8 +1530,10 @@ namespace SharpOS.AOT.IR {
 									}
 								}
 
-								if (pass == 1)
-									this.engine.WriteLine ("\t << " + definition.Block.Index + " : " + used.ToString());
+								if (pass == 1 && this.engine.Options.Dump) {
+									this.engine.Dump.Element(used);
+									this.engine.Dump.FinishElement();
+								}
 							}
 
 							// Add X to the queue as "X = 100;"
@@ -1639,6 +1559,8 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
+			this.engine.Dump.FinishElement();	// section: const-propagation
+
 			return;
 		}
 		/// <summary>
@@ -1648,9 +1570,7 @@ namespace SharpOS.AOT.IR {
 		{
 			List<string> keys = this.defuse.GetKeys();
 
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Copy Propagation");
-			this.engine.WriteLine ("=======================================");
+			this.engine.Dump.Section(DumpSection.CopyPropagation);
 
 			while (keys.Count > 0) {
 				string key = keys[0];
@@ -1685,8 +1605,9 @@ namespace SharpOS.AOT.IR {
 
 				} else
 					continue;
-
-				this.engine.WriteLine (definition.Block.Index + " : " + definition.ToString ());
+				
+				this.engine.Dump.Item();
+				this.engine.Dump.Element(definition);
 
 				bool _break = false;
 
@@ -1708,8 +1629,8 @@ namespace SharpOS.AOT.IR {
 
 						if (used.Value != null && used.Value.Operands != null) {
 							if (pass == 1)
-								this.engine.WriteLine ("\t >> " + definition.Block.Index + " : " + used.ToString ());
-
+								this.engine.Dump.Element(used);
+							
 							int replacements = 0;
 
 							for (int j = 0; j < used.Value.Operands.Length; j++) {
@@ -1736,8 +1657,8 @@ namespace SharpOS.AOT.IR {
 								break;
 							}
 							
-							if (pass == 1)
-								this.engine.WriteLine ("\t << " + definition.Block.Index + " : " + used.ToString ());
+							if (pass == 1) 
+								this.engine.Dump.Element(used);
 						}
 
 						if (pass == 1 && used is Assign) {
@@ -1747,7 +1668,9 @@ namespace SharpOS.AOT.IR {
 							// Add to the queue
 							if (!keys.Contains (id)
 									&& !(assignee is Reference || assignee is Field)) {
-								this.engine.WriteLine (string.Format ("[*]Add Key: {0}", id));
+								
+								// TODO: dump?
+								//this.engine.WriteLine (string.Format ("[*]Add Key: {0}", id));
 
 								keys.Add (id);
 							}
@@ -1772,8 +1695,12 @@ namespace SharpOS.AOT.IR {
 					// Remove the variable from the defuse list
 					this.defuse.Remove (key);
 				}
+				
+				this.engine.Dump.FinishElement();	// item
 			}
 
+			this.engine.Dump.FinishElement();	// section: copy-propagation
+			
 			return;
 		}
 
@@ -1935,7 +1862,7 @@ namespace SharpOS.AOT.IR {
 				this.blocks.Remove (block);
 		}
 
-		private class LiveRange : IComparable {
+		public class LiveRange : IComparable {
 			/// <summary>
 			/// Initializes a new instance of the <see cref="LiveRange"/> class.
 			/// </summary>
@@ -2198,13 +2125,15 @@ namespace SharpOS.AOT.IR {
 
 			this.liveRanges.Sort (new LiveRange.SortByStart ());
 
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Live Ranges");
-			this.engine.WriteLine ("=======================================");
-
-			foreach (LiveRange entry in this.liveRanges)
-				this.engine.WriteLine (entry.ToString());
-
+			if (engine.Options.Dump) {
+				engine.Dump.Section(DumpSection.LiveRanges);
+				
+				foreach (LiveRange entry in this.liveRanges)
+					engine.Dump.Element(entry);
+					
+				engine.Dump.FinishElement();
+			}
+			
 			return;
 		}
 
@@ -2260,13 +2189,15 @@ namespace SharpOS.AOT.IR {
 
 			this.liveRanges.Sort (new LiveRange.SortByRegisterStack());
 
-			this.engine.WriteLine ("=======================================");
-			this.engine.WriteLine ("Linear Scan Register Allocation");
-			this.engine.WriteLine ("=======================================");
-
-			foreach (LiveRange entry in this.liveRanges)
-				this.engine.WriteLine (entry.ToString ());
-
+			if (this.engine.Options.Dump) {
+				this.engine.Dump.Section(DumpSection.RegisterAllocation);
+				
+				foreach (LiveRange entry in this.liveRanges)
+					this.engine.Dump.Element(entry);
+				
+				this.engine.Dump.FinishElement();
+			}
+			
 			return;
 		}
 
@@ -2398,10 +2329,38 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
+		/// Dumps a representation of the blocks that comprise this method
+		/// </summary>
+		/// <returns></returns>
+		public void DumpBlocks(DumpProcessor p)
+		{
+			DumpBlocks(blocks, p);
+		}
+		
+		/// <summary>
+		/// Dumps a representation of the blocks that comprise this method
+		/// </summary>
+		/// <returns></returns>
+		private void DumpBlocks(List<Block> list, DumpProcessor p)
+		{
+			if (engine.Options.Dump) {
+				p.Section(DumpSection.MethodBlocks);
+				
+				foreach (Block block in list) 
+					block.Dump (p);
+				
+				p.FinishElement();
+			}
+		}
+		
+		/// <summary>
 		/// Processes this instance.
 		/// </summary>
 		public void Process ()
 		{
+			if (engine.Options.Dump)
+				engine.Dump.Element(this.methodDefinition);
+			
 			if (this.methodDefinition.Body == null)
 				return;
 
@@ -2412,42 +2371,51 @@ namespace SharpOS.AOT.IR {
 			this.ConvertFromCIL ();
 			this.Dominators ();
 
-			this.engine.WriteLine (this.Dump ());
+			if (this.engine.Options.DumpVerbosity >= 3)
+				DumpBlocks();
 
 			this.TransformationToSSA ();
 			this.EdgeSplit ();
 
-			this.engine.WriteLine (this.Dump ());
+			if (this.engine.Options.DumpVerbosity >= 3)
+				DumpBlocks();
 
 			this.GetListOfDefUse ();
 
-			this.engine.WriteLine (this.Dump ());
+			if (this.engine.Options.DumpVerbosity >= 3)
+				DumpBlocks();
 
 			this.DeadCodeElimination ();
 
-			this.engine.WriteLine (this.Dump ());
+			if (this.engine.Options.DumpVerbosity >= 3)
+				DumpBlocks();
 	
 			do {
 				this.ConstantPropagation ();
 
-				this.engine.WriteLine (this.Dump ());
+				if (this.engine.Options.DumpVerbosity >= 3)
+					DumpBlocks();
 
 				this.CopyPropagation ();
 				
-				this.engine.WriteLine (this.Dump ());
-
+				if (this.engine.Options.DumpVerbosity >= 3)
+					DumpBlocks();
 			} while (this.ConstantFolding ());
 
 			this.TransformationOutOfSSA ();
-
-			this.engine.WriteLine (this.Dump ());
-
+			
+			if (this.engine.Options.DumpVerbosity >= 3)
+				DumpBlocks();
+			
 			this.ComputeSizeType ();
 			this.ComputeLiveRanges ();
 			this.LinearScanRegisterAllocation ();
 
-			this.engine.WriteLine (this.Dump ()); //ReversePostorder()));
+			DumpBlocks();
 
+			if (engine.Options.Dump)
+				engine.Dump.FinishElement();	// method
+				
 			return;
 		}
 

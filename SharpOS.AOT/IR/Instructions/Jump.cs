@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -28,6 +29,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 		}
 
+		/* FIXME: convert to XML dump or kill (effectively the same as base Dump())
 		public override void Dump (string prefix, StringBuilder stringBuilder)
 		{
 			/*stringBuilder.Append(prefix + this.FormatedIndex + "Jump [");
@@ -42,7 +44,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			    stringBuilder.Append(this.Branches[i].FormatedIndex.Trim());
 			}
 
-			stringBuilder.Append("]");*/
+			stringBuilder.Append("]");
 
 			stringBuilder.Append (prefix + this.FormatedIndex + "Jmp");
 
@@ -50,6 +52,6 @@ namespace SharpOS.AOT.IR.Instructions {
 				stringBuilder.Append (" " + this.Value);
 
 			stringBuilder.Append ("\n");
-		}
+		}*/
 	}
 }

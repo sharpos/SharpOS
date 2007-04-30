@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -29,9 +30,9 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
-		public override void Dump (string prefix, StringBuilder stringBuilder)
+		public override void Dump (DumpProcessor p)
 		{
-			stringBuilder.Append (prefix + this.FormatedIndex + this.Method.ToString() + "\n");
+			p.Element(this, this.Method, null, null);
 		}
 	}
 }

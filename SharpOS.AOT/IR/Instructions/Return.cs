@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -33,21 +34,6 @@ namespace SharpOS.AOT.IR.Instructions {
 		public Return (Operand value)
 			: base (value)
 		{
-		}
-
-		/// <summary>
-		/// Dumps the specified prefix.
-		/// </summary>
-		/// <param name="prefix">The prefix.</param>
-		/// <param name="stringBuilder">The string builder.</param>
-		public override void Dump (string prefix, StringBuilder stringBuilder)
-		{
-			stringBuilder.Append (prefix + this.FormatedIndex + "Ret");
-
-			if (this.Value != null) 
-				stringBuilder.Append (" " + this.Value.ToString());
-
-			stringBuilder.Append ("\n");
 		}
 	}
 }

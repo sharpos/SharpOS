@@ -2,29 +2,19 @@ using System.Reflection;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-// These attributes are used with Mono.GetOptions
-//
-// This is text that goes after " [options]" in help output.
-[assembly: Mono.UsageComplement ("<assembly> ...")]
-
-// Attributes visible in " -V"
-
-[assembly: Mono.About ("The sharpos-aot compiler translates one or more IL bytecode assemblies into a\nraw platform-dependent kernel executable which may be run without operating\nsystem software. sharpos-aot is similar to the 'mono --aot' mode of\nthe Mono runtime, except that the resulting binary does not depend on any\nshared objects or operating system facilities.\n")]
-[assembly: Mono.Author ("Mircea Cristian Racasan and the SharpOS Team (http://sharpos.org/)")]
-
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
-[assembly: AssemblyTitle ("SharpOS Ahead-Of-Time Compiler") ]
+[assembly: AssemblyTitle ("SharpOS.AOT") ]
 
-[assembly: AssemblyDescription ("") ]
+[assembly: AssemblyDescription ("A self-contained kernel-mode ahead-of-time compiler for IL bytecode") ]
 
 [assembly: AssemblyConfiguration ("") ]
 
 [assembly: AssemblyCompany ("The SharpOS Project (http://sharpos.org/)") ]
 
-[assembly: AssemblyProduct ("SharpOS Ahead-Of-Time Compiler") ]
+[assembly: AssemblyProduct ("SharpOS Kernel AOT Engine") ]
 
 [assembly: AssemblyCopyright ("Copyright © 2007, The SharpOS Project") ]
 

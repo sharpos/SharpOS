@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -33,22 +34,21 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// </summary>
 		/// <param name="prefix">The prefix.</param>
 		/// <param name="stringBuilder">The string builder.</param>
-		public override void Dump (string prefix, StringBuilder stringBuilder) 
+		public override void Dump (DumpProcessor p) 
 		{
-			stringBuilder.Append (prefix + this.FormatedIndex);
-
-			stringBuilder.Append (this.Assignee.ToString());
-
-			stringBuilder.Append (" = {");
-
+			Dictionary<string,string> attr = new Dictionary<string,string>();
+			string v = "";
+		
+			attr["assignee"] = this.Assignee.ToString();
+		
 			for (int i = 0; i < this.Value.Operands.Length; i++) {
-				if (i > 0) 
-					stringBuilder.Append (", ");
-
-				stringBuilder.Append (this.Value.Operands[i].ToString());
+				if (i > 0)
+					v += ", ";
+		
+				v += this.Value.Operands[i].ToString();
 			}
 
-			stringBuilder.Append ("}\n");
+			p.Element(this, v, attr, null);
 		}
 	}
 }

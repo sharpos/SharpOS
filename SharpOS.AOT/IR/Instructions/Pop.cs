@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -25,16 +26,6 @@ namespace SharpOS.AOT.IR.Instructions {
 		public Pop (Identifier identifier)
 			: base (identifier)
 		{
-		}
-
-		/// <summary>
-		/// Dumps the specified prefix.
-		/// </summary>
-		/// <param name="prefix">The prefix.</param>
-		/// <param name="stringBuilder">The string builder.</param>
-		public override void Dump (string prefix, StringBuilder stringBuilder)
-		{
-			stringBuilder.Append (prefix + this.FormatedIndex + "Pop " + this.Value.ToString() + "\n");
 		}
 	}
 }

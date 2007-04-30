@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -1266,11 +1267,11 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		public override string ToString ()
 		{
-			StringBuilder stringBuilder = new StringBuilder ();
+			DumpProcessor p = new DumpProcessor(DumpType.Text);
+			
+			Dump (p);
 
-			Dump (string.Empty, stringBuilder);
-
-			return stringBuilder.ToString ();
+			return p.RenderDump(false);
 		}
 
 		/// <summary>
@@ -1289,54 +1290,34 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Dumps the specified string builder.
-		/// </summary>
-		/// <param name="stringBuilder">The string builder.</param>
-		public void Dump (StringBuilder stringBuilder)
-		{
-			this.UpdateIndex ();
-
-			this.Dump (string.Empty, stringBuilder);
-		}
-
-		/// <summary>
-		/// Dumps the specified prefix.
+		/// 	Dumps a representation of this block, including lists of blocks which
+		///	lead to this block and blocks which are led to after this block is
+		///	executed.
 		/// </summary>
 		/// <param name="prefix">The prefix.</param>
 		/// <param name="stringBuilder">The string builder.</param>
-		public void Dump (string prefix, StringBuilder stringBuilder)
+		public void Dump (DumpProcessor p)
 		{
-			string ins = string.Empty;
+			this.UpdateIndex();
+			
+			List<int> ins = new List<int>();
+			List<int> outs = new List<int>();
 
-			for (int i = 0; i < this.ins.Count; i++) {
-				if (ins.Length > 0) 
-					ins += " ";
+			for (int i = 0; i < this.ins.Count; i++)
+				ins.Add(this.ins[i].Index);
 
-				ins += this.ins[i].Index.ToString();
-			}
+			for (int i = 0; i < this.outs.Count; i++) 
+				outs.Add(this.outs[i].Index);
+			
+			p.Element(this, ins.ToArray(), outs.ToArray());
+			
+			for (int i = 0; i < this.InstructionsCount; i++)
+				this[i].Dump (p);
+			
+			p.FinishElement();	// block
 
-			string outs = string.Empty;
-
-			for (int i = 0; i < this.outs.Count; i++) {
-				if (outs.Length > 0) 
-					outs += " ";
-
-				outs += this.outs[i].Index.ToString();
-			}
-
-			stringBuilder.Append (prefix + "-------------------------------\n");
-
-			//stringBuilder.Append(prefix + String.Format(">>> {4} ({0}) [{1}] [{2}] [{3}]\n", this.StartOffset, this.type, ins, outs, this.index));
-			stringBuilder.Append (prefix + String.Format (">>> {0} [{1}] [{2}] [{3}]\n", this.index, this.type, ins, outs));
-			stringBuilder.Append (prefix + "-------------------------------\n");
-
-			for (int i = 0; i < this.InstructionsCount; i++) {
-				SharpOS.AOT.IR.Instructions.Instruction instruction = this[i];
-
-				instruction.Dump (prefix + "\t", stringBuilder);
-			}
-
-			#if false
+			#if false // TODO: convert to XML dump?
+			
 			foreach (Instruction instruction in this.cil) {
 				string operand = string.Empty;
 
