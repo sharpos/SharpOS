@@ -2,6 +2,10 @@
 {
 }
 
+.assembly extern SharpOS.AOT.Core
+{
+}
+
 .assembly 'SharpOS.TestKernel'
 {
 	.ver 0:0:0:0
@@ -13,7 +17,7 @@
 	{
 		.field public static uint8* BootMessage
 	
-		.method public hidebysig static void  BootEntry() cil managed
+		.method public hidebysig static void  BootEntry(uint32 magic, uint32 ptr) cil managed
 		{
 			.entrypoint
 	
@@ -26,6 +30,7 @@
 	
 		.method public hidebysig static uint8* String(string 'value') cil managed
 		{
+			.custom instance void [SharpOS.AOT.Core]SharpOS.AOT.Attributes.StringAttribute::.ctor() = ( 01 00 00 00 )
 			.maxstack  1
 			.locals init ([0] uint8* CS$1$0000)
 			IL_0000:  nop
