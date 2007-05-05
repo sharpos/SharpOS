@@ -10,7 +10,14 @@
 using System;
 using System.Text;
 
+using SharpOS.AOT;
+
 namespace SharpOS.AOT.Attributes {
+	/// <summary>
+	/// Used to mark a method as the AOT String() stub
+	/// that allows character constants to be used in 
+	/// AOTed code.
+	/// </summary>
 	[AttributeUsage (AttributeTargets.Method)]
 	public class StringAttribute : Attribute {
 	}

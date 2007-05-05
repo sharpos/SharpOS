@@ -25,6 +25,9 @@ using Mono.Cecil.Metadata;
 
 
 namespace SharpOS.AOT.IR {
+	/// <summary>
+	/// Represents a method in the AOT's intermediate representation. 
+	/// </summary>
 	public class Method : IEnumerable<Block> {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Method"/> class.
@@ -38,6 +41,8 @@ namespace SharpOS.AOT.IR {
 		}
 
 		private Engine engine = null;
+		private MethodDefinition methodDefinition = null;
+		private int stackSize = 0;
 
 		/// <summary>
 		/// Gets the engine.
@@ -48,8 +53,6 @@ namespace SharpOS.AOT.IR {
 				return this.engine;
 			}
 		}
-
-		private MethodDefinition methodDefinition = null;
 
 		public MethodDefinition MethodDefinition {
 			get {
@@ -65,8 +68,6 @@ namespace SharpOS.AOT.IR {
 		{
 			DumpBlocks (blocks, this.engine.Dump);
 		}
-
-		private int stackSize = 0;
 
 		/// <summary>
 		/// Gets or sets the size of the stack.
@@ -2369,6 +2370,7 @@ namespace SharpOS.AOT.IR {
 			this.ClassifyAndLinkBlocks ();
 			this.BlocksOptimization ();
 			this.ConvertFromCIL ();
+			
 			this.Dominators ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)

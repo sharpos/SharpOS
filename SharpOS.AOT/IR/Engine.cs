@@ -23,14 +23,20 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
+	/// <summary>
+	/// An instance of this class must be passed to the 
+	/// <see cref="SharpOS.AOT.IR.Engine" /> constructor.
+	/// The contained values defined the options used during
+	/// AOT compilation.
+	/// </summary>
 	public class EngineOptions {
 		public string[] Assemblies = null;
 		public string OutputFilename = "SharpOS.Kernel.bin";
 		public string CPU = "X86";
-		public bool Verbose = false;
 		public string DumpFile = null;
 		public bool TextDump = false;
 		public int DumpVerbosity = 1;
+		public int Verbosity = 0;
 		
 		public bool Dump {
 			get {
@@ -39,20 +45,67 @@ namespace SharpOS.AOT.IR {
 		}
 	}
 	
+	/// <summary>
+	/// Defines an exception thrown by <see cref="SharpOS.AOT.IR.Engine" />
+	/// and related classes when an unrecoverable error occurs while performing
+	/// the AOT operation. This exception should be caught by the program
+	/// embedding the AOT engine and displayed to the user. This exception is
+	/// not thrown when an internal AOT error occurs.
+	/// </summary>
+	public class EngineException : Exception {
+		public EngineException(string message):
+			base(message)
+		{
+		}
+	}
+	
+	/// <summary>
+	/// Provides storage for information about the architecture-dependent 
+	/// code layers found during initial processing of the assemblies to
+	/// be AOTed.
+	/// </summary>
+	public class ADCLayer {
+		public ADCLayer(string cpu, string ns)
+		{
+			CPU = cpu;
+			Namespace = ns;
+		}
+		
+		public string CPU, Namespace;
+	}
+	
+	/// <summary>
+	/// The core class of the AOT compiler. To embed the AOT compiler, 
+	/// an instance of this class should be constructed with an 
+	/// <see cref="SharpOS.AOT.IR.EngineOptions" /> instance.
+	/// </summary>
 	public partial class Engine : IEnumerable<Class> {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Engine"/> class.
 		/// </summary>
+		/// <param name="opts">
+		/// Specifies the set of options used to perform the AOT 
+		/// operation.
+		/// </param>
 		public Engine (EngineOptions opts)
 		{
 			options = opts;
 		}
 
+		/// <summary>
+		/// Represents the version of the AOT compiler engine.
+		/// </summary>
 		public const string EngineVersion = "svn";
 		
 		private EngineOptions options = null;
 		private IAssembly asm = null;
 		private DumpProcessor dump = null;
+		
+		private List<ADCLayer> adcLayers = new List<ADCLayer>();
+		private ADCLayer adcLayer = null;
+		
+		private List<AssemblyDefinition> assemblies = new List<AssemblyDefinition>();
+		private List<Class> classes = new List<Class> ();
 		
 		/// <summary>
 		/// Gets the assembly.
@@ -64,24 +117,126 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 		
+		/// <summary>
+		/// Provides access to the <see cref="EngineOptions" />
+		/// object used to initialize this Engine instance.
+		/// </summary>
 		public EngineOptions Options {
 			get {
 				return options;
 			}
 		}
 		
+		/// <summary>
+		/// Provides access to the dump processing object, which
+		/// is used for debugging.
+		/// </summary>
 		public DumpProcessor Dump {
 			get {
 				return dump;
 			}
 		}
+
+		/// <summary>
+		/// Provides access to the ADC layer selected for use
+		/// for this compiler invocation.
+		/// </summary>		
+		public ADCLayer ADC {
+			get {
+				return adcLayer;
+			}
+		}
 		
-		public void Message(uint lvl, string msg, params object[] prms)
+		/// <summary>
+		/// Prints a console message if <paramref name="lvl" /> is less
+		/// than or equal to the Verbosity option.
+		/// </summary>
+		public void Message(int lvl, string msg, params object[] prms)
 		{
-			if (lvl > 0 && options.Verbose)
+			if (options.Verbosity >= lvl)
 				Console.WriteLine(msg, prms);
 		}
 		
+		/// <summary>
+		/// Modifies the method reference <paramref name="call" /> to
+		/// refer to the equivalent ADC layer method.
+		/// </summary>
+		public void FixupADCMethod(MethodReference call)
+		{
+			// TODO: do real confirmation of the existence of a compatible method!
+			
+			TypeReference ntype = new TypeReference(call.DeclaringType.Name, adcLayer.Namespace, 
+								call.DeclaringType.Scope, 
+								call.DeclaringType.IsValueType);
+			
+			Console.WriteLine("Replacing ADC method `{0}': scope is `{1}'", call.ToString(), 
+						call.DeclaringType.Scope);
+			
+			call.DeclaringType = ntype;
+		}
+		
+		/// <summary>
+		/// Finds the MethodDefinition that matches the method reference
+		/// <paramref name="call" />. This method searches through the list
+		/// of assemblies provided by the 'Assemblies' option in 
+		/// <see cref="EngineOptions" />.
+		/// </summary>
+		public MethodDefinition GetCILDefinition(MethodReference call)
+		{
+			// TODO: work on performance
+			
+			foreach (AssemblyDefinition assem in assemblies) {
+				foreach (ModuleDefinition mod in assem.Modules) {
+					foreach (TypeDefinition type in mod.Types) {
+						if (type.FullName == call.DeclaringType.FullName) {
+							foreach (MethodDefinition def in type.Methods) {
+								bool badParams = false;
+								
+								if (def.Name != call.Name)
+									continue;
+								if (def.ReturnType.ReturnType != call.ReturnType.ReturnType)
+									continue;
+								
+								if (def.Parameters.Count != call.Parameters.Count)
+									continue;
+									
+								for (int x = 0; x < def.Parameters.Count; ++x) {
+									ParameterDefinition callPrm, defPrm;
+									
+									callPrm = call.Parameters[x];
+									defPrm = def.Parameters[x];
+									
+									if (callPrm.ParameterType.FullName != 
+										defPrm.ParameterType.FullName) {
+										badParams = true;
+										break;
+									}
+									
+									if (callPrm.Attributes != defPrm.Attributes) {
+										badParams = true;
+										break;
+									}
+								}
+								
+								if (badParams)
+									continue;
+								
+								return def;
+							}
+						}
+					}
+				}
+			}
+			
+			return null;
+		}
+		
+		/// <summary>
+		/// Creates the correct IAssembly object corresponding to 
+		/// the CPU architecture chosen by the 'CPU' option of 
+		/// <see cref="EngineOptions" />, then runs the AOT compiler 
+		/// engine using <see cref="Run(IAssembly)" />.
+		/// </summary>
 		public void Run ()
 		{
 			DumpType dumpType = DumpType.XML;
@@ -92,13 +247,14 @@ namespace SharpOS.AOT.IR {
 			IAssembly asm = null;
 			
 			switch (options.CPU) {
-				case "X86":
-					asm = new SharpOS.AOT.X86.Assembly();
-				break;
-				default:
-					Console.Error.WriteLine("Error: processor type `{0}' not supported", options.CPU);
-					Environment.Exit(1);
-				break;
+			case "X86":
+				asm = new SharpOS.AOT.X86.Assembly();
+			break;
+			default:
+				throw new EngineException(string.Format(
+					"Error: processor type `{0}' not supported", 
+					options.CPU));
+			break;
 			}
 			
 			Message(1, "AOT compiling for processor `{0}'", options.CPU);
@@ -106,11 +262,16 @@ namespace SharpOS.AOT.IR {
 		}
 		
 		/// <summary>
-		/// Runs the specified asm.
+		/// Runs the AOT compiler engine.
 		/// </summary>
-		/// <param name="asm">The asm.</param>
-		/// <param name="assembly">The assembly.</param>
-		/// <param name="target">The target.</param>
+		/// <param name="asm">
+		/// The IAssembly implementation used to translate the
+		/// compiler's intermediate representation into 
+		/// architecture-native code and write that code to file.
+		/// </param>
+		/// <exception cref="ArgumentNullException">
+		/// <paramref name="asm" /> is null.
+		/// </exception>
 		public void Run (IAssembly asm)
 		{
 			if (asm == null)
@@ -128,18 +289,86 @@ namespace SharpOS.AOT.IR {
 			this.asm = asm;
 
 			foreach (string assemblyFile in options.Assemblies) {
+				bool skip = false;
+				
 				Message(1, "Loading assembly `{0}'", assemblyFile);
 				
 				AssemblyDefinition library = AssemblyFactory.GetAssembly (assemblyFile);
+				
+				// Check for ADCLayerAttribute
+				
+				foreach (CustomAttribute ca in library.CustomAttributes) {
+					if (ca.Constructor.DeclaringType.FullName == 
+					    typeof(SharpOS.AOT.Attributes.ADCLayerAttribute).FullName) {
+					    	if (ca.ConstructorParameters.Count != 2)
+					    		throw new EngineException(string.Format(
+					    			"[ADCLayer] in assembly `{0}': must have 2 parameters",
+					    			library.Name));
+					    	
+						string adcCPU = ca.ConstructorParameters[0] as string;
+						string adcNamespace = ca.ConstructorParameters[1] as string;
+						
+						if (adcCPU == null || adcNamespace == null)
+							throw new EngineException (string.Format (
+								"[ADCLayer] in assembly `{0}': both parameters must be strings",
+								library.Name));
+						
+						// check for any conflicts with previously found layers
+						
+						foreach (ADCLayer layer in adcLayers) {
+							if (layer.CPU == adcCPU)
+								throw new EngineException (string.Format (
+									"Multiple ADC layers claim processor type `{0}'", 
+									adcCPU));
+						}
+						
+						ADCLayer newLayer = new ADCLayer(adcCPU, adcNamespace);
+						
+						if (options.CPU == adcCPU)
+							adcLayer = newLayer;
+						
+						Message (2, "Assembly `{0}' implements ADC for CPU `{1}' in namespace `{2}'",
+							 library.Name, 
+							 adcCPU,
+							 adcNamespace);
+						
+						adcLayers.Add(newLayer);
+					}
+				}
+				
+				assemblies.Add(library);
 				
 				Dump.Element(library, assemblyFile);
 				Message(1, "Generating IR for assembly types...");
 		
 				// We first add the data (Classes and Methods)
 				foreach (TypeDefinition type in library.MainModule.Types) {
+					bool ignore = false;
+					string ignoreReason = null;
+					
 					if (type.Name.Equals ("<Module>"))
 						continue;
-	
+					
+					foreach (ADCLayer layer in this.adcLayers) {
+						if (layer == this.adcLayer)
+							continue;
+						
+						if (type.Namespace.StartsWith(layer.Namespace)) {
+							Message (2, "Ignoring unused ADC type `{0}' in layer `{1}'",
+								 type.FullName, layer.CPU);
+							
+							ignore = true;
+							ignoreReason = "Unused ADC implementation";
+							break;
+						}
+					}
+					
+					if (skip) {
+						Dump.IgnoreMember(type.Name, ignoreReason);
+						
+						continue;
+					}
+					
 					Dump.Element(type);
 	
 					Class _class = new Class (this, type);
@@ -176,6 +405,12 @@ namespace SharpOS.AOT.IR {
 				Dump.FinishElement();
 			}
 			
+			if (adcLayer != null)
+				Message(1, "Selected ADC layer `{0}' for compilation", 
+					adcLayer.Namespace);
+			else
+				Message(1, "No available ADC layer matches CPU type.");
+			
 			Message(1, "Processing IR methods...");
 			
 			foreach (Class _class in this.classes)
@@ -202,13 +437,13 @@ namespace SharpOS.AOT.IR {
 			return;
 		}
 
-		private List<Class> classes = new List<Class> ();
-
 		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
+		/// Returns an enumerator that iterates through the <see cref="Class" />
+		/// objects that this instance contains.
 		/// </summary>
 		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that 
+		/// can be used to iterate through the collection.
 		/// </returns>
 		IEnumerator<Class> IEnumerable<Class>.GetEnumerator ()
 		{
@@ -217,10 +452,12 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Returns an enumerator that iterates through a collection.
+		/// Returns an enumerator that iterates through the <see cref="Class" />
+		/// objects that this instance contains.
 		/// </summary>
 		/// <returns>
-		/// An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
+		/// An <see cref="T:System.Collections.IEnumerator"></see> object that 
+		/// can be used to iterate through the collection.
 		/// </returns>
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
@@ -228,10 +465,16 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the size of the type.
+		/// Gets the size of the type <paramref name="type" />.
 		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <returns></returns>
+		/// <param name="type">
+		/// Either the C# name for the type (`int', `short', `bool') 
+		/// or a fully-qualified type name (`System.Int32', 
+		/// `System.Int16', `System.Boolean').
+		/// </param>
+		/// <returns>
+		/// The size of the given type in bytes.
+		/// </returns>
 		public int GetTypeSize (string type)
 		{
 			return this.GetTypeSize (type, 0);
@@ -335,9 +578,14 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the type of the internal.
+		/// Gets a <see cref="Operands.Operand.InternalSizeType" /> that 
+		/// represents the type <paramref name="type" />.
 		/// </summary>
-		/// <param name="type">The type.</param>
+		/// <param name="type">
+		/// Either the C# name for the type (`int', `short', `bool') 
+		/// or a fully-qualified type name (`System.Int32', 
+		/// `System.Int16', `System.Boolean').
+		/// </param>
 		/// <returns></returns>
 		public Operands.Operand.InternalSizeType GetInternalType (string type)
 		{

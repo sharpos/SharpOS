@@ -40,6 +40,9 @@
 				<include name="References/Mono.GetOptions.dll" />
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 			</references>
+			<resources>
+				<include name="Resources/*" />
+			</resources>	
 			<sources>
 				<include name="Program.cs" />
 				<include name="AssemblyInfo.cs" />

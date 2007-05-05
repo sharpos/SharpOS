@@ -1,0 +1,32 @@
+2007-05-01  William Lahti  <xfurious@gmail.com>
+	* IR/Engine.cs: refactoring, added support for automatically ignoring 
+	classes from ADC implementation namespaces (that is, those specified by 
+	ADCLayerAttributes on the assembly).
+	* IR/Block.cs: added support for automatic fixup of calls to methods 
+	marked with ADCStubAttribute to the correct ADC layer implementation 
+	as selected by the current CPU type.
+	* Program.cs: added support for generation of bootable floppy images.
+	* Attributes/ADCAttributes.cs: ADCLayerAttribute, ADCStubAttribute are 
+	used to control the AOT's architecture-dependent code mechanisms.
+	* Attributes/StringAttribute.cs: added documentation
+	* Resources/ImageBuilder.sh: A floppy image generator for UNIX/Linux.
+	* Resources/ImageBuilder.bat: A floppy image generator for Microsoft 
+	Windows.
+	* SharpOS.AOT.build: added resources to build file
+	* ChangeLog: added a top-level ChangeLog.
+
+2007-04-29  William Lahti  <xfurious@gmail.com>
+
+	* added option support
+	* added multiple-DLL compilation support
+	* split the AOT into SharpOS.AOT.Core.dll and SharpOS.AOT.exe.
+	* added XML/new text format dumping
+	* IR/Method.cs: changed Method.LiveRange, Method.DefUseItem to public.
+	changed Method.Dump() to Method.DumpBlocks().
+	* Instructions/*.cs: removed Dump() overrides for the Pop, Return, and 
+	Switch instructions.
+	* added some FIXMEs for incorrect/foggy documentation
+	* IR/Engine.cs: added EngineVersion, value is 'svn' (should match release).
+	* various minor refactoring
+	* changed build file to allow command line definition of 'debug' property
+	* changed build file to include "Attributes/*.cs" sources.

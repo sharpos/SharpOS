@@ -1050,8 +1050,26 @@ namespace SharpOS.AOT.IR {
 				else if (cilInstruction.OpCode == OpCodes.Call
 						|| cilInstruction.OpCode == OpCodes.Callvirt
 						|| cilInstruction.OpCode == OpCodes.Jmp) {
+					
 					MethodReference call = (cilInstruction.Operand as MethodReference);
-
+					MethodDefinition def = this.Method.Engine.GetCILDefinition (call);
+					
+					if (def != null) {
+						foreach (CustomAttribute attr in def.CustomAttributes) {
+							if (attr.Constructor.DeclaringType.FullName == 
+							typeof(SharpOS.AOT.Attributes.ADCStubAttribute)
+							.FullName) {
+								// replace this call with an equivalent call
+								// to the ADC layer
+								
+								this.Method.Engine.FixupADCMethod (call);
+							}
+						}
+					} else {
+						this.Method.Engine.Message(3, "Found a reference to undefined method `{0}'",
+									   call.ToString());
+					}
+					
 					Operand [] operands;
 
 					// If it is not static include the register of the instance into the operands
