@@ -56,7 +56,7 @@ namespace SharpOS.AOT.X86 {
 
 			foreach (Block block in method) {
 
-				assembly.LABEL (fullname + "_" + block.Index.ToString()); //StartOffset.ToString());
+				assembly.LABEL (fullname + "_" + block.Index.ToString());
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
 					if (instruction is SharpOS.AOT.IR.Instructions.Call
@@ -1308,6 +1308,20 @@ namespace SharpOS.AOT.X86 {
 
 				if (assembly.IsKernelString (call)) {
 					this.HandleAssign (block, new Assign (assign.Assignee, call.Operands[0]));
+
+				} else if (assembly.IsKernelAlloc (call)) {
+					if (assign.Assignee.IsRegisterSet)
+						this.assembly.MOV (this.assembly.GetRegister (assign.Assignee.Register), this.assembly.BSSAlloc (Convert.ToUInt32 ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value)));
+
+					else {
+						R32Type register = this.assembly.GetSpareRegister ();
+
+						this.assembly.MOV (register, this.assembly.BSSAlloc (Convert.ToUInt32 ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value)));
+
+						this.MovMemoryRegister (assign.Assignee, register);
+
+						this.assembly.FreeSpareRegister (register);
+					}
 
 				} else {
 					this.HandleCall (block, call);

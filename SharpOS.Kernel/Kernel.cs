@@ -75,6 +75,9 @@ namespace SharpOS {
 			return result;
 		}*/
 
+		private static byte* gdt = Alloc (1024);
+		private static byte* idt = Alloc (256);
+
 		public unsafe static void WriteMultibootInfoMMap (Multiboot.Info info)
 		{
 			Multiboot.MemoryMap* mmap = (Multiboot.MemoryMap*) info.MMapAddr;
@@ -438,6 +441,12 @@ namespace SharpOS {
 
 		[SharpOS.AOT.Attributes.String]
 		public unsafe static byte* String (string value)
+		{
+			return null;
+		}
+
+		[SharpOS.AOT.Attributes.Alloc]
+		public unsafe static byte* Alloc (uint value)
 		{
 			return null;
 		}

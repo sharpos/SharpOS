@@ -156,7 +156,7 @@ namespace SharpOS.AOT.IR {
 			if (options.Verbosity >= lvl)
 				Console.WriteLine(msg, prms);
 		}
-		
+
 		/// <summary>
 		/// Modifies the method reference <paramref name="call" /> to
 		/// refer to the equivalent ADC layer method.
@@ -240,12 +240,12 @@ namespace SharpOS.AOT.IR {
 		public void Run ()
 		{
 			DumpType dumpType = DumpType.XML;
-			
+
 			if (options.TextDump)
 				dumpType = DumpType.Text;
-			
+
 			IAssembly asm = null;
-			
+
 			switch (options.CPU) {
 			case "X86":
 				asm = new SharpOS.AOT.X86.Assembly();
@@ -256,11 +256,11 @@ namespace SharpOS.AOT.IR {
 					options.CPU));
 			break;
 			}
-			
-			Message(1, "AOT compiling for processor `{0}'", options.CPU);
-			Run(asm);
+
+			Message (1, "AOT compiling for processor `{0}'", options.CPU);
+			Run (asm);
 		}
-		
+
 		/// <summary>
 		/// Runs the AOT compiler engine.
 		/// </summary>
@@ -275,17 +275,17 @@ namespace SharpOS.AOT.IR {
 		public void Run (IAssembly asm)
 		{
 			if (asm == null)
-				throw new ArgumentNullException("asm");
-			
+				throw new ArgumentNullException ("asm");
+
 			DumpType dumpType = DumpType.XML;
-			
+
 			if (options.TextDump)
 				dumpType = DumpType.Text;
-			
-			dump = new DumpProcessor(dumpType);
-			
-			dump.Section(DumpSection.Root);
-			
+
+			dump = new DumpProcessor (dumpType);
+
+			dump.Section (DumpSection.Root);
+
 			this.asm = asm;
 
 			foreach (string assemblyFile in options.Assemblies) {
@@ -372,37 +372,37 @@ namespace SharpOS.AOT.IR {
 					Dump.Element(type);
 	
 					Class _class = new Class (this, type);
-	
+
 					this.classes.Add (_class);
-	
+
 					foreach (MethodDefinition entry in type.Constructors) {
 						if (!entry.Name.Equals (".cctor"))
 							continue;
-	
+
 						Method method = new Method (this, entry);
-	
+
 						_class.Add (method);
-	
+
 						break;
 					}
-	
+
 					foreach (MethodDefinition entry in type.Methods) {
 						if (entry.ImplAttributes != MethodImplAttributes.Managed) {
-							Dump.IgnoreMember(entry.Name, 
+							Dump.IgnoreMember (entry.Name,
 									"Method is unmanaged");
-	
+
 							continue;
 						}
-	
+
 						Method method = new Method (this, entry);
-	
+
 						_class.Add (method);
 					}
-					
-					Dump.FinishElement();
+
+					Dump.FinishElement ();
 				}
-				
-				Dump.FinishElement();
+
+				Dump.FinishElement ();
 			}
 			
 			if (adcLayer != null)
@@ -414,26 +414,26 @@ namespace SharpOS.AOT.IR {
 			Message(1, "Processing IR methods...");
 			
 			foreach (Class _class in this.classes)
-				foreach (Method _method in _class) 
+				foreach (Method _method in _class)
 					_method.Process ();
 
-			Message(1, "Encoding output for `{0}' to `{1}'...", options.CPU, 
+			Message (1, "Encoding output for `{0}' to `{1}'...", options.CPU,
 					options.OutputFilename);
-			
+
 			asm.Encode (this, options.OutputFilename);
 
-			Dump.FinishElement();
-			
+			Dump.FinishElement ();
+
 			if (options.DumpFile != null) {
 				if (options.DumpFile == "-")
-					Console.WriteLine(Dump.RenderDump(true));
+					Console.WriteLine (Dump.RenderDump (true));
 				else {
-					Message(1, "Creating dump file `{0}'", options.DumpFile);
-					using (StreamWriter sw = new StreamWriter(options.DumpFile))
-						sw.Write(Dump.RenderDump(true));
+					Message (1, "Creating dump file `{0}'", options.DumpFile);
+					using (StreamWriter sw = new StreamWriter (options.DumpFile))
+						sw.Write (Dump.RenderDump (true));
 				}
 			}
-			
+
 			return;
 		}
 

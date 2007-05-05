@@ -2077,7 +2077,9 @@ namespace SharpOS.AOT.IR {
 				return;
 
 			if (asmCall) {
-				identifier = (identifier as Reference).Value;
+				if (identifier is Reference)
+					identifier = (identifier as Reference).Value;
+
 				identifier.ForceSpill = true;
 			}
 

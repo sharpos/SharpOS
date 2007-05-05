@@ -1308,12 +1308,11 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// 	Dumps a representation of this block, including lists of blocks which
-		///	lead to this block and blocks which are led to after this block is
-		///	executed.
+		/// Dumps a representation of this block, including lists of blocks which
+		/// lead to this block and blocks which are led to after this block is
+		/// executed.
 		/// </summary>
-		/// <param name="prefix">The prefix.</param>
-		/// <param name="stringBuilder">The string builder.</param>
+		/// <param name="p">The Dump Processor.</param>
 		public void Dump (DumpProcessor p)
 		{
 			this.UpdateIndex();

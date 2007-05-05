@@ -26,8 +26,13 @@ namespace SharpOS.AOT.X86 {
 		const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
 		const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry System.UInt32 System.UInt32";
 		const string AOT_ATTRIBUTES = "SharpOS.AOT.Attributes";
-		
+
+		const string START_CODE = "[START CODE]";
+		const string END_CODE = "[END CODE]";
+		const string START_DATA = "[START DATA]";
 		const string END_DATA = "[END DATA]";
+		const string START_BSS = "[START BSS]";
+		const string END_BSS = "[END BSS]";
 		const string END_STACK = "[END STACK]";
 		const string THE_END = "[THE END]";
 		const string KERNEL_ENTRY_POINT = "[KERNEL ENTRY POINT]";
@@ -36,14 +41,25 @@ namespace SharpOS.AOT.X86 {
 		const string MULTIBOOT_LOAD_END_ADDRESS = "[MULTIBOOT LOAD END ADDRESS]";
 		const string MULTIBOOT_BSS_END_ADDRESS = "[MULTIBOOT BSS END ADDRESS]";
 		const string MULTIBOOT_ENTRY_POINT = "[MULTIBOOT ENTRY POINT]";
-		
+
+		const string DOS_MESSAGE = "[DOS MESSAGE]";
 		const string PE_ADRESS_OFFSET = "[PE ADRESS OFFSET]";
 		const string PE_HEADER = "[PE HEADER]";
 		const string PE_POINTER_TO_SYMBOL_TABLE = "[PE POINTER TO SYMBOL TABLE]";
 		const string PE_NUMBER_OF_SYMBOLS = "[PE NUMBER OF SYMBOLS]";
 		const string PE_SIZE_OF_OPTIONAL_HEADER = "[PE SIZE OF OPTIONAL HEADER]";
+		const string PE_ADDRESS_OF_ENTRY_POINT = "[PE ADDRESS OF ENTRY POINT]";
+		const string PE_CODE = ".text";
+		const string PE_DATA = ".data";
+		const string PE_BSS = ".bss";
+		const string PE_VIRTUAL_SIZE = "VirtualSize";
+		const string PE_VIRTUAL_ADDRESS = "VirtualAddress";
+		const string PE_SIZE_OF_RAW_DATA = "SizeOfRawData";
+		const string PE_POINTER_TO_RAW_DATA = "PointerToRawData";
+		
 
 		const uint BASE_ADDRESS = 0x00100000;
+		const uint ALIGNMENT = 16;
 
 		internal const string HELPER_LSHL = "LSHL";
 		internal const string HELPER_LSHR = "LSHR";
@@ -51,6 +67,7 @@ namespace SharpOS.AOT.X86 {
 
 		Engine engine;
 		Assembly data;
+		Assembly bss;
 
 		uint multibootBSSEndAddress = 0;
 		uint multibootLoadEndAddress = 0;
@@ -400,9 +417,6 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		internal bool IsKernelString (SharpOS.AOT.IR.Operands.Call call)
 		{
-			//string name = call.Method.DeclaringType.FullName + "." + call.Method.Name;
-			//name.Equals (KERNEL_STRING);
-
 			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
@@ -416,6 +430,30 @@ namespace SharpOS.AOT.X86 {
 					return true;
 
 				throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'String' method.");
+			}
+
+			return false;
+		}
+
+		internal bool IsKernelAlloc (SharpOS.AOT.IR.Operands.Call call)
+		{
+			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (AOT_ATTRIBUTES + ".AllocAttribute"))
+					continue;
+
+				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+						&& call.Method.Parameters.Count == 1
+						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.UInt32")))
+					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'Alloc' method.");
+
+				if (!(call.Operands [0] is SharpOS.AOT.IR.Operands.Constant
+						&& Convert.ToUInt32((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value) > 0))
+					throw new Exception ("The parameter of the 'Alloc' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
+
+				return true;
 			}
 
 			return false;
@@ -458,38 +496,110 @@ namespace SharpOS.AOT.X86 {
 			binaryWriter.Write ((int) value);
 
 
+			this.PatchPE (binaryWriter);
+
 			binaryWriter.Seek (0, SeekOrigin.End);
 		}
 
+		#region Portable Executable
 		private void AddPEHeader ()
 		{
+			////////////////////////////////////////////////////////////////////// 
 			// DOS Header
-			byte[] data = new byte [] {
-				0x4d, 0x5a, 0x90, 0x00, 0x03, 0x00, 0x00, 0x00, 0x04, 0x00, 0x00, 0x00, 0xff, 0xff, 0x00, 0x00, 
-				0xb8, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x40, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 
-				0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-			
-			foreach (byte value in data)
-				this.DATA (value);
-			
-			this.LABEL (PE_ADRESS_OFFSET);
+			// Magic number ('MZ')
+			this.DATA ((ushort) 0x5A4D);
 
+			// Bytes on last page of file
+			this.DATA ((ushort) 0x0090);
+
+			// Pages in file
+			this.DATA ((ushort) 0x0003);
+
+			// Relocations
+			this.DATA ((ushort) 0x0000);
+
+			// Size of header in paragraphs
+			this.DATA ((ushort) 0x0004);
+
+			// Minimum extra paragraphs needed
+			this.DATA ((ushort) 0x0000);
+
+			// Maximum extra paragraphs needed
+			this.DATA ((ushort) 0xFFFF);
+
+			// Initial (relative) SS value
+			this.DATA ((ushort) 0x0000);
+
+			// Initial SP value
+			this.DATA ((ushort) 0x00B8);
+
+			// Checksum
+			this.DATA ((ushort) 0x0000);
+
+			// Initial IP value
+			this.DATA ((ushort) 0x0000);
+
+			// Initial (relative) CS value
+			this.DATA ((ushort) 0x0000);
+
+			// File address of relocation table
+			this.DATA ((ushort) 0x0040);
+
+			// Overlay number
+			this.DATA ((ushort) 0x0000);
+
+			// Reserved words
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+
+			// OEM identifier
+			this.DATA ((ushort) 0x0000);
+
+			// OEM information
+			this.DATA ((ushort) 0x0000);
+
+			// Reserved words
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+			this.DATA ((ushort) 0x0000);
+
+			// File address of the new exe header
+			this.LABEL (PE_ADRESS_OFFSET);
 			this.DATA ((uint) 0);
 
+			//////////////////////////////////////////////////////////////////////
 			// DOS Code 
-			data = new byte [] { 
-				0x0e, 0x1f, 0xba, 0x0e, 0x00, 0xb4, 0x09, 0xcd, 0x21, 0xb8, 0x01, 0x4c, 0xcd, 0x21, 0x54, 0x68, 
-				0x69, 0x73, 0x20, 0x70, 0x72, 0x6f, 0x67, 0x72, 0x61, 0x6d, 0x20, 0x63, 0x61, 0x6e, 0x6e, 0x6f, 
-				0x74, 0x20, 0x62, 0x65, 0x20, 0x72, 0x75, 0x6e, 0x20, 0x69, 0x6e, 0x20, 0x44, 0x4f, 0x53, 0x20, 
-				0x6d, 0x6f, 0x64, 0x65, 0x2e, 0x0d, 0x0d, 0x0a, 0x24, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00 };
+			this.BITS32 (false);
+			this.ORG (0);
 
-			foreach (byte value in data)
-				this.DATA (value);
+			this.PUSH (Seg.CS);
+			this.POP (Seg.DS);
+
+			this.MOV (R16.DX, DOS_MESSAGE);
+			this.MOV (R8.AH, 0x09);
+			this.INT (0x21);
+			this.MOV (R16.AX, 0x4c01);
+			this.INT (0x21);
+
+			this.LABEL (DOS_MESSAGE);
+			this.DATA ("This is SharpOS speaking: Please don't panic!$");
+
+			this.BITS32 (true);
 
 			this.AddMultibootHeader ();
 
-			this.ALIGN (16);
+			//////////////////////////////////////////////////////////////////////
+			// PE Header
+			this.ALIGN (ALIGNMENT);
 
 			this.LABEL (PE_HEADER);
 
@@ -500,7 +610,7 @@ namespace SharpOS.AOT.X86 {
 			this.DATA ((ushort) 0x014C);
 
 			// Number of Sections
-			this.DATA ((ushort) 0x0005);
+			this.DATA ((ushort) 0x0003);
 
 			// Time Date Stamp
 			this.DATA ((uint) 0x4634F185);
@@ -514,13 +624,278 @@ namespace SharpOS.AOT.X86 {
 			this.DATA ((uint) 0);
 
 			// Size of Optional Header
-			this.LABEL (PE_SIZE_OF_OPTIONAL_HEADER);
-			this.DATA ((ushort) 0);
+			this.DATA ((ushort) 0x00E0);
 
 			// Characteristics
 			this.DATA ((ushort) 0x1305);
 
+			//////////////////////////////////////////////////////////////////////
+			// Optional Header
+			// MagicNumber 	
+			this.DATA ((ushort) 0x010B);
+
+			// MajorLinkerVersion
+			this.DATA ((byte) 0x07);
+
+			// MinorLinkerVersion
+			this.DATA ((byte) 0x00);
+
+			// SizeOfCode
+			this.DATA ((uint) 0x00000000); // FIXME ?
+
+			// SizeOfInitializedData
+			this.DATA ((uint) 0x00000000); // FIXME ?
+
+			// SizeOfUninitializedData
+			this.DATA ((uint) 0x00000000); // FIXME ?
+
+			// AddressOfEntryPoint
+			this.LABEL (PE_ADDRESS_OF_ENTRY_POINT);
+			this.DATA ((uint) 0x00000000);
+
+			// BaseOfCode
+			this.DATA ((uint) 0x00000000);
+
+			// BaseOfData
+			this.DATA ((uint) 0x00000000);
+
+			// ImageBase
+			this.DATA ((uint) BASE_ADDRESS);
+
+			// SectionAlignment
+			this.DATA ((uint) ALIGNMENT);
+
+			// FileAlignment
+			this.DATA ((uint) ALIGNMENT);
+
+			// MajorOSVersion
+			this.DATA ((ushort) 0x0005);
+
+			// MinorOSVersion
+			this.DATA ((ushort) 0x0001);
+
+			// MajorImageVersion
+			this.DATA ((ushort) 0x0005);
+
+			// MinorImageVersion
+			this.DATA ((ushort) 0x0001);
+
+			// MajorSubsystemVersion
+			this.DATA ((ushort) 0x0004);
+
+			// MinorSubsystemVersion
+			this.DATA ((ushort) 0x0000);
+
+			// Reserved
+			this.DATA ((uint) 0x00000000);
+
+			// SizeOfImage
+			this.DATA ((uint) 0x00000000); // FIXME
+
+			// SizeOfHeaders
+			this.DATA ((uint) 0x00000000); // FIXME
+
+			// CheckSum
+			this.DATA ((uint) 0x00000000); // FIXME ?
+
+			// Subsystem
+			this.DATA ((ushort) 0x0001);
+
+			// DLLCharacteristics
+			this.DATA ((ushort) 0x8000);
+
+			// SizeOfStackReserve
+			this.DATA ((uint) 0x00040000);
+
+			// SizeOfStackCommit
+			this.DATA ((uint) 0x00001000);
+
+			// SizeOfHeapReserve
+			this.DATA ((uint) 0x00100000);
+
+			// SizeOfHeapCommit
+			this.DATA ((uint) 0x00001000);
+
+			// LoaderFlags
+			this.DATA ((uint) 0x00000000);
+
+			// NumberOfRvaAndSizes
+			this.DATA ((uint) 0x00000010);
+
+			// Export Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Import Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Resource Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Exception Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Certificate File
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Relocation Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Debug Data
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Architecture Data
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Global Ptr
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// TLS Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Load Config Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Bound Import Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Import Address Table
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Delay Import Descriptor
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// COM+ Runtime Header
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			// Reserved
+			this.DATA ((uint) 0x00000000);
+			this.DATA ((uint) 0x00000000);
+
+			//////////////////////////////////////////////////////////////////////
+			// Sections
+			this.AddPESection (PE_CODE, 0x60000060);
+
+			this.AddPESection (PE_DATA, 0xC0000040);
+
+			this.AddPESection (PE_BSS, 0xC0000080);
 		}
+
+		private void PatchPE (BinaryWriter binaryWriter)
+		{
+			uint value = this.GetLabelAddress (START_CODE);
+			uint offset = this.GetLabelAddress (PE_ADDRESS_OF_ENTRY_POINT);
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_ADDRESS));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_POINTER_TO_RAW_DATA));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			value = this.GetLabelAddress (END_CODE) - value;
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_SIZE));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_SIZE_OF_RAW_DATA));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			
+			value = this.GetLabelAddress (START_DATA);
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_ADDRESS));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_POINTER_TO_RAW_DATA));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			value = this.GetLabelAddress (END_DATA) - value;
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_SIZE_OF_RAW_DATA));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+
+			value = this.GetLabelAddress (START_BSS);
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_ADDRESS));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+
+			value = this.GetLabelAddress (END_BSS) - value;
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
+			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
+			binaryWriter.Write ((int) value);
+		}
+
+		private string GetPESectionLabel (string prefix, string type)
+		{
+			return "[PE Section " + prefix + " " + type + "]";
+		}
+
+		private void AddPESection (string id, uint characteristics)
+		{
+			string name = id;
+
+			while (name.Length < 8)
+				name += "\0";
+
+			this.DATA (name);
+
+			// Misc/Virtual Size
+			this.LABEL (this.GetPESectionLabel (id, PE_VIRTUAL_SIZE));
+			this.DATA ((uint) 0x00000000);
+
+			// Virtual Address
+			this.LABEL (this.GetPESectionLabel (id, PE_VIRTUAL_ADDRESS));
+			this.DATA ((uint) 0x00000000);
+
+			// Size of Raw Data
+			this.LABEL (this.GetPESectionLabel (id, PE_SIZE_OF_RAW_DATA));
+			this.DATA ((uint) 0x00000000);
+
+			// Pointer to Raw Data
+			this.LABEL (this.GetPESectionLabel (id, PE_POINTER_TO_RAW_DATA));
+			this.DATA ((uint) 0x00000000);
+
+			// Pointer to Relocations
+			this.DATA ((uint) 0x00000000);
+
+			// Pointer to Linenumbers
+			this.DATA ((uint) 0x00000000);
+
+			// Number of Relocations
+			this.DATA ((ushort) 0x0000);
+
+			// Number of Line Numbers
+			this.DATA ((ushort) 0x0000);
+
+			// Characteristics
+			this.DATA (characteristics);
+		}
+		#endregion
 
 		/// <summary>
 		/// Adds the multiboot header.
@@ -600,7 +975,10 @@ namespace SharpOS.AOT.X86 {
 		private void AddData ()
 		{
 			this.engine.Dump.Section (DumpSection.DataEncode);
-			
+
+			this.ALIGN (ALIGNMENT);
+			this.LABEL (START_DATA);
+
 			foreach (Class _class in engine) {
 				if (_class.ClassDefinition.IsEnum)
 					continue;
@@ -657,17 +1035,26 @@ namespace SharpOS.AOT.X86 {
 			foreach (Instruction instruction in data.instructions)
 				this.instructions.Add (instruction);
 
-			this.ALIGN (4096);
+			this.ALIGN (ALIGNMENT);
 			this.LABEL (END_DATA);
 		}
 
 		/// <summary>
 		/// Adds the stack.
 		/// </summary>
-		private void AddStack ()
+		private void AddBSS ()
 		{
+			this.ALIGN (ALIGNMENT);
+			this.LABEL (START_BSS);
+
+			foreach (Instruction instruction in bss.instructions)
+				this.instructions.Add (instruction);
+
 			this.TIMES (8192, 0);
 			this.LABEL (END_STACK);
+
+			this.ALIGN (ALIGNMENT);
+			this.LABEL (END_BSS);
 		}
 
 		
@@ -680,12 +1067,16 @@ namespace SharpOS.AOT.X86 {
 		public bool Encode (Engine engine, string target)
 		{
 			this.data = new Assembly ();
+			this.bss = new Assembly ();
 			this.engine = engine;
 			
 			this.engine.Dump.Section (DumpSection.Encoding);
 			
 			this.AddPEHeader ();
 
+			this.ALIGN (ALIGNMENT);
+			this.LABEL (START_CODE);
+			
 			this.AddEntryPoint ();
 			
 			this.engine.Dump.Section (DumpSection.MethodEncode);
@@ -702,9 +1093,12 @@ namespace SharpOS.AOT.X86 {
 
 			this.AddHelperFunctions ();
 
+			this.ALIGN (ALIGNMENT);
+			this.LABEL (END_CODE);
+
 			this.AddData ();
 
-			this.AddStack ();
+			this.AddBSS ();
 
 			this.Save (target);
 			
@@ -739,7 +1133,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public bool Encode (MemoryStream memoryStream)
 		{
-			UInt32 org = 0;
+			int org = 0;
 
 			BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
 
@@ -756,10 +1150,14 @@ namespace SharpOS.AOT.X86 {
 					for (int i = 0; i < this.instructions.Count; i++) {
 						Instruction instruction = this.instructions [i];
 
-						if (instruction is OrgInstruction)
-							org = (UInt32) instruction.Value;
+						if (instruction is OrgInstruction) {
+							if ((UInt32) instruction.Value < offset)
+								org = -((int) offset);
 
-						else if (instruction is Bits32Instruction)
+							else
+								org = Convert.ToInt32 (instruction.Value);
+
+						} else if (instruction is Bits32Instruction)
 							this.bits32 = (bool) instruction.Value;
 
 						else if (instruction is OffsetInstruction) {
@@ -787,16 +1185,19 @@ namespace SharpOS.AOT.X86 {
 								binaryWriter.Write ((byte) times.Value);
 						}
 
+						if (instruction.Label.Equals (END_DATA))
+							bss = true;
+
 						if (pass == 0) {
 							if (instruction.Reference.Length > 0) {
 								instruction.Value = new UInt32 [] { this.GetLabelAddress (instruction.Reference) };
 
-								if (!instruction.Relative)
-									((UInt32 []) instruction.Value) [0] += org;
+								if (!instruction.Relative) {
+									((UInt32 []) instruction.Value) [0] = (UInt32) (org + ((UInt32 []) instruction.Value) [0]);
 
-								else {
+								} else {
 									int delta = (int) (((UInt32 []) instruction.Value) [0] - offset - 2);
-									
+
 									if (delta >= -128 && delta <= 127) {
 										Assembly temp = new Assembly ();
 
@@ -834,15 +1235,12 @@ namespace SharpOS.AOT.X86 {
 								instruction.RMMemory.Displacement = (int) (org + this.GetLabelAddress (instruction.RMMemory.Reference) + instruction.RMMemory.DisplacementDelta);
 
 							// Load End Address
-							if (instruction.Label.Equals (END_DATA)) {
-								bss = true;
-
-								this.multibootLoadEndAddress = org + offset;
-							}
+							if (instruction.Label.Equals (END_DATA))
+								this.multibootLoadEndAddress = (UInt32) (org + offset);
 
 							// BSS End Address
 							if (instruction.Label.Equals (END_STACK))
-								this.multibootBSSEndAddress = org + offset;
+								this.multibootBSSEndAddress = (UInt32) (org + offset);
 
 						} else {
 							if (!bss)
@@ -1500,11 +1898,28 @@ namespace SharpOS.AOT.X86 {
 
 			data.DATA (value);
 
-			data.DATA ( (byte) 0);
+			data.DATA ((byte) 0);
 
 			return label;
 		}
 
+		/// <summary>
+		/// Allocates of memory in the BSS Section.
+		/// </summary>
+		/// <param name="size">The size.</param>
+		/// <returns>The label of the memory chunk.</returns>
+		internal string BSSAlloc (uint size)
+		{
+			string label = this.GetFreeResourceLabel;
+
+			bss.ALIGN (ALIGNMENT);
+			
+			bss.LABEL (label);
+
+			bss.TIMES (size, 0);
+
+			return label;
+		}
 
 		private int resourceCounter = 0;
 

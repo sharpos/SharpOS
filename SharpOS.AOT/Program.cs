@@ -24,38 +24,39 @@ namespace SharpOS.AOT {
 	public class Options: GetOpts.Options {
 		public Options(string[] args):
 			base(args)
-		{ }
+		{ 
+		}
 		
 		public string[] Assemblies = null;
 		public bool TempOutput = false;
 		public string ImageFilename = null;
 		
 		[GetOpts.Option("The output file", 'o', "out")]
-			public string OutputFilename = null;
+		public string OutputFilename = null;
 		
 		[GetOpts.Option("The binary output (when -image is present)", "bin-out")]
-			public string BinaryFilename = null;
+		public string BinaryFilename = null;
 		
 		[GetOpts.Option("Output a bootable image", 'i', "image")]
-			public bool CreateImage = false;
+		public bool CreateImage = false;
 		
 		[GetOpts.Option("Choose the platform to compile", 'c', "cpu")]
-			public string CPU = "X86";
+		public string CPU = "X86";
 		
 		[GetOpts.Option("Verbose mode", 'v', "verbose")]
-			public bool Verbose = false;
+		public bool Verbose = false;
 			
 		[GetOpts.Option("Verbosity (0 [silent] - 5)", 'm', "verbosity")]
-			public int Verbosity = 0;
+		public int Verbosity = 0;
 			
 		[GetOpts.Option("Dump mode (super-verbose output)", 'd', "dump")]
-			public string DumpFile = null;
+		public string DumpFile = null;
 			
 		[GetOpts.Option("Text-mode dump (default is XML)", "text-dump")]
-			public bool TextDump = false;
+		public bool TextDump = false;
 			
 		[GetOpts.Option("Specify the dump verbosity (1 - 3)", "dump-level")]
-			public int DumpVerbosity = 1;
+		public int DumpVerbosity = 1;
 		
 		public EngineOptions GetEngineOptions()
 		{
@@ -127,83 +128,83 @@ namespace SharpOS.AOT {
 				imageFile.Close();
 			}
 			
-			stm.Close();
+			stm.Close ();
 			
 			// TODO: set executable status before running
 			
-			Process p = Process.Start(interp, string.Format("{0} {1} {2}", 
+			Process p = Process.Start (interp, string.Format ("{0} {1} {2}", 
 						tmpScript, opts.BinaryFilename, 
 						opts.ImageFilename));
-			
-			p.WaitForExit();
-			
+
+			p.WaitForExit ();
+
 			if (p.ExitCode != 0)
 				throw new EngineException (string.Format (
 							   "Failed to generate image `{0}'",
 							   opts.ImageFilename));
-			
-			File.Delete(tmpScript);
-			
+
+			File.Delete (tmpScript);
+
 			if (opts.TempOutput)
-				File.Delete(opts.BinaryFilename);
+				File.Delete (opts.BinaryFilename);
 		}
-		
-		static int Main (string[] args) 
+
+		static int Main (string [] args)
 		{
-			Options opts = new Options(args);
+			Options opts = new Options (args);
 			Engine engine = null;
-			
-			opts.ShowBanner();
-			
+
+			opts.ShowBanner ();
+
 			if (opts.RemainingArguments.Length == 0) {
-				Console.WriteLine("Error: too few arguments");
-				
+				Console.WriteLine ("Error: too few arguments");
+
 				return 1;
 			} else {
 				bool stop = false;
-				List<string> assemFiles = new List<string>();
-				
+				List<string> assemFiles = new List<string> ();
+
 				foreach (string argStr in opts.RemainingArguments) {
-					if (!File.Exists(argStr)) {
-						Console.Error.WriteLine("{0}: File not found");
+					if (!File.Exists (argStr)) {
+						Console.Error.WriteLine ("{0}: File not found");
 						stop = true;
 					}
-					
-					assemFiles.Add(argStr);
+
+					assemFiles.Add (argStr);
 				}
-				
+
 				if (stop)
 					return 1;
-					
-				opts.Assemblies = assemFiles.ToArray();
+
+				opts.Assemblies = assemFiles.ToArray ();
 			}
-			
+
 			if (opts.OutputFilename == null) {
-				if (opts.Assemblies[0].EndsWith (".dll"))
-					opts.OutputFilename = opts.Assemblies [0].Substring(0, opts.Assemblies[0].LastIndexOf ('.'))	
+				if (opts.Assemblies [0].EndsWith (".dll"))
+					opts.OutputFilename = opts.Assemblies [0].Substring (0, opts.Assemblies [0].LastIndexOf ('.'))
 							  + ".bin";
 				else
 					opts.OutputFilename = opts.Assemblies [0] + ".bin";
 			}
-			
+
 			if (opts.CreateImage) {
 				opts.ImageFilename = opts.OutputFilename;
 				if (opts.BinaryFilename == null)
-					opts.BinaryFilename = Path.GetTempFileName();
+					opts.BinaryFilename = Path.GetTempFileName ();
 				opts.TempOutput = true;
 			} else
 				opts.BinaryFilename = opts.OutputFilename;
-			
+
 			try {
 				engine = new Engine (opts.GetEngineOptions ());
 				engine.Run ();
-				
+
 				if (opts.CreateImage)
 					CreateImage (engine, opts);
 			} catch (EngineException e) {
-				Console.Error.WriteLine("Error: {0}", e.Message);
+				Console.Error.WriteLine ("Error: {0}", e.Message);
 			}
-			
+
 			return 0;
 		}
 	}
