@@ -53,10 +53,13 @@ namespace SharpOS.AOT {
 		public string DumpFile = null;
 			
 		[GetOpts.Option("Send dump to the console (as well as file)", "console-dump")]
-			public bool ConsoleDump = false;
+		public bool ConsoleDump = false;
 			
 		[GetOpts.Option("Text-mode dump (default is XML)", "text-dump")]
 		public bool TextDump = false;
+		
+		[GetOpts.Option ("Dump the Assembler Code", "asm-dump")]
+		public string AsmFile = null;
 			
 		[GetOpts.Option("Specify the dump verbosity (1 - 3)", "dump-level")]
 		public int DumpVerbosity = 1;
@@ -75,7 +78,8 @@ namespace SharpOS.AOT {
 				eo.ConsoleDump = true;
 			} else
 				eo.DumpFile = DumpFile;
-				
+
+			eo.AsmFile = AsmFile;
 			eo.TextDump = TextDump;
 			eo.DumpVerbosity = DumpVerbosity;
 			eo.Verbosity = Verbosity;

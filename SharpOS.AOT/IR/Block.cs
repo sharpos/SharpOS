@@ -1057,8 +1057,8 @@ namespace SharpOS.AOT.IR {
 					if (def != null) {
 						foreach (CustomAttribute attr in def.CustomAttributes) {
 							if (attr.Constructor.DeclaringType.FullName == 
-							typeof(SharpOS.AOT.Attributes.ADCStubAttribute)
-							.FullName) {
+									typeof(SharpOS.AOT.Attributes.ADCStubAttribute)
+									.FullName) {
 								// replace this call with an equivalent call
 								// to the ADC layer
 								

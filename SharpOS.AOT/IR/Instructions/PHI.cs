@@ -32,8 +32,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <summary>
 		/// Dumps the specified prefix.
 		/// </summary>
-		/// <param name="prefix">The prefix.</param>
-		/// <param name="stringBuilder">The string builder.</param>
+		/// <param name="p"></param>
 		public override void Dump (DumpProcessor p) 
 		{
 			Dictionary<string,string> attr = new Dictionary<string,string>();
@@ -47,6 +46,8 @@ namespace SharpOS.AOT.IR.Instructions {
 		
 				v += this.Value.Operands[i].ToString();
 			}
+
+			v = "{" + v + "}";
 
 			p.Element(this, v, attr, null);
 		}

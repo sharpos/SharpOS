@@ -34,6 +34,7 @@ namespace SharpOS.AOT.IR {
 		public string OutputFilename = "SharpOS.Kernel.bin";
 		public string CPU = "X86";
 		public string DumpFile = null;
+		public string AsmFile = null;
 		public bool TextDump = false;
 		public int DumpVerbosity = 1;
 		public int Verbosity = 0;
@@ -41,7 +42,13 @@ namespace SharpOS.AOT.IR {
 				
 		public bool Dump {
 			get {
-				return DumpFile != null;
+				return DumpFile != null || this.ConsoleDump;
+			}
+		}
+
+		public bool AsmDump {
+			get {
+				return AsmFile != null;
 			}
 		}
 	}
@@ -248,14 +255,14 @@ namespace SharpOS.AOT.IR {
 			IAssembly asm = null;
 
 			switch (options.CPU) {
-			case "X86":
-				asm = new SharpOS.AOT.X86.Assembly();
-			break;
-			default:
-				throw new EngineException(string.Format(
-					"Error: processor type `{0}' not supported", 
-					options.CPU));
-			break;
+				case "X86":
+					asm = new SharpOS.AOT.X86.Assembly();
+					break;
+				default:
+					throw new EngineException(string.Format(
+						"Error: processor type `{0}' not supported", 
+						options.CPU));
+					break;
 			}
 
 			Message (1, "AOT compiling for processor `{0}'", options.CPU);

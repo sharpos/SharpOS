@@ -8,6 +8,8 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
+#define PE
+
 using System;
 using System.IO;
 using System.Text;
@@ -24,31 +26,32 @@ namespace SharpOS.AOT.X86 {
 	public partial class Assembly : IAssembly {
 		const string KERNEL_CLASS = "SharpOS.Kernel";
 		const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
-		const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry System.UInt32 System.UInt32";
+		const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry System.UInt32 System.UInt32 System.UInt32 System.UInt32";
 		const string AOT_ATTRIBUTES = "SharpOS.AOT.Attributes";
 
-		const string START_CODE = "[START CODE]";
-		const string END_CODE = "[END CODE]";
-		const string START_DATA = "[START DATA]";
-		const string END_DATA = "[END DATA]";
-		const string START_BSS = "[START BSS]";
-		const string END_BSS = "[END BSS]";
-		const string END_STACK = "[END STACK]";
-		const string THE_END = "[THE END]";
-		const string KERNEL_ENTRY_POINT = "[KERNEL ENTRY POINT]";
+		const string START_CODE = "START_CODE";
+		const string END_CODE = "END_CODE";
+		const string START_DATA = "START_DATA";
+		const string END_DATA = "END_DATA";
+		const string START_BSS = "START_BSS";
+		const string END_BSS = "_END_BSS";
+		const string END_STACK = "END_STACK";
+		const string THE_END = "THE_END";
+		const string KERNEL_ENTRY_POINT = "KERNEL_ENTRY_POINT";
 
-		const string MULTIBOOT_HEADER_ADDRESS = "[MULTIBOOT HEADER ADDRESS]";
-		const string MULTIBOOT_LOAD_END_ADDRESS = "[MULTIBOOT LOAD END ADDRESS]";
-		const string MULTIBOOT_BSS_END_ADDRESS = "[MULTIBOOT BSS END ADDRESS]";
-		const string MULTIBOOT_ENTRY_POINT = "[MULTIBOOT ENTRY POINT]";
+		const string MULTIBOOT_HEADER_ADDRESS = "MULTIBOOT_HEADER_ADDRESS";
+		const string MULTIBOOT_LOAD_END_ADDRESS = "MULTIBOOT LOAD END ADDRESS";
+		const string MULTIBOOT_BSS_END_ADDRESS = "MULTIBOOT BSS END ADDRESS";
+		const string MULTIBOOT_ENTRY_POINT = "MULTIBOOT ENTRY POINT";
 
-		const string DOS_MESSAGE = "[DOS MESSAGE]";
-		const string PE_ADRESS_OFFSET = "[PE ADRESS OFFSET]";
-		const string PE_HEADER = "[PE HEADER]";
-		const string PE_POINTER_TO_SYMBOL_TABLE = "[PE POINTER TO SYMBOL TABLE]";
-		const string PE_NUMBER_OF_SYMBOLS = "[PE NUMBER OF SYMBOLS]";
-		const string PE_SIZE_OF_OPTIONAL_HEADER = "[PE SIZE OF OPTIONAL HEADER]";
-		const string PE_ADDRESS_OF_ENTRY_POINT = "[PE ADDRESS OF ENTRY POINT]";
+#if PE
+		const string DOS_MESSAGE = "DOS_MESSAGE";
+		const string PE_ADRESS_OFFSET = "PE_ADRESS_OFFSET";
+		const string PE_HEADER = "PE_HEADER";
+		const string PE_POINTER_TO_SYMBOL_TABLE = "PE_POINTER_TO_SYMBOL_TABLE";
+		const string PE_NUMBER_OF_SYMBOLS = "PE_NUMBER_OF_SYMBOLS";
+		const string PE_SIZE_OF_OPTIONAL_HEADER = "PE_SIZE_OF_OPTIONAL_HEADER";
+		const string PE_ADDRESS_OF_ENTRY_POINT = "PE_ADDRESS_OF_ENTRY_POINT";
 		const string PE_CODE = ".text";
 		const string PE_DATA = ".data";
 		const string PE_BSS = ".bss";
@@ -56,7 +59,7 @@ namespace SharpOS.AOT.X86 {
 		const string PE_VIRTUAL_ADDRESS = "VirtualAddress";
 		const string PE_SIZE_OF_RAW_DATA = "SizeOfRawData";
 		const string PE_POINTER_TO_RAW_DATA = "PointerToRawData";
-		
+#endif 		
 
 		const uint BASE_ADDRESS = 0x00100000;
 		const uint ALIGNMENT = 16;
@@ -322,7 +325,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="label">The label.</param>
 		public void MOV (R16Type target, string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + label, null, null, target, new UInt32[] { 0 }, new string[] { "o16", "B8+r", "iw" }));
+			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + Assembly.FormatLabelName (label), null, null, target, new UInt32[] { 0 }, new string[] { "o16", "B8+r", "iw" }));
 		}
 
 		/// <summary>
@@ -332,7 +335,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="label">The label.</param>
 		public void MOV (R32Type target, string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + label, null, null, target, new UInt32[] { 0 }, new string[] { "o32", "B8+r", "id" }));
+			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + Assembly.FormatLabelName (label), null, null, target, new UInt32[] { 0 }, new string[] { "o32", "B8+r", "id" }));
 		}
 
 
@@ -376,6 +379,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			UInt32 address = 0;
 			bool found = false;
+			label = Assembly.FormatLabelName (label);
 
 			foreach (Instruction instruction in this.instructions) {
 				if (instruction is Bits32Instruction)
@@ -489,19 +493,20 @@ namespace SharpOS.AOT.X86 {
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
 			binaryWriter.Write ((int) this.multibootBSSEndAddress);
 
-			
+#if PE			
 			offset = this.GetLabelAddress (PE_ADRESS_OFFSET);
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
 			value = this.GetLabelAddress (PE_HEADER);
 			binaryWriter.Write ((int) value);
 
-
 			this.PatchPE (binaryWriter);
+#endif
 
 			binaryWriter.Seek (0, SeekOrigin.End);
 		}
 
 		#region Portable Executable
+#if PE
 		private void AddPEHeader ()
 		{
 			////////////////////////////////////////////////////////////////////// 
@@ -852,7 +857,7 @@ namespace SharpOS.AOT.X86 {
 
 		private string GetPESectionLabel (string prefix, string type)
 		{
-			return "[PE Section " + prefix + " " + type + "]";
+			return "PE_Section_" + prefix + "_" + type;
 		}
 
 		private void AddPESection (string id, uint characteristics)
@@ -895,6 +900,7 @@ namespace SharpOS.AOT.X86 {
 			// Characteristics
 			this.DATA (characteristics);
 		}
+#endif
 		#endregion
 
 		/// <summary>
@@ -946,6 +952,13 @@ namespace SharpOS.AOT.X86 {
 			this.PUSH (0);
 			this.POPF ();
 
+			// The kernel End
+			this.MOV (R32.ECX, THE_END);
+			this.PUSH (R32.ECX);
+
+			// The kernel Start
+			this.PUSH (BASE_ADDRESS);
+
 			// Pointer to the Multiboot Info 
 			this.PUSH (R32.EBX);
 
@@ -964,9 +977,7 @@ namespace SharpOS.AOT.X86 {
 			this.CALL (KERNEL_MAIN);
 
 			// Just hang
-			this.LABEL (THE_END);
-
-			this.JMP (THE_END);
+			this.HLT ();
 		}
 
 		/// <summary>
@@ -1072,7 +1083,11 @@ namespace SharpOS.AOT.X86 {
 			
 			this.engine.Dump.Section (DumpSection.Encoding);
 			
+#if PE
 			this.AddPEHeader ();
+#else
+			this.AddMultibootHeader ();
+#endif
 
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (START_CODE);
@@ -1100,6 +1115,9 @@ namespace SharpOS.AOT.X86 {
 
 			this.AddBSS ();
 
+			this.ALIGN (ALIGNMENT);
+			this.LABEL (THE_END);
+
 			this.Save (target);
 			
 			return true;
@@ -1112,6 +1130,21 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		private bool Save (string target)
 		{
+			if (this.engine.Options.AsmDump) {
+				try {
+					using (StreamWriter streamWriter = new StreamWriter (this.engine.Options.AsmFile)) {
+						foreach (Instruction instruction in this.instructions) {
+							if (instruction is LabelInstruction)
+								streamWriter.WriteLine ();
+
+							streamWriter.WriteLine (instruction.ToString ());
+						}
+					}
+				} catch {
+					Console.WriteLine ("Could not generate the Asm Dump file. ('" + this.engine.Options.AsmFile + "')");
+				}
+			}
+
 			MemoryStream memoryStream = new MemoryStream ();
 
 			this.Encode (memoryStream);
@@ -1185,7 +1218,7 @@ namespace SharpOS.AOT.X86 {
 								binaryWriter.Write ((byte) times.Value);
 						}
 
-						if (instruction.Label.Equals (END_DATA))
+						if (instruction.Label.Equals (Assembly.FormatLabelName (START_BSS)))
 							bss = true;
 
 						if (pass == 0) {
@@ -1235,11 +1268,11 @@ namespace SharpOS.AOT.X86 {
 								instruction.RMMemory.Displacement = (int) (org + this.GetLabelAddress (instruction.RMMemory.Reference) + instruction.RMMemory.DisplacementDelta);
 
 							// Load End Address
-							if (instruction.Label.Equals (END_DATA))
+							if (instruction.Label.Equals (Assembly.FormatLabelName (END_DATA)))
 								this.multibootLoadEndAddress = (UInt32) (org + offset);
 
 							// BSS End Address
-							if (instruction.Label.Equals (END_STACK))
+							if (instruction.Label.Equals (Assembly.FormatLabelName (END_BSS)))
 								this.multibootBSSEndAddress = (UInt32) (org + offset);
 
 						} else {
@@ -1261,9 +1294,9 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		private void AddLSHL ()
 		{
-			string end = HELPER_LSHL + "_EXIT";
-			string hiShift = HELPER_LSHL + "_HI_SHIFT";
-			string start = HELPER_LSHL + "_START";
+			string end = HELPER_LSHL + " EXIT";
+			string hiShift = HELPER_LSHL + " HI_SHIFT";
+			string start = HELPER_LSHL + " START";
 
 			this.LABEL (HELPER_LSHL);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));
@@ -1323,8 +1356,8 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		private void AddLSHR ()
 		{
-			string end = HELPER_LSHR + "_EXIT";
-			string hiShift = HELPER_LSHR + "_HI_SHIFT";
+			string end = HELPER_LSHR + " EXIT";
+			string hiShift = HELPER_LSHR + " HI SHIFT";
 
 			this.LABEL (HELPER_LSHR);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));
@@ -1377,8 +1410,8 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		private void AddLSAR ()
 		{
-			string end = HELPER_LSAR + "_EXIT";
-			string hiShift = HELPER_LSAR + "_HI_SHIFT";
+			string end = HELPER_LSAR + " EXIT";
+			string hiShift = HELPER_LSAR + " HI SHIFT";
 
 			this.LABEL (HELPER_LSAR);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));
@@ -1929,7 +1962,7 @@ namespace SharpOS.AOT.X86 {
 		/// <value>The get free resource label.</value>
 		internal string GetFreeResourceLabel {
 			get {
-				return "Resource_" + this.resourceCounter++;
+				return "Resource " + this.resourceCounter++;
 			}
 		}
 
@@ -1941,8 +1974,18 @@ namespace SharpOS.AOT.X86 {
 		/// <value>The get CMP label.</value>
 		internal string GetCMPLabel {
 			get {
-				return "CMP_" + this.cmpCounter++;
+				return "CMP " + this.cmpCounter++;
 			}
+		}
+
+		/// <summary>
+		/// Formats the name of the label.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
+		internal static string FormatLabelName (string value)
+		{
+			return value;
 		}
 	}
 }

@@ -47,6 +47,7 @@ namespace SharpOS {
 
 		static byte oldAttributes = 0;
 
+		#region Structs
 		/*public struct TestStruct {
 			public uint FirstValue;
 			public byte SecondValue;
@@ -74,9 +75,65 @@ namespace SharpOS {
 
 			return result;
 		}*/
+		#endregion
 
 		private static byte* gdt = Alloc (1024);
 		private static byte* idt = Alloc (256);
+
+
+		public unsafe static void BootEntry (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
+		{
+			//x = NewTestStruct ();
+
+			SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
+
+			WriteLine (String ("SharpOS v0.0.0.75 (http://www.sharpos.org)"));
+			WriteNL ();
+
+			if (!WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd))
+				return;
+			
+			WriteCPUIDInfo ();
+
+			x = 0;
+			y = 23;
+
+			SetAttributes (ColorTypes.LightGreen, ColorTypes.Black);
+			WriteLine (String ("Pinky: What are we gonna do tonight, Brain?"));
+			WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
+			RestoreAttributes ();
+		}
+
+		#region Stubs
+		[SharpOS.AOT.Attributes.String]
+		public unsafe static byte* String (string value)
+		{
+			return null;
+		}
+
+		[SharpOS.AOT.Attributes.Alloc]
+		public unsafe static byte* Alloc (uint value)
+		{
+			return null;
+		}
+		#endregion
+
+		#region Multiboot
+		public unsafe static bool WriteMultibootInfo (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
+		{
+			if (magic != (uint) SharpOS.Multiboot.Magic.BootLoader) {
+				SetAttributes (ColorTypes.Red, ColorTypes.Black);
+				WriteLine (String ("Invalid magic number."));
+
+				return false;
+			}
+
+			Multiboot.Info* multibootInfo = (Multiboot.Info*) pointer;
+
+			WriteMultibootInfo (*multibootInfo, kernelStart, kernelEnd);
+
+			return true;
+		}
 
 		public unsafe static void WriteMultibootInfoMMap (Multiboot.Info info)
 		{
@@ -100,8 +157,14 @@ namespace SharpOS {
 			}
 		}
 
-		public unsafe static void WriteMultibootInfo (Multiboot.Info info)
+		public unsafe static void WriteMultibootInfo (Multiboot.Info info, uint kernelStart, uint kernelEnd)
 		{
+			WriteMessage (String ("Kernel Image: 0x"));
+			WriteNumber (true, (int) kernelStart);
+			WriteMessage (String (" - 0x"));
+			WriteNumber (true, (int) kernelEnd);
+			WriteNL ();
+
 			WriteMessage (String ("Boot Drive: 0x"));
 			WriteNumber (true, (int) info.BootDevice);
 			WriteNL ();
@@ -138,66 +201,9 @@ namespace SharpOS {
 
 			WriteNL ();
 		}
+		#endregion
 
-		public unsafe static void WriteNumber (bool hex, int value)
-		{
-			byte* buffer = stackalloc byte [32];
-			uint uvalue = (uint) value;
-			ushort divisor = hex ? (ushort) 16 : (ushort) 10;
-			int length = 0;
-
-			if (!hex && value < 0) {
-				buffer [length++] = (byte) '-';
-
-				uvalue = (uint) -value;
-			}
-
-			do {
-				uint remainder = uvalue % divisor;
-
-				if (remainder < 10)
-					buffer [length++] = (byte) ('0' + remainder);
-
-				else
-					buffer [length++] = (byte) ('A' + remainder - 10);
-
-			} while ((uvalue /= divisor) != 0);
-
-			while (length > 0)
-				WriteChar (buffer [--length]);
-		}
-
-		public unsafe static void BootEntry (uint magic, uint pointer)
-		{
-			//x = NewTestStruct ();
-
-			SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
-
-			WriteLine (String ("SharpOS v0.0.0.75 (http://www.sharpos.org)"));
-			WriteNL ();
-
-			if (magic != (uint) SharpOS.Multiboot.Magic.BootLoader) {
-				SetAttributes (ColorTypes.Red, ColorTypes.Black);
-				WriteLine (String ("Invalid magic number."));
-
-				return;
-			}
-
-			Multiboot.Info* multibootInfo = (Multiboot.Info*) pointer;
-
-			WriteMultibootInfo (*multibootInfo);
-			
-			WriteCPUIDInfo ();
-
-			x = 0;
-			y = 23;
-
-			SetAttributes (ColorTypes.LightGreen, ColorTypes.Black);
-			WriteLine (String ("Pinky: What are we gonna do tonight, Brain?"));
-			WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
-			RestoreAttributes ();
-		}
-
+		#region CPUID
 		public unsafe static void WriteProcessorInfo ()
 		{
 			UInt32 eax = 0, ebx = 0, ecx = 0, edx = 0;
@@ -312,36 +318,6 @@ namespace SharpOS {
 			WriteNL ();
 		}
 
-		public unsafe static void WriteLine (byte* message)
-		{
-			WriteMessage (message);
-			WriteNL ();
-		}
-
-		public unsafe static void WriteMessage (byte* message)
-		{
-			for (int i = 0; message [i] != 0; i++)
-				WriteChar (message [i]);
-		}
-
-		public unsafe static void WriteChar (byte value)
-		{
-			byte* video = (byte*) 0xB8000;
-
-			if (value == (byte) '\n') {
-				x = 0;
-				y++;
-
-			} else {
-				video += y * 160 + x * 2;
-
-				*video++ = value;
-				*video = attributes;
-
-				x++;
-			}
-		}
-
 		public unsafe static void WriteNoCPUID ()
 		{
 			SetAttributes (ColorTypes.LightRed, ColorTypes.Black);
@@ -430,27 +406,73 @@ namespace SharpOS {
 
 			return;
 		}
+		#endregion
 
+		#region Display Routines
+		public unsafe static void WriteNumber (bool hex, int value)
+		{
+			byte* buffer = stackalloc byte [32];
+			uint uvalue = (uint) value;
+			ushort divisor = hex ? (ushort) 16 : (ushort) 10;
+			int length = 0;
+
+			if (!hex && value < 0) {
+				buffer [length++] = (byte) '-';
+
+				uvalue = (uint) -value;
+			}
+
+			do {
+				uint remainder = uvalue % divisor;
+
+				if (remainder < 10)
+					buffer [length++] = (byte) ('0' + remainder);
+
+				else
+					buffer [length++] = (byte) ('A' + remainder - 10);
+
+			} while ((uvalue /= divisor) != 0);
+
+			while (length > 0)
+				WriteChar (buffer [--length]);
+		}
+
+		public unsafe static void WriteLine (byte* message)
+		{
+			WriteMessage (message);
+			WriteNL ();
+		}
+
+		public unsafe static void WriteMessage (byte* message)
+		{
+			for (int i = 0; message [i] != 0; i++)
+				WriteChar (message [i]);
+		}
+
+		public unsafe static void WriteChar (byte value)
+		{
+			byte* video = (byte*) 0xB8000;
+
+			if (value == (byte) '\n') {
+				x = 0;
+				y++;
+
+			} else {
+				video += y * 160 + x * 2;
+
+				*video++ = value;
+				*video = attributes;
+
+				x++;
+			}
+		}
 		public unsafe static void WriteString (UInt32 value)
 		{
 			for (int i = 0; i < 4; i++) {
-				WriteChar ( (byte) (value & 0xff));
+				WriteChar ((byte) (value & 0xff));
 				value >>= 8;
 			}
 		}
-
-		[SharpOS.AOT.Attributes.String]
-		public unsafe static byte* String (string value)
-		{
-			return null;
-		}
-
-		[SharpOS.AOT.Attributes.Alloc]
-		public unsafe static byte* Alloc (uint value)
-		{
-			return null;
-		}
-
 		public unsafe static void WriteNL ()
 		{
 			WriteChar ((byte) '\n');
@@ -459,34 +481,34 @@ namespace SharpOS {
 		public unsafe static void WriteByte (byte value)
 		{
 			WriteHex ((byte) (value >> 4));
-			WriteHex ( (byte) (value & 0x0F));
+			WriteHex ((byte) (value & 0x0F));
 		}
 
 		public unsafe static void WriteHex (byte value)
 		{
 			if (value <= 9)
-				WriteChar ( (byte) (48 + value));
+				WriteChar ((byte) (48 + value));
 
 			else if (value == 10)
-				WriteChar ( (byte) 'A');
+				WriteChar ((byte) 'A');
 
 			else if (value == 11)
-				WriteChar ( (byte) 'B');
+				WriteChar ((byte) 'B');
 
 			else if (value == 12)
-				WriteChar ( (byte) 'C');
+				WriteChar ((byte) 'C');
 
 			else if (value == 13)
-				WriteChar ( (byte) 'D');
+				WriteChar ((byte) 'D');
 
 			else if (value == 14)
-				WriteChar ( (byte) 'E');
+				WriteChar ((byte) 'E');
 
 			else if (value == 15)
-				WriteChar ( (byte) 'F');
+				WriteChar ((byte) 'F');
 
 			else
-				WriteChar ( (byte) 'X');
+				WriteChar ((byte) 'X');
 		}
 
 		public static void SetAttributes (ColorTypes _foreground, ColorTypes _background)
@@ -496,13 +518,14 @@ namespace SharpOS {
 
 			oldAttributes = attributes;
 			attributes = (byte) _foreground;
-			attributes += (byte) ( (byte) _background << 4);
+			attributes += (byte) ((byte) _background << 4);
 		}
 
 		public static void RestoreAttributes ()
 		{
 			attributes = oldAttributes;
 		}
+		#endregion
 	}
 }
 

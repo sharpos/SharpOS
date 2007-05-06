@@ -49,11 +49,11 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="stringBuilder">The string builder.</param>
 		public override void Dump (DumpProcessor p)
 		{
-			Dictionary<string, string> attr = new Dictionary<string, string>();
-			
-			attr["assignee"] = this.assignee.ToString();
-			
-			p.Element(this, null, attr, null);
+			Dictionary<string, string> attr = new Dictionary<string, string> ();
+
+			attr ["assignee"] = this.assignee.ToString ();
+
+			p.Element (this, null, attr, null);
 		}
 	}
 }

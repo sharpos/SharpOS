@@ -26,7 +26,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="label">The label.</param>
 		public LabelInstruction (string label)
-			: base (false, label, string.Empty, label + ":", string.Empty, null, null, null, label, null)
+			: base (false, label, string.Empty, Assembly.FormatLabelName (label) + ":", string.Empty, null, null, null, Assembly.FormatLabelName (label), null)
 		{
 		}
 	}

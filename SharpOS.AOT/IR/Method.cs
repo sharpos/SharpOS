@@ -2335,24 +2335,24 @@ namespace SharpOS.AOT.IR {
 		/// Dumps a representation of the blocks that comprise this method
 		/// </summary>
 		/// <returns></returns>
-		public void DumpBlocks(DumpProcessor p)
+		public void DumpBlocks (DumpProcessor p)
 		{
-			DumpBlocks(blocks, p);
+			DumpBlocks (blocks, p);
 		}
 		
 		/// <summary>
 		/// Dumps a representation of the blocks that comprise this method
 		/// </summary>
 		/// <returns></returns>
-		private void DumpBlocks(List<Block> list, DumpProcessor p)
+		private void DumpBlocks (List<Block> list, DumpProcessor p)
 		{
 			if (engine.Options.Dump) {
-				p.Section(DumpSection.MethodBlocks);
-				
-				foreach (Block block in list) 
+				p.Section (DumpSection.MethodBlocks);
+
+				foreach (Block block in list)
 					block.Dump (p);
-				
-				p.FinishElement();
+
+				p.FinishElement ();
 			}
 		}
 		
@@ -2404,6 +2404,7 @@ namespace SharpOS.AOT.IR {
 				
 				if (this.engine.Options.DumpVerbosity >= 3)
 					DumpBlocks();
+
 			} while (this.ConstantFolding ());
 
 			this.TransformationOutOfSSA ();

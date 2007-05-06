@@ -959,7 +959,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "CALL", label, null, null, null, new UInt32[] {0}, new string[] {"E8", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "CALL", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"E8", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4306,7 +4306,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JA (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JA", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JA", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4330,7 +4330,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JAE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JAE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JAE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4354,7 +4354,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JB (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JB", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JB", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4378,7 +4378,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JBE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JBE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JBE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4402,7 +4402,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JC (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JC", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JC", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4434,7 +4434,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4466,7 +4466,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JG (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JG", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JG", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4490,7 +4490,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JGE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JGE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JGE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4514,7 +4514,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JL (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JL", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JL", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4538,7 +4538,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JLE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JLE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JLE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4554,7 +4554,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JMP", label, null, null, null, new UInt32[] {0}, new string[] {"E9", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JMP", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"E9", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4650,7 +4650,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNA (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNA", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNA", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4674,7 +4674,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNAE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNAE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNAE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4698,7 +4698,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNB (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNB", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNB", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4722,7 +4722,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNBE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNBE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNBE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4746,7 +4746,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNC (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNC", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNC", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4770,7 +4770,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4794,7 +4794,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNG (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNG", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNG", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4818,7 +4818,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNGE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNGE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNGE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4842,7 +4842,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNL (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNL", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNL", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4866,7 +4866,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNLE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNLE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNLE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4890,7 +4890,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNO (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "81", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNO", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "81", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4914,7 +4914,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNP (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNP", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNP", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4938,7 +4938,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNS (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNS", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "89", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNS", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "89", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4962,7 +4962,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNZ (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JNZ", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNZ", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4986,7 +4986,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JO (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "80", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JO", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "80", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5010,7 +5010,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JP (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JP", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JP", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5034,7 +5034,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JPE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JPE", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JPE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5058,7 +5058,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JPO (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JPO", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JPO", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5082,7 +5082,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JS (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JS", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "88", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JS", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "88", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5106,7 +5106,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JZ (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, label, "JZ", label, null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JZ", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
 		}
 		
 		/// <summary>

@@ -36,7 +36,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="encoding">The encoding.</param>
 		public Instruction (bool indent, string label, string reference, string name, string parameters, Memory rmMemory, Register rmRegister, Register register, object value, string[] encoding)
 		{
-			this.label = label;
+			this.label = Assembly.FormatLabelName (label);
 			this.reference = reference;
 			this.name = name;
 			this.parameters = parameters;
@@ -135,14 +135,16 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Gets the name of the short.
+		/// Gets the short name only if it is not a label name.
 		/// </summary>
 		/// <value>The name of the short.</value>
 		public string ShortName {
 			get {
 				string result = name;
 
-				if (result.IndexOf ("_") != -1) {
+				if (result.Length > 0
+						&& result [result.Length - 1] != ':'
+						&& result.IndexOf ("_") != -1) {
 					string[] values = result.Split ('_');
 
 					result = values[0];

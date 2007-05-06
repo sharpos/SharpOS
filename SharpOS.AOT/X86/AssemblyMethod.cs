@@ -56,7 +56,7 @@ namespace SharpOS.AOT.X86 {
 
 			foreach (Block block in method) {
 
-				assembly.LABEL (fullname + "_" + block.Index.ToString());
+				assembly.LABEL (fullname + " " + block.Index.ToString());
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
 					if (instruction is SharpOS.AOT.IR.Instructions.Call
@@ -86,7 +86,7 @@ namespace SharpOS.AOT.X86 {
 				}
 			}
 
-			assembly.LABEL (fullname + "_exit");
+			assembly.LABEL (fullname + " exit");
 
 			assembly.LEA (R32.ESP, new DWordMemory (null, R32.EBP, null, 0, -12));
 			assembly.POP (R32.EDI);
@@ -107,7 +107,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			SharpOS.AOT.IR.Instructions.ConditionalJump jump = instruction as SharpOS.AOT.IR.Instructions.ConditionalJump;
 
-			string label = method.MethodFullName + "_" + block.Outs[0].Index.ToString(); //.StartOffset.ToString();
+			string label = method.MethodFullName + " " + block.Outs[0].Index.ToString(); //.StartOffset.ToString();
 
 			if (jump.Value is SharpOS.AOT.IR.Operands.Boolean) {
 				SharpOS.AOT.IR.Operands.Boolean expression = jump.Value as SharpOS.AOT.IR.Operands.Boolean;
@@ -247,7 +247,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			SharpOS.AOT.IR.Instructions.Jump jump = instruction as SharpOS.AOT.IR.Instructions.Jump;
 
-			assembly.JMP (method.MethodFullName + "_" + block.Outs[0].Index.ToString()); //.StartOffset.ToString());
+			assembly.JMP (method.MethodFullName + " " + block.Outs[0].Index.ToString()); //.StartOffset.ToString());
 		}
 
 		/// <summary>
@@ -1381,7 +1381,7 @@ namespace SharpOS.AOT.X86 {
 					throw new Exception ("'" + instruction + "' is not supported.");
 			}
 
-			assembly.JMP (method.MethodFullName + "_exit");
+			assembly.JMP (method.MethodFullName + " exit");
 		}
 
 		/// <summary>
@@ -1631,12 +1631,14 @@ namespace SharpOS.AOT.X86 {
 				if (++i == index)
 					break;
 
-				result++;
+				result += this.method.Engine.GetTypeSize (parameter.ParameterType.ToString (), 4) >> 2;
+
+				/*result++;
 
 				if (sizeType == Operand.InternalSizeType.I8
 						|| sizeType == Operand.InternalSizeType.U8
 						|| sizeType == Operand.InternalSizeType.R8)
-					result++;
+					result++;*/
 			}
 
 			return result;

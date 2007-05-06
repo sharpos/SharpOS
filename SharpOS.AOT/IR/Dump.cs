@@ -3,6 +3,7 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -67,12 +68,10 @@ namespace SharpOS.AOT.IR {
 		protected StreamWriter Output = null;
 		protected StringBuilder OutputStore = null;
 		
-		/**
-			<summary>
-				This class is used to track the previous ElementStack
-				and sections sent to this dump processor.
-			</summary>
-		*/
+		/// <summary>
+		/// This class is used to track the previous ElementStack
+		/// and sections sent to this dump processor.
+		/// </summary>
 		public class DumpElement {
 			public DumpElement (string tag)
 			{
@@ -92,15 +91,14 @@ namespace SharpOS.AOT.IR {
 			if (disposing)
 				GC.SuppressFinalize (this);
 			
-			Output.Dispose ();
+			if (Output != null)
+				Output.Dispose ();
 		}
 		
-		/**
-			<summary>
-				Adds <see cref=ElementextTab" /> to the Prefix member, 
-				but only when we are outputting a text dump.
-			</summary>
-		*/
+		/// <summary>
+		/// Adds <see cref=ElementextTab" /> to the Prefix member, 
+		/// but only when we are outputting a text dump.
+		/// </summary>
 		protected void IncreasePrefix ()
 		{
 			if (this.Type == DumpType.Text)
@@ -133,24 +131,22 @@ namespace SharpOS.AOT.IR {
 				OutputStore.Append ("\n");
 			}
 		}
-		
+
 		protected void AppendLine ()
 		{
 			Append ("\n");
 		}
-		
-		/**
-			<summary>
-				Removes one <see cref=ElementextTab" /> from the 
-				Prefix member, but only when we are outputting 
-				a text dump.
-			</summary>
-			<exception cref="InvalidOperationException">
-				Thrown when the <see cref="Prefix" /> member is
-				already empty or it's length is less than the size
-				of <see cref=ElementextTab" />.
-			</exception>
-		*/
+
+		/// <summary>
+		/// Removes one <see cref=ElementextTab" /> from the 
+		/// Prefix member, but only when we are outputting 
+		/// a text dump.
+		/// </summary>
+		/// <exception cref="InvalidOperationException">
+		/// Thrown when the <see cref="Prefix" /> member is
+		/// already empty or it's length is less than the size
+		/// of <see cref=ElementextTab" />.
+		/// </exception>
 		protected void DecreasePrefix ()
 		{
 			if (this.Type == DumpType.Text) {
@@ -195,11 +191,11 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 		
-		/**
-			<summary>
-			
-			</summary>
-		*/
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="assem"></param>
+		/// <param name="filename"></param>
 		public void Element(AssemblyDefinition assem, string filename)
 		{
 			if (this.Type == DumpType.XML)
@@ -213,11 +209,9 @@ namespace SharpOS.AOT.IR {
 			IncreasePrefix();
 		}
 		
-		/**
-			<summary>
-			
-			</summary>
-		*/
+		/// <summary>
+		/// 
+		/// </summary>
 		public void FinishElement()
 		{
 			DumpElement el = ElementStack.Pop();
@@ -225,7 +219,10 @@ namespace SharpOS.AOT.IR {
 			
 			if (el.Tag == "aot-dump")
 				remPrefix = false;
-			
+
+			if (this.ConsoleDump && el.Tag == "block")
+				Console.WriteLine ();
+
 			if (Type == DumpType.XML)
 				Append("</{0}>", el.Tag);
 			
@@ -233,11 +230,10 @@ namespace SharpOS.AOT.IR {
 				DecreasePrefix();
 		}
 		
-		/**
-			<summary>
-				
-			</summary>
-		*/
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="klass"></param>
 		public void Element(TypeDefinition klass)
 		{
 			if (this.Type == DumpType.XML)
@@ -249,11 +245,10 @@ namespace SharpOS.AOT.IR {
 			IncreasePrefix();
 		}
 		
-		/**
-			<summary>
-			
-			</summary>
-		*/
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="mr"></param>
 		public void Element(MethodDefinition mr)
 		{
 			if (this.Type == DumpType.XML)
@@ -265,11 +260,11 @@ namespace SharpOS.AOT.IR {
 			IncreasePrefix();
 		}
 		
-		/**
-			<summary>
-			
-			</summary>
-		*/
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <param name="name"></param>
+		/// <param name="reason"></param>
 		public void IgnoreMember(string name, string reason)
 		{
 			if (this.Type == DumpType.XML)
@@ -324,11 +319,14 @@ namespace SharpOS.AOT.IR {
 			FinishElement();
 		}
 		
-		/**
-			<summary>
-				Dumps the dominators of a given block.
-			</summary>
-		*/
+		/// <summary>
+		/// Dumps the dominators of a given block.
+		/// </summary>
+		/// <param name="b"></param>
+		/// <param name="idominator"></param>
+		/// <param name="dominators"></param>
+		/// <param name="dominates"></param>
+		/// <param name="frontiers"></param>
 		private void BlockDominance(Block b, int idominator, List<int> dominators, List<int> dominates, 
 						List<int> frontiers)
 		{
@@ -485,16 +483,37 @@ namespace SharpOS.AOT.IR {
 				else
 					Append (">{0}</instruction>", value);
 			} else if (this.Type == DumpType.Text) {
-				Append ("{0}- Instruction type: {1}", 
-							Prefix, ins.GetType().Name);
+				if (this.ConsoleDump) {
+					Append ("{0}\t", Prefix);
+
+					if (ins is Instructions.Return)
+						Append ("Ret ");
+
+					else if (ins is Instructions.Jump)
+						Append ("Jmp ");
+
+				} else
+					Append ("{0}- Instruction type: {1}",
+							Prefix, ins.GetType ().Name);
 				
 				if (attr != null) {
-					foreach (KeyValuePair<string,string> kvp in attr)
-						Append (", {0}: {1}", kvp.Key, kvp.Value);
+					foreach (KeyValuePair<string, string> kvp in attr) {
+						if (this.ConsoleDump)
+							Append ("{0}", kvp.Value);
+						else
+							Append (", {0}: {1}", kvp.Key, kvp.Value);
+					}
 				}
-				
-				Append ("   == {1}\n", 
-					Prefix, (value == null ? "(null)" : value));
+
+				if (this.ConsoleDump) {
+					if (attr != null && attr.Count > 0)
+						Append (" = ");
+
+					Append ("{0}\n", (value == null ? "" : value));
+
+				} else
+					Append (" == {1}\n", 
+						Prefix, (value == null ? "(null)" : value));
 			}
 		}
 		
