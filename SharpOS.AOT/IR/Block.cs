@@ -1285,11 +1285,12 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		public override string ToString ()
 		{
-			DumpProcessor p = new DumpProcessor(DumpType.Text);
+			StringBuilder sb = new StringBuilder();
+			DumpProcessor p = new DumpProcessor(DumpType.Text, sb);
 			
 			Dump (p);
 
-			return p.RenderDump(false);
+			return sb.ToString ();
 		}
 
 		/// <summary>

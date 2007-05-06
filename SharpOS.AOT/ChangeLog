@@ -1,3 +1,11 @@
+2007-05-06  William Lahti  <xfurious@gmail.com>
+	* IR/Instructions/Instructions.cs: uses new DumpProcessor constructor
+	* IR/Engine.cs: modified to pass console dump options to DumpProcessor
+	* IR/Dump.cs: modified to allow real-time output of dump information, as
+	opposed to dumping at the very end of the AOT.
+	* IR/Block.cs: uses new DumpProcessor constructor
+	* Program.cs: now supports -console-dump option
+	
 2007-05-01  William Lahti  <xfurious@gmail.com>
 	* IR/Engine.cs: refactoring, added support for automatically ignoring 
 	classes from ADC implementation namespaces (that is, those specified by 

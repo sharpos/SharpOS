@@ -176,11 +176,12 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		public override string ToString ()
 		{
-			DumpProcessor p = new DumpProcessor(DumpType.Text);
+			StringBuilder sb = new StringBuilder();
+			DumpProcessor p = new DumpProcessor(DumpType.Text, sb);
 			
 			Dump (p);
 
-			return p.RenderDump(false).Trim('\n');
+			return sb.ToString ();
 		}
 
 		public virtual void Dump (DumpProcessor d)

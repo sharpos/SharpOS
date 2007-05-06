@@ -8,6 +8,7 @@
 //
 
 using System;
+using System.IO;
 using System.Text;
 using System.Collections.Generic;
 
@@ -28,16 +29,43 @@ namespace SharpOS.AOT.IR {
 		Encoding, MethodEncode, DataEncode
 	}
 	
-	public class DumpProcessor {
-		public DumpProcessor(DumpType Type)
+	public class DumpProcessor: IDisposable {
+		public DumpProcessor (DumpType Type, bool consoleDump, string file)
 		{
 			this.Type = Type;
+			this.ConsoleDump = consoleDump;
+			this.File = file;
+			
+			if (file != null) {
+				this.Output = new StreamWriter (file);
+				this.Output.AutoFlush = true;
+			}
 		}
+		
+		/// <summary>
+		/// Creates a new dump processor that will store it's 
+		/// output in the given <see cref="StringBuilder" />.
+		/// </summary>
+		public DumpProcessor (DumpType type, StringBuilder sb):
+			this (type, false, null)
+		{
+			OutputStore = sb;
+		}
+		
+		~DumpProcessor ()
+		{
+			Dispose (false);
+		}
+		
+		public string TextTab = "  ";
 		
 		protected DumpType Type;
 		protected Stack<DumpElement> ElementStack = new Stack<DumpElement>();
 		protected string Prefix = "";
-		protected StringBuilder Output = new StringBuilder();
+		protected bool ConsoleDump = false;
+		protected string File = null;
+		protected StreamWriter Output = null;
+		protected StringBuilder OutputStore = null;
 		
 		/**
 			<summary>
@@ -46,7 +74,7 @@ namespace SharpOS.AOT.IR {
 			</summary>
 		*/
 		public class DumpElement {
-			public DumpElement(string tag)
+			public DumpElement (string tag)
 			{
 				Tag = tag;
 			}
@@ -54,7 +82,18 @@ namespace SharpOS.AOT.IR {
 			public string Tag;
 		}
 		
-		public string TextTab = "  ";
+		public void Dispose ()
+		{
+		
+		}
+		
+		protected void Dispose (bool disposing)
+		{
+			if (disposing)
+				GC.SuppressFinalize (this);
+			
+			Output.Dispose ();
+		}
 		
 		/**
 			<summary>
@@ -62,10 +101,42 @@ namespace SharpOS.AOT.IR {
 				but only when we are outputting a text dump.
 			</summary>
 		*/
-		protected void IncreasePrefix()
+		protected void IncreasePrefix ()
 		{
 			if (this.Type == DumpType.Text)
 				Prefix += TextTab;
+		}
+		
+		protected void Append (string append, params object [] parms)
+		{
+			if (this.ConsoleDump)
+				Console.Write (append, parms);
+			
+			if (Output != null)
+				Output.Write (append, parms);
+			
+			if (OutputStore != null)
+				OutputStore.AppendFormat (append, parms);
+			
+		}
+		
+		protected void AppendLine (string append, params object [] parms)
+		{
+			if (this.ConsoleDump)
+				Console.WriteLine (append, parms);
+			
+			if (Output != null)
+				Output.WriteLine (append, parms);
+			
+			if (OutputStore != null) {
+				OutputStore.AppendFormat (append, parms);
+				OutputStore.Append ("\n");
+			}
+		}
+		
+		protected void AppendLine ()
+		{
+			Append ("\n");
 		}
 		
 		/**
@@ -80,41 +151,41 @@ namespace SharpOS.AOT.IR {
 				of <see cref=ElementextTab" />.
 			</exception>
 		*/
-		protected void DecreasePrefix()
+		protected void DecreasePrefix ()
 		{
 			if (this.Type == DumpType.Text) {
 				if (Prefix.Length == 0)
-					throw new InvalidOperationException("Extraneous DecreasePrefix");
+					throw new InvalidOperationException ("Extraneous DecreasePrefix");
 				else if (Prefix.Length < TextTab.Length)
 					throw new Exception
 						("Internal: Prefix variable is in an incorrect state");
 					
-				Prefix = Prefix.Substring(TextTab.Length);
+				Prefix = Prefix.Substring (TextTab.Length);
 			}
 		}
 		
-		public void Item()
+		public void Item ()
 		{
 			if (this.Type == DumpType.XML)
-				Output.Append("<item>");
+				Append ("<item>");
 			else if (this.Type == DumpType.Text)
-				Output.AppendFormat("{0}- Item:\n", Prefix);
+				Append ("{0}- Item:\n", Prefix);
 			
-			ElementStack.Push(new DumpElement("item"));
-			IncreasePrefix();
+			ElementStack.Push (new DumpElement ("item"));
+			IncreasePrefix ();
 		}
 		
 		public void Element(Method.DefUseItem item)
 		{
 			if (this.Type == DumpType.XML) {
-				Output.Append("<item><definition>");
+				Append("<item><definition>");
 				Element(item.Definition);
-				Output.Append("</definition><uses>");
+				Append("</definition><uses>");
 				
 				foreach (Instruction ins in item)
 					Element(ins);
 					
-				Output.Append("</uses></item>");
+				Append("</uses></item>");
 			} else {
 				Element(item.Definition);
 				IncreasePrefix();
@@ -132,10 +203,10 @@ namespace SharpOS.AOT.IR {
 		public void Element(AssemblyDefinition assem, string filename)
 		{
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<assembly name=\"{0}\" filename=\"{0}\">", 
+				Append("<assembly name=\"{0}\" filename=\"{0}\">", 
 						assem.Name.Name, filename);
 			else if (this.Type == DumpType.Text)
-				Output.AppendFormat("{0}Assembly {1} (loaded from `{2}'):\n", 
+				Append("{0}Assembly {1} (loaded from `{2}'):\n", 
 						Prefix, assem.Name.Name, filename);
 		
 			ElementStack.Push(new DumpElement("assembly"));
@@ -156,7 +227,7 @@ namespace SharpOS.AOT.IR {
 				remPrefix = false;
 			
 			if (Type == DumpType.XML)
-				Output.AppendFormat("</{0}>", el.Tag);
+				Append("</{0}>", el.Tag);
 			
 			if (remPrefix)
 				DecreasePrefix();
@@ -170,9 +241,9 @@ namespace SharpOS.AOT.IR {
 		public void Element(TypeDefinition klass)
 		{
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<type name=\"{0}\">", klass);
+				Append("<type name=\"{0}\">", klass);
 			else
-				Output.AppendFormat("{0}Type {1}:\n", Prefix, klass);
+				Append("{0}Type {1}:\n", Prefix, klass);
 		
 			ElementStack.Push(new DumpElement("type"));
 			IncreasePrefix();
@@ -186,9 +257,9 @@ namespace SharpOS.AOT.IR {
 		public void Element(MethodDefinition mr)
 		{
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<method name=\"{0}\">", mr);
+				Append("<method name=\"{0}\">", mr);
 			else if (this.Type == DumpType.Text)
-				Output.AppendFormat("{0}Method {1}:\n", Prefix, mr);
+				Append("{0}Method {1}:\n", Prefix, mr);
 		
 			ElementStack.Push(new DumpElement("method"));
 			IncreasePrefix();
@@ -202,10 +273,10 @@ namespace SharpOS.AOT.IR {
 		public void IgnoreMember(string name, string reason)
 		{
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<ignore-member name=\"{0}\" reason=\"{1}\" />", 
+				Append("<ignore-member name=\"{0}\" reason=\"{1}\" />", 
 							name, reason);
 			else if (this.Type == DumpType.Text)
-				Output.AppendFormat("Ignoring member `{0}': {1}", name, reason);
+				Append("Ignoring member `{0}': {1}", name, reason);
 		}
 		
 		public void Dominance(List<Block> blocks)
@@ -262,14 +333,14 @@ namespace SharpOS.AOT.IR {
 						List<int> frontiers)
 		{
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat(
+				Append(
 					"<block><index>{0}</index><idominator>{1}</idominator>" + 
 					"<dominators>{2}</dominators><idominates>{3}</idominates>" +
 					"<frontiers>{4}</frontiers></block>", 
 					b.Index, idominator, CombineInts(dominators, null), 
 					CombineInts(dominates, null), CombineInts(frontiers, null));
 			else
-				Output.AppendFormat("{0}- Block #{1}, idominator: #{2}, dominators: {3}, " +
+				Append("{0}- Block #{1}, idominator: #{2}, dominators: {3}, " +
 						"idominates: {4}, frontiers: {5}\n",
 						Prefix, b.Index, idominator, CombineInts(dominators, "#"), 
 						CombineInts(dominates, "#"), CombineInts(frontiers, "#"));
@@ -347,9 +418,9 @@ namespace SharpOS.AOT.IR {
 			}
 			
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<{0}>", tag);
+				Append("<{0}>", tag);
 			else
-				Output.AppendFormat("{0}{1}:\n", Prefix, text);
+				Append("{0}{1}:\n", Prefix, text);
 			
 			if (close_text != null)
 				ElementStack.Push(new DumpElement(close_text));
@@ -362,33 +433,33 @@ namespace SharpOS.AOT.IR {
 		
 		public void Element(Block block, int[] ins, int[] outs)
 		{
-			string insStr = CombineInts(ins, "#");
-			string outsStr = CombineInts(outs, "#");
+			string insStr = CombineInts (ins, "#");
+			string outsStr = CombineInts (outs, "#");
 			
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<block ins=\"{0}\" outs=\"{1}\">", insStr, outsStr);
+				Append ("<block ins=\"{0}\" outs=\"{1}\">", insStr, outsStr);
 			else if (this.Type == DumpType.Text) {
-				Output.AppendFormat("{0}- Block #{1}", Prefix, 
+				Append ("{0}- Block #{1}", Prefix, 
 						block.Index, insStr, outsStr);
 			
 				if (insStr != "")
-					Output.AppendFormat(", ins: {0}", insStr);
+					Append (", ins: {0}", insStr);
 				if (outsStr != "")
-					Output.AppendFormat(", outs: {0}", outsStr);
+					Append (", outs: {0}", outsStr);
 				
-				Output.AppendLine();
+				AppendLine ();
 			}
 			
-			ElementStack.Push(new DumpElement("block"));
-			IncreasePrefix();
+			ElementStack.Push (new DumpElement ("block"));
+			IncreasePrefix ();
 		}
 		
-		public void Element(SharpOS.AOT.IR.Instructions.Instruction ins)
+		public void Element (SharpOS.AOT.IR.Instructions.Instruction ins)
 		{
-			Element(ins, null, null, null);
+			Element (ins, null, null, null);
 		}
 		
-		public void Element(SharpOS.AOT.IR.Instructions.Instruction ins, object lvalue, 
+		public void Element (SharpOS.AOT.IR.Instructions.Instruction ins, object lvalue, 
 					Dictionary<string, string> attr, int ?lblock)
 		{
 			object value = lvalue;
@@ -403,45 +474,47 @@ namespace SharpOS.AOT.IR {
 				block = (int)lblock;
 			
 			if (this.Type == DumpType.XML) {
-				Output.AppendFormat("<instruction index=\"{0}\" type=\"{1}\" block=\"{2}\"", 
+				Append ("<instruction index=\"{0}\" type=\"{1}\" block=\"{2}\"", 
 							ins.Index, ins.GetType().Name, block);
 				
 				if (attr != null) foreach (KeyValuePair<string,string> kvp in attr)
-					Output.AppendFormat(" {0}=\"{1}\"", kvp.Key, kvp.Value);
+					Append (" {0}=\"{1}\"", kvp.Key, kvp.Value);
 				
 				if (value == null)
-					Output.Append(">null</instruction>");
+					Append (">null</instruction>");
 				else
-					Output.AppendFormat(">{0}</instruction>", value);
+					Append (">{0}</instruction>", value);
 			} else if (this.Type == DumpType.Text) {
-				Output.AppendFormat("{0}- Instruction type: {1}", 
+				Append ("{0}- Instruction type: {1}", 
 							Prefix, ins.GetType().Name);
 				
-				if (attr != null) foreach (KeyValuePair<string,string> kvp in attr)
-					Output.AppendFormat(", {0}: {1}", kvp.Key, kvp.Value);
+				if (attr != null) {
+					foreach (KeyValuePair<string,string> kvp in attr)
+						Append (", {0}: {1}", kvp.Key, kvp.Value);
+				}
 				
-				Output.AppendFormat("   == {1}\n", 
+				Append ("   == {1}\n", 
 					Prefix, (value == null ? "(null)" : value));
 			}
 		}
 		
-		public void MethodEncode(Method m)
+		public void MethodEncode (Method m)
 		{
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<method name=\"{0}\" />", m.MethodFullName);
+				Append ("<method name=\"{0}\" />", m.MethodFullName);
 			else if (this.Type == DumpType.Text)
-				Output.AppendFormat("{0}- Method {1}\n", Prefix, m.MethodFullName);
+				Append ("{0}- Method {1}\n", Prefix, m.MethodFullName);
 		}
 		
-		public void CpAddKey(string key)
+		public void CpAddKey (string key)
 		{
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<add-key name=\"{0}\" />", key);
+				Append ("<add-key name=\"{0}\" />", key);
 			else
-				Output.AppendFormat("{0}- Add key {1}\n", Prefix, key);
+				Append ("{0}- Add key {1}\n", Prefix, key);
 		}
 		
-		public void Element(SharpOS.AOT.IR.Method.LiveRange r)
+		public void Element (SharpOS.AOT.IR.Method.LiveRange r)
 		{
 			string register = null;
 			
@@ -451,33 +524,33 @@ namespace SharpOS.AOT.IR {
 				register = "M" + r.Identifier.Stack;
 			
 			if (this.Type == DumpType.XML) {
-				Output.AppendFormat("<range identifier=\"{0}\"", r.Identifier);
+				Append ("<range identifier=\"{0}\"", r.Identifier);
 				
 				if (register != null)
-					Output.AppendFormat(" register=\"{0}\"", register);
+					Append (" register=\"{0}\"", register);
 				
-				Output.AppendFormat(" start=\"{0}\" end=\"{1}\" />", r.Start.Index, r.End.Index);
+				Append (" start=\"{0}\" end=\"{1}\" />", r.Start.Index, r.End.Index);
 			} else if (this.Type == DumpType.Text) {
-				Output.AppendFormat("{0}- Range {1}, {2}start: {3}, end: {4}\n",
+				Append ("{0}- Range {1}, {2}start: {3}, end: {4}\n",
 						Prefix, r.Identifier,
 						(register != null ? "register: " + register + ", " : ""),
 						r.Start.Index, r.End.Index);
 			}
 		}
 		
-		public void Phi(string ident)
+		public void Phi (string ident)
 		{
 			if (this.Type == DumpType.XML)
-				Output.AppendFormat("<phi identifier=\"{0}\" />", ident);
+				Append ("<phi identifier=\"{0}\" />", ident);
 			else
-				Output.AppendFormat("{0}- Phi {1}\n", Prefix, ident);
+				Append ("{0}- Phi {1}\n", Prefix, ident);
 		}
 		
 		
 		
 		///////////////////////////////////////
 		
-		private string CombineInts(int[] ints, string Prefix)
+		private string CombineInts (int[] ints, string Prefix)
 		{
 			string str = "";
 			
@@ -494,7 +567,7 @@ namespace SharpOS.AOT.IR {
 			return str;
 		}
 		
-		private string CombineInts(List<int> ints, string Prefix)
+		private string CombineInts (List<int> ints, string Prefix)
 		{
 			string str = "";
 			
@@ -509,14 +582,6 @@ namespace SharpOS.AOT.IR {
 			}
 			
 			return str;
-		}
-		
-		public string RenderDump(bool xmlHeader)
-		{
-			if (Type == DumpType.XML && xmlHeader)
-				return "<?xml version=\"1.0\"?>" + Output.ToString();
-			else
-				return Output.ToString();
 		}
 	}
 }

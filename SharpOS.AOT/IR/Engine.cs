@@ -37,7 +37,8 @@ namespace SharpOS.AOT.IR {
 		public bool TextDump = false;
 		public int DumpVerbosity = 1;
 		public int Verbosity = 0;
-		
+		public bool ConsoleDump = false;
+				
 		public bool Dump {
 			get {
 				return DumpFile != null;
@@ -276,14 +277,14 @@ namespace SharpOS.AOT.IR {
 		{
 			if (asm == null)
 				throw new ArgumentNullException ("asm");
-
+			
 			DumpType dumpType = DumpType.XML;
 
 			if (options.TextDump)
 				dumpType = DumpType.Text;
 
-			dump = new DumpProcessor (dumpType);
-
+			dump = new DumpProcessor (dumpType, options.ConsoleDump, options.DumpFile);
+			
 			dump.Section (DumpSection.Root);
 
 			this.asm = asm;
@@ -301,7 +302,7 @@ namespace SharpOS.AOT.IR {
 					if (ca.Constructor.DeclaringType.FullName == 
 					    typeof(SharpOS.AOT.Attributes.ADCLayerAttribute).FullName) {
 					    	if (ca.ConstructorParameters.Count != 2)
-					    		throw new EngineException(string.Format(
+					    		throw new EngineException (string.Format (
 					    			"[ADCLayer] in assembly `{0}': must have 2 parameters",
 					    			library.Name));
 					    	
@@ -322,7 +323,7 @@ namespace SharpOS.AOT.IR {
 									adcCPU));
 						}
 						
-						ADCLayer newLayer = new ADCLayer(adcCPU, adcNamespace);
+						ADCLayer newLayer = new ADCLayer (adcCPU, adcNamespace);
 						
 						if (options.CPU == adcCPU)
 							adcLayer = newLayer;
@@ -332,14 +333,14 @@ namespace SharpOS.AOT.IR {
 							 adcCPU,
 							 adcNamespace);
 						
-						adcLayers.Add(newLayer);
+						adcLayers.Add (newLayer);
 					}
 				}
 				
-				assemblies.Add(library);
+				assemblies.Add (library);
 				
-				Dump.Element(library, assemblyFile);
-				Message(1, "Generating IR for assembly types...");
+				Dump.Element (library, assemblyFile);
+				Message (1, "Generating IR for assembly types...");
 		
 				// We first add the data (Classes and Methods)
 				foreach (TypeDefinition type in library.MainModule.Types) {
@@ -364,12 +365,12 @@ namespace SharpOS.AOT.IR {
 					}
 					
 					if (skip) {
-						Dump.IgnoreMember(type.Name, ignoreReason);
+						Dump.IgnoreMember (type.Name, ignoreReason);
 						
 						continue;
 					}
 					
-					Dump.Element(type);
+					Dump.Element (type);
 	
 					Class _class = new Class (this, type);
 
@@ -423,16 +424,6 @@ namespace SharpOS.AOT.IR {
 			asm.Encode (this, options.OutputFilename);
 
 			Dump.FinishElement ();
-
-			if (options.DumpFile != null) {
-				if (options.DumpFile == "-")
-					Console.WriteLine (Dump.RenderDump (true));
-				else {
-					Message (1, "Creating dump file `{0}'", options.DumpFile);
-					using (StreamWriter sw = new StreamWriter (options.DumpFile))
-						sw.Write (Dump.RenderDump (true));
-				}
-			}
 
 			return;
 		}

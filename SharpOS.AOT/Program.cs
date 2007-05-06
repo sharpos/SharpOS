@@ -49,8 +49,11 @@ namespace SharpOS.AOT {
 		[GetOpts.Option("Verbosity (0 [silent] - 5)", 'm', "verbosity")]
 		public int Verbosity = 0;
 			
-		[GetOpts.Option("Dump mode (super-verbose output)", 'd', "dump")]
+		[GetOpts.Option("Specify a debug dump file ('-' for console)", 'd', "dump")]
 		public string DumpFile = null;
+			
+		[GetOpts.Option("Send dump to the console (as well as file)", "console-dump")]
+			public bool ConsoleDump = false;
 			
 		[GetOpts.Option("Text-mode dump (default is XML)", "text-dump")]
 		public bool TextDump = false;
@@ -65,7 +68,14 @@ namespace SharpOS.AOT {
 			eo.Assemblies = Assemblies;
 			eo.OutputFilename = OutputFilename;
 			eo.CPU = CPU;
-			eo.DumpFile = DumpFile;
+			eo.ConsoleDump = ConsoleDump;
+			
+			if (DumpFile == "-") {
+				eo.DumpFile = null;
+				eo.ConsoleDump = true;
+			} else
+				eo.DumpFile = DumpFile;
+				
 			eo.TextDump = TextDump;
 			eo.DumpVerbosity = DumpVerbosity;
 			eo.Verbosity = Verbosity;
