@@ -1,3 +1,8 @@
+2007-05-07  William Lahti  <xfurious@gmail.com>
+	* fixed clobbering of assembly dump
+	* Program.cs: fixed missing argument for 'file not found' error
+	* Program.cs: fixed handling of output filename options
+
 2007-05-06  William Lahti  <xfurious@gmail.com>
 	* more documentation
 	* IR/Engine.cs: Added better compatibility checking for ADC stub fixups,

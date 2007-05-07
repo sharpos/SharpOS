@@ -69,7 +69,7 @@ namespace SharpOS.AOT {
 			EngineOptions eo = new EngineOptions();
 			
 			eo.Assemblies = Assemblies;
-			eo.OutputFilename = OutputFilename;
+			eo.OutputFilename = BinaryFilename;
 			eo.CPU = CPU;
 			eo.ConsoleDump = ConsoleDump;
 			
@@ -180,7 +180,8 @@ namespace SharpOS.AOT {
 
 				foreach (string argStr in opts.RemainingArguments) {
 					if (!File.Exists (argStr)) {
-						Console.Error.WriteLine ("{0}: File not found");
+						Console.Error.WriteLine ("{0}: File not found",
+									 argStr);
 						stop = true;
 					}
 
@@ -194,9 +195,14 @@ namespace SharpOS.AOT {
 			}
 
 			if (opts.OutputFilename == null) {
+				string suffix = "bin";
+
+				if (opts.CreateImage)
+					suffix = "img";
+				
 				if (opts.Assemblies [0].EndsWith (".dll"))
 					opts.OutputFilename = opts.Assemblies [0].Substring (0, opts.Assemblies [0].LastIndexOf ('.'))
-							  + ".bin";
+							  + "." + suffix;
 				else
 					opts.OutputFilename = opts.Assemblies [0] + ".bin";
 			}
