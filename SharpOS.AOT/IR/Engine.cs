@@ -18,70 +18,13 @@ using SharpOS.AOT.IR;
 using SharpOS.AOT.IR.Instructions;
 using SharpOS.AOT.IR.Operands;
 using SharpOS.AOT.IR.Operators;
+using AOTAttr = SharpOS.AOT.Attributes;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
-	/// <summary>
-	/// An instance of this class must be passed to the 
-	/// <see cref="SharpOS.AOT.IR.Engine" /> constructor.
-	/// The contained values defined the options used during
-	/// AOT compilation.
-	/// </summary>
-	public class EngineOptions {
-		public string[] Assemblies = null;
-		public string OutputFilename = "SharpOS.Kernel.bin";
-		public string CPU = "X86";
-		public string DumpFile = null;
-		public string AsmFile = null;
-		public bool TextDump = false;
-		public int DumpVerbosity = 1;
-		public int Verbosity = 0;
-		public bool ConsoleDump = false;
-				
-		public bool Dump {
-			get {
-				return DumpFile != null || this.ConsoleDump;
-			}
-		}
 
-		public bool AsmDump {
-			get {
-				return AsmFile != null;
-			}
-		}
-	}
-	
-	/// <summary>
-	/// Defines an exception thrown by <see cref="SharpOS.AOT.IR.Engine" />
-	/// and related classes when an unrecoverable error occurs while performing
-	/// the AOT operation. This exception should be caught by the program
-	/// embedding the AOT engine and displayed to the user. This exception is
-	/// not thrown when an internal AOT error occurs.
-	/// </summary>
-	public class EngineException : Exception {
-		public EngineException(string message):
-			base(message)
-		{
-		}
-	}
-	
-	/// <summary>
-	/// Provides storage for information about the architecture-dependent 
-	/// code layers found during initial processing of the assemblies to
-	/// be AOTed.
-	/// </summary>
-	public class ADCLayer {
-		public ADCLayer(string cpu, string ns)
-		{
-			CPU = cpu;
-			Namespace = ns;
-		}
-		
-		public string CPU, Namespace;
-	}
-	
 	/// <summary>
 	/// The core class of the AOT compiler. To embed the AOT compiler, 
 	/// an instance of this class should be constructed with an 
@@ -110,15 +53,32 @@ namespace SharpOS.AOT.IR {
 		private DumpProcessor dump = null;
 		
 		private List<ADCLayer> adcLayers = new List<ADCLayer>();
+		private List<string> adcInterfaces = new List<string>();
 		private ADCLayer adcLayer = null;
 		
 		private List<AssemblyDefinition> assemblies = new List<AssemblyDefinition>();
 		private List<Class> classes = new List<Class> ();
 		
 		/// <summary>
-		/// Gets the assembly.
+		/// Provides storage for information about the architecture-dependent 
+		/// code layers found during initial processing of the assemblies to
+		/// be AOTed.
 		/// </summary>
-		/// <value>The assembly.</value>
+		public class ADCLayer {
+			public ADCLayer(string cpu, string ns)
+			{
+				CPU = cpu;
+				Namespace = ns;
+			}
+			
+			public string CPU, Namespace;
+		}
+		
+		/// <summary>
+		/// Gets the architecture-dependent IAssembly backend which encodes
+		/// the compiler's intermediate representation into architecture-native
+		/// binary code.
+		/// </summary>
 		public IAssembly Assembly {
 			get {
 				return asm;
@@ -127,7 +87,7 @@ namespace SharpOS.AOT.IR {
 		
 		/// <summary>
 		/// Provides access to the <see cref="EngineOptions" />
-		/// object used to initialize this Engine instance.
+		/// object used to configure this compiler engine instance.
 		/// </summary>
 		public EngineOptions Options {
 			get {
@@ -137,7 +97,7 @@ namespace SharpOS.AOT.IR {
 		
 		/// <summary>
 		/// Provides access to the dump processing object, which
-		/// is used for debugging.
+		/// is used for advanced debugging output.
 		/// </summary>
 		public DumpProcessor Dump {
 			get {
@@ -148,11 +108,34 @@ namespace SharpOS.AOT.IR {
 		/// <summary>
 		/// Provides access to the ADC layer selected for use
 		/// for this compiler invocation.
-		/// </summary>		
+		/// </summary>
 		public ADCLayer ADC {
 			get {
 				return adcLayer;
 			}
+		}
+		
+		/// <summary>
+		/// Retrieve a type definition for the specified type.
+		/// </summary>
+		public TypeDefinition GetTypeDefinition(string ns, string name)
+		{
+			if (ns == null)
+				throw new ArgumentNullException ("ns");
+			
+			if (name == null)
+				throw new ArgumentNullException ("name");
+			
+			foreach (AssemblyDefinition def in assemblies) {
+				foreach (ModuleDefinition mod in def.Modules) {
+					foreach (TypeDefinition type in mod.Types) {
+						if (type.Namespace == ns && type.Name == name)
+							return type;
+					}
+				}
+			}
+			
+			return null;
 		}
 		
 		/// <summary>
@@ -162,9 +145,9 @@ namespace SharpOS.AOT.IR {
 		public void Message(int lvl, string msg, params object[] prms)
 		{
 			if (options.Verbosity >= lvl)
-				Console.WriteLine(msg, prms);
+				Console.WriteLine (msg, prms);
 		}
-
+		
 		/// <summary>
 		/// Modifies the method reference <paramref name="call" /> to
 		/// refer to the equivalent ADC layer method.
@@ -172,14 +155,60 @@ namespace SharpOS.AOT.IR {
 		public void FixupADCMethod(MethodReference call)
 		{
 			// TODO: do real confirmation of the existence of a compatible method!
+			string rootns = null;
+			string nsseg = null;
+			TypeDefinition adcStubType;
+			MethodDefinition adcStub;
+			TypeReference ntype; 
+			bool matched = false;
 			
-			TypeReference ntype = new TypeReference(call.DeclaringType.Name, adcLayer.Namespace, 
-								call.DeclaringType.Scope, 
-								call.DeclaringType.IsValueType);
+			foreach (string iface in adcInterfaces) {
+				if (call.DeclaringType.Namespace.StartsWith (iface + ".")) {
+					rootns = iface;
+					break;
+				}
+			}
+
+			if (rootns != null)
+				nsseg = "." + call.DeclaringType.Namespace.Substring (rootns.Length + 1);
+			else
+				nsseg = "";
 			
-			Console.WriteLine("Replacing ADC method `{0}': scope is `{1}'", call.ToString(), 
-						call.DeclaringType.Scope);
-			
+			ntype = new TypeReference (call.DeclaringType.Name,
+						   adcLayer.Namespace + nsseg,
+						   call.DeclaringType.Scope,
+						   call.DeclaringType.IsValueType);
+			adcStubType = GetTypeDefinition (ntype.Namespace, ntype.Name);
+
+			// Find the equivalent ADC layer method
+			foreach (MethodDefinition def in adcStubType.Methods) {
+				if (def.ReturnType.ReturnType.FullName == call.ReturnType.ReturnType.FullName &&
+				    def.Parameters.Count == call.Parameters.Count) {
+				    	bool badParams = false;
+					for (int x = 0; x < call.Parameters.Count; ++x) {
+						if (call.Parameters [x].ParameterType.FullName !=
+						    def.Parameters [x].ParameterType.FullName) {
+							badParams = true;
+							break;
+						}
+					}
+
+					if (!badParams) {
+						matched = true;
+						adcStub = def;
+						break;
+					}
+				}
+			}
+
+			if (!matched)
+				throw new EngineException (string.Format (
+					"ADC stub method `{0}' does not match any ADC methods from type `{1}'",
+					call, adcStubType));
+
+			Message (2, "Replacing ADC method `{0}': scope is `{1}'", call.ToString(),
+					  call.DeclaringType.Scope);
+
 			call.DeclaringType = ntype;
 		}
 		
@@ -306,21 +335,21 @@ namespace SharpOS.AOT.IR {
 				// Check for ADCLayerAttribute
 				
 				foreach (CustomAttribute ca in library.CustomAttributes) {
-					if (ca.Constructor.DeclaringType.FullName == 
-					    typeof(SharpOS.AOT.Attributes.ADCLayerAttribute).FullName) {
-					    	if (ca.ConstructorParameters.Count != 2)
+					if (ca.Constructor.DeclaringType.FullName ==
+					    typeof(AOTAttr.ADCLayerAttribute).FullName) {
+						if (ca.ConstructorParameters.Count != 2)
 					    		throw new EngineException (string.Format (
 					    			"[ADCLayer] in assembly `{0}': must have 2 parameters",
 					    			library.Name));
-					    	
+
 						string adcCPU = ca.ConstructorParameters[0] as string;
 						string adcNamespace = ca.ConstructorParameters[1] as string;
-						
+
 						if (adcCPU == null || adcNamespace == null)
 							throw new EngineException (string.Format (
 								"[ADCLayer] in assembly `{0}': both parameters must be strings",
 								library.Name));
-						
+
 						// check for any conflicts with previously found layers
 						
 						foreach (ADCLayer layer in adcLayers) {
@@ -341,6 +370,20 @@ namespace SharpOS.AOT.IR {
 							 adcNamespace);
 						
 						adcLayers.Add (newLayer);
+					} else if (ca.Constructor.DeclaringType.FullName == 
+						   typeof(AOTAttr.ADCInterfaceAttribute).FullName) {
+					
+						if (ca.ConstructorParameters.Count != 1)
+					    		throw new EngineException (string.Format (
+					    			"[ADCLayer] in assembly `{0}': must have 1 parameters",
+					    			library.Name));
+
+					    	string iface = ca.ConstructorParameters[0] as string;
+						adcInterfaces.Add(iface);
+
+						Message (2, "Assembly `{0}' contains an ADC interface in namespace `{1}'",
+							library.Name,
+							iface);
 					}
 				}
 				

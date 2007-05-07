@@ -9,7 +9,6 @@
 
 using System;
 using System.Text;
-
 using SharpOS.AOT;
 
 namespace SharpOS.AOT.Attributes {
@@ -31,13 +30,5 @@ namespace SharpOS.AOT.Attributes {
 		
 		public string CPU;
 		public string Namespace;
-	}
-	
-	/// <summary>
-	/// Methods which carry this attribute act as stubs into
-	/// the ADC layer in use at AOT compile-time.
-	/// </summary>
-	[AttributeUsage (AttributeTargets.Method)]
-	public class ADCStubAttribute : Attribute {
 	}
 }

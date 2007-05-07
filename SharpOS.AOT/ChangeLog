@@ -1,4 +1,15 @@
 2007-05-06  William Lahti  <xfurious@gmail.com>
+	* more documentation
+	* IR/Engine.cs: Added better compatibility checking for ADC stub fixups,
+	support for nested namespaces in ADC.
+	* IR/EngineOptions.cs: moved class from IR/Engine.cs
+	* IR/EngineException.cs: moved class from IR/EngineException.cs
+	* Attributes/ADCLayerAttribute.cs: moved from ADCAttributes.cs
+	* Attributes/ADCInterfaceAttribute.cs: new attribute to allow nested
+	namespaces in the ADC interface/layers.
+	* Attributes/ADCStubAttribute.cs: moved from ADCAttributes.cs
+	
+2007-05-06  William Lahti  <xfurious@gmail.com>
 	* IR/Instructions/Instructions.cs: uses new DumpProcessor constructor
 	* IR/Engine.cs: modified to pass console dump options to DumpProcessor
 	* IR/Dump.cs: modified to allow real-time output of dump information, as
