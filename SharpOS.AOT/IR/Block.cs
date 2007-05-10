@@ -4,6 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	William Lahti <xfurious@gmail.com>
+//	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -737,6 +738,9 @@ namespace SharpOS.AOT.IR {
 				} else if (cilInstruction.OpCode == OpCodes.Ldstr) {
 					//instruction = new Assign(this.Register(stack), new Constant("\"" + cilInstruction.Operand.ToString() + "\""));
 					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand.ToString ()));
+
+				} else if (cilInstruction.OpCode == OpCodes.Ldftn) {
+					instruction = new Assign(this.Register(stack), new Operands.MethodReference(cilInstruction.Operand as Mono.Cecil.MethodReference));
 				}
 
 				// Load Constants
@@ -1051,7 +1055,7 @@ namespace SharpOS.AOT.IR {
 						|| cilInstruction.OpCode == OpCodes.Callvirt
 						|| cilInstruction.OpCode == OpCodes.Jmp) {
 					
-					MethodReference call = (cilInstruction.Operand as MethodReference);
+					Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
 					MethodDefinition def = this.Method.Engine.GetCILDefinition (call);
 					
 					if (def != null) {
@@ -1093,7 +1097,7 @@ namespace SharpOS.AOT.IR {
 					stack -= operands.Length;
 
 				} else if (cilInstruction.OpCode == OpCodes.Newobj) {
-					MethodReference call = (cilInstruction.Operand as MethodReference);
+					Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
 
 					Operand [] operands = new Operand [call.Parameters.Count];
 

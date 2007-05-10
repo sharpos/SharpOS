@@ -4,6 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	William Lahti <xfurious@gmail.com>
+//	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -152,7 +153,7 @@ namespace SharpOS.AOT.IR {
 		/// Modifies the method reference <paramref name="call" /> to
 		/// refer to the equivalent ADC layer method.
 		/// </summary>
-		public void FixupADCMethod(MethodReference call)
+		public void FixupADCMethod(Mono.Cecil.MethodReference call)
 		{
 			// TODO: do real confirmation of the existence of a compatible method!
 			string rootns = null;
@@ -218,7 +219,7 @@ namespace SharpOS.AOT.IR {
 		/// of assemblies provided by the 'Assemblies' option in 
 		/// <see cref="EngineOptions" />.
 		/// </summary>
-		public MethodDefinition GetCILDefinition(MethodReference call)
+		public MethodDefinition GetCILDefinition(Mono.Cecil.MethodReference call)
 		{
 			// TODO: work on performance
 			

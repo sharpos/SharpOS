@@ -4,6 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	William Lahti <xfurious@gmail.com>
+//	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -1722,7 +1723,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <returns></returns>
-		public static string GetLabel (MethodReference method)
+		public static string GetLabel (Mono.Cecil.MethodReference method)
 		{
 			StringBuilder result = new StringBuilder();
 

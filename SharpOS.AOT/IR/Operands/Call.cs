@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -23,19 +24,19 @@ namespace SharpOS.AOT.IR.Operands {
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <param name="operands">The operands.</param>
-		public Call (MethodReference method, Operand[] operands)
+		public Call (Mono.Cecil.MethodReference method, Operand[] operands)
 			: base (null, operands)
 		{
 			this.method = method;
 		}
 
-		private MethodReference method;
+		private Mono.Cecil.MethodReference method;
 
 		/// <summary>
 		/// Gets the method.
 		/// </summary>
 		/// <value>The method.</value>
-		public MethodReference Method {
+		public Mono.Cecil.MethodReference Method {
 			get {
 				return method;
 			}
