@@ -100,36 +100,6 @@ namespace SharpOS {
 
 		static byte oldAttributes = 0;
 
-		#region Structs
-		/*public struct TestStruct {
-			public uint FirstValue;
-			public byte SecondValue;
-
-			public int TestStructMethod (int value)
-			{
-				return (int) (this.FirstValue + this.SecondValue + value);
-			}
-		}
-
-		public unsafe static int TestStructProc (TestStruct value)
-		{
-			return (int) (value.FirstValue + value.SecondValue);
-		}
-
-		public unsafe static int NewTestStruct ()
-		{
-			TestStruct* values = stackalloc TestStruct [10];
-			values [3].FirstValue = 1;
-			values [3].SecondValue = 2;
-
-			int result = TestStructProc (values [3]);
-
-			result += values [3].TestStructMethod (2);
-
-			return result;
-		}*/
-		#endregion
-
 		#region GDT
 		private static GDTEntry* gdt;
 		private static GDTPointer* gdtPointer;
@@ -161,7 +131,6 @@ namespace SharpOS {
 				GDTEntry.Type.Descriptor |
 				GDTEntry.Type.Executable |
 				GDTEntry.Type.Writable)); 
-			//0x9A, 0xCF);
 
 			// Data Segment
 			gdt [2].Setup (0, 0xFFFFFFFF, (ushort) (
@@ -170,7 +139,6 @@ namespace SharpOS {
 				GDTEntry.Type.Present |
 				GDTEntry.Type.Descriptor |
 				GDTEntry.Type.Writable));
-			//0x92, 0xCF);
 
 			Asm.LGDT (new Memory ("GDTPointer"));
 
@@ -229,7 +197,7 @@ namespace SharpOS {
 			return null;
 		}
 
-		[SharpOS.AOT.Attributes.LabeledAlloc]
+		[SharpOS.AOT.Attributes.LabelledAlloc]
 		public unsafe static byte* LabeledAlloc (string label, uint value)
 		{
 			return null;
