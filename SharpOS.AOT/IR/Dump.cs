@@ -18,8 +18,11 @@ using Mono.Cecil;
 using SharpOS.AOT.IR.Instructions;
 
 namespace SharpOS.AOT.IR {
-	public enum DumpType {
-		XML, Text
+	public enum DumpType: byte {
+		Console = 1,
+		File = 2,
+		Buffer = 4,
+		XML = 8
 	}
 	
 	public enum DumpSection {
@@ -31,15 +34,20 @@ namespace SharpOS.AOT.IR {
 	}
 	
 	public class DumpProcessor: IDisposable {
-		public DumpProcessor (DumpType Type, bool consoleDump, string file)
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DumpProcessor"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="file">The file.</param>
+		public DumpProcessor (byte type, string file)
 		{
-			this.Type = Type;
-			this.ConsoleDump = consoleDump;
-			this.File = file;
+			this.type = type;
+			this.file = file;
 			
 			if (file != null) {
-				this.Output = new StreamWriter (file);
-				this.Output.AutoFlush = true;
+				this.type |= (byte) DumpType.File;
+				this.streamWriter = new StreamWriter (file);
+				this.streamWriter.AutoFlush = true;
 			}
 		}
 		
@@ -47,217 +55,298 @@ namespace SharpOS.AOT.IR {
 		/// Creates a new dump processor that will store it's 
 		/// output in the given <see cref="StringBuilder" />.
 		/// </summary>
-		public DumpProcessor (DumpType type, StringBuilder sb):
-			this (type, false, null)
+		public DumpProcessor (byte type):
+			this (type, null)
 		{
-			OutputStore = sb;
 		}
-		
+
+		/// <summary>
+		/// Releases unmanaged resources and performs other cleanup operations before the
+		/// <see cref="DumpProcessor"/> is reclaimed by garbage collection.
+		/// </summary>
 		~DumpProcessor ()
 		{
 			Dispose (false);
 		}
 		
-		public string TextTab = "  ";
-		
-		protected DumpType Type;
-		protected Stack<DumpElement> ElementStack = new Stack<DumpElement>();
-		protected string Prefix = "";
-		protected bool ConsoleDump = false;
-		protected string File = null;
-		protected StreamWriter Output = null;
-		protected StringBuilder OutputStore = null;
+		private byte type;
+		private Stack<DumpElement> elements = new Stack<DumpElement> ();
+		private string file = null;
+		private StreamWriter streamWriter = null;
+		private StringBuilder buffer = new StringBuilder ();
 		
 		/// <summary>
 		/// This class is used to track the previous ElementStack
 		/// and sections sent to this dump processor.
 		/// </summary>
-		public class DumpElement {
-			public DumpElement (string tag)
+		private class DumpElement {
+			/// <summary>
+			/// Initializes a new instance of the <see cref="DumpElement"/> class.
+			/// </summary>
+			/// <param name="tag">The tag.</param>
+			/// <param name="newLine">if set to <c>true</c> [new line].</param>
+			public DumpElement (string tag, bool newLine, bool inline, bool property)
 			{
-				Tag = tag;
+				this.Tag = tag;
+				this.NewLine = newLine;
+				this.Inline = inline;
+				this.Property = property;
 			}
-			
+
+			/// <summary>
+			/// Initializes a new instance of the <see cref="DumpElement"/> class.
+			/// </summary>
+			/// <param name="tag">The tag.</param>
+			public DumpElement (string tag)
+				: this (tag, false, true, false)
+			{
+			}
+
 			public string Tag;
+			public bool NewLine;
+			public bool Inline;
+			public bool Property;
 		}
-		
+
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+		/// </summary>
 		public void Dispose ()
 		{
 		
 		}
-		
+
+		/// <summary>
+		/// Disposes the specified disposing.
+		/// </summary>
+		/// <param name="disposing">if set to <c>true</c> [disposing].</param>
 		protected void Dispose (bool disposing)
 		{
-			if (disposing)
-				GC.SuppressFinalize (this);
-			
-			if (Output != null)
-				Output.Dispose ();
-		}
-		
-		/// <summary>
-		/// Adds <see cref=ElementextTab" /> to the Prefix member, 
-		/// but only when we are outputting a text dump.
-		/// </summary>
-		protected void IncreasePrefix ()
-		{
-			if (this.Type == DumpType.Text)
-				Prefix += TextTab;
-		}
-		
-		protected void Append (string append, params object [] parms)
-		{
-			if (this.ConsoleDump)
-				Console.Write (append, parms);
-			
-			if (Output != null)
-				Output.Write (append, parms);
-			
-			if (OutputStore != null)
-				OutputStore.AppendFormat (append, parms);
-			
-		}
-		
-		protected void AppendLine (string append, params object [] parms)
-		{
-			if (this.ConsoleDump)
-				Console.WriteLine (append, parms);
-			
-			if (Output != null)
-				Output.WriteLine (append, parms);
-			
-			if (OutputStore != null) {
-				OutputStore.AppendFormat (append, parms);
-				OutputStore.Append ("\n");
+			try {
+				if (disposing)
+					GC.SuppressFinalize (this);
+
+				if (streamWriter != null)
+					streamWriter.Dispose ();
+			} catch (Exception ex) {
+				Console.WriteLine (ex.ToString ());
 			}
 		}
 
-		protected void AppendLine ()
-		{
-			Append ("\n");
+
+		/// <summary>
+		/// Gets the prefix.
+		/// </summary>
+		/// <value>The prefix.</value>
+		private string Prefix {
+			get {
+				string result = "";
+
+				for (int i = 1; i < this.elements.Count; i++)
+					result += "    ";
+
+				return result;
+			}
 		}
 
 		/// <summary>
-		/// Removes one <see cref=ElementextTab" /> from the 
-		/// Prefix member, but only when we are outputting 
-		/// a text dump.
+		/// Pushes the element.
 		/// </summary>
-		/// <exception cref="InvalidOperationException">
-		/// Thrown when the <see cref="Prefix" /> member is
-		/// already empty or it's length is less than the size
-		/// of <see cref=ElementextTab" />.
-		/// </exception>
-		protected void DecreasePrefix ()
+		/// <param name="name">The name.</param>
+		internal void PushElement (string name)
 		{
-			if (this.Type == DumpType.Text) {
-				if (Prefix.Length == 0)
-					throw new InvalidOperationException ("Extraneous DecreasePrefix");
-				else if (Prefix.Length < TextTab.Length)
-					throw new Exception
-						("Internal: Prefix variable is in an incorrect state");
-					
-				Prefix = Prefix.Substring (TextTab.Length);
+			this.PushElement (name, true, false, false);
+		}
+
+		/// <summary>
+		/// Pushes the element.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		internal void PushElement (string name, bool newLine, bool inline, bool property)
+		{
+			this.elements.Push (new DumpElement (name, newLine, inline, property));
+
+			string value = string.Empty;
+
+			if ((this.type & (byte) DumpType.XML) != 0)
+				value += string.Format ("{0}<{1}>", this.Prefix, name);
+
+			else {
+				if (!inline || property)
+					value += string.Format ("{0}{1}: ", this.Prefix, name);
+				
+				else if (newLine)
+					value += this.Prefix;
+
+				if (!inline)
+					value += "\n";
+			}
+
+			if ((this.type & (byte) DumpType.Buffer) != 0)
+				this.buffer.Append (value);
+
+			if ((this.type & (byte) DumpType.File) != 0
+					&& this.streamWriter != null)
+				this.streamWriter.Write (value);
+
+			if ((this.type & (byte) DumpType.Console) != 0)
+				Console.Write (value);
+		}
+
+		/// <summary>
+		/// Pops the element.
+		/// </summary>
+		internal void PopElement ()
+		{
+			if (this.elements.Count > 0) {
+				string value = string.Empty;
+
+				if ((this.type & (byte) DumpType.XML) != 0)
+					value = string.Format ("{0}</{1}>", this.Prefix, this.elements.Peek ().Tag);
+
+				if (this.elements.Peek ().NewLine || this.elements.Peek ().Property)
+					value += "\n";
+
+				if ((this.type & (byte) DumpType.Buffer) != 0)
+					this.buffer.Append (value);
+
+				if ((this.type & (byte) DumpType.File) != 0
+						&& this.streamWriter != null)
+					this.streamWriter.Write (value);
+
+				if ((this.type & (byte) DumpType.Console) != 0)
+					Console.Write (value);
+				
+				this.elements.Pop ();
 			}
 		}
-		
+
+		/// <summary>
+		/// Flushes the elements.
+		/// </summary>
+		internal void FlushElements ()
+		{
+			while (this.elements.Count > 0)
+				this.PopElement ();
+		}
+
+		/// <summary>
+		/// Sets the content.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		private void SetContent (string value)
+		{
+			if (!this.elements.Peek ().Inline)
+				value += this.Prefix;
+
+			value = string.Format ("{1}", this.Prefix, value);
+
+			if (!this.elements.Peek ().Inline)
+				value += "\n";
+
+			if ((this.type & (byte) DumpType.Buffer) != 0)
+				this.buffer.Append (value);
+
+			if ((this.type & (byte) DumpType.File) != 0
+					&& this.streamWriter != null)
+				this.streamWriter.Write (value);
+
+			if ((this.type & (byte) DumpType.Console) != 0)
+				Console.Write (value);
+		}
+
+		/// <summary>
+		/// Adds the element.
+		/// </summary>
+		/// <param name="tag">The tag.</param>
+		/// <param name="value">The value.</param>
+		internal void AddElement (string tag, string value)
+		{
+			this.AddElement (tag, value, false, true, true);
+		}
+
+		internal void AddElement (string tag, string value, bool newLine, bool inline, bool property)
+		{
+			this.PushElement (tag, newLine, inline, property);
+			this.SetContent (value);
+			this.PopElement ();
+		}
+
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
+		public override string ToString ()
+		{
+			return this.buffer.ToString ();
+		}
+
+		/// <summary>
+		/// Items this instance.
+		/// </summary>
 		public void Item ()
 		{
-			if (this.Type == DumpType.XML)
-				Append ("<item>");
-			else if (this.Type == DumpType.Text)
-				Append ("{0}- Item:\n", Prefix);
-			
-			ElementStack.Push (new DumpElement ("item"));
-			IncreasePrefix ();
+			this.PushElement ("item");
 		}
-		
-		public void Element(Method.DefUseItem item)
-		{
-			if (this.Type == DumpType.XML) {
-				Append("<item><definition>");
-				Element(item.Definition);
-				Append("</definition><uses>");
-				
-				foreach (Instruction ins in item)
-					Element(ins);
-					
-				Append("</uses></item>");
-			} else {
-				Element(item.Definition);
-				IncreasePrefix();
-				foreach (Instruction ins in item)
-					Element(ins);
-				DecreasePrefix();
-			}
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		/// <param name="assem"></param>
-		/// <param name="filename"></param>
-		public void Element(AssemblyDefinition assem, string filename)
-		{
-			if (this.Type == DumpType.XML)
-				Append("<assembly name=\"{0}\" filename=\"{0}\">", 
-						assem.Name.Name, filename);
-			else if (this.Type == DumpType.Text)
-				Append("{0}Assembly {1} (loaded from `{2}'):\n", 
-						Prefix, assem.Name.Name, filename);
-		
-			ElementStack.Push(new DumpElement("assembly"));
-			IncreasePrefix();
-		}
-		
-		/// <summary>
-		/// 
-		/// </summary>
-		public void FinishElement()
-		{
-			DumpElement el = ElementStack.Pop();
-			bool remPrefix = true;
-			
-			if (el.Tag == "aot-dump")
-				remPrefix = false;
 
-			if (this.ConsoleDump && el.Tag == "block")
-				Console.WriteLine ();
+		/// <summary>
+		/// Elements the specified item.
+		/// </summary>
+		/// <param name="item">The item.</param>
+		public void Element (Method.DefUseItem item)
+		{
+			this.PushElement ("item");
 
-			if (Type == DumpType.XML)
-				Append("</{0}>", el.Tag);
-			
-			if (remPrefix)
-				DecreasePrefix();
+			this.PushElement ("definition", true, false, true);
+
+			this.Element (item.Definition);
+
+			this.PopElement ();
+
+			this.PushElement ("uses");
+
+			foreach (Instruction ins in item)
+				this.Element (ins);
+
+			this.PopElement ();
+
+			this.PopElement ();
 		}
-		
+
 		/// <summary>
-		/// 
+		/// Elements the specified assembly definition.
 		/// </summary>
-		/// <param name="klass"></param>
-		public void Element(TypeDefinition klass)
+		/// <param name="assemblyDefinition">The assembly definition.</param>
+		/// <param name="filename">The filename.</param>
+		public void Element (AssemblyDefinition assemblyDefinition, string filename)
 		{
-			if (this.Type == DumpType.XML)
-				Append("<type name=\"{0}\">", klass);
-			else
-				Append("{0}Type {1}:\n", Prefix, klass);
-		
-			ElementStack.Push(new DumpElement("type"));
-			IncreasePrefix();
+			this.PushElement ("assembly");
+
+			this.AddElement ("name", assemblyDefinition.Name.Name);
+			this.AddElement ("filename", filename);
 		}
-		
+
+
 		/// <summary>
-		/// 
+		/// Elements the specified type definition.
 		/// </summary>
-		/// <param name="mr"></param>
-		public void Element(MethodDefinition mr)
+		/// <param name="typeDefinition">The type definition.</param>
+		public void Element (TypeDefinition typeDefinition)
 		{
-			if (this.Type == DumpType.XML)
-				Append("<method name=\"{0}\">", mr);
-			else if (this.Type == DumpType.Text)
-				Append("{0}Method {1}:\n", Prefix, mr);
-		
-			ElementStack.Push(new DumpElement("method"));
-			IncreasePrefix();
+			this.AddElement ("type", typeDefinition.ToString ());
+		}
+
+		/// <summary>
+		/// Elements the specified method definition.
+		/// </summary>
+		/// <param name="methodDefinition">The method definition.</param>
+		public void Element(MethodDefinition methodDefinition)
+		{
+			this.PushElement ("method");
+
+			this.AddElement ("name", methodDefinition.ToString ());
 		}
 		
 		/// <summary>
@@ -267,83 +356,87 @@ namespace SharpOS.AOT.IR {
 		/// <param name="reason"></param>
 		public void IgnoreMember(string name, string reason)
 		{
-			if (this.Type == DumpType.XML)
-				Append("<ignore-member name=\"{0}\" reason=\"{1}\" />", 
-							name, reason);
-			else if (this.Type == DumpType.Text)
-				Append("Ignoring member `{0}': {1}", name, reason);
+			this.PushElement ("ignore-member");
+
+			this.AddElement ("name", name);
+			this.AddElement ("reason", reason);
 		}
-		
-		public void Dominance(List<Block> blocks)
+
+		/// <summary>
+		/// Dominances the specified blocks.
+		/// </summary>
+		/// <param name="blocks">The blocks.</param>
+		public void Dominance (List<Block> blocks)
 		{
-			List<int> idominates = new List<int>();
-			List<int> dominators = new List<int>();
-			List<int> frontiers = new List<int>();
+			List<int> idominates = new List<int> ();
+			List<int> dominators = new List<int> ();
+			List<int> frontiers = new List<int> ();
 			uint x = 0;
-			
-			Section(DumpSection.Dominance);
-			
+
+			this.Section (DumpSection.Dominance);
+
 			foreach (Block block in blocks) {
 				int idominator = 0;
-				
+
 				// idominates
-				
+
 				foreach (Block dominates in block.ImmediateDominatorOf)
-					idominates.Add(dominates.Index);
-				
+					idominates.Add (dominates.Index);
+
 				// idominator
-				
+
 				if (block.ImmediateDominator != null)
 					idominator = block.ImmediateDominator.Index;
 
 				// dominators
-				
+
 				foreach (Block dominator in block.Dominators)
-					dominators.Add(dominator.Index);
-				
+					dominators.Add (dominator.Index);
+
 				// frontiers
-				
+
 				foreach (Block frontier in block.DominanceFrontiers)
-					frontiers.Add(frontier.Index);
-				
-				BlockDominance(block, idominator, dominators, idominates,
+					frontiers.Add (frontier.Index);
+
+				BlockDominance (block, idominator, dominators, idominates,
 							frontiers);
-				
-				idominates.Clear();
-				dominators.Clear();
-				frontiers.Clear();
-				
+
+				idominates.Clear ();
+				dominators.Clear ();
+				frontiers.Clear ();
+
 				++x;
 			}
-			
-			FinishElement();
+
+			this.PopElement ();
 		}
-		
+
 		/// <summary>
 		/// Dumps the dominators of a given block.
 		/// </summary>
-		/// <param name="b"></param>
-		/// <param name="idominator"></param>
-		/// <param name="dominators"></param>
-		/// <param name="dominates"></param>
-		/// <param name="frontiers"></param>
+		/// <param name="b">The b.</param>
+		/// <param name="idominator">The idominator.</param>
+		/// <param name="dominators">The dominators.</param>
+		/// <param name="dominates">The dominates.</param>
+		/// <param name="frontiers">The frontiers.</param>
 		private void BlockDominance(Block b, int idominator, List<int> dominators, List<int> dominates, 
 						List<int> frontiers)
 		{
-			if (this.Type == DumpType.XML)
-				Append(
-					"<block><index>{0}</index><idominator>{1}</idominator>" + 
-					"<dominators>{2}</dominators><idominates>{3}</idominates>" +
-					"<frontiers>{4}</frontiers></block>", 
-					b.Index, idominator, CombineInts(dominators, null), 
-					CombineInts(dominates, null), CombineInts(frontiers, null));
-			else
-				Append("{0}- Block #{1}, idominator: #{2}, dominators: {3}, " +
-						"idominates: {4}, frontiers: {5}\n",
-						Prefix, b.Index, idominator, CombineInts(dominators, "#"), 
-						CombineInts(dominates, "#"), CombineInts(frontiers, "#"));
+			this.PushElement ("block");
+
+			this.AddElement ("index", b.Index.ToString ());
+			this.AddElement ("idominator", idominator.ToString ());
+			this.AddElement ("dominators", CombineInts (dominators, "#"));
+			this.AddElement ("idominates", CombineInts (dominates, "#"));
+			this.AddElement ("frontiers", CombineInts (frontiers, "#"));
+
+			this.PopElement ();
 		}
-		
+
+		/// <summary>
+		/// Sections the specified sect.
+		/// </summary>
+		/// <param name="sect">The sect.</param>
 		public void Section(DumpSection sect)
 		{
 			string tag = null;
@@ -353,111 +446,98 @@ namespace SharpOS.AOT.IR {
 			
 			switch (sect) {
 				case DumpSection.Root:
-					tag = "aot-dump appversion=\"SharpOS.AOT/" + 
-						Engine.EngineVersion + "\"";
-					text = "SharpOS.AOT/" + Engine.EngineVersion; // this means `run!!'
-					close_text = "aot-dump";
-					addPrefix = false;
-				break;
+					this.PushElement ("aot-dump");
+					this.AddElement ("appversion", "SharpOS.AOT/" + Engine.EngineVersion);
+					break;
 				case DumpSection.Dominance:
-					tag = "dominance";
-					text = "Dominance";
-				break;
+					this.PushElement ("dominance");
+					break;
 				case DumpSection.DefineUse:
-					tag = "define-use";
-					text = "Define-Use";
-				break;
+					this.PushElement ("define-use");
+					break;
 				case DumpSection.SSATransform:
-					tag = "ssa-transform";
-					text = "SSA Transform";
-				break;
+					this.PushElement ("ssa-transform");
+					break;
+
 				case DumpSection.RegisterAllocation:
-					tag = "register-alloc";
-					text = "Register Allocation";
-				break;
+					this.PushElement ("register-allocation");
+					break;
+
 				case DumpSection.ConstantPropagation:
-					tag = "const-propagation";
-					text = "Constant Propagation";
-				break;
+					this.PushElement ("constant-propagation");
+					break;
+
 				case DumpSection.CopyPropagation:
-					tag = "copy-propagation";
-					text = "Copy Propagation";
-				break;
+					this.PushElement ("copy-propagation");
+					break;
+
 				case DumpSection.LiveRanges:
-					tag = "live-ranges";
-					text = "Live Ranges";
-				break;
+					this.PushElement ("live-ranges");
+					break;
+
 				case DumpSection.DeadCodeElimination:
-					tag = "deadcode-elim";
-					text = "Dead Code Elimination";
-				break;
+					this.PushElement ("dead-code-elimination");
+					break;
+
 				case DumpSection.ConstantFolding:
-					tag = "constant-folding";
-					text = "Constant Folding";
-				break;
+					this.PushElement ("constant-folding");
+					break;
+
 				case DumpSection.MethodBlocks:
-					tag = "blocks";
-					text = "Blocks";
-				break;
+					this.PushElement ("blocks");
+					break;
+
 				case DumpSection.Encoding:
-					tag = "encoding";
-					text = "Encoding";
-				break;
+					this.PushElement ("encoding");
+					break;
+
 				case DumpSection.MethodEncode:
-					tag = "method-encode";
-					text = "Encoding methods";
-				break;
+					this.PushElement ("method-encode");
+					break;
+
 				case DumpSection.DataEncode:
-					tag = "data-encode";
-					text = "Encoding static class fields";
-				break;
+					this.PushElement ("data-encode");
+					break;
+
 				default:
 					throw new Exception("dump: unknown section " + sect);
 			}
-			
-			if (this.Type == DumpType.XML)
-				Append("<{0}>", tag);
-			else
-				Append("{0}{1}:\n", Prefix, text);
-			
-			if (close_text != null)
-				ElementStack.Push(new DumpElement(close_text));
-			else
-				ElementStack.Push(new DumpElement(tag));
-			
-			if (addPrefix)
-				IncreasePrefix();
 		}
-		
-		public void Element(Block block, int[] ins, int[] outs)
+
+		/// <summary>
+		/// Elements the specified block.
+		/// </summary>
+		/// <param name="block">The block.</param>
+		/// <param name="ins">The ins.</param>
+		/// <param name="outs">The outs.</param>
+		public void Element (Block block, int [] ins, int [] outs)
 		{
 			string insStr = CombineInts (ins, "#");
 			string outsStr = CombineInts (outs, "#");
-			
-			if (this.Type == DumpType.XML)
-				Append ("<block ins=\"{0}\" outs=\"{1}\">", insStr, outsStr);
-			else if (this.Type == DumpType.Text) {
-				Append ("{0}- Block #{1}", Prefix, 
-						block.Index, insStr, outsStr);
-			
-				if (insStr != "")
-					Append (", ins: {0}", insStr);
-				if (outsStr != "")
-					Append (", outs: {0}", outsStr);
-				
-				AppendLine ();
-			}
-			
-			ElementStack.Push (new DumpElement ("block"));
-			IncreasePrefix ();
+
+			this.PushElement ("block");
+
+			this.AddElement ("ins", insStr);
+			this.AddElement ("outs", outsStr);
 		}
-		
-		public void Element (SharpOS.AOT.IR.Instructions.Instruction ins)
+
+		/// <summary>
+		/// Adds the specified instruction as an element.
+		/// </summary>
+		/// <param name="instruction">The instruction.</param>
+		public void Element (SharpOS.AOT.IR.Instructions.Instruction instruction)
 		{
-			Element (ins, null, null, null);
+			instruction.Dump (this);
 		}
-		
-		public void Element (SharpOS.AOT.IR.Instructions.Instruction ins, object lvalue, 
+
+		/// <summary>
+		/// Elements the specified ins.
+		/// </summary>
+		/// <param name="ins">The ins.</param>
+		/// <param name="lvalue">The lvalue.</param>
+		/// <param name="attr">The attr.</param>
+		/// <param name="lblock">The lblock.</param>
+		/*public void Element (SharpOS.AOT.IR.Instructions.Instruction ins, object lvalue, 
 					Dictionary<string, string> attr, int ?lblock)
 		{
 			object value = lvalue;
@@ -470,8 +550,23 @@ namespace SharpOS.AOT.IR {
 				block = ins.Block.Index;
 			else
 				block = (int)lblock;
-			
-			if (this.Type == DumpType.XML) {
+
+			this.PushElement ("instruction");
+
+			this.AddElement ("index", ins.Index.ToString ());
+			this.AddElement ("type", ins.GetType ().Name);
+			this.AddElement ("block", block.ToString ());
+
+			if (attr != null) {
+				foreach (KeyValuePair<string, string> kvp in attr)
+					this.AddElement (kvp.Key, kvp.Value);
+			}
+
+			this.SetContent (value == null ? "null" : value.ToString ());
+
+			this.PopElement ();
+
+			/*if (this.Type == DumpType.XML) {
 				Append ("<instruction index=\"{0}\" type=\"{1}\" block=\"{2}\"", 
 							ins.Index, ins.GetType().Name, block);
 				
@@ -515,60 +610,76 @@ namespace SharpOS.AOT.IR {
 					Append (" == {1}\n", 
 						Prefix, (value == null ? "(null)" : value));
 			}
-		}
-		
-		public void MethodEncode (Method m)
+		}*/
+
+		/// <summary>
+		/// Methods the encode.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		public void MethodEncode (Method method)
 		{
-			if (this.Type == DumpType.XML)
-				Append ("<method name=\"{0}\" />", m.MethodFullName);
-			else if (this.Type == DumpType.Text)
-				Append ("{0}- Method {1}\n", Prefix, m.MethodFullName);
+			this.AddElement ("method", method.MethodFullName);
 		}
-		
+
+		/// <summary>
+		/// Cps the add key.
+		/// </summary>
+		/// <param name="key">The key.</param>
 		public void CpAddKey (string key)
 		{
-			if (this.Type == DumpType.XML)
-				Append ("<add-key name=\"{0}\" />", key);
-			else
-				Append ("{0}- Add key {1}\n", Prefix, key);
+			this.PushElement ("add-key");
+
+			this.AddElement ("name", key);
 		}
-		
-		public void Element (SharpOS.AOT.IR.Method.LiveRange r)
+
+		/// <summary>
+		/// Elements the specified live range.
+		/// </summary>
+		/// <param name="liveRange">The live range.</param>
+		public void Element (SharpOS.AOT.IR.Method.LiveRange liveRange)
 		{
 			string register = null;
 			
-			if (r.Identifier.Register != int.MinValue)
-				register = "R" + r.Identifier.Register;
-			else if (r.Identifier.Stack != int.MinValue)
-				register = "M" + r.Identifier.Stack;
-			
-			if (this.Type == DumpType.XML) {
-				Append ("<range identifier=\"{0}\"", r.Identifier);
-				
-				if (register != null)
-					Append (" register=\"{0}\"", register);
-				
-				Append (" start=\"{0}\" end=\"{1}\" />", r.Start.Index, r.End.Index);
-			} else if (this.Type == DumpType.Text) {
-				Append ("{0}- Range {1}, {2}start: {3}, end: {4}\n",
-						Prefix, r.Identifier,
-						(register != null ? "register: " + register + ", " : ""),
-						r.Start.Index, r.End.Index);
-			}
+			if (liveRange.Identifier.Register != int.MinValue)
+				register = "R" + liveRange.Identifier.Register;
+
+			else if (liveRange.Identifier.Stack != int.MinValue)
+				register = "M" + liveRange.Identifier.Stack;
+
+			this.PushElement ("range");
+
+			this.AddElement ("identifier", liveRange.Identifier.ToString ());
+
+			if (register != null)
+				this.AddElement ("register", register);
+
+			this.AddElement ("start", liveRange.Start.Index.ToString ());
+			this.AddElement ("end", liveRange.End.Index.ToString ());
+
+			this.PopElement ();
 		}
-		
-		public void Phi (string ident)
+
+		/// <summary>
+		/// Phis the specified identifier.
+		/// </summary>
+		/// <param name="identifier">The identifier.</param>
+		public void PHI (string identifier)
 		{
-			if (this.Type == DumpType.XML)
-				Append ("<phi identifier=\"{0}\" />", ident);
-			else
-				Append ("{0}- Phi {1}\n", Prefix, ident);
+			this.PushElement ("phi");
+
+			this.AddElement ("identifier", identifier);
+
+			this.PopElement ();
 		}
-		
-		
 		
 		///////////////////////////////////////
-		
+
+		/// <summary>
+		/// Combines the ints.
+		/// </summary>
+		/// <param name="ints">The ints.</param>
+		/// <param name="Prefix">The prefix.</param>
+		/// <returns></returns>
 		private string CombineInts (int[] ints, string Prefix)
 		{
 			string str = "";
@@ -585,7 +696,13 @@ namespace SharpOS.AOT.IR {
 			
 			return str;
 		}
-		
+
+		/// <summary>
+		/// Combines the ints.
+		/// </summary>
+		/// <param name="ints">The ints.</param>
+		/// <param name="Prefix">The prefix.</param>
+		/// <returns></returns>
 		private string CombineInts (List<int> ints, string Prefix)
 		{
 			string str = "";

@@ -80,5 +80,19 @@ namespace SharpOS.AOT.IR {
 		{
 			return ( (IEnumerable<Method>) this).GetEnumerator ();
 		}
+
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
+		public override string ToString ()
+		{
+			if (this.classDefinition != null)
+				return this.classDefinition.FullName;
+
+			return base.ToString ();
+		}
 	}
 }

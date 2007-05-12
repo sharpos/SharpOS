@@ -1016,7 +1016,7 @@ namespace SharpOS.AOT.IR {
 
 				// Arguments Load
 				else if (cilInstruction.OpCode == OpCodes.Ldarg || cilInstruction.OpCode == OpCodes.Ldarg_S) {
-					instruction = new Assign (this.Register (stack), this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
+					instruction = new Assign (this.Register (stack), this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence + 1));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S) {
 					if (cilInstruction.Operand is ParameterDefinition) {
@@ -1268,6 +1268,8 @@ namespace SharpOS.AOT.IR {
 		/// <param name="instruction">The instruction.</param>
 		public void RemoveInstruction (SharpOS.AOT.IR.Instructions.Instruction instruction)
 		{
+			instruction.Removed = true;
+
 			this.instructions.Remove (instruction);
 		}
 
@@ -1277,6 +1279,8 @@ namespace SharpOS.AOT.IR {
 		/// <param name="position">The position.</param>
 		public void RemoveInstruction (int position)
 		{
+			this.instructions [position].Removed = true;
+
 			this.instructions.RemoveAt (position);
 		}
 
@@ -1289,12 +1293,11 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		public override string ToString ()
 		{
-			StringBuilder sb = new StringBuilder();
-			DumpProcessor p = new DumpProcessor(DumpType.Text, sb);
+			DumpProcessor p = new DumpProcessor((int) DumpType.Buffer);
 			
 			Dump (p);
 
-			return sb.ToString ();
+			return p.ToString ();
 		}
 
 		/// <summary>
@@ -1336,7 +1339,7 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.InstructionsCount; i++)
 				this[i].Dump (p);
 			
-			p.FinishElement();	// block
+			p.PopElement();	// block
 
 			#if false // TODO: convert to XML dump?
 			

@@ -4013,6 +4013,10 @@ namespace SharpOS.AOT.X86 {
 							this.JMP ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
 							break;
 						
+						case "JMP UInt16 String":
+							this.JMP (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), (operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							break;
+						
 						case "JMP UInt16 UInt16":
 							this.JMP (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
 							break;

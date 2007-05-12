@@ -174,19 +174,46 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		private bool removed = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="Instruction"/> is removed.
+		/// It is used only for debugging purposes.
+		/// </summary>
+		/// <value><c>true</c> if removed; otherwise, <c>false</c>.</value>
+		public bool Removed {
+			get {
+				return removed;
+			}
+			set {
+				removed = value;
+			}
+		}
+
+		
+
+		/// <summary>
+		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
+		/// </returns>
 		public override string ToString ()
 		{
-			StringBuilder sb = new StringBuilder();
-			DumpProcessor p = new DumpProcessor(DumpType.Text, sb);
+			DumpProcessor p = new DumpProcessor((int) DumpType.Buffer);
 			
 			Dump (p);
 
-			return sb.ToString ();
+			return p.ToString ().Replace ("\n", "");
 		}
 
-		public virtual void Dump (DumpProcessor d)
+		/// <summary>
+		/// Dumps the instruction.
+		/// </summary>
+		/// <param name="dumpProcessor">The dump processor.</param>
+		public virtual void Dump (DumpProcessor dumpProcessor)
 		{
-			d.Element(this);
+			dumpProcessor.AddElement ("code", this.value.ToString (), true, true, false);
 		}
 
 		/// <summary>

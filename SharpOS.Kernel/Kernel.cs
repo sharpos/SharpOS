@@ -10,11 +10,64 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Runtime.InteropServices;
 using SharpOS;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
 namespace SharpOS {
+	[StructLayout (LayoutKind.Sequential)]
+	public struct GDTEntry {
+		public enum Type : ushort {
+			Accessed = 1,
+			Writable = 2,
+			Expansion = 4,
+			Executable = 8,
+			Descriptor = 16,
+			Privilege_Ring_0 = 0,
+			Privilege_Ring_1 = 32,
+			Privilege_Ring_2 = 64,
+			Privilege_Ring_3 = 96,
+			Present = 128,
+			OperandSize_32Bit = 1024,
+			Granularity_4K = 2048
+		}
+
+		public ushort LimitLow;
+		public ushort BaseLow;
+		public byte BaseMiddle;
+		public byte Access;
+		public byte Granularity;
+		public byte BaseHigh;
+
+		public void Setup (uint _base, uint _limit, ushort flags)
+		{
+			this.BaseLow = (ushort) (_base & 0xFFFF);
+			this.BaseMiddle = (byte) ((_base >> 16) & 0xFF);
+			this.BaseHigh = (byte) ((_base >> 24) & 0xFF);
+
+			// The limits
+			this.LimitLow = (ushort) (_limit & 0xFFFF);
+			this.Granularity = (byte) ((_limit >> 16) & 0x0F);
+
+			// Granularity and Access
+			this.Granularity |= (byte) ((flags >> 4) & 0xF0);
+			this.Access = (byte) (flags & 0xFF);
+		}
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
+	public struct GDTPointer {
+		public ushort Size;
+		public uint Address;
+
+		public void Setup (ushort size, uint address)
+		{
+			this.Size = size;
+			this.Address = address;
+		}
+	}
+
 	public unsafe class Kernel {
 		public enum ColorTypes : byte {
 			Black,
@@ -41,7 +94,7 @@ namespace SharpOS {
 
 		static ColorTypes foreground = ColorTypes.Yellow;
 
-		static ColorTypes background = ColorTypes.Yellow;
+		static ColorTypes background = ColorTypes.Black;
 
 		static byte attributes = 0;
 
@@ -77,15 +130,74 @@ namespace SharpOS {
 		}*/
 		#endregion
 
-		private static byte* gdt = Alloc (1024);
+		#region GDT
+		private static GDTEntry* gdt;
+		private static GDTPointer* gdtPointer;
+
+		internal static void SetupGDT ()
+		{
+			// 8 is the hardcoded size of a GDT Entry
+			// 3 is the number of entries if (the two second lines need to be kept in sync :D)
+			gdt = (GDTEntry*) Alloc (8 * 3);
+			ushort gdtSize = (ushort) (sizeof (GDTEntry) * 3 - 1);
+
+			// 6 is the hardcoded size of the GDTPointer
+			gdtPointer = (GDTPointer*) LabeledAlloc ("GDTPointer", 6);
+			gdtPointer->Setup (gdtSize, (uint) gdt);
+
+			WriteMessage (String ("GDT Pointer: 0x"));
+			WriteNumber (true, (int) gdtPointer->Address);
+			WriteMessage (String (" - 0x"));
+			WriteNumber (true, gdtPointer->Size);
+			WriteNL ();
+
+			gdt [0].Setup (0, 0, 0);
+
+			// Code Segment
+			gdt [1].Setup (0, 0xFFFFFFFF, (ushort) (
+				GDTEntry.Type.Granularity_4K |
+				GDTEntry.Type.OperandSize_32Bit |
+				GDTEntry.Type.Present |
+				GDTEntry.Type.Descriptor |
+				GDTEntry.Type.Executable |
+				GDTEntry.Type.Writable)); 
+			//0x9A, 0xCF);
+
+			// Data Segment
+			gdt [2].Setup (0, 0xFFFFFFFF, (ushort) (
+				GDTEntry.Type.Granularity_4K |
+				GDTEntry.Type.OperandSize_32Bit |
+				GDTEntry.Type.Present |
+				GDTEntry.Type.Descriptor |
+				GDTEntry.Type.Writable));
+			//0x92, 0xCF);
+
+			Asm.LGDT (new Memory ("GDTPointer"));
+
+			Asm.MOV (R16.AX, 0x10);
+			Asm.MOV (Seg.DS, R16.AX);
+			Asm.MOV (Seg.ES, R16.AX);
+			Asm.MOV (Seg.FS, R16.AX);
+			Asm.MOV (Seg.GS, R16.AX);
+			Asm.MOV (Seg.SS, R16.AX);
+			
+			Asm.JMP (0x08, "Kernel_GDT_Entry_Point");
+			Asm.LABEL ("Kernel_GDT_Entry_Point");
+		}
+		#endregion
+
+
 		private static byte* idt = Alloc (256);
 
 
 		public unsafe static void BootEntry (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
 		{
+			SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
+
 			//x = NewTestStruct ();
 
-			SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
+			SetupGDT ();
+
 
 			WriteLine (String ("SharpOS v0.0.0.75 (http://www.sharpos.org)"));
 			WriteNL ();
@@ -113,6 +225,12 @@ namespace SharpOS {
 
 		[SharpOS.AOT.Attributes.Alloc]
 		public unsafe static byte* Alloc (uint value)
+		{
+			return null;
+		}
+
+		[SharpOS.AOT.Attributes.LabeledAlloc]
+		public unsafe static byte* LabeledAlloc (string label, uint value)
 		{
 			return null;
 		}

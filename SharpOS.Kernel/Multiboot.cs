@@ -8,7 +8,7 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
-using Interop = System.Runtime.InteropServices;
+using System.Runtime.InteropServices;
 
 namespace SharpOS.Multiboot {
 	public enum Magic : uint {
@@ -16,7 +16,7 @@ namespace SharpOS.Multiboot {
 		BootLoader = 0x2BADB002
 	}
 	
-	[Interop.StructLayout(Interop.LayoutKind.Sequential)]
+	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct Header {
 		public uint Magic;
 		public uint Flags;
@@ -27,7 +27,8 @@ namespace SharpOS.Multiboot {
 		public uint BSSEndAddr;
 		public uint EntryAddr;
 	}
-	
+
+	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct AOUTSymbolTable
 	{
 		public uint TabSize;
@@ -35,7 +36,8 @@ namespace SharpOS.Multiboot {
 		public uint Addr;
 		public uint Reserved;
 	}
-	
+
+	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct ElfSectionHeaderTable
 	{
 		public uint Num;
@@ -45,35 +47,36 @@ namespace SharpOS.Multiboot {
 	}
 	
 	/* The Multiboot information. */
-	[Interop.StructLayout(Interop.LayoutKind.Explicit)]
+	[StructLayout (LayoutKind.Explicit)]
 	public unsafe struct Info
 	{
-		[Interop.FieldOffset(0)]
+		[FieldOffset(0)]
 		public uint Flags;
-		[Interop.FieldOffset(4)]
+		[FieldOffset(4)]
 		public uint MemLower;
-		[Interop.FieldOffset(8)]
+		[FieldOffset(8)]
 		public uint MemUpper;
-		[Interop.FieldOffset(12)]
+		[FieldOffset(12)]
 		public uint BootDevice;
-		[Interop.FieldOffset(16)]
+		[FieldOffset(16)]
 		public uint CmdLine;
-		[Interop.FieldOffset(20)]
+		[FieldOffset(20)]
 		public uint ModsCount;
-		[Interop.FieldOffset(24)]
+		[FieldOffset(24)]
 		public uint ModsAddr;
 		
-		[Interop.FieldOffset(32)]
+		[FieldOffset(28)]
 		public AOUTSymbolTable AOUTSym;
-		/*[Interop.FieldOffset(32)]
-		public ElfSectionHeaderTable ElfSec;*/
+		[FieldOffset(28)]
+		public ElfSectionHeaderTable ElfSec;
 			
-		[Interop.FieldOffset(36)]
+		[FieldOffset(44)]
 		public uint MMapLen;
-		[Interop.FieldOffset(40)]
+		[FieldOffset(48)]
 		public uint MMapAddr;
 	}
-	
+
+	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct Module
 	{
 		public uint ModStart;
@@ -87,6 +90,7 @@ namespace SharpOS.Multiboot {
 	/// Be careful that the offset 0 is base_addr_low
 	/// but no size. 
 	/// </remarks>
+	[StructLayout (LayoutKind.Sequential)]
 	public struct MemoryMap
 	{
 		public uint Size;

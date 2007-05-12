@@ -315,15 +315,20 @@ namespace SharpOS.AOT.X86 {
 					if (operand is SharpOS.AOT.IR.Operands.Object) {
 						_object = operand as SharpOS.AOT.IR.Operands.Object;
 
-						size = this.method.Engine.GetObjectSize (_object.Value);
+						size = this.method.Engine.GetTypeSize (_object.Value);
 					
 					} else {
 						Argument argument = operand as Argument;
 
-						size = this.method.Engine.GetFieldSize (argument.TypeName);
+						size = this.method.Engine.GetTypeSize (argument.TypeName);
 					}
 					
-					this.assembly.SUB (R32.ESP, (uint) size);
+					uint pushSize = (uint) size;
+
+					if (pushSize % 4 != 0)
+						pushSize = ((pushSize / 4) + 1) * 4;
+
+					this.assembly.SUB (R32.ESP, pushSize);
 
 					this.assembly.PUSH (R32.ESI);
 					this.assembly.PUSH (R32.EDI);
@@ -339,17 +344,17 @@ namespace SharpOS.AOT.X86 {
 
 						} else
 							throw new Exception ("'" + _object.Address + "' is not supported.");
+
 					} else
 						this.assembly.LEA (R32.ESI, this.GetMemory (operand as Identifier));
-					
 
 					// The 3 push above changed the ESP so we need a LEA = ESP + 12
 					this.assembly.LEA (R32.EDI, new Memory (null, R32.ESP, null, 0, 12));
-					this.assembly.MOV (R32.ECX, (uint) (size / 4));
+					this.assembly.MOV (R32.ECX, (uint) size);
 
 					this.assembly.CLD ();
 					this.assembly.REP ();
-					this.assembly.MOVSD ();
+					this.assembly.MOVSB ();
 
 					this.assembly.POP (R32.ECX);
 					this.assembly.POP (R32.EDI);
@@ -396,6 +401,9 @@ namespace SharpOS.AOT.X86 {
 
 			foreach (ParameterDefinition parameter in call.Method.Parameters)
 				result += (uint) this.method.Engine.GetTypeSize (parameter.ParameterType.ToString (), 4);
+
+			if (call.Method.HasThis)
+				result += 4;
 
 			assembly.ADD (R32.ESP, result);
 		}
@@ -1317,6 +1325,20 @@ namespace SharpOS.AOT.X86 {
 						R32Type register = this.assembly.GetSpareRegister ();
 
 						this.assembly.MOV (register, this.assembly.BSSAlloc (Convert.ToUInt32 ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value)));
+
+						this.MovMemoryRegister (assign.Assignee, register);
+
+						this.assembly.FreeSpareRegister (register);
+					}
+
+				} else if (assembly.IsKernelLabeledAlloc (call)) {
+					if (assign.Assignee.IsRegisterSet)
+						this.assembly.MOV (this.assembly.GetRegister (assign.Assignee.Register), this.assembly.BSSAlloc ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), Convert.ToUInt32 ((call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value)));
+
+					else {
+						R32Type register = this.assembly.GetSpareRegister ();
+
+						this.assembly.MOV (register, this.assembly.BSSAlloc ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), Convert.ToUInt32 ((call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value)));
 
 						this.MovMemoryRegister (assign.Assignee, register);
 

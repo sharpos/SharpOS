@@ -53,5 +53,18 @@ namespace SharpOS.AOT.IR.Instructions {
 
 			stringBuilder.Append ("\n");
 		}*/
+
+		/// <summary>
+		/// Dumps the instruction.
+		/// </summary>
+		/// <param name="dumpProcessor">The dump processor.</param>
+		public override void Dump (DumpProcessor dumpProcessor)
+		{
+			if (this.Value != null)
+				dumpProcessor.AddElement ("jump", "Jump " + this.Value.ToString (), true, true, false);
+			
+			else
+				dumpProcessor.AddElement ("jump", "Jump", true, true, false);
+		}
 	}
 }

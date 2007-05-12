@@ -4582,6 +4582,14 @@ namespace SharpOS.AOT.X86 {
 		}
 		
 		/// <summary>
+		/// JMP imm16:imm32
+		/// </summary>
+		public void JMP (ushort target, string label)
+		{
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JMP", string.Format("0x{0:x}", target) + ":" + Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0, target}, new string[] {"o32", "EA", "id", "iw"}));
+		}
+		
+		/// <summary>
 		/// JMP FAR mem
 		/// </summary>
 		public void JMP_FAR (Memory target)

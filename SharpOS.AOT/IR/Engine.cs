@@ -143,7 +143,7 @@ namespace SharpOS.AOT.IR {
 		/// Prints a console message if <paramref name="lvl" /> is less
 		/// than or equal to the Verbosity option.
 		/// </summary>
-		public void Message(int lvl, string msg, params object[] prms)
+		public void Message (int lvl, string msg, params object [] prms)
 		{
 			if (options.Verbosity >= lvl)
 				Console.WriteLine (msg, prms);
@@ -153,7 +153,7 @@ namespace SharpOS.AOT.IR {
 		/// Modifies the method reference <paramref name="call" /> to
 		/// refer to the equivalent ADC layer method.
 		/// </summary>
-		public void FixupADCMethod(Mono.Cecil.MethodReference call)
+		public void FixupADCMethod (Mono.Cecil.MethodReference call)
 		{
 			// TODO: do real confirmation of the existence of a compatible method!
 			string rootns = null;
@@ -174,7 +174,7 @@ namespace SharpOS.AOT.IR {
 				nsseg = "." + call.DeclaringType.Namespace.Substring (rootns.Length + 1);
 			else
 				nsseg = "";
-			
+
 			ntype = new TypeReference (call.DeclaringType.Name,
 						   adcLayer.Namespace + nsseg,
 						   call.DeclaringType.Scope,
@@ -219,53 +219,53 @@ namespace SharpOS.AOT.IR {
 		/// of assemblies provided by the 'Assemblies' option in 
 		/// <see cref="EngineOptions" />.
 		/// </summary>
-		public MethodDefinition GetCILDefinition(Mono.Cecil.MethodReference call)
+		public MethodDefinition GetCILDefinition (Mono.Cecil.MethodReference call)
 		{
 			// TODO: work on performance
-			
+
 			foreach (AssemblyDefinition assem in assemblies) {
 				foreach (ModuleDefinition mod in assem.Modules) {
 					foreach (TypeDefinition type in mod.Types) {
 						if (type.FullName == call.DeclaringType.FullName) {
 							foreach (MethodDefinition def in type.Methods) {
 								bool badParams = false;
-								
+
 								if (def.Name != call.Name)
 									continue;
 								if (def.ReturnType.ReturnType != call.ReturnType.ReturnType)
 									continue;
-								
+
 								if (def.Parameters.Count != call.Parameters.Count)
 									continue;
-									
+
 								for (int x = 0; x < def.Parameters.Count; ++x) {
 									ParameterDefinition callPrm, defPrm;
-									
-									callPrm = call.Parameters[x];
-									defPrm = def.Parameters[x];
-									
-									if (callPrm.ParameterType.FullName != 
+
+									callPrm = call.Parameters [x];
+									defPrm = def.Parameters [x];
+
+									if (callPrm.ParameterType.FullName !=
 										defPrm.ParameterType.FullName) {
 										badParams = true;
 										break;
 									}
-									
+
 									if (callPrm.Attributes != defPrm.Attributes) {
 										badParams = true;
 										break;
 									}
 								}
-								
+
 								if (badParams)
 									continue;
-								
+
 								return def;
 							}
 						}
 					}
 				}
 			}
-			
+
 			return null;
 		}
 		
@@ -279,18 +279,16 @@ namespace SharpOS.AOT.IR {
 		{
 			DumpType dumpType = DumpType.XML;
 
-			if (options.TextDump)
-				dumpType = DumpType.Text;
-
 			IAssembly asm = null;
 
 			switch (options.CPU) {
 				case "X86":
-					asm = new SharpOS.AOT.X86.Assembly();
+					asm = new SharpOS.AOT.X86.Assembly ();
 					break;
+
 				default:
-					throw new EngineException(string.Format(
-						"Error: processor type `{0}' not supported", 
+					throw new EngineException (string.Format (
+						"Error: processor type `{0}' not supported",
 						options.CPU));
 					break;
 			}
@@ -314,28 +312,35 @@ namespace SharpOS.AOT.IR {
 		{
 			if (asm == null)
 				throw new ArgumentNullException ("asm");
-			
-			DumpType dumpType = DumpType.XML;
 
-			if (options.TextDump)
-				dumpType = DumpType.Text;
+			byte dumpType = 0;
 
-			dump = new DumpProcessor (dumpType, options.ConsoleDump, options.DumpFile);
-			
+			if (this.options.ConsoleDump)
+				dumpType |= (byte) DumpType.Console;
+
+			if (!this.options.TextDump)
+				dumpType |= (byte) DumpType.XML;
+
+			if (this.options.Dump)
+				dumpType |= (byte) DumpType.File;
+
+			dump = new DumpProcessor ((byte) dumpType, options.DumpFile);
+
 			dump.Section (DumpSection.Root);
 
 			this.asm = asm;
 
 			foreach (string assemblyFile in options.Assemblies) {
 				bool skip = false;
-				
-				Message(1, "Loading assembly `{0}'", assemblyFile);
-				
+
+				Message (1, "Loading assembly `{0}'", assemblyFile);
+
 				AssemblyDefinition library = AssemblyFactory.GetAssembly (assemblyFile);
-				
+
 				// Check for ADCLayerAttribute
-				
+
 				foreach (CustomAttribute ca in library.CustomAttributes) {
+
 					if (ca.Constructor.DeclaringType.FullName ==
 					    typeof(AOTAttr.ADCLayerAttribute).FullName) {
 						if (ca.ConstructorParameters.Count != 2)
@@ -352,24 +357,24 @@ namespace SharpOS.AOT.IR {
 								library.Name));
 
 						// check for any conflicts with previously found layers
-						
+
 						foreach (ADCLayer layer in adcLayers) {
 							if (layer.CPU == adcCPU)
 								throw new EngineException (string.Format (
-									"Multiple ADC layers claim processor type `{0}'", 
+									"Multiple ADC layers claim processor type `{0}'",
 									adcCPU));
 						}
-						
+
 						ADCLayer newLayer = new ADCLayer (adcCPU, adcNamespace);
-						
+
 						if (options.CPU == adcCPU)
 							adcLayer = newLayer;
-						
+
 						Message (2, "Assembly `{0}' implements ADC for CPU `{1}' in namespace `{2}'",
-							 library.Name, 
+							 library.Name,
 							 adcCPU,
 							 adcNamespace);
-						
+
 						adcLayers.Add (newLayer);
 					} else if (ca.Constructor.DeclaringType.FullName == 
 						   typeof(AOTAttr.ADCInterfaceAttribute).FullName) {
@@ -387,42 +392,42 @@ namespace SharpOS.AOT.IR {
 							iface);
 					}
 				}
-				
+
 				assemblies.Add (library);
-				
+
 				Dump.Element (library, assemblyFile);
 				Message (1, "Generating IR for assembly types...");
-		
+
 				// We first add the data (Classes and Methods)
 				foreach (TypeDefinition type in library.MainModule.Types) {
 					bool ignore = false;
 					string ignoreReason = null;
-					
+
 					if (type.Name.Equals ("<Module>"))
 						continue;
-					
+
 					foreach (ADCLayer layer in this.adcLayers) {
 						if (layer == this.adcLayer)
 							continue;
-						
-						if (type.Namespace.StartsWith(layer.Namespace)) {
+
+						if (type.Namespace.StartsWith (layer.Namespace)) {
 							Message (2, "Ignoring unused ADC type `{0}' in layer `{1}'",
 								 type.FullName, layer.CPU);
-							
+
 							ignore = true;
 							ignoreReason = "Unused ADC implementation";
 							break;
 						}
 					}
-					
+
 					if (skip) {
 						Dump.IgnoreMember (type.Name, ignoreReason);
-						
+
 						continue;
 					}
-					
+
 					Dump.Element (type);
-	
+
 					Class _class = new Class (this, type);
 
 					this.classes.Add (_class);
@@ -450,21 +455,19 @@ namespace SharpOS.AOT.IR {
 
 						_class.Add (method);
 					}
-
-					Dump.FinishElement ();
 				}
 
-				Dump.FinishElement ();
+				Dump.PopElement ();
 			}
-			
+
 			if (adcLayer != null)
-				Message(1, "Selected ADC layer `{0}' for compilation", 
+				Message (1, "Selected ADC layer `{0}' for compilation",
 					adcLayer.Namespace);
 			else
-				Message(1, "No available ADC layer matches CPU type.");
-			
-			Message(1, "Processing IR methods...");
-			
+				Message (1, "No available ADC layer matches CPU type.");
+
+			Message (1, "Processing IR methods...");
+
 			foreach (Class _class in this.classes)
 				foreach (Method _method in _class)
 					_method.Process ();
@@ -474,7 +477,7 @@ namespace SharpOS.AOT.IR {
 
 			asm.Encode (this, options.OutputFilename);
 
-			Dump.FinishElement ();
+			Dump.PopElement ();
 
 			return;
 		}
@@ -529,7 +532,7 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public int GetFieldSize (string type)
 		{
-			return this.GetTypeSize (type, 2);
+			return this.GetTypeSize (type, 0); //2);
 		}
 
 		/// <summary>
@@ -537,10 +540,10 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns></returns>
-		public int GetObjectSize (string type)
+		/*public int GetObjectSize (string type)
 		{
 			return this.GetTypeSize (type, 4);
-		}
+		}*/
 
 		/// <summary>
 		/// Gets the size of the type.
@@ -599,8 +602,18 @@ namespace SharpOS.AOT.IR {
 								}
 
 							} else if (_class.ClassDefinition.IsValueType) {
-								foreach (FieldReference field in _class.ClassDefinition.Fields)
-									result += this.GetFieldSize (field.FieldType.FullName);
+								if ((_class.ClassDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
+									foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
+										int value = (int) (field.Offset + this.GetTypeSize (field.FieldType.FullName));
+
+										if (value > result)
+											result = value;
+									}
+
+								} else {
+									foreach (FieldReference field in _class.ClassDefinition.Fields)
+										result += this.GetFieldSize (field.FieldType.FullName);
+								}
 
 							} else
 								break;

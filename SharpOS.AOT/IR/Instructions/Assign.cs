@@ -45,15 +45,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <summary>
 		/// Dumps the specified prefix.
 		/// </summary>
-		/// <param name="prefix">The prefix.</param>
-		/// <param name="stringBuilder">The string builder.</param>
+		/// <param name="p">The DumpProcessor.</param>
 		public override void Dump (DumpProcessor p)
 		{
-			Dictionary<string, string> attr = new Dictionary<string, string> ();
-
-			attr ["assignee"] = this.assignee.ToString ();
-
-			p.Element (this, null, attr, null);
+			p.PushElement ("assign", true, true, false);
+			p.AddElement ("assignee", this.assignee.ToString (), false, true, false);
+			p.AddElement ("operation", " = ", false, true, false);
+			p.AddElement ("value", this.Value.ToString (), false, true, false);
+			p.PopElement ();
 		}
 	}
 }

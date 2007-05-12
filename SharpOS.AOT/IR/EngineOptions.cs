@@ -25,11 +25,16 @@ namespace SharpOS.AOT.IR {
 		public int Verbosity = 0;
 		public bool ConsoleDump = false;
 		public string AsmFile = null;
-		public bool AsmDump = false;
 		
 		public bool Dump {
 			get {
 				return DumpFile != null;
+			}
+		}
+
+		public bool AsmDump {
+			get {
+				return AsmFile != null;
 			}
 		}
 	}

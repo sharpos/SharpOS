@@ -34,7 +34,7 @@ namespace SharpOS.AOT.X86 {
 		const string START_DATA = "START_DATA";
 		const string END_DATA = "END_DATA";
 		const string START_BSS = "START_BSS";
-		const string END_BSS = "_END_BSS";
+		const string END_BSS = "END_BSS";
 		const string END_STACK = "END_STACK";
 		const string THE_END = "THE_END";
 		const string KERNEL_ENTRY_POINT = "KERNEL_ENTRY_POINT";
@@ -154,6 +154,9 @@ namespace SharpOS.AOT.X86 {
 				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U1;
 
 			else if (value.StartsWith ("SharpOS.AOT.X86.R16Type"))
+				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U2;
+			
+			else if (value.StartsWith ("SharpOS.AOT.X86.SegType"))
 				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U2;
 
 			else if (value.StartsWith ("SharpOS.AOT.X86.R32Type"))
@@ -357,9 +360,15 @@ namespace SharpOS.AOT.X86 {
 			foreach (Class _class in this.engine) {
 				if (_class.ClassDefinition.FullName.Equals (objectName)) {
 					foreach (FieldReference field in _class.ClassDefinition.Fields) {
-						if (field.Name.Equals (fieldName))
-							break;
+						if (field.Name.Equals (fieldName)) {
+							// An ExplicitLayout has already the offset defined
+							if (_class.ClassDefinition.IsValueType
+									&& (_class.ClassDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0)
+								result = (int) (field as FieldDefinition).Offset;
 
+							break;
+						}
+						
 						result += this.engine.GetFieldSize (field.FieldType.FullName);
 					}
 
@@ -439,6 +448,13 @@ namespace SharpOS.AOT.X86 {
 			return false;
 		}
 
+		/// <summary>
+		/// Determines whether [is kernel alloc] [the specified call].
+		/// </summary>
+		/// <param name="call">The call.</param>
+		/// <returns>
+		/// 	<c>true</c> if [is kernel alloc] [the specified call]; otherwise, <c>false</c>.
+		/// </returns>
 		internal bool IsKernelAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
 			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
@@ -456,6 +472,31 @@ namespace SharpOS.AOT.X86 {
 				if (!(call.Operands [0] is SharpOS.AOT.IR.Operands.Constant
 						&& Convert.ToUInt32((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value) > 0))
 					throw new Exception ("The parameter of the 'Alloc' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
+
+				return true;
+			}
+
+			return false;
+		}
+
+		internal bool IsKernelLabeledAlloc (SharpOS.AOT.IR.Operands.Call call)
+		{
+			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (AOT_ATTRIBUTES + ".LabeledAllocAttribute"))
+					continue;
+
+				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+						&& call.Method.Parameters.Count == 2
+						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String")
+						&& call.Method.Parameters [1].ParameterType.FullName.Equals ("System.UInt32")))
+					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'LabeledAlloc' method.");
+
+				if (!(call.Operands [1] is SharpOS.AOT.IR.Operands.Constant
+						&& Convert.ToUInt32 ((call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value) > 0))
+					throw new Exception ("The parameter of the 'LabeledAlloc' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
 
 				return true;
 			}
@@ -1041,7 +1082,7 @@ namespace SharpOS.AOT.X86 {
 				}
 			}
 
-			this.engine.Dump.FinishElement ();	// section: DataEncode
+			this.engine.Dump.PopElement ();	// section: DataEncode
 			
 			foreach (Instruction instruction in data.instructions)
 				this.instructions.Add (instruction);
@@ -1104,7 +1145,7 @@ namespace SharpOS.AOT.X86 {
 				}
 			}
 			
-			this.engine.Dump.FinishElement();
+			this.engine.Dump.PopElement();
 
 			this.AddHelperFunctions ();
 
@@ -1130,6 +1171,15 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		private bool Save (string target)
 		{
+			MemoryStream memoryStream = new MemoryStream ();
+
+			this.Encode (memoryStream);
+
+			this.Patch (memoryStream);
+
+			using (FileStream fileStream = new FileStream (target, FileMode.Create))
+				memoryStream.WriteTo (fileStream);
+
 			if (this.engine.Options.AsmDump) {
 				try {
 					using (StreamWriter streamWriter = new StreamWriter (this.engine.Options.AsmFile)) {
@@ -1145,16 +1195,7 @@ namespace SharpOS.AOT.X86 {
 				}
 			}
 
-			MemoryStream memoryStream = new MemoryStream ();
-
-			this.Encode (memoryStream);
-
-			this.Patch (memoryStream);
-
-			using (FileStream fileStream = new FileStream (target, FileMode.Create))
-				memoryStream.WriteTo (fileStream);
-			
-			this.engine.Dump.FinishElement();
+			this.engine.Dump.PopElement ();
 			
 			return true;
 		}
@@ -1223,7 +1264,8 @@ namespace SharpOS.AOT.X86 {
 
 						if (pass == 0) {
 							if (instruction.Reference.Length > 0) {
-								instruction.Value = new UInt32 [] { this.GetLabelAddress (instruction.Reference) };
+								//instruction.Value = new UInt32 [] { this.GetLabelAddress (instruction.Reference) };
+								((UInt32 []) instruction.Value) [0] = this.GetLabelAddress (instruction.Reference);
 
 								if (!instruction.Relative) {
 									((UInt32 []) instruction.Value) [0] = (UInt32) (org + ((UInt32 []) instruction.Value) [0]);
@@ -1279,6 +1321,8 @@ namespace SharpOS.AOT.X86 {
 							if (!bss)
 								instruction.Encode (this.bits32, binaryWriter);
 						}
+
+						instruction.Offset = offset;
 
 						offset += instruction.Size (this.bits32);
 					}
@@ -1945,8 +1989,13 @@ namespace SharpOS.AOT.X86 {
 		{
 			string label = this.GetFreeResourceLabel;
 
+			return BSSAlloc (label, size);
+		}
+
+		internal string BSSAlloc (string label, uint size)
+		{
 			bss.ALIGN (ALIGNMENT);
-			
+
 			bss.LABEL (label);
 
 			bss.TIMES (size, 0);

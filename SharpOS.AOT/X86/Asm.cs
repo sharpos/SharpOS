@@ -5449,6 +5449,13 @@ namespace SharpOS.AOT.X86 {
 		}
 		
 		/// <summary>
+		/// JMP imm16:imm32
+		/// </summary>
+		public static void JMP (ushort target, string label)
+		{
+		}
+		
+		/// <summary>
 		/// JMP FAR mem
 		/// </summary>
 		public static void JMP_FAR (Memory target)

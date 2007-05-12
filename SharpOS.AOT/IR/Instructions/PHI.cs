@@ -38,7 +38,8 @@ namespace SharpOS.AOT.IR.Instructions {
 			Dictionary<string,string> attr = new Dictionary<string,string>();
 			string v = "";
 		
-			attr["assignee"] = this.Assignee.ToString();
+			p.AddElement ("assignee", this.Assignee.ToString(), false, true, false);
+			p.AddElement ("operation", this.Assignee.ToString (), false, true, false);
 		
 			for (int i = 0; i < this.Value.Operands.Length; i++) {
 				if (i > 0)
@@ -49,7 +50,7 @@ namespace SharpOS.AOT.IR.Instructions {
 
 			v = "{" + v + "}";
 
-			p.Element(this, v, attr, null);
+			p.AddElement ("value", v, false, true, false);
 		}
 	}
 }
