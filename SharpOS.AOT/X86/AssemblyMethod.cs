@@ -1365,6 +1365,20 @@ namespace SharpOS.AOT.X86 {
 						this.assembly.FreeSpareRegister (register);
 					}
 
+				} else if (assembly.IsKernelLabelAddress (call)) {
+					if (assign.Assignee.IsRegisterSet)
+						this.assembly.MOV (this.assembly.GetRegister (assign.Assignee.Register), (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+
+					else {
+						R32Type register = this.assembly.GetSpareRegister ();
+
+						this.assembly.MOV (register, (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+
+						this.MovMemoryRegister (assign.Assignee, register);
+
+						this.assembly.FreeSpareRegister (register);
+					}
+
 				} else {
 					this.HandleCall (block, call);
 

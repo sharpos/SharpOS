@@ -469,11 +469,11 @@ namespace SharpOS.AOT.X86 {
 				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
 						&& call.Method.Parameters.Count == 1
 						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.UInt32")))
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'Alloc' method.");
+					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method.");
 
 				if (!(call.Operands [0] is SharpOS.AOT.IR.Operands.Constant
 						&& Convert.ToUInt32((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value) > 0))
-					throw new Exception ("The parameter of the 'Alloc' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
+					throw new Exception ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
 
 				return true;
 			}
@@ -481,6 +481,13 @@ namespace SharpOS.AOT.X86 {
 			return false;
 		}
 
+		/// <summary>
+		/// Determines whether [is kernel labelled alloc] [the specified call].
+		/// </summary>
+		/// <param name="call">The call.</param>
+		/// <returns>
+		/// 	<c>true</c> if [is kernel labelled alloc] [the specified call]; otherwise, <c>false</c>.
+		/// </returns>
 		internal bool IsKernelLabelledAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
 			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
@@ -494,11 +501,44 @@ namespace SharpOS.AOT.X86 {
 						&& call.Method.Parameters.Count == 2
 						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String")
 						&& call.Method.Parameters [1].ParameterType.FullName.Equals ("System.UInt32")))
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'LabeledAlloc' method.");
+					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method.");
 
-				if (!(call.Operands [1] is SharpOS.AOT.IR.Operands.Constant
+				if (!(call.Operands [0] is SharpOS.AOT.IR.Operands.Constant
+						&& call.Operands [1] is SharpOS.AOT.IR.Operands.Constant
+						&& ((string) (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value).Length > 0
 						&& Convert.ToUInt32 ((call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value) > 0))
-					throw new Exception ("The parameter of the 'LabeledAlloc' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
+					throw new Exception ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
+
+				return true;
+			}
+
+			return false;
+		}
+
+		/// <summary>
+		/// Determines whether [is kernel label address] [the specified call].
+		/// </summary>
+		/// <param name="call">The call.</param>
+		/// <returns>
+		/// 	<c>true</c> if [is kernel label address] [the specified call]; otherwise, <c>false</c>.
+		/// </returns>
+		internal bool IsKernelLabelAddress (SharpOS.AOT.IR.Operands.Call call)
+		{
+			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString ()))
+					continue;
+
+				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.UInt32")
+						&& call.Method.Parameters.Count == 1
+						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String")))
+					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method.");
+
+				if (!(call.Operands [0] is SharpOS.AOT.IR.Operands.Constant
+						&& ((string) (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value).Length > 0))
+					throw new Exception ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
 
 				return true;
 			}
@@ -1273,7 +1313,7 @@ namespace SharpOS.AOT.X86 {
 									((UInt32 []) instruction.Value) [0] = (UInt32) (org + ((UInt32 []) instruction.Value) [0]);
 
 								} else {
-									int delta = (int) (((UInt32 []) instruction.Value) [0] - offset - 2);
+									/*int delta = (int) (((UInt32 []) instruction.Value) [0] - offset - 2);
 
 									if (delta >= -128 && delta <= 127) {
 										Assembly temp = new Assembly ();
@@ -1304,7 +1344,7 @@ namespace SharpOS.AOT.X86 {
 										}
 
 										// TODO optimizations for the other jump instructions
-									}
+									}*/
 								}
 							}
 

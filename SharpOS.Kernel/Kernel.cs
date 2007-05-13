@@ -108,7 +108,27 @@ namespace SharpOS {
 		}
 	}
 
-	public unsafe class Kernel {
+	[StructLayout (LayoutKind.Sequential)]
+	public struct ISRData {
+		public uint SS;
+		public uint FS;
+		public uint GS;
+		public uint ES;
+		public uint DS;
+		public uint EDI;
+		public uint ESI;
+		public uint EBP;
+		public uint ESP;
+		public uint EBX;
+		public uint EDX;
+		public uint ECX;
+		public uint EAX;
+		public uint Index;
+		public uint EIP;
+		public uint CS;
+	}
+
+	public unsafe partial class Kernel {
 		#region GDT
 		private const ushort GDTEntries = 3;
 		private const ushort SystemSelector = 0;
@@ -177,12 +197,124 @@ namespace SharpOS {
 			WriteNumber (true, idtPointer->Size);
 			WriteNL ();
 
-			for (int i = 0; i < IDTEntries; i++)
-				idt [i].Setup (CodeSelector, 0, (byte) (
-					IDTEntry.Type.Present | 
-					IDTEntry.Type.Privilege_Ring_0));
+			SetupISR ();
 
-			//Asm.LIDT (new Memory ("IDTPointer"));
+			Asm.LIDT (new Memory ("IDTPointer"));
+
+			Asm.STI ();
+
+			// Breakpoint - Testing the IDT
+			//Asm.INT (3);
+		}
+
+		private static unsafe void ISRDispatcher (ISRData data)
+		{
+			x = 0;
+			y = 0;
+
+			WriteLine (String ("IDT 0x"), (int) data.Index);
+			WriteLine (String ("EIP 0x"), (int) data.EIP);
+
+			WriteLine (String ("EAX 0x"), (int) data.EAX);
+			WriteLine (String ("ECX 0x"), (int) data.ECX);
+			WriteLine (String ("EDX 0x"), (int) data.EDX);
+			WriteLine (String ("EBX 0x"), (int) data.EBX);
+
+			WriteLine (String ("ESP 0x"), (int) data.ESP);
+			WriteLine (String ("EBP 0x"), (int) data.EBP);
+			WriteLine (String ("ESI 0x"), (int) data.ESI);
+			WriteLine (String ("EDI 0x"), (int) data.EDI);
+
+			WriteLine (String ("DS 0x"), (int) data.DS);
+			WriteLine (String ("ES 0x"), (int) data.ES);
+			WriteLine (String ("FS 0x"), (int) data.FS);
+			WriteLine (String ("GS 0x"), (int) data.GS);
+			WriteLine (String ("SS 0x"), (int) data.SS);
+			WriteLine (String ("CS 0x"), (int) data.CS);
+
+			Asm.HLT ();
+		}
+		#endregion
+
+		#region PIC
+		private const byte MasterPICBase = 0x20;
+		private const ushort MasterPICCommandPort = 0x20;
+		private const ushort MasterPICDataPort = 0x21;
+
+		private const byte SlavePICBase = 0x28;
+		private const ushort SlavePICCommandPort = 0x70;
+		private const ushort SlavePICDataPort = 0x71;
+
+		public unsafe static byte inb (ushort port)
+		{
+			byte value = 0;
+
+			Asm.XOR (R32.EAX, R32.EAX);
+			Asm.MOV (R16.DX, &port);
+			Asm.IN_AL__DX ();
+			Asm.MOV (&value, R8.AL);
+
+			return value;
+		}
+
+		public unsafe static ushort inw (ushort port)
+		{
+			ushort value = 0;
+
+			Asm.XOR (R32.EAX, R32.EAX);
+			Asm.MOV (R16.DX, &port);
+			Asm.IN_AX__DX ();
+			Asm.MOV (&value, R16.AX);
+
+			return value;
+		}
+
+		public unsafe static uint inl (ushort port)
+		{
+			uint value = 0;
+
+			Asm.XOR (R32.EAX, R32.EAX);
+			Asm.MOV (R16.DX, &port);
+			Asm.IN_EAX__DX ();
+			Asm.MOV (&value, R32.EAX);
+
+			return value;
+		}
+
+		public unsafe static void outb (ushort port, byte value)
+		{
+			Asm.MOV (R16.DX, &port);
+			Asm.MOV (R8.AL, &value);
+			Asm.OUT_DX__AL ();
+		}
+
+		public unsafe static void outw (ushort port, ushort value)
+		{
+			Asm.MOV (R16.DX, &port);
+			Asm.MOV (R16.AX, &value);
+			Asm.OUT_DX__AX ();
+		}
+
+		public unsafe static void outl (ushort port, uint value)
+		{
+			Asm.MOV (R16.DX, &port);
+			Asm.MOV (R32.EAX, &value);
+			Asm.OUT_DX__EAX ();
+		}
+
+		public unsafe static void iodelay ()
+		{
+			Asm.IN_AL (0x80);
+			Asm.OUT__AL (0x80);
+		}
+
+		internal static void SetupPIC ()
+		{
+			byte masterMask = inb (MasterPICDataPort);
+			byte slaveMask = inb (SlavePICDataPort);
+
+			outb (MasterPICDataPort, masterMask);
+			outb (SlavePICDataPort, slaveMask);
 		}
 		#endregion
 
@@ -194,6 +326,7 @@ namespace SharpOS {
 			WriteNL ();
 
 			SetupGDT ();
+			SetupPIC ();
 			SetupIDT ();
 
 			if (!WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd))
@@ -227,6 +360,12 @@ namespace SharpOS {
 		public unsafe static byte* LabelledAlloc (string label, uint value)
 		{
 			return null;
+		}
+
+		[SharpOS.AOT.Attributes.LabelAddress]
+		public unsafe static uint GetFunctionPointer (string label)
+		{
+			return 0;
 		}
 		#endregion
 
@@ -581,6 +720,13 @@ namespace SharpOS {
 			WriteNL ();
 		}
 
+		public unsafe static void WriteLine (byte* message, int value)
+		{
+			WriteMessage (message);
+			WriteNumber (true, value);
+			WriteNL ();
+		}
+
 		public unsafe static void WriteMessage (byte* message)
 		{
 			for (int i = 0; message [i] != 0; i++)
@@ -604,6 +750,7 @@ namespace SharpOS {
 				x++;
 			}
 		}
+
 		public unsafe static void WriteString (UInt32 value)
 		{
 			for (int i = 0; i < 4; i++) {

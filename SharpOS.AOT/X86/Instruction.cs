@@ -255,10 +255,10 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public UInt32 Size (bool bits32)
 		{
-			MemoryStream memoryStream = new MemoryStream();
+			MemoryStream memoryStream = new MemoryStream ();
 			BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
 
-			Encode (bits32, binaryWriter);
+			this.Encode (bits32, binaryWriter);
 
 			return (UInt32) memoryStream.Length;
 		}
