@@ -17,6 +17,20 @@ using SharpOS.AOT.IR;
 
 namespace SharpOS {
 	[StructLayout (LayoutKind.Sequential)]
+	public struct DTPointer {
+		public const uint SizeOf = 6;
+
+		public ushort Size;
+		public uint Address;
+
+		public void Setup (ushort size, uint address)
+		{
+			this.Size = size;
+			this.Address = address;
+		}
+	}
+
+	[StructLayout (LayoutKind.Sequential)]
 	public struct GDTEntry {
 		public enum Type : ushort {
 			Accessed = 1,
@@ -29,9 +43,13 @@ namespace SharpOS {
 			Privilege_Ring_2 = 64,
 			Privilege_Ring_3 = 96,
 			Present = 128,
+			OperandSize_16Bit = 0,
 			OperandSize_32Bit = 1024,
+			Granularity_Byte = 0,
 			Granularity_4K = 2048
 		}
+
+		public const uint SizeOf = 8;
 
 		public ushort LimitLow;
 		public ushort BaseLow;
@@ -57,63 +75,52 @@ namespace SharpOS {
 	}
 
 	[StructLayout (LayoutKind.Sequential)]
-	public struct GDTPointer {
-		public ushort Size;
-		public uint Address;
+	public struct IDTEntry {
+		public enum Type : ushort {
+			Call_Gate = 4,
+			Task_Gate = 5,
+			Interrupt_Gate = 6,
+			Trap_Gate = 7,
+			OperandSize_16Bit = 0,
+			OperandSize_32Bit = 8,
+			Privilege_Ring_0 = 0,
+			Privilege_Ring_1 = 32,
+			Privilege_Ring_2 = 64,
+			Privilege_Ring_3 = 96,
+			Present = 128,
 
-		public void Setup (ushort size, uint address)
+		}
+
+		public const uint SizeOf = 8;
+
+		public ushort OffsetLow;
+		public ushort Selector;
+		public byte Unused;
+		public byte Options;
+		public ushort OffsetHigh;
+
+		public void Setup (ushort selector, uint offset, byte options)
 		{
-			this.Size = size;
-			this.Address = address;
+			this.Selector = selector;
+			this.OffsetLow = (ushort) (offset & 0xFFFF);
+			this.OffsetHigh = (byte) ((offset >> 16) & 0xFFFF);
+			this.Options = options;
 		}
 	}
 
 	public unsafe class Kernel {
-		public enum ColorTypes : byte {
-			Black,
-			Blue,
-			Green,
-			Cyan,
-			Red,
-			Magenta,
-			Brown,
-			White,
-			DarkGray,
-			LightBlue,
-			LightGreen,
-			LightCyan,
-			LightRed,
-			LightMagenta,
-			Yellow,
-			BrightWhite
-		}
-
-		static int x = 0;
-
-		static int y = 0;
-
-		static ColorTypes foreground = ColorTypes.Yellow;
-
-		static ColorTypes background = ColorTypes.Black;
-
-		static byte attributes = 0;
-
-		static byte oldAttributes = 0;
-
 		#region GDT
-		private static GDTEntry* gdt;
-		private static GDTPointer* gdtPointer;
+		private const ushort GDTEntries = 3;
+		private const ushort SystemSelector = 0;
+		private const ushort CodeSelector = 8;
+		private const ushort DataSelector = 16;
+
+		private static DTPointer* gdtPointer = (DTPointer*) LabelledAlloc ("GDTPointer", DTPointer.SizeOf);
+		private static GDTEntry* gdt = (GDTEntry*) Alloc (GDTEntry.SizeOf * GDTEntries);
 
 		internal static void SetupGDT ()
 		{
-			// 8 is the hardcoded size of a GDT Entry
-			// 3 is the number of entries if (the two second lines need to be kept in sync :D)
-			gdt = (GDTEntry*) Alloc (8 * 3);
-			ushort gdtSize = (ushort) (sizeof (GDTEntry) * 3 - 1);
-
-			// 6 is the hardcoded size of the GDTPointer
-			gdtPointer = (GDTPointer*) LabeledAlloc ("GDTPointer", 6);
-			gdtPointer->Setup (gdtSize, (uint) gdt);
+			gdtPointer->Setup ((ushort) (sizeof (GDTEntry) * GDTEntries - 1), (uint) gdt);
 
 			WriteMessage (String ("GDT Pointer: 0x"));
 			WriteNumber (true, (int) gdtPointer->Address);
@@ -121,10 +128,10 @@ namespace SharpOS {
 			WriteNumber (true, gdtPointer->Size);
 			WriteNL ();
 
-			gdt [0].Setup (0, 0, 0);
+			gdt [SystemSelector >> 3].Setup (0, 0, 0);
 
 			// Code Segment
-			gdt [1].Setup (0, 0xFFFFFFFF, (ushort) (
+			gdt [CodeSelector >> 3].Setup (0, 0xFFFFFFFF, (ushort) (
 				GDTEntry.Type.Granularity_4K |
 				GDTEntry.Type.OperandSize_32Bit |
 				GDTEntry.Type.Present |
@@ -133,7 +140,7 @@ namespace SharpOS {
 				GDTEntry.Type.Writable)); 
 
 			// Data Segment
-			gdt [2].Setup (0, 0xFFFFFFFF, (ushort) (
+			gdt [DataSelector >> 3].Setup (0, 0xFFFFFFFF, (ushort) (
 				GDTEntry.Type.Granularity_4K |
 				GDTEntry.Type.OperandSize_32Bit |
 				GDTEntry.Type.Present |
@@ -142,33 +149,52 @@ namespace SharpOS {
 
 			Asm.LGDT (new Memory ("GDTPointer"));
 
-			Asm.MOV (R16.AX, 0x10);
+			Asm.MOV (R16.AX, DataSelector);
 			Asm.MOV (Seg.DS, R16.AX);
 			Asm.MOV (Seg.ES, R16.AX);
 			Asm.MOV (Seg.FS, R16.AX);
 			Asm.MOV (Seg.GS, R16.AX);
 			Asm.MOV (Seg.SS, R16.AX);
-			
-			Asm.JMP (0x08, "Kernel_GDT_Entry_Point");
+
+			Asm.JMP (CodeSelector, "Kernel_GDT_Entry_Point");
 			Asm.LABEL ("Kernel_GDT_Entry_Point");
 		}
 		#endregion
 
+		#region IDT
+		private const ushort IDTEntries = 256;
 
-		private static byte* idt = Alloc (256);
+		private static DTPointer* idtPointer = (DTPointer*) LabelledAlloc ("IDTPointer", DTPointer.SizeOf);
+		private static IDTEntry* idt = (IDTEntry*) Alloc (IDTEntry.SizeOf * IDTEntries);
 
+		internal static void SetupIDT ()
+		{
+			idtPointer->Setup ((ushort) (sizeof (IDTEntry) * IDTEntries - 1), (uint) idt);
+
+			WriteMessage (String ("IDT Pointer: 0x"));
+			WriteNumber (true, (int) idtPointer->Address);
+			WriteMessage (String (" - 0x"));
+			WriteNumber (true, idtPointer->Size);
+			WriteNL ();
+
+			for (int i = 0; i < IDTEntries; i++)
+				idt [i].Setup (CodeSelector, 0, (byte) (
+					IDTEntry.Type.Present | 
+					IDTEntry.Type.Privilege_Ring_0));
+
+			//Asm.LIDT (new Memory ("IDTPointer"));
+		}
+		#endregion
 
 		public unsafe static void BootEntry (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
 		{
 			SetAttributes (ColorTypes.Yellow, ColorTypes.Black);
 
-			//x = NewTestStruct ();
-
-			SetupGDT ();
-
-
 			WriteLine (String ("SharpOS v0.0.0.75 (http://www.sharpos.org)"));
 			WriteNL ();
+
+			SetupGDT ();
+			SetupIDT ();
 
 			if (!WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd))
 				return;
@@ -198,7 +224,7 @@ namespace SharpOS {
 		}
 
 		[SharpOS.AOT.Attributes.LabelledAlloc]
-		public unsafe static byte* LabeledAlloc (string label, uint value)
+		public unsafe static byte* LabelledAlloc (string label, uint value)
 		{
 			return null;
 		}
@@ -495,6 +521,32 @@ namespace SharpOS {
 		#endregion
 
 		#region Display Routines
+		public enum ColorTypes : byte {
+			Black,
+			Blue,
+			Green,
+			Cyan,
+			Red,
+			Magenta,
+			Brown,
+			White,
+			DarkGray,
+			LightBlue,
+			LightGreen,
+			LightCyan,
+			LightRed,
+			LightMagenta,
+			Yellow,
+			BrightWhite
+		}
+
+		static int x = 0;
+		static int y = 0;
+		static ColorTypes foreground = ColorTypes.Yellow;
+		static ColorTypes background = ColorTypes.Black;
+		static byte attributes = 0;
+		static byte oldAttributes = 0;
+
 		public unsafe static void WriteNumber (bool hex, int value)
 		{
 			byte* buffer = stackalloc byte [32];

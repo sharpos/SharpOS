@@ -604,6 +604,9 @@ namespace SharpOS.AOT.IR {
 							} else if (_class.ClassDefinition.IsValueType) {
 								if ((_class.ClassDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
 									foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
+										if ((field as FieldDefinition).IsStatic)
+											continue;
+
 										int value = (int) (field.Offset + this.GetTypeSize (field.FieldType.FullName));
 
 										if (value > result)
@@ -611,8 +614,12 @@ namespace SharpOS.AOT.IR {
 									}
 
 								} else {
-									foreach (FieldReference field in _class.ClassDefinition.Fields)
+									foreach (FieldReference field in _class.ClassDefinition.Fields) {
+										if ((field as FieldDefinition).IsStatic)
+											continue;
+
 										result += this.GetFieldSize (field.FieldType.FullName);
+									}
 								}
 
 							} else

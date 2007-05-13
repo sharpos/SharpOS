@@ -27,7 +27,6 @@ namespace SharpOS.AOT.X86 {
 		const string KERNEL_CLASS = "SharpOS.Kernel";
 		const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
 		const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry System.UInt32 System.UInt32 System.UInt32 System.UInt32";
-		const string AOT_ATTRIBUTES = "SharpOS.AOT.Attributes";
 
 		const string START_CODE = "START_CODE";
 		const string END_CODE = "END_CODE";
@@ -360,6 +359,9 @@ namespace SharpOS.AOT.X86 {
 			foreach (Class _class in this.engine) {
 				if (_class.ClassDefinition.FullName.Equals (objectName)) {
 					foreach (FieldReference field in _class.ClassDefinition.Fields) {
+						if ((field as FieldDefinition).IsStatic)
+							continue;
+
 						if (field.Name.Equals (fieldName)) {
 							// An ExplicitLayout has already the offset defined
 							if (_class.ClassDefinition.IsValueType
@@ -434,7 +436,7 @@ namespace SharpOS.AOT.X86 {
 				return false;
 
 			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
-				if (!attribute.Constructor.DeclaringType.FullName.Equals (AOT_ATTRIBUTES + ".StringAttribute"))
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.StringAttribute).ToString ()))
 					continue;
 
 				if (call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
@@ -461,7 +463,7 @@ namespace SharpOS.AOT.X86 {
 				return false;
 
 			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
-				if (!attribute.Constructor.DeclaringType.FullName.Equals (AOT_ATTRIBUTES + ".AllocAttribute"))
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString ()))
 					continue;
 
 				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
@@ -479,13 +481,13 @@ namespace SharpOS.AOT.X86 {
 			return false;
 		}
 
-		internal bool IsKernelLabeledAlloc (SharpOS.AOT.IR.Operands.Call call)
+		internal bool IsKernelLabelledAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
 			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
 			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
-				if (!attribute.Constructor.DeclaringType.FullName.Equals (AOT_ATTRIBUTES + ".LabeledAllocAttribute"))
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString ()))
 					continue;
 
 				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")

@@ -1039,9 +1039,13 @@ namespace SharpOS.AOT.X86 {
 						assembly.ADD (register, assembly.GetRegister (second.Register));
 
 					} else {
-						//Memory memory = this.GetMemory(second as Identifier);
-						this.MovRegisterMemory (R32.EAX, second as Identifier);
-						assembly.ADD (register, R32.EAX);
+						R32Type spareRegister = this.assembly.GetSpareRegister ();
+
+						this.MovRegisterMemory (spareRegister, second as Identifier);
+
+						assembly.ADD (register, spareRegister);
+
+						this.assembly.FreeSpareRegister (spareRegister);
 					}
 
 				} else if (type == Binary.BinaryType.Sub) {
@@ -1054,9 +1058,13 @@ namespace SharpOS.AOT.X86 {
 						assembly.SUB (register, assembly.GetRegister (second.Register));
 
 					} else {
-						Memory memory = this.GetMemory (second as Identifier);
+						R32Type spareRegister = this.assembly.GetSpareRegister ();
 
-						assembly.SUB (register, memory as DWordMemory);
+						this.MovRegisterMemory (spareRegister, second as Identifier);
+
+						assembly.SUB (register, spareRegister);
+
+						this.assembly.FreeSpareRegister (spareRegister);
 					}
 
 				} else if (type == Binary.BinaryType.Mul) {
@@ -1069,9 +1077,13 @@ namespace SharpOS.AOT.X86 {
 						assembly.IMUL (register, assembly.GetRegister (second.Register));
 
 					} else {
-						Memory memory = this.GetMemory (second as Identifier);
+						R32Type spareRegister = this.assembly.GetSpareRegister ();
 
-						assembly.IMUL (register, memory as DWordMemory);
+						this.MovRegisterMemory (spareRegister, second as Identifier);
+
+						assembly.IMUL (register, spareRegister);
+
+						this.assembly.FreeSpareRegister (spareRegister);
 					}
 
 				} else if (type == Binary.BinaryType.Div) {
@@ -1120,9 +1132,13 @@ namespace SharpOS.AOT.X86 {
 						assembly.AND (register, assembly.GetRegister (second.Register));
 
 					} else {
-						Memory memory = this.GetMemory (second as Identifier);
+						R32Type spareRegister = this.assembly.GetSpareRegister ();
 
-						assembly.AND (register, memory as DWordMemory);
+						this.MovRegisterMemory (spareRegister, second as Identifier);
+
+						assembly.AND (register, spareRegister);
+
+						this.assembly.FreeSpareRegister (spareRegister);
 					}
 
 				} else if (type == Binary.BinaryType.Or) {
@@ -1135,9 +1151,13 @@ namespace SharpOS.AOT.X86 {
 						assembly.OR (register, assembly.GetRegister (second.Register));
 
 					} else {
-						Memory memory = this.GetMemory (second as Identifier);
+						R32Type spareRegister = this.assembly.GetSpareRegister ();
 
-						assembly.OR (register, memory as DWordMemory);
+						this.MovRegisterMemory (spareRegister, second as Identifier);
+
+						assembly.OR (register, spareRegister);
+
+						this.assembly.FreeSpareRegister (spareRegister);
 					}
 
 				} else if (type == Binary.BinaryType.SHL) {
@@ -1331,7 +1351,7 @@ namespace SharpOS.AOT.X86 {
 						this.assembly.FreeSpareRegister (register);
 					}
 
-				} else if (assembly.IsKernelLabeledAlloc (call)) {
+				} else if (assembly.IsKernelLabelledAlloc (call)) {
 					if (assign.Assignee.IsRegisterSet)
 						this.assembly.MOV (this.assembly.GetRegister (assign.Assignee.Register), this.assembly.BSSAlloc ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), Convert.ToUInt32 ((call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value)));
 
