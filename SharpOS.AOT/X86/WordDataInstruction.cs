@@ -26,10 +26,10 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="value">The value.</param>
-		public WordDataInstruction (string name, UInt16 value)
+		/*public WordDataInstruction (string name, UInt16 value)
 			: base (false, name, string.Empty, name, "DW " + string.Format ("0x{0:X4}", value), null, null, null, value, null)
 		{
-		}
+		}*/
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="WordDataInstruction"/> class.
@@ -39,5 +39,15 @@ namespace SharpOS.AOT.X86 {
 			: base (false, string.Empty, string.Empty, string.Empty, "DW " + string.Format ("0x{0:X4}", value), null, null, null, value, null)
 		{
 		}
+
+		public override string Parameters {
+			get {
+				if (this.value.GetType () == typeof (UInt16))
+					return "DW " + string.Format ("0x{0:X4}", this.value);
+
+				return base.Parameters;
+			}
+		}
+
 	}
 }

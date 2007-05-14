@@ -26,10 +26,10 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="value">The value.</param>
-		public DWordDataInstruction (string name, UInt32 value)
+		/*public DWordDataInstruction (string name, UInt32 value)
 			: base (false, name, string.Empty, name, "DD " + string.Format ("0x{0:X8}", value), null, null, null, value, null)
 		{
-		}
+		}*/
 
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DWordDataInstruction"/> class.
@@ -38,6 +38,15 @@ namespace SharpOS.AOT.X86 {
 		public DWordDataInstruction (UInt32 value)
 			: base (false, string.Empty, string.Empty, string.Empty, "DD " + string.Format ("0x{0:X8}", value), null, null, null, value, null)
 		{
+		}
+
+		public override string Parameters {
+			get {
+				if (this.value.GetType () == typeof (UInt32))
+					return "DD " + string.Format ("0x{0:X8}", this.value);
+
+				return base.Parameters;
+			}
 		}
 	}
 }

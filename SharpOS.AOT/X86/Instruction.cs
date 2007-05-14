@@ -83,7 +83,7 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
-		private object value = null;
+		protected object value = null;
 
 		/// <summary>
 		/// Gets or sets the value.
@@ -169,13 +169,13 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
-		private string parameters = string.Empty;
+		protected string parameters = string.Empty;
 
 		/// <summary>
 		/// Gets the parameters.
 		/// </summary>
 		/// <value>The parameters.</value>
-		public string Parameters {
+		public virtual string Parameters {
 			get {
 				return parameters;
 			}
@@ -237,12 +237,12 @@ namespace SharpOS.AOT.X86 {
 			if (this.RMMemory != null
 					&& this.RMMemory.Reference != null
 					&& this.RMMemory.Reference.Length > 0) {
-				stringBuilder.Append (this.parameters.Replace ("[0x0]", "[" + this.RMMemory.Reference + "]"));
+				stringBuilder.Append (this.Parameters.Replace ("[0x0]", "[" + this.RMMemory.Reference + "]"));
 
 				stringBuilder.Append ("\t;" + string.Format("0x{0:x}", this.RMMemory.Displacement));
 
 			} else
-				stringBuilder.Append (this.parameters);
+				stringBuilder.Append (this.Parameters);
 
 
 			return stringBuilder.ToString ();

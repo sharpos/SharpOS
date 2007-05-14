@@ -39,9 +39,9 @@ namespace SharpOS.AOT.X86 {
 		const string KERNEL_ENTRY_POINT = "KERNEL_ENTRY_POINT";
 
 		const string MULTIBOOT_HEADER_ADDRESS = "MULTIBOOT_HEADER_ADDRESS";
-		const string MULTIBOOT_LOAD_END_ADDRESS = "MULTIBOOT LOAD END ADDRESS";
-		const string MULTIBOOT_BSS_END_ADDRESS = "MULTIBOOT BSS END ADDRESS";
-		const string MULTIBOOT_ENTRY_POINT = "MULTIBOOT ENTRY POINT";
+		const string MULTIBOOT_LOAD_END_ADDRESS = "MULTIBOOT_LOAD_END_ADDRESS";
+		const string MULTIBOOT_BSS_END_ADDRESS = "MULTIBOOT_BSS_END_ADDRESS";
+		const string MULTIBOOT_ENTRY_POINT = "MULTIBOOT_ENTRY_POINT";
 
 #if PE
 		const string DOS_MESSAGE = "DOS_MESSAGE";
@@ -205,7 +205,9 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="values">The values.</param>
 		public void DATA (string name, string values)
 		{
-			this.instructions.Add (new ByteDataInstruction (name, values));
+			this.instructions.Add (new LabelInstruction (name));
+			this.instructions.Add (new ByteDataInstruction (values));
+			//this.instructions.Add (new ByteDataInstruction (name, values));
 		}
 
 		/// <summary>
@@ -215,7 +217,9 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="value">The value.</param>
 		public void DATA (string name, byte value)
 		{
-			this.instructions.Add (new ByteDataInstruction (name, value));
+			this.instructions.Add (new LabelInstruction (name));
+			this.instructions.Add (new ByteDataInstruction (value));
+			//this.instructions.Add (new ByteDataInstruction (name, value));
 		}
 
 		/// <summary>
@@ -225,7 +229,9 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="value">The value.</param>
 		public void DATA (string name, UInt16 value)
 		{
-			this.instructions.Add (new WordDataInstruction (name, value));
+			this.instructions.Add (new LabelInstruction (name));
+			this.instructions.Add (new WordDataInstruction (value));
+			//this.instructions.Add (new WordDataInstruction (name, value));
 		}
 
 		/// <summary>
@@ -235,7 +241,9 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="value">The value.</param>
 		public void DATA (string name, UInt32 value)
 		{
-			this.instructions.Add (new DWordDataInstruction (name, value));
+			this.instructions.Add (new LabelInstruction (name));
+			this.instructions.Add (new DWordDataInstruction (value));
+			//this.instructions.Add (new DWordDataInstruction (name, value));
 		}
 
 		/// <summary>
@@ -423,6 +431,15 @@ namespace SharpOS.AOT.X86 {
 			return address;
 		}
 
+		private int GetLabelIndex (string label)
+		{
+			for (int i = 0; i < this.instructions.Count; i++ )
+				if (this.instructions [i].Label.ToLower ().Equals (label.ToLower ()))
+					return i;
+
+			throw new Exception ("Label '" + label + "' has not been found.");
+		}
+
 		/// <summary>
 		/// Determines whether [is kernel string] [the specified value].
 		/// </summary>
@@ -550,42 +567,58 @@ namespace SharpOS.AOT.X86 {
 		/// Patches the specified memory stream.
 		/// </summary>
 		/// <param name="memoryStream">The memory stream.</param>
-		private void Patch (MemoryStream memoryStream)
+		private void Patch (/*MemoryStream memoryStream*/)
 		{
-			BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
+			/*BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
 			
 
 			uint offset = this.GetLabelAddress (MULTIBOOT_ENTRY_POINT);
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
 			uint value = BASE_ADDRESS + this.GetLabelAddress (KERNEL_ENTRY_POINT);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
+
+			int index = this.GetLabelIndex (MULTIBOOT_ENTRY_POINT);
+			this.instructions [index + 1].Value = BASE_ADDRESS + this.instructions [this.GetLabelIndex (KERNEL_ENTRY_POINT)].Offset;
 
 
-			offset = this.GetLabelAddress (MULTIBOOT_HEADER_ADDRESS);
+			/*offset = this.GetLabelAddress (MULTIBOOT_HEADER_ADDRESS);
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
 			value = BASE_ADDRESS + offset - 0x0C;
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
+
+			index = this.GetLabelIndex (MULTIBOOT_HEADER_ADDRESS);
+			this.instructions [index + 1].Value = BASE_ADDRESS + this.instructions [index].Offset - 0x0C;
 
 
-			offset = this.GetLabelAddress (MULTIBOOT_LOAD_END_ADDRESS);
+			/*offset = this.GetLabelAddress (MULTIBOOT_LOAD_END_ADDRESS);
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) this.multibootLoadEndAddress);
+			binaryWriter.Write ((int) this.multibootLoadEndAddress);*/
+
+			index = this.GetLabelIndex (MULTIBOOT_LOAD_END_ADDRESS);
+			this.instructions [index + 1].Value = this.multibootLoadEndAddress;
 
 
-			offset = this.GetLabelAddress (MULTIBOOT_BSS_END_ADDRESS);
+			/*offset = this.GetLabelAddress (MULTIBOOT_BSS_END_ADDRESS);
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) this.multibootBSSEndAddress);
+			binaryWriter.Write ((int) this.multibootBSSEndAddress);*/
+
+			index = this.GetLabelIndex (MULTIBOOT_BSS_END_ADDRESS);
+			this.instructions [index + 1].Value = this.multibootBSSEndAddress;
 
 #if PE			
-			offset = this.GetLabelAddress (PE_ADRESS_OFFSET);
+			/*offset = this.GetLabelAddress (PE_ADRESS_OFFSET);
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
 			value = this.GetLabelAddress (PE_HEADER);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			this.PatchPE (binaryWriter);
+			index = this.GetLabelIndex (PE_ADRESS_OFFSET);
+			this.instructions [index + 1].Value = this.instructions [this.GetLabelIndex (PE_HEADER)].Offset;
+
+
+			this.PatchPE (/*binaryWriter*/);
 #endif
 
-			binaryWriter.Seek (0, SeekOrigin.End);
+			//binaryWriter.Seek (0, SeekOrigin.End);
 		}
 
 		#region Portable Executable
@@ -883,59 +916,111 @@ namespace SharpOS.AOT.X86 {
 			this.AddPESection (PE_BSS, 0xC0000080);
 		}
 
-		private void PatchPE (BinaryWriter binaryWriter)
+		private void PatchPE (/*BinaryWriter binaryWriter*/)
 		{
-			uint value = this.GetLabelAddress (START_CODE);
+			/*uint value = this.GetLabelAddress (START_CODE);
 			uint offset = this.GetLabelAddress (PE_ADDRESS_OF_ENTRY_POINT);
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_ADDRESS));
+			uint start = this.instructions [this.GetLabelIndex (START_CODE)].Offset;
+			int index = this.GetLabelIndex (PE_ADDRESS_OF_ENTRY_POINT);
+			this.instructions [index + 1].Value = start;
+
+
+			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_ADDRESS));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_POINTER_TO_RAW_DATA));
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_ADDRESS));
+			this.instructions [index + 1].Value = start;
+
+
+			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_POINTER_TO_RAW_DATA));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			value = this.GetLabelAddress (END_CODE) - value;
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_POINTER_TO_RAW_DATA));
+			this.instructions [index + 1].Value = start;
+
+
+			////////////////////////////////////////////////////////////////////////////////////////
+			/*value = this.GetLabelAddress (END_CODE) - value;
 			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_SIZE));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_SIZE_OF_RAW_DATA));
+			start = this.instructions [this.GetLabelIndex (END_CODE)].Offset - start;
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_SIZE));
+			this.instructions [index + 1].Value = start;
+
+
+			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_SIZE_OF_RAW_DATA));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			
-			value = this.GetLabelAddress (START_DATA);
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_SIZE_OF_RAW_DATA));
+			this.instructions [index + 1].Value = start;
+
+
+			////////////////////////////////////////////////////////////////////////////////////////
+			/*value = this.GetLabelAddress (START_DATA);
 			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_ADDRESS));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_POINTER_TO_RAW_DATA));
+			start = this.instructions [this.GetLabelIndex (START_DATA)].Offset;
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_ADDRESS));
+			this.instructions [index + 1].Value = start;
+
+
+			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_POINTER_TO_RAW_DATA));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			value = this.GetLabelAddress (END_DATA) - value;
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_POINTER_TO_RAW_DATA));
+			this.instructions [index + 1].Value = start;
+
+
+			////////////////////////////////////////////////////////////////////////////////////////
+			/*value = this.GetLabelAddress (END_DATA) - value;
 			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_SIZE_OF_RAW_DATA));
+			start = this.instructions [this.GetLabelIndex (END_DATA)].Offset - start;
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
+			this.instructions [index + 1].Value = start;
+
+
+			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_SIZE_OF_RAW_DATA));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
+
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_SIZE_OF_RAW_DATA));
+			this.instructions [index + 1].Value = start;
 
 
-			value = this.GetLabelAddress (START_BSS);
+			////////////////////////////////////////////////////////////////////////////////////////
+			/*value = this.GetLabelAddress (START_BSS);
 			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_ADDRESS));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
 
-			value = this.GetLabelAddress (END_BSS) - value;
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
+			start = this.instructions [this.GetLabelIndex (START_BSS)].Offset;
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_ADDRESS));
+			this.instructions [index + 1].Value = start;
+
+
+			////////////////////////////////////////////////////////////////////////////////////////
+			/*value = this.GetLabelAddress (END_BSS) - value;
+			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_SIZE));
 			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);
+			binaryWriter.Write ((int) value);*/
+
+			start = this.instructions [this.GetLabelIndex (END_BSS)].Offset -  start;
+			index = this.GetLabelIndex (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_SIZE));
+			this.instructions [index + 1].Value = start;
 		}
 
 		private string GetPESectionLabel (string prefix, string type)
@@ -1217,8 +1302,6 @@ namespace SharpOS.AOT.X86 {
 
 			this.Encode (memoryStream);
 
-			this.Patch (memoryStream);
-
 			using (FileStream fileStream = new FileStream (target, FileMode.Create))
 				memoryStream.WriteTo (fileStream);
 
@@ -1257,6 +1340,9 @@ namespace SharpOS.AOT.X86 {
 			// The second pass writes the content
 			for (int pass = 0; pass < 2; pass++) {
 				bool changed;
+
+				if (pass == 1)
+					this.Patch ();
 
 				do {
 					changed = false;

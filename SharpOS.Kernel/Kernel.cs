@@ -201,7 +201,7 @@ namespace SharpOS {
 
 			Asm.LIDT (new Memory ("IDTPointer"));
 
-			Asm.STI ();
+			//Asm.STI ();
 
 			// Breakpoint - Testing the IDT
 			//Asm.INT (3);
