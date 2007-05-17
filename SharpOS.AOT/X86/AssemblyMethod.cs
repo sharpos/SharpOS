@@ -44,6 +44,14 @@ namespace SharpOS.AOT.X86 {
 		{
 			string fullname = method.MethodFullName;
 
+			foreach (CustomAttribute attribute in method.MethodDefinition.CustomAttributes) {
+				if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ()))
+					assembly.LABEL (attribute.ConstructorParameters [0].ToString());
+
+				else if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.KernelMainAttribute).ToString ()))
+					assembly.LABEL (Assembly.KERNEL_MAIN);
+			}
+
 			assembly.LABEL (fullname);
 			assembly.PUSH (R32.EBP);
 			assembly.MOV (R32.EBP, R32.ESP);

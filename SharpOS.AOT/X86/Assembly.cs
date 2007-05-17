@@ -24,9 +24,7 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	public partial class Assembly : IAssembly {
-		const string KERNEL_CLASS = "SharpOS.Kernel";
-		const string KERNEL_CTOR = "System.Void " + KERNEL_CLASS + "..cctor";
-		const string KERNEL_MAIN = "System.Void " + KERNEL_CLASS + ".BootEntry System.UInt32 System.UInt32 System.UInt32 System.UInt32";
+		internal const string KERNEL_MAIN = "KERNEL_MAIN";
 
 		const string START_CODE = "START_CODE";
 		const string END_CODE = "END_CODE";
@@ -70,6 +68,7 @@ namespace SharpOS.AOT.X86 {
 		Engine engine;
 		Assembly data;
 		Assembly bss;
+		Dictionary<string, Instruction> labels;
 
 		uint multibootBSSEndAddress = 0;
 		uint multibootLoadEndAddress = 0;
@@ -207,7 +206,6 @@ namespace SharpOS.AOT.X86 {
 		{
 			this.instructions.Add (new LabelInstruction (name));
 			this.instructions.Add (new ByteDataInstruction (values));
-			//this.instructions.Add (new ByteDataInstruction (name, values));
 		}
 
 		/// <summary>
@@ -219,7 +217,6 @@ namespace SharpOS.AOT.X86 {
 		{
 			this.instructions.Add (new LabelInstruction (name));
 			this.instructions.Add (new ByteDataInstruction (value));
-			//this.instructions.Add (new ByteDataInstruction (name, value));
 		}
 
 		/// <summary>
@@ -231,7 +228,6 @@ namespace SharpOS.AOT.X86 {
 		{
 			this.instructions.Add (new LabelInstruction (name));
 			this.instructions.Add (new WordDataInstruction (value));
-			//this.instructions.Add (new WordDataInstruction (name, value));
 		}
 
 		/// <summary>
@@ -243,7 +239,6 @@ namespace SharpOS.AOT.X86 {
 		{
 			this.instructions.Add (new LabelInstruction (name));
 			this.instructions.Add (new DWordDataInstruction (value));
-			//this.instructions.Add (new DWordDataInstruction (name, value));
 		}
 
 		/// <summary>
@@ -390,55 +385,35 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
+		/// Gets the index of the label.
+		/// </summary>
+		/// <param name="label">The label.</param>
+		/// <returns></returns>
+		private int GetLabelIndex (string label)
+		{
+			label = Assembly.FormatLabelName (label);
+
+			if (this.labels.ContainsKey (label) == false)
+				throw new Exception ("Label '" + label + "' has not been found.");
+
+			return this.labels [label].Index;
+		}
+
+		/// <summary>
 		/// Gets the label address.
 		/// </summary>
 		/// <param name="label">The label.</param>
 		/// <returns></returns>
 		private UInt32 GetLabelAddress (string label)
 		{
-			UInt32 address = 0;
-			bool found = false;
 			label = Assembly.FormatLabelName (label);
 
-			foreach (Instruction instruction in this.instructions) {
-				if (instruction is Bits32Instruction)
-					this.bits32 = (bool) instruction.Value;
-
-				if (instruction.Label.ToLower ().Equals (label.ToLower ())) {
-					found = true;
-					break;
-				}
-
-				if (instruction is OffsetInstruction)
-					address = (UInt32) instruction.Value;
-
-				else if (instruction is AlignInstruction) {
-					if (address % (UInt32) instruction.Value != 0)
-						address += ((UInt32) instruction.Value - address % (UInt32) instruction.Value);
-
-				} else if (instruction is TimesInstruction) {
-					TimesInstruction times = instruction as TimesInstruction;
-
-					address += times.Length;
-
-				} else
-					address += instruction.Size (this.bits32);
-			}
-
-			if (!found)
+			if (this.labels.ContainsKey (label) == false)
 				throw new Exception ("Label '" + label + "' has not been found.");
 
-			return address;
+			return this.labels [label].Offset;
 		}
-
-		private int GetLabelIndex (string label)
-		{
-			for (int i = 0; i < this.instructions.Count; i++ )
-				if (this.instructions [i].Label.ToLower ().Equals (label.ToLower ()))
-					return i;
-
-			throw new Exception ("Label '" + label + "' has not been found.");
-		}
+		
 
 		/// <summary>
 		/// Determines whether [is kernel string] [the specified value].
@@ -566,59 +541,27 @@ namespace SharpOS.AOT.X86 {
 		/// <summary>
 		/// Patches the specified memory stream.
 		/// </summary>
-		/// <param name="memoryStream">The memory stream.</param>
 		private void Patch (/*MemoryStream memoryStream*/)
 		{
-			/*BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
-			
-
-			uint offset = this.GetLabelAddress (MULTIBOOT_ENTRY_POINT);
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			uint value = BASE_ADDRESS + this.GetLabelAddress (KERNEL_ENTRY_POINT);
-			binaryWriter.Write ((int) value);*/
-
 			int index = this.GetLabelIndex (MULTIBOOT_ENTRY_POINT);
 			this.instructions [index + 1].Value = BASE_ADDRESS + this.instructions [this.GetLabelIndex (KERNEL_ENTRY_POINT)].Offset;
-
-
-			/*offset = this.GetLabelAddress (MULTIBOOT_HEADER_ADDRESS);
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			value = BASE_ADDRESS + offset - 0x0C;
-			binaryWriter.Write ((int) value);*/
 
 			index = this.GetLabelIndex (MULTIBOOT_HEADER_ADDRESS);
 			this.instructions [index + 1].Value = BASE_ADDRESS + this.instructions [index].Offset - 0x0C;
 
-
-			/*offset = this.GetLabelAddress (MULTIBOOT_LOAD_END_ADDRESS);
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) this.multibootLoadEndAddress);*/
-
 			index = this.GetLabelIndex (MULTIBOOT_LOAD_END_ADDRESS);
 			this.instructions [index + 1].Value = this.multibootLoadEndAddress;
-
-
-			/*offset = this.GetLabelAddress (MULTIBOOT_BSS_END_ADDRESS);
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) this.multibootBSSEndAddress);*/
 
 			index = this.GetLabelIndex (MULTIBOOT_BSS_END_ADDRESS);
 			this.instructions [index + 1].Value = this.multibootBSSEndAddress;
 
 #if PE			
-			/*offset = this.GetLabelAddress (PE_ADRESS_OFFSET);
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			value = this.GetLabelAddress (PE_HEADER);
-			binaryWriter.Write ((int) value);*/
-
 			index = this.GetLabelIndex (PE_ADRESS_OFFSET);
 			this.instructions [index + 1].Value = this.instructions [this.GetLabelIndex (PE_HEADER)].Offset;
 
 
-			this.PatchPE (/*binaryWriter*/);
+			this.PatchPE ();
 #endif
-
-			//binaryWriter.Seek (0, SeekOrigin.End);
 		}
 
 		#region Portable Executable
@@ -811,13 +754,13 @@ namespace SharpOS.AOT.X86 {
 			this.DATA ((uint) 0x00000000);
 
 			// SizeOfImage
-			this.DATA ((uint) 0x00000000); // FIXME
+			this.DATA ((uint) 0x00000000); 
 
 			// SizeOfHeaders
-			this.DATA ((uint) 0x00000000); // FIXME
+			this.DATA ((uint) 0x00000000); 
 
 			// CheckSum
-			this.DATA ((uint) 0x00000000); // FIXME ?
+			this.DATA ((uint) 0x00000000); 
 
 			// Subsystem
 			this.DATA ((ushort) 0x0001);
@@ -918,106 +861,51 @@ namespace SharpOS.AOT.X86 {
 
 		private void PatchPE (/*BinaryWriter binaryWriter*/)
 		{
-			/*uint value = this.GetLabelAddress (START_CODE);
-			uint offset = this.GetLabelAddress (PE_ADDRESS_OF_ENTRY_POINT);
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
-
 			uint start = this.instructions [this.GetLabelIndex (START_CODE)].Offset;
 			int index = this.GetLabelIndex (PE_ADDRESS_OF_ENTRY_POINT);
 			this.instructions [index + 1].Value = start;
 
-
-			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_ADDRESS));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
-
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_ADDRESS));
 			this.instructions [index + 1].Value = start;
-
-
-			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_POINTER_TO_RAW_DATA));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
 
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_POINTER_TO_RAW_DATA));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
-			/*value = this.GetLabelAddress (END_CODE) - value;
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_SIZE));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
-
 			start = this.instructions [this.GetLabelIndex (END_CODE)].Offset - start;
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_SIZE));
 			this.instructions [index + 1].Value = start;
-
-
-			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_CODE, PE_SIZE_OF_RAW_DATA));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
 
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_SIZE_OF_RAW_DATA));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
-			/*value = this.GetLabelAddress (START_DATA);
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_ADDRESS));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
-
 			start = this.instructions [this.GetLabelIndex (START_DATA)].Offset;
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_ADDRESS));
 			this.instructions [index + 1].Value = start;
-
-
-			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_POINTER_TO_RAW_DATA));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
 
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_POINTER_TO_RAW_DATA));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
-			/*value = this.GetLabelAddress (END_DATA) - value;
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
-
 			start = this.instructions [this.GetLabelIndex (END_DATA)].Offset - start;
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
 			this.instructions [index + 1].Value = start;
-
-
-			/*offset = this.GetLabelAddress (this.GetPESectionLabel (PE_DATA, PE_SIZE_OF_RAW_DATA));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
 
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_SIZE_OF_RAW_DATA));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
-			/*value = this.GetLabelAddress (START_BSS);
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_ADDRESS));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
-
 			start = this.instructions [this.GetLabelIndex (START_BSS)].Offset;
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_ADDRESS));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
-			/*value = this.GetLabelAddress (END_BSS) - value;
-			offset = this.GetLabelAddress (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_SIZE));
-			binaryWriter.Seek ((int) offset, SeekOrigin.Begin);
-			binaryWriter.Write ((int) value);*/
-
 			start = this.instructions [this.GetLabelIndex (END_BSS)].Offset -  start;
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_SIZE));
 			this.instructions [index + 1].Value = start;
@@ -1271,8 +1159,8 @@ namespace SharpOS.AOT.X86 {
 					new AssemblyMethod (this, method).GetAssemblyCode ();
 				}
 			}
-			
-			this.engine.Dump.PopElement();
+
+			this.engine.Dump.PopElement ();
 
 			this.AddHelperFunctions ();
 
@@ -1334,9 +1222,10 @@ namespace SharpOS.AOT.X86 {
 		{
 			int org = 0;
 
+			this.labels = new Dictionary<string, Instruction> ();
 			BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
 
-			// The first pass does the optimization
+			// The first pass does the computation/optimization
 			// The second pass writes the content
 			for (int pass = 0; pass < 2; pass++) {
 				bool changed;
@@ -1351,6 +1240,9 @@ namespace SharpOS.AOT.X86 {
 
 					for (int i = 0; i < this.instructions.Count; i++) {
 						Instruction instruction = this.instructions [i];
+
+						if (pass == 0)
+							instruction.Index = i;
 
 						if (instruction is OrgInstruction) {
 							if ((UInt32) instruction.Value < offset)
@@ -1368,14 +1260,14 @@ namespace SharpOS.AOT.X86 {
 							if (offset < binaryWriter.BaseStream.Length)
 								throw new Exception ("Wrong offset '" + offset.ToString () + "'.");
 
-							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < instruction.Offset)
 								binaryWriter.Write ((byte) 0);
 
 						} else if (instruction is AlignInstruction) {
 							if (offset % (UInt32) instruction.Value != 0)
 								offset += ((UInt32) instruction.Value - offset % (UInt32) instruction.Value);
 
-							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < instruction.Offset)
 								binaryWriter.Write ((byte) 0);
 
 						} else if (instruction is TimesInstruction) {
@@ -1383,7 +1275,7 @@ namespace SharpOS.AOT.X86 {
 
 							offset += times.Length;
 
-							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < offset)
+							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < instruction.Offset)
 								binaryWriter.Write ((byte) times.Value);
 						}
 
@@ -1391,68 +1283,43 @@ namespace SharpOS.AOT.X86 {
 							bss = true;
 
 						if (pass == 0) {
+							instruction.Offset = offset;
+
+							if (instruction.Label.Length > 0) {
+								if (this.labels.ContainsKey (instruction.Label))
+									throw new Exception ("The label '" + instruction.Label + "' has been defined more than once.");
+
+								this.labels.Add (instruction.Label, instruction);
+							}
+						}
+
+						if (pass == 1) {
 							if (instruction.Reference.Length > 0) {
-								//instruction.Value = new UInt32 [] { this.GetLabelAddress (instruction.Reference) };
 								((UInt32 []) instruction.Value) [0] = this.GetLabelAddress (instruction.Reference);
 
-								if (!instruction.Relative) {
+								if (!instruction.Relative)
 									((UInt32 []) instruction.Value) [0] = (UInt32) (org + ((UInt32 []) instruction.Value) [0]);
-
-								} else {
-									/*int delta = (int) (((UInt32 []) instruction.Value) [0] - offset - 2);
-
-									if (delta >= -128 && delta <= 127) {
-										Assembly temp = new Assembly ();
-
-										if (instruction.Name.Equals ("JMP")
-												&& instruction.Encoding [0] == "E9") {
-											temp.JMP ((byte) 0);
-
-											instruction.Set (temp [0]);
-
-											changed = true;
-
-										} else if (instruction.Name.Equals ("JNZ")
-												&& instruction.Encoding [1] == "85") {
-											temp.JNZ ((byte) 0);
-
-											instruction.Set (temp [0]);
-
-											changed = true;
-
-										} else if (instruction.Name.Equals ("JNE")
-												&& instruction.Encoding [1] == "85") {
-											temp.JNE ((byte) 0);
-
-											instruction.Set (temp [0]);
-
-											changed = true;
-										}
-
-										// TODO optimizations for the other jump instructions
-									}*/
-								}
 							}
 
 							if (instruction.RMMemory != null && instruction.RMMemory.Reference.Length > 0)
 								instruction.RMMemory.Displacement = (int) (org + this.GetLabelAddress (instruction.RMMemory.Reference) + instruction.RMMemory.DisplacementDelta);
+						}
 
+						if (pass == 0) {
 							// Load End Address
 							if (instruction.Label.Equals (Assembly.FormatLabelName (END_DATA)))
-								this.multibootLoadEndAddress = (UInt32) (org + offset);
+								this.multibootLoadEndAddress = (UInt32) (org + instruction.Offset);
 
 							// BSS End Address
 							if (instruction.Label.Equals (Assembly.FormatLabelName (END_BSS)))
-								this.multibootBSSEndAddress = (UInt32) (org + offset);
+								this.multibootBSSEndAddress = (UInt32) (org + instruction.Offset);
+						} 
+						
+						if (pass == 1 && !bss)
+							instruction.Encode (this.bits32, binaryWriter);
 
-						} else {
-							if (!bss)
-								instruction.Encode (this.bits32, binaryWriter);
-						}
-
-						instruction.Offset = offset;
-
-						offset += instruction.Size (this.bits32);
+						if (pass == 0)
+							offset += instruction.Size (this.bits32);
 					}
 
 				} while (changed);

@@ -193,6 +193,22 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		private int index = int.MaxValue;
+
+		/// <summary>
+		/// Gets or sets the index.
+		/// </summary>
+		/// <value>The index.</value>
+		public int Index {
+			get {
+				return index;
+			}
+			set {
+				index = value;
+			}
+		}
+
+
 		/// <summary>
 		/// Gets a value indicating whether this <see cref="Instruction"/> is relative.
 		/// </summary>
