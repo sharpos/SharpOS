@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Johann MacDonagh <johann [at] macdonaghs [dot] com>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="SharpOS AOT Compiler" default="build">
+	<description>Compiles SharpOS AOT Test Cases.</description>
+
+	<property name="debug" value="false" readonly="false" overwrite="false" />
+	<property name="prefix" value="../build" />
+	
+	<target name="build">
+		<echo message="Building SharpOS AOT Test Cases compiler" />
+		
+		<mkdir dir="${prefix}" />
+		
+		<csc target="library" output="${path::combine(prefix, 'SharpOS.AOT.Tests.dll')}" debug="${debug}" 
+				unsafe="true">
+			<references>
+				<include name="References/nunit.framework.dll" />
+				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
+			</references>
+			<sources>
+				<include name="X86.cs" />
+				<include name="X86.Memory16.cs" />
+				<include name="X86.Memory32.cs" />
+				<include name="AssemblyInfo.cs" />
+			</sources>
+		</csc>
+		
+		<copy file="References/nunit.framework.dll" tofile="${path::combine(prefix, 'nunit.framework.dll')}" />
+	</target>
+
+	<target name="clean">
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.Tests.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'nunit.framework.dll')}" failonerror="false" />
+	</target>
+</project>

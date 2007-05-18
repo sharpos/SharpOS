@@ -1015,8 +1015,11 @@ namespace SharpOS.AOT.IR {
 				}
 
 				// Arguments Load
-				else if (cilInstruction.OpCode == OpCodes.Ldarg || cilInstruction.OpCode == OpCodes.Ldarg_S) {
-					instruction = new Assign (this.Register (stack), this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence + 1));
+				else if (cilInstruction.OpCode == OpCodes.Ldarg) {
+					instruction = new Assign (this.Register (stack), this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
+
+				} else if (cilInstruction.OpCode == OpCodes.Ldarg_S) {
+					instruction = new Assign (this.Register (stack), this.Method.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S) {
 					if (cilInstruction.Operand is ParameterDefinition) {
@@ -1054,26 +1057,26 @@ namespace SharpOS.AOT.IR {
 				else if (cilInstruction.OpCode == OpCodes.Call
 						|| cilInstruction.OpCode == OpCodes.Callvirt
 						|| cilInstruction.OpCode == OpCodes.Jmp) {
-					
+
 					Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
 					MethodDefinition def = this.Method.Engine.GetCILDefinition (call);
-					
+
 					if (def != null) {
 						foreach (CustomAttribute attr in def.CustomAttributes) {
-							if (attr.Constructor.DeclaringType.FullName == 
-									typeof(SharpOS.AOT.Attributes.ADCStubAttribute)
+							if (attr.Constructor.DeclaringType.FullName ==
+									typeof (SharpOS.AOT.Attributes.ADCStubAttribute)
 									.FullName) {
 								// replace this call with an equivalent call
 								// to the ADC layer
-								
+
 								this.Method.Engine.FixupADCMethod (call);
 							}
 						}
 					} else {
-						this.Method.Engine.Message(3, "Found a reference to undefined method `{0}'",
-									   call.ToString());
+						this.Method.Engine.Message (3, "Found a reference to undefined method `{0}'",
+									   call.ToString ());
 					}
-					
+
 					Operand [] operands;
 
 					// If it is not static include the register of the instance into the operands
@@ -1122,11 +1125,11 @@ namespace SharpOS.AOT.IR {
 
 					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (fieldName);
 				}
-				/*else if (cilInstruction.OpCode == OpCodes.Ldflda)
-				{
-					instruction = new Assign(this.Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, this.Register(stack - 1)));
-					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-				}*/
+					/*else if (cilInstruction.OpCode == OpCodes.Ldflda)
+					{
+						instruction = new Assign(this.Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, this.Register(stack - 1)));
+						(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+					}*/
 				else if (cilInstruction.OpCode == OpCodes.Ldsfld) {
 					FieldReference field = cilInstruction.Operand as FieldReference;
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
@@ -1134,11 +1137,11 @@ namespace SharpOS.AOT.IR {
 					instruction = new Assign (this.Register (stack), new Field (fieldName));
 					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
 				}
-				/*else if (cilInstruction.OpCode == OpCodes.Ldsflda)
-				{
-					instruction = new Assign(this.Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name));
-					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-				}*/
+					/*else if (cilInstruction.OpCode == OpCodes.Ldsflda)
+					{
+						instruction = new Assign(this.Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name));
+						(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+					}*/
 				else if (cilInstruction.OpCode == OpCodes.Stfld) {
 					MemberReference field = cilInstruction.Operand as MemberReference;
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;

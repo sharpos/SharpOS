@@ -17,8 +17,9 @@
 	{
 		.field public static uint8* BootMessage
 	
-		.method public hidebysig static void  BootEntry(uint32 magic, uint32 ptr) cil managed
+		.method public hidebysig static void BootEntry(uint32 magic, uint32 ptr) cil managed
 		{
+			.custom instance void [SharpOS.AOT.Core]SharpOS.AOT.Attributes.KernelMainAttribute::.ctor() = ( 01 00 00 00 )
 			.entrypoint
 	
 			.maxstack  8

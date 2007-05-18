@@ -424,7 +424,8 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		internal bool IsKernelString (SharpOS.AOT.IR.Operands.Call call)
 		{
-			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method is MethodDefinition)
+					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
 			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
@@ -451,7 +452,8 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		internal bool IsKernelAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
-			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method is MethodDefinition)
+					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
 			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
@@ -482,7 +484,8 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		internal bool IsKernelLabelledAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
-			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method is MethodDefinition)
+					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
 			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
@@ -516,7 +519,8 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		internal bool IsKernelLabelAddress (SharpOS.AOT.IR.Operands.Call call)
 		{
-			if ((call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method is MethodDefinition)
+					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
 			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
