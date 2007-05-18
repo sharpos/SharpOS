@@ -55,6 +55,7 @@
 	</target>
 
 	<target name="clean">
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe.mdb')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'Mono.Cecil.dll')}" failonerror="false" />

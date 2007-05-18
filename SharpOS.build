@@ -14,7 +14,7 @@
 		<nant buildfile="./SharpOS.AOT/SharpOS.AOT.build" />
 		<nant buildfile="./SharpOS.AOT.Tests/SharpOS.AOT.Tests.build" />
 		<nant buildfile="./SharpOS.Kernel/SharpOS.Kernel.build" />
-		<nant buildfile="./SharpOS.TestKernel/SharpOS.TestKernel.build" />
+		<nant buildfile="./SharpOS.Kernel.Tests/SharpOS.Kernel.Tests.build" />
 	</target>
 
 	<target name="dist" depends="build">
@@ -46,8 +46,8 @@
 		<nant buildfile="./SharpOS.AOT/SharpOS.AOT.build" target="clean" />
 		<nant buildfile="./SharpOS.AOT.Tests/SharpOS.AOT.Tests.build" target="clean" />
 		<nant buildfile="./SharpOS.Kernel/SharpOS.Kernel.build" target="clean" />
-		<nant buildfile="./SharpOS.TestKernel/SharpOS.TestKernel.build" target="clean" />
-		<delete dir="build" />
-		<delete dir="dist" />
+		<nant buildfile="./SharpOS.Kernel.Tests/SharpOS.Kernel.Tests.build" target="clean" />
+		<delete dir="build"/>
+		<delete dir="dist"/>
 	</target>
 </project>

@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Johann MacDonagh <johann [at] macdonaghs [dot] com>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="SharpOS AOT Testing Kernel" default="build">
+	<description>Compiles a set of tests for the AOT compiler.</description>
+
+	<property name="prefix" value="../build" readonly="true" />
+
+	<target name="build">
+		<echo message="Building Test Kernel" />
+		
+		<mkdir dir="${prefix}" />
+
+		<ilasm target="dll" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}">
+			<sources>
+				<include name="IL/*.il" />
+			</sources>
+		</ilasm>
+
+		<csc target="library" unsafe="true" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}">
+			<sources>
+				<include name="CS/*.cs" />
+			</sources>
+		</csc>
+		
+		<script language="C#">
+			<references>
+				<include name="${path::combine(prefix, 'mono.cecil.dll')}" />
+			</references>
+			<imports>
+				<import namespace="Mono.Cecil" />
+				<import namespace="Mono.Cecil.Cil" />
+				<import namespace="Mono.Cecil.Metadata" />
+			</imports>
+			<code>
+				<![CDATA[
+					public static void ProcessAssembly (Project project, TextWriter tr, string assemblyFile)
+					{
+						// project.Log(Level.Info, "Processing: " + assemblyFile);
+
+						AssemblyDefinition library = AssemblyFactory.GetAssembly (assemblyFile);
+						
+						foreach (TypeDefinition type in library.MainModule.Types) {
+							if (type.Name.Equals ("<Module>"))
+								continue;
+								
+							foreach (MethodDefinition entry in type.Methods) {
+								if (!(entry.IsStatic
+										&& entry.ImplAttributes == MethodImplAttributes.Managed
+										&& entry.Name.StartsWith ("CMP"))) {
+									
+									// project.Log(Level.Info, "Ignoring: " + entry.ToString());
+									
+									continue;
+								}
+										
+								tr.WriteLine ("\t\t\tif (" + entry.DeclaringType.FullName + "." + entry.Name + " () != 1) {");
+								tr.WriteLine ("\t\t\t\tScreen.WriteLine (KRNL.String (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\"));");
+								tr.WriteLine ("\t\t\t\treturn;");
+								tr.WriteLine ("\t\t\t}");
+								tr.WriteLine ("");
+								
+								// project.Log(Level.Info, entry.DeclaringType.FullName + "." + entry.Name);
+							}
+						}
+					}
+					
+					public static void ScriptMain (Project project)
+					{
+						TextWriter tr = new StreamWriter (File.Open (Path.Combine (project.BaseDirectory, "Wrapper.cs"), FileMode.Create));
+						tr.WriteLine ("//");
+						tr.WriteLine ("// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)");
+						tr.WriteLine ("//");
+						tr.WriteLine ("// Authors:");
+						tr.WriteLine ("//	Mircea-Cristian Racasan <darx_kies@gmx.net>");
+						tr.WriteLine ("//");
+						tr.WriteLine ("// Licensed under the terms of the GNU GPL License version 2.");
+						tr.WriteLine ("//");
+
+						tr.WriteLine ("");
+						
+						tr.WriteLine ("namespace SharpOS {");
+						tr.WriteLine ("\tpublic unsafe partial class KRNL {");
+						tr.WriteLine ("\t\tprotected static void RunTests ()");
+						tr.WriteLine ("\t\t{");
+						
+						ProcessAssembly (project, tr, Path.Combine (project.BaseDirectory, Path.Combine (project.Properties["prefix"], "SharpOS.Kernel.Tests.IL.dll")));
+						ProcessAssembly (project, tr, Path.Combine (project.BaseDirectory, Path.Combine (project.Properties["prefix"], "SharpOS.Kernel.Tests.CS.dll")));
+
+						tr.WriteLine ("\t\t\tScreen.WriteLine (KRNL.String (\"All test cases have completed successfully!\"));");
+						
+						tr.WriteLine ("\t\t}");
+						tr.WriteLine ("\t}");
+						tr.WriteLine ("}");
+						tr.Close ();
+					}
+				]]>
+			</code>
+		</script>
+		
+		<csc target="library" unsafe="true" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')}">
+			<references>
+				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
+				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}" />
+				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
+			</references>
+			<sources>
+				<include name="*.cs" />
+			</sources>
+		</csc>
+	</target>
+	
+	<target name="clean">
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" failonerror="false" />
+		<delete file="Wrapper.cs" failonerror="false" />
+	</target>
+</project>
