@@ -79,16 +79,10 @@ namespace SharpOS.AOT.X86 {
 		{
 			if (value is R32Type)
 				return value as R32Type;
-
-			if (!(value is SharpOS.AOT.IR.Operands.Field))
-				throw new Exception ("'" + value.ToString() + "' is not supported.");
-
-			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
-
-			if (id.Equals ("null"))
-				return null;
-
-			switch (id.Substring (id.Length - 3)) {
+			
+			switch (Register.GetName (value)) {
+				case null:
+					return null;
 
 				case "EAX":
 					return R32.EAX;
@@ -115,7 +109,7 @@ namespace SharpOS.AOT.X86 {
 					return R32.EDI;
 
 				default:
-					throw new Exception ("Unknown R32 Register '" + id + "'");
+					throw new Exception ("Unknown R32 Register '" + value.ToString () + "'");
 			}
 		}
 	}

@@ -49,15 +49,9 @@ namespace SharpOS.AOT.X86 {
 			if (value is R16Type)
 				return value as R16Type;
 
-			if (!(value is SharpOS.AOT.IR.Operands.Field))
-				throw new Exception ("'" + value.ToString() + "' is not supported.");
-
-			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
-
-			if (id.Equals ("null"))
-				return null;
-
-			switch (id.Substring (id.Length - 2)) {
+			switch (Register.GetName (value)) {
+				case null:
+					return null;
 
 				case "AX":
 					return R16.AX;
@@ -84,7 +78,7 @@ namespace SharpOS.AOT.X86 {
 					return R16.DI;
 
 				default:
-					throw new Exception ("Unknown R16 Register '" + id + "'");
+					throw new Exception ("Unknown R16 Register '" + value.ToString () + "'");
 			}
 		}
 	}

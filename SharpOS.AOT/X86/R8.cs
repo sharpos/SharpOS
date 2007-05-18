@@ -48,15 +48,9 @@ namespace SharpOS.AOT.X86 {
 			if (value is R8Type)
 				return value as R8Type;
 
-			if (!(value is SharpOS.AOT.IR.Operands.Field))
-				throw new Exception ("'" + value.ToString() + "' is not supported.");
-
-			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
-
-			if (id.Equals ("null"))
-				return null;
-
-			switch (id.Substring (id.Length - 2)) {
+			switch (Register.GetName (value)) {
+				case null:
+					return null;
 
 				case "AL":
 					return R8.AL;
@@ -83,7 +77,7 @@ namespace SharpOS.AOT.X86 {
 					return R8.DH;
 
 				default:
-					throw new Exception ("Unknown R8 Register '" + id + "'");
+					throw new Exception ("Unknown R8 Register '" + value.ToString () + "'");
 			}
 		}
 	}

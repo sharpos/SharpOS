@@ -44,15 +44,9 @@ namespace SharpOS.AOT.X86 {
 			if (value is SegType)
 				return value as SegType;
 
-			if (!(value is SharpOS.AOT.IR.Operands.Field))
-				throw new Exception ("'" + value.ToString() + "' is not supported.");
-
-			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
-
-			if (id.Equals ("null"))
-				return null;
-
-			switch (id.Substring (id.Length - 2)) {
+			switch (Register.GetName (value)) {
+				case null:
+					return null;
 
 				case "DS":
 					return Seg.DS;
@@ -73,7 +67,7 @@ namespace SharpOS.AOT.X86 {
 					return Seg.GS;
 
 				default:
-					throw new Exception ("Unknown Seg Register '" + id + "'");
+					throw new Exception ("Unknown Seg Register '" + value.ToString () + "'");
 			}
 		}
 	}

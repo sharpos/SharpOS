@@ -52,7 +52,10 @@ namespace SharpOS {
 		{
 			GoTo (0, 0);
 
-			// TODO delete the content on the screen
+			for (byte* video = (byte*) 0xB8000; (uint) video < 0xB8000 + 40 * 2 * 25;) {
+				*video++ = 0x20;
+				*video++ = 0x00;
+			}
 		}
 
 		public unsafe static void WriteNumber (bool hex, int value)

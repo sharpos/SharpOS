@@ -67,5 +67,27 @@ namespace SharpOS.AOT.X86 {
 		{
 			return this.name;
 		}
+
+		public static string GetName (object value)
+		{
+			string result;
+
+			if (value is System.String)
+				result = value as System.String;
+
+			else if (value is SharpOS.AOT.IR.Operands.Identifier)
+				result = (value as SharpOS.AOT.IR.Operands.Identifier).Value.ToString();
+	
+			else
+				throw new Exception ("'" + value.ToString() + "' is not supported.");
+
+			if (result.IndexOf ("::") != -1)
+				result = result.Substring (result.IndexOf ("::") + 2);
+
+			if (result.ToLower ().Equals ("null"))
+				return null;
+
+			return result;
+		}
 	}
 }

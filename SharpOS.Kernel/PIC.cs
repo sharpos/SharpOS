@@ -17,6 +17,11 @@ using SharpOS.AOT.IR;
 
 namespace SharpOS.ADC.X86 {
 	public unsafe class PIC {
+		private static byte MasterIRQMask = 0xFB;
+		private static byte SlaveIRQMask = 0xFF;
+
+		public const byte EndOfInterrupt = 0x20;
+
 		public const byte MasterIRQBase = 0x20;
 		private const ushort MasterPICCommandPort = 0x20;
 		private const ushort MasterPICDataPort = 0x21;
@@ -59,12 +64,91 @@ namespace SharpOS.ADC.X86 {
 			IO.Out8 (SlavePICDataPort, SlaveICW4);
 			IO.Delay ();
 
-			// Disable all IRQs (except IRQ2)
-			IO.Out8 (MasterPICDataPort, 0xFB);
+
+			DisableAllIRQs ();
+		}
+
+		public static void SendMasterEndOfInterrupt ()
+		{
+			IO.Out8 (MasterPICCommandPort, EndOfInterrupt);
+		}
+
+		public static void SendSlaveEndOfInterrupt ()
+		{
+			IO.Out8 (SlavePICCommandPort, EndOfInterrupt);
+		}
+
+		public static void DisableAllIRQs ()
+		{
+			MasterIRQMask = (byte) 0xFF;
+
+			IO.Out8 (MasterPICDataPort, MasterIRQMask);
 			IO.Delay ();
 
-			IO.Out8 (SlavePICDataPort, 0xFF);
+			SlaveIRQMask = (byte) 0xFF;
+
+			IO.Out8 (SlavePICDataPort, SlaveIRQMask);
 			IO.Delay ();
+		}
+
+		public static void EnableMasterIRQ (byte value)
+		{
+			value &= 7;
+
+			if (value == 2)
+				return;
+
+			MasterIRQMask &= (byte) ~(1 << value);
+
+			IO.Out8 (MasterPICDataPort, MasterIRQMask);
+		}
+
+		public static void EnableSlaveIRQ (byte value)
+		{
+			value &= 7;
+
+			SlaveIRQMask &= (byte) ~(1 << value);
+
+			IO.Out8 (SlavePICDataPort, SlaveIRQMask);
+		}
+
+		public static void EnableIRQ (byte value)
+		{
+			if (value < 8)
+				EnableMasterIRQ (value);
+
+			else if (value < 16)
+				EnableSlaveIRQ ((byte) (value - 8));
+		}
+
+		public static void DisableMasterIRQ (byte value)
+		{
+			value &= 7;
+
+			if (value == 2)
+				return;
+
+			MasterIRQMask |= (byte) (1 << value);
+
+			IO.Out8 (MasterPICDataPort, MasterIRQMask);
+		}
+
+		public static void DisableSlaveIRQ (byte value)
+		{
+			value &= 7;
+
+			SlaveIRQMask |= (byte) (1 << value);
+
+			IO.Out8 (SlavePICDataPort, SlaveIRQMask);
+		}
+
+		public static void DisableIRQ (byte value)
+		{
+			if (value < 8)
+				DisableMasterIRQ (value);
+
+			else if (value < 16)
+				DisableSlaveIRQ ((byte) (value - 8));
 		}
 	}
 }

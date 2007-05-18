@@ -48,15 +48,9 @@ namespace SharpOS.AOT.X86 {
 			if (value is FPType)
 				return value as FPType;
 
-			if (!(value is SharpOS.AOT.IR.Operands.Field))
-				throw new Exception ("'" + value.ToString() + "' is not supported.");
-
-			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
-
-			if (id.Equals ("null"))
-				return null;
-
-			switch (id.Substring (id.Length - 3)) {
+			switch (Register.GetName (value)) {
+				case null:
+					return null;
 
 				case "ST0":
 					return FP.ST0;
@@ -83,7 +77,7 @@ namespace SharpOS.AOT.X86 {
 					return FP.ST7;
 
 				default:
-					throw new Exception ("Unknown FP Register '" + id + "'");
+					throw new Exception ("Unknown FP Register '" + value.ToString () + "'");
 			}
 		}
 	}

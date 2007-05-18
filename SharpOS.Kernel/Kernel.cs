@@ -27,6 +27,7 @@ namespace SharpOS {
 			GDT.Setup ();
 			PIC.Setup ();
 			IDT.Setup ();
+			PIT.Setup ();
 
 			if (!Multiboot.WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd))
 				return;
@@ -38,6 +39,8 @@ namespace SharpOS {
 			Screen.WriteLine (String ("Pinky: What are we gonna do tonight, Brain?"));
 			Screen.WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
 			Screen.RestoreAttributes ();
+
+			while (true);
 		}
 
 		#region Stubs

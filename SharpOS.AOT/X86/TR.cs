@@ -42,15 +42,9 @@ namespace SharpOS.AOT.X86 {
 			if (value is TRType)
 				return value as TRType;
 
-			if (!(value is SharpOS.AOT.IR.Operands.Field))
-				throw new Exception ("'" + value.ToString() + "' is not supported.");
-
-			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
-
-			if (id.Equals ("null"))
-				return null;
-
-			switch (id.Substring (id.Length - 3)) {
+			switch (Register.GetName (value)) {
+				case null:
+					return null;
 
 				case "TR3":
 					return TR.TR3;
@@ -68,7 +62,7 @@ namespace SharpOS.AOT.X86 {
 					return TR.TR7;
 
 				default:
-					throw new Exception ("Unknown TR Register '" + id + "'");
+					throw new Exception ("Unknown TR Register '" + value.ToString () + "'");
 			}
 		}
 	}

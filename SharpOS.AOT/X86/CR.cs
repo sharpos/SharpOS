@@ -40,17 +40,9 @@ namespace SharpOS.AOT.X86 {
 			if (value is CRType)
 				return value as CRType;
 
-
-			if (!(value is SharpOS.AOT.IR.Operands.Field))
-				throw new Exception ("'" + value.ToString() + "' is not supported.");
-
-
-			string id = (value as SharpOS.AOT.IR.Operands.Field).Value.ToString();
-
-			if (id.Equals ("null"))
-				return null;
-
-			switch (id.Substring (id.Length - 3)) {
+			switch (Register.GetName (value)) {
+				case null:
+					return null;
 
 				case "CR0":
 					return CR.CR0;
@@ -65,7 +57,7 @@ namespace SharpOS.AOT.X86 {
 					return CR.CR4;
 
 				default:
-					throw new Exception ("Unknown CR Register '" + id + "'");
+					throw new Exception ("Unknown CR Register '" + value.ToString () + "'");
 			}
 		}
 	}
