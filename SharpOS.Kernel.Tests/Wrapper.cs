@@ -81,56 +81,6 @@ namespace SharpOS {
 				return;
 			}
 
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP5 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP5' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP6 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP6' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP7 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP7' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP8 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP8' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP9 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP9' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP10 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP10' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP11 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP11' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP12 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP12' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP13 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP13' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHR.CMP14 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHR.CMP14' failed."));
-				return;
-			}
-
 			if (SharpOS.Kernel.Tests.IL.SHL.CMP0 () != 1) {
 				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP0' failed."));
 				return;
@@ -168,71 +118,6 @@ namespace SharpOS {
 
 			if (SharpOS.Kernel.Tests.IL.SHL.CMP7 () != 1) {
 				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP7' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP8 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP8' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP9 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP9' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP10 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP10' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP11 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP11' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP12 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP12' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP13 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP13' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP14 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP14' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP15 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP15' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP16 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP16' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP17 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP17' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP18 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP18' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP19 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP19' failed."));
-				return;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.SHL.CMP20 () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.IL.SHL.CMP20' failed."));
 				return;
 			}
 

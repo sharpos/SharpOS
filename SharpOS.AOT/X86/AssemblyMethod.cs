@@ -1639,7 +1639,7 @@ namespace SharpOS.AOT.X86 {
 						if (emit)
 							this.MovRegisterMemory (register, identifier);
 					}
-					
+
 					address = this.GetMemory (operand.SizeType, register, 0, this.assembly.GetFieldOffset (field.Value));
 
 					assembly.FreeSpareRegister (register);
@@ -1655,9 +1655,9 @@ namespace SharpOS.AOT.X86 {
 					register = assembly.GetRegister (identifier.Register);
 
 				else {
-					register = assembly.GetSpareRegister();
+					register = assembly.GetSpareRegister ();
 
-					if (emit) 
+					if (emit)
 						this.MovRegisterMemory (register, identifier);
 				}
 
@@ -1671,10 +1671,10 @@ namespace SharpOS.AOT.X86 {
 				address = this.GetMemory (operand.SizeType, R32.EBP, 0, this.GetArgumentOffset (index) * 4);
 
 			} else if (operand.Stack != int.MinValue) {
-				address = this.GetMemory (operand.SizeType, R32.EBP, 0, - ( (3 + operand.Stack) * 4));
+				address = this.GetMemory (operand.SizeType, R32.EBP, 0, -((3 + operand.Stack) * 4));
 
 			} else
-				throw new Exception ("Wrong '" + operand.ToString() + "' Operand.");
+				throw new Exception ("Wrong '" + operand.ToString () + "' Operand.");
 
 			return address;
 		}
