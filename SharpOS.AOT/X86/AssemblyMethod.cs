@@ -45,12 +45,19 @@ namespace SharpOS.AOT.X86 {
 			string fullname = method.MethodFullName;
 
 			foreach (CustomAttribute attribute in method.MethodDefinition.CustomAttributes) {
-				if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ()))
-					assembly.LABEL (attribute.ConstructorParameters [0].ToString());
+				if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ())) {
+					assembly.LABEL (attribute.ConstructorParameters [0].ToString ());
 
-				else if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.KernelMainAttribute).ToString ()))
+					this.assembly.AddSymbol (new COFF.Label (attribute.ConstructorParameters [0].ToString ()));
+
+				} else if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.KernelMainAttribute).ToString ())) {
 					assembly.LABEL (Assembly.KERNEL_MAIN);
+
+					this.assembly.AddSymbol (new COFF.Label (Assembly.KERNEL_MAIN));
+				}
 			}
+
+			this.assembly.AddSymbol (new COFF.Function (fullname));
 
 			assembly.LABEL (fullname);
 			assembly.PUSH (R32.EBP);
@@ -303,6 +310,9 @@ namespace SharpOS.AOT.X86 {
 			parameterTypes = parameterTypes.Trim();
 
 			assembly.GetAssemblyInstruction (call.Method, operands, parameterTypes);
+
+			if (call.Method.Method.Name.Equals ("LABEL"))
+				this.assembly.AddSymbol (new COFF.Label (operands [0].ToString ()));
 		}
 
 		/// <summary>

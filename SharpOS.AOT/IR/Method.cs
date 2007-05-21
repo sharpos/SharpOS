@@ -1816,11 +1816,20 @@ namespace SharpOS.AOT.IR {
 		{
 			StringBuilder result = new StringBuilder();
 
-			result.Append (method.ReturnType.ReturnType.FullName + " ");
+			//result.Append (method.ReturnType.ReturnType.FullName + " ");
 			result.Append (method.DeclaringType.FullName + "." + method.Name);
 
-			foreach (ParameterReference parameter in method.Parameters)
-				result.Append (" " + parameter.ParameterType.FullName);
+			for (int i = 0; i < method.Parameters.Count; i++) {
+				if (i == 0)
+					result.Append ("(");
+				else
+					result.Append (",");
+
+				result.Append (method.Parameters [i].ParameterType.FullName);
+			}
+
+			if (method.Parameters.Count > 0)
+				result.Append (")");
 
 			return result.ToString();
 		}

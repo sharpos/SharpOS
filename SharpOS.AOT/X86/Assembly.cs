@@ -30,6 +30,7 @@ namespace SharpOS.AOT.X86 {
 		const string END_CODE = "END_CODE";
 		const string START_DATA = "START_DATA";
 		const string END_DATA = "END_DATA";
+		const string START_COFF_SYMBOLS = "START_COFF_SYMBOLS";
 		const string START_BSS = "START_BSS";
 		const string END_BSS = "END_BSS";
 		const string END_STACK = "END_STACK";
@@ -56,6 +57,7 @@ namespace SharpOS.AOT.X86 {
 		const string PE_VIRTUAL_ADDRESS = "VirtualAddress";
 		const string PE_SIZE_OF_RAW_DATA = "SizeOfRawData";
 		const string PE_POINTER_TO_RAW_DATA = "PointerToRawData";
+		const ushort PE_CODE_SECTION = 1;
 #endif 		
 
 		const uint BASE_ADDRESS = 0x00100000;
@@ -69,6 +71,7 @@ namespace SharpOS.AOT.X86 {
 		Assembly data;
 		Assembly bss;
 		Dictionary<string, Instruction> labels;
+		List<COFF.Symbol> symbols;
 
 		uint multibootBSSEndAddress = 0;
 		uint multibootLoadEndAddress = 0;
@@ -112,6 +115,85 @@ namespace SharpOS.AOT.X86 {
 				return this.instructions [index];
 			}
 		}
+
+		#region COFF Symbols
+		/// <summary>
+		/// Adds a COFF Symbol.
+		/// </summary>
+		/// <param name="symbol">The symbol.</param>
+		internal void AddSymbol (COFF.Symbol symbol)
+		{
+			this.symbols.Add (symbol);
+		}
+
+		/// <summary>
+		/// Adds the encoded COFF symbol data.
+		/// </summary>
+		private void AddSymbols ()
+		{
+			this.ALIGN (ALIGNMENT);
+			this.LABEL (START_COFF_SYMBOLS);
+
+			uint stringTableOffset = 4;
+
+			for (int i = 0; i < this.symbols.Count; i++) {
+				if (this.symbols [i] is COFF.Label) {
+					// To tell the COFF Loader that the name is in the String Table
+					this.DATA ((uint) 0);
+
+					// The offset in the string table containing the name
+					this.DATA (stringTableOffset);
+
+					// We remember the index for the next instruction that needs to be updated
+					this.symbols [i].Index = this.instructions.Count;
+
+					// The offset to the code that the label points to int he binary
+					this.DATA ((uint) 0);
+
+					// The section
+					this.DATA (PE_CODE_SECTION);
+
+					// The type
+					this.DATA ((ushort) (this.symbols [i] is COFF.Function ? 0x20 : 0));
+
+					// The storage class
+					this.DATA ((byte) (this.symbols [i] is COFF.Function ? COFF.Symbol.StorageClassType.C_EXT : COFF.Symbol.StorageClassType.C_LABEL));
+
+					// Number of Auxiliary Records
+					this.DATA ((byte) 0);
+
+					stringTableOffset += (uint) ((this.symbols [i] as COFF.Label).Name.Length + 1);
+				} else
+					throw new Exception ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
+			}
+
+			// Write String Table Length
+			this.DATA ((uint) stringTableOffset);
+
+			for (int i = 0; i < this.symbols.Count; i++) {
+				if (this.symbols [i] is COFF.Label) {
+					this.DATA ((this.symbols [i] as COFF.Label).Name);
+					this.DATA ((byte) 0);
+
+				} else
+					throw new Exception ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
+			}
+		}
+
+		private void PatchSymbolOffsets ()
+		{
+			uint startCode = this.instructions [this.GetLabelIndex (START_CODE)].Offset;
+
+			for (int i = 0; i < this.symbols.Count; i++) {
+				if (this.symbols [i] is COFF.Label) {
+					uint offset = this.instructions [this.GetLabelIndex ((this.symbols [i] as COFF.Label).Name)].Offset - startCode;
+					this.instructions [this.symbols [i].Index].Value = offset;
+
+				} else
+					throw new Exception ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
+			}
+		}
+		#endregion
 
 		/// <summary>
 		/// Returns a <see cref="T:System.String"></see> that represents the current <see cref="T:System.Object"></see>.
@@ -545,7 +627,7 @@ namespace SharpOS.AOT.X86 {
 		/// <summary>
 		/// Patches the specified memory stream.
 		/// </summary>
-		private void Patch (/*MemoryStream memoryStream*/)
+		private void Patch ()
 		{
 			int index = this.GetLabelIndex (MULTIBOOT_ENTRY_POINT);
 			this.instructions [index + 1].Value = BASE_ADDRESS + this.instructions [this.GetLabelIndex (KERNEL_ENTRY_POINT)].Offset;
@@ -562,7 +644,6 @@ namespace SharpOS.AOT.X86 {
 #if PE			
 			index = this.GetLabelIndex (PE_ADRESS_OFFSET);
 			this.instructions [index + 1].Value = this.instructions [this.GetLabelIndex (PE_HEADER)].Offset;
-
 
 			this.PatchPE ();
 #endif
@@ -863,7 +944,7 @@ namespace SharpOS.AOT.X86 {
 			this.AddPESection (PE_BSS, 0xC0000080);
 		}
 
-		private void PatchPE (/*BinaryWriter binaryWriter*/)
+		private void PatchPE ()
 		{
 			uint start = this.instructions [this.GetLabelIndex (START_CODE)].Offset;
 			int index = this.GetLabelIndex (PE_ADDRESS_OF_ENTRY_POINT);
@@ -913,6 +994,15 @@ namespace SharpOS.AOT.X86 {
 			start = this.instructions [this.GetLabelIndex (END_BSS)].Offset -  start;
 			index = this.GetLabelIndex (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_SIZE));
 			this.instructions [index + 1].Value = start;
+
+
+			////////////////////////////////////////////////////////////////////////////////////////
+			start = this.instructions [this.GetLabelIndex (START_COFF_SYMBOLS)].Offset;
+			index = this.GetLabelIndex (PE_POINTER_TO_SYMBOL_TABLE);
+			this.instructions [index + 1].Value = (uint) start;
+
+			index = this.GetLabelIndex (PE_NUMBER_OF_SYMBOLS);
+			this.instructions [index + 1].Value = (uint) this.symbols.Count;
 		}
 
 		private string GetPESectionLabel (string prefix, string type)
@@ -1004,6 +1094,8 @@ namespace SharpOS.AOT.X86 {
 		private void AddEntryPoint ()
 		{
 			this.ORG (0x00100000);
+
+			this.AddSymbol (new COFF.Label (KERNEL_ENTRY_POINT));
 
 			this.LABEL (KERNEL_ENTRY_POINT);
 	
@@ -1137,6 +1229,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public bool Encode (Engine engine, string target)
 		{
+			this.symbols = new List<SharpOS.AOT.COFF.Symbol> ();
 			this.data = new Assembly ();
 			this.bss = new Assembly ();
 			this.engine = engine;
@@ -1172,6 +1265,8 @@ namespace SharpOS.AOT.X86 {
 			this.LABEL (END_CODE);
 
 			this.AddData ();
+
+			this.AddSymbols ();
 
 			this.AddBSS ();
 
@@ -1236,6 +1331,9 @@ namespace SharpOS.AOT.X86 {
 
 				if (pass == 1)
 					this.Patch ();
+
+				if (pass == 1)
+					this.PatchSymbolOffsets ();
 
 				do {
 					changed = false;
@@ -1341,6 +1439,8 @@ namespace SharpOS.AOT.X86 {
 			string hiShift = HELPER_LSHL + " HI_SHIFT";
 			string start = HELPER_LSHL + " START";
 
+			this.AddSymbol (new COFF.Label (HELPER_LSHL));
+
 			this.LABEL (HELPER_LSHL);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));
 			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 8));
@@ -1402,6 +1502,8 @@ namespace SharpOS.AOT.X86 {
 			string end = HELPER_LSHR + " EXIT";
 			string hiShift = HELPER_LSHR + " HI SHIFT";
 
+			this.AddSymbol (new COFF.Label (HELPER_LSHR));
+
 			this.LABEL (HELPER_LSHR);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));
 			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 8));
@@ -1455,6 +1557,8 @@ namespace SharpOS.AOT.X86 {
 		{
 			string end = HELPER_LSAR + " EXIT";
 			string hiShift = HELPER_LSAR + " HI SHIFT";
+
+			this.AddSymbol (new COFF.Label (HELPER_LSAR));
 
 			this.LABEL (HELPER_LSAR);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));

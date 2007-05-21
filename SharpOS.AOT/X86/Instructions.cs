@@ -17,7 +17,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AAA ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAA", "", null, null, null, null, new string[] {"37"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAA", "", null, null, null, null, new string [] {"37"}));
 		}
 		
 		/// <summary>
@@ -25,7 +25,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AAD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAD", "", null, null, null, null, new string[] {"D5", "0A"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAD", "", null, null, null, null, new string [] {"D5", "0A"}));
 		}
 		
 		/// <summary>
@@ -33,7 +33,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AAD (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAD", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"D5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAD", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"D5", "ib"}));
 		}
 		
 		/// <summary>
@@ -41,7 +41,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AAM ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAM", "", null, null, null, null, new string[] {"D4", "0A"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAM", "", null, null, null, null, new string [] {"D4", "0A"}));
 		}
 		
 		/// <summary>
@@ -49,7 +49,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AAM (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAM", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"D4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAM", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"D4", "ib"}));
 		}
 		
 		/// <summary>
@@ -57,7 +57,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AAS ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAS", "", null, null, null, null, new string[] {"3F"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AAS", "", null, null, null, null, new string [] {"3F"}));
 		}
 		
 		/// <summary>
@@ -65,7 +65,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"10", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"10", "/r"}));
 		}
 		
 		/// <summary>
@@ -73,7 +73,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "11", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "11", "/r"}));
 		}
 		
 		/// <summary>
@@ -81,7 +81,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "11", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "11", "/r"}));
 		}
 		
 		/// <summary>
@@ -89,7 +89,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"12", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"12", "/r"}));
 		}
 		
 		/// <summary>
@@ -97,7 +97,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "13", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "13", "/r"}));
 		}
 		
 		/// <summary>
@@ -105,7 +105,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "13", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "13", "/r"}));
 		}
 		
 		/// <summary>
@@ -113,7 +113,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"80", "/2", "ib"}));
 		}
 		
 		/// <summary>
@@ -121,7 +121,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/2", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "81", "/2", "iw"}));
 		}
 		
 		/// <summary>
@@ -129,7 +129,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/2", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "81", "/2", "id"}));
 		}
 		
 		/// <summary>
@@ -137,7 +137,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "83", "/2", "ib"}));
 		}
 		
 		/// <summary>
@@ -145,7 +145,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "83", "/2", "ib"}));
 		}
 		
 		/// <summary>
@@ -153,7 +153,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"10", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"10", "/r"}));
 		}
 		
 		/// <summary>
@@ -161,7 +161,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "11", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "11", "/r"}));
 		}
 		
 		/// <summary>
@@ -169,7 +169,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "11", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "11", "/r"}));
 		}
 		
 		/// <summary>
@@ -178,10 +178,10 @@ namespace SharpOS.AOT.X86 {
 		public void ADC (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"14", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"14", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/2", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"80", "/2", "ib"}));
 			}
 		}
 		
@@ -191,10 +191,10 @@ namespace SharpOS.AOT.X86 {
 		public void ADC (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "15", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "15", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/2", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "81", "/2", "iw"}));
 			}
 		}
 		
@@ -204,14 +204,14 @@ namespace SharpOS.AOT.X86 {
 		public void ADC (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "15", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "15", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.ADC (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/2", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/2", "id"}));
 				}
 			}
 		}
@@ -221,7 +221,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "83", "/2", "ib"}));
 		}
 		
 		/// <summary>
@@ -229,7 +229,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADC (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/2", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "83", "/2", "ib"}));
 		}
 		
 		/// <summary>
@@ -237,7 +237,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"00", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"00", "/r"}));
 		}
 		
 		/// <summary>
@@ -245,7 +245,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "01", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "01", "/r"}));
 		}
 		
 		/// <summary>
@@ -253,7 +253,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "01", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "01", "/r"}));
 		}
 		
 		/// <summary>
@@ -261,7 +261,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"02", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"02", "/r"}));
 		}
 		
 		/// <summary>
@@ -269,7 +269,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "03", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "03", "/r"}));
 		}
 		
 		/// <summary>
@@ -277,7 +277,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "03", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "03", "/r"}));
 		}
 		
 		/// <summary>
@@ -285,7 +285,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"80", "/0", "ib"}));
 		}
 		
 		/// <summary>
@@ -293,7 +293,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/0", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "81", "/0", "iw"}));
 		}
 		
 		/// <summary>
@@ -301,7 +301,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/0", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "81", "/0", "id"}));
 		}
 		
 		/// <summary>
@@ -309,7 +309,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "83", "/0", "ib"}));
 		}
 		
 		/// <summary>
@@ -317,7 +317,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "83", "/0", "ib"}));
 		}
 		
 		/// <summary>
@@ -325,7 +325,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"00", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"00", "/r"}));
 		}
 		
 		/// <summary>
@@ -333,7 +333,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "01", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "01", "/r"}));
 		}
 		
 		/// <summary>
@@ -341,7 +341,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "01", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "01", "/r"}));
 		}
 		
 		/// <summary>
@@ -350,10 +350,10 @@ namespace SharpOS.AOT.X86 {
 		public void ADD (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"04", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"04", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"80", "/0", "ib"}));
 			}
 		}
 		
@@ -363,10 +363,10 @@ namespace SharpOS.AOT.X86 {
 		public void ADD (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "05", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "05", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/0", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "81", "/0", "iw"}));
 			}
 		}
 		
@@ -376,14 +376,14 @@ namespace SharpOS.AOT.X86 {
 		public void ADD (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "05", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "05", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.ADD (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/0", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/0", "id"}));
 				}
 			}
 		}
@@ -393,7 +393,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ADD (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "83", "/0", "ib"}));
 		}
 		
 		/// <summary>
@@ -410,7 +410,7 @@ namespace SharpOS.AOT.X86 {
 			}
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "83", "/0", "ib"}));
 			}
 		}
 		
@@ -419,7 +419,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"20", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"20", "/r"}));
 		}
 		
 		/// <summary>
@@ -427,7 +427,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "21", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "21", "/r"}));
 		}
 		
 		/// <summary>
@@ -435,7 +435,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "21", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "21", "/r"}));
 		}
 		
 		/// <summary>
@@ -443,7 +443,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"22", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"22", "/r"}));
 		}
 		
 		/// <summary>
@@ -451,7 +451,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "23", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "23", "/r"}));
 		}
 		
 		/// <summary>
@@ -459,7 +459,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "23", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "23", "/r"}));
 		}
 		
 		/// <summary>
@@ -467,7 +467,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"80", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -475,7 +475,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/4", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "81", "/4", "iw"}));
 		}
 		
 		/// <summary>
@@ -483,7 +483,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/4", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "81", "/4", "id"}));
 		}
 		
 		/// <summary>
@@ -491,7 +491,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "83", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -499,7 +499,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "83", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -507,7 +507,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"20", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"20", "/r"}));
 		}
 		
 		/// <summary>
@@ -515,7 +515,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "21", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "21", "/r"}));
 		}
 		
 		/// <summary>
@@ -523,7 +523,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "21", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "21", "/r"}));
 		}
 		
 		/// <summary>
@@ -532,10 +532,10 @@ namespace SharpOS.AOT.X86 {
 		public void AND (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"24", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"24", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"80", "/4", "ib"}));
 			}
 		}
 		
@@ -545,10 +545,10 @@ namespace SharpOS.AOT.X86 {
 		public void AND (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "25", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "25", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/4", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "81", "/4", "iw"}));
 			}
 		}
 		
@@ -558,14 +558,14 @@ namespace SharpOS.AOT.X86 {
 		public void AND (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "25", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "25", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.AND (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/4", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/4", "id"}));
 				}
 			}
 		}
@@ -575,7 +575,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "83", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -583,7 +583,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void AND (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "83", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -591,7 +591,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ARPL (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ARPL", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"63", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ARPL", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"63", "/r"}));
 		}
 		
 		/// <summary>
@@ -599,7 +599,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ARPL (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ARPL", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"63", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ARPL", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"63", "/r"}));
 		}
 		
 		/// <summary>
@@ -607,7 +607,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BOUND (R16Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BOUND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "62", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BOUND", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "62", "/r"}));
 		}
 		
 		/// <summary>
@@ -615,7 +615,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BOUND (R32Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BOUND", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "62", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BOUND", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "62", "/r"}));
 		}
 		
 		/// <summary>
@@ -623,7 +623,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSF (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "BC", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "BC", "/r"}));
 		}
 		
 		/// <summary>
@@ -631,7 +631,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSF (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "BC", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "BC", "/r"}));
 		}
 		
 		/// <summary>
@@ -639,7 +639,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSF (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "BC", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "BC", "/r"}));
 		}
 		
 		/// <summary>
@@ -647,7 +647,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSF (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "BC", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSF", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "BC", "/r"}));
 		}
 		
 		/// <summary>
@@ -655,7 +655,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSR (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "BD", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "BD", "/r"}));
 		}
 		
 		/// <summary>
@@ -663,7 +663,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSR (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "BD", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "BD", "/r"}));
 		}
 		
 		/// <summary>
@@ -671,7 +671,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSR (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "BD", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "BD", "/r"}));
 		}
 		
 		/// <summary>
@@ -679,7 +679,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSR (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "BD", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSR", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "BD", "/r"}));
 		}
 		
 		/// <summary>
@@ -687,7 +687,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BSWAP (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSWAP", target.ToString(), null, null, target, null, new string[] {"o32", "0F", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BSWAP", target.ToString (), null, null, target, null, new string [] {"o32", "0F", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -695,7 +695,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BT (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "A3", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "0F", "A3", "/r"}));
 		}
 		
 		/// <summary>
@@ -703,7 +703,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BT (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "A3", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "0F", "A3", "/r"}));
 		}
 		
 		/// <summary>
@@ -711,7 +711,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BT (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "0F", "BA", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -719,7 +719,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BT (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "0F", "BA", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -727,7 +727,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BT (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "A3", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "0F", "A3", "/r"}));
 		}
 		
 		/// <summary>
@@ -735,7 +735,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BT (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "A3", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "0F", "A3", "/r"}));
 		}
 		
 		/// <summary>
@@ -743,7 +743,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BT (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "0F", "BA", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -751,7 +751,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BT (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BT", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "0F", "BA", "/4", "ib"}));
 		}
 		
 		/// <summary>
@@ -759,7 +759,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTC (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "BB", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "0F", "BB", "/r"}));
 		}
 		
 		/// <summary>
@@ -767,7 +767,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTC (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "BB", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "0F", "BB", "/r"}));
 		}
 		
 		/// <summary>
@@ -775,7 +775,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTC (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "0F", "BA", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -783,7 +783,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTC (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "0F", "BA", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -791,7 +791,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTC (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "BB", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "0F", "BB", "/r"}));
 		}
 		
 		/// <summary>
@@ -799,7 +799,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTC (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "BB", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "0F", "BB", "/r"}));
 		}
 		
 		/// <summary>
@@ -807,7 +807,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTC (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "0F", "BA", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -815,7 +815,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTC (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "0F", "BA", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -823,7 +823,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTR (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "B3", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "0F", "B3", "/r"}));
 		}
 		
 		/// <summary>
@@ -831,7 +831,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTR (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "B3", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "0F", "B3", "/r"}));
 		}
 		
 		/// <summary>
@@ -839,7 +839,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTR (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "0F", "BA", "/6", "ib"}));
 		}
 		
 		/// <summary>
@@ -847,7 +847,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTR (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "0F", "BA", "/6", "ib"}));
 		}
 		
 		/// <summary>
@@ -855,7 +855,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTR (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "B3", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "0F", "B3", "/r"}));
 		}
 		
 		/// <summary>
@@ -863,7 +863,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTR (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "B3", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "0F", "B3", "/r"}));
 		}
 		
 		/// <summary>
@@ -871,7 +871,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTR (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "0F", "BA", "/6", "ib"}));
 		}
 		
 		/// <summary>
@@ -879,7 +879,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTR (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "0F", "BA", "/6", "ib"}));
 		}
 		
 		/// <summary>
@@ -887,7 +887,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTS (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "AB", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "0F", "AB", "/r"}));
 		}
 		
 		/// <summary>
@@ -895,7 +895,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTS (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "AB", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "0F", "AB", "/r"}));
 		}
 		
 		/// <summary>
@@ -903,7 +903,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTS (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "0F", "BA", "/5", "ib"}));
 		}
 		
 		/// <summary>
@@ -911,7 +911,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTS (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "0F", "BA", "/5", "ib"}));
 		}
 		
 		/// <summary>
@@ -919,7 +919,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTS (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "AB", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "0F", "AB", "/r"}));
 		}
 		
 		/// <summary>
@@ -927,7 +927,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTS (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "AB", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "0F", "AB", "/r"}));
 		}
 		
 		/// <summary>
@@ -935,7 +935,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTS (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "0F", "BA", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "0F", "BA", "/5", "ib"}));
 		}
 		
 		/// <summary>
@@ -943,7 +943,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void BTS (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "0F", "BA", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "BTS", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "0F", "BA", "/5", "ib"}));
 		}
 		
 		/// <summary>
@@ -951,7 +951,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E8", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"E8", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -959,7 +959,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "CALL", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"E8", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "CALL", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"E8", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -967,7 +967,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (UInt16 target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o16", "9A", "iw", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source, target}, new string [] {"o16", "9A", "iw", "iw"}));
 		}
 		
 		/// <summary>
@@ -975,7 +975,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (UInt16 target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o32", "9A", "id", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source, target}, new string [] {"o32", "9A", "id", "iw"}));
 		}
 		
 		/// <summary>
@@ -983,7 +983,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL_FAR (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL_FAR", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL_FAR", target.ToString (), target, null, null, null, new string [] {"o16", "FF", "/3"}));
 		}
 		
 		/// <summary>
@@ -991,7 +991,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL_FAR (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL_FAR", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL_FAR", target.ToString (), target, null, null, null, new string [] {"o32", "FF", "/3"}));
 		}
 		
 		/// <summary>
@@ -999,7 +999,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString (), target, null, null, null, new string [] {"o16", "FF", "/2"}));
 		}
 		
 		/// <summary>
@@ -1007,7 +1007,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString (), target, null, null, null, new string [] {"o32", "FF", "/2"}));
 		}
 		
 		/// <summary>
@@ -1015,7 +1015,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString(), null, target, null, null, new string[] {"o16", "FF", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString (), null, target, null, null, new string [] {"o16", "FF", "/2"}));
 		}
 		
 		/// <summary>
@@ -1023,7 +1023,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CALL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString(), null, target, null, null, new string[] {"o32", "FF", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CALL", target.ToString (), null, target, null, null, new string [] {"o32", "FF", "/2"}));
 		}
 		
 		/// <summary>
@@ -1031,7 +1031,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CBW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CBW", "", null, null, null, null, new string[] {"o16", "98"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CBW", "", null, null, null, null, new string [] {"o16", "98"}));
 		}
 		
 		/// <summary>
@@ -1039,7 +1039,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CDQ ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CDQ", "", null, null, null, null, new string[] {"o32", "99"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CDQ", "", null, null, null, null, new string [] {"o32", "99"}));
 		}
 		
 		/// <summary>
@@ -1047,7 +1047,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CLC ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLC", "", null, null, null, null, new string[] {"F8"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLC", "", null, null, null, null, new string [] {"F8"}));
 		}
 		
 		/// <summary>
@@ -1055,7 +1055,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CLD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLD", "", null, null, null, null, new string[] {"FC"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLD", "", null, null, null, null, new string [] {"FC"}));
 		}
 		
 		/// <summary>
@@ -1063,7 +1063,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CLFLUSH (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLFLUSH", target.ToString(), target, null, null, null, new string[] {"0F", "AE", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLFLUSH", target.ToString (), target, null, null, null, new string [] {"0F", "AE", "/7"}));
 		}
 		
 		/// <summary>
@@ -1071,7 +1071,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CLI ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLI", "", null, null, null, null, new string[] {"FA"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLI", "", null, null, null, null, new string [] {"FA"}));
 		}
 		
 		/// <summary>
@@ -1079,7 +1079,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CLTS ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLTS", "", null, null, null, null, new string[] {"0F", "06"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CLTS", "", null, null, null, null, new string [] {"0F", "06"}));
 		}
 		
 		/// <summary>
@@ -1087,7 +1087,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMC ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMC", "", null, null, null, null, new string[] {"F5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMC", "", null, null, null, null, new string [] {"F5"}));
 		}
 		
 		/// <summary>
@@ -1095,7 +1095,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVA (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "47", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "47", "/r"}));
 		}
 		
 		/// <summary>
@@ -1103,7 +1103,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVA (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "47", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "47", "/r"}));
 		}
 		
 		/// <summary>
@@ -1111,7 +1111,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVA (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "47", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "47", "/r"}));
 		}
 		
 		/// <summary>
@@ -1119,7 +1119,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVA (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "47", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVA", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "47", "/r"}));
 		}
 		
 		/// <summary>
@@ -1127,7 +1127,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVAE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1135,7 +1135,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVAE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1143,7 +1143,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVAE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1151,7 +1151,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVAE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVAE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1159,7 +1159,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVB (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1167,7 +1167,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVB (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1175,7 +1175,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVB (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1183,7 +1183,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVB (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVB", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1191,7 +1191,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVBE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "46", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "46", "/r"}));
 		}
 		
 		/// <summary>
@@ -1199,7 +1199,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVBE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "46", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "46", "/r"}));
 		}
 		
 		/// <summary>
@@ -1207,7 +1207,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVBE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "46", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "46", "/r"}));
 		}
 		
 		/// <summary>
@@ -1215,7 +1215,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVBE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "46", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVBE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "46", "/r"}));
 		}
 		
 		/// <summary>
@@ -1223,7 +1223,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVC (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1231,7 +1231,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVC (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1239,7 +1239,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVC (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1247,7 +1247,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVC (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVC", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1255,7 +1255,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "44", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "44", "/r"}));
 		}
 		
 		/// <summary>
@@ -1263,7 +1263,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "44", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "44", "/r"}));
 		}
 		
 		/// <summary>
@@ -1271,7 +1271,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "44", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "44", "/r"}));
 		}
 		
 		/// <summary>
@@ -1279,7 +1279,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "44", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "44", "/r"}));
 		}
 		
 		/// <summary>
@@ -1287,7 +1287,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVG (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4F", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4F", "/r"}));
 		}
 		
 		/// <summary>
@@ -1295,7 +1295,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVG (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4F", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4F", "/r"}));
 		}
 		
 		/// <summary>
@@ -1303,7 +1303,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVG (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4F", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4F", "/r"}));
 		}
 		
 		/// <summary>
@@ -1311,7 +1311,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVG (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4F", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVG", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4F", "/r"}));
 		}
 		
 		/// <summary>
@@ -1319,7 +1319,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVGE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4D", "/r"}));
 		}
 		
 		/// <summary>
@@ -1327,7 +1327,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVGE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4D", "/r"}));
 		}
 		
 		/// <summary>
@@ -1335,7 +1335,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVGE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4D", "/r"}));
 		}
 		
 		/// <summary>
@@ -1343,7 +1343,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVGE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVGE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4D", "/r"}));
 		}
 		
 		/// <summary>
@@ -1351,7 +1351,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVL (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4C", "/r"}));
 		}
 		
 		/// <summary>
@@ -1359,7 +1359,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVL (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4C", "/r"}));
 		}
 		
 		/// <summary>
@@ -1367,7 +1367,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVL (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4C", "/r"}));
 		}
 		
 		/// <summary>
@@ -1375,7 +1375,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVL (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVL", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4C", "/r"}));
 		}
 		
 		/// <summary>
@@ -1383,7 +1383,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVLE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4E", "/r"}));
 		}
 		
 		/// <summary>
@@ -1391,7 +1391,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVLE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4E", "/r"}));
 		}
 		
 		/// <summary>
@@ -1399,7 +1399,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVLE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4E", "/r"}));
 		}
 		
 		/// <summary>
@@ -1407,7 +1407,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVLE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVLE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4E", "/r"}));
 		}
 		
 		/// <summary>
@@ -1415,7 +1415,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNA (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "46", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "46", "/r"}));
 		}
 		
 		/// <summary>
@@ -1423,7 +1423,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNA (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "46", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "46", "/r"}));
 		}
 		
 		/// <summary>
@@ -1431,7 +1431,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNA (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "46", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "46", "/r"}));
 		}
 		
 		/// <summary>
@@ -1439,7 +1439,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNA (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "46", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNA", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "46", "/r"}));
 		}
 		
 		/// <summary>
@@ -1447,7 +1447,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNAE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1455,7 +1455,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNAE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1463,7 +1463,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNAE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1471,7 +1471,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNAE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "42", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNAE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "42", "/r"}));
 		}
 		
 		/// <summary>
@@ -1479,7 +1479,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNB (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1487,7 +1487,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNB (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1495,7 +1495,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNB (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1503,7 +1503,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNB (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNB", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1511,7 +1511,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNBE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "47", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "47", "/r"}));
 		}
 		
 		/// <summary>
@@ -1519,7 +1519,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNBE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "47", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "47", "/r"}));
 		}
 		
 		/// <summary>
@@ -1527,7 +1527,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNBE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "47", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "47", "/r"}));
 		}
 		
 		/// <summary>
@@ -1535,7 +1535,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNBE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "47", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNBE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "47", "/r"}));
 		}
 		
 		/// <summary>
@@ -1543,7 +1543,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNC (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1551,7 +1551,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNC (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1559,7 +1559,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNC (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1567,7 +1567,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNC (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "43", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNC", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "43", "/r"}));
 		}
 		
 		/// <summary>
@@ -1575,7 +1575,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "45", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "45", "/r"}));
 		}
 		
 		/// <summary>
@@ -1583,7 +1583,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "45", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "45", "/r"}));
 		}
 		
 		/// <summary>
@@ -1591,7 +1591,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "45", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "45", "/r"}));
 		}
 		
 		/// <summary>
@@ -1599,7 +1599,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "45", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "45", "/r"}));
 		}
 		
 		/// <summary>
@@ -1607,7 +1607,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNG (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4E", "/r"}));
 		}
 		
 		/// <summary>
@@ -1615,7 +1615,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNG (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4E", "/r"}));
 		}
 		
 		/// <summary>
@@ -1623,7 +1623,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNG (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4E", "/r"}));
 		}
 		
 		/// <summary>
@@ -1631,7 +1631,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNG (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNG", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4E", "/r"}));
 		}
 		
 		/// <summary>
@@ -1639,7 +1639,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNGE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4C", "/r"}));
 		}
 		
 		/// <summary>
@@ -1647,7 +1647,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNGE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4C", "/r"}));
 		}
 		
 		/// <summary>
@@ -1655,7 +1655,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNGE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4C", "/r"}));
 		}
 		
 		/// <summary>
@@ -1663,7 +1663,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNGE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNGE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4C", "/r"}));
 		}
 		
 		/// <summary>
@@ -1671,7 +1671,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNL (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4D", "/r"}));
 		}
 		
 		/// <summary>
@@ -1679,7 +1679,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNL (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4D", "/r"}));
 		}
 		
 		/// <summary>
@@ -1687,7 +1687,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNL (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4D", "/r"}));
 		}
 		
 		/// <summary>
@@ -1695,7 +1695,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNL (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNL", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4D", "/r"}));
 		}
 		
 		/// <summary>
@@ -1703,7 +1703,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNLE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4F", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4F", "/r"}));
 		}
 		
 		/// <summary>
@@ -1711,7 +1711,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNLE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4F", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4F", "/r"}));
 		}
 		
 		/// <summary>
@@ -1719,7 +1719,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNLE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4F", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4F", "/r"}));
 		}
 		
 		/// <summary>
@@ -1727,7 +1727,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNLE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4F", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNLE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4F", "/r"}));
 		}
 		
 		/// <summary>
@@ -1735,7 +1735,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNO (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "41", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "41", "/r"}));
 		}
 		
 		/// <summary>
@@ -1743,7 +1743,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNO (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "41", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "41", "/r"}));
 		}
 		
 		/// <summary>
@@ -1751,7 +1751,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNO (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "41", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "41", "/r"}));
 		}
 		
 		/// <summary>
@@ -1759,7 +1759,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNO (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "41", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNO", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "41", "/r"}));
 		}
 		
 		/// <summary>
@@ -1767,7 +1767,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNP (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4B", "/r"}));
 		}
 		
 		/// <summary>
@@ -1775,7 +1775,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNP (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4B", "/r"}));
 		}
 		
 		/// <summary>
@@ -1783,7 +1783,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNP (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4B", "/r"}));
 		}
 		
 		/// <summary>
@@ -1791,7 +1791,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNP (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNP", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4B", "/r"}));
 		}
 		
 		/// <summary>
@@ -1799,7 +1799,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNS (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "49", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "49", "/r"}));
 		}
 		
 		/// <summary>
@@ -1807,7 +1807,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNS (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "49", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "49", "/r"}));
 		}
 		
 		/// <summary>
@@ -1815,7 +1815,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNS (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "49", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "49", "/r"}));
 		}
 		
 		/// <summary>
@@ -1823,7 +1823,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNS (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "49", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNS", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "49", "/r"}));
 		}
 		
 		/// <summary>
@@ -1831,7 +1831,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNZ (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "45", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "45", "/r"}));
 		}
 		
 		/// <summary>
@@ -1839,7 +1839,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNZ (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "45", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "45", "/r"}));
 		}
 		
 		/// <summary>
@@ -1847,7 +1847,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNZ (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "45", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "45", "/r"}));
 		}
 		
 		/// <summary>
@@ -1855,7 +1855,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVNZ (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "45", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVNZ", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "45", "/r"}));
 		}
 		
 		/// <summary>
@@ -1863,7 +1863,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVO (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "40", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "40", "/r"}));
 		}
 		
 		/// <summary>
@@ -1871,7 +1871,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVO (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "40", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "40", "/r"}));
 		}
 		
 		/// <summary>
@@ -1879,7 +1879,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVO (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "40", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "40", "/r"}));
 		}
 		
 		/// <summary>
@@ -1887,7 +1887,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVO (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "40", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVO", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "40", "/r"}));
 		}
 		
 		/// <summary>
@@ -1895,7 +1895,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVP (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4A", "/r"}));
 		}
 		
 		/// <summary>
@@ -1903,7 +1903,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVP (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4A", "/r"}));
 		}
 		
 		/// <summary>
@@ -1911,7 +1911,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVP (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4A", "/r"}));
 		}
 		
 		/// <summary>
@@ -1919,7 +1919,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVP (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVP", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4A", "/r"}));
 		}
 		
 		/// <summary>
@@ -1927,7 +1927,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVPE (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4A", "/r"}));
 		}
 		
 		/// <summary>
@@ -1935,7 +1935,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVPE (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4A", "/r"}));
 		}
 		
 		/// <summary>
@@ -1943,7 +1943,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVPE (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4A", "/r"}));
 		}
 		
 		/// <summary>
@@ -1951,7 +1951,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVPE (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPE", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4A", "/r"}));
 		}
 		
 		/// <summary>
@@ -1959,7 +1959,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVPO (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "4B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "4B", "/r"}));
 		}
 		
 		/// <summary>
@@ -1967,7 +1967,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVPO (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "4B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "4B", "/r"}));
 		}
 		
 		/// <summary>
@@ -1975,7 +1975,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVPO (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "4B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "4B", "/r"}));
 		}
 		
 		/// <summary>
@@ -1983,7 +1983,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVPO (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "4B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVPO", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "4B", "/r"}));
 		}
 		
 		/// <summary>
@@ -1991,7 +1991,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVS (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "48", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "48", "/r"}));
 		}
 		
 		/// <summary>
@@ -1999,7 +1999,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVS (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "48", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "48", "/r"}));
 		}
 		
 		/// <summary>
@@ -2007,7 +2007,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVS (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "48", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "48", "/r"}));
 		}
 		
 		/// <summary>
@@ -2015,7 +2015,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVS (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "48", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVS", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "48", "/r"}));
 		}
 		
 		/// <summary>
@@ -2023,7 +2023,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVZ (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "44", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "44", "/r"}));
 		}
 		
 		/// <summary>
@@ -2031,7 +2031,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVZ (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "44", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "44", "/r"}));
 		}
 		
 		/// <summary>
@@ -2039,7 +2039,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVZ (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "44", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "44", "/r"}));
 		}
 		
 		/// <summary>
@@ -2047,7 +2047,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMOVZ (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "44", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMOVZ", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "44", "/r"}));
 		}
 		
 		/// <summary>
@@ -2055,7 +2055,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"38", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"38", "/r"}));
 		}
 		
 		/// <summary>
@@ -2063,7 +2063,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "39", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "39", "/r"}));
 		}
 		
 		/// <summary>
@@ -2071,7 +2071,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "39", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "39", "/r"}));
 		}
 		
 		/// <summary>
@@ -2079,7 +2079,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"3A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"3A", "/r"}));
 		}
 		
 		/// <summary>
@@ -2087,7 +2087,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "3B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "3B", "/r"}));
 		}
 		
 		/// <summary>
@@ -2095,7 +2095,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "3B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "3B", "/r"}));
 		}
 		
 		/// <summary>
@@ -2103,7 +2103,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"80", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -2111,7 +2111,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/7", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "81", "/7", "iw"}));
 		}
 		
 		/// <summary>
@@ -2119,7 +2119,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/7", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "81", "/7", "id"}));
 		}
 		
 		/// <summary>
@@ -2127,7 +2127,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "83", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -2135,7 +2135,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "83", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -2143,7 +2143,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"38", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"38", "/r"}));
 		}
 		
 		/// <summary>
@@ -2151,7 +2151,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "39", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "39", "/r"}));
 		}
 		
 		/// <summary>
@@ -2159,7 +2159,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "39", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "39", "/r"}));
 		}
 		
 		/// <summary>
@@ -2168,10 +2168,10 @@ namespace SharpOS.AOT.X86 {
 		public void CMP (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"3C", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"3C", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/7", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"80", "/7", "ib"}));
 			}
 		}
 		
@@ -2181,10 +2181,10 @@ namespace SharpOS.AOT.X86 {
 		public void CMP (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "3D", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "3D", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/7", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "81", "/7", "iw"}));
 			}
 		}
 		
@@ -2194,14 +2194,14 @@ namespace SharpOS.AOT.X86 {
 		public void CMP (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "3D", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "3D", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.CMP (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/7", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/7", "id"}));
 				}
 			}
 		}
@@ -2211,7 +2211,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "83", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -2219,7 +2219,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMP (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "83", "/7", "ib"}));
 		}
 		
 		/// <summary>
@@ -2227,7 +2227,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPSB ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSB", "", null, null, null, null, new string[] {"A6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSB", "", null, null, null, null, new string [] {"A6"}));
 		}
 		
 		/// <summary>
@@ -2235,7 +2235,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPSD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSD", "", null, null, null, null, new string[] {"o32", "A7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSD", "", null, null, null, null, new string [] {"o32", "A7"}));
 		}
 		
 		/// <summary>
@@ -2243,7 +2243,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPSW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSW", "", null, null, null, null, new string[] {"o16", "A7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPSW", "", null, null, null, null, new string [] {"o16", "A7"}));
 		}
 		
 		/// <summary>
@@ -2251,7 +2251,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPXCHG (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"0F", "B0", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"0F", "B0", "/r"}));
 		}
 		
 		/// <summary>
@@ -2259,7 +2259,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPXCHG (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "B1", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "0F", "B1", "/r"}));
 		}
 		
 		/// <summary>
@@ -2267,7 +2267,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPXCHG (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "B1", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "0F", "B1", "/r"}));
 		}
 		
 		/// <summary>
@@ -2275,7 +2275,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPXCHG (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "B0", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"0F", "B0", "/r"}));
 		}
 		
 		/// <summary>
@@ -2283,7 +2283,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPXCHG (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "B1", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "0F", "B1", "/r"}));
 		}
 		
 		/// <summary>
@@ -2291,7 +2291,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPXCHG (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "B1", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "0F", "B1", "/r"}));
 		}
 		
 		/// <summary>
@@ -2299,7 +2299,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CMPXCHG8B (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG8B", target.ToString(), target, null, null, null, new string[] {"0F", "C7", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMPXCHG8B", target.ToString (), target, null, null, null, new string [] {"0F", "C7", "/1"}));
 		}
 		
 		/// <summary>
@@ -2307,7 +2307,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CPUID ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CPUID", "", null, null, null, null, new string[] {"0F", "A2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CPUID", "", null, null, null, null, new string [] {"0F", "A2"}));
 		}
 		
 		/// <summary>
@@ -2315,7 +2315,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CWD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CWD", "", null, null, null, null, new string[] {"o16", "99"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CWD", "", null, null, null, null, new string [] {"o16", "99"}));
 		}
 		
 		/// <summary>
@@ -2323,7 +2323,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void CWDE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CWDE", "", null, null, null, null, new string[] {"o32", "98"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CWDE", "", null, null, null, null, new string [] {"o32", "98"}));
 		}
 		
 		/// <summary>
@@ -2331,7 +2331,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DAA ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DAA", "", null, null, null, null, new string[] {"27"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DAA", "", null, null, null, null, new string [] {"27"}));
 		}
 		
 		/// <summary>
@@ -2339,7 +2339,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DAS ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DAS", "", null, null, null, null, new string[] {"2F"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DAS", "", null, null, null, null, new string [] {"2F"}));
 		}
 		
 		/// <summary>
@@ -2347,7 +2347,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DEC (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), null, null, target, null, new string[] {"o16", "48+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString (), null, null, target, null, new string [] {"o16", "48+r"}));
 		}
 		
 		/// <summary>
@@ -2355,7 +2355,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DEC (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), null, null, target, null, new string[] {"o32", "48+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString (), null, null, target, null, new string [] {"o32", "48+r"}));
 		}
 		
 		/// <summary>
@@ -2363,7 +2363,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DEC (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), target, null, null, null, new string[] {"FE", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString (), target, null, null, null, new string [] {"FE", "/1"}));
 		}
 		
 		/// <summary>
@@ -2371,7 +2371,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DEC (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString (), target, null, null, null, new string [] {"o16", "FF", "/1"}));
 		}
 		
 		/// <summary>
@@ -2379,7 +2379,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DEC (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString (), target, null, null, null, new string [] {"o32", "FF", "/1"}));
 		}
 		
 		/// <summary>
@@ -2387,7 +2387,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DEC (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString(), null, target, null, null, new string[] {"FE", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DEC", target.ToString (), null, target, null, null, new string [] {"FE", "/1"}));
 		}
 		
 		/// <summary>
@@ -2395,7 +2395,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DIV (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), target, null, null, null, new string[] {"F6", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString (), target, null, null, null, new string [] {"F6", "/6"}));
 		}
 		
 		/// <summary>
@@ -2403,7 +2403,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DIV (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString (), target, null, null, null, new string [] {"o16", "F7", "/6"}));
 		}
 		
 		/// <summary>
@@ -2411,7 +2411,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DIV (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString (), target, null, null, null, new string [] {"o32", "F7", "/6"}));
 		}
 		
 		/// <summary>
@@ -2419,7 +2419,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DIV (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), null, target, null, null, new string[] {"F6", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString (), null, target, null, null, new string [] {"F6", "/6"}));
 		}
 		
 		/// <summary>
@@ -2427,7 +2427,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DIV (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString (), null, target, null, null, new string [] {"o16", "F7", "/6"}));
 		}
 		
 		/// <summary>
@@ -2435,7 +2435,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void DIV (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "DIV", target.ToString (), null, target, null, null, new string [] {"o32", "F7", "/6"}));
 		}
 		
 		/// <summary>
@@ -2443,7 +2443,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void EMMS ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "EMMS", "", null, null, null, null, new string[] {"0F", "77"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "EMMS", "", null, null, null, null, new string [] {"0F", "77"}));
 		}
 		
 		/// <summary>
@@ -2451,7 +2451,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ENTER (UInt16 target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ENTER", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {target, source}, new string[] {"C8", "iw", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ENTER", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {target, source}, new string [] {"C8", "iw", "ib"}));
 		}
 		
 		/// <summary>
@@ -2459,7 +2459,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void F2XM1 ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "F2XM1", "", null, null, null, null, new string[] {"D9", "F0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "F2XM1", "", null, null, null, null, new string [] {"D9", "F0"}));
 		}
 		
 		/// <summary>
@@ -2467,7 +2467,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FABS ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FABS", "", null, null, null, null, new string[] {"D9", "E1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FABS", "", null, null, null, null, new string [] {"D9", "E1"}));
 		}
 		
 		/// <summary>
@@ -2475,7 +2475,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FADD (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString(), target, null, null, null, new string[] {"D8", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString (), target, null, null, null, new string [] {"D8", "/0"}));
 		}
 		
 		/// <summary>
@@ -2483,7 +2483,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FADD (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString(), target, null, null, null, new string[] {"DC", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString (), target, null, null, null, new string [] {"DC", "/0"}));
 		}
 		
 		/// <summary>
@@ -2491,7 +2491,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FADD (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString(), null, null, target, null, new string[] {"D8", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD", target.ToString (), null, null, target, null, new string [] {"D8", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2499,7 +2499,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FADD_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D8", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2507,7 +2507,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FADD__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADD__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DC", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2515,7 +2515,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FADDP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADDP", target.ToString(), null, null, target, null, new string[] {"DE", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADDP", target.ToString (), null, null, target, null, new string [] {"DE", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2523,7 +2523,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FADDP__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADDP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FADDP__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DE", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2531,7 +2531,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FBLD (TWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FBLD", target.ToString(), target, null, null, null, new string[] {"DF", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FBLD", target.ToString (), target, null, null, null, new string [] {"DF", "/4"}));
 		}
 		
 		/// <summary>
@@ -2539,7 +2539,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FBSTP (TWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FBSTP", target.ToString(), target, null, null, null, new string[] {"DF", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FBSTP", target.ToString (), target, null, null, null, new string [] {"DF", "/6"}));
 		}
 		
 		/// <summary>
@@ -2547,7 +2547,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCHS ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCHS", "", null, null, null, null, new string[] {"D9", "E0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCHS", "", null, null, null, null, new string [] {"D9", "E0"}));
 		}
 		
 		/// <summary>
@@ -2555,7 +2555,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCLEX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCLEX", "", null, null, null, null, new string[] {"9B", "DB", "E2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCLEX", "", null, null, null, null, new string [] {"9B", "DB", "E2"}));
 		}
 		
 		/// <summary>
@@ -2563,7 +2563,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVB (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVB", target.ToString(), null, null, target, null, new string[] {"DA", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVB", target.ToString (), null, null, target, null, new string [] {"DA", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2571,7 +2571,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVB_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVB_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DA", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVB_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DA", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2579,7 +2579,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVBE (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVBE", target.ToString(), null, null, target, null, new string[] {"DA", "D0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVBE", target.ToString (), null, null, target, null, new string [] {"DA", "D0+r"}));
 		}
 		
 		/// <summary>
@@ -2587,7 +2587,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVBE_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVBE_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DA", "D0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVBE_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DA", "D0+r"}));
 		}
 		
 		/// <summary>
@@ -2595,7 +2595,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVE (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVE", target.ToString(), null, null, target, null, new string[] {"DA", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVE", target.ToString (), null, null, target, null, new string [] {"DA", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -2603,7 +2603,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVE_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVE_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DA", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVE_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DA", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -2611,7 +2611,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVNB (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNB", target.ToString(), null, null, target, null, new string[] {"DB", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNB", target.ToString (), null, null, target, null, new string [] {"DB", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2619,7 +2619,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVNB_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNB_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNB_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DB", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2627,7 +2627,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVNBE (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNBE", target.ToString(), null, null, target, null, new string[] {"DB", "D0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNBE", target.ToString (), null, null, target, null, new string [] {"DB", "D0+r"}));
 		}
 		
 		/// <summary>
@@ -2635,7 +2635,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVNBE_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNBE_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "D0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNBE_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DB", "D0+r"}));
 		}
 		
 		/// <summary>
@@ -2643,7 +2643,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVNE (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNE", target.ToString(), null, null, target, null, new string[] {"DB", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNE", target.ToString (), null, null, target, null, new string [] {"DB", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -2651,7 +2651,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVNE_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNE_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNE_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DB", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -2659,7 +2659,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVNU (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNU", target.ToString(), null, null, target, null, new string[] {"DB", "D8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNU", target.ToString (), null, null, target, null, new string [] {"DB", "D8+r"}));
 		}
 		
 		/// <summary>
@@ -2667,7 +2667,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVNU_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNU_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "D8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVNU_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DB", "D8+r"}));
 		}
 		
 		/// <summary>
@@ -2675,7 +2675,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVU (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVU", target.ToString(), null, null, target, null, new string[] {"DA", "D8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVU", target.ToString (), null, null, target, null, new string [] {"DA", "D8+r"}));
 		}
 		
 		/// <summary>
@@ -2683,7 +2683,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCMOVU_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVU_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DA", "D8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCMOVU_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DA", "D8+r"}));
 		}
 		
 		/// <summary>
@@ -2691,7 +2691,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOM (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString(), target, null, null, null, new string[] {"D8", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString (), target, null, null, null, new string [] {"D8", "/2"}));
 		}
 		
 		/// <summary>
@@ -2699,7 +2699,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOM (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString(), target, null, null, null, new string[] {"DC", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString (), target, null, null, null, new string [] {"DC", "/2"}));
 		}
 		
 		/// <summary>
@@ -2707,7 +2707,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOM (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString(), null, null, target, null, new string[] {"D8", "D0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM", target.ToString (), null, null, target, null, new string [] {"D8", "D0+r"}));
 		}
 		
 		/// <summary>
@@ -2715,7 +2715,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOM_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "D0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOM_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D8", "D0+r"}));
 		}
 		
 		/// <summary>
@@ -2723,7 +2723,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMI (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMI", target.ToString(), null, null, target, null, new string[] {"DB", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMI", target.ToString (), null, null, target, null, new string [] {"DB", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2731,7 +2731,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMI_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMI_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMI_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DB", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2739,7 +2739,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMIP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMIP", target.ToString(), null, null, target, null, new string[] {"DF", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMIP", target.ToString (), null, null, target, null, new string [] {"DF", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2747,7 +2747,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMIP_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMIP_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DF", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMIP_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DF", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2755,7 +2755,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMP (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString(), target, null, null, null, new string[] {"D8", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString (), target, null, null, null, new string [] {"D8", "/3"}));
 		}
 		
 		/// <summary>
@@ -2763,7 +2763,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMP (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString(), target, null, null, null, new string[] {"DC", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString (), target, null, null, null, new string [] {"DC", "/3"}));
 		}
 		
 		/// <summary>
@@ -2771,7 +2771,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString(), null, null, target, null, new string[] {"D8", "D8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP", target.ToString (), null, null, target, null, new string [] {"D8", "D8+r"}));
 		}
 		
 		/// <summary>
@@ -2779,7 +2779,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMP_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "D8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMP_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D8", "D8+r"}));
 		}
 		
 		/// <summary>
@@ -2787,7 +2787,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOMPP ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMPP", "", null, null, null, null, new string[] {"DE", "D9"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOMPP", "", null, null, null, null, new string [] {"DE", "D9"}));
 		}
 		
 		/// <summary>
@@ -2795,7 +2795,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FCOS ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOS", "", null, null, null, null, new string[] {"D9", "FF"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FCOS", "", null, null, null, null, new string [] {"D9", "FF"}));
 		}
 		
 		/// <summary>
@@ -2803,7 +2803,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDECSTP ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDECSTP", "", null, null, null, null, new string[] {"D9", "F6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDECSTP", "", null, null, null, null, new string [] {"D9", "F6"}));
 		}
 		
 		/// <summary>
@@ -2811,7 +2811,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDISI ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDISI", "", null, null, null, null, new string[] {"9B", "DB", "E1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDISI", "", null, null, null, null, new string [] {"9B", "DB", "E1"}));
 		}
 		
 		/// <summary>
@@ -2819,7 +2819,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIV (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString(), target, null, null, null, new string[] {"D8", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString (), target, null, null, null, new string [] {"D8", "/6"}));
 		}
 		
 		/// <summary>
@@ -2827,7 +2827,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIV (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString(), target, null, null, null, new string[] {"DC", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString (), target, null, null, null, new string [] {"DC", "/6"}));
 		}
 		
 		/// <summary>
@@ -2835,7 +2835,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIV (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString(), null, null, target, null, new string[] {"D8", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV", target.ToString (), null, null, target, null, new string [] {"D8", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2843,7 +2843,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIV_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D8", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2851,7 +2851,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIV__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "F8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIV__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DC", "F8+r"}));
 		}
 		
 		/// <summary>
@@ -2859,7 +2859,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVP", target.ToString(), null, null, target, null, new string[] {"DE", "F8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVP", target.ToString (), null, null, target, null, new string [] {"DE", "F8+r"}));
 		}
 		
 		/// <summary>
@@ -2867,7 +2867,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVP__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "F8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVP__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DE", "F8+r"}));
 		}
 		
 		/// <summary>
@@ -2875,7 +2875,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVR (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString(), target, null, null, null, new string[] {"D8", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString (), target, null, null, null, new string [] {"D8", "/7"}));
 		}
 		
 		/// <summary>
@@ -2883,7 +2883,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVR (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString(), target, null, null, null, new string[] {"DC", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString (), target, null, null, null, new string [] {"DC", "/7"}));
 		}
 		
 		/// <summary>
@@ -2891,7 +2891,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVR (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString(), null, null, target, null, new string[] {"D8", "F8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR", target.ToString (), null, null, target, null, new string [] {"D8", "F8+r"}));
 		}
 		
 		/// <summary>
@@ -2899,7 +2899,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVR_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "F8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D8", "F8+r"}));
 		}
 		
 		/// <summary>
@@ -2907,7 +2907,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVR__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVR__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DC", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2915,7 +2915,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVRP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVRP", target.ToString(), null, null, target, null, new string[] {"DE", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVRP", target.ToString (), null, null, target, null, new string [] {"DE", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2923,7 +2923,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FDIVRP__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVRP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "F0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FDIVRP__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DE", "F0+r"}));
 		}
 		
 		/// <summary>
@@ -2931,7 +2931,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FENI ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FENI", "", null, null, null, null, new string[] {"9B", "DB", "E0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FENI", "", null, null, null, null, new string [] {"9B", "DB", "E0"}));
 		}
 		
 		/// <summary>
@@ -2939,7 +2939,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FFREE (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FFREE", target.ToString(), null, null, target, null, new string[] {"DD", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FFREE", target.ToString (), null, null, target, null, new string [] {"DD", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2947,7 +2947,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FFREEP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FFREEP", target.ToString(), null, null, target, null, new string[] {"DF", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FFREEP", target.ToString (), null, null, target, null, new string [] {"DF", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -2955,7 +2955,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIADD (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIADD", target.ToString(), target, null, null, null, new string[] {"DE", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIADD", target.ToString (), target, null, null, null, new string [] {"DE", "/0"}));
 		}
 		
 		/// <summary>
@@ -2963,7 +2963,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIADD (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIADD", target.ToString(), target, null, null, null, new string[] {"DA", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIADD", target.ToString (), target, null, null, null, new string [] {"DA", "/0"}));
 		}
 		
 		/// <summary>
@@ -2971,7 +2971,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FICOM (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOM", target.ToString(), target, null, null, null, new string[] {"DE", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOM", target.ToString (), target, null, null, null, new string [] {"DE", "/2"}));
 		}
 		
 		/// <summary>
@@ -2979,7 +2979,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FICOM (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOM", target.ToString(), target, null, null, null, new string[] {"DA", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOM", target.ToString (), target, null, null, null, new string [] {"DA", "/2"}));
 		}
 		
 		/// <summary>
@@ -2987,7 +2987,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FICOMP (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOMP", target.ToString(), target, null, null, null, new string[] {"DE", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOMP", target.ToString (), target, null, null, null, new string [] {"DE", "/3"}));
 		}
 		
 		/// <summary>
@@ -2995,7 +2995,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FICOMP (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOMP", target.ToString(), target, null, null, null, new string[] {"DA", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FICOMP", target.ToString (), target, null, null, null, new string [] {"DA", "/3"}));
 		}
 		
 		/// <summary>
@@ -3003,7 +3003,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIDIV (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIV", target.ToString(), target, null, null, null, new string[] {"DE", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIV", target.ToString (), target, null, null, null, new string [] {"DE", "/6"}));
 		}
 		
 		/// <summary>
@@ -3011,7 +3011,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIDIV (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIV", target.ToString(), target, null, null, null, new string[] {"DA", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIV", target.ToString (), target, null, null, null, new string [] {"DA", "/6"}));
 		}
 		
 		/// <summary>
@@ -3019,7 +3019,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIDIVR (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIVR", target.ToString(), target, null, null, null, new string[] {"DE", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIVR", target.ToString (), target, null, null, null, new string [] {"DE", "/7"}));
 		}
 		
 		/// <summary>
@@ -3027,7 +3027,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIDIVR (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIVR", target.ToString(), target, null, null, null, new string[] {"DA", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIDIVR", target.ToString (), target, null, null, null, new string [] {"DA", "/7"}));
 		}
 		
 		/// <summary>
@@ -3035,7 +3035,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FILD (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString(), target, null, null, null, new string[] {"DF", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString (), target, null, null, null, new string [] {"DF", "/0"}));
 		}
 		
 		/// <summary>
@@ -3043,7 +3043,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FILD (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString(), target, null, null, null, new string[] {"DB", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString (), target, null, null, null, new string [] {"DB", "/0"}));
 		}
 		
 		/// <summary>
@@ -3051,7 +3051,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FILD (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString(), target, null, null, null, new string[] {"DF", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FILD", target.ToString (), target, null, null, null, new string [] {"DF", "/5"}));
 		}
 		
 		/// <summary>
@@ -3059,7 +3059,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIMUL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIMUL", target.ToString(), target, null, null, null, new string[] {"DE", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIMUL", target.ToString (), target, null, null, null, new string [] {"DE", "/1"}));
 		}
 		
 		/// <summary>
@@ -3067,7 +3067,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIMUL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIMUL", target.ToString(), target, null, null, null, new string[] {"DA", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIMUL", target.ToString (), target, null, null, null, new string [] {"DA", "/1"}));
 		}
 		
 		/// <summary>
@@ -3075,7 +3075,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FINCSTP ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FINCSTP", "", null, null, null, null, new string[] {"D9", "F7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FINCSTP", "", null, null, null, null, new string [] {"D9", "F7"}));
 		}
 		
 		/// <summary>
@@ -3083,7 +3083,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FINIT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FINIT", "", null, null, null, null, new string[] {"9B", "DB", "E3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FINIT", "", null, null, null, null, new string [] {"9B", "DB", "E3"}));
 		}
 		
 		/// <summary>
@@ -3091,7 +3091,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIST (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIST", target.ToString(), target, null, null, null, new string[] {"DF", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIST", target.ToString (), target, null, null, null, new string [] {"DF", "/2"}));
 		}
 		
 		/// <summary>
@@ -3099,7 +3099,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FIST (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIST", target.ToString(), target, null, null, null, new string[] {"DB", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FIST", target.ToString (), target, null, null, null, new string [] {"DB", "/2"}));
 		}
 		
 		/// <summary>
@@ -3107,7 +3107,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FISTP (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString(), target, null, null, null, new string[] {"DF", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString (), target, null, null, null, new string [] {"DF", "/3"}));
 		}
 		
 		/// <summary>
@@ -3115,7 +3115,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FISTP (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString(), target, null, null, null, new string[] {"DB", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString (), target, null, null, null, new string [] {"DB", "/3"}));
 		}
 		
 		/// <summary>
@@ -3123,7 +3123,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FISTP (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString(), target, null, null, null, new string[] {"DF", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISTP", target.ToString (), target, null, null, null, new string [] {"DF", "/7"}));
 		}
 		
 		/// <summary>
@@ -3131,7 +3131,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FISUB (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUB", target.ToString(), target, null, null, null, new string[] {"DE", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUB", target.ToString (), target, null, null, null, new string [] {"DE", "/4"}));
 		}
 		
 		/// <summary>
@@ -3139,7 +3139,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FISUB (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUB", target.ToString(), target, null, null, null, new string[] {"DA", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUB", target.ToString (), target, null, null, null, new string [] {"DA", "/4"}));
 		}
 		
 		/// <summary>
@@ -3147,7 +3147,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FISUBR (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUBR", target.ToString(), target, null, null, null, new string[] {"DE", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUBR", target.ToString (), target, null, null, null, new string [] {"DE", "/5"}));
 		}
 		
 		/// <summary>
@@ -3155,7 +3155,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FISUBR (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUBR", target.ToString(), target, null, null, null, new string[] {"DA", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FISUBR", target.ToString (), target, null, null, null, new string [] {"DA", "/5"}));
 		}
 		
 		/// <summary>
@@ -3163,7 +3163,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLD (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString(), target, null, null, null, new string[] {"D9", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString (), target, null, null, null, new string [] {"D9", "/0"}));
 		}
 		
 		/// <summary>
@@ -3171,7 +3171,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLD (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString(), target, null, null, null, new string[] {"DD", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString (), target, null, null, null, new string [] {"DD", "/0"}));
 		}
 		
 		/// <summary>
@@ -3179,7 +3179,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLD (TWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString(), target, null, null, null, new string[] {"DB", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString (), target, null, null, null, new string [] {"DB", "/5"}));
 		}
 		
 		/// <summary>
@@ -3187,7 +3187,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLD (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString(), null, null, target, null, new string[] {"D9", "C0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD", target.ToString (), null, null, target, null, new string [] {"D9", "C0+r"}));
 		}
 		
 		/// <summary>
@@ -3195,7 +3195,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLD1 ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD1", "", null, null, null, null, new string[] {"D9", "E8"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLD1", "", null, null, null, null, new string [] {"D9", "E8"}));
 		}
 		
 		/// <summary>
@@ -3203,7 +3203,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLDCW (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDCW", target.ToString(), target, null, null, null, new string[] {"D9", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDCW", target.ToString (), target, null, null, null, new string [] {"D9", "/5"}));
 		}
 		
 		/// <summary>
@@ -3211,7 +3211,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLDENV (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDENV", target.ToString(), target, null, null, null, new string[] {"D9", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDENV", target.ToString (), target, null, null, null, new string [] {"D9", "/4"}));
 		}
 		
 		/// <summary>
@@ -3219,7 +3219,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLDL2E ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDL2E", "", null, null, null, null, new string[] {"D9", "EA"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDL2E", "", null, null, null, null, new string [] {"D9", "EA"}));
 		}
 		
 		/// <summary>
@@ -3227,7 +3227,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLDL2T ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDL2T", "", null, null, null, null, new string[] {"D9", "E9"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDL2T", "", null, null, null, null, new string [] {"D9", "E9"}));
 		}
 		
 		/// <summary>
@@ -3235,7 +3235,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLDLG2 ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDLG2", "", null, null, null, null, new string[] {"D9", "EC"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDLG2", "", null, null, null, null, new string [] {"D9", "EC"}));
 		}
 		
 		/// <summary>
@@ -3243,7 +3243,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLDLN2 ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDLN2", "", null, null, null, null, new string[] {"D9", "ED"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDLN2", "", null, null, null, null, new string [] {"D9", "ED"}));
 		}
 		
 		/// <summary>
@@ -3251,7 +3251,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLDPI ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDPI", "", null, null, null, null, new string[] {"D9", "EB"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDPI", "", null, null, null, null, new string [] {"D9", "EB"}));
 		}
 		
 		/// <summary>
@@ -3259,7 +3259,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FLDZ ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDZ", "", null, null, null, null, new string[] {"D9", "EE"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FLDZ", "", null, null, null, null, new string [] {"D9", "EE"}));
 		}
 		
 		/// <summary>
@@ -3267,7 +3267,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FMUL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString(), target, null, null, null, new string[] {"D8", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString (), target, null, null, null, new string [] {"D8", "/1"}));
 		}
 		
 		/// <summary>
@@ -3275,7 +3275,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FMUL (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString(), target, null, null, null, new string[] {"DC", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString (), target, null, null, null, new string [] {"DC", "/1"}));
 		}
 		
 		/// <summary>
@@ -3283,7 +3283,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FMUL (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString(), null, null, target, null, new string[] {"D8", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL", target.ToString (), null, null, target, null, new string [] {"D8", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -3291,7 +3291,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FMUL_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D8", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -3299,7 +3299,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FMUL__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMUL__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DC", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -3307,7 +3307,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FMULP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMULP", target.ToString(), null, null, target, null, new string[] {"DE", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMULP", target.ToString (), null, null, target, null, new string [] {"DE", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -3315,7 +3315,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FMULP__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMULP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FMULP__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DE", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -3323,7 +3323,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNCLEX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNCLEX", "", null, null, null, null, new string[] {"DB", "E2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNCLEX", "", null, null, null, null, new string [] {"DB", "E2"}));
 		}
 		
 		/// <summary>
@@ -3331,7 +3331,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNDISI ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNDISI", "", null, null, null, null, new string[] {"DB", "E1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNDISI", "", null, null, null, null, new string [] {"DB", "E1"}));
 		}
 		
 		/// <summary>
@@ -3339,7 +3339,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNENI ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNENI", "", null, null, null, null, new string[] {"DB", "E0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNENI", "", null, null, null, null, new string [] {"DB", "E0"}));
 		}
 		
 		/// <summary>
@@ -3347,7 +3347,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNINIT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNINIT", "", null, null, null, null, new string[] {"DB", "E3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNINIT", "", null, null, null, null, new string [] {"DB", "E3"}));
 		}
 		
 		/// <summary>
@@ -3355,7 +3355,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNOP ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNOP", "", null, null, null, null, new string[] {"D9", "D0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNOP", "", null, null, null, null, new string [] {"D9", "D0"}));
 		}
 		
 		/// <summary>
@@ -3363,7 +3363,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNSAVE (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSAVE", target.ToString(), target, null, null, null, new string[] {"DD", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSAVE", target.ToString (), target, null, null, null, new string [] {"DD", "/6"}));
 		}
 		
 		/// <summary>
@@ -3371,7 +3371,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNSTCW (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTCW", target.ToString(), target, null, null, null, new string[] {"D9", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTCW", target.ToString (), target, null, null, null, new string [] {"D9", "/7"}));
 		}
 		
 		/// <summary>
@@ -3379,7 +3379,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNSTENV (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTENV", target.ToString(), target, null, null, null, new string[] {"D9", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTENV", target.ToString (), target, null, null, null, new string [] {"D9", "/6"}));
 		}
 		
 		/// <summary>
@@ -3387,7 +3387,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNSTSW (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTSW", target.ToString(), target, null, null, null, new string[] {"DD", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTSW", target.ToString (), target, null, null, null, new string [] {"DD", "/7"}));
 		}
 		
 		/// <summary>
@@ -3395,7 +3395,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FNSTSW_AX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTSW_AX", "AX", null, null, null, null, new string[] {"DF", "E0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FNSTSW_AX", "AX", null, null, null, null, new string [] {"DF", "E0"}));
 		}
 		
 		/// <summary>
@@ -3403,7 +3403,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FPATAN ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPATAN", "", null, null, null, null, new string[] {"D9", "F3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPATAN", "", null, null, null, null, new string [] {"D9", "F3"}));
 		}
 		
 		/// <summary>
@@ -3411,7 +3411,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FPREM ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPREM", "", null, null, null, null, new string[] {"D9", "F8"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPREM", "", null, null, null, null, new string [] {"D9", "F8"}));
 		}
 		
 		/// <summary>
@@ -3419,7 +3419,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FPREM1 ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPREM1", "", null, null, null, null, new string[] {"D9", "F5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPREM1", "", null, null, null, null, new string [] {"D9", "F5"}));
 		}
 		
 		/// <summary>
@@ -3427,7 +3427,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FPTAN ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPTAN", "", null, null, null, null, new string[] {"D9", "F2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FPTAN", "", null, null, null, null, new string [] {"D9", "F2"}));
 		}
 		
 		/// <summary>
@@ -3435,7 +3435,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FRNDINT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FRNDINT", "", null, null, null, null, new string[] {"D9", "FC"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FRNDINT", "", null, null, null, null, new string [] {"D9", "FC"}));
 		}
 		
 		/// <summary>
@@ -3443,7 +3443,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FRSTOR (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FRSTOR", target.ToString(), target, null, null, null, new string[] {"DD", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FRSTOR", target.ToString (), target, null, null, null, new string [] {"DD", "/4"}));
 		}
 		
 		/// <summary>
@@ -3451,7 +3451,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSAVE (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSAVE", target.ToString(), target, null, null, null, new string[] {"9B", "DD", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSAVE", target.ToString (), target, null, null, null, new string [] {"9B", "DD", "/6"}));
 		}
 		
 		/// <summary>
@@ -3459,7 +3459,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSCALE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSCALE", "", null, null, null, null, new string[] {"D9", "FD"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSCALE", "", null, null, null, null, new string [] {"D9", "FD"}));
 		}
 		
 		/// <summary>
@@ -3467,7 +3467,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSETPM ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSETPM", "", null, null, null, null, new string[] {"DB", "E4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSETPM", "", null, null, null, null, new string [] {"DB", "E4"}));
 		}
 		
 		/// <summary>
@@ -3475,7 +3475,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSIN ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSIN", "", null, null, null, null, new string[] {"D9", "FE"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSIN", "", null, null, null, null, new string [] {"D9", "FE"}));
 		}
 		
 		/// <summary>
@@ -3483,7 +3483,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSINCOS ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSINCOS", "", null, null, null, null, new string[] {"D9", "FB"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSINCOS", "", null, null, null, null, new string [] {"D9", "FB"}));
 		}
 		
 		/// <summary>
@@ -3491,7 +3491,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSQRT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSQRT", "", null, null, null, null, new string[] {"D9", "FA"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSQRT", "", null, null, null, null, new string [] {"D9", "FA"}));
 		}
 		
 		/// <summary>
@@ -3499,7 +3499,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FST (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString(), target, null, null, null, new string[] {"D9", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString (), target, null, null, null, new string [] {"D9", "/2"}));
 		}
 		
 		/// <summary>
@@ -3507,7 +3507,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FST (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString(), target, null, null, null, new string[] {"DD", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString (), target, null, null, null, new string [] {"DD", "/2"}));
 		}
 		
 		/// <summary>
@@ -3515,7 +3515,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FST (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString(), null, null, target, null, new string[] {"DD", "D0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FST", target.ToString (), null, null, target, null, new string [] {"DD", "D0+r"}));
 		}
 		
 		/// <summary>
@@ -3523,7 +3523,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSTCW (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTCW", target.ToString(), target, null, null, null, new string[] {"9B", "D9", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTCW", target.ToString (), target, null, null, null, new string [] {"9B", "D9", "/7"}));
 		}
 		
 		/// <summary>
@@ -3531,7 +3531,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSTENV (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTENV", target.ToString(), target, null, null, null, new string[] {"9B", "D9", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTENV", target.ToString (), target, null, null, null, new string [] {"9B", "D9", "/6"}));
 		}
 		
 		/// <summary>
@@ -3539,7 +3539,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSTP (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString(), target, null, null, null, new string[] {"D9", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString (), target, null, null, null, new string [] {"D9", "/3"}));
 		}
 		
 		/// <summary>
@@ -3547,7 +3547,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSTP (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString(), target, null, null, null, new string[] {"DD", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString (), target, null, null, null, new string [] {"DD", "/3"}));
 		}
 		
 		/// <summary>
@@ -3555,7 +3555,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSTP (TWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString(), target, null, null, null, new string[] {"DB", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString (), target, null, null, null, new string [] {"DB", "/7"}));
 		}
 		
 		/// <summary>
@@ -3563,7 +3563,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSTP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString(), null, null, target, null, new string[] {"DD", "D8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTP", target.ToString (), null, null, target, null, new string [] {"DD", "D8+r"}));
 		}
 		
 		/// <summary>
@@ -3571,7 +3571,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSTSW (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTSW", target.ToString(), target, null, null, null, new string[] {"9B", "DD", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTSW", target.ToString (), target, null, null, null, new string [] {"9B", "DD", "/7"}));
 		}
 		
 		/// <summary>
@@ -3579,7 +3579,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSTSW_AX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTSW_AX", "AX", null, null, null, null, new string[] {"9B", "DF", "E0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSTSW_AX", "AX", null, null, null, null, new string [] {"9B", "DF", "E0"}));
 		}
 		
 		/// <summary>
@@ -3587,7 +3587,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUB (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString(), target, null, null, null, new string[] {"D8", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString (), target, null, null, null, new string [] {"D8", "/4"}));
 		}
 		
 		/// <summary>
@@ -3595,7 +3595,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUB (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString(), target, null, null, null, new string[] {"DC", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString (), target, null, null, null, new string [] {"DC", "/4"}));
 		}
 		
 		/// <summary>
@@ -3603,7 +3603,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUB (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString(), null, null, target, null, new string[] {"D8", "E0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB", target.ToString (), null, null, target, null, new string [] {"D8", "E0+r"}));
 		}
 		
 		/// <summary>
@@ -3611,7 +3611,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUB_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "E0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D8", "E0+r"}));
 		}
 		
 		/// <summary>
@@ -3619,7 +3619,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUB__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUB__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DC", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3627,7 +3627,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBP", target.ToString(), null, null, target, null, new string[] {"DE", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBP", target.ToString (), null, null, target, null, new string [] {"DE", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3635,7 +3635,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBP__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBP__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DE", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3643,7 +3643,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBR (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString(), target, null, null, null, new string[] {"D8", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString (), target, null, null, null, new string [] {"D8", "/5"}));
 		}
 		
 		/// <summary>
@@ -3651,7 +3651,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBR (QWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString(), target, null, null, null, new string[] {"DC", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString (), target, null, null, null, new string [] {"DC", "/5"}));
 		}
 		
 		/// <summary>
@@ -3659,7 +3659,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBR (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString(), null, null, target, null, new string[] {"D8", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR", target.ToString (), null, null, target, null, new string [] {"D8", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3667,7 +3667,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBR_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D8", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D8", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3675,7 +3675,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBR__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DC", "E0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBR__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DC", "E0+r"}));
 		}
 		
 		/// <summary>
@@ -3683,7 +3683,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBRP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBRP", target.ToString(), null, null, target, null, new string[] {"DE", "E0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBRP", target.ToString (), null, null, target, null, new string [] {"DE", "E0+r"}));
 		}
 		
 		/// <summary>
@@ -3691,7 +3691,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FSUBRP__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBRP__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"DE", "E0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FSUBRP__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"DE", "E0+r"}));
 		}
 		
 		/// <summary>
@@ -3699,7 +3699,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FTST ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FTST", "", null, null, null, null, new string[] {"D9", "E4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FTST", "", null, null, null, null, new string [] {"D9", "E4"}));
 		}
 		
 		/// <summary>
@@ -3707,7 +3707,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOM (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOM", target.ToString(), null, null, target, null, new string[] {"DD", "E0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOM", target.ToString (), null, null, target, null, new string [] {"DD", "E0+r"}));
 		}
 		
 		/// <summary>
@@ -3715,7 +3715,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOM_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOM_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DD", "E0+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOM_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DD", "E0+r"}));
 		}
 		
 		/// <summary>
@@ -3723,7 +3723,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOMI (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMI", target.ToString(), null, null, target, null, new string[] {"DB", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMI", target.ToString (), null, null, target, null, new string [] {"DB", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3731,7 +3731,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOMI_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMI_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DB", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMI_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DB", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3739,7 +3739,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOMIP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMIP", target.ToString(), null, null, target, null, new string[] {"DF", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMIP", target.ToString (), null, null, target, null, new string [] {"DF", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3747,7 +3747,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOMIP_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMIP_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DF", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMIP_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DF", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3755,7 +3755,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOMP (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMP", target.ToString(), null, null, target, null, new string[] {"DD", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMP", target.ToString (), null, null, target, null, new string [] {"DD", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3763,7 +3763,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOMP_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMP_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"DD", "E8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMP_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"DD", "E8+r"}));
 		}
 		
 		/// <summary>
@@ -3771,7 +3771,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FUCOMPP ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMPP", "", null, null, null, null, new string[] {"DA", "E9"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FUCOMPP", "", null, null, null, null, new string [] {"DA", "E9"}));
 		}
 		
 		/// <summary>
@@ -3779,7 +3779,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FWAIT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FWAIT", "", null, null, null, null, new string[] {"9B"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FWAIT", "", null, null, null, null, new string [] {"9B"}));
 		}
 		
 		/// <summary>
@@ -3787,7 +3787,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FXAM ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXAM", "", null, null, null, null, new string[] {"D9", "E5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXAM", "", null, null, null, null, new string [] {"D9", "E5"}));
 		}
 		
 		/// <summary>
@@ -3795,7 +3795,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FXCH ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH", "", null, null, null, null, new string[] {"D9", "C9"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH", "", null, null, null, null, new string [] {"D9", "C9"}));
 		}
 		
 		/// <summary>
@@ -3803,7 +3803,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FXCH (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH", target.ToString(), null, null, target, null, new string[] {"D9", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH", target.ToString (), null, null, target, null, new string [] {"D9", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -3811,7 +3811,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FXCH__ST0 (FPType target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH__ST0", target.ToString() + ", " + "ST0", null, null, target, null, new string[] {"D9", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH__ST0", target.ToString () + ", " + "ST0", null, null, target, null, new string [] {"D9", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -3819,7 +3819,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FXCH_ST0 (FPType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH_ST0", "ST0" + ", " + source.ToString(), null, null, source, null, new string[] {"D9", "C8+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXCH_ST0", "ST0" + ", " + source.ToString (), null, null, source, null, new string [] {"D9", "C8+r"}));
 		}
 		
 		/// <summary>
@@ -3827,7 +3827,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FXRSTOR (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXRSTOR", target.ToString(), target, null, null, null, new string[] {"0F", "AE", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXRSTOR", target.ToString (), target, null, null, null, new string [] {"0F", "AE", "/1"}));
 		}
 		
 		/// <summary>
@@ -3835,7 +3835,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FXSAVE (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXSAVE", target.ToString(), target, null, null, null, new string[] {"0F", "AE", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXSAVE", target.ToString (), target, null, null, null, new string [] {"0F", "AE", "/0"}));
 		}
 		
 		/// <summary>
@@ -3843,7 +3843,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FXTRACT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXTRACT", "", null, null, null, null, new string[] {"D9", "F4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FXTRACT", "", null, null, null, null, new string [] {"D9", "F4"}));
 		}
 		
 		/// <summary>
@@ -3851,7 +3851,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FYL2X ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FYL2X", "", null, null, null, null, new string[] {"D9", "F1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FYL2X", "", null, null, null, null, new string [] {"D9", "F1"}));
 		}
 		
 		/// <summary>
@@ -3859,7 +3859,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void FYL2XP1 ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FYL2XP1", "", null, null, null, null, new string[] {"D9", "F9"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "FYL2XP1", "", null, null, null, null, new string [] {"D9", "F9"}));
 		}
 		
 		/// <summary>
@@ -3867,7 +3867,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void HLT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "HLT", "", null, null, null, null, new string[] {"F4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "HLT", "", null, null, null, null, new string [] {"F4"}));
 		}
 		
 		/// <summary>
@@ -3875,7 +3875,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ICEBP ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ICEBP", "", null, null, null, null, new string[] {"F1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ICEBP", "", null, null, null, null, new string [] {"F1"}));
 		}
 		
 		/// <summary>
@@ -3883,7 +3883,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IDIV (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), target, null, null, null, new string[] {"F6", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString (), target, null, null, null, new string [] {"F6", "/7"}));
 		}
 		
 		/// <summary>
@@ -3891,7 +3891,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IDIV (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString (), target, null, null, null, new string [] {"o16", "F7", "/7"}));
 		}
 		
 		/// <summary>
@@ -3899,7 +3899,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IDIV (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString (), target, null, null, null, new string [] {"o32", "F7", "/7"}));
 		}
 		
 		/// <summary>
@@ -3907,7 +3907,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IDIV (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), null, target, null, null, new string[] {"F6", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString (), null, target, null, null, new string [] {"F6", "/7"}));
 		}
 		
 		/// <summary>
@@ -3915,7 +3915,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IDIV (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString (), null, target, null, null, new string [] {"o16", "F7", "/7"}));
 		}
 		
 		/// <summary>
@@ -3923,7 +3923,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IDIV (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IDIV", target.ToString (), null, target, null, null, new string [] {"o32", "F7", "/7"}));
 		}
 		
 		/// <summary>
@@ -3931,7 +3931,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), target, null, null, null, new string[] {"F6", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString (), target, null, null, null, new string [] {"F6", "/5"}));
 		}
 		
 		/// <summary>
@@ -3939,7 +3939,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString (), target, null, null, null, new string [] {"o16", "F7", "/5"}));
 		}
 		
 		/// <summary>
@@ -3947,7 +3947,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString (), target, null, null, null, new string [] {"o32", "F7", "/5"}));
 		}
 		
 		/// <summary>
@@ -3955,7 +3955,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "AF", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "AF", "/r"}));
 		}
 		
 		/// <summary>
@@ -3963,7 +3963,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "AF", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "AF", "/r"}));
 		}
 		
 		/// <summary>
@@ -3971,7 +3971,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32 [] {source}, new string [] {"o16", "6B", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -3979,7 +3979,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "69", "/r", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32 [] {source}, new string [] {"o16", "69", "/r", "iw"}));
 		}
 		
 		/// <summary>
@@ -3987,7 +3987,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32 [] {source}, new string [] {"o32", "6B", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -3995,7 +3995,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "69", "/r", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32 [] {source}, new string [] {"o32", "69", "/r", "id"}));
 		}
 		
 		/// <summary>
@@ -4003,7 +4003,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target, WordMemory source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o16", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), source, null, target, new UInt32 [] {value}, new string [] {"o16", "6B", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -4011,7 +4011,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target, WordMemory source, UInt16 value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o16", "69", "/r", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), source, null, target, new UInt32 [] {value}, new string [] {"o16", "69", "/r", "iw"}));
 		}
 		
 		/// <summary>
@@ -4019,7 +4019,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target, DWordMemory source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o32", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), source, null, target, new UInt32 [] {value}, new string [] {"o32", "6B", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -4027,7 +4027,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target, DWordMemory source, UInt32 value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), source, null, target, new UInt32[] {value}, new string[] {"o32", "69", "/r", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), source, null, target, new UInt32 [] {value}, new string [] {"o32", "69", "/r", "id"}));
 		}
 		
 		/// <summary>
@@ -4035,7 +4035,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), null, target, null, null, new string[] {"F6", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString (), null, target, null, null, new string [] {"F6", "/5"}));
 		}
 		
 		/// <summary>
@@ -4043,7 +4043,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString (), null, target, null, null, new string [] {"o16", "F7", "/5"}));
 		}
 		
 		/// <summary>
@@ -4051,7 +4051,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString (), null, target, null, null, new string [] {"o32", "F7", "/5"}));
 		}
 		
 		/// <summary>
@@ -4059,7 +4059,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "AF", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "AF", "/r"}));
 		}
 		
 		/// <summary>
@@ -4067,7 +4067,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "AF", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "AF", "/r"}));
 		}
 		
 		/// <summary>
@@ -4075,7 +4075,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o16", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), null, source, target, new UInt32 [] {value}, new string [] {"o16", "6B", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -4083,7 +4083,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R16Type target, R16Type source, UInt16 value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o16", "69", "/r", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), null, source, target, new UInt32 [] {value}, new string [] {"o16", "69", "/r", "iw"}));
 		}
 		
 		/// <summary>
@@ -4091,7 +4091,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o32", "6B", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), null, source, target, new UInt32 [] {value}, new string [] {"o32", "6B", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -4099,7 +4099,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IMUL (R32Type target, R32Type source, UInt32 value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, source, target, new UInt32[] {value}, new string[] {"o32", "69", "/r", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IMUL", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), null, source, target, new UInt32 [] {value}, new string [] {"o32", "69", "/r", "id"}));
 		}
 		
 		/// <summary>
@@ -4107,7 +4107,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IN_AL (Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"E4", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"E4", "ib"}));
 		}
 		
 		/// <summary>
@@ -4115,7 +4115,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IN_AX (Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "E5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "E5", "ib"}));
 		}
 		
 		/// <summary>
@@ -4123,7 +4123,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IN_EAX (Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "E5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "E5", "ib"}));
 		}
 		
 		/// <summary>
@@ -4131,7 +4131,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IN_AL__DX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AL__DX", "AL" + ", " + "DX", null, null, null, null, new string[] {"EC"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AL__DX", "AL" + ", " + "DX", null, null, null, null, new string [] {"EC"}));
 		}
 		
 		/// <summary>
@@ -4139,7 +4139,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IN_AX__DX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AX__DX", "AX" + ", " + "DX", null, null, null, null, new string[] {"o16", "ED"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_AX__DX", "AX" + ", " + "DX", null, null, null, null, new string [] {"o16", "ED"}));
 		}
 		
 		/// <summary>
@@ -4147,7 +4147,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IN_EAX__DX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_EAX__DX", "EAX" + ", " + "DX", null, null, null, null, new string[] {"o32", "ED"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IN_EAX__DX", "EAX" + ", " + "DX", null, null, null, null, new string [] {"o32", "ED"}));
 		}
 		
 		/// <summary>
@@ -4155,7 +4155,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INC (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), null, null, target, null, new string[] {"o16", "40+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString (), null, null, target, null, new string [] {"o16", "40+r"}));
 		}
 		
 		/// <summary>
@@ -4163,7 +4163,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INC (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), null, null, target, null, new string[] {"o32", "40+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString (), null, null, target, null, new string [] {"o32", "40+r"}));
 		}
 		
 		/// <summary>
@@ -4171,7 +4171,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INC (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), target, null, null, null, new string[] {"FE", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString (), target, null, null, null, new string [] {"FE", "/0"}));
 		}
 		
 		/// <summary>
@@ -4179,7 +4179,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INC (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString (), target, null, null, null, new string [] {"o16", "FF", "/0"}));
 		}
 		
 		/// <summary>
@@ -4187,7 +4187,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INC (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString (), target, null, null, null, new string [] {"o32", "FF", "/0"}));
 		}
 		
 		/// <summary>
@@ -4195,7 +4195,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INC (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString(), null, target, null, null, new string[] {"FE", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INC", target.ToString (), null, target, null, null, new string [] {"FE", "/0"}));
 		}
 		
 		/// <summary>
@@ -4203,7 +4203,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INSB ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSB", "", null, null, null, null, new string[] {"6C"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSB", "", null, null, null, null, new string [] {"6C"}));
 		}
 		
 		/// <summary>
@@ -4211,7 +4211,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INSD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSD", "", null, null, null, null, new string[] {"o32", "6D"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSD", "", null, null, null, null, new string [] {"o32", "6D"}));
 		}
 		
 		/// <summary>
@@ -4219,7 +4219,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INSW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSW", "", null, null, null, null, new string[] {"o16", "6D"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INSW", "", null, null, null, null, new string [] {"o16", "6D"}));
 		}
 		
 		/// <summary>
@@ -4228,12 +4228,12 @@ namespace SharpOS.AOT.X86 {
 		public void INT (Byte target)
 		{
 			if (target == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT_1", "1", null, null, null, null, new string[] {"F1"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT_1", "1", null, null, null, null, new string [] {"F1"}));
 			else if (target == 3)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT_3", "3", null, null, null, null, new string[] {"CC"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT_3", "3", null, null, null, null, new string [] {"CC"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"CD", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INT", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"CD", "ib"}));
 			}
 		}
 		
@@ -4242,7 +4242,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INTO ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INTO", "", null, null, null, null, new string[] {"CE"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INTO", "", null, null, null, null, new string [] {"CE"}));
 		}
 		
 		/// <summary>
@@ -4250,7 +4250,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INVD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INVD", "", null, null, null, null, new string[] {"0F", "08"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INVD", "", null, null, null, null, new string [] {"0F", "08"}));
 		}
 		
 		/// <summary>
@@ -4258,7 +4258,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void INVLPG (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INVLPG", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "INVLPG", target.ToString (), target, null, null, null, new string [] {"0F", "01", "/7"}));
 		}
 		
 		/// <summary>
@@ -4266,7 +4266,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IRET ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRET", "", null, null, null, null, new string[] {"CF"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRET", "", null, null, null, null, new string [] {"CF"}));
 		}
 		
 		/// <summary>
@@ -4274,7 +4274,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IRETD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRETD", "", null, null, null, null, new string[] {"o32", "CF"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRETD", "", null, null, null, null, new string [] {"o32", "CF"}));
 		}
 		
 		/// <summary>
@@ -4282,7 +4282,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void IRETW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRETW", "", null, null, null, null, new string[] {"o16", "CF"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "IRETW", "", null, null, null, null, new string [] {"o16", "CF"}));
 		}
 		
 		/// <summary>
@@ -4290,7 +4290,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JA (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JA", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"77", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JA", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"77", "rb"}));
 		}
 		
 		/// <summary>
@@ -4298,7 +4298,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JA (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JA", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JA", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "87", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4306,7 +4306,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JA (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JA", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JA", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "87", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4314,7 +4314,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JAE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JAE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JAE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"73", "rb"}));
 		}
 		
 		/// <summary>
@@ -4322,7 +4322,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JAE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JAE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JAE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4330,7 +4330,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JAE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JAE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JAE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4338,7 +4338,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JB (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JB", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JB", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"72", "rb"}));
 		}
 		
 		/// <summary>
@@ -4346,7 +4346,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JB (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JB", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JB", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4354,7 +4354,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JB (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JB", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JB", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4362,7 +4362,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JBE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JBE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"76", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JBE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"76", "rb"}));
 		}
 		
 		/// <summary>
@@ -4370,7 +4370,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JBE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JBE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JBE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "86", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4378,7 +4378,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JBE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JBE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JBE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "86", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4386,7 +4386,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JC (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JC", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JC", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"72", "rb"}));
 		}
 		
 		/// <summary>
@@ -4394,7 +4394,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JC (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JC", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JC", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4402,7 +4402,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JC (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JC", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JC", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4410,7 +4410,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JCXZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JCXZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"a16", "E3", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JCXZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"a16", "E3", "rb"}));
 		}
 		
 		/// <summary>
@@ -4418,7 +4418,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"74", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"74", "rb"}));
 		}
 		
 		/// <summary>
@@ -4426,7 +4426,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "84", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4434,7 +4434,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "84", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4442,7 +4442,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JECXZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JECXZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"a32", "E3", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JECXZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"a32", "E3", "rb"}));
 		}
 		
 		/// <summary>
@@ -4450,7 +4450,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JG (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JG", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7F", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JG", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7F", "rb"}));
 		}
 		
 		/// <summary>
@@ -4458,7 +4458,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JG (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JG", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JG", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8F", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4466,7 +4466,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JG (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JG", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JG", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8F", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4474,7 +4474,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JGE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JGE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7D", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JGE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7D", "rb"}));
 		}
 		
 		/// <summary>
@@ -4482,7 +4482,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JGE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JGE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JGE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8D", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4490,7 +4490,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JGE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JGE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JGE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8D", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4498,7 +4498,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JL (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7C", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JL", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7C", "rb"}));
 		}
 		
 		/// <summary>
@@ -4506,7 +4506,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JL (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JL", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8C", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4514,7 +4514,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JL (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JL", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JL", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8C", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4522,7 +4522,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JLE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JLE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7E", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JLE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7E", "rb"}));
 		}
 		
 		/// <summary>
@@ -4530,7 +4530,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JLE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JLE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JLE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8E", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4538,7 +4538,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JLE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JLE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JLE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8E", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4546,7 +4546,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E9", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"E9", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4554,7 +4554,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JMP", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"E9", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JMP", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"E9", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4562,7 +4562,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"EB", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"EB", "rb"}));
 		}
 		
 		/// <summary>
@@ -4570,7 +4570,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (UInt16 target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o16", "EA", "iw", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source, target}, new string [] {"o16", "EA", "iw", "iw"}));
 		}
 		
 		/// <summary>
@@ -4578,7 +4578,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (UInt16 target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format("0x{0:x}", target) + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source, target}, new string[] {"o32", "EA", "id", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", string.Format ("0x{0:x}", target) + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source, target}, new string [] {"o32", "EA", "id", "iw"}));
 		}
 		
 		/// <summary>
@@ -4586,7 +4586,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (ushort target, string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JMP", string.Format("0x{0:x}", target) + ":" + Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0, target}, new string[] {"o32", "EA", "id", "iw"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JMP", string.Format("0x{0:x}", target) + ":" + Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0, target}, new string [] {"o32", "EA", "id", "iw"}));
 		}
 		
 		/// <summary>
@@ -4594,7 +4594,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP_FAR (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP_FAR", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP_FAR", target.ToString (), target, null, null, null, new string [] {"o16", "FF", "/5"}));
 		}
 		
 		/// <summary>
@@ -4602,7 +4602,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP_FAR (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP_FAR", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP_FAR", target.ToString (), target, null, null, null, new string [] {"o32", "FF", "/5"}));
 		}
 		
 		/// <summary>
@@ -4610,7 +4610,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString (), target, null, null, null, new string [] {"o16", "FF", "/4"}));
 		}
 		
 		/// <summary>
@@ -4618,7 +4618,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString (), target, null, null, null, new string [] {"o32", "FF", "/4"}));
 		}
 		
 		/// <summary>
@@ -4626,7 +4626,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString(), null, target, null, null, new string[] {"o16", "FF", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString (), null, target, null, null, new string [] {"o16", "FF", "/4"}));
 		}
 		
 		/// <summary>
@@ -4634,7 +4634,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JMP (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString(), null, target, null, null, new string[] {"o32", "FF", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JMP", target.ToString (), null, target, null, null, new string [] {"o32", "FF", "/4"}));
 		}
 		
 		/// <summary>
@@ -4642,7 +4642,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNA (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNA", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"76", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNA", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"76", "rb"}));
 		}
 		
 		/// <summary>
@@ -4650,7 +4650,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNA (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNA", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNA", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "86", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4658,7 +4658,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNA (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNA", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "86", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNA", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "86", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4666,7 +4666,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNAE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNAE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"72", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNAE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"72", "rb"}));
 		}
 		
 		/// <summary>
@@ -4674,7 +4674,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNAE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNAE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNAE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4682,7 +4682,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNAE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNAE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "82", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNAE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "82", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4690,7 +4690,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNB (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNB", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNB", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"73", "rb"}));
 		}
 		
 		/// <summary>
@@ -4698,7 +4698,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNB (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNB", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNB", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4706,7 +4706,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNB (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNB", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNB", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4714,7 +4714,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNBE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNBE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"77", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNBE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"77", "rb"}));
 		}
 		
 		/// <summary>
@@ -4722,7 +4722,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNBE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNBE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNBE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "87", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4730,7 +4730,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNBE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNBE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "87", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNBE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "87", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4738,7 +4738,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNC (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNC", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"73", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNC", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"73", "rb"}));
 		}
 		
 		/// <summary>
@@ -4746,7 +4746,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNC (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNC", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNC", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4754,7 +4754,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNC (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNC", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "83", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNC", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "83", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4762,7 +4762,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"75", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"75", "rb"}));
 		}
 		
 		/// <summary>
@@ -4770,7 +4770,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "85", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4778,7 +4778,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "85", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4786,7 +4786,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNG (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNG", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7E", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNG", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7E", "rb"}));
 		}
 		
 		/// <summary>
@@ -4794,7 +4794,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNG (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNG", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNG", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8E", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4802,7 +4802,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNG (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNG", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8E", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNG", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8E", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4810,7 +4810,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNGE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNGE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7C", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNGE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7C", "rb"}));
 		}
 		
 		/// <summary>
@@ -4818,7 +4818,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNGE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNGE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNGE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8C", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4826,7 +4826,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNGE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNGE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8C", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNGE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8C", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4834,7 +4834,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNL (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7D", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNL", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7D", "rb"}));
 		}
 		
 		/// <summary>
@@ -4842,7 +4842,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNL (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNL", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNL", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8D", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4850,7 +4850,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNL (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNL", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8D", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNL", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8D", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4858,7 +4858,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNLE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNLE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7F", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNLE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7F", "rb"}));
 		}
 		
 		/// <summary>
@@ -4866,7 +4866,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNLE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNLE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNLE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8F", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4874,7 +4874,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNLE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNLE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8F", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNLE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8F", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4882,7 +4882,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNO (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"71", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNO", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"71", "rb"}));
 		}
 		
 		/// <summary>
@@ -4890,7 +4890,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNO (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "81", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNO", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "81", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4898,7 +4898,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNO (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNO", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "81", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNO", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "81", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4906,7 +4906,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNP (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7B", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNP", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7B", "rb"}));
 		}
 		
 		/// <summary>
@@ -4914,7 +4914,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNP (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNP", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8B", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4922,7 +4922,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNP (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNP", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNP", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8B", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4930,7 +4930,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNS (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNS", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"79", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNS", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"79", "rb"}));
 		}
 		
 		/// <summary>
@@ -4938,7 +4938,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNS (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNS", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "89", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNS", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "89", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4946,7 +4946,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNS (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNS", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "89", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNS", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "89", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4954,7 +4954,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"75", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"75", "rb"}));
 		}
 		
 		/// <summary>
@@ -4962,7 +4962,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNZ (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JNZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "85", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4970,7 +4970,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JNZ (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNZ", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "85", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JNZ", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "85", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4978,7 +4978,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JO (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"70", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JO", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"70", "rb"}));
 		}
 		
 		/// <summary>
@@ -4986,7 +4986,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JO (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "80", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JO", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "80", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -4994,7 +4994,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JO (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JO", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "80", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JO", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "80", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5002,7 +5002,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JP (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7A", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JP", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7A", "rb"}));
 		}
 		
 		/// <summary>
@@ -5010,7 +5010,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JP (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JP", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8A", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5018,7 +5018,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JP (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JP", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JP", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8A", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5026,7 +5026,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JPE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7A", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7A", "rb"}));
 		}
 		
 		/// <summary>
@@ -5034,7 +5034,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JPE (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8A", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5042,7 +5042,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JPE (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JPE", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8A", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JPE", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8A", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5050,7 +5050,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JPO (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"7B", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPO", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"7B", "rb"}));
 		}
 		
 		/// <summary>
@@ -5058,7 +5058,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JPO (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPO", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JPO", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "8B", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5066,7 +5066,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JPO (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JPO", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "8B", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JPO", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "8B", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5074,7 +5074,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JS (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JS", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"78", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JS", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"78", "rb"}));
 		}
 		
 		/// <summary>
@@ -5082,7 +5082,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JS (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JS", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "88", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JS", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "88", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5090,7 +5090,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JS (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JS", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "88", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JS", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "88", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5098,7 +5098,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"74", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"74", "rb"}));
 		}
 		
 		/// <summary>
@@ -5106,7 +5106,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JZ (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "JZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"0F", "84", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5114,7 +5114,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void JZ (string label)
 		{
-			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JZ", Assembly.FormatLabelName (label), null, null, null, new UInt32[] {0}, new string[] {"0F", "84", "rw/rd"}));
+			this.instructions.Add (new Instruction(true, string.Empty, Assembly.FormatLabelName(label), "JZ", Assembly.FormatLabelName (label), null, null, null, new UInt32 [] {0}, new string [] {"0F", "84", "rw/rd"}));
 		}
 		
 		/// <summary>
@@ -5122,7 +5122,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LAHF ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAHF", "", null, null, null, null, new string[] {"9F"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAHF", "", null, null, null, null, new string [] {"9F"}));
 		}
 		
 		/// <summary>
@@ -5130,7 +5130,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LAR (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "02", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "02", "/r"}));
 		}
 		
 		/// <summary>
@@ -5138,7 +5138,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LAR (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "02", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "02", "/r"}));
 		}
 		
 		/// <summary>
@@ -5146,7 +5146,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LAR (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "02", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "02", "/r"}));
 		}
 		
 		/// <summary>
@@ -5154,7 +5154,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LAR (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "02", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LAR", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "02", "/r"}));
 		}
 		
 		/// <summary>
@@ -5162,7 +5162,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LDS (R16Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LDS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "C5", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LDS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "C5", "/r"}));
 		}
 		
 		/// <summary>
@@ -5170,7 +5170,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LDS (R32Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LDS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "C5", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LDS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "C5", "/r"}));
 		}
 		
 		/// <summary>
@@ -5178,7 +5178,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LEA (R16Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "8D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEA", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "8D", "/r"}));
 		}
 		
 		/// <summary>
@@ -5186,7 +5186,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LEA (R32Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEA", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "8D", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEA", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "8D", "/r"}));
 		}
 		
 		/// <summary>
@@ -5194,7 +5194,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LEAVE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEAVE", "", null, null, null, null, new string[] {"C9"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LEAVE", "", null, null, null, null, new string [] {"C9"}));
 		}
 		
 		/// <summary>
@@ -5202,7 +5202,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LES (R16Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LES", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "C4", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LES", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "C4", "/r"}));
 		}
 		
 		/// <summary>
@@ -5210,7 +5210,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LES (R32Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LES", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "C4", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LES", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "C4", "/r"}));
 		}
 		
 		/// <summary>
@@ -5218,7 +5218,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LFENCE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFENCE", "", null, null, null, null, new string[] {"0F", "AE", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFENCE", "", null, null, null, null, new string [] {"0F", "AE", "/5"}));
 		}
 		
 		/// <summary>
@@ -5226,7 +5226,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LFS (R16Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "B4", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "B4", "/r"}));
 		}
 		
 		/// <summary>
@@ -5234,7 +5234,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LFS (R32Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B4", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LFS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "B4", "/r"}));
 		}
 		
 		/// <summary>
@@ -5242,7 +5242,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LGDT (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGDT", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGDT", target.ToString (), target, null, null, null, new string [] {"0F", "01", "/2"}));
 		}
 		
 		/// <summary>
@@ -5250,7 +5250,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LGS (R16Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "B5", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "B5", "/r"}));
 		}
 		
 		/// <summary>
@@ -5258,7 +5258,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LGS (R32Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B5", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LGS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "B5", "/r"}));
 		}
 		
 		/// <summary>
@@ -5266,7 +5266,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LIDT (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LIDT", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LIDT", target.ToString (), target, null, null, null, new string [] {"0F", "01", "/3"}));
 		}
 		
 		/// <summary>
@@ -5274,7 +5274,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LLDT (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LLDT", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LLDT", target.ToString (), target, null, null, null, new string [] {"0F", "00", "/2"}));
 		}
 		
 		/// <summary>
@@ -5282,7 +5282,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LLDT (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LLDT", target.ToString(), null, target, null, null, new string[] {"0F", "00", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LLDT", target.ToString (), null, target, null, null, new string [] {"0F", "00", "/2"}));
 		}
 		
 		/// <summary>
@@ -5290,7 +5290,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LMSW (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LMSW", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LMSW", target.ToString (), target, null, null, null, new string [] {"0F", "01", "/6"}));
 		}
 		
 		/// <summary>
@@ -5298,7 +5298,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LMSW (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LMSW", target.ToString(), null, target, null, null, new string[] {"0F", "01", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LMSW", target.ToString (), null, target, null, null, new string [] {"0F", "01", "/6"}));
 		}
 		
 		/// <summary>
@@ -5306,7 +5306,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LOCK ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOCK", "", null, null, null, null, new string[] {"F0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOCK", "", null, null, null, null, new string [] {"F0"}));
 		}
 		
 		/// <summary>
@@ -5314,7 +5314,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LODSB ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSB", "", null, null, null, null, new string[] {"AC"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSB", "", null, null, null, null, new string [] {"AC"}));
 		}
 		
 		/// <summary>
@@ -5322,7 +5322,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LODSD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSD", "", null, null, null, null, new string[] {"o32", "AD"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSD", "", null, null, null, null, new string [] {"o32", "AD"}));
 		}
 		
 		/// <summary>
@@ -5330,7 +5330,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LODSW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSW", "", null, null, null, null, new string[] {"o16", "AD"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LODSW", "", null, null, null, null, new string [] {"o16", "AD"}));
 		}
 		
 		/// <summary>
@@ -5338,7 +5338,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LOOP (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOP", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E2", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOP", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"E2", "rb"}));
 		}
 		
 		/// <summary>
@@ -5346,7 +5346,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LOOPE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E1", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"E1", "rb"}));
 		}
 		
 		/// <summary>
@@ -5354,7 +5354,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LOOPNE (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPNE", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E0", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPNE", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"E0", "rb"}));
 		}
 		
 		/// <summary>
@@ -5362,7 +5362,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LOOPNZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPNZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E0", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPNZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"E0", "rb"}));
 		}
 		
 		/// <summary>
@@ -5370,7 +5370,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LOOPZ (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPZ", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"E1", "rb"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LOOPZ", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"E1", "rb"}));
 		}
 		
 		/// <summary>
@@ -5378,7 +5378,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LSL (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "03", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "03", "/r"}));
 		}
 		
 		/// <summary>
@@ -5386,7 +5386,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LSL (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "03", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "03", "/r"}));
 		}
 		
 		/// <summary>
@@ -5394,7 +5394,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LSL (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "03", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "03", "/r"}));
 		}
 		
 		/// <summary>
@@ -5402,7 +5402,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LSL (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "03", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSL", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "03", "/r"}));
 		}
 		
 		/// <summary>
@@ -5410,7 +5410,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LSS (R16Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "B2", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "B2", "/r"}));
 		}
 		
 		/// <summary>
@@ -5418,7 +5418,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LSS (R32Type target, Memory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSS", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B2", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LSS", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "B2", "/r"}));
 		}
 		
 		/// <summary>
@@ -5426,7 +5426,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LTR (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LTR", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LTR", target.ToString (), target, null, null, null, new string [] {"0F", "00", "/3"}));
 		}
 		
 		/// <summary>
@@ -5434,7 +5434,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void LTR (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LTR", target.ToString(), null, target, null, null, new string[] {"0F", "00", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "LTR", target.ToString (), null, target, null, null, new string [] {"0F", "00", "/3"}));
 		}
 		
 		/// <summary>
@@ -5442,7 +5442,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MFENCE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MFENCE", "", null, null, null, null, new string[] {"0F", "AE", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MFENCE", "", null, null, null, null, new string [] {"0F", "AE", "/6"}));
 		}
 		
 		/// <summary>
@@ -5450,7 +5450,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"88", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"88", "/r"}));
 		}
 		
 		/// <summary>
@@ -5458,7 +5458,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "89", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "89", "/r"}));
 		}
 		
 		/// <summary>
@@ -5466,7 +5466,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "89", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "89", "/r"}));
 		}
 		
 		/// <summary>
@@ -5474,7 +5474,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"8A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"8A", "/r"}));
 		}
 		
 		/// <summary>
@@ -5482,7 +5482,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "8B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "8B", "/r"}));
 		}
 		
 		/// <summary>
@@ -5490,7 +5490,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "8B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "8B", "/r"}));
 		}
 		
 		/// <summary>
@@ -5498,7 +5498,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R8Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"B0+r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32 [] {source}, new string [] {"B0+r", "ib"}));
 		}
 		
 		/// <summary>
@@ -5506,7 +5506,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R16Type target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o16", "B8+r", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32 [] {source}, new string [] {"o16", "B8+r", "iw"}));
 		}
 		
 		/// <summary>
@@ -5514,7 +5514,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R32Type target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), null, null, target, new UInt32[] {source}, new string[] {"o32", "B8+r", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, null, target, new UInt32 [] {source}, new string [] {"o32", "B8+r", "id"}));
 		}
 		
 		/// <summary>
@@ -5522,7 +5522,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C6", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C6", "/0", "ib"}));
 		}
 		
 		/// <summary>
@@ -5530,7 +5530,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C7", "/0", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C7", "/0", "iw"}));
 		}
 		
 		/// <summary>
@@ -5538,7 +5538,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C7", "/0", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C7", "/0", "id"}));
 		}
 		
 		/// <summary>
@@ -5546,7 +5546,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV_AL (byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_AL", "AL" + ", " + source.ToString(), null, null, null, new UInt32[] {source}, new string[] {"A0", "ow/od"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_AL", "AL" + ", " + source.ToString (), null, null, null, new UInt32 [] {source}, new string [] {"A0", "ow/od"}));
 		}
 		
 		/// <summary>
@@ -5554,7 +5554,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV_AX (UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_AX", "AX" + ", " + source.ToString(), null, null, null, new UInt32[] {source}, new string[] {"o16", "A1", "ow/od"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_AX", "AX" + ", " + source.ToString (), null, null, null, new UInt32 [] {source}, new string [] {"o16", "A1", "ow/od"}));
 		}
 		
 		/// <summary>
@@ -5562,7 +5562,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV_EAX (UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_EAX", "EAX" + ", " + source.ToString(), null, null, null, new UInt32[] {source}, new string[] {"o32", "A1", "ow/od"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV_EAX", "EAX" + ", " + source.ToString (), null, null, null, new UInt32 [] {source}, new string [] {"o32", "A1", "ow/od"}));
 		}
 		
 		/// <summary>
@@ -5570,7 +5570,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV__AL (byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__AL", target.ToString() + ", " + "AL", null, null, null, new UInt32[] {target}, new string[] {"A2", "ow/od"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__AL", target.ToString () + ", " + "AL", null, null, null, new UInt32 [] {target}, new string [] {"A2", "ow/od"}));
 		}
 		
 		/// <summary>
@@ -5578,7 +5578,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV__AX (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__AX", target.ToString() + ", " + "AX", null, null, null, new UInt32[] {target}, new string[] {"o16", "A3", "ow/od"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__AX", target.ToString () + ", " + "AX", null, null, null, new UInt32 [] {target}, new string [] {"o16", "A3", "ow/od"}));
 		}
 		
 		/// <summary>
@@ -5586,7 +5586,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV__EAX (UInt32 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__EAX", target.ToString() + ", " + "EAX", null, null, null, new UInt32[] {target}, new string[] {"o32", "A3", "ow/od"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV__EAX", target.ToString () + ", " + "EAX", null, null, null, new UInt32 [] {target}, new string [] {"o32", "A3", "ow/od"}));
 		}
 		
 		/// <summary>
@@ -5594,7 +5594,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (WordMemory target, SegType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"8C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"8C", "/r"}));
 		}
 		
 		/// <summary>
@@ -5602,7 +5602,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (DWordMemory target, SegType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "8C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "8C", "/r"}));
 		}
 		
 		/// <summary>
@@ -5610,7 +5610,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (SegType target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"8E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"8E", "/r"}));
 		}
 		
 		/// <summary>
@@ -5618,7 +5618,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (SegType target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "8E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "8E", "/r"}));
 		}
 		
 		/// <summary>
@@ -5626,7 +5626,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R32Type target, CRType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "20", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"0F", "20", "/r"}));
 		}
 		
 		/// <summary>
@@ -5634,7 +5634,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R32Type target, DRType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "21", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"0F", "21", "/r"}));
 		}
 		
 		/// <summary>
@@ -5642,7 +5642,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R32Type target, TRType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "24", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"0F", "24", "/r"}));
 		}
 		
 		/// <summary>
@@ -5650,7 +5650,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (CRType target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"0F", "22", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"0F", "22", "/r"}));
 		}
 		
 		/// <summary>
@@ -5658,7 +5658,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (DRType target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"0F", "23", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"0F", "23", "/r"}));
 		}
 		
 		/// <summary>
@@ -5666,7 +5666,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (TRType target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"0F", "26", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"0F", "26", "/r"}));
 		}
 		
 		/// <summary>
@@ -5674,7 +5674,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"88", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"88", "/r"}));
 		}
 		
 		/// <summary>
@@ -5682,7 +5682,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "89", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "89", "/r"}));
 		}
 		
 		/// <summary>
@@ -5690,7 +5690,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "89", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "89", "/r"}));
 		}
 		
 		/// <summary>
@@ -5698,7 +5698,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R16Type target, SegType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "8C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "8C", "/r"}));
 		}
 		
 		/// <summary>
@@ -5706,7 +5706,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (R32Type target, SegType source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "8C", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "8C", "/r"}));
 		}
 		
 		/// <summary>
@@ -5714,7 +5714,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (SegType target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"8E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"8E", "/r"}));
 		}
 		
 		/// <summary>
@@ -5722,7 +5722,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOV (SegType target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "8E", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOV", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "8E", "/r"}));
 		}
 		
 		/// <summary>
@@ -5730,7 +5730,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSB ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSB", "", null, null, null, null, new string[] {"A4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSB", "", null, null, null, null, new string [] {"A4"}));
 		}
 		
 		/// <summary>
@@ -5738,7 +5738,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSD", "", null, null, null, null, new string[] {"o32", "A5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSD", "", null, null, null, null, new string [] {"o32", "A5"}));
 		}
 		
 		/// <summary>
@@ -5746,7 +5746,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSW", "", null, null, null, null, new string[] {"o16", "A5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSW", "", null, null, null, null, new string [] {"o16", "A5"}));
 		}
 		
 		/// <summary>
@@ -5754,7 +5754,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSX (R16Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "BE", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "BE", "/r"}));
 		}
 		
 		/// <summary>
@@ -5762,7 +5762,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSX (R32Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "BE", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "BE", "/r"}));
 		}
 		
 		/// <summary>
@@ -5770,7 +5770,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSX (R32Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "BF", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "BF", "/r"}));
 		}
 		
 		/// <summary>
@@ -5778,7 +5778,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSX (R16Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "BE", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "BE", "/r"}));
 		}
 		
 		/// <summary>
@@ -5786,7 +5786,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSX (R32Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "BE", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "BE", "/r"}));
 		}
 		
 		/// <summary>
@@ -5794,7 +5794,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVSX (R32Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "BF", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVSX", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "BF", "/r"}));
 		}
 		
 		/// <summary>
@@ -5802,7 +5802,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVZX (R16Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0F", "B6", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0F", "B6", "/r"}));
 		}
 		
 		/// <summary>
@@ -5810,7 +5810,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVZX (R32Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B6", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "B6", "/r"}));
 		}
 		
 		/// <summary>
@@ -5818,7 +5818,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVZX (R32Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0F", "B7", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0F", "B7", "/r"}));
 		}
 		
 		/// <summary>
@@ -5826,7 +5826,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVZX (R16Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "0F", "B6", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "0F", "B6", "/r"}));
 		}
 		
 		/// <summary>
@@ -5834,7 +5834,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVZX (R32Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "B6", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "B6", "/r"}));
 		}
 		
 		/// <summary>
@@ -5842,7 +5842,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MOVZX (R32Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "0F", "B7", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MOVZX", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "0F", "B7", "/r"}));
 		}
 		
 		/// <summary>
@@ -5850,7 +5850,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MUL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), target, null, null, null, new string[] {"F6", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString (), target, null, null, null, new string [] {"F6", "/4"}));
 		}
 		
 		/// <summary>
@@ -5858,7 +5858,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MUL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString (), target, null, null, null, new string [] {"o16", "F7", "/4"}));
 		}
 		
 		/// <summary>
@@ -5866,7 +5866,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MUL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString (), target, null, null, null, new string [] {"o32", "F7", "/4"}));
 		}
 		
 		/// <summary>
@@ -5874,7 +5874,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MUL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), null, target, null, null, new string[] {"F6", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString (), null, target, null, null, new string [] {"F6", "/4"}));
 		}
 		
 		/// <summary>
@@ -5882,7 +5882,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MUL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString (), null, target, null, null, new string [] {"o16", "F7", "/4"}));
 		}
 		
 		/// <summary>
@@ -5890,7 +5890,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void MUL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "MUL", target.ToString (), null, target, null, null, new string [] {"o32", "F7", "/4"}));
 		}
 		
 		/// <summary>
@@ -5898,7 +5898,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NEG (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), target, null, null, null, new string[] {"F6", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString (), target, null, null, null, new string [] {"F6", "/3"}));
 		}
 		
 		/// <summary>
@@ -5906,7 +5906,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NEG (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString (), target, null, null, null, new string [] {"o16", "F7", "/3"}));
 		}
 		
 		/// <summary>
@@ -5914,7 +5914,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NEG (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString (), target, null, null, null, new string [] {"o32", "F7", "/3"}));
 		}
 		
 		/// <summary>
@@ -5922,7 +5922,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NEG (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), null, target, null, null, new string[] {"F6", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString (), null, target, null, null, new string [] {"F6", "/3"}));
 		}
 		
 		/// <summary>
@@ -5930,7 +5930,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NEG (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString (), null, target, null, null, new string [] {"o16", "F7", "/3"}));
 		}
 		
 		/// <summary>
@@ -5938,7 +5938,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NEG (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NEG", target.ToString (), null, target, null, null, new string [] {"o32", "F7", "/3"}));
 		}
 		
 		/// <summary>
@@ -5946,7 +5946,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NOP ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOP", "", null, null, null, null, new string[] {"90"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOP", "", null, null, null, null, new string [] {"90"}));
 		}
 		
 		/// <summary>
@@ -5954,7 +5954,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NOT (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), target, null, null, null, new string[] {"F6", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString (), target, null, null, null, new string [] {"F6", "/2"}));
 		}
 		
 		/// <summary>
@@ -5962,7 +5962,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NOT (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), target, null, null, null, new string[] {"o16", "F7", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString (), target, null, null, null, new string [] {"o16", "F7", "/2"}));
 		}
 		
 		/// <summary>
@@ -5970,7 +5970,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NOT (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), target, null, null, null, new string[] {"o32", "F7", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString (), target, null, null, null, new string [] {"o32", "F7", "/2"}));
 		}
 		
 		/// <summary>
@@ -5978,7 +5978,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NOT (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), null, target, null, null, new string[] {"F6", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString (), null, target, null, null, new string [] {"F6", "/2"}));
 		}
 		
 		/// <summary>
@@ -5986,7 +5986,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NOT (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), null, target, null, null, new string[] {"o16", "F7", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString (), null, target, null, null, new string [] {"o16", "F7", "/2"}));
 		}
 		
 		/// <summary>
@@ -5994,7 +5994,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void NOT (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString(), null, target, null, null, new string[] {"o32", "F7", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "NOT", target.ToString (), null, target, null, null, new string [] {"o32", "F7", "/2"}));
 		}
 		
 		/// <summary>
@@ -6002,7 +6002,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"08", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"08", "/r"}));
 		}
 		
 		/// <summary>
@@ -6010,7 +6010,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "09", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "09", "/r"}));
 		}
 		
 		/// <summary>
@@ -6018,7 +6018,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "09", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "09", "/r"}));
 		}
 		
 		/// <summary>
@@ -6026,7 +6026,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"0A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"0A", "/r"}));
 		}
 		
 		/// <summary>
@@ -6034,7 +6034,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "0B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "0B", "/r"}));
 		}
 		
 		/// <summary>
@@ -6042,7 +6042,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "0B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "0B", "/r"}));
 		}
 		
 		/// <summary>
@@ -6050,7 +6050,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"80", "/1", "ib"}));
 		}
 		
 		/// <summary>
@@ -6058,7 +6058,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/1", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "81", "/1", "iw"}));
 		}
 		
 		/// <summary>
@@ -6066,7 +6066,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/1", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "81", "/1", "id"}));
 		}
 		
 		/// <summary>
@@ -6074,7 +6074,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "83", "/1", "ib"}));
 		}
 		
 		/// <summary>
@@ -6082,7 +6082,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "83", "/1", "ib"}));
 		}
 		
 		/// <summary>
@@ -6090,7 +6090,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"08", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"08", "/r"}));
 		}
 		
 		/// <summary>
@@ -6098,7 +6098,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "09", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "09", "/r"}));
 		}
 		
 		/// <summary>
@@ -6106,7 +6106,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "09", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "09", "/r"}));
 		}
 		
 		/// <summary>
@@ -6115,10 +6115,10 @@ namespace SharpOS.AOT.X86 {
 		public void OR (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"0C", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"0C", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/1", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"80", "/1", "ib"}));
 			}
 		}
 		
@@ -6128,10 +6128,10 @@ namespace SharpOS.AOT.X86 {
 		public void OR (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "0D", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "0D", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/1", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "81", "/1", "iw"}));
 			}
 		}
 		
@@ -6141,14 +6141,14 @@ namespace SharpOS.AOT.X86 {
 		public void OR (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "0D", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "0D", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.OR (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/1", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/1", "id"}));
 				}
 			}
 		}
@@ -6158,7 +6158,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "83", "/1", "ib"}));
 		}
 		
 		/// <summary>
@@ -6166,7 +6166,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OR (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/1", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "83", "/1", "ib"}));
 		}
 		
 		/// <summary>
@@ -6174,7 +6174,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUT__AL (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__AL", string.Format("0x{0:x}", target) + ", " + "AL", null, null, null, new UInt32[] {target}, new string[] {"E6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__AL", string.Format ("0x{0:x}", target) + ", " + "AL", null, null, null, new UInt32 [] {target}, new string [] {"E6", "ib"}));
 		}
 		
 		/// <summary>
@@ -6182,7 +6182,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUT__AX (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__AX", string.Format("0x{0:x}", target) + ", " + "AX", null, null, null, new UInt32[] {target}, new string[] {"o16", "E7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__AX", string.Format ("0x{0:x}", target) + ", " + "AX", null, null, null, new UInt32 [] {target}, new string [] {"o16", "E7", "ib"}));
 		}
 		
 		/// <summary>
@@ -6190,7 +6190,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUT__EAX (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__EAX", string.Format("0x{0:x}", target) + ", " + "EAX", null, null, null, new UInt32[] {target}, new string[] {"o32", "E7", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT__EAX", string.Format ("0x{0:x}", target) + ", " + "EAX", null, null, null, new UInt32 [] {target}, new string [] {"o32", "E7", "ib"}));
 		}
 		
 		/// <summary>
@@ -6198,7 +6198,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUT_DX__AL ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__AL", "DX" + ", " + "AL", null, null, null, null, new string[] {"EE"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__AL", "DX" + ", " + "AL", null, null, null, null, new string [] {"EE"}));
 		}
 		
 		/// <summary>
@@ -6206,7 +6206,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUT_DX__AX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__AX", "DX" + ", " + "AX", null, null, null, null, new string[] {"o16", "EF"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__AX", "DX" + ", " + "AX", null, null, null, null, new string [] {"o16", "EF"}));
 		}
 		
 		/// <summary>
@@ -6214,7 +6214,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUT_DX__EAX ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__EAX", "DX" + ", " + "EAX", null, null, null, null, new string[] {"o32", "EF"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUT_DX__EAX", "DX" + ", " + "EAX", null, null, null, null, new string [] {"o32", "EF"}));
 		}
 		
 		/// <summary>
@@ -6222,7 +6222,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUTSB ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSB", "", null, null, null, null, new string[] {"6E"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSB", "", null, null, null, null, new string [] {"6E"}));
 		}
 		
 		/// <summary>
@@ -6230,7 +6230,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUTSD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSD", "", null, null, null, null, new string[] {"o32", "6F"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSD", "", null, null, null, null, new string [] {"o32", "6F"}));
 		}
 		
 		/// <summary>
@@ -6238,7 +6238,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void OUTSW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSW", "", null, null, null, null, new string[] {"o16", "6F"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OUTSW", "", null, null, null, null, new string [] {"o16", "6F"}));
 		}
 		
 		/// <summary>
@@ -6246,7 +6246,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PAUSE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PAUSE", "", null, null, null, null, new string[] {"F3", "90"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PAUSE", "", null, null, null, null, new string [] {"F3", "90"}));
 		}
 		
 		/// <summary>
@@ -6254,7 +6254,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POP (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString(), null, null, target, null, new string[] {"o16", "58+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString (), null, null, target, null, new string [] {"o16", "58+r"}));
 		}
 		
 		/// <summary>
@@ -6262,7 +6262,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POP (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString(), null, null, target, null, new string[] {"o32", "58+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString (), null, null, target, null, new string [] {"o32", "58+r"}));
 		}
 		
 		/// <summary>
@@ -6270,7 +6270,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POP (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString(), target, null, null, null, new string[] {"o16", "8F", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString (), target, null, null, null, new string [] {"o16", "8F", "/0"}));
 		}
 		
 		/// <summary>
@@ -6278,7 +6278,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POP (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString(), target, null, null, null, new string[] {"o32", "8F", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP", target.ToString (), target, null, null, null, new string [] {"o32", "8F", "/0"}));
 		}
 		
 		/// <summary>
@@ -6287,15 +6287,15 @@ namespace SharpOS.AOT.X86 {
 		public void POP (SegType target)
 		{
 			if (target == Seg.GS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_GS", "GS", null, null, null, null, new string[] {"0F", "A9"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_GS", "GS", null, null, null, null, new string [] {"0F", "A9"}));
 			else if (target == Seg.FS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_FS", "FS", null, null, null, null, new string[] {"0F", "A1"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_FS", "FS", null, null, null, null, new string [] {"0F", "A1"}));
 			else if (target == Seg.ES)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_ES", "ES", null, null, null, null, new string[] {"07"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_ES", "ES", null, null, null, null, new string [] {"07"}));
 			else if (target == Seg.DS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_DS", "DS", null, null, null, null, new string[] {"1F"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_DS", "DS", null, null, null, null, new string [] {"1F"}));
 			else if (target == Seg.SS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_SS", "SS", null, null, null, null, new string[] {"17"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_SS", "SS", null, null, null, null, new string [] {"17"}));
 			else
 			{
 				throw new Exception ("Parameters not supported.");
@@ -6307,7 +6307,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POPA ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPA", "", null, null, null, null, new string[] {"61"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPA", "", null, null, null, null, new string [] {"61"}));
 		}
 		
 		/// <summary>
@@ -6315,7 +6315,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POPAD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPAD", "", null, null, null, null, new string[] {"o32", "61"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPAD", "", null, null, null, null, new string [] {"o32", "61"}));
 		}
 		
 		/// <summary>
@@ -6323,7 +6323,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POPAW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPAW", "", null, null, null, null, new string[] {"o16", "61"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPAW", "", null, null, null, null, new string [] {"o16", "61"}));
 		}
 		
 		/// <summary>
@@ -6331,7 +6331,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POPF ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPF", "", null, null, null, null, new string[] {"9D"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPF", "", null, null, null, null, new string [] {"9D"}));
 		}
 		
 		/// <summary>
@@ -6339,7 +6339,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POPFD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPFD", "", null, null, null, null, new string[] {"o32", "9D"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPFD", "", null, null, null, null, new string [] {"o32", "9D"}));
 		}
 		
 		/// <summary>
@@ -6347,7 +6347,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void POPFW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPFW", "", null, null, null, null, new string[] {"o16", "9D"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POPFW", "", null, null, null, null, new string [] {"o16", "9D"}));
 		}
 		
 		/// <summary>
@@ -6355,7 +6355,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PREFETCHNTA (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHNTA", target.ToString(), target, null, null, null, new string[] {"0F", "18", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHNTA", target.ToString (), target, null, null, null, new string [] {"0F", "18", "/0"}));
 		}
 		
 		/// <summary>
@@ -6363,7 +6363,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PREFETCHT0 (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT0", target.ToString(), target, null, null, null, new string[] {"0F", "18", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT0", target.ToString (), target, null, null, null, new string [] {"0F", "18", "/1"}));
 		}
 		
 		/// <summary>
@@ -6371,7 +6371,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PREFETCHT1 (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT1", target.ToString(), target, null, null, null, new string[] {"0F", "18", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT1", target.ToString (), target, null, null, null, new string [] {"0F", "18", "/2"}));
 		}
 		
 		/// <summary>
@@ -6379,7 +6379,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PREFETCHT2 (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT2", target.ToString(), target, null, null, null, new string[] {"0F", "18", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PREFETCHT2", target.ToString (), target, null, null, null, new string [] {"0F", "18", "/3"}));
 		}
 		
 		/// <summary>
@@ -6387,7 +6387,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSH (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString(), null, null, target, null, new string[] {"o16", "50+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString (), null, null, target, null, new string [] {"o16", "50+r"}));
 		}
 		
 		/// <summary>
@@ -6395,7 +6395,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSH (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString(), null, null, target, null, new string[] {"o32", "50+r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString (), null, null, target, null, new string [] {"o32", "50+r"}));
 		}
 		
 		/// <summary>
@@ -6403,7 +6403,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSH (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString(), target, null, null, null, new string[] {"o16", "FF", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString (), target, null, null, null, new string [] {"o16", "FF", "/6"}));
 		}
 		
 		/// <summary>
@@ -6411,7 +6411,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSH (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString(), target, null, null, null, new string[] {"o32", "FF", "/6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", target.ToString (), target, null, null, null, new string [] {"o32", "FF", "/6"}));
 		}
 		
 		/// <summary>
@@ -6419,7 +6419,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSH (Byte target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"6A", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"6A", "ib"}));
 		}
 		
 		/// <summary>
@@ -6427,7 +6427,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSH (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"o16", "68", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"o16", "68", "iw"}));
 		}
 		
 		/// <summary>
@@ -6441,7 +6441,7 @@ namespace SharpOS.AOT.X86 {
 			}
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"o32", "68", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"o32", "68", "id"}));
 			}
 		}
 		
@@ -6451,17 +6451,17 @@ namespace SharpOS.AOT.X86 {
 		public void PUSH (SegType target)
 		{
 			if (target == Seg.CS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_CS", "CS", null, null, null, null, new string[] {"0E"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_CS", "CS", null, null, null, null, new string [] {"0E"}));
 			else if (target == Seg.GS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_GS", "GS", null, null, null, null, new string[] {"0F", "A8"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_GS", "GS", null, null, null, null, new string [] {"0F", "A8"}));
 			else if (target == Seg.ES)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_ES", "ES", null, null, null, null, new string[] {"06"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_ES", "ES", null, null, null, null, new string [] {"06"}));
 			else if (target == Seg.DS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_DS", "DS", null, null, null, null, new string[] {"1E"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_DS", "DS", null, null, null, null, new string [] {"1E"}));
 			else if (target == Seg.SS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_SS", "SS", null, null, null, null, new string[] {"16"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_SS", "SS", null, null, null, null, new string [] {"16"}));
 			else if (target == Seg.FS)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_FS", "FS", null, null, null, null, new string[] {"0F", "A0"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_FS", "FS", null, null, null, null, new string [] {"0F", "A0"}));
 			else
 			{
 				throw new Exception ("Parameters not supported.");
@@ -6473,7 +6473,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSHA ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHA", "", null, null, null, null, new string[] {"60"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHA", "", null, null, null, null, new string [] {"60"}));
 		}
 		
 		/// <summary>
@@ -6481,7 +6481,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSHAD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHAD", "", null, null, null, null, new string[] {"o32", "60"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHAD", "", null, null, null, null, new string [] {"o32", "60"}));
 		}
 		
 		/// <summary>
@@ -6489,7 +6489,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSHAW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHAW", "", null, null, null, null, new string[] {"o16", "60"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHAW", "", null, null, null, null, new string [] {"o16", "60"}));
 		}
 		
 		/// <summary>
@@ -6497,7 +6497,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSHF ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHF", "", null, null, null, null, new string[] {"9C"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHF", "", null, null, null, null, new string [] {"9C"}));
 		}
 		
 		/// <summary>
@@ -6505,7 +6505,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSHFD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHFD", "", null, null, null, null, new string[] {"o32", "9C"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHFD", "", null, null, null, null, new string [] {"o32", "9C"}));
 		}
 		
 		/// <summary>
@@ -6513,7 +6513,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void PUSHFW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHFW", "", null, null, null, null, new string[] {"o16", "9C"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSHFW", "", null, null, null, null, new string [] {"o16", "9C"}));
 		}
 		
 		/// <summary>
@@ -6521,7 +6521,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCL__CL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"D2", "/2"}));
 		}
 		
 		/// <summary>
@@ -6530,10 +6530,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCL (ByteMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/2"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"D0", "/2"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/2", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C0", "/2", "ib"}));
 			}
 		}
 		
@@ -6542,7 +6542,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCL__CL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o16", "D3", "/2"}));
 		}
 		
 		/// <summary>
@@ -6551,10 +6551,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCL (WordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/2"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o16", "D1", "/2"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/2", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/2", "ib"}));
 			}
 		}
 		
@@ -6563,7 +6563,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCL__CL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o32", "D3", "/2"}));
 		}
 		
 		/// <summary>
@@ -6572,10 +6572,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCL (DWordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/2"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o32", "D1", "/2"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/2", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/2", "ib"}));
 			}
 		}
 		
@@ -6584,7 +6584,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCL__CL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"D2", "/2"}));
 		}
 		
 		/// <summary>
@@ -6593,10 +6593,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCL (R8Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/2"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"D0", "/2"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/2", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"C0", "/2", "ib"}));
 			}
 		}
 		
@@ -6605,7 +6605,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCL__CL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o16", "D3", "/2"}));
 		}
 		
 		/// <summary>
@@ -6614,10 +6614,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCL (R16Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/2"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o16", "D1", "/2"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/2", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/2", "ib"}));
 			}
 		}
 		
@@ -6626,7 +6626,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCL__CL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o32", "D3", "/2"}));
 		}
 		
 		/// <summary>
@@ -6635,10 +6635,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCL (R32Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/2"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o32", "D1", "/2"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/2", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/2", "ib"}));
 			}
 		}
 		
@@ -6647,7 +6647,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCR__CL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"D2", "/3"}));
 		}
 		
 		/// <summary>
@@ -6656,10 +6656,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCR (ByteMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/3"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"D0", "/3"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/3", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C0", "/3", "ib"}));
 			}
 		}
 		
@@ -6668,7 +6668,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCR__CL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o16", "D3", "/3"}));
 		}
 		
 		/// <summary>
@@ -6677,10 +6677,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCR (WordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/3"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o16", "D1", "/3"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/3", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/3", "ib"}));
 			}
 		}
 		
@@ -6689,7 +6689,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCR__CL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o32", "D3", "/3"}));
 		}
 		
 		/// <summary>
@@ -6698,10 +6698,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCR (DWordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/3"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o32", "D1", "/3"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/3", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/3", "ib"}));
 			}
 		}
 		
@@ -6710,7 +6710,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCR__CL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"D2", "/3"}));
 		}
 		
 		/// <summary>
@@ -6719,10 +6719,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCR (R8Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/3"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"D0", "/3"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/3", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"C0", "/3", "ib"}));
 			}
 		}
 		
@@ -6731,7 +6731,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCR__CL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o16", "D3", "/3"}));
 		}
 		
 		/// <summary>
@@ -6740,10 +6740,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCR (R16Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/3"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o16", "D1", "/3"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/3", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/3", "ib"}));
 			}
 		}
 		
@@ -6752,7 +6752,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RCR__CL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o32", "D3", "/3"}));
 		}
 		
 		/// <summary>
@@ -6761,10 +6761,10 @@ namespace SharpOS.AOT.X86 {
 		public void RCR (R32Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/3"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o32", "D1", "/3"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/3", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RCR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/3", "ib"}));
 			}
 		}
 		
@@ -6773,7 +6773,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RDMSR ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDMSR", "", null, null, null, null, new string[] {"0F", "32"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDMSR", "", null, null, null, null, new string [] {"0F", "32"}));
 		}
 		
 		/// <summary>
@@ -6781,7 +6781,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RDPMC ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDPMC", "", null, null, null, null, new string[] {"0F", "33"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDPMC", "", null, null, null, null, new string [] {"0F", "33"}));
 		}
 		
 		/// <summary>
@@ -6789,7 +6789,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RDTSC ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDTSC", "", null, null, null, null, new string[] {"0F", "31"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RDTSC", "", null, null, null, null, new string [] {"0F", "31"}));
 		}
 		
 		/// <summary>
@@ -6797,7 +6797,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void REP ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REP", "", null, null, null, null, new string[] {"F3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REP", "", null, null, null, null, new string [] {"F3"}));
 		}
 		
 		/// <summary>
@@ -6805,7 +6805,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void REPE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPE", "", null, null, null, null, new string[] {"F3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPE", "", null, null, null, null, new string [] {"F3"}));
 		}
 		
 		/// <summary>
@@ -6813,7 +6813,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void REPNE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPNE", "", null, null, null, null, new string[] {"F2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPNE", "", null, null, null, null, new string [] {"F2"}));
 		}
 		
 		/// <summary>
@@ -6821,7 +6821,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void REPNZ ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPNZ", "", null, null, null, null, new string[] {"F2"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPNZ", "", null, null, null, null, new string [] {"F2"}));
 		}
 		
 		/// <summary>
@@ -6829,7 +6829,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void REPZ ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPZ", "", null, null, null, null, new string[] {"F3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "REPZ", "", null, null, null, null, new string [] {"F3"}));
 		}
 		
 		/// <summary>
@@ -6837,7 +6837,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RET ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RET", "", null, null, null, null, new string[] {"C3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RET", "", null, null, null, null, new string [] {"C3"}));
 		}
 		
 		/// <summary>
@@ -6845,7 +6845,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RET (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RET", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"C2", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RET", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"C2", "iw"}));
 		}
 		
 		/// <summary>
@@ -6853,7 +6853,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RETF ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETF", "", null, null, null, null, new string[] {"CB"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETF", "", null, null, null, null, new string [] {"CB"}));
 		}
 		
 		/// <summary>
@@ -6861,7 +6861,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RETF (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETF", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"CA", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETF", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"CA", "iw"}));
 		}
 		
 		/// <summary>
@@ -6869,7 +6869,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RETN ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETN", "", null, null, null, null, new string[] {"C3"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETN", "", null, null, null, null, new string [] {"C3"}));
 		}
 		
 		/// <summary>
@@ -6877,7 +6877,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RETN (UInt16 target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETN", string.Format("0x{0:x}", target), null, null, null, new UInt32[] {target}, new string[] {"C2", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RETN", string.Format ("0x{0:x}", target), null, null, null, new UInt32 [] {target}, new string [] {"C2", "iw"}));
 		}
 		
 		/// <summary>
@@ -6885,7 +6885,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROL__CL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"D2", "/0"}));
 		}
 		
 		/// <summary>
@@ -6894,10 +6894,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROL (ByteMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/0"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"D0", "/0"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C0", "/0", "ib"}));
 			}
 		}
 		
@@ -6906,7 +6906,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROL__CL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o16", "D3", "/0"}));
 		}
 		
 		/// <summary>
@@ -6915,10 +6915,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROL (WordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/0"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o16", "D1", "/0"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/0", "ib"}));
 			}
 		}
 		
@@ -6927,7 +6927,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROL__CL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o32", "D3", "/0"}));
 		}
 		
 		/// <summary>
@@ -6936,10 +6936,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROL (DWordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/0"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o32", "D1", "/0"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/0", "ib"}));
 			}
 		}
 		
@@ -6948,7 +6948,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROL__CL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"D2", "/0"}));
 		}
 		
 		/// <summary>
@@ -6957,10 +6957,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROL (R8Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/0"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"D0", "/0"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"C0", "/0", "ib"}));
 			}
 		}
 		
@@ -6969,7 +6969,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROL__CL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o16", "D3", "/0"}));
 		}
 		
 		/// <summary>
@@ -6978,10 +6978,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROL (R16Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/0"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o16", "D1", "/0"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/0", "ib"}));
 			}
 		}
 		
@@ -6990,7 +6990,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROL__CL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o32", "D3", "/0"}));
 		}
 		
 		/// <summary>
@@ -6999,10 +6999,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROL (R32Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/0"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o32", "D1", "/0"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/0", "ib"}));
 			}
 		}
 		
@@ -7011,7 +7011,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROR__CL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"D2", "/1"}));
 		}
 		
 		/// <summary>
@@ -7020,10 +7020,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROR (ByteMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/1"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"D0", "/1"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/1", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C0", "/1", "ib"}));
 			}
 		}
 		
@@ -7032,7 +7032,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROR__CL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o16", "D3", "/1"}));
 		}
 		
 		/// <summary>
@@ -7041,10 +7041,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROR (WordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/1"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o16", "D1", "/1"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/1", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/1", "ib"}));
 			}
 		}
 		
@@ -7053,7 +7053,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROR__CL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o32", "D3", "/1"}));
 		}
 		
 		/// <summary>
@@ -7062,10 +7062,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROR (DWordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/1"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o32", "D1", "/1"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/1", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/1", "ib"}));
 			}
 		}
 		
@@ -7074,7 +7074,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROR__CL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"D2", "/1"}));
 		}
 		
 		/// <summary>
@@ -7083,10 +7083,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROR (R8Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/1"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"D0", "/1"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/1", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"C0", "/1", "ib"}));
 			}
 		}
 		
@@ -7095,7 +7095,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROR__CL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o16", "D3", "/1"}));
 		}
 		
 		/// <summary>
@@ -7104,10 +7104,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROR (R16Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/1"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o16", "D1", "/1"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/1", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/1", "ib"}));
 			}
 		}
 		
@@ -7116,7 +7116,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void ROR__CL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o32", "D3", "/1"}));
 		}
 		
 		/// <summary>
@@ -7125,10 +7125,10 @@ namespace SharpOS.AOT.X86 {
 		public void ROR (R32Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/1"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o32", "D1", "/1"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/1", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ROR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/1", "ib"}));
 			}
 		}
 		
@@ -7137,7 +7137,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void RSM ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RSM", "", null, null, null, null, new string[] {"0F", "AA"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "RSM", "", null, null, null, null, new string [] {"0F", "AA"}));
 		}
 		
 		/// <summary>
@@ -7145,7 +7145,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAHF ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAHF", "", null, null, null, null, new string[] {"9E"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAHF", "", null, null, null, null, new string [] {"9E"}));
 		}
 		
 		/// <summary>
@@ -7153,7 +7153,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAL__CL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"D2", "/4"}));
 		}
 		
 		/// <summary>
@@ -7162,10 +7162,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAL (ByteMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"D0", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C0", "/4", "ib"}));
 			}
 		}
 		
@@ -7174,7 +7174,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAL__CL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o16", "D3", "/4"}));
 		}
 		
 		/// <summary>
@@ -7183,10 +7183,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAL (WordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o16", "D1", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/4", "ib"}));
 			}
 		}
 		
@@ -7195,7 +7195,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAL__CL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o32", "D3", "/4"}));
 		}
 		
 		/// <summary>
@@ -7204,10 +7204,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAL (DWordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o32", "D1", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/4", "ib"}));
 			}
 		}
 		
@@ -7216,7 +7216,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAL__CL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"D2", "/4"}));
 		}
 		
 		/// <summary>
@@ -7225,10 +7225,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAL (R8Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"D0", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"C0", "/4", "ib"}));
 			}
 		}
 		
@@ -7237,7 +7237,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAL__CL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o16", "D3", "/4"}));
 		}
 		
 		/// <summary>
@@ -7246,10 +7246,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAL (R16Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o16", "D1", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/4", "ib"}));
 			}
 		}
 		
@@ -7258,7 +7258,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAL__CL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o32", "D3", "/4"}));
 		}
 		
 		/// <summary>
@@ -7267,10 +7267,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAL (R32Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o32", "D1", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/4", "ib"}));
 			}
 		}
 		
@@ -7279,7 +7279,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SALC ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SALC", "", null, null, null, null, new string[] {"D6"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SALC", "", null, null, null, null, new string [] {"D6"}));
 		}
 		
 		/// <summary>
@@ -7287,7 +7287,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAR__CL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"D2", "/7"}));
 		}
 		
 		/// <summary>
@@ -7296,10 +7296,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAR (ByteMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/7"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"D0", "/7"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/7", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C0", "/7", "ib"}));
 			}
 		}
 		
@@ -7308,7 +7308,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAR__CL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o16", "D3", "/7"}));
 		}
 		
 		/// <summary>
@@ -7317,10 +7317,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAR (WordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/7"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o16", "D1", "/7"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/7", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/7", "ib"}));
 			}
 		}
 		
@@ -7329,7 +7329,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAR__CL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o32", "D3", "/7"}));
 		}
 		
 		/// <summary>
@@ -7338,10 +7338,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAR (DWordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/7"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o32", "D1", "/7"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/7", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/7", "ib"}));
 			}
 		}
 		
@@ -7350,7 +7350,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAR__CL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"D2", "/7"}));
 		}
 		
 		/// <summary>
@@ -7359,10 +7359,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAR (R8Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/7"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"D0", "/7"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/7", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"C0", "/7", "ib"}));
 			}
 		}
 		
@@ -7371,7 +7371,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAR__CL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o16", "D3", "/7"}));
 		}
 		
 		/// <summary>
@@ -7380,10 +7380,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAR (R16Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/7"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o16", "D1", "/7"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/7", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/7", "ib"}));
 			}
 		}
 		
@@ -7392,7 +7392,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SAR__CL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o32", "D3", "/7"}));
 		}
 		
 		/// <summary>
@@ -7401,10 +7401,10 @@ namespace SharpOS.AOT.X86 {
 		public void SAR (R32Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/7"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o32", "D1", "/7"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/7", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SAR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/7", "ib"}));
 			}
 		}
 		
@@ -7413,7 +7413,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"18", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"18", "/r"}));
 		}
 		
 		/// <summary>
@@ -7421,7 +7421,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "19", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "19", "/r"}));
 		}
 		
 		/// <summary>
@@ -7429,7 +7429,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "19", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "19", "/r"}));
 		}
 		
 		/// <summary>
@@ -7437,7 +7437,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"1A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"1A", "/r"}));
 		}
 		
 		/// <summary>
@@ -7445,7 +7445,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "1B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "1B", "/r"}));
 		}
 		
 		/// <summary>
@@ -7453,7 +7453,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "1B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "1B", "/r"}));
 		}
 		
 		/// <summary>
@@ -7461,7 +7461,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"80", "/3", "ib"}));
 		}
 		
 		/// <summary>
@@ -7469,7 +7469,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/3", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "81", "/3", "iw"}));
 		}
 		
 		/// <summary>
@@ -7477,7 +7477,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/3", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "81", "/3", "id"}));
 		}
 		
 		/// <summary>
@@ -7485,7 +7485,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "83", "/3", "ib"}));
 		}
 		
 		/// <summary>
@@ -7493,7 +7493,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "83", "/3", "ib"}));
 		}
 		
 		/// <summary>
@@ -7501,7 +7501,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"18", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"18", "/r"}));
 		}
 		
 		/// <summary>
@@ -7509,7 +7509,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "19", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "19", "/r"}));
 		}
 		
 		/// <summary>
@@ -7517,7 +7517,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "19", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "19", "/r"}));
 		}
 		
 		/// <summary>
@@ -7526,10 +7526,10 @@ namespace SharpOS.AOT.X86 {
 		public void SBB (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"1C", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"1C", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/3", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"80", "/3", "ib"}));
 			}
 		}
 		
@@ -7539,10 +7539,10 @@ namespace SharpOS.AOT.X86 {
 		public void SBB (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "1D", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "1D", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/3", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "81", "/3", "iw"}));
 			}
 		}
 		
@@ -7552,14 +7552,14 @@ namespace SharpOS.AOT.X86 {
 		public void SBB (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "1D", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "1D", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.SBB (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/3", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/3", "id"}));
 				}
 			}
 		}
@@ -7569,7 +7569,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "83", "/3", "ib"}));
 		}
 		
 		/// <summary>
@@ -7577,7 +7577,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SBB (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/3", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "83", "/3", "ib"}));
 		}
 		
 		/// <summary>
@@ -7585,7 +7585,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SCASB ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASB", "", null, null, null, null, new string[] {"AE"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASB", "", null, null, null, null, new string [] {"AE"}));
 		}
 		
 		/// <summary>
@@ -7593,7 +7593,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SCASD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASD", "", null, null, null, null, new string[] {"o32", "AF"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASD", "", null, null, null, null, new string [] {"o32", "AF"}));
 		}
 		
 		/// <summary>
@@ -7601,7 +7601,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SCASW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASW", "", null, null, null, null, new string[] {"o16", "AF"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SCASW", "", null, null, null, null, new string [] {"o16", "AF"}));
 		}
 		
 		/// <summary>
@@ -7609,7 +7609,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETA (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETA", target.ToString(), target, null, null, null, new string[] {"0F", "97", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETA", target.ToString (), target, null, null, null, new string [] {"0F", "97", "/0"}));
 		}
 		
 		/// <summary>
@@ -7617,7 +7617,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETA (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETA", target.ToString(), null, target, null, null, new string[] {"0F", "97", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETA", target.ToString (), null, target, null, null, new string [] {"0F", "97", "/0"}));
 		}
 		
 		/// <summary>
@@ -7625,7 +7625,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETAE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETAE", target.ToString(), target, null, null, null, new string[] {"0F", "93", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETAE", target.ToString (), target, null, null, null, new string [] {"0F", "93", "/0"}));
 		}
 		
 		/// <summary>
@@ -7633,7 +7633,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETAE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETAE", target.ToString(), null, target, null, null, new string[] {"0F", "93", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETAE", target.ToString (), null, target, null, null, new string [] {"0F", "93", "/0"}));
 		}
 		
 		/// <summary>
@@ -7641,7 +7641,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETB (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETB", target.ToString(), target, null, null, null, new string[] {"0F", "92", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETB", target.ToString (), target, null, null, null, new string [] {"0F", "92", "/0"}));
 		}
 		
 		/// <summary>
@@ -7649,7 +7649,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETB (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETB", target.ToString(), null, target, null, null, new string[] {"0F", "92", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETB", target.ToString (), null, target, null, null, new string [] {"0F", "92", "/0"}));
 		}
 		
 		/// <summary>
@@ -7657,7 +7657,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETBE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETBE", target.ToString(), target, null, null, null, new string[] {"0F", "96", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETBE", target.ToString (), target, null, null, null, new string [] {"0F", "96", "/0"}));
 		}
 		
 		/// <summary>
@@ -7665,7 +7665,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETBE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETBE", target.ToString(), null, target, null, null, new string[] {"0F", "96", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETBE", target.ToString (), null, target, null, null, new string [] {"0F", "96", "/0"}));
 		}
 		
 		/// <summary>
@@ -7673,7 +7673,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETC (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETC", target.ToString(), target, null, null, null, new string[] {"0F", "92", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETC", target.ToString (), target, null, null, null, new string [] {"0F", "92", "/0"}));
 		}
 		
 		/// <summary>
@@ -7681,7 +7681,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETC (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETC", target.ToString(), null, target, null, null, new string[] {"0F", "92", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETC", target.ToString (), null, target, null, null, new string [] {"0F", "92", "/0"}));
 		}
 		
 		/// <summary>
@@ -7689,7 +7689,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETE", target.ToString(), target, null, null, null, new string[] {"0F", "94", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETE", target.ToString (), target, null, null, null, new string [] {"0F", "94", "/0"}));
 		}
 		
 		/// <summary>
@@ -7697,7 +7697,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETE", target.ToString(), null, target, null, null, new string[] {"0F", "94", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETE", target.ToString (), null, target, null, null, new string [] {"0F", "94", "/0"}));
 		}
 		
 		/// <summary>
@@ -7705,7 +7705,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETG (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETG", target.ToString(), target, null, null, null, new string[] {"0F", "9F", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETG", target.ToString (), target, null, null, null, new string [] {"0F", "9F", "/0"}));
 		}
 		
 		/// <summary>
@@ -7713,7 +7713,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETG (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETG", target.ToString(), null, target, null, null, new string[] {"0F", "9F", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETG", target.ToString (), null, target, null, null, new string [] {"0F", "9F", "/0"}));
 		}
 		
 		/// <summary>
@@ -7721,7 +7721,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETGE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETGE", target.ToString(), target, null, null, null, new string[] {"0F", "9D", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETGE", target.ToString (), target, null, null, null, new string [] {"0F", "9D", "/0"}));
 		}
 		
 		/// <summary>
@@ -7729,7 +7729,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETGE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETGE", target.ToString(), null, target, null, null, new string[] {"0F", "9D", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETGE", target.ToString (), null, target, null, null, new string [] {"0F", "9D", "/0"}));
 		}
 		
 		/// <summary>
@@ -7737,7 +7737,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETL", target.ToString(), target, null, null, null, new string[] {"0F", "9C", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETL", target.ToString (), target, null, null, null, new string [] {"0F", "9C", "/0"}));
 		}
 		
 		/// <summary>
@@ -7745,7 +7745,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETL", target.ToString(), null, target, null, null, new string[] {"0F", "9C", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETL", target.ToString (), null, target, null, null, new string [] {"0F", "9C", "/0"}));
 		}
 		
 		/// <summary>
@@ -7753,7 +7753,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETLE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETLE", target.ToString(), target, null, null, null, new string[] {"0F", "9E", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETLE", target.ToString (), target, null, null, null, new string [] {"0F", "9E", "/0"}));
 		}
 		
 		/// <summary>
@@ -7761,7 +7761,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETLE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETLE", target.ToString(), null, target, null, null, new string[] {"0F", "9E", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETLE", target.ToString (), null, target, null, null, new string [] {"0F", "9E", "/0"}));
 		}
 		
 		/// <summary>
@@ -7769,7 +7769,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNA (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNA", target.ToString(), target, null, null, null, new string[] {"0F", "96", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNA", target.ToString (), target, null, null, null, new string [] {"0F", "96", "/0"}));
 		}
 		
 		/// <summary>
@@ -7777,7 +7777,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNA (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNA", target.ToString(), null, target, null, null, new string[] {"0F", "96", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNA", target.ToString (), null, target, null, null, new string [] {"0F", "96", "/0"}));
 		}
 		
 		/// <summary>
@@ -7785,7 +7785,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNAE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNAE", target.ToString(), target, null, null, null, new string[] {"0F", "92", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNAE", target.ToString (), target, null, null, null, new string [] {"0F", "92", "/0"}));
 		}
 		
 		/// <summary>
@@ -7793,7 +7793,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNAE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNAE", target.ToString(), null, target, null, null, new string[] {"0F", "92", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNAE", target.ToString (), null, target, null, null, new string [] {"0F", "92", "/0"}));
 		}
 		
 		/// <summary>
@@ -7801,7 +7801,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNB (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNB", target.ToString(), target, null, null, null, new string[] {"0F", "93", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNB", target.ToString (), target, null, null, null, new string [] {"0F", "93", "/0"}));
 		}
 		
 		/// <summary>
@@ -7809,7 +7809,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNB (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNB", target.ToString(), null, target, null, null, new string[] {"0F", "93", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNB", target.ToString (), null, target, null, null, new string [] {"0F", "93", "/0"}));
 		}
 		
 		/// <summary>
@@ -7817,7 +7817,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNBE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNBE", target.ToString(), target, null, null, null, new string[] {"0F", "97", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNBE", target.ToString (), target, null, null, null, new string [] {"0F", "97", "/0"}));
 		}
 		
 		/// <summary>
@@ -7825,7 +7825,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNBE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNBE", target.ToString(), null, target, null, null, new string[] {"0F", "97", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNBE", target.ToString (), null, target, null, null, new string [] {"0F", "97", "/0"}));
 		}
 		
 		/// <summary>
@@ -7833,7 +7833,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNC (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNC", target.ToString(), target, null, null, null, new string[] {"0F", "93", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNC", target.ToString (), target, null, null, null, new string [] {"0F", "93", "/0"}));
 		}
 		
 		/// <summary>
@@ -7841,7 +7841,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNC (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNC", target.ToString(), null, target, null, null, new string[] {"0F", "93", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNC", target.ToString (), null, target, null, null, new string [] {"0F", "93", "/0"}));
 		}
 		
 		/// <summary>
@@ -7849,7 +7849,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNE", target.ToString(), target, null, null, null, new string[] {"0F", "95", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNE", target.ToString (), target, null, null, null, new string [] {"0F", "95", "/0"}));
 		}
 		
 		/// <summary>
@@ -7857,7 +7857,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNE", target.ToString(), null, target, null, null, new string[] {"0F", "95", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNE", target.ToString (), null, target, null, null, new string [] {"0F", "95", "/0"}));
 		}
 		
 		/// <summary>
@@ -7865,7 +7865,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNG (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNG", target.ToString(), target, null, null, null, new string[] {"0F", "9E", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNG", target.ToString (), target, null, null, null, new string [] {"0F", "9E", "/0"}));
 		}
 		
 		/// <summary>
@@ -7873,7 +7873,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNG (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNG", target.ToString(), null, target, null, null, new string[] {"0F", "9E", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNG", target.ToString (), null, target, null, null, new string [] {"0F", "9E", "/0"}));
 		}
 		
 		/// <summary>
@@ -7881,7 +7881,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNGE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNGE", target.ToString(), target, null, null, null, new string[] {"0F", "9C", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNGE", target.ToString (), target, null, null, null, new string [] {"0F", "9C", "/0"}));
 		}
 		
 		/// <summary>
@@ -7889,7 +7889,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNGE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNGE", target.ToString(), null, target, null, null, new string[] {"0F", "9C", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNGE", target.ToString (), null, target, null, null, new string [] {"0F", "9C", "/0"}));
 		}
 		
 		/// <summary>
@@ -7897,7 +7897,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNL", target.ToString(), target, null, null, null, new string[] {"0F", "9D", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNL", target.ToString (), target, null, null, null, new string [] {"0F", "9D", "/0"}));
 		}
 		
 		/// <summary>
@@ -7905,7 +7905,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNL", target.ToString(), null, target, null, null, new string[] {"0F", "9D", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNL", target.ToString (), null, target, null, null, new string [] {"0F", "9D", "/0"}));
 		}
 		
 		/// <summary>
@@ -7913,7 +7913,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNLE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNLE", target.ToString(), target, null, null, null, new string[] {"0F", "9F", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNLE", target.ToString (), target, null, null, null, new string [] {"0F", "9F", "/0"}));
 		}
 		
 		/// <summary>
@@ -7921,7 +7921,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNLE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNLE", target.ToString(), null, target, null, null, new string[] {"0F", "9F", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNLE", target.ToString (), null, target, null, null, new string [] {"0F", "9F", "/0"}));
 		}
 		
 		/// <summary>
@@ -7929,7 +7929,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNO (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNO", target.ToString(), target, null, null, null, new string[] {"0F", "91", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNO", target.ToString (), target, null, null, null, new string [] {"0F", "91", "/0"}));
 		}
 		
 		/// <summary>
@@ -7937,7 +7937,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNO (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNO", target.ToString(), null, target, null, null, new string[] {"0F", "91", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNO", target.ToString (), null, target, null, null, new string [] {"0F", "91", "/0"}));
 		}
 		
 		/// <summary>
@@ -7945,7 +7945,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNP (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNP", target.ToString(), target, null, null, null, new string[] {"0F", "9B", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNP", target.ToString (), target, null, null, null, new string [] {"0F", "9B", "/0"}));
 		}
 		
 		/// <summary>
@@ -7953,7 +7953,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNP (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNP", target.ToString(), null, target, null, null, new string[] {"0F", "9B", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNP", target.ToString (), null, target, null, null, new string [] {"0F", "9B", "/0"}));
 		}
 		
 		/// <summary>
@@ -7961,7 +7961,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNS (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNS", target.ToString(), target, null, null, null, new string[] {"0F", "99", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNS", target.ToString (), target, null, null, null, new string [] {"0F", "99", "/0"}));
 		}
 		
 		/// <summary>
@@ -7969,7 +7969,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNS (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNS", target.ToString(), null, target, null, null, new string[] {"0F", "99", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNS", target.ToString (), null, target, null, null, new string [] {"0F", "99", "/0"}));
 		}
 		
 		/// <summary>
@@ -7977,7 +7977,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNZ (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNZ", target.ToString(), target, null, null, null, new string[] {"0F", "95", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNZ", target.ToString (), target, null, null, null, new string [] {"0F", "95", "/0"}));
 		}
 		
 		/// <summary>
@@ -7985,7 +7985,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETNZ (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNZ", target.ToString(), null, target, null, null, new string[] {"0F", "95", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETNZ", target.ToString (), null, target, null, null, new string [] {"0F", "95", "/0"}));
 		}
 		
 		/// <summary>
@@ -7993,7 +7993,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETO (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETO", target.ToString(), target, null, null, null, new string[] {"0F", "90", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETO", target.ToString (), target, null, null, null, new string [] {"0F", "90", "/0"}));
 		}
 		
 		/// <summary>
@@ -8001,7 +8001,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETO (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETO", target.ToString(), null, target, null, null, new string[] {"0F", "90", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETO", target.ToString (), null, target, null, null, new string [] {"0F", "90", "/0"}));
 		}
 		
 		/// <summary>
@@ -8009,7 +8009,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETP (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETP", target.ToString(), target, null, null, null, new string[] {"0F", "9A", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETP", target.ToString (), target, null, null, null, new string [] {"0F", "9A", "/0"}));
 		}
 		
 		/// <summary>
@@ -8017,7 +8017,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETP (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETP", target.ToString(), null, target, null, null, new string[] {"0F", "9A", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETP", target.ToString (), null, target, null, null, new string [] {"0F", "9A", "/0"}));
 		}
 		
 		/// <summary>
@@ -8025,7 +8025,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETPE (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPE", target.ToString(), target, null, null, null, new string[] {"0F", "9A", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPE", target.ToString (), target, null, null, null, new string [] {"0F", "9A", "/0"}));
 		}
 		
 		/// <summary>
@@ -8033,7 +8033,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETPE (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPE", target.ToString(), null, target, null, null, new string[] {"0F", "9A", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPE", target.ToString (), null, target, null, null, new string [] {"0F", "9A", "/0"}));
 		}
 		
 		/// <summary>
@@ -8041,7 +8041,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETPO (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPO", target.ToString(), target, null, null, null, new string[] {"0F", "9B", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPO", target.ToString (), target, null, null, null, new string [] {"0F", "9B", "/0"}));
 		}
 		
 		/// <summary>
@@ -8049,7 +8049,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETPO (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPO", target.ToString(), null, target, null, null, new string[] {"0F", "9B", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETPO", target.ToString (), null, target, null, null, new string [] {"0F", "9B", "/0"}));
 		}
 		
 		/// <summary>
@@ -8057,7 +8057,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETS (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETS", target.ToString(), target, null, null, null, new string[] {"0F", "98", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETS", target.ToString (), target, null, null, null, new string [] {"0F", "98", "/0"}));
 		}
 		
 		/// <summary>
@@ -8065,7 +8065,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETS (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETS", target.ToString(), null, target, null, null, new string[] {"0F", "98", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETS", target.ToString (), null, target, null, null, new string [] {"0F", "98", "/0"}));
 		}
 		
 		/// <summary>
@@ -8073,7 +8073,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETZ (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETZ", target.ToString(), target, null, null, null, new string[] {"0F", "94", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETZ", target.ToString (), target, null, null, null, new string [] {"0F", "94", "/0"}));
 		}
 		
 		/// <summary>
@@ -8081,7 +8081,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SETZ (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETZ", target.ToString(), null, target, null, null, new string[] {"0F", "94", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SETZ", target.ToString (), null, target, null, null, new string [] {"0F", "94", "/0"}));
 		}
 		
 		/// <summary>
@@ -8089,7 +8089,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SFENCE ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SFENCE", "", null, null, null, null, new string[] {"0F", "AE", "/7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SFENCE", "", null, null, null, null, new string [] {"0F", "AE", "/7"}));
 		}
 		
 		/// <summary>
@@ -8097,7 +8097,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SGDT (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SGDT", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SGDT", target.ToString (), target, null, null, null, new string [] {"0F", "01", "/0"}));
 		}
 		
 		/// <summary>
@@ -8105,7 +8105,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHL__CL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"D2", "/4"}));
 		}
 		
 		/// <summary>
@@ -8114,10 +8114,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHL (ByteMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"D0", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C0", "/4", "ib"}));
 			}
 		}
 		
@@ -8126,7 +8126,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHL__CL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o16", "D3", "/4"}));
 		}
 		
 		/// <summary>
@@ -8135,10 +8135,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHL (WordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o16", "D1", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/4", "ib"}));
 			}
 		}
 		
@@ -8147,7 +8147,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHL__CL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o32", "D3", "/4"}));
 		}
 		
 		/// <summary>
@@ -8156,10 +8156,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHL (DWordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o32", "D1", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/4", "ib"}));
 			}
 		}
 		
@@ -8168,7 +8168,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHL__CL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"D2", "/4"}));
 		}
 		
 		/// <summary>
@@ -8177,10 +8177,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHL (R8Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"D0", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"C0", "/4", "ib"}));
 			}
 		}
 		
@@ -8189,7 +8189,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHL__CL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o16", "D3", "/4"}));
 		}
 		
 		/// <summary>
@@ -8198,10 +8198,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHL (R16Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o16", "D1", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/4", "ib"}));
 			}
 		}
 		
@@ -8210,7 +8210,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHL__CL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o32", "D3", "/4"}));
 		}
 		
 		/// <summary>
@@ -8219,10 +8219,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHL (R32Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/4"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o32", "D1", "/4"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/4", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHL", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/4", "ib"}));
 			}
 		}
 		
@@ -8231,7 +8231,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHLD (WordMemory target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o16", "0F", "A4", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), target, null, source, new UInt32 [] {value}, new string [] {"o16", "0F", "A4", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -8239,7 +8239,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHLD (DWordMemory target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o32", "0F", "A4", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), target, null, source, new UInt32 [] {value}, new string [] {"o32", "0F", "A4", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -8247,7 +8247,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHLD___CL (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", target, null, source, null, new string[] {"o16", "0F", "A5", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString () + ", " + source.ToString () + ", " + "CL", target, null, source, null, new string [] {"o16", "0F", "A5", "/r"}));
 		}
 		
 		/// <summary>
@@ -8255,7 +8255,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHLD___CL (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", target, null, source, null, new string[] {"o32", "0F", "A5", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString () + ", " + source.ToString () + ", " + "CL", target, null, source, null, new string [] {"o32", "0F", "A5", "/r"}));
 		}
 		
 		/// <summary>
@@ -8263,7 +8263,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHLD (R16Type target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o16", "0F", "A4", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), null, target, source, new UInt32 [] {value}, new string [] {"o16", "0F", "A4", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -8271,7 +8271,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHLD (R32Type target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o32", "0F", "A4", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), null, target, source, new UInt32 [] {value}, new string [] {"o32", "0F", "A4", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -8279,7 +8279,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHLD___CL (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", null, target, source, null, new string[] {"o16", "0F", "A5", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString () + ", " + source.ToString () + ", " + "CL", null, target, source, null, new string [] {"o16", "0F", "A5", "/r"}));
 		}
 		
 		/// <summary>
@@ -8287,7 +8287,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHLD___CL (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", null, target, source, null, new string[] {"o32", "0F", "A5", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHLD___CL", target.ToString () + ", " + source.ToString () + ", " + "CL", null, target, source, null, new string [] {"o32", "0F", "A5", "/r"}));
 		}
 		
 		/// <summary>
@@ -8295,7 +8295,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHR__CL (ByteMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"D2", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"D2", "/5"}));
 		}
 		
 		/// <summary>
@@ -8304,10 +8304,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHR (ByteMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"D0", "/5"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"D0", "/5"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"C0", "/5", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"C0", "/5", "ib"}));
 			}
 		}
 		
@@ -8316,7 +8316,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHR__CL (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o16", "D3", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o16", "D3", "/5"}));
 		}
 		
 		/// <summary>
@@ -8325,10 +8325,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHR (WordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o16", "D1", "/5"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o16", "D1", "/5"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "C1", "/5", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/5", "ib"}));
 			}
 		}
 		
@@ -8337,7 +8337,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHR__CL (DWordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", target, null, null, null, new string[] {"o32", "D3", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString () + ", " + "CL", target, null, null, null, new string [] {"o32", "D3", "/5"}));
 		}
 		
 		/// <summary>
@@ -8346,10 +8346,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHR (DWordMemory target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", target, null, null, null, new string[] {"o32", "D1", "/5"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString () + ", " + "1", target, null, null, null, new string [] {"o32", "D1", "/5"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "C1", "/5", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/5", "ib"}));
 			}
 		}
 		
@@ -8358,7 +8358,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHR__CL (R8Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"D2", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"D2", "/5"}));
 		}
 		
 		/// <summary>
@@ -8367,10 +8367,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHR (R8Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"D0", "/5"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"D0", "/5"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"C0", "/5", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"C0", "/5", "ib"}));
 			}
 		}
 		
@@ -8379,7 +8379,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHR__CL (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o16", "D3", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o16", "D3", "/5"}));
 		}
 		
 		/// <summary>
@@ -8388,10 +8388,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHR (R16Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o16", "D1", "/5"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o16", "D1", "/5"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "C1", "/5", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "C1", "/5", "ib"}));
 			}
 		}
 		
@@ -8400,7 +8400,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHR__CL (R32Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString() + ", " + "CL", null, target, null, null, new string[] {"o32", "D3", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__CL", target.ToString () + ", " + "CL", null, target, null, null, new string [] {"o32", "D3", "/5"}));
 		}
 		
 		/// <summary>
@@ -8409,10 +8409,10 @@ namespace SharpOS.AOT.X86 {
 		public void SHR (R32Type target, Byte source)
 		{
 			if (source == 1)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString() + ", " + "1", null, target, null, null, new string[] {"o32", "D1", "/5"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR__1", target.ToString () + ", " + "1", null, target, null, null, new string [] {"o32", "D1", "/5"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "C1", "/5", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "C1", "/5", "ib"}));
 			}
 		}
 		
@@ -8421,7 +8421,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHRD (WordMemory target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o16", "0F", "AC", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), target, null, source, new UInt32 [] {value}, new string [] {"o16", "0F", "AC", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -8429,7 +8429,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHRD (DWordMemory target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), target, null, source, new UInt32[] {value}, new string[] {"o32", "0F", "AC", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), target, null, source, new UInt32 [] {value}, new string [] {"o32", "0F", "AC", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -8437,7 +8437,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHRD___CL (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", target, null, source, null, new string[] {"o16", "0F", "AD", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString () + ", " + source.ToString () + ", " + "CL", target, null, source, null, new string [] {"o16", "0F", "AD", "/r"}));
 		}
 		
 		/// <summary>
@@ -8445,7 +8445,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHRD___CL (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", target, null, source, null, new string[] {"o32", "0F", "AD", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString () + ", " + source.ToString () + ", " + "CL", target, null, source, null, new string [] {"o32", "0F", "AD", "/r"}));
 		}
 		
 		/// <summary>
@@ -8453,7 +8453,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHRD (R16Type target, R16Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o16", "0F", "AC", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), null, target, source, new UInt32 [] {value}, new string [] {"o16", "0F", "AC", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -8461,7 +8461,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHRD (R32Type target, R32Type source, Byte value)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString() + ", " + source.ToString() + ", " + string.Format("0x{0:x}", value), null, target, source, new UInt32[] {value}, new string[] {"o32", "0F", "AC", "/r", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD", target.ToString () + ", " + source.ToString () + ", " + string.Format ("0x{0:x}", value), null, target, source, new UInt32 [] {value}, new string [] {"o32", "0F", "AC", "/r", "ib"}));
 		}
 		
 		/// <summary>
@@ -8469,7 +8469,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHRD___CL (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", null, target, source, null, new string[] {"o16", "0F", "AD", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString () + ", " + source.ToString () + ", " + "CL", null, target, source, null, new string [] {"o16", "0F", "AD", "/r"}));
 		}
 		
 		/// <summary>
@@ -8477,7 +8477,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SHRD___CL (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString() + ", " + source.ToString() + ", " + "CL", null, target, source, null, new string[] {"o32", "0F", "AD", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SHRD___CL", target.ToString () + ", " + source.ToString () + ", " + "CL", null, target, source, null, new string [] {"o32", "0F", "AD", "/r"}));
 		}
 		
 		/// <summary>
@@ -8485,7 +8485,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SIDT (Memory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SIDT", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SIDT", target.ToString (), target, null, null, null, new string [] {"0F", "01", "/1"}));
 		}
 		
 		/// <summary>
@@ -8493,7 +8493,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SLDT (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SLDT", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SLDT", target.ToString (), target, null, null, null, new string [] {"0F", "00", "/0"}));
 		}
 		
 		/// <summary>
@@ -8501,7 +8501,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SLDT (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SLDT", target.ToString(), null, target, null, null, new string[] {"o16", "0F", "00", "/0"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SLDT", target.ToString (), null, target, null, null, new string [] {"o16", "0F", "00", "/0"}));
 		}
 		
 		/// <summary>
@@ -8509,7 +8509,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SMSW (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SMSW", target.ToString(), target, null, null, null, new string[] {"0F", "01", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SMSW", target.ToString (), target, null, null, null, new string [] {"0F", "01", "/4"}));
 		}
 		
 		/// <summary>
@@ -8517,7 +8517,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SMSW (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SMSW", target.ToString(), null, target, null, null, new string[] {"o16", "0F", "01", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SMSW", target.ToString (), null, target, null, null, new string [] {"o16", "0F", "01", "/4"}));
 		}
 		
 		/// <summary>
@@ -8525,7 +8525,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void STC ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STC", "", null, null, null, null, new string[] {"F9"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STC", "", null, null, null, null, new string [] {"F9"}));
 		}
 		
 		/// <summary>
@@ -8533,7 +8533,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void STD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STD", "", null, null, null, null, new string[] {"FD"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STD", "", null, null, null, null, new string [] {"FD"}));
 		}
 		
 		/// <summary>
@@ -8541,7 +8541,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void STI ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STI", "", null, null, null, null, new string[] {"FB"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STI", "", null, null, null, null, new string [] {"FB"}));
 		}
 		
 		/// <summary>
@@ -8549,7 +8549,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void STOSB ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSB", "", null, null, null, null, new string[] {"AA"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSB", "", null, null, null, null, new string [] {"AA"}));
 		}
 		
 		/// <summary>
@@ -8557,7 +8557,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void STOSD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSD", "", null, null, null, null, new string[] {"o32", "AB"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSD", "", null, null, null, null, new string [] {"o32", "AB"}));
 		}
 		
 		/// <summary>
@@ -8565,7 +8565,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void STOSW ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSW", "", null, null, null, null, new string[] {"o16", "AB"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STOSW", "", null, null, null, null, new string [] {"o16", "AB"}));
 		}
 		
 		/// <summary>
@@ -8573,7 +8573,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void STR (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STR", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STR", target.ToString (), target, null, null, null, new string [] {"0F", "00", "/1"}));
 		}
 		
 		/// <summary>
@@ -8581,7 +8581,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void STR (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STR", target.ToString(), null, target, null, null, new string[] {"o16", "0F", "00", "/1"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "STR", target.ToString (), null, target, null, null, new string [] {"o16", "0F", "00", "/1"}));
 		}
 		
 		/// <summary>
@@ -8589,7 +8589,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"28", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"28", "/r"}));
 		}
 		
 		/// <summary>
@@ -8597,7 +8597,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "29", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "29", "/r"}));
 		}
 		
 		/// <summary>
@@ -8605,7 +8605,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "29", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "29", "/r"}));
 		}
 		
 		/// <summary>
@@ -8613,7 +8613,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"2A", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"2A", "/r"}));
 		}
 		
 		/// <summary>
@@ -8621,7 +8621,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "2B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "2B", "/r"}));
 		}
 		
 		/// <summary>
@@ -8629,7 +8629,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "2B", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "2B", "/r"}));
 		}
 		
 		/// <summary>
@@ -8637,7 +8637,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"80", "/5", "ib"}));
 		}
 		
 		/// <summary>
@@ -8645,7 +8645,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/5", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "81", "/5", "iw"}));
 		}
 		
 		/// <summary>
@@ -8653,7 +8653,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/5", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "81", "/5", "id"}));
 		}
 		
 		/// <summary>
@@ -8661,7 +8661,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "83", "/5", "ib"}));
 		}
 		
 		/// <summary>
@@ -8669,7 +8669,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "83", "/5", "ib"}));
 		}
 		
 		/// <summary>
@@ -8677,7 +8677,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"28", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"28", "/r"}));
 		}
 		
 		/// <summary>
@@ -8685,7 +8685,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "29", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "29", "/r"}));
 		}
 		
 		/// <summary>
@@ -8693,7 +8693,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "29", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "29", "/r"}));
 		}
 		
 		/// <summary>
@@ -8702,10 +8702,10 @@ namespace SharpOS.AOT.X86 {
 		public void SUB (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"2C", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"2C", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/5", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"80", "/5", "ib"}));
 			}
 		}
 		
@@ -8715,10 +8715,10 @@ namespace SharpOS.AOT.X86 {
 		public void SUB (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "2D", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "2D", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/5", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "81", "/5", "iw"}));
 			}
 		}
 		
@@ -8728,14 +8728,14 @@ namespace SharpOS.AOT.X86 {
 		public void SUB (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "2D", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "2D", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.SUB (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/5", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/5", "id"}));
 				}
 			}
 		}
@@ -8745,7 +8745,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SUB (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/5", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "83", "/5", "ib"}));
 		}
 		
 		/// <summary>
@@ -8762,7 +8762,7 @@ namespace SharpOS.AOT.X86 {
 			}
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/5", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "83", "/5", "ib"}));
 			}
 		}
 		
@@ -8771,7 +8771,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SYSCALL ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSCALL", "", null, null, null, null, new string[] {"0F", "05"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSCALL", "", null, null, null, null, new string [] {"0F", "05"}));
 		}
 		
 		/// <summary>
@@ -8779,7 +8779,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SYSENTER ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSENTER", "", null, null, null, null, new string[] {"0F", "34"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSENTER", "", null, null, null, null, new string [] {"0F", "34"}));
 		}
 		
 		/// <summary>
@@ -8787,7 +8787,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SYSEXIT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSEXIT", "", null, null, null, null, new string[] {"0F", "35"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSEXIT", "", null, null, null, null, new string [] {"0F", "35"}));
 		}
 		
 		/// <summary>
@@ -8795,7 +8795,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void SYSRET ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSRET", "", null, null, null, null, new string[] {"0F", "07"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SYSRET", "", null, null, null, null, new string [] {"0F", "07"}));
 		}
 		
 		/// <summary>
@@ -8803,7 +8803,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"84", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"84", "/r"}));
 		}
 		
 		/// <summary>
@@ -8811,7 +8811,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "85", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "85", "/r"}));
 		}
 		
 		/// <summary>
@@ -8819,7 +8819,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "85", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "85", "/r"}));
 		}
 		
 		/// <summary>
@@ -8827,7 +8827,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"F6", "/0", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"F6", "/0", "ib"}));
 		}
 		
 		/// <summary>
@@ -8835,7 +8835,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "F7", "/0", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "F7", "/0", "iw"}));
 		}
 		
 		/// <summary>
@@ -8843,7 +8843,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "F7", "/0", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "F7", "/0", "id"}));
 		}
 		
 		/// <summary>
@@ -8851,7 +8851,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"84", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"84", "/r"}));
 		}
 		
 		/// <summary>
@@ -8859,7 +8859,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "85", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "85", "/r"}));
 		}
 		
 		/// <summary>
@@ -8867,7 +8867,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void TEST (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "85", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "85", "/r"}));
 		}
 		
 		/// <summary>
@@ -8876,10 +8876,10 @@ namespace SharpOS.AOT.X86 {
 		public void TEST (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"A8", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"A8", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"F6", "/0", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"F6", "/0", "ib"}));
 			}
 		}
 		
@@ -8889,10 +8889,10 @@ namespace SharpOS.AOT.X86 {
 		public void TEST (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "A9", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "A9", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "F7", "/0", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "F7", "/0", "iw"}));
 			}
 		}
 		
@@ -8902,14 +8902,14 @@ namespace SharpOS.AOT.X86 {
 		public void TEST (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "A9", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "A9", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.TEST (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "F7", "/0", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "F7", "/0", "id"}));
 				}
 			}
 		}
@@ -8919,7 +8919,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void VERR (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERR", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERR", target.ToString (), target, null, null, null, new string [] {"0F", "00", "/4"}));
 		}
 		
 		/// <summary>
@@ -8927,7 +8927,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void VERR (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERR", target.ToString(), null, target, null, null, new string[] {"0F", "00", "/4"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERR", target.ToString (), null, target, null, null, new string [] {"0F", "00", "/4"}));
 		}
 		
 		/// <summary>
@@ -8935,7 +8935,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void VERW (WordMemory target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERW", target.ToString(), target, null, null, null, new string[] {"0F", "00", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERW", target.ToString (), target, null, null, null, new string [] {"0F", "00", "/5"}));
 		}
 		
 		/// <summary>
@@ -8943,7 +8943,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void VERW (R16Type target)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERW", target.ToString(), null, target, null, null, new string[] {"0F", "00", "/5"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "VERW", target.ToString (), null, target, null, null, new string [] {"0F", "00", "/5"}));
 		}
 		
 		/// <summary>
@@ -8951,7 +8951,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void WAIT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WAIT", "", null, null, null, null, new string[] {"9B"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WAIT", "", null, null, null, null, new string [] {"9B"}));
 		}
 		
 		/// <summary>
@@ -8959,7 +8959,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void WBINVD ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WBINVD", "", null, null, null, null, new string[] {"0F", "09"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WBINVD", "", null, null, null, null, new string [] {"0F", "09"}));
 		}
 		
 		/// <summary>
@@ -8967,7 +8967,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void WRMSR ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WRMSR", "", null, null, null, null, new string[] {"0F", "30"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "WRMSR", "", null, null, null, null, new string [] {"0F", "30"}));
 		}
 		
 		/// <summary>
@@ -8975,7 +8975,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XADD (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"0F", "C0", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"0F", "C0", "/r"}));
 		}
 		
 		/// <summary>
@@ -8983,7 +8983,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XADD (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "0F", "C1", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "0F", "C1", "/r"}));
 		}
 		
 		/// <summary>
@@ -8991,7 +8991,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XADD (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "0F", "C1", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "0F", "C1", "/r"}));
 		}
 		
 		/// <summary>
@@ -8999,7 +8999,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XADD (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"0F", "C0", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"0F", "C0", "/r"}));
 		}
 		
 		/// <summary>
@@ -9007,7 +9007,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XADD (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "0F", "C1", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "0F", "C1", "/r"}));
 		}
 		
 		/// <summary>
@@ -9015,7 +9015,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XADD (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "0F", "C1", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XADD", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "0F", "C1", "/r"}));
 		}
 		
 		/// <summary>
@@ -9023,7 +9023,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XCHG (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"86", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"86", "/r"}));
 		}
 		
 		/// <summary>
@@ -9031,7 +9031,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XCHG (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "87", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "87", "/r"}));
 		}
 		
 		/// <summary>
@@ -9039,7 +9039,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XCHG (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "87", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "87", "/r"}));
 		}
 		
 		/// <summary>
@@ -9047,7 +9047,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XCHG (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"86", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"86", "/r"}));
 		}
 		
 		/// <summary>
@@ -9055,7 +9055,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XCHG (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "87", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "87", "/r"}));
 		}
 		
 		/// <summary>
@@ -9063,7 +9063,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XCHG (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "87", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "87", "/r"}));
 		}
 		
 		/// <summary>
@@ -9071,7 +9071,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XCHG (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"86", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"86", "/r"}));
 		}
 		
 		/// <summary>
@@ -9080,12 +9080,12 @@ namespace SharpOS.AOT.X86 {
 		public void XCHG (R16Type target, R16Type source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG_AX", "AX" + ", " + source.ToString(), null, null, source, null, new string[] {"o16", "90+r"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG_AX", "AX" + ", " + source.ToString (), null, null, source, null, new string [] {"o16", "90+r"}));
 			else if (source == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG__AX", target.ToString() + ", " + "AX", null, null, target, null, new string[] {"o16", "90+r"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG__AX", target.ToString () + ", " + "AX", null, null, target, null, new string [] {"o16", "90+r"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o16", "87", "/r"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o16", "87", "/r"}));
 			}
 		}
 		
@@ -9095,12 +9095,12 @@ namespace SharpOS.AOT.X86 {
 		public void XCHG (R32Type target, R32Type source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG_EAX", "EAX" + ", " + source.ToString(), null, null, source, null, new string[] {"o32", "90+r"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG_EAX", "EAX" + ", " + source.ToString (), null, null, source, null, new string [] {"o32", "90+r"}));
 			else if (source == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG__EAX", target.ToString() + ", " + "EAX", null, null, target, null, new string[] {"o32", "90+r"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG__EAX", target.ToString () + ", " + "EAX", null, null, target, null, new string [] {"o32", "90+r"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString() + ", " + source.ToString(), null, source, target, null, new string[] {"o32", "87", "/r"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XCHG", target.ToString () + ", " + source.ToString (), null, source, target, null, new string [] {"o32", "87", "/r"}));
 			}
 		}
 		
@@ -9109,7 +9109,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XLAT ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XLAT", "", null, null, null, null, new string[] {"D7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XLAT", "", null, null, null, null, new string [] {"D7"}));
 		}
 		
 		/// <summary>
@@ -9117,7 +9117,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XLATB ()
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XLATB", "", null, null, null, null, new string[] {"D7"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XLATB", "", null, null, null, null, new string [] {"D7"}));
 		}
 		
 		/// <summary>
@@ -9125,7 +9125,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (ByteMemory target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"30", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"30", "/r"}));
 		}
 		
 		/// <summary>
@@ -9133,7 +9133,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (WordMemory target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o16", "31", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o16", "31", "/r"}));
 		}
 		
 		/// <summary>
@@ -9141,7 +9141,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (DWordMemory target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), target, null, source, null, new string[] {"o32", "31", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), target, null, source, null, new string [] {"o32", "31", "/r"}));
 		}
 		
 		/// <summary>
@@ -9149,7 +9149,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (R8Type target, ByteMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"32", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"32", "/r"}));
 		}
 		
 		/// <summary>
@@ -9157,7 +9157,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (R16Type target, WordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o16", "33", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o16", "33", "/r"}));
 		}
 		
 		/// <summary>
@@ -9165,7 +9165,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (R32Type target, DWordMemory source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), source, null, target, null, new string[] {"o32", "33", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), source, null, target, null, new string [] {"o32", "33", "/r"}));
 		}
 		
 		/// <summary>
@@ -9173,7 +9173,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (ByteMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"80", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"80", "/6", "ib"}));
 		}
 		
 		/// <summary>
@@ -9181,7 +9181,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (WordMemory target, UInt16 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "81", "/6", "iw"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "81", "/6", "iw"}));
 		}
 		
 		/// <summary>
@@ -9189,7 +9189,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (DWordMemory target, UInt32 source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "81", "/6", "id"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "81", "/6", "id"}));
 		}
 		
 		/// <summary>
@@ -9197,7 +9197,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (WordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o16", "83", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o16", "83", "/6", "ib"}));
 		}
 		
 		/// <summary>
@@ -9205,7 +9205,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (DWordMemory target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), target, null, null, new UInt32[] {source}, new string[] {"o32", "83", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), target, null, null, new UInt32 [] {source}, new string [] {"o32", "83", "/6", "ib"}));
 		}
 		
 		/// <summary>
@@ -9213,7 +9213,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (R8Type target, R8Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"30", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"30", "/r"}));
 		}
 		
 		/// <summary>
@@ -9221,7 +9221,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (R16Type target, R16Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o16", "31", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o16", "31", "/r"}));
 		}
 		
 		/// <summary>
@@ -9229,7 +9229,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (R32Type target, R32Type source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + source.ToString(), null, target, source, null, new string[] {"o32", "31", "/r"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + source.ToString (), null, target, source, null, new string [] {"o32", "31", "/r"}));
 		}
 		
 		/// <summary>
@@ -9238,10 +9238,10 @@ namespace SharpOS.AOT.X86 {
 		public void XOR (R8Type target, Byte source)
 		{
 			if (target == R8.AL)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_AL", "AL" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"34", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_AL", "AL" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"34", "ib"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"80", "/6", "ib"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"80", "/6", "ib"}));
 			}
 		}
 		
@@ -9251,10 +9251,10 @@ namespace SharpOS.AOT.X86 {
 		public void XOR (R16Type target, UInt16 source)
 		{
 			if (target == R16.AX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_AX", "AX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o16", "35", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_AX", "AX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o16", "35", "iw"}));
 			else
 			{
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "81", "/6", "iw"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "81", "/6", "iw"}));
 			}
 		}
 		
@@ -9264,14 +9264,14 @@ namespace SharpOS.AOT.X86 {
 		public void XOR (R32Type target, UInt32 source)
 		{
 			if (target == R32.EAX)
-				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_EAX", "EAX" + ", " + string.Format("0x{0:x}", source), null, null, null, new UInt32[] {source}, new string[] {"o32", "35", "id"}));
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "35", "id"}));
 			else
 			{
 				if ((Int32)source >= -128 && (Int32)source <= 127)
 					this.XOR (target, (byte)source);
 				else
 				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "81", "/6", "id"}));
+					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/6", "id"}));
 				}
 			}
 		}
@@ -9281,7 +9281,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (R16Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o16", "83", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o16", "83", "/6", "ib"}));
 		}
 		
 		/// <summary>
@@ -9289,7 +9289,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		public void XOR (R32Type target, Byte source)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString() + ", " + string.Format("0x{0:x}", source), null, target, null, new UInt32[] {source}, new string[] {"o32", "83", "/6", "ib"}));
+			this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "83", "/6", "ib"}));
 		}
 	}
 	
