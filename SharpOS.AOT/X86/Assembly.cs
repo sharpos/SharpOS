@@ -1446,13 +1446,6 @@ namespace SharpOS.AOT.X86 {
 			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 8));
 			this.MOV (R32.EDX, new DWordMemory (null, R32.ESP, null, 0, 4));
 
-			this.CMP (R32.ECX, 64);
-			this.JB (start);
-
-			this.OR (R32.ECX, (byte) 0x20);
-
-			this.LABEL (start);
-
 			this.AND (R32.ECX, 63);
 
 			this.TEST (R32.ECX, R32.ECX);
@@ -2051,6 +2044,7 @@ namespace SharpOS.AOT.X86 {
 				throw new Exception ("Size Type not set.");
 
 			if (type == Operand.InternalSizeType.I8
+					|| type == Operand.InternalSizeType.U8
 					|| type == Operand.InternalSizeType.R4
 					|| type == Operand.InternalSizeType.R8)
 				return true;

@@ -34,6 +34,21 @@ namespace SharpOS.AOT.IR {
 	}
 	
 	public class DumpProcessor: IDisposable {
+		private bool enabled = true;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this <see cref="DumpProcessor"/> will write its content.
+		/// </summary>
+		/// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
+		public bool Enabled {
+			get {
+				return enabled;
+			}
+			set {
+				enabled = value;
+			}
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="DumpProcessor"/> class.
 		/// </summary>
@@ -182,14 +197,14 @@ namespace SharpOS.AOT.IR {
 					value += "\n";
 			}
 
-			if ((this.type & (byte) DumpType.Buffer) != 0)
+			if (this.enabled && (this.type & (byte) DumpType.Buffer) != 0)
 				this.buffer.Append (value);
 
-			if ((this.type & (byte) DumpType.File) != 0
+			if (this.enabled && (this.type & (byte) DumpType.File) != 0
 					&& this.streamWriter != null)
 				this.streamWriter.Write (value);
 
-			if ((this.type & (byte) DumpType.Console) != 0)
+			if (this.enabled && (this.type & (byte) DumpType.Console) != 0)
 				Console.Write (value);
 		}
 
@@ -207,14 +222,14 @@ namespace SharpOS.AOT.IR {
 				if (this.elements.Peek ().NewLine || this.elements.Peek ().Property)
 					value += "\n";
 
-				if ((this.type & (byte) DumpType.Buffer) != 0)
+				if (this.enabled && (this.type & (byte) DumpType.Buffer) != 0)
 					this.buffer.Append (value);
 
-				if ((this.type & (byte) DumpType.File) != 0
+				if (this.enabled && (this.type & (byte) DumpType.File) != 0
 						&& this.streamWriter != null)
 					this.streamWriter.Write (value);
 
-				if ((this.type & (byte) DumpType.Console) != 0)
+				if (this.enabled && (this.type & (byte) DumpType.Console) != 0)
 					Console.Write (value);
 				
 				this.elements.Pop ();
@@ -244,14 +259,14 @@ namespace SharpOS.AOT.IR {
 			if (!this.elements.Peek ().Inline)
 				value += "\n";
 
-			if ((this.type & (byte) DumpType.Buffer) != 0)
+			if (this.enabled && (this.type & (byte) DumpType.Buffer) != 0)
 				this.buffer.Append (value);
 
-			if ((this.type & (byte) DumpType.File) != 0
+			if (this.enabled && (this.type & (byte) DumpType.File) != 0
 					&& this.streamWriter != null)
 				this.streamWriter.Write (value);
 
-			if ((this.type & (byte) DumpType.Console) != 0)
+			if (this.enabled && (this.type & (byte) DumpType.Console) != 0)
 				Console.Write (value);
 		}
 

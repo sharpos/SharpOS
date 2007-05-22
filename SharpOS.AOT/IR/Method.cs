@@ -1819,17 +1819,17 @@ namespace SharpOS.AOT.IR {
 			//result.Append (method.ReturnType.ReturnType.FullName + " ");
 			result.Append (method.DeclaringType.FullName + "." + method.Name);
 
+			result.Append ("(");
+
 			for (int i = 0; i < method.Parameters.Count; i++) {
-				if (i == 0)
-					result.Append ("(");
-				else
+				if (i != 0)
 					result.Append (",");
 
 				result.Append (method.Parameters [i].ParameterType.FullName);
 			}
 
-			if (method.Parameters.Count > 0)
-				result.Append (")");
+			
+			result.Append (")");
 
 			return result.ToString();
 		}
@@ -2213,7 +2213,7 @@ namespace SharpOS.AOT.IR {
 			int index = 0;
 			Dictionary<string, LiveRange> values = new Dictionary<string, LiveRange>();
 
-			foreach (Block block in ReversePostorder()) {
+			foreach (Block block in ReversePostorder ()) {
 				foreach (Instructions.Instruction instruction in block) {
 					instruction.Index = index++;
 
@@ -2276,37 +2276,37 @@ namespace SharpOS.AOT.IR {
 				registers.Add (i);
 
 			for (int i = 0; i < this.liveRanges.Count; i++) {
-				ExpireOldIntervals (active, registers, this.liveRanges[i]);
+				ExpireOldIntervals (active, registers, this.liveRanges [i]);
 
-				if ( (this.liveRanges[i].Identifier as Identifier).ForceSpill
-						|| this.engine.Assembly.Spill (this.liveRanges[i].Identifier.SizeType))
-					SetNextStackPosition (this.liveRanges[i].Identifier);
+				if ((this.liveRanges [i].Identifier as Identifier).ForceSpill
+						|| this.engine.Assembly.Spill (this.liveRanges [i].Identifier.SizeType))
+					SetNextStackPosition (this.liveRanges [i].Identifier);
 
 				else {
 					if (active.Count == this.engine.Assembly.AvailableRegistersCount)
-						SpillAtInterval (active, registers, ref stackPosition, this.liveRanges[i]);
+						SpillAtInterval (active, registers, ref stackPosition, this.liveRanges [i]);
 
 					else {
-						int register = registers[0];
+						int register = registers [0];
 						registers.RemoveAt (0);
 
-						this.liveRanges[i].Identifier.Register = register;
+						this.liveRanges [i].Identifier.Register = register;
 
-						active.Add (this.liveRanges[i]);
-						active.Sort (new LiveRange.SortByEnd());
+						active.Add (this.liveRanges [i]);
+						active.Sort (new LiveRange.SortByEnd ());
 					}
 				}
 			}
 
-			this.liveRanges.Sort (new LiveRange.SortByRegisterStack());
+			this.liveRanges.Sort (new LiveRange.SortByRegisterStack ());
 
 			if (this.engine.Options.Dump) {
-				this.engine.Dump.Section(DumpSection.RegisterAllocation);
-				
+				this.engine.Dump.Section (DumpSection.RegisterAllocation);
+
 				foreach (LiveRange entry in this.liveRanges)
-					this.engine.Dump.Element(entry);
-				
-				this.engine.Dump.PopElement();
+					this.engine.Dump.Element (entry);
+
+				this.engine.Dump.PopElement ();
 			}
 			
 			return;

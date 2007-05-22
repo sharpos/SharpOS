@@ -75,23 +75,6 @@ namespace SharpOS.AOT.IR.Operands {
 			else
 				stringBuilder.Append ("null");
 
-			/*if (this.Operands != null)
-			{
-			    stringBuilder.Append(" (");
-
-			    foreach (Operand operand in this.Operands)
-			    {
-			        if (operand != this.Operands[0])
-			        {
-			            stringBuilder.Append(", ");
-			        }
-
-			        stringBuilder.Append(operand.ToString());
-			    }
-
-			    stringBuilder.Append(")");
-			}*/
-
 			return stringBuilder.ToString();
 		}
 	}

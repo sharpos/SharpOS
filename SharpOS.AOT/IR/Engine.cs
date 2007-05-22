@@ -300,13 +300,11 @@ namespace SharpOS.AOT.IR {
 		/// <summary>
 		/// Runs the AOT compiler engine.
 		/// </summary>
-		/// <param name="asm">
-		/// The IAssembly implementation used to translate the
-		/// compiler's intermediate representation into 
-		/// architecture-native code and write that code to file.
-		/// </param>
+		/// <param name="asm">The IAssembly implementation used to translate the
+		/// compiler's intermediate representation into
+		/// architecture-native code and write that code to file.</param>
 		/// <exception cref="ArgumentNullException">
-		/// <paramref name="asm" /> is null.
+		/// 	<paramref name="asm"/> is null.
 		/// </exception>
 		public void Run (IAssembly asm)
 		{
@@ -469,8 +467,20 @@ namespace SharpOS.AOT.IR {
 			Message (1, "Processing IR methods...");
 
 			foreach (Class _class in this.classes)
-				foreach (Method _method in _class)
-					_method.Process ();
+				foreach (Method _method in _class) {
+					if (this.options.DumpFilter.Length > 0
+							&& _method.ToString ().IndexOf (this.options.DumpFilter) == -1) {
+
+						// If a filter is defined then turn off the verbosity
+						Dump.Enabled = false;
+						
+						_method.Process ();
+
+						Dump.Enabled = true;
+					} else
+						_method.Process ();
+
+				}
 
 			Message (1, "Encoding output for `{0}' to `{1}'...", options.CPU,
 					options.OutputFilename);

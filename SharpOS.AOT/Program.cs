@@ -63,6 +63,9 @@ namespace SharpOS.AOT {
 			
 		[GetOpts.Option("Specify the dump verbosity (1 - 3)", "dump-level")]
 		public int DumpVerbosity = 1;
+
+		[GetOpts.Option ("Dump method that contains the defined token", "dump-filter")]
+		public string DumpFilter = string.Empty;
 		
 		public EngineOptions GetEngineOptions()
 		{
@@ -86,7 +89,9 @@ namespace SharpOS.AOT {
 			
 			if (Verbosity == 0 && Verbose)
 				eo.Verbosity = 1;
-			
+
+			eo.DumpFilter = DumpFilter;
+
 			return eo;
 		}
 	}

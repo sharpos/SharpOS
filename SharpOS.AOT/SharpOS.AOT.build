@@ -25,6 +25,7 @@
 			</references>
 			<sources>
 				<include name="Core.AssemblyInfo.cs" />
+				<include name="COFF.cs" />
 				<include name="IR/*.cs" />
 				<include name="IR/Instructions/*.cs" />
 				<include name="IR/Operands/*.cs" />
