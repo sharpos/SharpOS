@@ -17,8 +17,8 @@ using System.Text;
 using SharpOS;
 using SharpOS.AOT.IR;
 using SharpOS.AOT.X86;
-
 using GetOpts = Mono.GetOptions;
+using Mono.Cecil;
 
 namespace SharpOS.AOT {
 	public class Options: GetOpts.Options {
@@ -226,8 +226,51 @@ namespace SharpOS.AOT {
 
 				if (opts.CreateImage)
 					CreateImage (engine, opts);
-			} catch (EngineException e) {
-				Console.Error.WriteLine ("Error: {0}", e.Message);
+				
+			} catch (Exception e) {
+				AssemblyDefinition assembly;
+				ModuleDefinition module;
+				TypeDefinition type;
+				MethodDefinition method;
+
+				// Error handling
+				
+				engine.GetStatusInformation (out assembly, out module, out type, out method);
+
+				if (e is EngineException) {
+					Console.Error.WriteLine ("Error: {0}", e.Message);
+				} else {
+					Console.Error.WriteLine ("Caught exception: " + e);
+				}
+
+				switch (engine.CurrentStatus) {
+				case Engine.Status.AssemblyLoading:
+					Console.Error.WriteLine ("While loading assembly `{0}'", engine.ProcessingAssemblyFile);
+					break;
+					
+				case Engine.Status.IRProcessing:
+					Console.Error.WriteLine ();
+					Console.Error.WriteLine ("While processing");
+					Console.Error.WriteLine ("Method:  {0}", (method == null ? "?" : method.ToString ()));
+					Console.Error.WriteLine ("  in module:  {0}", (module == null ? "?" : module.ToString ()));
+					Console.Error.WriteLine ("  of assembly:  {0}", (assembly == null ? "?" :
+						assembly.ToString ()));
+					Console.Error.WriteLine ("  loaded from:  {0}", (engine.ProcessingAssemblyFile == null ?
+						"?" : engine.ProcessingAssemblyFile));
+					Console.Error.WriteLine ();
+					break;
+
+				case Engine.Status.IRGeneration:
+					Console.Error.WriteLine ("While generating IR code for assembly `{0}'",
+								engine.ProcessingAssemblyFile);
+					break;
+
+				case Engine.Status.Encoding:
+					Console.Error.WriteLine ("While encoding the output assembly.");
+					break;
+				}
+
+				return 1;
 			}
 
 			return 0;

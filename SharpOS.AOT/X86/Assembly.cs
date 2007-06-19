@@ -241,7 +241,10 @@ namespace SharpOS.AOT.X86 {
 
 			else if (value.StartsWith ("SharpOS.AOT.X86.R32Type"))
 				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U4;
-
+				
+			else if (value.StartsWith ("SharpOS.AOT.X86.CRType"))
+				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U4;
+			
 			else
 				throw new Exception ("'" + value + "' is not supported.");
 		}

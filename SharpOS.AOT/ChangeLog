@@ -1,3 +1,13 @@
+2007-06-18  William Lahti  <xfurious@gmail.com>
+	* Added better error handling, the AOT tells you what method it was in
+	when it crashed :)
+	* The program wrapping SharpOS.AOT.IR.Engine can pull some status
+	information from the Engine instance in the case of an exception.
+
+2007-05-14  William Lahti  <xfurious@gmail.com>
+	* SharpOS.AOT.build: added missing delete directives in `clean' target.
+	* X86/Assembly.cs: Added CRType register size to GetSizeType
+
 2007-05-10  Bruce Markham  <illuminus86@gmail.com>
 	* IR/Operands/MethodReference.cs: new class to represent a 
 	Mono.Cecil.MethodReference for use in 'Assign' type IR instructions

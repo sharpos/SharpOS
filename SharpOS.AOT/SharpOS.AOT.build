@@ -39,6 +39,7 @@
 				unsafe="true">
 			<references>
 				<include name="References/Mono.GetOptions.dll" />
+				<include name="References/Mono.Cecil.dll" />
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 			</references>
 			<resources>
@@ -57,6 +58,7 @@
 
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.dll.mdb')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe.mdb')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'Mono.Cecil.dll')}" failonerror="false" />

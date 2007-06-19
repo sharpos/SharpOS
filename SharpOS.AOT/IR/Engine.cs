@@ -44,21 +44,45 @@ namespace SharpOS.AOT.IR {
 			options = opts;
 		}
 
+		public enum Status : int {
+			None = 0,
+			AssemblyLoading,
+			ADCLayerSelection,
+			IRGeneration,
+			IRProcessing,
+			Encoding,
+			Success,
+			Failure
+		}
+		
 		/// <summary>
 		/// Represents the version of the AOT compiler engine.
 		/// </summary>
 		public const string EngineVersion = "svn";
+
+		EngineOptions options = null;
+		IAssembly asm = null;
+		DumpProcessor dump = null;
 		
-		private EngineOptions options = null;
-		private IAssembly asm = null;
-		private DumpProcessor dump = null;
+		List<ADCLayer> adcLayers = new List<ADCLayer>();
+		List<string> adcInterfaces = new List<string>();
+		ADCLayer adcLayer = null;
 		
-		private List<ADCLayer> adcLayers = new List<ADCLayer>();
-		private List<string> adcInterfaces = new List<string>();
-		private ADCLayer adcLayer = null;
-		
-		private List<AssemblyDefinition> assemblies = new List<AssemblyDefinition>();
-		private List<Class> classes = new List<Class> ();
+		List<AssemblyDefinition> assemblies = new List<AssemblyDefinition>();
+		List<Class> classes = new List<Class> ();
+
+		Status status;
+		string currentAssemblyFile;
+		AssemblyDefinition currentAssembly;
+		ModuleDefinition currentModule;
+		TypeDefinition currentType;
+		MethodDefinition currentMethod;
+
+		public Status CurrentStatus {
+			get {
+				return this.status;
+			}
+		}
 		
 		/// <summary>
 		/// Provides storage for information about the architecture-dependent 
@@ -82,7 +106,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public IAssembly Assembly {
 			get {
-				return asm;
+				return this.asm;
 			}
 		}
 		
@@ -92,7 +116,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public EngineOptions Options {
 			get {
-				return options;
+				return this.options;
 			}
 		}
 		
@@ -102,7 +126,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public DumpProcessor Dump {
 			get {
-				return dump;
+				return this.dump;
 			}
 		}
 
@@ -112,14 +136,37 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public ADCLayer ADC {
 			get {
-				return adcLayer;
+				return this.adcLayer;
 			}
+		}
+
+		public string ProcessingAssemblyFile {
+			get {
+				return this.currentAssemblyFile;
+			}
+		}
+		
+		/// <summary>
+		/// Changes the Status property of the Engine.
+		/// </summary>
+		internal void SetStatus (Status status)
+		{
+			this.status = status;
+		}
+
+		public void GetStatusInformation (out AssemblyDefinition assembly, out ModuleDefinition module, out
+						  TypeDefinition type, out MethodDefinition method)
+		{
+			assembly = this.currentAssembly;
+			module = this.currentModule;
+			type = this.currentType;
+			method = this.currentMethod;
 		}
 		
 		/// <summary>
 		/// Retrieve a type definition for the specified type.
 		/// </summary>
-		public TypeDefinition GetTypeDefinition(string ns, string name)
+		public TypeDefinition GetTypeDefinition (string ns, string name)
 		{
 			if (ns == null)
 				throw new ArgumentNullException ("ns");
@@ -308,11 +355,13 @@ namespace SharpOS.AOT.IR {
 		/// </exception>
 		public void Run (IAssembly asm)
 		{
+			byte dumpType = 0;
+			
 			if (asm == null)
 				throw new ArgumentNullException ("asm");
 
-			byte dumpType = 0;
-
+			// Decide the dump type and start the processor
+			
 			if (this.options.ConsoleDump)
 				dumpType |= (byte) DumpType.Console;
 
@@ -323,7 +372,6 @@ namespace SharpOS.AOT.IR {
 				dumpType |= (byte) DumpType.File;
 
 			dump = new DumpProcessor ((byte) dumpType, options.DumpFile);
-
 			dump.Section (DumpSection.Root);
 
 			this.asm = asm;
@@ -332,10 +380,17 @@ namespace SharpOS.AOT.IR {
 				bool skip = false;
 
 				Message (1, "Loading assembly `{0}'", assemblyFile);
+				SetStatus (Status.AssemblyLoading);
+				this.currentAssemblyFile = assemblyFile;
 
 				AssemblyDefinition library = AssemblyFactory.GetAssembly (assemblyFile);
 
+				this.currentAssembly = library;
+
 				// Check for ADCLayerAttribute
+
+				Message (2, "Aggregating ADC layers...");
+				SetStatus (Status.ADCLayerSelection);
 
 				foreach (CustomAttribute ca in library.CustomAttributes) {
 
@@ -395,6 +450,7 @@ namespace SharpOS.AOT.IR {
 
 				Dump.Element (library, assemblyFile);
 				Message (1, "Generating IR for assembly types...");
+				SetStatus (Status.IRGeneration);
 
 				// We first add the data (Classes and Methods)
 				foreach (TypeDefinition type in library.MainModule.Types) {
@@ -465,9 +521,15 @@ namespace SharpOS.AOT.IR {
 				Message (1, "No available ADC layer matches CPU type.");
 
 			Message (1, "Processing IR methods...");
-
-			foreach (Class _class in this.classes)
+			SetStatus (Status.IRProcessing);
+			
+			foreach (Class _class in this.classes) {
+				this.currentModule = _class.ClassDefinition.Module;
+				this.currentType = _class.ClassDefinition;
+				
 				foreach (Method _method in _class) {
+					this.currentMethod = _method.MethodDefinition;
+					
 					if (this.options.DumpFilter.Length > 0
 							&& _method.ToString ().IndexOf (this.options.DumpFilter) == -1) {
 
@@ -480,15 +542,22 @@ namespace SharpOS.AOT.IR {
 					} else
 						_method.Process ();
 
+					this.currentMethod = null;
 				}
+
+				this.currentModule = null;
+				this.currentType = null;
+			}
 
 			Message (1, "Encoding output for `{0}' to `{1}'...", options.CPU,
 					options.OutputFilename);
+			SetStatus (Status.Encoding);
 
 			asm.Encode (this, options.OutputFilename);
 
 			Dump.PopElement ();
-
+			SetStatus (Status.Success);
+			
 			return;
 		}
 
