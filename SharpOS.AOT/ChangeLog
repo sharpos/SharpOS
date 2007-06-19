@@ -1,3 +1,8 @@
+2007-06-18 William Lahti <xfurious@gmail.com>
+	* IR/Engine.cs: Engine.GetInternalType(): gave 'void' a specific case
+	and added a warning if no specific case is found
+	* Changelog: wrapping
+
 2007-06-18  William Lahti  <xfurious@gmail.com>
 	* Added better error handling, the AOT tells you what method it was in
 	when it crashed :)
@@ -11,15 +16,15 @@
 2007-05-10  Bruce Markham  <illuminus86@gmail.com>
 	* IR/Operands/MethodReference.cs: new class to represent a 
 	Mono.Cecil.MethodReference for use in 'Assign' type IR instructions
-	* IR/Block.cs: added a handler for OpCodes.Ldftn in method ConvertFromCIL(),  
-	also fixed ambiguous type reference between Mono.Cecil.MethodReference 
-	and IR.Operands.MethodReference
-	* IR/Engine.cs: fixed ambiguous type reference between Mono.Cecil.MethodReference
-	and IR.Operands.MethodReference
-	* IR/Method.cs: fixed ambiguous type reference between Mono.Cecil.MethodReference
-	and IR.Operands.MethodReference
-	* IR/Operands/Call.cs:  fixed ambiguous type reference between Mono.Cecil.MethodReference
-	and IR.Operands.MethodReference
+	* IR/Block.cs: added a handler for OpCodes.Ldftn in method
+	ConvertFromCIL(), also fixed ambiguous type reference between
+	Mono.Cecil.MethodReference and IR.Operands.MethodReference
+	* IR/Engine.cs: fixed ambiguous type reference between
+	Mono.Cecil.MethodReference and IR.Operands.MethodReference
+	* IR/Method.cs: fixed ambiguous type reference between
+	Mono.Cecil.MethodReference and IR.Operands.MethodReference
+	* IR/Operands/Call.cs:  fixed ambiguous type reference between
+	Mono.Cecil.MethodReference and IR.Operands.MethodReference
 
 2007-05-07  William Lahti  <xfurious@gmail.com>
 	* fixed clobbering of assembly dump

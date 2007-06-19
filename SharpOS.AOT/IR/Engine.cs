@@ -735,6 +735,11 @@ namespace SharpOS.AOT.IR {
 			else if (type.EndsWith ("[]"))
 				return Operands.Operand.InternalSizeType.U;
 
+			else if (type.Equals ("void"))
+				return Operands.Operand.InternalSizeType.NotSet;
+			else if (type.Equals ("System.Void"))
+				return Operands.Operand.InternalSizeType.NotSet;
+			
 			else if (type.Equals ("System.Boolean"))
 				return Operands.Operand.InternalSizeType.U1;
 			else if (type.Equals ("bool"))
@@ -819,7 +824,8 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
-			//throw new Exception ("'" + type + "' not supported.");
+			Console.Error.WriteLine ("WARNING: '" + type + "' not supported.");
+			
 			return Operand.InternalSizeType.NotSet;
 		}
 	}
