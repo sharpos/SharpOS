@@ -1,1 +1,1 @@
-Bochs -q
+Bochs -f ..\util\bochsrc.txt -q
