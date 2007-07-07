@@ -120,7 +120,7 @@ namespace SharpOS.AOT {
 				
 				File.Move(tmpScript, tmpScript + ".bat");
 				tmpScript += ".bat";
-				interp = "CMD.EXE";
+				interp = tmpScript;
 				stm = System.Reflection.Assembly.GetCallingAssembly().
 					GetManifestResourceStream("ImageBuilder.bat");	
 			}
@@ -150,10 +150,20 @@ namespace SharpOS.AOT {
 			stm.Close ();
 			
 			// TODO: set executable status before running
-			
-			Process p = Process.Start (interp, string.Format ("{0} {1} {2}", 
-						tmpScript, opts.BinaryFilename, 
-						opts.ImageFilename));
+
+			string param;
+			if (tmpScript != interp) 
+				param = string.Format("\"{0}\" \"{1}\" \"{2}\"",
+					tmpScript, opts.BinaryFilename,
+					opts.ImageFilename);
+			else
+				param = string.Format("\"{0}\" \"{1}\"",
+					opts.BinaryFilename,
+					opts.ImageFilename);
+
+
+			engine.Message(1, "Start process (" + interp + " " + param + ")");
+			Process p = Process.Start(tmpScript, param);
 
 			p.WaitForExit ();
 
