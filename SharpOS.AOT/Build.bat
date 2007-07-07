@@ -1,0 +1,2 @@
+@nant.bat|more
+@pause
