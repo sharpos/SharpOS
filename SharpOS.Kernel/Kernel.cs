@@ -40,7 +40,8 @@ namespace SharpOS {
 			Screen.WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
 			Screen.RestoreAttributes ();
 
-			while (true);
+			//FIXME: this currently crashes the aot-compiler - LogicalError
+			//while (true);
 		}
 
 		#region Stubs
