@@ -42,6 +42,10 @@ namespace SharpOS {
 
 			//FIXME: this currently crashes the aot-compiler - LogicalError
 			//while (true);
+
+			//this works however;
+			byte n = 0;
+			while (n < 100) { }
 		}
 
 		#region Stubs
