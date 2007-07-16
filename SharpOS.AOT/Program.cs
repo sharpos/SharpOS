@@ -126,8 +126,13 @@ namespace SharpOS.AOT {
 			}
 			
 			using (StreamReader sr = new StreamReader(stm)) {
-				using (StreamWriter sw = new StreamWriter(tmpScript))
-					sw.Write(sr.ReadToEnd());
+				using (StreamWriter sw = new StreamWriter(tmpScript)) {
+					string sx = sr.ReadToEnd ();
+
+					Console.WriteLine (sx);
+					
+					sw.Write(sx);
+				}
 			}
 			
 			{
@@ -161,9 +166,8 @@ namespace SharpOS.AOT {
 					opts.BinaryFilename,
 					opts.ImageFilename);
 
-
 			engine.Message(1, "Start process (" + interp + " " + param + ")");
-			Process p = Process.Start(tmpScript, param);
+			Process p = Process.Start(interp, param);
 
 			p.WaitForExit ();
 
