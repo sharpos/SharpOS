@@ -163,6 +163,23 @@ namespace SharpOS.AOT.IR {
 			method = this.currentMethod;
 		}
 		
+		public void ClearStatusInformation ()
+		{
+			this.currentAssembly = null;
+			this.currentModule = null;
+			this.currentType = null;
+			this.currentMethod = null;
+		}
+		
+		public void SetStatusInformation (AssemblyDefinition assembly, ModuleDefinition module, 
+						  TypeDefinition type, MethodDefinition method)
+		{
+			this.currentAssembly = assembly;
+			this.currentModule = module;
+			this.currentType = type;
+			this.currentMethod = method;
+		}
+		
 		/// <summary>
 		/// Retrieve a type definition for the specified type.
 		/// </summary>

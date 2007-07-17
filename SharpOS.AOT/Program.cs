@@ -264,14 +264,7 @@ namespace SharpOS.AOT {
 					
 				case Engine.Status.IRProcessing:
 					Console.Error.WriteLine ();
-					Console.Error.WriteLine ("While processing");
-					Console.Error.WriteLine ("Method:  {0}", (method == null ? "?" : method.ToString ()));
-					Console.Error.WriteLine ("  in module:  {0}", (module == null ? "?" : module.ToString ()));
-					Console.Error.WriteLine ("  of assembly:  {0}", (assembly == null ? "?" :
-						assembly.ToString ()));
-					Console.Error.WriteLine ("  loaded from:  {0}", (engine.ProcessingAssemblyFile == null ?
-						"?" : engine.ProcessingAssemblyFile));
-					Console.Error.WriteLine ();
+					Console.Error.WriteLine ("While performing IR processing");
 					break;
 
 				case Engine.Status.IRGeneration:
@@ -284,6 +277,18 @@ namespace SharpOS.AOT {
 					break;
 				}
 
+				if (method != null) {				
+					Console.Error.WriteLine ("Method:  {0}", (method == null ? "?" : method.ToString ()));
+					Console.Error.WriteLine ("  in module:  {0}", (module == null ? "?" : module.ToString ()));
+					Console.Error.WriteLine ("  of assembly:  {0}", (assembly == null ? "?" :
+						assembly.ToString ()));
+					Console.Error.WriteLine ("  loaded from:  {0}", (engine.ProcessingAssemblyFile == null ?
+						"?" : engine.ProcessingAssemblyFile));
+					Console.Error.WriteLine ();
+				} else {
+					Console.Error.WriteLine ("* Status information is not available.");
+				}
+				
 				return 1;
 			}
 

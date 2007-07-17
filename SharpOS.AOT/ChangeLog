@@ -1,4 +1,13 @@
-2007-06-18 William Lahti <xfurious@gmail.com>
+2007-07-17  William Lahti <xfurious@gmail.com>
+	* IR/Engine.cs: Added SetStatusInformation and ClearStatusInformation
+	which can be used from other phases of compilation to set the current
+	method being compiled.
+	* Program.cs: status information is now shown at any stage of
+	compilation as long as the current method is not null.
+	* X86/Assembly.cs: use SetStatusInformation to provide status during
+	assembly encoding phase
+	
+2007-06-18  William Lahti <xfurious@gmail.com>
 	* IR/Engine.cs: Engine.GetInternalType(): gave 'void' a specific case
 	and added a warning if no specific case is found
 	* Changelog: wrapping

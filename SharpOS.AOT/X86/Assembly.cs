@@ -1256,7 +1256,13 @@ namespace SharpOS.AOT.X86 {
 				foreach (Method method in _class) {
 					this.engine.Dump.MethodEncode (method);
 
+					engine.SetStatusInformation (_class.ClassDefinition.Module.Assembly, 
+						_class.ClassDefinition.Module, _class.ClassDefinition,
+						method.MethodDefinition);
+					
 					new AssemblyMethod (this, method).GetAssemblyCode ();
+					
+					engine.ClearStatusInformation ();
 				}
 			}
 
