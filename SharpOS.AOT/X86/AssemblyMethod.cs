@@ -1068,7 +1068,8 @@ namespace SharpOS.AOT.X86 {
 
 				} else if (type == Binary.BinaryType.Sub) {
 					if (second is Constant) {
-						UInt32 value = Convert.ToUInt32 (Convert.ToInt32 ( (second as Constant).Value));
+						UInt32 value = (uint) Convert.ToInt32 ( (second as Constant).Value);
+						//UInt32 value = Convert.ToUInt32 (Convert.ToInt32 ( (second as Constant).Value));
 
 						assembly.SUB (register, value);
 
@@ -1161,7 +1162,8 @@ namespace SharpOS.AOT.X86 {
 
 				} else if (type == Binary.BinaryType.Or) {
 					if (second is Constant) {
-						UInt32 value = Convert.ToUInt32 (Convert.ToInt32 ( (second as Constant).Value));
+						UInt32 value = (uint) Convert.ToInt32 ( (second as Constant).Value);
+						//UInt32 value = Convert.ToUInt32 (Convert.ToInt32 ( (second as Constant).Value));
 
 						assembly.OR (register, value);
 
@@ -1416,18 +1418,30 @@ namespace SharpOS.AOT.X86 {
 				if (miscellaneous.Operator is SharpOS.AOT.IR.Operators.Miscellaneous
 						&& (miscellaneous.Operator as SharpOS.AOT.IR.Operators.Miscellaneous).Type == Operator.MiscellaneousType.Localloc) {
 
-					int size = Convert.ToInt32 ((miscellaneous.Operands [0] as Constant).Value);
+					Console.WriteLine ("misc op #: {0}", miscellaneous.Operands.Length);
+					Console.WriteLine ("op-0 type: {0}", miscellaneous.Operands [0].GetType ().FullName);
 
-					if (size < 1)
-						throw new Exception ("'" + instruction + "' has an invalid size value.");
+					if (miscellaneous.Operands [0] is Constant) {					
+						int size = Convert.ToInt32 ((miscellaneous.Operands [0] as Constant).Value);
 
-					if (size > 4096)
-						throw new Exception ("'" + instruction + "' has an invalid size value. (Bigger than 4096 bytes)");
+						if (size < 1)
+							throw new Exception ("'" + instruction + "' has an invalid size value.");
 
-					if (size % 4 != 0)
-						size = ((size / 4) + 1) * 4;
+						if (size > 4096)
+							throw new Exception ("'" + instruction + "' has an invalid size value. (Bigger than 4096 bytes)");
 
-					this.assembly.SUB (R32.ESP, (uint) size);
+						if (size % 4 != 0)
+							size = ((size / 4) + 1) * 4;
+
+						this.assembly.SUB (R32.ESP, (uint) size);
+					} else if (miscellaneous.Operands [0] is SharpOS.AOT.IR.Operands.Register) {
+						// TODO: verify size
+						this.assembly.SUB (R32.ESP, assembly.GetRegister ((miscellaneous.Operands [0] 
+							as SharpOS.AOT.IR.Operands.Register).Index));
+					} else {
+						throw new Exception ("'" + miscellaneous.Operands [0].GetType () + "' is not supported'");
+					}
+					
 					this.MovOperandRegister (assign.Assignee, R32.ESP);
 
 				} else

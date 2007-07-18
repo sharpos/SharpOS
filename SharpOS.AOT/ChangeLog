@@ -1,3 +1,11 @@
+2007-07-18  William Lahti <xfurious@gmail.com>
+	* X86/AssemblyMethod.cs: Added support for using variables for the
+	size of a 'stackalloc' operation, as opposed to constants. Now this
+	works:
+
+	int count = 4;
+	int *array = stackalloc int [count];
+
 2007-07-17  William Lahti <xfurious@gmail.com>
 	* IR/Engine.cs: Added SetStatusInformation and ClearStatusInformation
 	which can be used from other phases of compilation to set the current
