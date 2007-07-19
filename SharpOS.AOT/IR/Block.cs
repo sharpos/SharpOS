@@ -1069,7 +1069,8 @@ namespace SharpOS.AOT.IR {
 								// replace this call with an equivalent call
 								// to the ADC layer
 
-								this.Method.Engine.FixupADCMethod (call);
+								this.Method.Engine.Message (2, "Replacing ADC stub call `{0}'", call);
+								call = this.Method.Engine.FixupADCMethod (call);
 							}
 						}
 					} else {

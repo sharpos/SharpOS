@@ -1,3 +1,15 @@
+2007-07-19  William Lahti <xfurious@gmail.com>
+	* X86/Assembly.cs: more verbose information for multiple label
+	definition exception
+	* IR/Engine.cs: changed FixupADCMethod to return a new MethodReference
+	instead of changing the DeclaringType value of the existing
+	MethodReference. This stops the multiple definition problem as it
+	seems the same reference instance is used to define the label of the
+	method later in the AOT process.
+	* IR/Block.cs: replaces the MethodReference used to translate the
+	CIL to IR instead of changing the CIL opcode after the fact. This was
+	an oversight on my part earlier.
+
 2007-07-18  William Lahti <xfurious@gmail.com>
 	* X86/AssemblyMethod.cs: Added support for using variables for the
 	size of a 'stackalloc' operation, as opposed to constants. Now this

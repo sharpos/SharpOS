@@ -1398,7 +1398,9 @@ namespace SharpOS.AOT.X86 {
 
 							if (instruction.Label.Length > 0) {
 								if (this.labels.ContainsKey (instruction.Label))
-									throw new Exception ("The label '" + instruction.Label + "' has been defined more than once.");
+									throw new Exception (string.Format (
+										"The label '{0}' has been defined more than once. Definition 1 = '{1}', Definition 2 = '{2}'",
+										instruction.Label, this.labels [instruction.Label], instruction));
 
 								this.labels.Add (instruction.Label, instruction);
 							}

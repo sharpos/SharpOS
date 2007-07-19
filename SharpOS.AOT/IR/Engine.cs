@@ -217,7 +217,7 @@ namespace SharpOS.AOT.IR {
 		/// Modifies the method reference <paramref name="call" /> to
 		/// refer to the equivalent ADC layer method.
 		/// </summary>
-		public void FixupADCMethod (Mono.Cecil.MethodReference call)
+		public Mono.Cecil.MethodReference FixupADCMethod (Mono.Cecil.MethodReference call)
 		{
 			// TODO: do real confirmation of the existence of a compatible method!
 			string rootns = null;
@@ -271,10 +271,23 @@ namespace SharpOS.AOT.IR {
 					"ADC stub method `{0}' does not match any ADC methods from type `{1}'",
 					call, adcStubType));
 
-			Message (2, "Replacing ADC method `{0}': scope is `{1}'", call.ToString(),
-					  call.DeclaringType.Scope);
-
-			call.DeclaringType = ntype;
+			Message (2, "Replacing ADC method `{0}': AIC namespace = `{1}', ADC namespace = `{2}'", 
+				call.ToString(), rootns, adcLayer.Namespace);
+			Message (3, "                            scope is `{0}', namespace segment = `{1}', class = '{2}'",
+				call.DeclaringType.Scope, nsseg, call.DeclaringType.Name);
+			
+			
+			Mono.Cecil.MethodReference nn = new Mono.Cecil.MethodReference (call.Name, ntype, call.ReturnType.ReturnType, call.HasThis, call.ExplicitThis,
+				call.CallingConvention);
+			
+			foreach (ParameterDefinition def in call.Parameters)
+				nn.Parameters.Add (def);
+			
+			Console.WriteLine ("old: " + call);
+			Console.WriteLine ("new: " + nn);
+			return nn;
+			
+			// call.DeclaringType = ntype;
 		}
 		
 		/// <summary>
@@ -541,10 +554,16 @@ namespace SharpOS.AOT.IR {
 			SetStatus (Status.IRProcessing);
 			
 			foreach (Class _class in this.classes) {
+				List <string> defNames = new List <string> ();
+				
 				this.currentModule = _class.ClassDefinition.Module;
 				this.currentType = _class.ClassDefinition;
 				
 				foreach (Method _method in _class) {
+					if (defNames.Contains (_method.MethodDefinition.ToString ()))
+						throw new Exception ("Already compiled this method: " + 
+							_method.MethodDefinition.ToString ());
+					defNames.Add (_method.MethodDefinition.ToString ());
 					this.currentMethod = _method.MethodDefinition;
 					
 					if (this.options.DumpFilter.Length > 0
