@@ -1,0 +1,7 @@
+2007-07-20  William Lahti  <xfurious@gmail.com>
+	* banished X86-specific code to the ADC layer mechanism
+	* merged in logicalerror's console code and TextMode class
+	* added memory management code to the kernel, got it to AOT properly.
+	The code is not yet active though.
+	* miscellaneous changes
+

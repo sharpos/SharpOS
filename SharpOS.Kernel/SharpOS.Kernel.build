@@ -19,6 +19,9 @@
 			</references>
 			<sources>
 				<include name="*.cs" />
+				<include name="ADC/*.cs" />
+				<include name="ADC/X86/*.cs" />
+				<include name="Keymaps/*.cs" />
 			</sources>
 		</csc>
 	</target>

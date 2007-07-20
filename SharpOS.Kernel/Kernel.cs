@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	Sander van Rossen <sander.vanrossen@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -12,41 +13,83 @@ using System.Runtime.InteropServices;
 using SharpOS;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using SharpOS.ADC.X86;
+using SharpOS.ADC;
 
-namespace SharpOS {
-	public unsafe partial class Kernel {
+namespace SharpOS 
+{
+	public unsafe partial class Kernel 
+	{
+		public static bool stayInLoop = true;
+		static KernelStage kernelStage = KernelStage.Init;
+		
 		[SharpOS.AOT.Attributes.KernelMain]
 		public unsafe static void BootEntry (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
 		{
-			Screen.SetAttributes (Screen.ColorTypes.Yellow, Screen.ColorTypes.Black);
+			TextMode.Setup();
 
-			Screen.WriteLine (Kernel.String ("SharpOS v0.0.0.75 (http://www.sharpos.org)"));
-			Screen.WriteNL ();
+			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 
-			GDT.Setup ();
-			PIC.Setup ();
-			IDT.Setup ();
-			PIT.Setup ();
+			TextMode.WriteLine (Kernel.String ("SharpOS v0.0.0.75 (http://www.sharpos.org)"));
+			TextMode.WriteLine ();
 
-			if (!Multiboot.WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd))
+			Arch.Setup ();
+			Keyboard.Setup();
+
+			if (!Multiboot.WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd)) {
+				TextMode.WriteLine (Kernel.String ("Error: multiboot loader required!"));
 				return;
+			}
 			
-			CPU.Setup ();
+			//CPU.Setup ();
 
-			Screen.GoTo (0, 23);
-			Screen.SetAttributes (Screen.ColorTypes.LightGreen, Screen.ColorTypes.Black);
-			Screen.WriteLine (String ("Pinky: What are we gonna do tonight, Brain?"));
-			Screen.WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
-			Screen.RestoreAttributes ();
+			TextMode.GoTo (0, 23);
+			TextMode.SetAttributes (TextColor.LightGreen, TextColor.Black);
+			TextMode.WriteLine (String ("Pinky: What are we gonna do tonight, Brain?"));
+			TextMode.WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
+			TextMode.RestoreAttributes ();
+
+			SharpOS.Console.Setup();
 
 			//FIXME: this currently crashes the aot-compiler - LogicalError
 			//while (true);
-
-			//this works however;
+			
+			//this works;
 			byte n = 0;
 			while (n < 100) { }
 		}
+
+		public unsafe static void SetKernelStage (KernelStage stage)
+		{
+			kernelStage = stage;
+		}
+		
+		public unsafe static KernelStage GetKernelStage ()
+		{
+			return kernelStage;
+		}
+		
+		public unsafe static void Halt ()
+		{
+			SetKernelStage (KernelStage.Halt);
+			BootControl.Halt ();
+		}
+		
+		public unsafe static void Reboot ()
+		{
+			SetKernelStage (KernelStage.Halt);
+			BootControl.Reboot ();
+		}
+		
+		#region Call
+		public unsafe static void Call (uint address, uint value)
+		{
+			if (address == 0)
+				return;
+
+			Asm.PUSH(&value);
+			Asm.CALL(&address);
+		}
+		#endregion
 
 		#region Stubs
 		[SharpOS.AOT.Attributes.String]

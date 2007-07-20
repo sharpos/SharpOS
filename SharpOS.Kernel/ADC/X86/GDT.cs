@@ -73,11 +73,11 @@ namespace SharpOS.ADC.X86 {
 		{
 			gdtPointer->Setup ((ushort) (sizeof (Entry) * GDTEntries - 1), (uint) gdt);
 
-			Screen.WriteMessage (Kernel.String ("GDT Pointer: 0x"));
-			Screen.WriteNumber (true, (int) gdtPointer->Address);
-			Screen.WriteMessage (Kernel.String (" - 0x"));
-			Screen.WriteNumber (true, gdtPointer->Size);
-			Screen.WriteNL ();
+			TextMode.Write (Kernel.String ("GDT Pointer: 0x"));
+			TextMode.WriteNumber ((int) gdtPointer->Address, true);
+			TextMode.Write (Kernel.String (" - 0x"));
+			TextMode.WriteNumber (gdtPointer->Size, true);
+			TextMode.WriteNL ();
 
 			gdt [SystemSelector >> 3].Setup (0, 0, 0);
 
@@ -98,7 +98,7 @@ namespace SharpOS.ADC.X86 {
 				Entry.Type.Descriptor |
 				Entry.Type.Writable));
 
-			Asm.LGDT (new Memory ("GDTPointer"));
+			Asm.LGDT (new SharpOS.AOT.X86.Memory ("GDTPointer"));
 
 			Asm.MOV (R16.AX, DataSelector);
 			Asm.MOV (Seg.DS, R16.AX);
