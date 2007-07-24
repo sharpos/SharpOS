@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Johann MacDonagh <johann [at] macdonaghs [dot] com>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="SharpOS Kernel" default="build">
+	<property name="debug" value="false" readonly="false" overwrite="false" />
+	<property name="prefix" value="../../build" overwrite="false" />
+	
+	<target name="build">
+		<echo message="Building the SharpOS kernel" />
+		<csc target="exe" output="${path::combine(prefix, 'KeyCompiler.exe')}" debug="${debug}" unsafe="true">
+			<references>
+				<include name="../../build/Mono.GetOptions.dll" />
+			</references>
+			<sources>
+				<include name="*.cs" />
+			</sources>
+		</csc>
+	</target>
+	
+	<target name="clean">
+		<delete file="${path::combine(prefix, 'KeyCompiler.exe')}" failonerror="false" />
+	</target>
+</project>
