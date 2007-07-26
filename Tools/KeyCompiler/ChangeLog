@@ -1,3 +1,17 @@
 2007-07-24  William Lahti  <xfurious@gmail.com>
+	* added support for creating/unpacking keymap archives
+	* added -force option to override safety checks
+	* improved architecture to facilitate Unicode compilation
+	* added UnicodeEncoding class to implement -enc:unicode
+	* decompilation now inserts special key names instead of decimal
+	value.
+	* fixed bug where escaped characters were not encoded correctly, but
+	instead encoded as the character that was escaped. Example: instead of
+	a newline for scancode 28, an 'n' was inserted.
+	* added support for macro arguments (for the archive modes only) using
+	the @ prefix.
+	* other bugfixes
+
+2007-07-24  William Lahti  <xfurious@gmail.com>
 	* started
 

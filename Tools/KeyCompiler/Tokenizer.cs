@@ -396,7 +396,19 @@ namespace SharpOS.Tools {
 			}
 			
 			while (_Caret < Text.Length) {
-				str += c.ToString ();
+				if (skipCheck) {
+					if (c == 'n')
+						str += "\n";
+					else if (c == 'b')
+						str += "\b";
+					else if (c == 't')
+						str += "\t";
+					else if (c == 'r')
+						str += "\r";
+					else
+						str += c.ToString ();
+				} else
+					str += c.ToString ();
 				
 				if (!skipCheck && str.EndsWith (EndStringSequence)) {
 					_EndStringFlag = true;

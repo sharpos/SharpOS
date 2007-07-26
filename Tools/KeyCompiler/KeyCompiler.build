@@ -7,12 +7,12 @@
         *
 -->
 
-<project name="SharpOS Kernel" default="build">
+<project name="KeyCompiler" default="build">
 	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../../build" overwrite="false" />
 	
 	<target name="build">
-		<echo message="Building the SharpOS kernel" />
+		<echo message="Building KeyCompiler" />
 		<csc target="exe" output="${path::combine(prefix, 'KeyCompiler.exe')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="../../build/Mono.GetOptions.dll" />

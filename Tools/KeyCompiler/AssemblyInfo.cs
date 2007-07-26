@@ -16,6 +16,8 @@ using System.Runtime.CompilerServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
+[assembly: Mono.UsageComplement ("[mode] <input-file> ...")]
+
 // The assembly version has following format :
 //
 // Major.Minor.Build.Revision
