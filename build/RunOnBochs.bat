@@ -7,6 +7,6 @@ echo Could not find disk.img
 IF not "%1"=="nopause" pause
 exit
 :run
-cmd /C "Bochs -f ..\util\bochsrc.txt -q"
+cmd /C "Bochs -f ..\util\bochsrc.bxrc -q"
 IF not "%1"=="nopause" pause
 exit
