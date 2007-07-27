@@ -31,7 +31,7 @@
 		
 		<script language="C#">
 			<references>
-				<include name="${path::combine(prefix, 'mono.cecil.dll')}" />
+				<include name="${path::combine(prefix, 'Mono.Cecil.dll')}" />
 			</references>
 			<imports>
 				<import namespace="Mono.Cecil" />
@@ -164,6 +164,10 @@
 				<include name="NUnit/*.cs" />
 			</sources>
 		</csc>
+
+		<echo message="AOT compiling testcases..." />
+		<exec program="${path::combine (prefix, 'SharpOS.AOT.exe')}" 
+			commandline="-d:tests.dump -text-dump -v -o ${path::combine(prefix, 'SharpOS.Kernel.bin')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
 	</target>
 	
 	<target name="clean">
