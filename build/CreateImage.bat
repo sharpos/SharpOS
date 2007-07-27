@@ -24,7 +24,7 @@ echo.
 echo -------------------------------------
 echo Compiling and Creating image
 echo -------------------------------------
-SharpOS.AOT.exe SharpOS.Kernel.dll -v -image -bin-out:SharpOS.bin -out:disk.img
+SharpOS.AOT.exe SharpOS.Kernel.dll -v -image -bin-out:SharpOS.bin -out:.\distro\common\disk.img
 IF not "%1"=="nopause" (
 pause
 ) ELSE (

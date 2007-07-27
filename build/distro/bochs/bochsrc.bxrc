@@ -1,0 +1,10 @@
+megs: 32
+debugger_log: debug.log
+log: info.log
+
+floppya: image=./../common/disk.img, status=inserted
+
+boot: floppy
+
+error: action=report
+panic: action=ask
