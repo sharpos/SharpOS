@@ -12,6 +12,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Reflect = System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
@@ -70,7 +71,8 @@ namespace SharpOS.AOT.IR {
 		
 		List<AssemblyDefinition> assemblies = new List<AssemblyDefinition>();
 		List<Class> classes = new List<Class> ();
-
+		Dictionary<string,byte[]> resources = null;
+		
 		Status status;
 		string currentAssemblyFile;
 		AssemblyDefinition currentAssembly;
@@ -81,6 +83,12 @@ namespace SharpOS.AOT.IR {
 		public Status CurrentStatus {
 			get {
 				return this.status;
+			}
+		}
+		
+		public Dictionary<string,byte[]> Resources {
+			get {
+				return this.resources;
 			}
 		}
 		
@@ -271,23 +279,20 @@ namespace SharpOS.AOT.IR {
 					"ADC stub method `{0}' does not match any ADC methods from type `{1}'",
 					call, adcStubType));
 
-			Message (2, "Replacing ADC method `{0}': AIC namespace = `{1}', ADC namespace = `{2}'", 
-				call.ToString(), rootns, adcLayer.Namespace);
-			Message (3, "                            scope is `{0}', namespace segment = `{1}', class = '{2}'",
+			Message (3, "Replacing ADC method: `{0}'",
+				call.ToString());
+			Message (4, " -- scope: `{0}', ns-segment = `{1}', class = '{2}'",
 				call.DeclaringType.Scope, nsseg, call.DeclaringType.Name);
 			
 			
-			Mono.Cecil.MethodReference nn = new Mono.Cecil.MethodReference (call.Name, ntype, call.ReturnType.ReturnType, call.HasThis, call.ExplicitThis,
-				call.CallingConvention);
+			Mono.Cecil.MethodReference nn = new Mono.Cecil.MethodReference (
+				call.Name, ntype, call.ReturnType.ReturnType, call.HasThis,
+				call.ExplicitThis, call.CallingConvention);
 			
 			foreach (ParameterDefinition def in call.Parameters)
 				nn.Parameters.Add (def);
 			
-			Console.WriteLine ("old: " + call);
-			Console.WriteLine ("new: " + nn);
 			return nn;
-			
-			// call.DeclaringType = ntype;
 		}
 		
 		/// <summary>
@@ -373,6 +378,22 @@ namespace SharpOS.AOT.IR {
 			Message (1, "AOT compiling for processor `{0}'", options.CPU);
 			Run (asm);
 		}
+		
+		public void LoadResources (AssemblyDefinition def)
+		{
+			// TODO: does this cover multi-module assemblies?
+			
+			Message (2, "Adding resources from {0}", def.Name.Name);
+			
+			foreach (EmbeddedResource res in def.MainModule.Resources) {
+				Message (2, "- Added resource {0}/Resources/{1}",
+					def.Name.Name, res.Name);
+				
+				resources [def.Name.Name + "/Resources/" + res.Name] =
+					res.Data;
+			}
+		}
+		
 
 		/// <summary>
 		/// Runs the AOT compiler engine.
@@ -405,11 +426,13 @@ namespace SharpOS.AOT.IR {
 			dump.Section (DumpSection.Root);
 
 			this.asm = asm;
-
+			this.resources = this.options.Resources;
+			
 			foreach (string assemblyFile in options.Assemblies) {
 				bool skip = false;
 
 				Message (1, "Loading assembly `{0}'", assemblyFile);
+				
 				SetStatus (Status.AssemblyLoading);
 				this.currentAssemblyFile = assemblyFile;
 
@@ -417,6 +440,8 @@ namespace SharpOS.AOT.IR {
 
 				this.currentAssembly = library;
 
+				LoadResources (library);
+				
 				// Check for ADCLayerAttribute
 
 				Message (2, "Aggregating ADC layers...");

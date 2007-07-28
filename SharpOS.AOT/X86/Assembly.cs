@@ -470,7 +470,7 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Gets the index of the label.
+		/// Gets the index of the given data label.
 		/// </summary>
 		/// <param name="label">The label.</param>
 		/// <returns></returns>
@@ -485,7 +485,7 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Gets the label address.
+		/// Gets the address of the given data label.
 		/// </summary>
 		/// <param name="label">The label.</param>
 		/// <returns></returns>
@@ -501,11 +501,11 @@ namespace SharpOS.AOT.X86 {
 		
 
 		/// <summary>
-		/// Determines whether [is kernel string] [the specified value].
+		/// Determines whether the given call is marked with a StringAttribute.
 		/// </summary>
-		/// <param name="call">The call.</param>
+		/// <param name="call">The call operand.</param>
 		/// <returns>
-		/// 	<c>true</c> if [is kernel string] [the specified value]; otherwise, <c>false</c>.
+		/// 	<c>true</c> if the method is a String stub; otherwise, <c>false</c>.
 		/// </returns>
 		internal bool IsKernelString (SharpOS.AOT.IR.Operands.Call call)
 		{
@@ -529,11 +529,11 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines whether [is kernel alloc] [the specified call].
+		/// Determines whether the given call is marked with an AllocAttribute.
 		/// </summary>
 		/// <param name="call">The call.</param>
 		/// <returns>
-		/// 	<c>true</c> if [is kernel alloc] [the specified call]; otherwise, <c>false</c>.
+		/// 	<c>true</c> if the method being called is an Alloc stub; otherwise, <c>false</c>.
 		/// </returns>
 		internal bool IsKernelAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
@@ -561,11 +561,12 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines whether [is kernel labelled alloc] [the specified call].
+		/// Determines if the method being called in <paramref name="call" /> is
+		/// marked with a LabelledAllocAttribute.
 		/// </summary>
-		/// <param name="call">The call.</param>
+		/// <param name="call">The call operand.</param>
 		/// <returns>
-		/// 	<c>true</c> if [is kernel labelled alloc] [the specified call]; otherwise, <c>false</c>.
+		/// 	<c>true</c> if the call is a LabelledAlloc stub; otherwise, <c>false</c>.
 		/// </returns>
 		internal bool IsKernelLabelledAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
@@ -596,11 +597,11 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines whether [is kernel label address] [the specified call].
+		/// Determines whether the method being called is marked with LabelAddressAttribute.
 		/// </summary>
 		/// <param name="call">The call.</param>
 		/// <returns>
-		/// 	<c>true</c> if [is kernel label address] [the specified call]; otherwise, <c>false</c>.
+		/// 	<c>true</c> if the method is a LabelAddress stub; otherwise, <c>false</c>.
 		/// </returns>
 		internal bool IsKernelLabelAddress (SharpOS.AOT.IR.Operands.Call call)
 		{
@@ -1223,6 +1224,22 @@ namespace SharpOS.AOT.X86 {
 			this.LABEL (END_BSS);
 		}
 
+		private void AddResources ()
+		{
+			foreach (KeyValuePair <string, byte[]> kvp in this.engine.Resources) {
+				this.engine.Message (3, "Encoding resource `{0}'...",
+					kvp.Key);
+				
+				if (!kvp.Key.Contains ("/Resources/"))
+					throw new Exception ("Bad label for resource: " +
+						kvp.Key);
+				
+				this.LABEL (kvp.Key);
+
+				for (int x = 0; x < kvp.Value.Length; ++x)
+					this.DATA (kvp.Value [x]);
+			}
+		}
 		
 		/// <summary>
 		/// Encodes the specified engine.
@@ -1274,11 +1291,10 @@ namespace SharpOS.AOT.X86 {
 			this.LABEL (END_CODE);
 
 			this.AddData ();
-
 			this.AddSymbols ();
-
 			this.AddBSS ();
-
+			this.AddResources ();
+			
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (THE_END);
 

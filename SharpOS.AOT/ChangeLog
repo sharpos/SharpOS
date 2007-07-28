@@ -1,3 +1,17 @@
+2007-07-28  William Lahti <xfurious@gmail.com>
+	* X86/Assembly.cs: added support for encoding assembly resources into
+	the output binary
+	* X86/Assembly.cs: improved some documentation
+	* X86/AssemblyMethod.cs: removed some debug cruft I accidentally left
+	in
+	* X86/Engine.cs: refactoring
+	* IR/EngineOptions.cs: added a Resources field
+	* IR/Engine.cs: added support for reading the resources from
+	assemblies
+	* IR/Block.cs: removed some irritating messages
+	* Program.cs: added an option for adding resources from the command
+	line and other minor improvements / refactoring
+
 2007-07-19  William Lahti <xfurious@gmail.com>
 	* X86/Assembly.cs: more verbose information for multiple label
 	definition exception

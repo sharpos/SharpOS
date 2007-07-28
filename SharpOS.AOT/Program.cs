@@ -67,6 +67,9 @@ namespace SharpOS.AOT {
 		[GetOpts.Option ("Dump method that contains the defined token", "dump-filter")]
 		public string DumpFilter = string.Empty;
 		
+		[GetOpts.Option (-1, "Specify a resource to add to the output file", 'R', "res")]
+		public string [] Resources = new string [0];
+	
 		public EngineOptions GetEngineOptions()
 		{
 			EngineOptions eo = new EngineOptions();
@@ -91,6 +94,33 @@ namespace SharpOS.AOT {
 				eo.Verbosity = 1;
 
 			eo.DumpFilter = DumpFilter;
+			
+			foreach (string res in Resources) {
+				byte [] contents;
+				byte [] buffer = new byte [1024];
+				int read = 0;
+				int x = 0;
+				Stream fs = null;
+				string key, value;
+				
+				if (!res.Contains (":"))
+					throw new Exception ("Invalid resource: '" +
+						res + "': format is 'name:file'");
+				
+				key = res.Substring (0, res.IndexOf (':'));
+				value = res.Substring (key.Length);
+				fs = File.Open (value, FileMode.Open, FileAccess.Read);
+				contents = new byte [fs.Length];
+
+				while ((read = fs.Read (buffer, 0, buffer.Length)) != 0) {
+					Array.Copy (buffer, 0, contents, x, read);
+					x += read;
+				}
+
+				fs.Close ();
+				
+				eo.Resources.Add (key, contents);
+			}
 
 			return eo;
 		}
@@ -103,7 +133,8 @@ namespace SharpOS.AOT {
 			string interp = null;
 			Stream stm = null;
 			
-			engine.Message(1, "Creating filesystem image `{0}'...", opts.ImageFilename);
+			engine.Message(1, "Creating filesystem image `{0}'...",
+				opts.ImageFilename);
 			
 			if (Environment.OSVersion.Platform == PlatformID.Unix) {
 				// Linux/UNIX style system
@@ -127,11 +158,7 @@ namespace SharpOS.AOT {
 			
 			using (StreamReader sr = new StreamReader(stm)) {
 				using (StreamWriter sw = new StreamWriter(tmpScript)) {
-					string sx = sr.ReadToEnd ();
-
-					Console.WriteLine (sx);
-					
-					sw.Write(sx);
+					sw.Write(sr.ReadToEnd ());
 				}
 			}
 			
@@ -220,8 +247,9 @@ namespace SharpOS.AOT {
 					suffix = "img";
 				
 				if (opts.Assemblies [0].EndsWith (".dll"))
-					opts.OutputFilename = opts.Assemblies [0].Substring (0, opts.Assemblies [0].LastIndexOf ('.'))
-							  + "." + suffix;
+					opts.OutputFilename = opts.Assemblies [0].Substring (0,
+						opts.Assemblies [0].LastIndexOf ('.'))
+						+ "." + suffix;
 				else
 					opts.OutputFilename = opts.Assemblies [0] + ".bin";
 			}

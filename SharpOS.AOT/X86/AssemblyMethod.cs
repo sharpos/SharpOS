@@ -1418,9 +1418,6 @@ namespace SharpOS.AOT.X86 {
 				if (miscellaneous.Operator is SharpOS.AOT.IR.Operators.Miscellaneous
 						&& (miscellaneous.Operator as SharpOS.AOT.IR.Operators.Miscellaneous).Type == Operator.MiscellaneousType.Localloc) {
 
-					Console.WriteLine ("misc op #: {0}", miscellaneous.Operands.Length);
-					Console.WriteLine ("op-0 type: {0}", miscellaneous.Operands [0].GetType ().FullName);
-
 					if (miscellaneous.Operands [0] is Constant) {					
 						int size = Convert.ToInt32 ((miscellaneous.Operands [0] as Constant).Value);
 

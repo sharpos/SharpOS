@@ -7,6 +7,8 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
+using System.Collections.Generic;
+
 namespace SharpOS.AOT.IR {
 
 	/// <summary>
@@ -26,7 +28,9 @@ namespace SharpOS.AOT.IR {
 		public bool ConsoleDump = false;
 		public string AsmFile = null;
 		public string DumpFilter = string.Empty;
-
+		public Dictionary <string, byte[]> Resources =
+			new Dictionary<string,byte []> ();
+		
 		public bool Dump {
 			get {
 				return DumpFile != null;

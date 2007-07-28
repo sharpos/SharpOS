@@ -27,7 +27,9 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new Exception ("'" +
+							method.Method.Name + "(" + parameterTypes +
+							")' is not supported.");
 					}
 					break;
 				

@@ -1069,15 +1069,14 @@ namespace SharpOS.AOT.IR {
 								// replace this call with an equivalent call
 								// to the ADC layer
 
-								this.Method.Engine.Message (2, "Replacing ADC stub call `{0}'", call);
 								call = this.Method.Engine.FixupADCMethod (call);
 							}
 						}
-					} else {
-						this.Method.Engine.Message (3, "Found a reference to undefined method `{0}'",
-									   call.ToString ());
 					}
 
+					// TODO: if def == null, only allow stubs past this, fail gracefully
+					// otherwise.
+					
 					Operand [] operands;
 
 					// If it is not static include the register of the instance into the operands
