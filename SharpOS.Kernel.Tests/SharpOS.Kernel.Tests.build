@@ -24,6 +24,9 @@
 		</ilasm>
 
 		<csc target="library" unsafe="true" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}">
+			<references>
+				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
+			</references>
 			<sources>
 				<include name="CS/*.cs" />
 			</sources>
@@ -32,6 +35,7 @@
 		<script language="C#">
 			<references>
 				<include name="${path::combine(prefix, 'Mono.Cecil.dll')}" />
+				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 			</references>
 			<imports>
 				<import namespace="Mono.Cecil" />
@@ -62,7 +66,7 @@
 										
 								if (unitTests) {
 									tr.WriteLine ("\t[Test]");
-									tr.WriteLine ("\tpublic void Run" + unitTestsCount++ + " ()");
+									tr.WriteLine ("\tpublic void " + entry.DeclaringType.FullName.Replace (".", "_") + "_" + entry.Name + " ()");
 									tr.WriteLine ("\t\t{");
 									tr.WriteLine ("\t\t\tAssert.IsTrue (" + entry.DeclaringType.FullName + "." + entry.Name + " () == 1, \"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
 									tr.WriteLine ("\t\t}");

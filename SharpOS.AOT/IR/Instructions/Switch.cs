@@ -27,5 +27,14 @@ namespace SharpOS.AOT.IR.Instructions {
 			: base (value)
 		{
 		}
+
+		/// <summary>
+		/// Dumps the instruction.
+		/// </summary>
+		/// <param name="dumpProcessor">The dump processor.</param>
+		public override void Dump (DumpProcessor dumpProcessor)
+		{
+			dumpProcessor.AddElement ("switch", "Switch " + this.Value.ToString (), true, true, false);
+		}
 	}
 }

@@ -1635,6 +1635,10 @@ namespace SharpOS.AOT.X86 {
 			this.AddLSHL ();
 			this.AddLSHR ();
 			this.AddLSAR ();
+
+			// TODO remove the dummy System.Object constructor
+			this.LABEL ("System.Object..ctor()");
+			this.RET ();
 		}
 
 		/// <summary>

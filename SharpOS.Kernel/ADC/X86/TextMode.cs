@@ -20,7 +20,8 @@ namespace SharpOS.ADC.X86
 {
 	
 	public unsafe class TextMode
-	{		//FIXME: get row size from video card
+	{
+		//FIXME: get row size from video card
 	
 		static int			x					= 0;
 		static int			y					= 0;

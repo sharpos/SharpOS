@@ -910,11 +910,10 @@ namespace SharpOS.AOT.IR {
 				
 				// Load Locales
 				else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S) {
-					// TODO use the Address() instead of Reference()?
-					Reference reference = new Reference (this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
-					reference.SizeType = Operand.InternalSizeType.I;
+					Address address = new Address (this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
+					address.SizeType = Operand.InternalSizeType.I;
 
-					instruction = new Assign (this.Register (stack), reference);
+					instruction = new Assign (this.Register (stack), address);
 
 				} else if (cilInstruction.OpCode == OpCodes.Ldloc || cilInstruction.OpCode == OpCodes.Ldloc_S) {
 					instruction = new Assign (this.Register (stack), this.Method.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));

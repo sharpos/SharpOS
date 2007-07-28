@@ -201,7 +201,6 @@ namespace SharpOS.AOT.IR {
 			blocks.Add (currentBlock);
 
 			// 1st Step: Split the code in blocks that branch at the end
-
 			for (int i = 0; i < this.methodDefinition.Body.Instructions.Count; i++) {
 				Mono.Cecil.Cil.Instruction instruction = this.methodDefinition.Body.Instructions[i];
 
@@ -363,7 +362,11 @@ namespace SharpOS.AOT.IR {
 				} else if (block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Switch) {
 					block.Type = Block.BlockType.NWay;
 
-					this.FillOuts (block, block.CIL[block.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction[]);
+					// In case none of the switch tests are true it has to continue with the next block 
+					// so it has to be added to the "outs"
+					block.Outs.Add (blocks [i + 1]);
+
+					this.FillOuts (block, block.CIL [block.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction []);
 
 				} else if (block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Br
 						|| block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Br_S) {
@@ -420,7 +423,8 @@ namespace SharpOS.AOT.IR {
 			// Fill The Ins
 			for (int i = 0; i < blocks.Count; i++) {
 				for (int j = 0; j < blocks.Count; j++) {
-					if (blocks[j].Outs.Contains (blocks[i]))
+					if (blocks[j].Outs.Contains (blocks[i])
+						|| (j + 1 == i && blocks[j].Type == Block.BlockType.NWay))
 						blocks[i].Ins.Add (blocks[j]);
 				}
 			}
@@ -467,6 +471,15 @@ namespace SharpOS.AOT.IR {
 		{
 			foreach (Block block in this.Preorder ()) 
 				block.ConvertFromCIL ();
+
+			if (this.methodDefinition.Body.InitLocals
+					&& blocks.Count > 0
+					&& this.methodDefinition.Body.Variables.Count > 0) {
+				for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
+					VariableDefinition variableDefinition = this.methodDefinition.Body.Variables [this.methodDefinition.Body.Variables.Count - i - 1];
+					blocks [0].InsertInstruction (0, new Initialize (this.GetLocal (this.methodDefinition.Body.Variables.Count - i - 1), variableDefinition));
+				}
+			}
 
 			return;
 		}
@@ -695,6 +708,9 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
+			if (engine.Options.Dump)
+				engine.Dump.Dominance (this.blocks);
+		
 			// Compute the Dominance Frontier
 			foreach (Block block in blocks) {
 				if (block.Ins.Count == 0)
@@ -704,7 +720,9 @@ namespace SharpOS.AOT.IR {
 					Block runner = predecessor;
 
 					while (runner != block.ImmediateDominator) {
-						runner.DominanceFrontiers.Add (block);
+						if (!runner.DominanceFrontiers.Contains (block))
+							runner.DominanceFrontiers.Add (block);
+
 						runner = runner.ImmediateDominator;
 					}
 				}
@@ -886,6 +904,7 @@ namespace SharpOS.AOT.IR {
 				}
 
 				this.SSARename (this.blocks [0], count, stack);
+
 			}
 
 			return;
@@ -911,7 +930,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="block">The block.</param>
 		/// <param name="count">The count.</param>
 		/// <param name="stack">The stack.</param>
-		private void SSARename (Block block, Dictionary<string, int> count, Dictionary < string, Stack < int >> stack)
+		private void SSARename (Block block, Dictionary<string, int> count, Dictionary<string, Stack<int>> stack)
 		{
 			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
 				// Update the Operands of the instruction (A = B -> A = B5)
@@ -928,7 +947,7 @@ namespace SharpOS.AOT.IR {
 
 								if (identifier != null)
 									identifier.Version = GetSSAStackValue (stack, identifier.Value);
-							
+
 							} else if (operand is Operands.Object) {
 								Identifier identifier = (operand as Operands.Object).Address;
 
@@ -965,14 +984,14 @@ namespace SharpOS.AOT.IR {
 
 					} else if (assign.Assignee is Operands.Object) {
 						Identifier identifier = (assign.Assignee as Operands.Object).Address;
-						
+
 						identifier.Version = GetSSAStackValue (stack, identifier.Value);
 
 					} else {
 						string id = assign.Assignee.Value;
 
-						count[id]++;
-						stack[id].Push (count[id]);
+						count [id]++;
+						stack [id].Push (count [id]);
 
 						assign.Assignee.Version = count [id];
 					}
@@ -1004,7 +1023,7 @@ namespace SharpOS.AOT.IR {
 
 					PHI phi = instruction as PHI;
 
-					phi.Value.Operands[j].Version = stack[ (phi as Assign).Assignee.Value].Peek();
+					phi.Value.Operands [j].Version = stack [(phi as Assign).Assignee.Value].Peek ();
 				}
 			}
 
@@ -1020,7 +1039,7 @@ namespace SharpOS.AOT.IR {
 				Assign assign = instruction as Assign;
 
 				if (!(assign.Assignee is Reference || assign.Assignee is Field || assign.Assignee is Operands.Object))
-					stack [assign.Assignee.Value].Pop();
+					stack [assign.Assignee.Value].Pop ();
 			}
 
 			return;
@@ -1237,6 +1256,9 @@ namespace SharpOS.AOT.IR {
 			public bool SkipCopyPropagation (Engine engine) 
 			{
 				if (!(definition is Assign) || this.Count == 0)
+					return true;
+
+				if (definition is Initialize)
 					return true;
 
 				Assign assign = definition as Assign;
@@ -1814,7 +1836,7 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public static string GetLabel (Mono.Cecil.MethodReference method)
 		{
-			StringBuilder result = new StringBuilder();
+			StringBuilder result = new StringBuilder ();
 
 			//result.Append (method.ReturnType.ReturnType.FullName + " ");
 			result.Append (method.DeclaringType.FullName + "." + method.Name);
@@ -1828,45 +1850,46 @@ namespace SharpOS.AOT.IR {
 				result.Append (method.Parameters [i].ParameterType.FullName);
 			}
 
-			
+
 			result.Append (")");
 
-			return result.ToString();
+			return result.ToString ();
 		}
 
 		/// <summary>
 		/// If a block that has many predecessors is linked to a block that has many successors
 		/// then an empty edge is inserted. Its used later for the transformation out of SSA.
 		/// </summary>
-		public void EdgeSplit()
+		public void EdgeSplit ()
 		{
-			foreach (Block block in Preorder()) {
+			foreach (Block block in Preorder ()) {
 				if (block.Ins.Count <= 1)
 					continue;
 
 				for (int i = 0; i < block.Ins.Count; i++) {
-					Block predecessor = block.Ins[i];
+					Block predecessor = block.Ins [i];
 
 					if (predecessor.Outs.Count <= 1)
 						continue;
-					
+
 					int position = 0;
 
-					for (; position < predecessor.Outs.Count && predecessor.Outs [position] != block; position++);
+					for (; position < predecessor.Outs.Count && predecessor.Outs [position] != block; position++)
+						;
 
 					if (position == predecessor.Outs.Count)
 						throw new Exception ("In '" + this.MethodFullName + "' Block " + predecessor.Index + " is not linked to the Block " + block.Index + ".");
 
-					Block split = new Block();
+					Block split = new Block ();
 
-					split.Index = this.blocks[this.blocks.Count - 1].Index + 1;
+					split.Index = this.blocks [this.blocks.Count - 1].Index + 1;
 					split.Type = Block.BlockType.OneWay;
-					split.InsertInstruction (0, new Jump());
+					split.InsertInstruction (0, new Jump ());
 					split.Ins.Add (predecessor);
 					split.Outs.Add (block);
 
-					predecessor.Outs[position] = split;
-					block.Ins[i] = split;
+					predecessor.Outs [position] = split;
+					block.Ins [i] = split;
 
 					this.blocks.Add (split);
 				}
@@ -2176,20 +2199,11 @@ namespace SharpOS.AOT.IR {
 				return;
 			}
 
-
-			if (identifier is Argument
-					|| identifier is Field
-					/*|| (identifier is Reference
-						&& !(asmCall && !((identifier as Reference).Value is Argument)))*/)
+			if (identifier is Argument || identifier is Field)
 				return;
 
-			if (asmCall) {
-				if (!(identifier is Reference))
-					throw new Exception ("'" + identifier + "' should be a constant or a reference.");
-
-				identifier = (identifier as Reference).Value;
+			if (asmCall) 
 				identifier.ForceSpill = true;
-			}
 
 			string id = identifier.ID;
 
@@ -2480,6 +2494,9 @@ namespace SharpOS.AOT.IR {
 			this.ClassifyAndLinkBlocks ();
 			this.BlocksOptimization ();
 			this.ConvertFromCIL ();
+			
+			if (this.engine.Options.DumpVerbosity >= 3)
+				DumpBlocks ();
 			
 			this.Dominators ();
 

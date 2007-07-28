@@ -84,6 +84,9 @@ namespace SharpOS.AOT.X86 {
 					} else if (instruction is SharpOS.AOT.IR.Instructions.Assign) {
 						this.HandleAssign (block, instruction);
 
+					} else if (instruction is SharpOS.AOT.IR.Instructions.Switch) {
+						this.HandleSwitch (block, instruction);
+					
 					} else if (instruction is SharpOS.AOT.IR.Instructions.ConditionalJump) {
 						this.HandleConditionalJump (block, instruction);
 
@@ -111,6 +114,26 @@ namespace SharpOS.AOT.X86 {
 			assembly.RET();
 
 			return true;
+		}
+
+		private void HandleSwitch (Block block, SharpOS.AOT.IR.Instructions.Instruction instruction)
+		{
+			SharpOS.AOT.IR.Instructions.Switch _switch = instruction as SharpOS.AOT.IR.Instructions.Switch;
+
+			this.MovRegisterOperand (R32.EAX, _switch.Value);
+
+			// The first block (0) is the one that is used to bail out if the switch tests are all false.
+			for (byte i = 1; i < block.Outs.Count; i++) {
+				string label = method.MethodFullName + " " + block.Outs [i].Index.ToString ();
+				byte _case = (byte) (i - 1);
+
+				assembly.CMP (R32.EAX, _case);
+				assembly.JE (label);
+			}
+
+			assembly.JMP (method.MethodFullName + " " + block.Outs [0].Index.ToString ());
+
+			return;
 		}
 
 		/// <summary>
@@ -395,9 +418,14 @@ namespace SharpOS.AOT.X86 {
 
 				} else if (operand is Argument
 						|| operand is SharpOS.AOT.IR.Operands.Register
+						|| operand is Address
 						|| operand is Reference
 						|| operand is Local) {
 					if (this.IsFourBytes (operand)) {
+						if (operand is Address
+							&& (operand as Address).Value.SizeType == Operand.InternalSizeType.ValueType)
+							operand = (operand as Address).Value;
+
 						if (operand.IsRegisterSet)
 							assembly.PUSH (assembly.GetRegister (operand.Register));
 
@@ -1444,6 +1472,22 @@ namespace SharpOS.AOT.X86 {
 				} else
 					throw new Exception ("'" + instruction + "' is not supported.");
 
+			} else if (assign is Initialize) {
+				Initialize initialize = assign as Initialize;
+
+				if (assign.Assignee.SizeType == Operand.InternalSizeType.ValueType
+						|| this.IsFourBytes (assign.Assignee)) {
+					int size = this.method.Engine.GetTypeSize (initialize.Type.VariableType.ToString() , 4);
+					
+					this.assembly.SUB (R32.ESP, (uint) size);
+					
+					// TODO fill the area with zero
+
+					this.MovOperandRegister (assign.Assignee, R32.ESP);
+
+				} else
+					throw new Exception ("'" + instruction + "' is not supported.");
+
 			} else
 				throw new Exception ("'" + instruction + "' is not supported.");
 		}
@@ -1717,13 +1761,6 @@ namespace SharpOS.AOT.X86 {
 					break;
 
 				result += this.method.Engine.GetTypeSize (parameter.ParameterType.ToString (), 4) >> 2;
-
-				/*result++;
-
-				if (sizeType == Operand.InternalSizeType.I8
-						|| sizeType == Operand.InternalSizeType.U8
-						|| sizeType == Operand.InternalSizeType.R8)
-					result++;*/
 			}
 
 			return result;

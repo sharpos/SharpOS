@@ -532,6 +532,7 @@ namespace SharpOS.AOT.IR {
 
 			this.PushElement ("block");
 
+			this.AddElement ("id", "#" + block.Index.ToString());
 			this.AddElement ("ins", insStr);
 			this.AddElement ("outs", outsStr);
 		}

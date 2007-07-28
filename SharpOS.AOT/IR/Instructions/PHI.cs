@@ -33,24 +33,26 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Dumps the specified prefix.
 		/// </summary>
 		/// <param name="p"></param>
-		public override void Dump (DumpProcessor p) 
+		public override void Dump (DumpProcessor p)
 		{
-			Dictionary<string,string> attr = new Dictionary<string,string>();
+			Dictionary<string, string> attr = new Dictionary<string, string> ();
 			string v = "";
-		
-			p.AddElement ("assignee", this.Assignee.ToString(), false, true, false);
-			p.AddElement ("operation", this.Assignee.ToString (), false, true, false);
-		
+
+			p.PushElement ("assign", true, true, false);
+			p.AddElement ("assignee", this.Assignee.ToString (), false, true, false);
+			p.AddElement ("operation", " = ", false, true, false);
+
 			for (int i = 0; i < this.Value.Operands.Length; i++) {
 				if (i > 0)
 					v += ", ";
-		
-				v += this.Value.Operands[i].ToString();
+
+				v += this.Value.Operands [i].ToString ();
 			}
 
 			v = "{" + v + "}";
 
 			p.AddElement ("value", v, false, true, false);
+			p.PopElement ();
 		}
 	}
 }

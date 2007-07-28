@@ -542,9 +542,6 @@ namespace SharpOS.AOT.IR {
 					this.classes.Add (_class);
 
 					foreach (MethodDefinition entry in type.Constructors) {
-						if (!entry.Name.Equals (".cctor"))
-							continue;
-
 						Method method = new Method (this, entry);
 
 						_class.Add (method);

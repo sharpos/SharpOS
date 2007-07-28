@@ -300,7 +300,8 @@ namespace SharpOS.ADC.X86
 		public static bool RightControl ()
 		{
 			return rightControl;
-		}
+		}
+
 		public static bool ScrollLock ()
 		{
 			return scrollLock;
