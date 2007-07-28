@@ -545,8 +545,6 @@ namespace SharpOS.AOT.IR {
 						Method method = new Method (this, entry);
 
 						_class.Add (method);
-
-						break;
 					}
 
 					foreach (MethodDefinition entry in type.Methods) {
