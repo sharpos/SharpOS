@@ -56,6 +56,21 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		private bool ssaBlock = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this block has been added by the SSA.
+		/// </summary>
+		/// <value><c>true</c> if it has been added by the SSA; otherwise, <c>false</c>.</value>
+		public bool SSABlock {
+			get {
+				return this.ssaBlock;
+			}
+			set {
+				this.ssaBlock = value;
+			}
+		}
+
 		private List<Mono.Cecil.Cil.Instruction> cil = new List<Mono.Cecil.Cil.Instruction> ();
 
 		/// <summary>

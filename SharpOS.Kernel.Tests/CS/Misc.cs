@@ -22,41 +22,5 @@ namespace SharpOS.Kernel.Tests.CS {
 				
 			return 1;
 		}
-		
-		public unsafe static uint Misc2 (uint granularity)
-		{
-			switch (granularity) {
-				case 0:
-					return 4096;
-				case 1:
-					return 131072;
-				default:
-					return 0xFFFFFFFF;
-			}
-		}
-
-		public unsafe static uint CMPMisc2a ()
-		{
-			if (Misc2 (0) == 4096)
-				return 1;
-				
-			return 0;
-		}
-
-		public unsafe static uint CMPMisc2b ()
-		{
-			if (Misc2 (1) == 131072)
-				return 1;
-
-			return 0;
-		}
-
-		public unsafe static uint CMPMisc2c ()
-		{
-			if (Misc2 (5) == 0xFFFFFFFF)
-				return 1;
-
-			return 0;
-		}
 	}
 }

@@ -311,18 +311,33 @@ namespace SharpOS {
 				return;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Misc.CMPMisc2a () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Misc.CMPMisc2a' failed."));
+			if (SharpOS.Kernel.Tests.CS.Switch.CMP0 () != 1) {
+				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Switch.CMP0' failed."));
 				return;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Misc.CMPMisc2b () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Misc.CMPMisc2b' failed."));
+			if (SharpOS.Kernel.Tests.CS.Switch.CMP1 () != 1) {
+				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Switch.CMP1' failed."));
 				return;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Misc.CMPMisc2c () != 1) {
-				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Misc.CMPMisc2c' failed."));
+			if (SharpOS.Kernel.Tests.CS.Switch.CMP2 () != 1) {
+				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Switch.CMP2' failed."));
+				return;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a () != 1) {
+				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a' failed."));
+				return;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b () != 1) {
+				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b' failed."));
+				return;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c () != 1) {
+				Screen.WriteLine (KRNL.String ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c' failed."));
 				return;
 			}
 

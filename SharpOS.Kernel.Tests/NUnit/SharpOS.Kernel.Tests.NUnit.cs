@@ -312,18 +312,33 @@ public class KernelTests {
 			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMPMisc1 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMPMisc1' failed.");
 		}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMPMisc2a ()
+	public void SharpOS_Kernel_Tests_CS_Switch_CMP0 ()
 		{
-			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMPMisc2a () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMPMisc2a' failed.");
+			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP0' failed.");
 		}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMPMisc2b ()
+	public void SharpOS_Kernel_Tests_CS_Switch_CMP1 ()
 		{
-			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMPMisc2b () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMPMisc2b' failed.");
+			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP1 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP1' failed.");
 		}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMPMisc2c ()
+	public void SharpOS_Kernel_Tests_CS_Switch_CMP2 ()
 		{
-			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMPMisc2c () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMPMisc2c' failed.");
+			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP2' failed.");
+		}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2a ()
+		{
+			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a' failed.");
+		}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2b ()
+		{
+			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b' failed.");
+		}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2c ()
+		{
+			Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c' failed.");
 		}
 }

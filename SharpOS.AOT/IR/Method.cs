@@ -692,7 +692,6 @@ namespace SharpOS.AOT.IR {
 					}
 
 					// We found the Immediate Dominator that does not dominate any other dominator but the block itself
-
 					if (!found) {
 						block.ImmediateDominator = immediateDominator;
 						break;
@@ -1882,6 +1881,7 @@ namespace SharpOS.AOT.IR {
 
 					Block split = new Block ();
 
+					split.SSABlock = true;
 					split.Index = this.blocks [this.blocks.Count - 1].Index + 1;
 					split.Type = Block.BlockType.OneWay;
 					split.InsertInstruction (0, new Jump ());
@@ -1944,7 +1944,8 @@ namespace SharpOS.AOT.IR {
 			List<Block> removeBlocks = new List<Block> ();
 
 			foreach (Block block in this.blocks) {
-				if (block.Type == Block.BlockType.OneWay
+				if (block.SSABlock
+						&& block.Type == Block.BlockType.OneWay
 						&& block.Ins.Count == 1
 						&& block.InstructionsCount == 1) {
 
