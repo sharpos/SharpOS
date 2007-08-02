@@ -21,7 +21,7 @@
 				<include name="*.cs" />
 				<include name="ADC/*.cs" />
 				<include name="ADC/X86/*.cs" />
-				<include name="Keymaps/*.cs" />
+				<include name="KeyMaps/*.cs" />
 			</sources>
 		</csc>
 	</target>

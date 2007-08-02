@@ -11,7 +11,7 @@
 	
 	<target name="build">
 		<echo message="Processing data..." />
-		<nant buildfile="./keymaps/keymaps.build" />
+		<nant buildfile="./KeyMaps/KeyMaps.build" />
 	</target>
 
 	<target name="test">
