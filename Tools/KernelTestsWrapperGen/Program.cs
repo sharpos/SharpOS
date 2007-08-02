@@ -1,3 +1,12 @@
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -15,8 +24,6 @@ namespace KernelTestsWrapperGen {
 
 		public static void ProcessAssembly (bool unitTests, string path, TextWriter tr, string assemblyFile)
 		{
-			// project.Log(Level.Info, "Processing: " + assemblyFile);
-
 			AssemblyDefinition library = AssemblyFactory.GetAssembly (assemblyFile);
 
 			foreach (TypeDefinition type in library.MainModule.Types) {
@@ -27,8 +34,6 @@ namespace KernelTestsWrapperGen {
 					if (!(entry.IsStatic
 							&& entry.ImplAttributes == MethodImplAttributes.Managed
 							&& entry.Name.StartsWith ("CMP"))) {
-
-						// project.Log(Level.Info, "Ignoring: " + entry.ToString());
 
 						continue;
 					}
@@ -47,8 +52,6 @@ namespace KernelTestsWrapperGen {
 						tr.WriteLine ("\t\t\t}");
 						tr.WriteLine ("");
 					}
-
-					// project.Log(Level.Info, entry.DeclaringType.FullName + "." + entry.Name);
 				}
 			}
 		}
@@ -80,7 +83,6 @@ namespace KernelTestsWrapperGen {
 		{
 			string ilDLL = Path.Combine (path, "SharpOS.Kernel.Tests.IL.dll");
 			string csDLL = Path.Combine (path, "SharpOS.Kernel.Tests.CS.dll");
-
 
 			TextWriter tr = OpenFile (path, "Wrapper.cs");
 

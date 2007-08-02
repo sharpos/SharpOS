@@ -15,7 +15,7 @@
 	
 	<target name="build">
 		<echo message="Building SharpOS AOT Core" />
-    <copy file="../../References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
+		<copy file="../../References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
 		<csc target="library" output="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" 
 				debug="${debug}" unsafe="true">
 			<references>
@@ -33,16 +33,17 @@
 		</csc>
 
 	</target>
-  <target name="fxcop" depends="build">
-    <exec program="fxcopcmd.exe"
-      commandline="/p:SharpOS.AOT.Core.fxcop /o:${path::combine(prefix, 'SharpOS.AOT.Core-fxcop.xml')}" failonerror="false"/>
-  </target>
+	
+	<target name="fxcop" depends="build">
+		<exec program="fxcopcmd.exe"
+			commandline="/p:SharpOS.AOT.Core.fxcop /o:${path::combine(prefix, 'SharpOS.AOT.Core-fxcop.xml')}" failonerror="false"/>
+	</target>
 
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.dll.mdb')}" failonerror="false" />
-    <delete file="${path::combine(prefix, 'SharpOS.AOT.Core.pdb')}" failonerror="false" />
-    <delete file="${path::combine(prefix, 'SharpOS.AOT.Core.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.pdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.xml')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'Mono.Cecil.dll')}" failonerror="false" />
 	</target>
 </project>

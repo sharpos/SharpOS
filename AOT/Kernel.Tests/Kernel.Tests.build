@@ -15,6 +15,7 @@
 	<target name="build">
 		<echo message="Building Test Kernel" />
 		
+		<copy file="../../References/nunit.framework.dll" tofile="${path::combine(prefix, 'nunit.framework.dll')}" />
 		<mkdir dir="${prefix}" />
 
 		<ilasm target="dll" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}">
@@ -32,119 +33,8 @@
 			</sources>
 		</csc>
 		
-		<script language="C#">
-			<references>
-				<include name="${path::combine(prefix, 'Mono.Cecil.dll')}" />
-				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
-			</references>
-			<imports>
-				<import namespace="Mono.Cecil" />
-				<import namespace="Mono.Cecil.Cil" />
-				<import namespace="Mono.Cecil.Metadata" />
-			</imports>
-			<code>
-				<![CDATA[
-					public static void ProcessAssembly (bool unitTests, Project project, TextWriter tr, string assemblyFile)
-					{
-						// project.Log(Level.Info, "Processing: " + assemblyFile);
-
-						AssemblyDefinition library = AssemblyFactory.GetAssembly (assemblyFile);
-						
-						foreach (TypeDefinition type in library.MainModule.Types) {
-							if (type.Name.Equals ("<Module>"))
-								continue;
-								
-							foreach (MethodDefinition entry in type.Methods) {
-								if (!(entry.IsStatic
-										&& entry.ImplAttributes == MethodImplAttributes.Managed
-										&& entry.Name.StartsWith ("CMP"))) {
-									
-									// project.Log(Level.Info, "Ignoring: " + entry.ToString());
-									
-									continue;
-								}
-										
-								if (unitTests) {
-									tr.WriteLine ("\t[Test]");
-									tr.WriteLine ("\tpublic void " + entry.DeclaringType.FullName.Replace (".", "_") + "_" + entry.Name + " ()");
-									tr.WriteLine ("\t\t{");
-									tr.WriteLine ("\t\t\tAssert.IsTrue (" + entry.DeclaringType.FullName + "." + entry.Name + " () == 1, \"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
-									tr.WriteLine ("\t\t}");
-									
-								} else {
-									tr.WriteLine ("\t\t\tif (" + entry.DeclaringType.FullName + "." + entry.Name + " () != 1) {");
-									tr.WriteLine ("\t\t\t\tScreen.WriteLine (KRNL.String (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\"));");
-									tr.WriteLine ("\t\t\t\treturn;");
-									tr.WriteLine ("\t\t\t}");
-									tr.WriteLine ("");
-								}
-								
-								// project.Log(Level.Info, entry.DeclaringType.FullName + "." + entry.Name);
-							}
-						}
-					}
-					
-					public static TextWriter OpenFile (Project project, string name)
-					{
-						TextWriter tr = new StreamWriter (File.Open (Path.Combine (project.BaseDirectory, name), FileMode.Create));
-						tr.WriteLine ("//");
-						tr.WriteLine ("// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)");
-						tr.WriteLine ("//");
-						tr.WriteLine ("// Authors:");
-						tr.WriteLine ("//	Mircea-Cristian Racasan <darx_kies@gmx.net>");
-						tr.WriteLine ("//");
-						tr.WriteLine ("// Licensed under the terms of the GNU GPL License version 2.");
-						tr.WriteLine ("//");
-
-						tr.WriteLine ("");
-						
-						return tr;
-					}
-					
-					private static int unitTestsCount = 0;
-					
-					public static void ScriptMain (Project project)
-					{
-						string ilDLL = Path.Combine (project.BaseDirectory, Path.Combine (project.Properties["prefix"], "SharpOS.Kernel.Tests.IL.dll"));
-						string csDLL = Path.Combine (project.BaseDirectory, Path.Combine (project.Properties["prefix"], "SharpOS.Kernel.Tests.CS.dll"));
-
-						
-						TextWriter tr = OpenFile (project, "Wrapper.cs");
-						
-						tr.WriteLine ("namespace SharpOS {");
-						tr.WriteLine ("\tpublic unsafe partial class KRNL {");
-						tr.WriteLine ("\t\tprotected static void RunTests ()");
-						tr.WriteLine ("\t\t{");
-						
-						ProcessAssembly (false, project, tr, ilDLL);
-						ProcessAssembly (false, project, tr, csDLL);
-
-						tr.WriteLine ("\t\t\tScreen.WriteLine (KRNL.String (\"All test cases have completed successfully!\"));");
-						
-						tr.WriteLine ("\t\t}");
-						tr.WriteLine ("\t}");
-						tr.WriteLine ("}");
-						tr.Close ();
-						
-						
-						tr = OpenFile (project, "NUnit/SharpOS.Kernel.Tests.NUnit.cs");
-						tr.WriteLine ("using NUnit.Framework;");
-						
-						tr.WriteLine ("");
-						
-						tr.WriteLine ("[TestFixture]");
-						tr.WriteLine ("public class KernelTests {");
-
-						ProcessAssembly (true, project, tr, ilDLL);
-						ProcessAssembly (true, project, tr, csDLL);
-						
-						tr.WriteLine ("}");
-
-						tr.Close ();
-					}
-				]]>
-			</code>
-		</script>
+		<echo message="Generating Wrapper files..." />
+		<exec program="${path::combine (prefix, 'KernelTestsWrapperGen.exe')}" />
 		
 		<csc target="library" unsafe="true" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')}">
 			<references>
@@ -159,7 +49,7 @@
 		
 		<csc target="library" unsafe="true" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.NUnit.dll')}">
 			<references>
-				<include name="../SharpOS.AOT.Tests/References/nunit.framework.dll" />
+				<include name="${path::combine(prefix, 'nunit.framework.dll')}" />
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}" />
 				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
