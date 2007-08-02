@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 SharpOS Team
+	*
+	* Authors:
+	*	William Lahti
+	*
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="Keymaps" default="build">
+	<description>Compiles the keymaps to binary form</description>
+
+	<property name="debug" value="false" readonly="false" overwrite="false" />
+	<property name="prefix" value="../build/Keymaps" />
+	<property name="compiler" value="../build/KeyCompiler.exe" />
+
+	<target name="build">
+		<echo message="Building SharpOS AOT compiler" />
+		
+		<mkdir dir="${prefix}" />
+		
+		<!-- make sure the compiler is built -->
+		<if test="${file::exists(compiler) == false}">
+			<property name="oldprefix" value="${prefix}" />
+			<property name="prefix" value="../../build" />
+			<nant buildfile="../Tools/KeyCompiler/KeyCompiler.build" />
+			<property name="prefix" value="${oldprefix}" />
+		</if>
+
+		<exec program="${compiler}" commandline="US.skm -o:${prefix}/US.bin" />
+	</target>
+
+	<target name="clean">
+		<delete file="${prefix}/US.bin" failonerror="false" />
+	</target>
+</project>

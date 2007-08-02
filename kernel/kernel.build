@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Johann MacDonagh <johann [at] macdonaghs [dot] com>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="SharpOS" default="build">
+	
+	<target name="build">
+		<echo message="Building the SharpOS kernel" />
+		<nant buildfile="./SharpOS.Kernel.Core/SharpOS.Kernel.Core.build" />
+		<!-- <nant buildfile="./korlib/korlib.build" /> -->
+	</target>
+
+	<target name="test">
+		<!-- nothing yet -->
+	</target>
+	
+	<target name="clean">
+		<nant buildfile="./SharpOS.Kernel/SharpOS.Kernel.build" target="clean" />
+	</target>
+</project>

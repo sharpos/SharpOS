@@ -15,7 +15,7 @@
 		<echo message="Building KeyCompiler" />
 		<csc target="exe" output="${path::combine(prefix, 'KeyCompiler.exe')}" debug="${debug}" unsafe="true">
 			<references>
-				<include name="../../build/Mono.GetOptions.dll" />
+				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 			</references>
 			<sources>
 				<include name="*.cs" />

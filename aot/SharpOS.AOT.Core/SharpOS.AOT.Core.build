@@ -19,7 +19,7 @@
 		<csc target="library" output="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" 
 				debug="${debug}" unsafe="true">
 			<references>
-				<include name="References/Mono.Cecil.dll" />
+				<include name="${path::combine(prefix, 'Mono.Cecil.dll')}" />
 			</references>
 			<sources>
 				<include name="*.cs" />
