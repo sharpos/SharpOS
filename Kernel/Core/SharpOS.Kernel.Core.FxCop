@@ -2,7 +2,7 @@
 <FxCopProject Version="1.35" Name="SharpOS.Kernel.Core">
  <ProjectOptions>
   <SharedProject>True</SharedProject>
-  <Stylesheet Apply="True">http://www.gotdotnet.com/team/fxcop//xsl/1.35/FxCopReport.xsl</Stylesheet>
+  <Stylesheet Apply="False">http://www.gotdotnet.com/team/fxcop//xsl/1.35/FxCopReport.xsl</Stylesheet>
   <SaveMessages>
    <Project Status="Excluded" NewOnly="False" />
    <Report Status="Active" NewOnly="False" />
