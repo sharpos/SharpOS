@@ -36,6 +36,11 @@
 		</csc>
 	</target>
 
+  <target name="fxcop" depends="build">
+    <exec program="fxcopcmd.exe"
+      commandline="/p:SharpOS.AOT.fxcop /o:${path::combine(prefix, 'SharpOS.AOT-fxcop.xml')}" failonerror="false"/>
+  </target>
+
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe.mdb')}" failonerror="false" />

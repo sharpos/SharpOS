@@ -25,8 +25,13 @@
 			</sources>
 		</csc>
 	</target>
-	
-	<target name="clean">
+  
+  <target name="fxcop" depends="build">
+    <exec program="fxcopcmd.exe"
+      commandline="/p:SharpOS.Kernel.Core.fxcop /o:${path::combine(prefix, 'SharpOS.Kernel-fxcop.xml')}" failonerror="false"/>
+  </target>
+
+  <target name="clean">
 		<delete file="${path::combine(prefix, 'SharpOS.Kernel.dll')}" failonerror="false" />
 	</target>
 </project>

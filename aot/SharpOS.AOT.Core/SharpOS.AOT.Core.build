@@ -34,6 +34,10 @@
 		
 		<copy file="References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
 	</target>
+  <target name="fxcop" depends="build">
+    <exec program="fxcopcmd.exe"
+      commandline="/p:SharpOS.AOT.Core.fxcop /o:${path::combine(prefix, 'SharpOS.AOT.Core-fxcop.xml')}" failonerror="false"/>
+  </target>
 
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" failonerror="false" />
