@@ -12,6 +12,6 @@ using System.Text;
 
 namespace SharpOS.AOT.Attributes {
 	[AttributeUsage (AttributeTargets.Method)]
-	public class AllocAttribute : Attribute {
+	public sealed class AllocAttribute : Attribute {
 	}
 }

@@ -18,7 +18,7 @@ namespace SharpOS.AOT.Attributes {
 	/// in an assembly. This is used to support nested namespaces.
 	/// </summary>
 	[AttributeUsage (AttributeTargets.Assembly)]
-	public class ADCInterfaceAttribute : Attribute {
+	public sealed class ADCInterfaceAttribute : Attribute {
 		public ADCInterfaceAttribute (string ns)
 		{
 			Namespace = ns;

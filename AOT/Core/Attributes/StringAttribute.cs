@@ -19,6 +19,6 @@ namespace SharpOS.AOT.Attributes {
 	/// AOTed code.
 	/// </summary>
 	[AttributeUsage (AttributeTargets.Method)]
-	public class StringAttribute : Attribute {
+	public sealed class StringAttribute : Attribute {
 	}
 }

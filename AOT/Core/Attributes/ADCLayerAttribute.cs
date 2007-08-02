@@ -21,7 +21,7 @@ namespace SharpOS.AOT.Attributes {
 	/// namespace.
 	/// </summary>
 	[AttributeUsage (AttributeTargets.Assembly, AllowMultiple = true)]
-	public class ADCLayerAttribute : Attribute {
+	public sealed class ADCLayerAttribute : Attribute {
 		public ADCLayerAttribute (string cpu, string ns)
 		{
 			CPU = cpu;

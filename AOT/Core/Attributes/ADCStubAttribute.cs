@@ -18,7 +18,7 @@ namespace SharpOS.AOT.Attributes {
 	/// the ADC layer in use at AOT compile-time.
 	/// </summary>
 	[AttributeUsage (AttributeTargets.Method)]
-	public class ADCStubAttribute : Attribute {
+	public sealed class ADCStubAttribute : Attribute {
 	}
 	
 }

@@ -12,7 +12,7 @@ using System.Text;
 
 namespace SharpOS.AOT.Attributes {
 	[AttributeUsage (AttributeTargets.Method)]
-	public class LabelAttribute : Attribute {
+	public sealed class LabelAttribute : Attribute {
 		public LabelAttribute (string label)
 		{
 		}
