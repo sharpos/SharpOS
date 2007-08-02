@@ -4,17 +4,17 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5E0259D4-4102-11DC-8314-0800200C9A66}</ProjectGuid>
+    <ProjectGuid>{14D3B428-413F-11DC-8314-0800200C9A66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpOS.Kernel.Tests</RootNamespace>
-    <AssemblyName>SharpOS.Kernel.Tests</AssemblyName>
+    <RootNamespace>SharpOS.Kernel.Tests.CS</RootNamespace>
+    <AssemblyName>SharpOS.Kernel.Tests.CS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -43,7 +43,7 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\SharpOS.AOT.Core.csproj">
+    <ProjectReference Include="..\..\Core\SharpOS.AOT.Core.csproj">
       <Project>{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}</Project>
       <Name>SharpOS.AOT.Core</Name>
     </ProjectReference>
