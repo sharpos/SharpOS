@@ -75,7 +75,7 @@ namespace SharpOS.AOT.X86 {
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
 					if (instruction is SharpOS.AOT.IR.Instructions.Call
-							&& assembly.IsAssemblyStub ( (instruction as SharpOS.AOT.IR.Instructions.Call).Method.Method.DeclaringType.FullName)) {
+							&& Assembly.IsAssemblyStub ( (instruction as SharpOS.AOT.IR.Instructions.Call).Method.Method.DeclaringType.FullName)) {
 						this.HandleAssemblyStub (block, instruction);
 
 					} else if (instruction is SharpOS.AOT.IR.Instructions.Call) {
@@ -151,8 +151,8 @@ namespace SharpOS.AOT.X86 {
 				SharpOS.AOT.IR.Operands.Boolean expression = jump.Value as SharpOS.AOT.IR.Operands.Boolean;
 
 				if (expression.Operator is SharpOS.AOT.IR.Operators.Relational) {
-					if (this.IsFourBytes (expression.Operands[0])
-							&& this.IsFourBytes (expression.Operands[1])) {
+					if (IsFourBytes (expression.Operands[0])
+							&& IsFourBytes (expression.Operands[1])) {
 						R32Type spare1 = assembly.GetSpareRegister();
 						R32Type spare2 = assembly.GetSpareRegister();
 
@@ -237,7 +237,7 @@ namespace SharpOS.AOT.X86 {
 					SharpOS.AOT.IR.Operators.Boolean boolean = expression.Operator as SharpOS.AOT.IR.Operators.Boolean;
 
 					if (expression.Operands[0].IsRegisterSet) {
-						R32Type register = assembly.GetRegister (expression.Operands[0].Register);
+						R32Type register = Assembly.GetRegister (expression.Operands[0].Register);
 
 						assembly.TEST (register, register);
 
@@ -311,7 +311,7 @@ namespace SharpOS.AOT.X86 {
 					Operand operand = (call.Value.Operands[i] as SharpOS.AOT.IR.Operands.Reference).Value;
 
 					if (operand.IsRegisterSet) {
-						Register register = assembly.GetRegister (operand.Register);
+						Register register = Assembly.GetRegister (operand.Register);
 						parameterTypes += register.GetType().Name;
 						operands[i] = register;
 
@@ -376,9 +376,9 @@ namespace SharpOS.AOT.X86 {
 					this.assembly.PUSH (R32.ECX);
 
 					if (operand is SharpOS.AOT.IR.Operands.Object) {
-						if (this.IsFourBytes (_object.Address)) {
+						if (IsFourBytes (_object.Address)) {
 							if (_object.Address.IsRegisterSet)
-								this.MovRegisterRegister (R32.ESI, assembly.GetRegister (_object.Address.Register));
+								this.MovRegisterRegister (R32.ESI, Assembly.GetRegister (_object.Address.Register));
 
 							else
 								this.assembly.LEA (R32.ESI, this.GetMemory (_object.Address as Identifier));
@@ -402,12 +402,12 @@ namespace SharpOS.AOT.X86 {
 					this.assembly.POP (R32.ESI);
 
 				} else  if (operand is Constant) {
-					if (this.IsFourBytes (operand)) {
+					if (IsFourBytes (operand)) {
 						Int32 value = Convert.ToInt32 ((operand as Constant).Value);
 
 						assembly.PUSH ((UInt32) value);
 
-					} else if (this.IsEightBytes (operand)) {
+					} else if (IsEightBytes (operand)) {
 						Int64 value = Convert.ToInt64 ((operand as Constant).Value);
 
 						assembly.PUSH ((UInt32) (value >> 32));
@@ -421,13 +421,13 @@ namespace SharpOS.AOT.X86 {
 						|| operand is Address
 						|| operand is Reference
 						|| operand is Local) {
-					if (this.IsFourBytes (operand)) {
+					if (IsFourBytes (operand)) {
 						if (operand is Address
 							&& (operand as Address).Value.SizeType == Operand.InternalSizeType.ValueType)
 							operand = (operand as Address).Value;
 
 						if (operand.IsRegisterSet)
-							assembly.PUSH (assembly.GetRegister (operand.Register));
+							assembly.PUSH (Assembly.GetRegister (operand.Register));
 
 						else {
 							this.MovRegisterMemory (R32.EAX, operand as Identifier);
@@ -465,7 +465,7 @@ namespace SharpOS.AOT.X86 {
 				this.MovRegisterConstant (register, operand as Constant);
 
 			} else if (operand.IsRegisterSet) {
-				this.MovRegisterRegister (register, assembly.GetRegister (operand.Register));
+				this.MovRegisterRegister (register, Assembly.GetRegister (operand.Register));
 
 			} else
 				this.MovRegisterMemory (register, operand as Identifier);
@@ -499,7 +499,7 @@ namespace SharpOS.AOT.X86 {
 		private void MovOperandRegister (Operand operand, R32Type register)
 		{
 			if (operand.IsRegisterSet)
-				this.MovRegisterRegister (assembly.GetRegister (operand.Register), register);
+				this.MovRegisterRegister (Assembly.GetRegister (operand.Register), register);
 
 			else
 				this.MovMemoryRegister (operand as Identifier, register);
@@ -529,14 +529,14 @@ namespace SharpOS.AOT.X86 {
 				assembly.MOV (register, memory as DWordMemory);
 
 			else if (memory is WordMemory) {
-				if (this.IsSigned (identifier))
+				if (IsSigned (identifier))
 					assembly.MOVSX (register, memory as WordMemory);
 
 				else
 					assembly.MOVZX (register, memory as WordMemory);
 
 			} else if (memory is ByteMemory) {
-				if (this.IsSigned (identifier))
+				if (IsSigned (identifier))
 					assembly.MOVSX (register, memory as ByteMemory);
 
 				else
@@ -596,7 +596,7 @@ namespace SharpOS.AOT.X86 {
 				ByteMemory byteMemory = this.GetMemory (identifier) as ByteMemory;
 
 				this.MovRegisterRegister (spare, register);
-				assembly.MOV (byteMemory, assembly.Get8BitRegister (spare));
+				assembly.MOV (byteMemory, Assembly.Get8BitRegister (spare));
 
 				assembly.FreeSpareRegister (spare);
 
@@ -605,7 +605,7 @@ namespace SharpOS.AOT.X86 {
 				WordMemory wordMemory = this.GetMemory (identifier) as WordMemory;
 
 				this.MovRegisterRegister (spare, register);
-				assembly.MOV (wordMemory, assembly.Get16BitRegister (spare));
+				assembly.MOV (wordMemory, Assembly.Get16BitRegister (spare));
 
 				assembly.FreeSpareRegister (spare);
 
@@ -800,8 +800,8 @@ namespace SharpOS.AOT.X86 {
 				second = temp;
 			}
 
-			if (this.IsEightBytes (first)
-					|| this.IsEightBytes (second)) {
+			if (IsEightBytes (first)
+					|| IsEightBytes (second)) {
 				string errorLabel = assembly.GetCMPLabel;
 				string okLabel = assembly.GetCMPLabel;
 				string endLabel = assembly.GetCMPLabel;
@@ -826,7 +826,7 @@ namespace SharpOS.AOT.X86 {
 					assembly.CMP (register, (UInt32) value);
 
 				} else if (second.IsRegisterSet) {
-					assembly.CMP (register, assembly.GetRegister (second.Register));
+					assembly.CMP (register, Assembly.GetRegister (second.Register));
 
 				} else {
 					Memory memory = this.GetMemory (second as Identifier);
@@ -1082,7 +1082,7 @@ namespace SharpOS.AOT.X86 {
 						assembly.ADD (register, (UInt32) value);
 
 					} else if (second.IsRegisterSet) {
-						assembly.ADD (register, assembly.GetRegister (second.Register));
+						assembly.ADD (register, Assembly.GetRegister (second.Register));
 
 					} else {
 						R32Type spareRegister = this.assembly.GetSpareRegister ();
@@ -1102,7 +1102,7 @@ namespace SharpOS.AOT.X86 {
 						assembly.SUB (register, value);
 
 					} else if (second.IsRegisterSet) {
-						assembly.SUB (register, assembly.GetRegister (second.Register));
+						assembly.SUB (register, Assembly.GetRegister (second.Register));
 
 					} else {
 						R32Type spareRegister = this.assembly.GetSpareRegister ();
@@ -1121,7 +1121,7 @@ namespace SharpOS.AOT.X86 {
 						assembly.IMUL (register, value);
 
 					} else if (second.IsRegisterSet) {
-						assembly.IMUL (register, assembly.GetRegister (second.Register));
+						assembly.IMUL (register, Assembly.GetRegister (second.Register));
 
 					} else {
 						R32Type spareRegister = this.assembly.GetSpareRegister ();
@@ -1176,7 +1176,7 @@ namespace SharpOS.AOT.X86 {
 						assembly.AND (register, value);
 
 					} else if (second.IsRegisterSet) {
-						assembly.AND (register, assembly.GetRegister (second.Register));
+						assembly.AND (register, Assembly.GetRegister (second.Register));
 
 					} else {
 						R32Type spareRegister = this.assembly.GetSpareRegister ();
@@ -1196,7 +1196,7 @@ namespace SharpOS.AOT.X86 {
 						assembly.OR (register, value);
 
 					} else if (second.IsRegisterSet) {
-						assembly.OR (register, assembly.GetRegister (second.Register));
+						assembly.OR (register, Assembly.GetRegister (second.Register));
 
 					} else {
 						R32Type spareRegister = this.assembly.GetSpareRegister ();
@@ -1275,13 +1275,13 @@ namespace SharpOS.AOT.X86 {
 				R32Type register;
 
 				if (assign.Assignee.IsRegisterSet)
-					register = this.assembly.GetRegister (assign.Assignee.Register);
+					register = Assembly.GetRegister (assign.Assignee.Register);
 
 				else
-					register = this.assembly.GetSpareRegister ();
+					register = assembly.GetSpareRegister ();
 
 				if (address.Value.IsRegisterSet)
-					assembly.MOV (register, this.assembly.GetRegister (address.Value.Register));
+					assembly.MOV (register, Assembly.GetRegister (address.Value.Register));
 
 				else
 					assembly.LEA (register, this.GetMemory (address.Value));
@@ -1293,8 +1293,8 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (assign.Value is Constant) {
-				if (this.IsFourBytes (assign.Assignee)
-						|| this.IsEightBytes (assign.Assignee)) {
+				if (IsFourBytes (assign.Assignee)
+						|| IsEightBytes (assign.Assignee)) {
 					if (assign.Assignee.IsRegisterSet)
 						this.MovRegisterConstant (assign);
 
@@ -1311,8 +1311,8 @@ namespace SharpOS.AOT.X86 {
 
 				} else if (!assign.Assignee.IsRegisterSet
 						&& !assign.Value.IsRegisterSet) {
-					if (this.IsFourBytes (assign.Assignee)
-							|| this.IsEightBytes (assign.Assignee)) {
+					if (IsFourBytes (assign.Assignee)
+							|| IsEightBytes (assign.Assignee)) {
 						this.MovMemoryMemory (assign);
 
 					} else
@@ -1320,7 +1320,7 @@ namespace SharpOS.AOT.X86 {
 
 				} else if (!assign.Assignee.IsRegisterSet
 						&& assign.Value.IsRegisterSet) {
-					if (this.IsFourBytes (assign.Assignee)) {
+					if (IsFourBytes (assign.Assignee)) {
 						this.MovMemoryRegister (assign);
 
 					} else 
@@ -1328,7 +1328,7 @@ namespace SharpOS.AOT.X86 {
 
 				} else if (assign.Assignee.IsRegisterSet
 						&& !assign.Value.IsRegisterSet) {
-					if (this.IsFourBytes (assign.Assignee))
+					if (IsFourBytes (assign.Assignee))
 						this.MovRegisterMemory (assign);
 
 					else
@@ -1339,9 +1339,9 @@ namespace SharpOS.AOT.X86 {
 					throw new Exception ("'" + instruction + "' is not supported.");
 
 			} else if (assign.Value is Arithmetic) {
-				if (this.IsFourBytes (assign.Assignee)) {
+				if (IsFourBytes (assign.Assignee)) {
 					if (assign.Assignee.IsRegisterSet)
-						this.MovRegisterArithmetic (assembly.GetRegister (assign.Assignee.Register), assign.Value as Arithmetic);
+						this.MovRegisterArithmetic (Assembly.GetRegister (assign.Assignee.Register), assign.Value as Arithmetic);
 
 					else {
 						R32Type register = assembly.GetSpareRegister();
@@ -1353,7 +1353,7 @@ namespace SharpOS.AOT.X86 {
 						assembly.FreeSpareRegister (register);
 					}
 
-				} else if (this.IsEightBytes (assign.Assignee)) {
+				} else if (IsEightBytes (assign.Assignee)) {
 					this.MovRegisterArithmetic (R32.EAX, R32.EDX, assign.Value as Arithmetic);
 
 					this.MovMemoryRegister (assign.Assignee, R32.EAX, R32.EDX);
@@ -1362,9 +1362,9 @@ namespace SharpOS.AOT.X86 {
 					throw new Exception ("'" + instruction + "' is not supported.");
 
 			} else if (assign.Value is SharpOS.AOT.IR.Operands.Boolean) {
-				if (this.IsFourBytes (assign.Assignee)) {
+				if (IsFourBytes (assign.Assignee)) {
 					if (assign.Assignee.IsRegisterSet) {
-						this.MovRegisterBoolean (assembly.GetRegister (assign.Assignee.Register), assign.Value as SharpOS.AOT.IR.Operands.Boolean);
+						this.MovRegisterBoolean (Assembly.GetRegister (assign.Assignee.Register), assign.Value as SharpOS.AOT.IR.Operands.Boolean);
 
 					} else {
 						R32Type register = assembly.GetSpareRegister();
@@ -1382,12 +1382,12 @@ namespace SharpOS.AOT.X86 {
 			} else if (assign.Value is SharpOS.AOT.IR.Operands.Call) {
 				SharpOS.AOT.IR.Operands.Call call = assign.Value as SharpOS.AOT.IR.Operands.Call;
 
-				if (assembly.IsKernelString (call)) {
+				if (Assembly.IsKernelString (call)) {
 					this.HandleAssign (block, new Assign (assign.Assignee, call.Operands[0]));
 
-				} else if (assembly.IsKernelAlloc (call)) {
+				} else if (Assembly.IsKernelAlloc (call)) {
 					if (assign.Assignee.IsRegisterSet)
-						this.assembly.MOV (this.assembly.GetRegister (assign.Assignee.Register), this.assembly.BSSAlloc (Convert.ToUInt32 ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value)));
+						this.assembly.MOV (Assembly.GetRegister (assign.Assignee.Register), this.assembly.BSSAlloc (Convert.ToUInt32 ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value)));
 
 					else {
 						R32Type register = this.assembly.GetSpareRegister ();
@@ -1399,9 +1399,9 @@ namespace SharpOS.AOT.X86 {
 						this.assembly.FreeSpareRegister (register);
 					}
 
-				} else if (assembly.IsKernelLabelledAlloc (call)) {
+				} else if (Assembly.IsKernelLabelledAlloc (call)) {
 					if (assign.Assignee.IsRegisterSet)
-						this.assembly.MOV (this.assembly.GetRegister (assign.Assignee.Register), this.assembly.BSSAlloc ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), Convert.ToUInt32 ((call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value)));
+						this.assembly.MOV (Assembly.GetRegister (assign.Assignee.Register), this.assembly.BSSAlloc ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), Convert.ToUInt32 ((call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value)));
 
 					else {
 						R32Type register = this.assembly.GetSpareRegister ();
@@ -1413,9 +1413,9 @@ namespace SharpOS.AOT.X86 {
 						this.assembly.FreeSpareRegister (register);
 					}
 
-				} else if (assembly.IsKernelLabelAddress (call)) {
+				} else if (Assembly.IsKernelLabelAddress (call)) {
 					if (assign.Assignee.IsRegisterSet)
-						this.assembly.MOV (this.assembly.GetRegister (assign.Assignee.Register), (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+						this.assembly.MOV (Assembly.GetRegister (assign.Assignee.Register), (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
 
 					else {
 						R32Type register = this.assembly.GetSpareRegister ();
@@ -1430,10 +1430,10 @@ namespace SharpOS.AOT.X86 {
 				} else {
 					this.HandleCall (block, call);
 
-					if (this.IsFourBytes (assign.Assignee)) {
+					if (IsFourBytes (assign.Assignee)) {
 						this.MovOperandRegister (assign.Assignee, R32.EAX);
 
-					} else if (this.IsEightBytes (assign.Assignee)) {
+					} else if (IsEightBytes (assign.Assignee)) {
 						this.MovMemoryRegister (assign.Assignee, R32.EAX, R32.EDX);
 
 					} else
@@ -1461,7 +1461,7 @@ namespace SharpOS.AOT.X86 {
 						this.assembly.SUB (R32.ESP, (uint) size);
 					} else if (miscellaneous.Operands [0] is SharpOS.AOT.IR.Operands.Register) {
 						// TODO: verify size
-						this.assembly.SUB (R32.ESP, assembly.GetRegister ((miscellaneous.Operands [0] 
+						this.assembly.SUB (R32.ESP, Assembly.GetRegister ((miscellaneous.Operands [0] 
 							as SharpOS.AOT.IR.Operands.Register).Index));
 					} else {
 						throw new Exception ("'" + miscellaneous.Operands [0].GetType () + "' is not supported'");
@@ -1476,7 +1476,7 @@ namespace SharpOS.AOT.X86 {
 				Initialize initialize = assign as Initialize;
 
 				if (assign.Assignee.SizeType == Operand.InternalSizeType.ValueType
-						|| this.IsFourBytes (assign.Assignee)) {
+						|| IsFourBytes (assign.Assignee)) {
 					int size = this.method.Engine.GetTypeSize (initialize.Type.VariableType.ToString() , 4);
 					
 					this.assembly.SUB (R32.ESP, (uint) size);
@@ -1500,10 +1500,10 @@ namespace SharpOS.AOT.X86 {
 		private void HandleReturn (Block block, SharpOS.AOT.IR.Instructions.Return instruction)
 		{
 			if (instruction.Value != null) {
-				if (this.IsFourBytes (instruction.Value)) {
+				if (IsFourBytes (instruction.Value)) {
 					this.MovRegisterOperand (R32.EAX, instruction.Value);
 
-				} else if (this.IsEightBytes (instruction.Value)) {
+				} else if (IsEightBytes (instruction.Value)) {
 					this.MovRegisterMemory (R32.EAX, R32.EDX, instruction.Value as Identifier);
 
 				} else
@@ -1535,7 +1535,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="assign">The assign.</param>
 		private void MovRegisterConstant (Assign assign)
 		{
-			this.MovRegisterConstant (assembly.GetRegister (assign.Assignee.Register), assign.Value as Constant);
+			this.MovRegisterConstant (Assembly.GetRegister (assign.Assignee.Register), assign.Value as Constant);
 		}
 
 		/// <summary>
@@ -1544,14 +1544,14 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="assign">The assign.</param>
 		private void MovMemoryConstant (Assign assign)
 		{
-			if (this.IsFourBytes (assign.Assignee)) {
+			if (IsFourBytes (assign.Assignee)) {
 				Memory memory = this.GetMemory (assign.Assignee);
 
 				Int32 value = Convert.ToInt32 ( (assign.Value as Constant).Value);
 
 				this.MovMemoryConstant (memory, (UInt32) value);
 
-			} else if (this.IsEightBytes (assign.Assignee)) {
+			} else if (IsEightBytes (assign.Assignee)) {
 				DWordMemory memory = this.GetMemory (assign.Assignee) as DWordMemory;
 
 				Int64 value = Convert.ToInt64 ( (assign.Value as Constant).Value);
@@ -1593,7 +1593,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="displacement">The displacement.</param>
 		/// <param name="label">The label.</param>
 		/// <returns></returns>
-		private Memory GetMemory (SharpOS.AOT.IR.Operands.Operand.InternalSizeType sizeType, R32Type _base, byte scale, int displacement, string label)
+		private static Memory GetMemory (SharpOS.AOT.IR.Operands.Operand.InternalSizeType sizeType, R32Type _base, byte scale, int displacement, string label)
 		{
 			Memory address = null;
 
@@ -1696,7 +1696,7 @@ namespace SharpOS.AOT.X86 {
 					R32Type register;
 
 					if (identifier.IsRegisterSet)
-						register = assembly.GetRegister (identifier.Register);
+						register = Assembly.GetRegister (identifier.Register);
 
 					else {
 						register = assembly.GetSpareRegister ();
@@ -1710,14 +1710,14 @@ namespace SharpOS.AOT.X86 {
 					assembly.FreeSpareRegister (register);
 
 				} else
-					address = this.GetMemory (operand.SizeType, null, 0, 0, operand.Value);
+					address = GetMemory (operand.SizeType, null, 0, 0, operand.Value);
 
 			} else if (operand is Reference) {
 				Identifier identifier = (operand as Reference).Value as Identifier;
 				R32Type register;
 
 				if (identifier.IsRegisterSet)
-					register = assembly.GetRegister (identifier.Register);
+					register = Assembly.GetRegister (identifier.Register);
 
 				else {
 					register = assembly.GetSpareRegister ();
@@ -1772,7 +1772,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="assign">The assign.</param>
 		private void MovMemoryRegister (Assign assign)
 		{
-			this.MovMemoryRegister (assign.Assignee, assembly.GetRegister (assign.Value.Register));
+			this.MovMemoryRegister (assign.Assignee, Assembly.GetRegister (assign.Value.Register));
 		}
 
 		/// <summary>
@@ -1781,7 +1781,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="assign">The assign.</param>
 		private void MovRegisterMemory (Assign assign)
 		{
-			this.MovRegisterMemory (assembly.GetRegister (assign.Assignee.Register), assign.Value as Identifier);
+			this.MovRegisterMemory (Assembly.GetRegister (assign.Assignee.Register), assign.Value as Identifier);
 		}
 
 		/// <summary>
@@ -1790,7 +1790,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="assign">The assign.</param>
 		private void MovMemoryMemory (Assign assign)
 		{
-			if (this.IsFourBytes (assign.Assignee)) {
+			if (IsFourBytes (assign.Assignee)) {
 				R32Type register = assembly.GetSpareRegister();
 
 				this.MovRegisterMemory (register, assign.Value as Identifier);
@@ -1799,7 +1799,7 @@ namespace SharpOS.AOT.X86 {
 
 				assembly.FreeSpareRegister (register);
 
-			} else if (this.IsEightBytes (assign.Assignee)) {
+			} else if (IsEightBytes (assign.Assignee)) {
 				this.MovRegisterMemory (R32.EAX, R32.EDX, assign.Value as Identifier);
 
 				this.MovMemoryRegister (assign.Assignee, R32.EAX, R32.EDX);
@@ -1821,10 +1821,10 @@ namespace SharpOS.AOT.X86 {
 				assembly.XOR (register, register);
 
 				if (memory is ByteMemory) {
-					assembly.MOV (memory as ByteMemory, assembly.Get8BitRegister (register));
+					assembly.MOV (memory as ByteMemory, Assembly.Get8BitRegister (register));
 
 				} else if (memory is WordMemory) {
-					assembly.MOV (memory as WordMemory, assembly.Get16BitRegister (register));
+					assembly.MOV (memory as WordMemory, Assembly.Get16BitRegister (register));
 
 				} else if (memory is DWordMemory) {
 					assembly.MOV (memory as DWordMemory, register);
@@ -1853,7 +1853,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="assign">The assign.</param>
 		private void MovRegisterRegister (Assign assign)
 		{
-			this.MovRegisterRegister (assembly.GetRegister (assign.Assignee.Register), assembly.GetRegister (assign.Value.Register));
+			this.MovRegisterRegister (Assembly.GetRegister (assign.Assignee.Register), Assembly.GetRegister (assign.Value.Register));
 		}
 
 		/// <summary>
@@ -1874,7 +1874,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if [is four bytes] [the specified operand]; otherwise, <c>false</c>.
 		/// </returns>
-		private bool IsFourBytes (Operand operand)
+		private static bool IsFourBytes (Operand operand)
 		{
 			if (operand.SizeType == Operand.InternalSizeType.I
 					|| operand.SizeType == Operand.InternalSizeType.U
@@ -1898,7 +1898,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if [is eight bytes] [the specified operand]; otherwise, <c>false</c>.
 		/// </returns>
-		private bool IsEightBytes (Operand operand)
+		private static bool IsEightBytes (Operand operand)
 		{
 			if (operand.SizeType == Operand.InternalSizeType.I8
 					|| operand.SizeType == Operand.InternalSizeType.U8)
@@ -1914,7 +1914,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if the specified operand is signed; otherwise, <c>false</c>.
 		/// </returns>
-		private bool IsSigned (Operand operand)
+		private static bool IsSigned (Operand operand)
 		{
 			if (operand.SizeType == Operand.InternalSizeType.I
 					|| operand.SizeType == Operand.InternalSizeType.I1

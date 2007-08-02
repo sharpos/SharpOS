@@ -147,7 +147,7 @@ namespace SharpOS.AOT.IR {
 		/// <returns>
 		/// 	<c>true</c> if the specified instruction is branch; otherwise, <c>false</c>.
 		/// </returns>
-		public bool IsBranch (Mono.Cecil.Cil.Instruction instruction, bool all)
+		public static bool IsBranch (Mono.Cecil.Cil.Instruction instruction, bool all)
 		{
 			if (all && instruction.OpCode == OpCodes.Ret) 
 				return true;
@@ -219,7 +219,7 @@ namespace SharpOS.AOT.IR {
 				found = false;
 
 				foreach (Block source in blocks) {
-					if (this.IsBranch (source.CIL[source.CIL.Count - 1], false)
+					if (IsBranch (source.CIL[source.CIL.Count - 1], false)
 							&& (source.CIL[source.CIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction
 							    || source.CIL[source.CIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction[])) {
 						List<Mono.Cecil.Cil.Instruction> jumps = new List<Mono.Cecil.Cil.Instruction>();
@@ -407,7 +407,7 @@ namespace SharpOS.AOT.IR {
 					if (!found)
 						throw new Exception ("Malformated Try/Catch block in '" + block.Method.MethodDefinition.Name + "'.");
 						
-				} else if (this.IsBranch (block.CIL[block.CIL.Count - 1], false)) {
+				} else if (IsBranch (block.CIL[block.CIL.Count - 1], false)) {
 					block.Type = Block.BlockType.TwoWay;
 
 					this.FillOuts (block, new Mono.Cecil.Cil.Instruction[] { block.CIL[block.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction });
@@ -915,7 +915,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="stack">The stack.</param>
 		/// <param name="name">The name.</param>
 		/// <returns></returns>
-		private int GetSSAStackValue (Dictionary < string, Stack < int >> stack, string name)
+		private static int GetSSAStackValue (Dictionary < string, Stack < int >> stack, string name)
 		{
 			if (!stack.ContainsKey (name)) 
 				return 0;
@@ -2333,7 +2333,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="active">The active.</param>
 		/// <param name="registers">The registers.</param>
 		/// <param name="liveRange">The live range.</param>
-		private void ExpireOldIntervals (List<LiveRange> active, List<int> registers, LiveRange liveRange)
+		private static void ExpireOldIntervals (List<LiveRange> active, List<int> registers, LiveRange liveRange)
 		{
 
 			List<LiveRange> remove = new List<LiveRange>();

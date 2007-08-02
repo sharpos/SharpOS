@@ -268,7 +268,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if [is assembly stub] [the specified value]; otherwise, <c>false</c>.
 		/// </returns>
-		internal bool IsAssemblyStub (string value)
+		internal static bool IsAssemblyStub (string value)
 		{
 			return value.Equals ("SharpOS.AOT.X86.Asm");
 		}
@@ -507,7 +507,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if the method is a String stub; otherwise, <c>false</c>.
 		/// </returns>
-		internal bool IsKernelString (SharpOS.AOT.IR.Operands.Call call)
+		internal static bool IsKernelString (SharpOS.AOT.IR.Operands.Call call)
 		{
 			if (!(call.Method is MethodDefinition)
 					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
@@ -535,7 +535,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if the method being called is an Alloc stub; otherwise, <c>false</c>.
 		/// </returns>
-		internal bool IsKernelAlloc (SharpOS.AOT.IR.Operands.Call call)
+		internal static bool IsKernelAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
 			if (!(call.Method is MethodDefinition)
 					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
@@ -568,7 +568,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if the call is a LabelledAlloc stub; otherwise, <c>false</c>.
 		/// </returns>
-		internal bool IsKernelLabelledAlloc (SharpOS.AOT.IR.Operands.Call call)
+		internal static bool IsKernelLabelledAlloc (SharpOS.AOT.IR.Operands.Call call)
 		{
 			if (!(call.Method is MethodDefinition)
 					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
@@ -603,7 +603,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if the method is a LabelAddress stub; otherwise, <c>false</c>.
 		/// </returns>
-		internal bool IsKernelLabelAddress (SharpOS.AOT.IR.Operands.Call call)
+		internal static bool IsKernelLabelAddress (SharpOS.AOT.IR.Operands.Call call)
 		{
 			if (!(call.Method is MethodDefinition)
 					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
@@ -954,49 +954,49 @@ namespace SharpOS.AOT.X86 {
 			int index = this.GetLabelIndex (PE_ADDRESS_OF_ENTRY_POINT);
 			this.instructions [index + 1].Value = start;
 
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_ADDRESS));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_CODE, PE_VIRTUAL_ADDRESS));
 			this.instructions [index + 1].Value = start;
 
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_POINTER_TO_RAW_DATA));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_CODE, PE_POINTER_TO_RAW_DATA));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			start = this.instructions [this.GetLabelIndex (END_CODE)].Offset - start;
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_VIRTUAL_SIZE));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_CODE, PE_VIRTUAL_SIZE));
 			this.instructions [index + 1].Value = start;
 
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_CODE, PE_SIZE_OF_RAW_DATA));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_CODE, PE_SIZE_OF_RAW_DATA));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			start = this.instructions [this.GetLabelIndex (START_DATA)].Offset;
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_ADDRESS));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_DATA, PE_VIRTUAL_ADDRESS));
 			this.instructions [index + 1].Value = start;
 
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_POINTER_TO_RAW_DATA));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_DATA, PE_POINTER_TO_RAW_DATA));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			start = this.instructions [this.GetLabelIndex (END_DATA)].Offset - start;
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_DATA, PE_VIRTUAL_SIZE));
 			this.instructions [index + 1].Value = start;
 
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_DATA, PE_SIZE_OF_RAW_DATA));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_DATA, PE_SIZE_OF_RAW_DATA));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			start = this.instructions [this.GetLabelIndex (START_BSS)].Offset;
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_ADDRESS));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_BSS, PE_VIRTUAL_ADDRESS));
 			this.instructions [index + 1].Value = start;
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
 			start = this.instructions [this.GetLabelIndex (END_BSS)].Offset -  start;
-			index = this.GetLabelIndex (this.GetPESectionLabel (PE_BSS, PE_VIRTUAL_SIZE));
+			index = this.GetLabelIndex (GetPESectionLabel (PE_BSS, PE_VIRTUAL_SIZE));
 			this.instructions [index + 1].Value = start;
 
 
@@ -1009,7 +1009,7 @@ namespace SharpOS.AOT.X86 {
 			this.instructions [index + 1].Value = (uint) this.symbols.Count;
 		}
 
-		private string GetPESectionLabel (string prefix, string type)
+		private static string GetPESectionLabel (string prefix, string type)
 		{
 			return "PE_Section_" + prefix + "_" + type;
 		}
@@ -1024,19 +1024,19 @@ namespace SharpOS.AOT.X86 {
 			this.DATA (name);
 
 			// Misc/Virtual Size
-			this.LABEL (this.GetPESectionLabel (id, PE_VIRTUAL_SIZE));
+			this.LABEL (GetPESectionLabel (id, PE_VIRTUAL_SIZE));
 			this.DATA ((uint) 0x00000000);
 
 			// Virtual Address
-			this.LABEL (this.GetPESectionLabel (id, PE_VIRTUAL_ADDRESS));
+			this.LABEL (GetPESectionLabel (id, PE_VIRTUAL_ADDRESS));
 			this.DATA ((uint) 0x00000000);
 
 			// Size of Raw Data
-			this.LABEL (this.GetPESectionLabel (id, PE_SIZE_OF_RAW_DATA));
+			this.LABEL (GetPESectionLabel (id, PE_SIZE_OF_RAW_DATA));
 			this.DATA ((uint) 0x00000000);
 
 			// Pointer to Raw Data
-			this.LABEL (this.GetPESectionLabel (id, PE_POINTER_TO_RAW_DATA));
+			this.LABEL (GetPESectionLabel (id, PE_POINTER_TO_RAW_DATA));
 			this.DATA ((uint) 0x00000000);
 
 			// Pointer to Relocations
@@ -1646,7 +1646,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns></returns>
-		private Memory GetMemoryInternal (object value)
+		private static Memory GetMemoryInternal (object value)
 		{
 			if (value is Memory)
 				return value as Memory;
@@ -1949,7 +1949,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="register">The register.</param>
 		/// <returns></returns>
-		internal R8Type Get8BitRegister (SharpOS.AOT.X86.R32Type register)
+		internal static R8Type Get8BitRegister (SharpOS.AOT.X86.R32Type register)
 		{
 			if (register == R32.EAX)
 				return R8.AL;
@@ -1972,7 +1972,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="register">The register.</param>
 		/// <returns></returns>
-		internal R16Type Get16BitRegister (SharpOS.AOT.X86.R32Type register)
+		internal static R16Type Get16BitRegister (SharpOS.AOT.X86.R32Type register)
 		{
 			if (register == R32.EAX)
 				return R16.AX;
@@ -2017,7 +2017,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="i">The i.</param>
 		/// <returns></returns>
-		internal SharpOS.AOT.X86.R32Type GetRegister (int i)
+		internal static SharpOS.AOT.X86.R32Type GetRegister (int i)
 		{
 			switch ( (Registers) i) {
 

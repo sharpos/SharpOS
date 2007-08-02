@@ -696,7 +696,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="ints">The ints.</param>
 		/// <param name="Prefix">The prefix.</param>
 		/// <returns></returns>
-		private string CombineInts (int[] ints, string Prefix)
+		private static string CombineInts (int[] ints, string Prefix)
 		{
 			string str = "";
 			
@@ -719,7 +719,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="ints">The ints.</param>
 		/// <param name="Prefix">The prefix.</param>
 		/// <returns></returns>
-		private string CombineInts (List<int> ints, string Prefix)
+		private static string CombineInts (List<int> ints, string Prefix)
 		{
 			string str = "";
 			

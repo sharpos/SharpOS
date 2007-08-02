@@ -325,7 +325,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="instruction">The instruction.</param>
 		/// <returns></returns>
-		private int GetStackDelta (Mono.Cecil.Cil.Instruction instruction)
+		private static int GetStackDelta (Mono.Cecil.Cil.Instruction instruction)
 		{
 			int result = 0;
 
