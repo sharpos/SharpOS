@@ -8,18 +8,14 @@
 -->
 
 <project name="SharpOS" default="build">
-	
 	<target name="build">
 		<echo message="Building useful tools..." />
 		<nant buildfile="./KeyCompiler/KeyCompiler.build" />
-		<!-- <nant buildfile="./korlib/korlib.build" /> -->
+		<nant buildfile="./KernelTestsWrapperGen/KernelTestsWrapperGen.build" />
 	</target>
 
-	<target name="test">
-		<!-- nothing yet -->
-	</target>
-	
 	<target name="clean">
-		<nant buildfile="./SharpOS.Kernel/SharpOS.Kernel.build" target="clean" />
+		<nant buildfile="./KeyCompiler/KeyCompiler.build" target="clean" />
+		<nant buildfile="./KernelTestsWrapperGen/KernelTestsWrapperGen.build" target="clean" />
 	</target>
 </project>

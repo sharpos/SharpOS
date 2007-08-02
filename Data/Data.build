@@ -8,7 +8,6 @@
 -->
 
 <project name="SharpOS" default="build">
-	
 	<target name="build">
 		<echo message="Processing data..." />
 		<nant buildfile="./KeyMaps/KeyMaps.build" />
@@ -18,37 +17,7 @@
 		<!-- nothing yet -->
 	</target>
 
-	<target name="dist" depends="build">
-		<echo message="AOT Compiling TestKernel" />
-		<exec program="SharpOS.AOT.exe" basedir="build" workingdir="build">
-			<arg path="build/SharpOS.TestKernel.exe" />
-		</exec>
-
-		<echo message="Copying TestKernel to disk image" />
-		<mkdir dir="dist" />
-		<copy file="util/bochsrc.txt" tofile="dist/bochsrc.txt" />
-		<copy file="util/disk.img" tofile="dist/disk.img" />
-
-		<mkdir dir="dist/mnt" />
-		<exec program="mount" workingdir="dist">
-			<arg line="disk.img -o loop mnt" />
-		</exec>
-
-		<copy file="build/SharpOS.bin" tofile="dist/mnt/SharpOS.bin" />
-
-		<exec program="umount" workingdir="dist">
-			<arg value="mnt" />
-		</exec>
-
-		<delete dir="dist/mnt" />
-	</target>
-	
 	<target name="clean">
-		<nant buildfile="./SharpOS.AOT/SharpOS.AOT.build" target="clean" />
-		<nant buildfile="./SharpOS.AOT.Tests/SharpOS.AOT.Tests.build" target="clean" />
-		<nant buildfile="./SharpOS.Kernel/SharpOS.Kernel.build" target="clean" />
-		<nant buildfile="./SharpOS.Kernel.Tests/SharpOS.Kernel.Tests.build" target="clean" />
-		<delete dir="build"/>
-		<delete dir="dist"/>
+		<nant buildfile="./KeyMaps/KeyMaps.build" target="clean" />
 	</target>
 </project>

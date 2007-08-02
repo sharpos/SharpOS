@@ -38,11 +38,9 @@
 	</target>
 	
 	<target name="clean">
-		<nant buildfile="./AOT/SharpOS.AOT/SharpOS.AOT.build" target="clean" />
-		<nant buildfile="./SharpOS.AOT.Tests/SharpOS.AOT.Tests.build" target="clean" />
-		<nant buildfile="./SharpOS.Kernel/SharpOS.Kernel.build" target="clean" />
-		<nant buildfile="./SharpOS.Kernel.Tests/SharpOS.Kernel.Tests.build" target="clean" />
-		<delete dir="build"/>
-		<delete dir="dist"/>
+		<nant buildfile="./Tools/Tools.build" target="clean" />
+		<nant buildfile="./AOT/AOT.build" target="clean" />
+		<nant buildfile="./Data/Data.build" target="clean" />
+		<nant buildfile="./Kernel/kernel.build" target="clean" />
 	</target>
 </project>

@@ -14,8 +14,8 @@
 	<description>Compiles the keymaps to binary form</description>
 
 	<property name="debug" value="false" readonly="false" overwrite="false" />
-	<property name="prefix" value="../build/Keymaps" />
-	<property name="compiler" value="../build/KeyCompiler.exe" />
+	<property name="prefix" value="../../build/KeyMaps" />
+	<property name="compiler" value="../../build/KeyCompiler.exe" />
 
 	<target name="build">
 		<echo message="Building SharpOS AOT compiler" />
@@ -26,7 +26,7 @@
 		<if test="${file::exists(compiler) == false}">
 			<property name="oldprefix" value="${prefix}" />
 			<property name="prefix" value="../../build" />
-			<nant buildfile="../Tools/KeyCompiler/KeyCompiler.build" />
+			<nant buildfile="../../Tools/KeyCompiler/KeyCompiler.build" />
 			<property name="prefix" value="${oldprefix}" />
 		</if>
 
