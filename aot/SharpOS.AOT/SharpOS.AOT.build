@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Johann MacDonagh <johann [at] macdonaghs [dot] com>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="SharpOS AOT Compiler" default="build">
+	<description>Compiles IL assemblies into machine code.</description>
+
+	<property name="debug" value="false" readonly="false" overwrite="false" />
+	<property name="prefix" value="../../build" />
+	
+	<target name="build">
+		<echo message="Building SharpOS AOT console executable" />
+		
+		<csc target="exe" output="${path::combine(prefix, 'SharpOS.AOT.exe')}" debug="${debug}" 
+				unsafe="true">
+			<references>
+				<include name="References/Mono.GetOptions.dll" />
+				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
+			</references>
+			<resources>
+				<include name="Resources/*" />
+			</resources>	
+			<sources>
+				<include name="Program.cs" />
+				<include name="AssemblyInfo.cs" />
+			</sources>
+		</csc>
+		
+		<copy file="References/Mono.GetOptions.dll" tofile="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
+	</target>
+
+	<target name="clean">
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe.mdb')}" failonerror="false" />
+    <delete file="${path::combine(prefix, 'Mono.GetOptions.dll')}" failonerror="false" />
+	</target>
+</project>

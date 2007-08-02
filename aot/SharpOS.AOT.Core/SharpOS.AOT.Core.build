@@ -11,12 +11,10 @@
 	<description>Compiles IL assemblies into machine code.</description>
 
 	<property name="debug" value="false" readonly="false" overwrite="false" />
-	<property name="prefix" value="../build" />
+	<property name="prefix" value="../../build" />
 	
 	<target name="build">
-		<echo message="Building SharpOS AOT compiler" />
-		
-		<mkdir dir="${prefix}" />
+		<echo message="Building SharpOS AOT Core" />
 		
 		<csc target="library" output="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" 
 				debug="${debug}" unsafe="true">
@@ -24,8 +22,7 @@
 				<include name="References/Mono.Cecil.dll" />
 			</references>
 			<sources>
-				<include name="Core.AssemblyInfo.cs" />
-				<include name="COFF.cs" />
+				<include name="*.cs" />
 				<include name="IR/*.cs" />
 				<include name="IR/Instructions/*.cs" />
 				<include name="IR/Operands/*.cs" />
@@ -35,32 +32,12 @@
 			</sources>
 		</csc>
 		
-		<csc target="exe" output="${path::combine(prefix, 'SharpOS.AOT.exe')}" debug="${debug}" 
-				unsafe="true">
-			<references>
-				<include name="References/Mono.GetOptions.dll" />
-				<include name="References/Mono.Cecil.dll" />
-				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
-			</references>
-			<resources>
-				<include name="Resources/*" />
-			</resources>	
-			<sources>
-				<include name="Program.cs" />
-				<include name="AssemblyInfo.cs" />
-			</sources>
-		</csc>
-		
 		<copy file="References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
-		<copy file="References/Mono.GetOptions.dll" 
-				tofile="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 	</target>
 
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Core.dll.mdb')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe.mdb')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'Mono.Cecil.dll')}" failonerror="false" />
 	</target>
 </project>
