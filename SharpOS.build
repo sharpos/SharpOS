@@ -11,24 +11,24 @@
 	
 	<target name="build">
 		<echo message="Building projects" />
-		<nant buildfile="./tools/tools.build" />
-		<nant buildfile="./aot/aot.build" />
-		<nant buildfile="./data/data.build" />
-		<nant buildfile="./kernel/kernel.build" />
-		<!-- <nant buildfile="./userspace/userspace.build" /> -->
+		<nant buildfile="./Tools/Tools.build" />
+		<nant buildfile="./AOT/AOT.build" />
+		<nant buildfile="./Data/Data.build" />
+		<nant buildfile="./Kernel/kernel.build" />
+		<!-- <nant buildfile="./Userspace/userspace.build" /> -->
 	</target>
 
 	<target name="test" depends="build">
 		<echo message="Running integrity tests..." />
-		<nant buildfile="./tools/tools.build" target="test" />
-		<nant buildfile="./aot/aot.build" target="test" />
-		<nant buildfile="./data/data.build" target="test" />
-		<nant buildfile="./kernel/kernel.build" target="test" />
+		<nant buildfile="./Tools/Tools.build" target="test" />
+		<nant buildfile="./AOT/AOT.build" target="test" />
+		<nant buildfile="./Data/Data.build" target="test" />
+		<nant buildfile="./Kernel/Kernel.build" target="test" />
 	</target>
 
 	<target name="dist" depends="build">
 		<echo message="Ahead-of-time compiling the SharpOS kernel" />
-		<nant buildfile="./kernel/SharpOS.Kernel.Core/SharpOS.Kernel.Core.build" 
+		<nant buildfile="./Kernel/SharpOS.Kernel.Core/SharpOS.Kernel.Core.build" 
 			target="aot-image" />
 
 		<mkdir dir="dist" />
@@ -38,7 +38,7 @@
 	</target>
 	
 	<target name="clean">
-		<nant buildfile="./SharpOS.AOT/SharpOS.AOT.build" target="clean" />
+		<nant buildfile="./AOT/SharpOS.AOT/SharpOS.AOT.build" target="clean" />
 		<nant buildfile="./SharpOS.AOT.Tests/SharpOS.AOT.Tests.build" target="clean" />
 		<nant buildfile="./SharpOS.Kernel/SharpOS.Kernel.build" target="clean" />
 		<nant buildfile="./SharpOS.Kernel.Tests/SharpOS.Kernel.Tests.build" target="clean" />
