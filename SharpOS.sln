@@ -2,16 +2,58 @@
 Microsoft Visual Studio Solution File, Format Version 9.00
 # Visual Studio 2005
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOS.AOT", "AOT\Main\SharpOS.AOT.csproj", "{5AADA544-40FE-11DC-8314-0800200C9A66}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOS.AOT.Core", "AOT\Core\SharpOS.AOT.Core.csproj", "{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOS.Kernel.Core", "Kernel\Core\SharpOS.Kernel.Core.csproj", "{1BDA3EE0-BC5F-4C4A-986C-31730A8EFADC}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOS.AOT.Tests", "AOT\Core.Tests\SharpOS.AOT.Tests.csproj", "{479653EE-C3CA-44A6-A18C-278608C51EAE}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOS.Kernel.Tests", "AOT\Kernel.Tests\SharpOS.Kernel.Tests.csproj", "{5E0259D4-4102-11DC-8314-0800200C9A66}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyCompiler", "Tools\KeyCompiler\KeyCompiler.csproj", "{36AF02F0-4105-11DC-8314-0800200C9A66}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kernel", "Kernel", "{16002BC6-987E-4C17-B868-63082C1A5EC0}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{181306B4-F099-4B0E-9D9A-C319631E4C8E}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "AOT", "AOT", "{8301C982-2075-45DD-925F-D41CCDBC413C}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -46,5 +88,13 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{1BDA3EE0-BC5F-4C4A-986C-31730A8EFADC} = {16002BC6-987E-4C17-B868-63082C1A5EC0}
+		{36AF02F0-4105-11DC-8314-0800200C9A66} = {181306B4-F099-4B0E-9D9A-C319631E4C8E}
+		{5AADA544-40FE-11DC-8314-0800200C9A66} = {8301C982-2075-45DD-925F-D41CCDBC413C}
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8} = {8301C982-2075-45DD-925F-D41CCDBC413C}
+		{5E0259D4-4102-11DC-8314-0800200C9A66} = {8301C982-2075-45DD-925F-D41CCDBC413C}
+		{479653EE-C3CA-44A6-A18C-278608C51EAE} = {8301C982-2075-45DD-925F-D41CCDBC413C}
 	EndGlobalSection
 EndGlobal

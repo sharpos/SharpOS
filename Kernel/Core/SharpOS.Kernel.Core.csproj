@@ -41,7 +41,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\AOT\Core\SharpOS.AOT.Core.csproj">
       <Project>{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}</Project>
-      <Name>SharpOS.Kernel.Core</Name>
+      <Name>SharpOS.AOT.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
