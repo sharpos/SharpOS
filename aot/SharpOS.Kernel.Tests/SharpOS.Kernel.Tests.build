@@ -10,7 +10,7 @@
 <project name="SharpOS AOT Testing Kernel" default="build">
 	<description>Compiles a set of tests for the AOT compiler.</description>
 
-	<property name="prefix" value="../build" readonly="true" />
+	<property name="prefix" value="../../build" readonly="true" />
 
 	<target name="build">
 		<echo message="Building Test Kernel" />
