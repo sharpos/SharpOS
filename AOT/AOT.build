@@ -10,19 +10,19 @@
 <project name="SharpOS Ahead-of-Time Engine" default="build">
 	
 	<target name="build">
-		<nant buildfile="./SharpOS.AOT.Core/SharpOS.AOT.Core.build" />
-		<nant buildfile="./SharpOS.AOT/SharpOS.AOT.build" />
+		<nant buildfile="./Core/Core.build" />
+		<nant buildfile="./Main/Main.build" />
 	</target>
 
 	<target name="test" depends="build">
-		<nant buildfile="./SharpOS.AOT.Tests/SharpOS.AOT.Tests.build" />
-		<nant buildfile="./SharpOS.Kernel.Tests/SharpOS.Kernel.Tests.build" />
+		<nant buildfile="./Core.Tests/Core.Tests.build" />
+		<nant buildfile="./Kernel.Tests/Kernel.Tests.build" />
 	</target>
 
 	<target name="clean">
-		<nant buildfile="./SharpOS.AOT.Core/SharpOS.AOT.Core.build" target="clean" />
-		<nant buildfile="./SharpOS.AOT/SharpOS.AOT.build" target="clean" />
-		<nant buildfile="./SharpOS.AOT.Tests/SharpOS.AOT.Tests.build" target="clean" />
-		<nant buildfile="./SharpOS.Kernel.Tests/SharpOS.Kernel.Tests.build" target="clean" />
+		<nant buildfile="./Core/Core.build" target="clean" />
+		<nant buildfile="./Main/Main.build" target="clean" />
+		<nant buildfile="./Core.Tests/Core.Tests.build" target="clean" />
+		<nant buildfile="./Kernel.Tests/Kernel.Tests.build" target="clean" />
 	</target>
 </project>
