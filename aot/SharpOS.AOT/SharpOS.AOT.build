@@ -20,7 +20,7 @@
 				unsafe="true">
 			<references>
 				<include name="References/Mono.GetOptions.dll" />
-        <include name="${path::combine(prefix, 'Mono.Cecil.dll')}" />
+        <include name="../SharpOS.AOT.Core/References/Mono.Cecil.dll" />
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 			</references>
 			<resources>
