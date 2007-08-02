@@ -159,7 +159,7 @@
 		
 		<csc target="library" unsafe="true" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.NUnit.dll')}">
 			<references>
-				<include name="${path::combine(prefix, 'nunit.framework.dll')}" />
+				<include name="../SharpOS.AOT.Tests/References/nunit.framework.dll" />
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}" />
 				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />

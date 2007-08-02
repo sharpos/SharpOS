@@ -11,7 +11,7 @@
 	<description>Compiles SharpOS AOT Test Cases.</description>
 
 	<property name="debug" value="false" readonly="false" overwrite="false" />
-	<property name="prefix" value="../build" />
+	<property name="prefix" value="../../build" />
 	
 	<target name="build">
 		<echo message="Building SharpOS AOT Test Cases compiler" />
