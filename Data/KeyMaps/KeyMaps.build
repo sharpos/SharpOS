@@ -10,26 +10,17 @@
         *
 -->
 
-<project name="Keymaps" default="build">
+<project name="Data/KeyMaps" default="build">
 	<description>Compiles the keymaps to binary form</description>
 
 	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../../build/KeyMaps" />
-	<property name="compiler" value="../../build/KeyCompiler.exe" />
+	<property name="compiler" value="../../build/key-compiler.exe" />
 
 	<target name="build">
 		<echo message="Building SharpOS AOT compiler" />
-		
 		<mkdir dir="${prefix}" />
-		
-		<!-- make sure the compiler is built -->
-		<if test="${file::exists(compiler) == false}">
-			<property name="oldprefix" value="${prefix}" />
-			<property name="prefix" value="../../build" />
-			<nant buildfile="../../Tools/KeyCompiler/KeyCompiler.build" />
-			<property name="prefix" value="${oldprefix}" />
-		</if>
-
+		<nant buildfile="../../Tools/KeyCompiler/KeyCompiler.build" />
 		<exec program="${compiler}" commandline="US.skm -o:${prefix}/US.bin" />
 	</target>
 

@@ -148,13 +148,13 @@ namespace SharpOS.ADC.X86 {
 			Asm.MOV (&edx, R32.EDX);
 			Asm.MOV (&ecx, R32.ECX);
 
-			TextMode.Write (Kernel.String ("CPU Vendor: "));
-			TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
-			TextMode.WriteString (ebx);
-			TextMode.WriteString (edx);
-			TextMode.WriteString (ecx);
-			TextMode.RestoreAttributes ();
-			TextMode.WriteNL ();
+			ADC.TextMode.Write (Kernel.String ("CPU Vendor: "));
+			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
+			ADC.TextMode.WriteString (ebx);
+			ADC.TextMode.WriteString (edx);
+			ADC.TextMode.WriteString (ecx);
+			ADC.TextMode.RestoreAttributes ();
+			ADC.TextMode.WriteLine ();
 		}
 
 		public unsafe static void WriteBrandName (uint value)
@@ -168,24 +168,23 @@ namespace SharpOS.ADC.X86 {
 			Asm.MOV (&edx, R32.EDX);
 			Asm.MOV (&ecx, R32.ECX);
 
-			TextMode.WriteString (eax);
-			TextMode.WriteString (ebx);
-			TextMode.WriteString (ecx);
-			TextMode.WriteString (edx);
+			ADC.TextMode.WriteString (eax);
+			ADC.TextMode.WriteString (ebx);
+			ADC.TextMode.WriteString (ecx);
+			ADC.TextMode.WriteString (edx);
 		}
 
 		public unsafe static void WriteBrandName ()
 		{
 			// Brand Name
-			TextMode.Write (Kernel.String ("CPU Brand: "));
-			TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
+			ADC.TextMode.Write (Kernel.String ("CPU Brand: "));
+			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 
 			for (uint i = 0x80000002; i <= 0x80000004; i++)
 				WriteBrandName (i);
 
-			TextMode.RestoreAttributes ();
-
-			TextMode.WriteNL ();
+			ADC.TextMode.RestoreAttributes ();
+			ADC.TextMode.WriteLine ();
 		}
 
 		public unsafe static byte HasNoCPUID ()

@@ -1,3 +1,6 @@
+2007-08-02  William Lahti  <xfurious@gmail.com>
+	* removed stale debug statement
+
 2007-07-24  William Lahti  <xfurious@gmail.com>
 	* added support for creating/unpacking keymap archives
 	* added -force option to override safety checks

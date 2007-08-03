@@ -256,9 +256,10 @@ namespace SharpOS.AOT {
 
 			if (opts.CreateImage) {
 				opts.ImageFilename = opts.OutputFilename;
-				if (opts.BinaryFilename == null)
+				if (opts.BinaryFilename == null) {
 					opts.BinaryFilename = Path.GetTempFileName ();
-				opts.TempOutput = true;
+					opts.TempOutput = true;
+				}
 			} else
 				opts.BinaryFilename = opts.OutputFilename;
 

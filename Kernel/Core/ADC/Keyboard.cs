@@ -77,7 +77,8 @@ namespace SharpOS.ADC
 		public static bool RightControl ()
 		{
 			return false;
-		}
+		}
+
 		[AOTAttr.ADCStub]
 		public static bool ScrollLock ()
 		{
@@ -95,14 +96,28 @@ namespace SharpOS.ADC
 		{
 			return false;
 		}
-	
+
 		[AOTAttr.ADCStub]
-		public static void SetKeymap (byte *keymap)
+		public static byte *GetCurrentDefaultTable (int *ret_len)
 		{
+			return null;
 		}
 		
 		[AOTAttr.ADCStub]
-		public static byte Translate (uint scancode)
+		public static byte *GetCurrentShiftedTable (int *ret_len)
+		{
+			return null;
+		}
+	
+		[AOTAttr.ADCStub]
+		public static void SetKeymap (byte *defMap, int defLen, byte *shiftMap,
+					      int shiftLen)
+		{
+		}
+		
+
+		[AOTAttr.ADCStub]
+		public static byte Translate (uint scancode, bool shifted)
 		{
 			return 0;
 		}

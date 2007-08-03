@@ -16,6 +16,7 @@
 	<target name="build">
 		<echo message="Building SharpOS AOT Core" />
 		<copy file="../../References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
+		
 		<csc target="library" output="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" 
 				debug="${debug}" unsafe="true">
 			<references>
@@ -31,7 +32,6 @@
 				<include name="X86/*.cs" />
 			</sources>
 		</csc>
-
 	</target>
 	
 	<target name="fxcop" depends="build">

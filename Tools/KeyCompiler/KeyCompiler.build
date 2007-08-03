@@ -15,7 +15,7 @@
 		<echo message="Building KeyCompiler" />
 		<copy file="../../References/Mono.GetOptions.dll" tofile="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 
-		<csc target="exe" output="${path::combine(prefix, 'KeyCompiler.exe')}" debug="${debug}" unsafe="true">
+		<csc target="exe" output="${path::combine(prefix, 'key-compiler.exe')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 			</references>
@@ -26,6 +26,6 @@
 	</target>
 	
 	<target name="clean">
-		<delete file="${path::combine(prefix, 'KeyCompiler.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'key-compiler.exe')}" failonerror="false" />
 	</target>
 </project>

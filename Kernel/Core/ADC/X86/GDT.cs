@@ -14,6 +14,7 @@ using System.Runtime.InteropServices;
 using SharpOS;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
+using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
 	public unsafe class GDT {
@@ -73,11 +74,11 @@ namespace SharpOS.ADC.X86 {
 		{
 			gdtPointer->Setup ((ushort) (sizeof (Entry) * GDTEntries - 1), (uint) gdt);
 
-			TextMode.Write (Kernel.String ("GDT Pointer: 0x"));
-			TextMode.WriteNumber ((int) gdtPointer->Address, true);
-			TextMode.Write (Kernel.String (" - 0x"));
-			TextMode.WriteNumber (gdtPointer->Size, true);
-			TextMode.WriteNL ();
+			ADC.TextMode.Write (Kernel.String ("GDT Pointer: 0x"));
+			ADC.TextMode.WriteNumber ((int) gdtPointer->Address, true);
+			ADC.TextMode.Write (Kernel.String (" - 0x"));
+			ADC.TextMode.WriteNumber (gdtPointer->Size, true);
+			ADC.TextMode.WriteLine ();
 
 			gdt [SystemSelector >> 3].Setup (0, 0, 0);
 

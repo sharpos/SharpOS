@@ -139,9 +139,6 @@ namespace SharpOS.Tools.KeyCompiler
 				if (value > 255)
 					Console.Error.WriteLine ("Warning: key `{0}' is too large", value);
 				
-				Console.Error.WriteLine("ASCII: encoding scancode `{0}' to `{1}'",
-					scancode, (char)value);
-				
 				w.Write ((byte)value);
 			}
 		}

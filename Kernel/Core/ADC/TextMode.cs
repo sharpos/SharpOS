@@ -18,7 +18,8 @@ using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.ADC {
 	public unsafe class TextMode
-	{		[AOTAttr.ADCStub]
+	{
+		[AOTAttr.ADCStub]
 		public static void Setup()
 		{
 		}
@@ -55,9 +56,10 @@ namespace SharpOS.ADC {
 		{
 		}
 
-		[AOTAttr.ADCStub]
-		public unsafe static void WriteNumber (int value, bool hex)
+		public unsafe static void WriteSubstring (byte *message, int offset, int len)
 		{
+			for (int i = offset; message [i] != 0 && i < (offset+len); ++i)
+				WriteChar (message [i]);
 		}
 
 		public unsafe static void WriteNumber (int value)
@@ -65,10 +67,38 @@ namespace SharpOS.ADC {
 			WriteNumber (value, false);
 		}
 		
+		public unsafe static void WriteNumber (int value, bool hex)
+		{
+			byte* buffer = stackalloc byte [32];
+			uint uvalue = (uint) value;
+			ushort divisor = hex ? (ushort) 16 : (ushort) 10;
+			int length = 0;
+
+			if (!hex && value < 0) {
+				buffer [length++] = (byte) '-';
+
+				uvalue = (uint) -value;
+			}
+
+			do {
+				uint remainder = uvalue % divisor;
+
+				if (remainder < 10)
+					buffer [length++] = (byte) ('0' + remainder);
+
+				else
+					buffer [length++] = (byte) ('A' + remainder - 10);
+
+			} while ((uvalue /= divisor) != 0);
+
+			while (length > 0)
+				WriteChar (buffer [--length]);
+		}
+
 		[Obsolete ("Use WriteNumber (int value, bool hex) instead")]
 		public unsafe static void WriteNumber (bool hex, int value)
 		{
-		
+			WriteNumber (value, hex);
 		}
 		
 		public unsafe static void WriteLine (byte* message)

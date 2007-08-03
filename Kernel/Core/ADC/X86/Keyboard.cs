@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using SharpOS;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
+using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 
 {
@@ -43,21 +44,33 @@ namespace SharpOS.ADC.X86
 		static bool capsLock;
 		static bool numLock;
 	
-		static byte* keymap = null;
+		static byte* defaultMap = null;
+		static byte* shiftedMap = null;
+
+		static int defaultMapLen = 0;
+		static int shiftedMapLen = 0;
 		
-		public static void Setup ()
-		{
+		public static void Setup () {
+			ADC.TextMode.Write (Kernel.String ("ADC: Setting up keyboard... "));
 			keyUpEvent = (uint*) Kernel.Alloc (sizeof (uint) * 4);
 			keyUpEventCount = 4;
 			keyDownEvent = (uint*) Kernel.Alloc (sizeof (uint) * 4);
 			keyDownEventCount = 4;
 			
 			IDT.SetupIRQ (1, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
-			
-			keymap = Kernel.Alloc (300);
-			KeyboardLayouts.US (keymap);
+
+			ADC.TextMode.WriteLine (Kernel.String ("done"));
 		}
 
+		public static void SetKeymap (byte *defMap, int defLen, byte *shiftMap,
+					      int shiftLen)
+		{
+			defaultMap = defMap;
+			shiftedMap = shiftMap;
+			defaultMapLen = defLen;
+			shiftedMapLen = shiftLen;
+		}
+		
 		#region KeyUpEvent
 		public static EventRegisterStatus RegisterKeyUpEvent(uint address)
 		{
@@ -317,19 +330,29 @@ namespace SharpOS.ADC.X86
 			return numLock;
 		}
 	
-		public static byte *GetKeymap ()
+		public static byte *GetCurrentDefaultTable (int *ret_len)
 		{
-			return keymap;
+			*ret_len = defaultMapLen;
+			return shiftedMap;
 		}
 		
-		public static byte Translate (uint scancode)
+		public static byte *GetCurrentShiftedTable (int *ret_len)
 		{
-			Kernel.Assert (keymap != null, Kernel.String ("No keymap is available!"));
-			
-			if (scancode > 0x80)
-				return (byte)'\0';
-			
-			return keymap [(byte) scancode];
+			*ret_len = shiftedMapLen;
+			return shiftedMap;
+		}
+		
+		public static byte Translate (uint scancode, bool shifted)
+		{
+			Kernel.Assert (shiftedMap != null,
+				Kernel.String ("No shifted map is available!"));
+			Kernel.Assert (defaultMap != null,
+				Kernel.String ("No default map is available!"));
+
+			if (shifted)
+				return shiftedMap [(byte) scancode];
+			else
+				return defaultMap [(byte) scancode];
 		}
 	}
 }

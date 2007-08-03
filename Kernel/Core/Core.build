@@ -10,28 +10,61 @@
 <project name="SharpOS Kernel" default="build">
 	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../../build" overwrite="false" />
-	
+	<property name="arch" value="X86" readonly="false" overwrite="false" />
+	<property name="aot-options" value="" readonly="false" overwrite="false" />
+	<property name="temp-dir" value="${path::combine(prefix, 'Temp')}" />
+
+	<target name="conf">
+		<!-- nothing yet -->		
+	</target>
+
 	<target name="build">
+		<!-- create the keymap archive -->
+		<echo message="Preparing keymap archive to build into the kernel" />
+		
+		<mkdir dir="${path::combine(prefix, 'Temp')}" failonerror="false" />
+		<exec program="${path::combine(prefix, 'key-compiler.exe')}" 
+			commandline="-ar -o:${path::combine(temp-dir, 'BuiltinKeymaps.ska')} @Config/BuiltinKeymaps.cfg" />
+		
 		<echo message="Building the SharpOS kernel" />
+
 		<csc target="library" output="${path::combine(prefix, 'SharpOS.Kernel.dll')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 			</references>
+			<resources>
+				<include name="${path::combine(temp-dir, 'BuiltinKeymaps.ska')}" />
+			</resources>
 			<sources>
 				<include name="*.cs" />
 				<include name="ADC/*.cs" />
 				<include name="ADC/X86/*.cs" />
-				<include name="KeyMaps/*.cs" />
+				<include name="Foundation/*.cs" />
 			</sources>
 		</csc>
 	</target>
 
-  <target name="fxcop" depends="build">
-    <exec program="fxcopcmd.exe"
-      commandline="/p:SharpOS.Kernel.Core.fxcop /o:${path::combine(prefix, 'SharpOS.Kernel.Core-fxcop.xml')}" failonerror="false"/>
-  </target>
+	<target name="aot">
+		<echo message="AOT compiling the SharpOS Kernel" />
+		<exec program="${path::combine(prefix, 'SharpOS.AOT.exe')}" 
+			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')}" />
+	</target>
+
+	<target name="aot-image">
+		<echo message="AOT compiling the SharpOS Kernel" />
+		<exec program="${path::combine(prefix, 'SharpOS.AOT.exe')}" 
+			commandline="-v -i -c:${arch} -bin-out:${path::combine(prefix, 'SharpOS.Kernel.bin')} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')}" />
+	</target>
+
+	<target name="fxcop" depends="build">
+		<exec program="fxcopcmd.exe"
+			commandline="/p:SharpOS.Kernel.Core.fxcop /o:${path::combine(prefix, 'SharpOS.Kernel.Core-fxcop.xml')}" 
+			failonerror="false" />
+	</target>
 	
 	<target name="clean">
+		<delete file="build/keymaps.ska" failonerror="false" />
+		<delete file="${path::combine(temp-dir, 'BuiltinKeymaps.ska')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.Kernel.dll')}" failonerror="false" />
 	</target>
 </project>

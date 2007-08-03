@@ -185,34 +185,6 @@ namespace SharpOS.ADC.X86
 			}*/
 		}
 
-		public unsafe static void WriteNumber (int value, bool hex)
-		{
-			byte* buffer = stackalloc byte [32];
-			uint uvalue = (uint) value;
-			ushort divisor = hex ? (ushort) 16 : (ushort) 10;
-			int length = 0;
-
-			if (!hex && value < 0) {
-				buffer [length++] = (byte) '-';
-
-				uvalue = (uint) -value;
-			}
-
-			do {
-				uint remainder = uvalue % divisor;
-
-				if (remainder < 10)
-					buffer [length++] = (byte) ('0' + remainder);
-
-				else
-					buffer [length++] = (byte) ('A' + remainder - 10);
-
-			} while ((uvalue /= divisor) != 0);
-
-			while (length > 0)
-				WriteChar (buffer [--length]);
-		}
-
 		public unsafe static void Write (byte* message)
 		{
 			for (int i = 0; message [i] != 0; i++)
@@ -296,11 +268,6 @@ namespace SharpOS.ADC.X86
 				WriteChar ((byte) (value & 0xff));
 				value >>= 8;
 			}
-		}
-
-		public unsafe static void WriteNL ()
-		{
-			WriteChar ((byte) '\n');
 		}
 
 		public unsafe static void WriteByte (byte value)

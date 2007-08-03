@@ -98,12 +98,17 @@ namespace SharpOS
 			if (!initialized)
 				return;
 
-			byte key = Keyboard.Translate (scancode);
+			byte key = 0;
+			
+			if (Keyboard.LeftShift () || Keyboard.RightShift ())
+				key = Keyboard.Translate (scancode, true);
+			else
+				key = Keyboard.Translate (scancode, false);
+
 			
 			if (key == 0)
 				return;
 
-			if (Keyboard.LeftShift () || Keyboard.RightShift ())
 				key = ASCII.ToUpper (key);
 			
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);

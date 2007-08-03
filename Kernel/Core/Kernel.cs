@@ -33,22 +33,23 @@ namespace SharpOS
 			TextMode.WriteLine ();
 
 			Arch.Setup ();
-			Keyboard.Setup();
 
 			if (!Multiboot.WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd)) {
 				TextMode.WriteLine (Kernel.String ("Error: multiboot loader required!"));
 				return;
 			}
 			
+			CommandLine.Setup ((Multiboot.Info*)pointer);
+			Keymap.Setup ();
+			Keyboard.Setup();
 			//CPU.Setup ();
+			SharpOS.Console.Setup();
 
 			TextMode.GoTo (0, 23);
 			TextMode.SetAttributes (TextColor.LightGreen, TextColor.Black);
 			TextMode.WriteLine (String ("Pinky: What are we gonna do tonight, Brain?"));
 			TextMode.WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
 			TextMode.RestoreAttributes ();
-
-			SharpOS.Console.Setup();
 
 			//FIXME: this currently crashes the aot-compiler - LogicalError
 			//while (true);

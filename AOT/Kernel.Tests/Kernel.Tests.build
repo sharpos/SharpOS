@@ -61,7 +61,7 @@
 
 		<echo message="AOT compiling testcases..." />
 		<exec program="${path::combine (prefix, 'SharpOS.AOT.exe')}" 
-			commandline="-d:tests.dump -text-dump -v -o ${path::combine(prefix, 'SharpOS.Kernel.bin')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
+			commandline="-v -o:${path::combine(prefix, 'SharpOS.Kernel.bin')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
 	</target>
 	
 	<target name="clean">

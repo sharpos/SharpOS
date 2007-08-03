@@ -1202,6 +1202,8 @@ namespace SharpOS.AOT.X86 {
 			foreach (Instruction instruction in data.instructions)
 				this.instructions.Add (instruction);
 
+			AddResources ();
+
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (END_DATA);
 		}
@@ -1293,7 +1295,6 @@ namespace SharpOS.AOT.X86 {
 			this.AddData ();
 			this.AddSymbols ();
 			this.AddBSS ();
-			this.AddResources ();
 			
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (THE_END);

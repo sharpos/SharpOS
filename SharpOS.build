@@ -11,10 +11,15 @@
 	
 	<target name="build">
 		<echo message="Building projects" />
+		<copy todir="build">
+			<fileset basedir="References">
+				<include name="*" />
+			</fileset>
+		</copy>
 		<nant buildfile="./Tools/Tools.build" />
 		<nant buildfile="./AOT/AOT.build" />
 		<nant buildfile="./Data/Data.build" />
-		<nant buildfile="./Kernel/kernel.build" />
+		<nant buildfile="./Kernel/Kernel.build" />
 		<!-- <nant buildfile="./Userspace/userspace.build" /> -->
 	</target>
 
@@ -28,7 +33,7 @@
 
 	<target name="dist" depends="build">
 		<echo message="Ahead-of-time compiling the SharpOS kernel" />
-		<nant buildfile="./Kernel/SharpOS.Kernel.Core/SharpOS.Kernel.Core.build" 
+		<nant buildfile="./Kernel/Core/Core.build" 
 			target="aot-image" />
 
 		<mkdir dir="dist" />
@@ -41,6 +46,7 @@
 		<nant buildfile="./Tools/Tools.build" target="clean" />
 		<nant buildfile="./AOT/AOT.build" target="clean" />
 		<nant buildfile="./Data/Data.build" target="clean" />
-		<nant buildfile="./Kernel/kernel.build" target="clean" />
+		<nant buildfile="./Kernel/Kernel.build" target="clean" />
+>>>>>>> .r309
 	</target>
 </project>
