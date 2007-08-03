@@ -231,7 +231,10 @@ namespace SharpOS.AOT.IR {
 
 						foreach (Mono.Cecil.Cil.Instruction jump in jumps) {
 
-							if (jump == source.CIL[source.CIL.Count - 1]) 
+							if (jump == source.CIL[source.CIL.Count - 1]
+									&& (source.CIL [source.CIL.Count - 1] != source.CIL [source.CIL.Count - 1].Operand 
+										|| (source.CIL [source.CIL.Count - 1] == source.CIL [source.CIL.Count - 1].Operand
+											&& source.CIL.Count == 1))) 
 								continue;
 
 							for (int destinationIndex = 0; destinationIndex < blocks.Count; destinationIndex++) {

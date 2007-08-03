@@ -144,7 +144,7 @@ namespace SharpOS.AOT.IR {
 				if (streamWriter != null)
 					streamWriter.Dispose ();
 			} catch (Exception ex) {
-				Console.WriteLine (ex.ToString ());
+				//Console.WriteLine (ex.ToString ());
 			}
 		}
 
