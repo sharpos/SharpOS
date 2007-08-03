@@ -77,8 +77,6 @@ namespace KernelTestsWrapperGen {
 			return tr;
 		}
 
-		private static int unitTestsCount = 0;
-
 		public static void ScriptMain (string path)
 		{
 			string ilDLL = Path.Combine (path, "SharpOS.Kernel.Tests.IL.dll");

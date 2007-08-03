@@ -1,0 +1,33 @@
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <ProjectGuid>{5E470596-4138-11DC-8314-0800200C9A66}</ProjectGuid>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <OutputType>Library</OutputType>
+    <RootNamespace>SharpOS.Kernel.Tests.IL</RootNamespace>
+    <AssemblyName>SharpOS.Kernel.Tests.IL</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
+    <OutputPath>..\..\..\build</OutputPath>
+    <DebugSymbols>True</DebugSymbols>
+    <DebugType>Full</DebugType>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)' == 'Release' ">
+    <OutputPath>..\..\..\build</OutputPath>
+    <DebugSymbols>False</DebugSymbols>
+    <DebugType>None</DebugType>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="*.il" />
+  </ItemGroup>
+  
+	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+	
+	<Target Name="Build">
+		<Exec Command="$(MSBuildBinPath)\ilasm.exe /nologo /debug /output=..\..\..\build\SharpOS.Kernel.Tests.IL.dll /dll @(Compile->'%(Filename)%(Extension)',' ')" />
+	</Target>
+	
+	<Target Name="Clean">
+		<Delete Files="..\..\..\build\SharpOS.Kernel.Tests.IL.dll;..\..\..\build\SharpOS.Kernel.Tests.IL.pdb" />
+	</Target>
+</Project>

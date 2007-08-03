@@ -32,7 +32,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\..\build\SharpOS.AOT.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>

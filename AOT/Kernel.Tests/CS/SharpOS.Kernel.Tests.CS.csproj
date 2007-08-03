@@ -63,11 +63,19 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
-  <Target Name="PrintIntermediateAssemblyName" DependsOnTargets="Compile">
-    <Message Text="Intermediate assembly name: @(IntermediateAssembly)" />
-    <Message Text="Int assm full path:&#xD;&#xA;		$(MSBuildProjectDirectory)\@(IntermediateAssembly)" />
-    <Message Text="---------CoreBuildDependsOn--------------" />
-    <Message Text="$(CoreBuildDependsOn)" />
-    <Message Text="-----------------------------------------" />
-  </Target>
+  
+	<Target Name="PrintIntermediateAssemblyName" DependsOnTargets="Compile">
+		<Message Text="Intermediate assembly name: @(IntermediateAssembly)" />
+		<Message Text="Int assm full path:&#xD;&#xA;		$(MSBuildProjectDirectory)/@(IntermediateAssembly)" />
+		<Message Text="---------CoreBuildDependsOn--------------" />
+		<Message Text="$(CoreBuildDependsOn)" />
+		<Message Text="-----------------------------------------" />
+	</Target>
+	<Target Name="MyComputedData" DependsOnTargets="GetNativeManifest">
+		<Message Text="-----------------------------------------" />
+		<Message Text="@(ComputedApplicationManifest)" />
+		<Message Text="$(_DeploymentApplicationManifestIdentity)" />
+		<Message Text="%(_ApplicationManifestFinal.FullPath)" />
+		<Message Text="-----------------------------------------" />
+	</Target>
 </Project>
