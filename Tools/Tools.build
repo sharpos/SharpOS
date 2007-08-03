@@ -12,6 +12,7 @@
 		<echo message="Building useful tools..." />
 		<nant buildfile="./KeyCompiler/KeyCompiler.build" />
 		<nant buildfile="./KernelTestsWrapperGen/KernelTestsWrapperGen.build" />
+		<nant buildfile="./DiskImageUpdater/DiskImageUpdater.build" />
 	</target>
 
 	<target name="test">
@@ -21,5 +22,6 @@
 	<target name="clean">
 		<nant buildfile="./KeyCompiler/KeyCompiler.build" target="clean" />
 		<nant buildfile="./KernelTestsWrapperGen/KernelTestsWrapperGen.build" target="clean" />
+		<nant buildfile="./DiskImageUpdater/DiskImageUpdater.build" target="clean" />
 	</target>
 </project>

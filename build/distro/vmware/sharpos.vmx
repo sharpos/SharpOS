@@ -15,7 +15,7 @@ workingDir = ""
 debug = "TRUE"
 monitor_control.log_vmsample = "TRUE"
 
-uuid.location = "56 4d 2f 66 28 39 1a 37-6b b7 de 52 26 8e 85 fa"
+uuid.location = "56 4d 52 b4 33 d9 7f c1-d4 3a 9e 2e dd 10 cf 52"
 uuid.bios = "56 4d 5a 8b 15 f8 34 34-18 7b 54 61 34 be f9 f3"
 
 serial0.present = "TRUE"
@@ -32,3 +32,5 @@ virtualHW.productCompatibility = "hosted"
 tools.upgrade.policy = "manual"
 
 checkpoint.vmState = "sharpos.vmss"
+
+extendedConfigFile = "sharpos.vmxf"

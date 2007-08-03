@@ -5,16 +5,19 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
+[assembly: Mono.UsageComplement ("-i <kernel> -o <disk image>")]
+[assembly: Mono.Author ("Mircea-Cristian Racasan (darx_kies@gmx.net)")]
+[assembly: Mono.About ("")]
 
-[assembly: AssemblyTitle ("KernelTestsWrapperGen") ]
+[assembly: AssemblyTitle ("DiskImageUpdater") ]
 
-[assembly: AssemblyDescription ("It generates the Wrapper.cs for the SharpOS.Kernel.Tests project and the NUnit wrapper.") ]
+[assembly: AssemblyDescription ("An Ext2-Updater for the disk.img. For now only the SharpOS.Kernel.bin gets updated.") ]
 
 [assembly: AssemblyConfiguration ("") ]
 
 [assembly: AssemblyCompany ("The SharpOS Project (http://sharpos.org/)") ]
 
-[assembly: AssemblyProduct ("SharpOS Kernel Tests Wrapper Generator") ]
+[assembly: AssemblyProduct ("SharpOS Disk Image Updater") ]
 
 [assembly: AssemblyCopyright ("Copyright © 2007, The SharpOS Project") ]
 
@@ -43,3 +46,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyVersion ("1.0.0.0") ]
 
 [assembly: AssemblyFileVersion ("1.0.0.0") ]
+

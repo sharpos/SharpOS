@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Mircea-Cristian Racasan <darx_kies [at] gmx [dot] net>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="DiskImageUpdater" default="build">
+	<property name="debug" value="false" readonly="false" overwrite="false" />
+	<property name="prefix" value="../../build" overwrite="false" />
+	
+	<target name="build">
+		<echo message="Building DiskImageUpdater" />
+		
+		<csc target="exe" output="${path::combine(prefix, 'DiskImageUpdater.exe')}" debug="${debug}" unsafe="true">
+			<sources>
+				<include name="*.cs" />
+			</sources>
+		</csc>
+	</target>
+	
+	<target name="clean">
+		<delete file="${path::combine(prefix, 'DiskImageUpdater.exe')}" failonerror="false" />
+	</target>
+</project>
