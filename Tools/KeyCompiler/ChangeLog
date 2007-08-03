@@ -1,4 +1,7 @@
 2007-08-02  William Lahti  <xfurious@gmail.com>
+	* KeyCompiler.build: changed 'overwrite' on 'prefix' property to
+	'true', no more keycompiler files in build/KeyMaps
+2007-08-02  William Lahti  <xfurious@gmail.com>
 	* removed stale debug statement
 
 2007-07-24  William Lahti  <xfurious@gmail.com>

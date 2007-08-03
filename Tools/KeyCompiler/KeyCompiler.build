@@ -9,7 +9,7 @@
 
 <project name="KeyCompiler" default="build">
 	<property name="debug" value="false" readonly="false" overwrite="false" />
-	<property name="prefix" value="../../build" overwrite="false" />
+	<property name="prefix" value="../../build" overwrite="true" />
 	
 	<target name="build">
 		<echo message="Building KeyCompiler" />
