@@ -10,11 +10,15 @@
 <project name="DiskImageUpdater" default="build">
 	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../../build" overwrite="false" />
+	<copy file="../../References/Mono.GetOptions.dll" tofile="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 	
 	<target name="build">
 		<echo message="Building DiskImageUpdater" />
 		
 		<csc target="exe" output="${path::combine(prefix, 'DiskImageUpdater.exe')}" debug="${debug}" unsafe="true">
+			<references>
+				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
+			</references>
 			<sources>
 				<include name="*.cs" />
 			</sources>
@@ -23,5 +27,6 @@
 	
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'DiskImageUpdater.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'Mono.GetOptions.dll')}" failonerror="false" />
 	</target>
 </project>
