@@ -27,5 +27,8 @@
 	
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'KernelTestsWrapperGen.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'KernelTestsWrapperGen.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'KernelTestsWrapperGen.exe.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'KernelTestsWrapperGen.pdb')}" failonerror="false" />
 	</target>
 </project>

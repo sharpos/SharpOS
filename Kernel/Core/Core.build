@@ -65,6 +65,10 @@
 	<target name="clean">
 		<delete file="build/keymaps.ska" failonerror="false" />
 		<delete file="${path::combine(temp-dir, 'BuiltinKeymaps.ska')}" failonerror="false" />
+		
 		<delete file="${path::combine(prefix, 'SharpOS.Kernel.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.bin')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.pdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.dll.mdb')}" failonerror="false" />
 	</target>
 </project>

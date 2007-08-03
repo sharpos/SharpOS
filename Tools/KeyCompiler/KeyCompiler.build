@@ -27,5 +27,8 @@
 	
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'key-compiler.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'key-compiler.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'key-compiler.exe.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'key-compiler.pdb')}" failonerror="false" />
 	</target>
 </project>

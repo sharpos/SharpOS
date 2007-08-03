@@ -66,9 +66,27 @@
 	
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.dll.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.pdb')}" failonerror="false" />
+
 		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.pdb')}" failonerror="false" />
+		
 		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.pdb')}" failonerror="false" />
+		
 		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.NUnit.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.NUnit.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.NUnit.dll.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.Kernel.Tests.NUnit.pdb')}" failonerror="false" />
+
+		<delete file="${path::combine(prefix, 'tests.dump')}" failonerror="false" />
+		
 		<delete file="Wrapper.cs" failonerror="false" />
 		<delete file="NUnit/SharpOS.Kernel.Tests.NUnit.cs" failonerror="false" />
 	</target>

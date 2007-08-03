@@ -27,6 +27,10 @@
 	
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'DiskImageUpdater.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'DiskImageUpdater.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'DiskImageUpdater.exe.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'DiskImageUpdater.pdb')}" failonerror="false" />
+		
 		<delete file="${path::combine(prefix, 'Mono.GetOptions.dll')}" failonerror="false" />
 	</target>
 </project>

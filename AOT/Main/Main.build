@@ -45,6 +45,7 @@
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe.mdb')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.pdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.xml')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'Mono.GetOptions.dll')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'Mono.Cecil.dll')}" failonerror="false" />
 	</target>

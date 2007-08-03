@@ -18,8 +18,9 @@
 		
 		<mkdir dir="${prefix}" />
 		
-		<csc target="library" output="${path::combine(prefix, 'SharpOS.AOT.Tests.dll')}" debug="${debug}" 
-				unsafe="true">
+		<copy file="../../References/nunit.framework.dll" tofile="${path::combine(prefix, 'nunit.framework.dll')}" />
+		
+		<csc target="library" output="${path::combine(prefix, 'SharpOS.AOT.Tests.dll')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="../../References/nunit.framework.dll" />
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
@@ -31,12 +32,15 @@
 				<include name="AssemblyInfo.cs" />
 			</sources>
 		</csc>
-		
-		<copy file="../../References/nunit.framework.dll" tofile="${path::combine(prefix, 'nunit.framework.dll')}" />
 	</target>
 
 	<target name="clean">
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Tests.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.Tests.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.Tests.dll.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.AOT.Tests.pdb')}" failonerror="false" />
+		
 		<delete file="${path::combine(prefix, 'nunit.framework.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'nunit.framework.xml')}" failonerror="false" />
 	</target>
 </project>

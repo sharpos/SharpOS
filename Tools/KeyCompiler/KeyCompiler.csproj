@@ -8,7 +8,7 @@
     <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>KeyCompiler</RootNamespace>
-    <AssemblyName>KeyCompiler</AssemblyName>
+    <AssemblyName>key-compiler</AssemblyName>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -45,7 +45,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\build\KEyCompiler.xml</DocumentationFile>
+    <DocumentationFile>..\build\key-compiler.xml</DocumentationFile>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
