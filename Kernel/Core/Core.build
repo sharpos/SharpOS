@@ -50,12 +50,6 @@
 			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')}" />
 	</target>
 
-	<target name="aot-image">
-		<echo message="AOT compiling the SharpOS Kernel" />
-		<exec program="${path::combine(prefix, 'SharpOS.AOT.exe')}" 
-			commandline="-v -i -c:${arch} -bin-out:${path::combine(prefix, 'SharpOS.Kernel.bin')} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')}" />
-	</target>
-
 	<target name="fxcop" depends="build">
 		<exec program="fxcopcmd.exe"
 			commandline="/p:SharpOS.Kernel.Core.fxcop /o:${path::combine(prefix, 'SharpOS.Kernel.Core-fxcop.xml')}" 

@@ -58,7 +58,7 @@
   -->
   <PropertyGroup>
     <PostBuildEvent>$(TargetDir)\SharpOS.AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll
-copy $(TargetDir)\..\Data\disk.img $(TargetDir)\distro\common
-$(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\disk.img</PostBuildEvent>
+copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
+$(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -2,7 +2,7 @@ megs: 32
 debugger_log: debug.log
 log: info.log
 
-floppya: image=./../common/disk.img, status=inserted
+floppya: image=./../common/SharpOS.img, status=inserted
 
 boot: floppy
 

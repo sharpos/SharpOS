@@ -1,7 +1,7 @@
 config.version = "8"
 virtualHW.version = "4"
 memsize = "256"
-floppy0.fileName = "./../common/disk.img"
+floppy0.fileName = "./../common/SharpOS.img"
 sound.present = "TRUE"
 sound.virtualDev = "es1371"
 displayName = "SharpOS"

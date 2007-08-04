@@ -34,12 +34,12 @@
 	<target name="dist" depends="build">
 		<echo message="Ahead-of-time compiling the SharpOS kernel" />
 		<nant buildfile="./Kernel/Core/Core.build" 
-			target="aot-image" />
-
-		<mkdir dir="dist" />
-		<copy file="build/SharpOS.Kernel.dll" todir="dist" />
-		<copy file="build/SharpOS.Kernel.bin" todir="dist" />
-		<copy file="build/SharpOS.Kernel.img" todir="dist" />
+			target="aot" />
+		<copy file="Data/DiskImages/TemplateDisk.img" tofile="build/distro/common/SharpOS.img" />
+		<echo message="Embedding the kernel into a disk image for testing..." />
+		<exec program="build/DiskImageUpdater.exe" 
+			commandline="-o build/distro/common/SharpOS.img -i build/SharpOS.Kernel.bin" />
+		<echo message="Distribution is built at build/distro." />
 	</target>
 	
 	<target name="clean">
@@ -47,6 +47,5 @@
 		<nant buildfile="./AOT/AOT.build" target="clean" />
 		<nant buildfile="./Data/Data.build" target="clean" />
 		<nant buildfile="./Kernel/Kernel.build" target="clean" />
->>>>>>> .r309
 	</target>
 </project>

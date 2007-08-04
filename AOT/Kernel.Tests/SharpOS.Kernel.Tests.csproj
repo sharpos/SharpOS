@@ -75,7 +75,7 @@
   <PropertyGroup>
     <PreBuildEvent>$(TargetDir)\KernelTestsWrapperGen.exe</PreBuildEvent>
     <PostBuildEvent>$(TargetDir)\SharpOS.AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.Tests.dll $(TargetDir)\SharpOS.Kernel.Tests.IL.dll $(TargetDir)\SharpOS.Kernel.Tests.CS.dll
-copy $(TargetDir)\..\Data\disk.img $(TargetDir)\distro\common
-$(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\disk.img</PostBuildEvent>
+copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common
+$(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.Kernel.img</PostBuildEvent>
   </PropertyGroup>
 </Project>
