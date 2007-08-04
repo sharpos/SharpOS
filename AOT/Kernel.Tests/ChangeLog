@@ -4,4 +4,5 @@
 	* CS/UnsignedIntegerCast.cs: conversions between unsigned integers
 	* CS/PointerCast.cs: conversions between pointer types
 	* CS/MixedIntegerPointerCast.cs: dereferencing to integer types
-
+	* CS/StaticConstructor.cs: tests the AOT's static constructor support
+	* CS/ByteString.cs: tests the AOT 'String' stub.
