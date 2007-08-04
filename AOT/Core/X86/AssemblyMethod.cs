@@ -1736,7 +1736,7 @@ namespace SharpOS.AOT.X86 {
 				address = this.GetMemory (operand.SizeType, R32.EBP, 0, this.GetArgumentOffset (index) * 4);
 
 			} else if (operand.Stack != int.MinValue) {
-				address = this.GetMemory (operand.SizeType, R32.EBP, 0, -((3 + operand.Stack) * 4));
+				address = this.GetMemory (operand.SizeType, R32.EBP, 0, -((4 + operand.Stack) * 4));
 			
 			} else
 				throw new Exception ("Wrong '" + operand.ToString () + "' Operand.");

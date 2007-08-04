@@ -51,12 +51,7 @@ namespace SharpOS
 			TextMode.WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
 			TextMode.RestoreAttributes ();
 
-			//FIXME: this currently crashes the aot-compiler - LogicalError
-			//while (true);
-			
-			//this works;
-			byte n = 0;
-			while (n < 100) { }
+			while (true);
 		}
 
 		public unsafe static void SetKernelStage (KernelStage stage)

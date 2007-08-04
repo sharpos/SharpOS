@@ -13,6 +13,10 @@
 	<property name="arch" value="X86" readonly="false" overwrite="false" />
 	<property name="aot-options" value="" readonly="false" overwrite="false" />
 	<property name="temp-dir" value="${path::combine(prefix, 'Temp')}" />
+	<property name="distro-dir" value="${path::combine(prefix, 'distro')}" />
+	<property name="common-dir" value="${path::combine(distro-dir, 'common')}" />
+	<property name="data-dir" value="../../Data" />
+	<property name="disk-images-dir" value="${path::combine(data-dir, 'DiskImages')}" />
 
 	<target name="conf">
 		<!-- nothing yet -->		
@@ -42,6 +46,11 @@
 				<include name="Foundation/*.cs" />
 			</sources>
 		</csc>
+		
+		<copy file="${path::combine(disk-images-dir, 'TemplateDisk.img')} " tofile="${path::combine(common-dir, 'SharpOS.img')}" />
+		
+		<exec program="${path::combine(prefix, 'DiskImageUpdater.exe')}" 
+			commandline="-i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>
 
 	<target name="aot">
