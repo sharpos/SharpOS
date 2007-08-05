@@ -20,14 +20,17 @@
   <ItemGroup>
     <Compile Include="*.il" />
   </ItemGroup>
-  
-	<Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
-	
-	<Target Name="Build">
-		<Exec Command="$(MSBuildBinPath)\ilasm.exe /nologo /debug /output=..\..\..\build\SharpOS.Kernel.Tests.IL.dll /dll @(Compile->'%(Filename)%(Extension)',' ')" />
-	</Target>
-	
-	<Target Name="Clean">
-		<Delete Files="..\..\..\build\SharpOS.Kernel.Tests.IL.dll;..\..\..\build\SharpOS.Kernel.Tests.IL.pdb" />
-	</Target>
+  <ItemGroup>
+    <ProjectReference Include="..\..\..\Tools\KernelTestsWrapperGen\KernelTestsWrapperGen.csproj">
+      <Project>{740EB78B-4306-41AC-880A-D8A494EA4429}</Project>
+      <Name>KernelTestsWrapperGen</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Target Name="Build">
+    <Exec Command="$(TargetDir)\KernelTestsWrapperGen.exe -c $(MSBuildBinPath)\ilasm.exe" />
+  </Target>
+  <Target Name="Clean">
+    <Delete Files="..\..\..\build\SharpOS.Kernel.Tests.IL.dll;..\..\..\build\SharpOS.Kernel.Tests.IL.pdb" />
+  </Target>
 </Project>

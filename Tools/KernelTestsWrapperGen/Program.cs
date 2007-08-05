@@ -11,15 +11,42 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.IO;
+using System.Diagnostics;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
+using Mono.GetOptions;
 
 namespace KernelTestsWrapperGen {
-	class Program {
-		static void Main (string [] args)
+	public class WrapperOptions : Options
+	{
+		public WrapperOptions (string [] args)
+			: base (args)
 		{
-			ScriptMain (System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly ().Location));
+
+		}
+
+		[Option ("Specify the ilasm.exe with full path to compile SharpOS.Kernel.Test.Il.dll if needed.", 'c', "ilasm")]
+		public string ILAsm = "";
+	}
+
+	class Program 
+	{
+		private const string IL_DLL = "SharpOS.Kernel.Tests.IL.dll";
+		private const string CS_DLL = "SharpOS.Kernel.Tests.CS.dll";
+		private const string WRAPPER_CS = "Wrapper.cs";
+		private const string NUNIT_CS = "SharpOS.Kernel.Tests.NUnit.cs";
+
+		static int Main (string [] args)
+		{
+			WrapperOptions opts = new WrapperOptions (args);
+
+			string path = System.IO.Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
+
+			if (opts.ILAsm.Trim ().Length > 0)
+				return CompileIL (opts.ILAsm.Trim(), path);
+			
+			return ScriptMain (path);
 		}
 
 		public static void ProcessAssembly (bool unitTests, string path, TextWriter tr, string assemblyFile)
@@ -56,13 +83,9 @@ namespace KernelTestsWrapperGen {
 			}
 		}
 
-		public static TextWriter OpenFile (string path, string name)
+		public static TextWriter OpenFile (string name)
 		{
-			path = Path.Combine (path, "..");
-			path = Path.Combine (path, "AOT");
-			path = Path.Combine (path, "Kernel.Tests");
-
-			TextWriter tr = new StreamWriter (File.Open (Path.Combine (path, name), FileMode.Create));
+			TextWriter tr = new StreamWriter (File.Open (name, FileMode.Create));
 			tr.WriteLine ("//");
 			tr.WriteLine ("// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)");
 			tr.WriteLine ("//");
@@ -77,43 +100,144 @@ namespace KernelTestsWrapperGen {
 			return tr;
 		}
 
-		public static void ScriptMain (string path)
+		public static int ScriptMain (string path)
 		{
-			string ilDLL = Path.Combine (path, "SharpOS.Kernel.Tests.IL.dll");
-			string csDLL = Path.Combine (path, "SharpOS.Kernel.Tests.CS.dll");
+			string ilDLL = Path.Combine (path, IL_DLL);
+			string csDLL = Path.Combine (path, CS_DLL);
 
-			TextWriter tr = OpenFile (path, "Wrapper.cs");
-
-			tr.WriteLine ("namespace SharpOS {");
-			tr.WriteLine ("\tpublic unsafe partial class KRNL {");
-			tr.WriteLine ("\t\tprotected static void RunTests ()");
-			tr.WriteLine ("\t\t{");
-
-			ProcessAssembly (false, path, tr, ilDLL);
-			ProcessAssembly (false, path, tr, csDLL);
-
-			tr.WriteLine ("\t\t\tScreen.WriteLine (KRNL.String (\"All test cases have completed successfully!\"));");
-
-			tr.WriteLine ("\t\t}");
-			tr.WriteLine ("\t}");
-			tr.WriteLine ("}");
-			tr.Close ();
+			string kernelTestsPath = Path.Combine (Path.Combine (Path.Combine (path, ".."), "AOT"), "Kernel.Tests");
+			
+			string wrapperCS = Path.Combine (kernelTestsPath, WRAPPER_CS);
+			string nunitCS = Path.Combine (Path.Combine (kernelTestsPath, "NUnit"), NUNIT_CS);
 
 
-			tr = OpenFile (path, Path.Combine ("NUnit", "SharpOS.Kernel.Tests.NUnit.cs"));
-			tr.WriteLine ("using NUnit.Framework;");
+			FileInfo ilDLLFileInfo = new FileInfo (ilDLL);
+			FileInfo csDLLFileInfo = new FileInfo (csDLL);
+			FileInfo wrapperCSFileInfo = new FileInfo (wrapperCS);
+			FileInfo nunitCSFileInfo = new FileInfo (nunitCS);
 
-			tr.WriteLine ("");
 
-			tr.WriteLine ("[TestFixture]");
-			tr.WriteLine ("public class KernelTests {");
+			if (ilDLLFileInfo == null || csDLLFileInfo == null) {
+				Console.WriteLine ("One of the source .DLLs is missing.");
+				return 1;
+			}
 
-			ProcessAssembly (true, path, tr, ilDLL);
-			ProcessAssembly (true, path, tr, csDLL);
+			if (wrapperCSFileInfo == null
+					|| wrapperCSFileInfo.LastWriteTime < csDLLFileInfo.LastWriteTime
+					|| wrapperCSFileInfo.LastWriteTime < ilDLLFileInfo.LastWriteTime) {
+				TextWriter tr = OpenFile (wrapperCS);
 
-			tr.WriteLine ("}");
+				tr.WriteLine ("namespace SharpOS {");
+				tr.WriteLine ("\tpublic unsafe partial class KRNL {");
+				tr.WriteLine ("\t\tprotected static void RunTests ()");
+				tr.WriteLine ("\t\t{");
 
-			tr.Close ();
+				ProcessAssembly (false, path, tr, ilDLL);
+				ProcessAssembly (false, path, tr, csDLL);
+
+				tr.WriteLine ("\t\t\tScreen.WriteLine (KRNL.String (\"All test cases have completed successfully!\"));");
+
+				tr.WriteLine ("\t\t}");
+				tr.WriteLine ("\t}");
+				tr.WriteLine ("}");
+				tr.Close ();
+				
+				Console.WriteLine (string.Format ("'{0}' generated.", wrapperCS));
+
+			} else
+				Console.WriteLine (string.Format ("Skipping '{0}'.", wrapperCS));
+
+
+			if (nunitCSFileInfo == null
+					|| nunitCSFileInfo.LastWriteTime < csDLLFileInfo.LastWriteTime
+					|| nunitCSFileInfo.LastWriteTime < ilDLLFileInfo.LastWriteTime) {
+
+				TextWriter tr = OpenFile (nunitCS);
+				tr.WriteLine ("using NUnit.Framework;");
+
+				tr.WriteLine ("");
+
+				tr.WriteLine ("[TestFixture]");
+				tr.WriteLine ("public class KernelTests {");
+
+				ProcessAssembly (true, path, tr, ilDLL);
+				ProcessAssembly (true, path, tr, csDLL);
+
+				tr.WriteLine ("}");
+
+				tr.Close ();
+
+				Console.WriteLine (string.Format ("'{0}' generated.", nunitCS));
+
+			} else
+				Console.WriteLine (string.Format ("Skipping '{0}'.", nunitCS));
+
+			return 0;
+		}
+
+		private static int CompileIL (string ilasm, string buildPath)
+		{
+			string fileList;
+
+			if (!ContinueCompileIL (buildPath, out fileList)) {
+				Console.WriteLine ("Skipped.");
+				return 0;
+			}
+
+			string ilDLL = Path.Combine (buildPath, IL_DLL);
+
+			ProcessStartInfo startInfo = new ProcessStartInfo ();
+			startInfo.FileName = ilasm;
+			startInfo.Arguments = "/dll /quiet /debug /nologo /output=" + ilDLL + " " + fileList;
+			startInfo.RedirectStandardOutput = true;
+			startInfo.RedirectStandardError = true;
+			startInfo.UseShellExecute = false;
+
+			Process process = Process.Start (startInfo);
+			
+			string output = process.StandardOutput.ReadToEnd ();
+			string error = process.StandardError.ReadToEnd ();
+
+			process.WaitForExit ();
+
+			Console.WriteLine (output);
+			Console.WriteLine (error);
+
+			Console.WriteLine ("Done.");
+			return process.ExitCode;
+		}
+
+		private static bool ContinueCompileIL (string buildPath, out string files)
+		{
+			bool result = false;
+
+			string ilDLL = Path.Combine (buildPath, IL_DLL);
+
+			FileInfo ilDllFileInfo = new FileInfo (ilDLL);
+
+			if (ilDllFileInfo == null)
+				result = true;
+
+			string ilPath = Path.Combine (Path.Combine (Path.Combine (Path.Combine (buildPath, ".."), "AOT"), "Kernel.Tests"), "IL");
+
+			DirectoryInfo directoryInfo = new DirectoryInfo (ilPath);
+
+			FileInfo [] fileList = directoryInfo.GetFiles ("*.il");
+
+			StringBuilder stringBuilder = new StringBuilder ();
+
+			foreach (FileInfo file in fileList) {
+				if (!result 
+						&& file.LastWriteTime > ilDllFileInfo.LastWriteTime)
+					result = true;
+
+				stringBuilder.Append (" ");
+				stringBuilder.Append (file.FullName);
+			}
+
+			files = stringBuilder.ToString ();
+
+			return result;
 		}
 	}
 }

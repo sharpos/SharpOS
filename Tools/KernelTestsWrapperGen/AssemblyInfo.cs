@@ -6,9 +6,13 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 
+[assembly: Mono.UsageComplement ("-c <ilasm.exe>")]
+[assembly: Mono.Author ("Mircea-Cristian Racasan (darx_kies@gmx.net)")]
+[assembly: Mono.About ("")]
+
 [assembly: AssemblyTitle ("KernelTestsWrapperGen") ]
 
-[assembly: AssemblyDescription ("It generates the Wrapper.cs for the SharpOS.Kernel.Tests project and the NUnit wrapper.") ]
+[assembly: AssemblyDescription ("It generates the Wrapper.cs for the SharpOS.Kernel.Tests project and the NUnit wrapper. It also compiles the SharpOS.Kernel.Tests.IL.dll if the -c parameter is specified with the name and location of ilasm.exe") ]
 
 [assembly: AssemblyConfiguration ("") ]
 
