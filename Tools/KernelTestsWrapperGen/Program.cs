@@ -28,6 +28,9 @@ namespace KernelTestsWrapperGen {
 
 		[Option ("Specify the ilasm.exe with full path to compile SharpOS.Kernel.Test.Il.dll if needed.", 'c', "ilasm")]
 		public string ILAsm = "";
+		
+		[Option ("Specify the string that has to be contained in the name of a CMP method in order ", 'f', "filter")]
+		public string Filter = "";
 	}
 
 	class Program 
@@ -46,10 +49,10 @@ namespace KernelTestsWrapperGen {
 			if (opts.ILAsm.Trim ().Length > 0)
 				return CompileIL (opts.ILAsm.Trim(), path);
 			
-			return ScriptMain (path);
+			return ScriptMain (path, opts.Filter.Trim ());
 		}
 
-		public static void ProcessAssembly (bool unitTests, string path, TextWriter tr, string assemblyFile)
+		public static void ProcessAssembly (bool unitTests, string path, TextWriter tr, string assemblyFile, string filter)
 		{
 			AssemblyDefinition library = AssemblyFactory.GetAssembly (assemblyFile);
 
@@ -58,6 +61,7 @@ namespace KernelTestsWrapperGen {
 					continue;
 
 				foreach (MethodDefinition entry in type.Methods) {
+					// Skip the method if it is not static, not managed and it does not start with CMP.
 					if (!(entry.IsStatic
 							&& entry.ImplAttributes == MethodImplAttributes.Managed
 							&& entry.Name.StartsWith ("CMP"))) {
@@ -65,15 +69,24 @@ namespace KernelTestsWrapperGen {
 						continue;
 					}
 
+					string entryFullName = entry.DeclaringType.FullName + "." + entry.Name;
+
+					// If a filter has been defined and it is not contained in the method name then skip it.
+					if (filter.Length > 0)
+						if (entryFullName.IndexOf (filter) == -1)
+							continue;
+						else
+							Console.WriteLine (string.Format ("Added '{0}'.", entryFullName));
+
 					if (unitTests) {
 						tr.WriteLine ("\t[Test]");
 						tr.WriteLine ("\tpublic void " + entry.DeclaringType.FullName.Replace (".", "_") + "_" + entry.Name + " ()");
 						tr.WriteLine ("\t\t{");
-						tr.WriteLine ("\t\t\tAssert.IsTrue (" + entry.DeclaringType.FullName + "." + entry.Name + " () == 1, \"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
+						tr.WriteLine ("\t\t\tAssert.IsTrue (" + entryFullName + " () == 1, \"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
 						tr.WriteLine ("\t\t}");
 
 					} else {
-						tr.WriteLine ("\t\t\tif (" + entry.DeclaringType.FullName + "." + entry.Name + " () != 1) {");
+						tr.WriteLine ("\t\t\tif (" + entryFullName + " () != 1) {");
 						tr.WriteLine ("\t\t\t\tScreen.WriteLine (KRNL.String (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\"));");
 						tr.WriteLine ("\t\t\t\treturn;");
 						tr.WriteLine ("\t\t\t}");
@@ -100,7 +113,7 @@ namespace KernelTestsWrapperGen {
 			return tr;
 		}
 
-		public static int ScriptMain (string path)
+		public static int ScriptMain (string path, string filter)
 		{
 			string ilDLL = Path.Combine (path, IL_DLL);
 			string csDLL = Path.Combine (path, CS_DLL);
@@ -122,7 +135,8 @@ namespace KernelTestsWrapperGen {
 				return 1;
 			}
 
-			if (wrapperCSFileInfo == null
+			if (filter.Length > 0
+					|| wrapperCSFileInfo == null
 					|| wrapperCSFileInfo.LastWriteTime < csDLLFileInfo.LastWriteTime
 					|| wrapperCSFileInfo.LastWriteTime < ilDLLFileInfo.LastWriteTime) {
 				TextWriter tr = OpenFile (wrapperCS);
@@ -132,8 +146,8 @@ namespace KernelTestsWrapperGen {
 				tr.WriteLine ("\t\tprotected static void RunTests ()");
 				tr.WriteLine ("\t\t{");
 
-				ProcessAssembly (false, path, tr, ilDLL);
-				ProcessAssembly (false, path, tr, csDLL);
+				ProcessAssembly (false, path, tr, ilDLL, filter);
+				ProcessAssembly (false, path, tr, csDLL, filter);
 
 				tr.WriteLine ("\t\t\tScreen.WriteLine (KRNL.String (\"All test cases have completed successfully!\"));");
 
@@ -148,7 +162,8 @@ namespace KernelTestsWrapperGen {
 				Console.WriteLine (string.Format ("Skipping '{0}'.", wrapperCS));
 
 
-			if (nunitCSFileInfo == null
+			if (filter.Length > 0
+					|| nunitCSFileInfo == null
 					|| nunitCSFileInfo.LastWriteTime < csDLLFileInfo.LastWriteTime
 					|| nunitCSFileInfo.LastWriteTime < ilDLLFileInfo.LastWriteTime) {
 
@@ -160,8 +175,8 @@ namespace KernelTestsWrapperGen {
 				tr.WriteLine ("[TestFixture]");
 				tr.WriteLine ("public class KernelTests {");
 
-				ProcessAssembly (true, path, tr, ilDLL);
-				ProcessAssembly (true, path, tr, csDLL);
+				ProcessAssembly (true, path, tr, ilDLL, filter);
+				ProcessAssembly (true, path, tr, csDLL, filter);
 
 				tr.WriteLine ("}");
 
