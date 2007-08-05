@@ -20,12 +20,6 @@
   <ItemGroup>
     <Compile Include="*.il" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\..\Tools\KernelTestsWrapperGen\KernelTestsWrapperGen.csproj">
-      <Project>{740EB78B-4306-41AC-880A-D8A494EA4429}</Project>
-      <Name>KernelTestsWrapperGen</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build">
     <Exec Command="$(TargetDir)\KernelTestsWrapperGen.exe -c $(MSBuildBinPath)\ilasm.exe" />

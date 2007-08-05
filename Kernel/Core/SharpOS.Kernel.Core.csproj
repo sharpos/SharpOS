@@ -48,6 +48,12 @@
   <ItemGroup>
     <Compile Include="**\*.cs" />
   </ItemGroup>
+	<ItemGroup>
+		<EmbeddedResource Include="..\..\build\BuiltinKeymaps.ska">
+			<LogicalName>BuiltinKeymaps.ska</LogicalName>
+		</EmbeddedResource>
+	</ItemGroup>
+	
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -60,5 +66,6 @@
     <PostBuildEvent>$(TargetDir)\SharpOS.AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll
 copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
 $(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>
+    <PreBuildEvent>$(TargetDir)\key-compiler.exe -ar -o:$(TargetDir)\BuiltinKeymaps.ska '@Config/BuiltinKeymaps.cfg'</PreBuildEvent>
   </PropertyGroup>
 </Project>
