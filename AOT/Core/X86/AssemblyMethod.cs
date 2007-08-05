@@ -829,9 +829,13 @@ namespace SharpOS.AOT.X86 {
 					assembly.CMP (register, Assembly.GetRegister (second.Register));
 
 				} else {
-					Memory memory = this.GetMemory (second as Identifier);
+					R32Type spare = assembly.GetSpareRegister ();
 
-					assembly.CMP (register, memory as DWordMemory);
+					this.MovRegisterMemory (spare, second as Identifier);
+
+					assembly.CMP (register, spare);
+
+					assembly.FreeSpareRegister (spare);
 				}
 
 				switch (type) {

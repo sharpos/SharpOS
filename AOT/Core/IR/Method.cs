@@ -1754,7 +1754,12 @@ namespace SharpOS.AOT.IR {
 									continue;
 
 								if (pass == 1) {
-									if (used.Value is Identifier)
+									if (used.Value is Reference) {
+										Reference reference = used.Value as Reference;
+
+										reference.Value = definition.Value as Identifier;
+
+									} else if (used.Value is Identifier)
 										used.Value = definition.Value;
 
 									else
