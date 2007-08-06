@@ -88,7 +88,7 @@ namespace KernelTestsWrapperGen {
 					} else {
 						tr.WriteLine ("\t\t\tif (" + entryFullName + " () != 1) {");
 						tr.WriteLine ("\t\t\t\tScreen.WriteLine (KRNL.String (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\"));");
-						tr.WriteLine ("\t\t\t\treturn;");
+						//tr.WriteLine ("\t\t\t\treturn;");
 						tr.WriteLine ("\t\t\t}");
 						tr.WriteLine ("");
 					}
