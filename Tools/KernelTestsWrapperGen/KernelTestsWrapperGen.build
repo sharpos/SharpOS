@@ -14,10 +14,12 @@
 	<target name="build">
 		<echo message="Building KernelTestsWrapperGen" />
 		<copy file="../../References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
+		<copy file="../../References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 		
 		<csc target="exe" output="${path::combine(prefix, 'KernelTestsWrapperGen.exe')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="${path::combine(prefix, 'Mono.Cecil.dll')}" />
+				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 			</references>
 			<sources>
 				<include name="*.cs" />
