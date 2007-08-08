@@ -24,11 +24,13 @@ namespace SharpOS.Kernel.Tests.CS {
 			if (3 * 5 - 2 / 3 + 4 - 1 * 3 != 16)
 				return 0;
 
-			if ((4 + 10) * 2 != 80)
+			if ((4 + 10) * 2 != 28)
 				return 0;
 
-			if (2 * (4 + 10) != 80)
+			if (2 * (4 + 10) == 80)
 				return 0;
+
+			return 1;
 		}
 
 		public static uint CMPValues ()
@@ -72,14 +74,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			b = 10;
 			c = 2;
 			
-			if ((a + b) * c != 80)
+			if ((a + b) * c != 28)
 				return 0;
 
 			a = 2;
 			b = 4;
 			c = 10;
 			
-			if (a * (b + c) != 80)
+			if (a * (b + c) == 80)
 				return 0;
 				
 			return 1;
@@ -120,13 +122,13 @@ namespace SharpOS.Kernel.Tests.CS {
 			b = 10;
 			c = 2;
 			
-			if ((4 + b) * c != 80)
+			if ((4 + b) * c != 28)
 				return 0;
 
 			a = 2;
 			b = 4;
 			
-			if (a * (b + 10) != 80)
+			if (a * (b + 10) == 80)
 				return 0;
 				
 			return 1;
