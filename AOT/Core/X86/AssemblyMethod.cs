@@ -244,7 +244,14 @@ namespace SharpOS.AOT.X86 {
 					} else {
 						R32Type register = assembly.GetSpareRegister();
 
-						this.MovRegisterMemory (register, expression.Operands[0] as Identifier);
+						if (expression.Operands [0] is Constant)
+							this.MovRegisterConstant (register, expression.Operands [0] as Constant);
+
+						else if (expression.Operands [0] is Identifier)
+							this.MovRegisterMemory (register, expression.Operands[0] as Identifier);
+
+						else
+							throw new Exception ("'" + expression.Operands[0] + "' is not supported.");
 
 						assembly.TEST (register, register);
 
@@ -1195,7 +1202,6 @@ namespace SharpOS.AOT.X86 {
 				} else if (type == Binary.BinaryType.Or) {
 					if (second is Constant) {
 						UInt32 value = (uint) Convert.ToInt32 ( (second as Constant).Value);
-						//UInt32 value = Convert.ToUInt32 (Convert.ToInt32 ( (second as Constant).Value));
 
 						assembly.OR (register, value);
 
@@ -1208,6 +1214,25 @@ namespace SharpOS.AOT.X86 {
 						this.MovRegisterMemory (spareRegister, second as Identifier);
 
 						assembly.OR (register, spareRegister);
+
+						this.assembly.FreeSpareRegister (spareRegister);
+					}
+
+				} else if (type == Binary.BinaryType.Xor) {
+					if (second is Constant) {
+						UInt32 value = (uint) Convert.ToInt32 ((second as Constant).Value);
+
+						assembly.XOR (register, value);
+
+					} else if (second.IsRegisterSet) {
+						assembly.XOR (register, Assembly.GetRegister (second.Register));
+
+					} else {
+						R32Type spareRegister = this.assembly.GetSpareRegister ();
+
+						this.MovRegisterMemory (spareRegister, second as Identifier);
+
+						assembly.XOR (register, spareRegister);
 
 						this.assembly.FreeSpareRegister (spareRegister);
 					}

@@ -1100,7 +1100,18 @@ namespace SharpOS.AOT.IR {
 			/// <param name="value">The value.</param>
 			public void SetDefinition (string key, Instructions.Instruction value)
 			{
-				this.GetItem (key).SetDefinition (value);
+				this.SetDefinition (key, value, false);
+			}
+
+			/// <summary>
+			/// Sets the definition.
+			/// </summary>
+			/// <param name="key">The key.</param>
+			/// <param name="value">The value.</param>
+			/// <param name="force">if set to <c>true</c> no checks are performed.</param>
+			public void SetDefinition (string key, Instructions.Instruction value, bool force)
+			{
+				this.GetItem (key).SetDefinition (value, force);
 			}
 
 			/// <summary>
@@ -1188,7 +1199,19 @@ namespace SharpOS.AOT.IR {
 			/// <param name="value">The value.</param>
 			public void SetDefinition (Instructions.Instruction value)
 			{
-				if (this.definition == null)
+				this.SetDefinition (value, false);
+			}
+
+			/// <summary>
+			/// Sets the definition.
+			/// </summary>
+			/// <param name="value">The value.</param>
+			/// <param name="force">if set to <c>true</c> no checks are performed.</param>
+			public void SetDefinition (Instructions.Instruction value, bool force)
+			{
+				if (force)
+					this.definition = value;
+				else if (this.definition == null)
 					this.definition = value;
 
 				else if (!(value is Instructions.System))
@@ -1294,6 +1317,11 @@ namespace SharpOS.AOT.IR {
 					return false;
 
 				return true;
+			}
+
+			public override string ToString ()
+			{
+				return this.definition.ToString ();
 			}
 		}
 
@@ -1662,7 +1690,8 @@ namespace SharpOS.AOT.IR {
 
 				Instructions.Instruction definition = item.Definition;
 
-				// v2 = PHI(v1, v1)
+				// If the PHI values are all the same then PHI is replaced with the first value. 
+				// (e.g. v2 = PHI(v1, v1) -> v2 = v1)
 				if (definition is PHI) {
 					Operand sample = definition.Value.Operands [0];
 
@@ -1684,7 +1713,7 @@ namespace SharpOS.AOT.IR {
 					definition.Block.RemoveInstruction (definition);
 					definition.Block.InsertInstruction (0, assign);
 
-					this.defuse.SetDefinition (key, assign);
+					this.defuse.SetDefinition (key, assign, true);
 				}
 
 				// A = 100
