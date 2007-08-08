@@ -1178,7 +1178,9 @@ namespace SharpOS.AOT.IR {
 
 				// Array
 				else if (cilInstruction.OpCode == OpCodes.Newarr) {
-					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.NewArray), this.Register (stack - 1)));
+					// TODO managed/unmanaged
+					throw new Exception ("Needs to be implemented.");
+					//instruction = new Assign (this.Register (stack - 1), new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.NewArray), cilInstruction.Operand ));
 
 				} else if (cilInstruction.OpCode == OpCodes.Stelem_Ref
 						|| cilInstruction.OpCode == OpCodes.Stelem_Any
@@ -1226,6 +1228,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="block">The block.</param>
 		public void Merge (Block block)
 		{
+			// Remove the jump that connects this block with the block parameter
 			if (this.type == BlockType.OneWay) 
 				this.cil.Remove (this.cil[this.cil.Count - 1]);
 
@@ -1233,8 +1236,16 @@ namespace SharpOS.AOT.IR {
 
 			this.outs = block.outs;
 
+			// Add the instructions of the block parameter
 			foreach (Mono.Cecil.Cil.Instruction instruction in block.cil) 
 				this.cil.Add (instruction);
+
+			foreach (Block _out in block.outs) {
+				for (int i = 0; i < _out.ins.Count; i++) {
+					if (_out.ins [i] == block)
+						_out.ins [i] = this;
+				}
+			}
 		}
 
 		/// <summary>

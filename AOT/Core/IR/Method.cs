@@ -427,7 +427,7 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < blocks.Count; i++) {
 				for (int j = 0; j < blocks.Count; j++) {
 					if (blocks[j].Outs.Contains (blocks[i])
-						|| (j + 1 == i && blocks[j].Type == Block.BlockType.NWay))
+							|| (j + 1 == i && blocks[j].Type == Block.BlockType.NWay))
 						blocks[i].Ins.Add (blocks[j]);
 				}
 			}
@@ -446,13 +446,13 @@ namespace SharpOS.AOT.IR {
 				changed = false;
 
 				for (int i = 1; i < this.blocks.Count; i++) {
-					if (this.blocks[i].Ins.Count == 1
-							&& this.blocks[i - 1].Outs.Count == 1
-							&& this.blocks[i].Ins[0] == this.blocks[i - 1]
-							&& this.blocks[i - 1].Outs[0] == this.blocks[i]) {
-						this.blocks[i - 1].Merge (this.blocks[i]);
+					if (this.blocks [i].Ins.Count == 1
+							&& this.blocks [i - 1].Outs.Count == 1
+							&& this.blocks [i].Ins [0] == this.blocks [i - 1]
+							&& this.blocks [i - 1].Outs [0] == this.blocks [i]) {
+						this.blocks [i - 1].Merge (this.blocks [i]);
 
-						this.blocks.Remove (this.blocks[i]);
+						this.blocks.Remove (this.blocks [i]);
 
 						changed = true;
 						break;
@@ -1257,35 +1257,43 @@ namespace SharpOS.AOT.IR {
 
 			public bool SkipCopyPropagation (Engine engine) 
 			{
-				if (!(definition is Assign) || this.Count == 0)
+				// ... if it is no assign instruction
+				if (!(definition is Assign))
 					return true;
 
+				// ... if it is an initialization of a varible
 				if (definition is Initialize)
 					return true;
 
+				// ... if it is not used by any other instruction
+				if (this.Count == 0)
+					return true;
+
+
 				Assign assign = definition as Assign;
 
-				if (assign.Value.ConvertTo != SharpOS.AOT.IR.Operands.Operand.ConvertType.NotSet
-					/*|| assign.Value is Reference*/
-						|| (assign.Value is Field && !engine.Assembly.IsRegister ((assign.Value as Identifier).Value))
-						|| assign.Value is Arithmetic) {
+				// ... if it is a conversion
+				if (assign.Value.ConvertTo != SharpOS.AOT.IR.Operands.Operand.ConvertType.NotSet)
 					return true;
 
-				} else if (assign.Assignee is Register
-						&& assign.Value is Identifier
-						&& engine.Assembly.IsRegister ((assign.Value as Identifier).Value)) {
-
-				} else if (assign.Assignee is Register
-						&& assign.Value is Operands.Call
-						&& engine.Assembly.IsInstruction ((assign.Value as Operands.Call).Method.DeclaringType.FullName)) {
-
-				} else if (assign.Assignee is Identifier
-						&& assign.Value is Identifier) {
-
-				} else
+				// ... if it is a reference or address
+				if (assign.Value is Reference)
 					return true;
 
-				return false;
+				// ... if it is a field
+				if (assign.Value is Field)
+					return true;
+				
+				// ... if it is an arithmetic
+				if (assign.Value is Arithmetic)
+					return true;
+
+				// ... else 
+				if (assign.Assignee is Identifier
+						&& assign.Value is Identifier)
+					return false;
+
+				return true;
 			}
 		}
 
@@ -1489,6 +1497,73 @@ namespace SharpOS.AOT.IR {
 			
 			return;
 		}
+
+		private void AssemblyCallPropagationLogic (Instructions.Instruction instruction, Operands.Call operand)
+		{
+			for (int i = 0; i < operand.Operands.Length; i++) {
+				Operand parameter = operand.Operands [i];
+				DefUseItem item = null;
+				bool first = true;
+				Assign assign = null;
+
+				do {
+					if (!this.defuse.Contains (parameter.ID))
+						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", parameter.ID));
+
+					item = this.defuse [parameter.ID];
+
+					// Remove it from the usage list
+					if (first) {
+						first = false;
+						item.RemoveUsage (instruction);
+					}
+
+					assign = item.Definition as Assign;
+
+					parameter = assign.Value;
+				}
+				while (parameter is Register);
+
+				operand.Operands [i] = parameter;
+
+				if (parameter is Operands.Address) {
+					Operands.Address address = parameter as Operands.Address;
+
+					if (!this.defuse.Contains (address.Value.ID))
+						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", address.Value.ID));
+
+					item = this.defuse [address.Value.ID];
+
+					// Add it to the new item's usage list
+					item.AddUsage (instruction);
+				}
+
+				if (parameter is Operands.Call)
+					this.AssemblyCallPropagationLogic (assign, parameter as Operands.Call);
+			}
+		}
+
+		/// <summary>
+		/// It is a Constant and Copy Propagation but only for Assembly calls. (e.g. Asm.MOV...)
+		/// </summary>
+		/// <returns></returns>
+		private void AssemblyPropagation ()
+		{
+			foreach (Block block in this.blocks) {
+				foreach (Instructions.Instruction instruction in block) {
+					if (instruction is Instructions.Call
+							&& engine.Assembly.IsInstruction ((instruction as Instructions.Call).Method.Method.DeclaringType.FullName)) {
+						Instructions.Call call = (instruction as Instructions.Call);
+						Operands.Call operand = (call.Value as Operands.Call);
+
+						this.AssemblyCallPropagationLogic (instruction, operand);
+					}
+				}
+			}
+
+			return;
+		}
+
 		/// <summary>
 		/// If there is an instruction like 'a = 1 + 2' is encountered then it gets replaced with 
 		/// 'a = 3'.
@@ -1533,7 +1608,7 @@ namespace SharpOS.AOT.IR {
 
 						// TODO implement the other combinations
 						if (constant1.SizeType == Operand.InternalSizeType.I4
-							&& constant2.SizeType == Operand.InternalSizeType.I4) {
+								&& constant2.SizeType == Operand.InternalSizeType.I4) {
 
 							changed = true;
 
@@ -1545,7 +1620,7 @@ namespace SharpOS.AOT.IR {
 					} else if (binary.Type == Operator.BinaryType.Sub) {
 						// TODO implement the other combinations
 						if (constant1.SizeType == Operand.InternalSizeType.I4
-							&& constant2.SizeType == Operand.InternalSizeType.I4) {
+								&& constant2.SizeType == Operand.InternalSizeType.I4) {
 
 							changed = true;
 
@@ -1796,7 +1871,6 @@ namespace SharpOS.AOT.IR {
 							}
 						}
 					}
-
 				}
 
 				if (!_break) {
@@ -1831,7 +1905,6 @@ namespace SharpOS.AOT.IR {
 		/// <value>The full name of the method.</value>
 		public string MethodFullName {
 			get {
-				//return this.methodDefinition.DeclaringType.FullName + "." + this.methodDefinition.Name;
 				return Method.GetLabel (this.methodDefinition);
 			}
 		}
@@ -1845,7 +1918,6 @@ namespace SharpOS.AOT.IR {
 		{
 			StringBuilder result = new StringBuilder ();
 
-			//result.Append (method.ReturnType.ReturnType.FullName + " ");
 			result.Append (method.DeclaringType.FullName + "." + method.Name);
 
 			result.Append ("(");
@@ -2192,11 +2264,14 @@ namespace SharpOS.AOT.IR {
 		/// <param name="instruction">The instruction.</param>
 		private void AddLineScanValue (Dictionary<string, LiveRange> values, Identifier identifier, Instructions.Instruction instruction)
 		{
+			// No need to process as it is an Assembly Register
 			if (this.engine.Assembly.IsRegister (identifier.Value))
 				return;
 
-			if (identifier is Address)
+			if (identifier is Address) {
 				identifier = (identifier as Address).Value;
+				identifier.ForceSpill = true;
+			}
 
 			bool asmCall = instruction.Value is Operands.Call
 				       && this.engine.Assembly.IsInstruction ( (instruction.Value as Operands.Call).Method.DeclaringType.FullName);
@@ -2522,6 +2597,13 @@ namespace SharpOS.AOT.IR {
 
 			if (this.engine.Options.DumpVerbosity >= 3)
 				DumpBlocks();
+
+			this.AssemblyPropagation ();
+
+			if (this.engine.Options.DumpVerbosity >= 3) {
+				DumpDefUse ();
+				DumpBlocks ();
+			}
 
 			this.DeadCodeElimination ();
 

@@ -24,8 +24,6 @@ namespace SharpOS {
 			Screen.WriteNL ();
 
 			RunTests ();
-			
-			while (true);
 		}
 
 		#region Stubs

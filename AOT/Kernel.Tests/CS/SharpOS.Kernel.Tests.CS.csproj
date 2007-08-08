@@ -38,7 +38,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="*.cs" />
+    <Compile Include="Arithmetic.cs" />
+    <Compile Include="Array.cs" />
+    <Compile Include="BitwiseOperators.cs" />
+    <Compile Include="Boolean.cs" />
+    <Compile Include="BooleanOrderOfOperations.cs" />
+    <Compile Include="ByteString.cs" />
+    <Compile Include="X86.cs" />
+    <Compile Include="Enum.cs" />
+    <Compile Include="Misc.cs" />
+    <Compile Include="MixedIntegerCast.cs" />
+    <Compile Include="MixedIntegerPointerCast.cs" />
+    <Compile Include="OrderOfOperations.cs" />
+    <Compile Include="PointerCast.cs" />
+    <Compile Include="SignedIntegerCast.cs" />
+    <Compile Include="StaticConstructor.cs" />
+    <Compile Include="Struct.cs" />
+    <Compile Include="Switch.cs" />
+    <Compile Include="UnsignedIntegerCast.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
@@ -60,19 +77,18 @@
     <PreBuildEvent>
     </PreBuildEvent>
   </PropertyGroup>
-  
-	<Target Name="PrintIntermediateAssemblyName" DependsOnTargets="Compile">
-		<Message Text="Intermediate assembly name: @(IntermediateAssembly)" />
-		<Message Text="Int assm full path:&#xD;&#xA;		$(MSBuildProjectDirectory)/@(IntermediateAssembly)" />
-		<Message Text="---------CoreBuildDependsOn--------------" />
-		<Message Text="$(CoreBuildDependsOn)" />
-		<Message Text="-----------------------------------------" />
-	</Target>
-	<Target Name="MyComputedData" DependsOnTargets="GetNativeManifest">
-		<Message Text="-----------------------------------------" />
-		<Message Text="@(ComputedApplicationManifest)" />
-		<Message Text="$(_DeploymentApplicationManifestIdentity)" />
-		<Message Text="%(_ApplicationManifestFinal.FullPath)" />
-		<Message Text="-----------------------------------------" />
-	</Target>
+  <Target Name="PrintIntermediateAssemblyName" DependsOnTargets="Compile">
+    <Message Text="Intermediate assembly name: @(IntermediateAssembly)" />
+    <Message Text="Int assm full path:&#xD;&#xA;		$(MSBuildProjectDirectory)/@(IntermediateAssembly)" />
+    <Message Text="---------CoreBuildDependsOn--------------" />
+    <Message Text="$(CoreBuildDependsOn)" />
+    <Message Text="-----------------------------------------" />
+  </Target>
+  <Target Name="MyComputedData" DependsOnTargets="GetNativeManifest">
+    <Message Text="-----------------------------------------" />
+    <Message Text="@(ComputedApplicationManifest)" />
+    <Message Text="$(_DeploymentApplicationManifestIdentity)" />
+    <Message Text="%(_ApplicationManifestFinal.FullPath)" />
+    <Message Text="-----------------------------------------" />
+  </Target>
 </Project>
