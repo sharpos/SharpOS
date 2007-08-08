@@ -7,8 +7,12 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
+#define ARRAYS_NOT_SUPPORTED
+
 namespace SharpOS.Kernel.Tests.CS {
+#if !ARRAYS_NOT_SUPPORTED
 	public unsafe class Array {
+
 		/// <summary>
 		/// int[] read/write
 		/// </summary>
@@ -223,4 +227,5 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 1;
 		}
 	}
+#endif
 }
