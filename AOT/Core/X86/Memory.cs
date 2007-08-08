@@ -182,9 +182,10 @@ namespace SharpOS.AOT.X86 {
 				return this.displacementDelta;
 			}
 			set {
-				if (this.reference.Length == 0)
+				if (this.reference.Length == 0) {
+					this.displacementSet = true;
 					this.displacement += value;
-				else
+				}  else
 					this.displacementDelta = value;
 			}
 		}
@@ -410,7 +411,7 @@ namespace SharpOS.AOT.X86 {
 				stringBuilder.Append (System.Math.Pow (2, this.scale));
 			}
 
-			if (this.displacementSet != false) {
+			if (this.displacementSet) {
 				if (stringBuilder.Length > 0)
 					stringBuilder.Append (" + ");
 
