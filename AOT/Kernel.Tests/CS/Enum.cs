@@ -66,12 +66,12 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			IntEnum a, b;
 
-
-			a = IntEnum.A;
+			/*a = IntEnum.A;
 			b = IntEnum.B;
 			
 			if (a != b)
 				return 0;		// but really... come on.
+			*/
 
 			a = IntEnum.A;
 			b = IntEnum.B;
@@ -92,12 +92,12 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			IntEnum a;
 
-			if ((int)(IntEnum.A | IntEnum.C) != 5)
+			if ((int)(IntEnum.A | IntEnum.C) != 2)
 				return 0;
 
 			a = IntEnum.A | IntEnum.C | IntEnum.E;
 			
-			if ((a & IntEnum.A) == 0)
+			if ((a & IntEnum.A) != 0)
 				return 0;
 			
 			if ((a & IntEnum.B) != 0)
@@ -106,7 +106,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			if ((a & IntEnum.C) == 0)
 				return 0;
 			
-			if ((a & IntEnum.D) != 0)
+			if ((a & IntEnum.D) == 0)
 				return 0;
 			
 			if ((a & IntEnum.E) == 0)
