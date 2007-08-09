@@ -101,28 +101,29 @@ namespace SharpOS
 		public static void *GetBuiltinKeymap (byte *name, int nameLen)
 		{
 			byte *table = (byte*)keymapArchive + 4;
-
+			byte *buf = Kernel.Alloc (100);
 			for (int x = 0; x < keymapEntries; ++x) {
 				int nSize = 0;
-				byte nx = 0;
 				int tSize = 0;
+				int error = 0;
+				int strSize = 0;
 				
-				nx = *(byte*)table;
-				table += 1;
+				strSize = BinaryTool.ReadPrefixedString (table, buf,
+					100, &error);
 
+				table += strSize;
+				nSize = ByteString.Length (buf);
+				
 				TextMode.Write (Kernel.String ("nsize: "));
-				TextMode.WriteNumber (false, nx);
+				TextMode.WriteNumber (false, nSize);
 				TextMode.WriteLine ();
-
-				nSize = nx;
 
 				TextMode.Write (Kernel.String ("found keymap: "));
-				TextMode.WriteSubstring (table, 0, nSize);
-				TextMode.WriteLine ();
+				TextMode.WriteLine (buf);
 				
 				if (nSize == nameLen && ByteString.Compare (name,
-				    table, nameLen) == 0) {
-					return (void*) table;
+				    buf, nameLen) == 0) {
+					return table;
 				}
 
 				table += 2; // keymask/statebit

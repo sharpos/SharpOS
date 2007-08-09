@@ -70,9 +70,7 @@ namespace SharpOS.Foundation {
 		
 		public static int Compare (byte *a, byte *b, int count)
 		{
-			byte *pa = a, pb = b;
 			int c = count;
-			int x = 0;
 			int al = Length (a), bl = Length (b);
 			
 			if (count == 0 && al != bl) {
@@ -83,18 +81,52 @@ namespace SharpOS.Foundation {
 			
 			if (c == 0)
 				c = al;
-				
-			while (x < c) {
-				if (*pa != *pb) {
-					return *pa - *pb;
-				}
-				
-				++pa;
-				++pb;
-				++x;
-			}
+
+			TextMode.Write (Kernel.String ("comparing: '"));
+			TextMode.WriteSubstring (a, 0, count);
+			TextMode.Write (Kernel.String ("' to '"));
+			TextMode.WriteSubstring (b, 0, count);
+			TextMode.WriteLine (Kernel.String ("'"));
 			
+			TextMode.WriteLine (Kernel.String ("count: "), c);
+			
+			for (int x = 0; x < c; ++x) {
+			
+				if (x >= c) {
+					TextMode.WriteLine (Kernel.String ("here"));
+					break;
+				}
+
+				//TextMode.WriteLine (Kernel.String ("x :"), x);
+				TextMode.WriteLine (Kernel.String ("c :"), c);
+				//TextMode.Write (Kernel.String ("comparing: '"));
+				//TextMode.WriteSubstring (a, x, 1);
+				//TextMode.Write (Kernel.String ("' to '"));
+				//TextMode.WriteSubstring (b, x, 1);
+				//TextMode.WriteLine (Kernel.String ("'"));
+	
+				if (a [x] != b [x]) {
+					return a [x] - b [x];
+				}
+			}
+
+			TextMode.WriteLine (Kernel.String ("done"));
 			return 0;
+		}
+
+		public static void Test1 ()
+		{
+			byte *ptr1 = Kernel.String ("US"), ptr2 = Kernel.String ("SK");
+
+			if (ByteString.Compare (ptr1, ptr2, 2) == 0)
+				TextMode.WriteLine (Kernel.String ("ByteString.Compare(): test fail: 'US' != 'SK'"));
+			else
+				TextMode.WriteLine (Kernel.String ("ByteString.Compare(): test pass: 'US' != 'SK'"));
+
+			if (ByteString.Compare (ptr1, ptr1, 2) == 0)
+				TextMode.WriteLine (Kernel.String ("ByteString.Compare(): test pass: 'US' == 'US'"));
+			else
+				TextMode.WriteLine (Kernel.String ("ByteString.Compare(): test fail: 'US' == 'US'"));
 		}
 	}
 }

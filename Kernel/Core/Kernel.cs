@@ -14,6 +14,7 @@ using SharpOS;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 using SharpOS.ADC;
+using SharpOS.Foundation;
 
 namespace SharpOS 
 {
@@ -38,7 +39,8 @@ namespace SharpOS
 				TextMode.WriteLine (Kernel.String ("Error: multiboot loader required!"));
 				return;
 			}
-			
+
+			ByteString.Test1 ();
 			CommandLine.Setup ((Multiboot.Info*)pointer);
 			Keymap.Setup ();
 			Keyboard.Setup();
