@@ -1082,7 +1082,6 @@ namespace SharpOS.AOT.IR {
 									.FullName) {
 								// replace this call with an equivalent call
 								// to the ADC layer
-
 								call = this.Method.Engine.FixupADCMethod (call);
 							}
 						}

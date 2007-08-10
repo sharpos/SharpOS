@@ -11,8 +11,8 @@
 	
 	<target name="build">
 		<echo message="Building the SharpOS kernel" />
+		<nant buildfile="./korlib/korlib.build" />
 		<nant buildfile="./Core/Core.build" />
-		<!-- <nant buildfile="./korlib/korlib.build" /> -->
 	</target>
 
 	<target name="test">
@@ -21,5 +21,6 @@
 	
 	<target name="clean">
 		<nant buildfile="./Core/Core.build" target="clean" />
+		<nant buildfile="./korlib/korlib.build" target="clean" />
 	</target>
 </project>

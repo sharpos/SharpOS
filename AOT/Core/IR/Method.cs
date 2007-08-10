@@ -475,8 +475,8 @@ namespace SharpOS.AOT.IR {
 			foreach (Block block in this.Preorder ()) 
 				block.ConvertFromCIL ();
 
-			if (this.methodDefinition.Body.InitLocals
-					&& blocks.Count > 0
+			if (/*this.methodDefinition.Body.InitLocals
+					&& */blocks.Count > 0
 					&& this.methodDefinition.Body.Variables.Count > 0) {
 				for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
 					VariableDefinition variableDefinition = this.methodDefinition.Body.Variables [this.methodDefinition.Body.Variables.Count - i - 1];
@@ -1307,10 +1307,6 @@ namespace SharpOS.AOT.IR {
 				if (assign.Value is Field)
 					return true;
 				
-				// ... if it is an arithmetic
-				if (assign.Value is Arithmetic)
-					return true;
-
 				// ... else 
 				if (assign.Assignee is Identifier
 						&& assign.Value is Identifier)
@@ -1585,6 +1581,29 @@ namespace SharpOS.AOT.IR {
 						Operands.Call operand = (call.Value as Operands.Call);
 
 						this.AssemblyCallPropagationLogic (instruction, operand);
+					}
+				}
+			}
+
+			return;
+		}
+
+
+		/// <summary>
+		/// It is a Constant and Copy Propagation but only for SharpOS custom attributes. (e.g. SharpOS.AOT.Attribues.ADCLayerAttribute)
+		/// </summary>
+		private void SharpOSAttributesPropagation ()
+		{
+			foreach (Block block in this.blocks) {
+				foreach (Instructions.Instruction instruction in block) {
+					if (instruction is Instructions.Call)
+					{
+						Instructions.Call call = (instruction as Instructions.Call);
+						Operands.Call operand = (call.Value as Operands.Call);
+
+						if (!engine.HasSharpOSAttribute (operand))
+							continue;
+						
 					}
 				}
 			}
@@ -2628,6 +2647,13 @@ namespace SharpOS.AOT.IR {
 				DumpBlocks();
 
 			this.AssemblyPropagation ();
+
+			if (this.engine.Options.DumpVerbosity >= 3) {
+				DumpDefUse ();
+				DumpBlocks ();
+			}
+
+			this.SharpOSAttributesPropagation ();
 
 			if (this.engine.Options.DumpVerbosity >= 3) {
 				DumpDefUse ();

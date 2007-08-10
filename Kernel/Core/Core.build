@@ -52,7 +52,7 @@
 	<target name="aot">
 		<echo message="AOT compiling the SharpOS Kernel" />
 		<exec program="${path::combine(prefix, 'SharpOS.AOT.exe')}" 
-			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')}" />
+			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')} ${path::combine(prefix, 'SharpOS.korlib.dll')}" />
 			
 		<echo message="Update the disk image." />
 		<copy file="${path::combine(disk-images-dir, 'TemplateDisk.img')}" tofile="${path::combine(common-dir, 'SharpOS.img')}" />

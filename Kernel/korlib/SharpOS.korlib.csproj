@@ -4,11 +4,11 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{1BDA3EE0-BC5F-4C4A-986C-31730A8EFADC}</ProjectGuid>
+    <ProjectGuid>{2a63a2ac-4732-11dc-8314-0800200c9a66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpOS.Kernel</RootNamespace>
-    <AssemblyName>SharpOS.Kernel</AssemblyName>
+    <RootNamespace>SharpOS.korlib</RootNamespace>
+    <AssemblyName>SharpOS.korlib</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,29 +30,19 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\..\build\SharpOS.Kernel.Core.XML</DocumentationFile>
+    <DocumentationFile>..\..\build\SharpOS.korlib.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\AOT\Core\SharpOS.AOT.Core.csproj">
-      <Project>{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}</Project>
-      <Name>SharpOS.AOT.Core</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="**\*.cs" />
   </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="..\..\build\BuiltinKeymaps.ska">
-      <LogicalName>BuiltinKeymaps.ska</LogicalName>
-    </EmbeddedResource>
-  </ItemGroup>
+	
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
@@ -62,9 +52,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PostBuildEvent>$(TargetDir)\SharpOS.AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll $(TargetDir)\SharpOS.korlib.dll
-copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
-$(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>
-    <PreBuildEvent>$(TargetDir)\key-compiler.exe -ar -o:$(TargetDir)\BuiltinKeymaps.ska '@Config/BuiltinKeymaps.cfg'</PreBuildEvent>
+    <PostBuildEvent></PostBuildEvent>
+    <PreBuildEvent></PreBuildEvent>
   </PropertyGroup>
 </Project>

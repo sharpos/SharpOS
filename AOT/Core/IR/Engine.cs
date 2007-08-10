@@ -60,6 +60,7 @@ namespace SharpOS.AOT.IR {
 		/// Represents the version of the AOT compiler engine.
 		/// </summary>
 		public const string EngineVersion = "svn";
+		public const string SHARPOS_ATTRIBUTES = "SharpOS.AOT.Attributes.";
 
 		EngineOptions options = null;
 		IAssembly asm = null;
@@ -393,7 +394,20 @@ namespace SharpOS.AOT.IR {
 					res.Data;
 			}
 		}
-		
+
+		internal bool HasSharpOSAttribute (SharpOS.AOT.IR.Operands.Call call)
+		{
+			if (!(call.Method is MethodDefinition)
+					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+				if (attribute.Constructor.DeclaringType.FullName.StartsWith (SHARPOS_ATTRIBUTES))
+					return true;
+			}
+
+			return false;
+		}
 
 		/// <summary>
 		/// Runs the AOT compiler engine.

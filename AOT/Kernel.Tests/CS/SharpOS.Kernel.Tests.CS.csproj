@@ -44,6 +44,7 @@
     <Compile Include="Boolean.cs" />
     <Compile Include="BooleanOrderOfOperations.cs" />
     <Compile Include="ByteString.cs" />
+    <Compile Include="String.cs" />
     <Compile Include="X86.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Misc.cs" />

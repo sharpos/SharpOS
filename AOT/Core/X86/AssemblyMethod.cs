@@ -494,6 +494,10 @@ namespace SharpOS.AOT.X86 {
 			} else if (!operand.IsRegisterSet) {
 				this.MovRegisterMemory (loRegister, hiRegister, operand as Identifier);
 
+			} else if (IsFourBytes (operand)) {
+				this.MovRegisterOperand (loRegister, operand);
+				this.assembly.XOR (hiRegister, hiRegister);
+
 			} else
 				throw new Exception ("'" + operand + "' not supported.");
 		}

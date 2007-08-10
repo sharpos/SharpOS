@@ -11,7 +11,9 @@
 	<description>Compiles a set of tests for the AOT compiler.</description>
 
 	<property name="prefix" value="../../build" readonly="true" />
-
+	<property name="distro-dir" value="${path::combine(prefix, 'distro')}" />
+	<property name="common-dir" value="${path::combine(distro-dir, 'common')}" />
+	
 	<target name="build">
 		<echo message="Building Test Kernel" />
 		
@@ -61,9 +63,9 @@
 
 		<echo message="AOT compiling testcases..." />
 		<exec program="${path::combine (prefix, 'SharpOS.AOT.exe')}" 
-			commandline="-v -o:${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
-		<copy file="../../Data/DiskImages/TemplateDisk.img" tofile="${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.img')}" />
-		<exec program="${path::combine (prefix, 'DiskImageUpdater.exe')}" commandline="-i ${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} -o ${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.img')}" />
+			commandline="-v -o:${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')} ${path::combine(prefix, 'SharpOS.korlib.dll')}" />
+		<copy file="../../Data/DiskImages/TemplateDisk.img" tofile="${path::combine(common-dir, 'SharpOS.img')}" />
+		<exec program="${path::combine (prefix, 'DiskImageUpdater.exe')}" commandline="-i ${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>
 	
 	<target name="clean">

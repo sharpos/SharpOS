@@ -25,8 +25,9 @@
 		{
 			.maxstack 8
 
-			ldc.i4 0
 			ldc.i4 1
+			ldc.i4 0
+			pop
 			ret
 		}
 	}

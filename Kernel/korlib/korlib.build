@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Mircea-Cristian Racasan  <darx_kies [at] gmx [dot] net>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="SharpOS korlib" default="build">
+	<property name="debug" value="false" readonly="false" overwrite="false" />
+	<property name="prefix" value="../../build" overwrite="false" />
+	<property name="arch" value="X86" readonly="false" overwrite="false" />
+	<property name="aot-options" value="" readonly="false" overwrite="false" />
+
+	<target name="conf">
+		<!-- nothing yet -->		
+	</target>
+
+	<target name="build">
+		<!-- create the keymap archive -->
+		<echo message="Building the SharpOS korlib" />
+
+		<csc target="library" output="${path::combine(prefix, 'SharpOS.korlib.dll')}" debug="${debug}" unsafe="true">
+			<sources>
+				<include name="**/*.cs" />
+			</sources>
+		</csc>
+		
+	</target>
+
+	<target name="aot">
+		<echo message="AOT compiling the SharpOS korlib" />
+		<exec program="${path::combine(prefix, 'SharpOS.AOT.exe')}" 
+			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.korlib.dll')}" />
+			
+	</target>
+
+	<target name="fxcop" depends="build">
+		<exec program="fxcopcmd.exe"
+			commandline="/p:SharpOS.korlib.fxcop /o:${path::combine(prefix, 'SharpOS.korlib-fxcop.xml')}" 
+			failonerror="false" />
+	</target>
+	
+	<target name="clean">
+		<delete file="${path::combine(prefix, 'SharpOS.korlib.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.korlib.bin')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.korlib.pdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'SharpOS.korlib.dll.mdb')}" failonerror="false" />
+	</target>
+</project>

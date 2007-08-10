@@ -15,8 +15,8 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			uint result;
 
-			Asm.PUSH(&value);
-			Asm.POP(R32.EAX);
+			Asm.PUSH (&value);
+			Asm.POP (R32.EAX);
 			Asm.MOV (&result, R32.EAX);
 
 			return result;
