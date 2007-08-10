@@ -21,7 +21,7 @@
 		<!-- create the keymap archive -->
 		<echo message="Building the SharpOS korlib" />
 
-		<csc target="library" output="${path::combine(prefix, 'SharpOS.korlib.dll')}" debug="${debug}" unsafe="true">
+		<csc nostdlib="true" target="library" output="${path::combine(prefix, 'SharpOS.korlib.dll')}" debug="${debug}" unsafe="true">
 			<sources>
 				<include name="**/*.cs" />
 			</sources>
