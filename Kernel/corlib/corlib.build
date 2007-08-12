@@ -36,6 +36,7 @@
 				<excludesfile name="corlib.dll.win32-excludes" 
 					if="${platform::is-win32()}" />
 				<includesfile name="corlib.dll.sharpos-includes" />
+				<excludesfile name="corlib.dll.sharpos-excludes" />
 				
 				<!--
 				<include name="**/*.cs" />
