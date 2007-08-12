@@ -1,0 +1,4 @@
+
+This code should be synchronized with Mono's implementation of mscorlib. It is located in the
+Mono source code at mono-x.x.x/mcs/class/corlib. We are using SVN branching to develop our 
+kernel-level corlib while keeping synchronized with further developments from Mono.
