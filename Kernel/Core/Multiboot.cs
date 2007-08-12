@@ -107,7 +107,7 @@ namespace SharpOS {
 		{
 			if (magic != (uint) SharpOS.Multiboot.Magic.BootLoader) {
 				TextMode.SetAttributes (TextColor.Red, TextColor.Black);
-				TextMode.WriteLine (Kernel.String ("Invalid magic number."));
+				TextMode.WriteLine ("Invalid magic number.");
 
 				return false;
 			}
@@ -124,15 +124,15 @@ namespace SharpOS {
 			Multiboot.MemoryMap* mmap = (Multiboot.MemoryMap*) info.MMapAddr;
 
 			while ((uint) mmap < info.MMapAddr + info.MMapLen) {
-				TextMode.Write (Kernel.String ("Size = 0x"));
+				TextMode.Write ("Size = 0x");
 				TextMode.WriteNumber (true, (int) mmap->Size);
-				TextMode.Write (Kernel.String (", Base Address = 0x"));
+				TextMode.Write (", Base Address = 0x");
 				TextMode.WriteNumber (true, (int) mmap->BaseAddrHigh);
 				TextMode.WriteNumber (true, (int) mmap->BaseAddrLow);
-				TextMode.Write (Kernel.String (", Length = 0x"));
+				TextMode.Write (", Length = 0x");
 				TextMode.WriteNumber (true, (int) mmap->LengthHigh);
 				TextMode.WriteNumber (true, (int) mmap->LengthLow);
-				TextMode.Write (Kernel.String (", Type = 0x"));
+				TextMode.Write (", Type = 0x");
 				TextMode.WriteNumber (true, (int) mmap->Type);
 				TextMode.WriteLine ();
 
@@ -143,40 +143,40 @@ namespace SharpOS {
 
 		public unsafe static void WriteMultibootInfo (Multiboot.Info info, uint kernelStart, uint kernelEnd)
 		{
-			TextMode.Write (Kernel.String ("Kernel Image: 0x"));
+			TextMode.Write ("Kernel Image: 0x");
 			TextMode.WriteNumber (true, (int) kernelStart);
-			TextMode.Write (Kernel.String (" - 0x"));
+			TextMode.Write (" - 0x");
 			TextMode.WriteNumber (true, (int) kernelEnd);
 			TextMode.WriteLine ();
 
-			TextMode.Write (Kernel.String ("Boot Drive: 0x"));
+			TextMode.Write ("Boot Drive: 0x");
 			TextMode.WriteNumber (true, (int) info.BootDevice);
 			TextMode.WriteLine ();
 
-			TextMode.Write (Kernel.String ("Flags: 0x"));
+			TextMode.Write ("Flags: 0x");
 			TextMode.WriteNumber (true, (int) info.Flags);
 			TextMode.WriteLine ();
 
-			TextMode.Write (Kernel.String ("Command Line: "));
+			TextMode.Write ("Command Line: ");
 			TextMode.Write ((byte*) info.CmdLine);
 			TextMode.WriteLine ();
 
 			if ((info.Flags & 0x01) != 0) {
-				TextMode.Write (Kernel.String ("Memory Lower: 0x"));
+				TextMode.Write ("Memory Lower: 0x");
 				TextMode.WriteNumber (true, (int) info.MemLower);
 				TextMode.WriteLine ();
 
-				TextMode.Write (Kernel.String ("Memory Upper: 0x"));
+				TextMode.Write ("Memory Upper: 0x");
 				TextMode.WriteNumber (true, (int) info.MemUpper);
 				TextMode.WriteLine ();
 			}
 
 			if ((info.Flags & 0x40) != 0) {
-				TextMode.Write (Kernel.String ("MMap Address: 0x"));
+				TextMode.Write ("MMap Address: 0x");
 				TextMode.WriteNumber (true, (int) info.MMapAddr);
 				TextMode.WriteLine ();
 
-				TextMode.Write (Kernel.String ("MMap Length: 0x"));
+				TextMode.Write ("MMap Length: 0x");
 				TextMode.WriteNumber (true, (int) info.MMapLen);
 				TextMode.WriteLine ();
 

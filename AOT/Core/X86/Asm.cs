@@ -10307,6 +10307,13 @@ namespace SharpOS.AOT.X86 {
 		}
 		
 		/// <summary>
+		/// UTF16 
+		/// </summary>
+		public static void UTF16 (string values)
+		{
+		}
+		
+		/// <summary>
 		/// VERR mem16
 		/// </summary>
 		public static void VERR (WordMemory target)

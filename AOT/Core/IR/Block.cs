@@ -1137,25 +1137,31 @@ namespace SharpOS.AOT.IR {
 						instruction = new Assign (this.Register (stack - 1), new Field (fieldName, this.Register (stack - 1)));
 
 					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (fieldName);
-				}
-					/*else if (cilInstruction.OpCode == OpCodes.Ldflda)
-					{
-						instruction = new Assign(this.Register(stack - 1), new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, this.Register(stack - 1)));
-						(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-					}*/
-				else if (cilInstruction.OpCode == OpCodes.Ldsfld) {
+
+				} else if (cilInstruction.OpCode == OpCodes.Ldflda) {
+					FieldReference field = cilInstruction.Operand as FieldReference;
+					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+
+					instruction = new Assign(this.Register(stack - 1), new Operands.Address (new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, this.Register(stack - 1))));
+					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+					(instruction.Value as Address).Value.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
+
+				} else if (cilInstruction.OpCode == OpCodes.Ldsfld) {
 					FieldReference field = cilInstruction.Operand as FieldReference;
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
 
 					instruction = new Assign (this.Register (stack), new Field (fieldName));
 					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
-				}
-					/*else if (cilInstruction.OpCode == OpCodes.Ldsflda)
-					{
-						instruction = new Assign(this.Register(stack), new Field((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name));
-						(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-					}*/
-				else if (cilInstruction.OpCode == OpCodes.Stfld) {
+
+				} else if (cilInstruction.OpCode == OpCodes.Ldsflda) {
+					FieldReference field = cilInstruction.Operand as FieldReference;
+					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+
+					instruction = new Assign (this.Register (stack), new Operands.Address (new Field ((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name)));
+					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
+					(instruction.Value as Address).Value.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
+
+				} else if (cilInstruction.OpCode == OpCodes.Stfld) {
 					MemberReference field = cilInstruction.Operand as MemberReference;
 					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
 

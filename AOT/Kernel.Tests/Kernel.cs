@@ -20,19 +20,13 @@ namespace SharpOS {
 		{
 			Screen.SetAttributes (Screen.ColorTypes.Yellow, Screen.ColorTypes.Black);
 
-			Screen.WriteLine (String ("SharpOS Unit Tests (http://www.sharpos.org)"));
+			Screen.WriteLine ("SharpOS Unit Tests (http://www.sharpos.org)");
 			Screen.WriteNL ();
 
 			RunTests ();
 		}
 
 		#region Stubs
-		[SharpOS.AOT.Attributes.String]
-		public unsafe static byte* String (string value)
-		{
-			return null;
-		}
-
 		[SharpOS.AOT.Attributes.Alloc]
 		public unsafe static byte* Alloc (uint value)
 		{

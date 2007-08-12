@@ -43,8 +43,11 @@
     <Compile Include="BitwiseOperators.cs" />
     <Compile Include="Boolean.cs" />
     <Compile Include="BooleanOrderOfOperations.cs" />
-    <Compile Include="ByteString.cs" />
+    <Compile Include="ByteString.cs">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="String.cs" />
+    <Compile Include="WhileLoop.cs" />
     <Compile Include="X86.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Misc.cs" />

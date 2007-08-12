@@ -802,6 +802,8 @@ namespace SharpOS.AOT.IR {
 		{
 			if (type.EndsWith ("*"))
 				return Operands.Operand.InternalSizeType.U;
+			else if (type.EndsWith ("&"))
+				return Operands.Operand.InternalSizeType.U;
 			else if (type.EndsWith ("[]"))
 				return Operands.Operand.InternalSizeType.U;
 
@@ -821,6 +823,8 @@ namespace SharpOS.AOT.IR {
 				return Operands.Operand.InternalSizeType.I1;
 
 			else if (type.Equals ("char"))
+				return Operands.Operand.InternalSizeType.U2;
+			else if (type.Equals ("System.Char"))
 				return Operands.Operand.InternalSizeType.U2;
 			else if (type.Equals ("short"))
 				return Operands.Operand.InternalSizeType.I2;

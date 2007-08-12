@@ -87,7 +87,7 @@ namespace KernelTestsWrapperGen {
 
 					} else {
 						tr.WriteLine ("\t\t\tif (" + entryFullName + " () != 1) {");
-						tr.WriteLine ("\t\t\t\tScreen.WriteLine (KRNL.String (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\"));");
+						tr.WriteLine ("\t\t\t\tScreen.WriteLine (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
 						//tr.WriteLine ("\t\t\t\treturn;");
 						tr.WriteLine ("\t\t\t}");
 						tr.WriteLine ("");
@@ -149,7 +149,7 @@ namespace KernelTestsWrapperGen {
 				ProcessAssembly (false, path, tr, ilDLL, filter);
 				ProcessAssembly (false, path, tr, csDLL, filter);
 
-				tr.WriteLine ("\t\t\tScreen.WriteLine (KRNL.String (\"All test cases have completed successfully!\"));");
+				tr.WriteLine ("\t\t\tScreen.WriteLine (\"All test cases have completed successfully!\");");
 
 				tr.WriteLine ("\t\t}");
 				tr.WriteLine ("\t}");

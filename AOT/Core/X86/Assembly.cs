@@ -327,12 +327,21 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// DATAs the specified values.
+		/// Adds an UTF7 string for storage.
 		/// </summary>
-		/// <param name="values">The values.</param>
-		public void DATA (string values)
+		/// <param name="value">The value.</param>
+		public void DATA (string value)
 		{
-			this.instructions.Add (new ByteDataInstruction (values));
+			this.instructions.Add (new ByteDataInstruction (value));
+		}
+
+		/// <summary>
+		/// Adds an UTF16 string for storage.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		public void UTF16 (string value)
+		{
+			this.instructions.Add (new WordDataInstruction (value));
 		}
 
 		/// <summary>
@@ -498,8 +507,18 @@ namespace SharpOS.AOT.X86 {
 
 			return this.labels [label].Offset;
 		}
-		
 
+		private bool utf7StringEncoding;
+
+		internal bool UTF7StringEncoding {
+			get {
+				return this.utf7StringEncoding;
+			}
+			set {
+				this.utf7StringEncoding = value;
+			}
+		}
+	
 		/// <summary>
 		/// Determines whether the given call is marked with a StringAttribute.
 		/// </summary>
@@ -1638,8 +1657,8 @@ namespace SharpOS.AOT.X86 {
 			this.AddLSAR ();
 
 			// TODO remove the dummy System.Object constructor
-			this.LABEL ("System.Object..ctor()");
-			this.RET ();
+			// this.LABEL ("System.Object..ctor()");
+			// this.RET ();
 		}
 
 		/// <summary>
@@ -2102,9 +2121,24 @@ namespace SharpOS.AOT.X86 {
 
 			data.LABEL (label);
 
-			data.DATA (value);
+			if (this.UTF7StringEncoding) {
+				data.DATA (value);
 
-			data.DATA ((byte) 0);
+				data.DATA ((byte) 0);
+
+			} else {
+				// Capacity
+				data.DATA ((uint) value.Length + 1);
+
+				// Length
+				data.DATA ((uint) value.Length);
+
+				// The string value
+				data.UTF16 (value);
+
+				// Trailing zero
+				data.DATA ((ushort) 0);
+			}
 
 			return label;
 		}

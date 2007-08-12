@@ -82,29 +82,29 @@ namespace SharpOS {
 			} while ((uvalue /= divisor) != 0);
 
 			while (length > 0)
-				WriteChar (buffer [--length]);
+				WriteChar ((char) buffer [--length]);
 		}
 
-		public unsafe static void WriteLine (byte* message)
+		public unsafe static void WriteLine (string message)
 		{
 			WriteMessage (message);
 			WriteNL ();
 		}
 
-		public unsafe static void WriteLine (byte* message, int value)
+		public unsafe static void WriteLine (string message, int value)
 		{
 			WriteMessage (message);
 			WriteNumber (true, value);
 			WriteNL ();
 		}
 
-		public unsafe static void WriteMessage (byte* message)
+		public unsafe static void WriteMessage (string message)
 		{
-			for (int i = 0; message [i] != 0; i++)
-				WriteChar (message [i]);
+			foreach (char value in message)
+				WriteChar (value);
 		}
 
-		public unsafe static void WriteChar (byte value)
+		public unsafe static void WriteChar (char value)
 		{
 			byte* video = (byte*) 0xB8000;
 
@@ -115,7 +115,7 @@ namespace SharpOS {
 			} else {
 				video += y * 160 + x * 2;
 
-				*video++ = value;
+				*video++ = (byte) value;
 				*video = attributes;
 
 				x++;
@@ -125,13 +125,13 @@ namespace SharpOS {
 		public unsafe static void WriteString (UInt32 value)
 		{
 			for (int i = 0; i < 4; i++) {
-				WriteChar ((byte) (value & 0xff));
+				WriteChar ((char) (value & 0xff));
 				value >>= 8;
 			}
 		}
 		public unsafe static void WriteNL ()
 		{
-			WriteChar ((byte) '\n');
+			WriteChar ('\n');
 		}
 
 		public unsafe static void WriteByte (byte value)
@@ -143,28 +143,28 @@ namespace SharpOS {
 		public unsafe static void WriteHex (byte value)
 		{
 			if (value <= 9)
-				WriteChar ((byte) (48 + value));
+				WriteChar ((char) (48 + value));
 
 			else if (value == 10)
-				WriteChar ((byte) 'A');
+				WriteChar ('A');
 
 			else if (value == 11)
-				WriteChar ((byte) 'B');
+				WriteChar ('B');
 
 			else if (value == 12)
-				WriteChar ((byte) 'C');
+				WriteChar ('C');
 
 			else if (value == 13)
-				WriteChar ((byte) 'D');
+				WriteChar ('D');
 
 			else if (value == 14)
-				WriteChar ((byte) 'E');
+				WriteChar ('E');
 
 			else if (value == 15)
-				WriteChar ((byte) 'F');
+				WriteChar ('F');
 
 			else
-				WriteChar ((byte) 'X');
+				WriteChar ('X');
 		}
 
 		public static void SetAttributes (ColorTypes _foreground, ColorTypes _background)

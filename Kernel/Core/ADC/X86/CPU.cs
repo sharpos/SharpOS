@@ -29,101 +29,101 @@ namespace SharpOS.ADC.X86 {
 			Asm.MOV (&edx, R32.EDX);
 			Asm.MOV (&ecx, R32.ECX);
 
-			ADC.TextMode.Write (Kernel.String ("CPU Family: "));
+			ADC.TextMode.Write ("CPU Family: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) ((eax >> 8) & 0x0F));
 			ADC.TextMode.RestoreAttributes ();
 			ADC.TextMode.WriteLine ();
 
-			ADC.TextMode.Write (Kernel.String ("CPU Model: "));
+			ADC.TextMode.Write ("CPU Model: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) ((eax >> 4) & 0x0F));
 			ADC.TextMode.RestoreAttributes ();
 			ADC.TextMode.WriteLine ();
 
-			ADC.TextMode.Write (Kernel.String ("CPU Stepping: "));
+			ADC.TextMode.Write ("CPU Stepping: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) (eax & 0x0F));
 			ADC.TextMode.RestoreAttributes ();
 			ADC.TextMode.WriteLine ();
 
-			ADC.TextMode.Write (Kernel.String ("CPU Flags: "));
+			ADC.TextMode.Write ("CPU Flags: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 
 			if ((edx & 0x000000001) != 0)
-				ADC.TextMode.Write (Kernel.String ("FPU "));
+				ADC.TextMode.Write ("FPU ");
 
 			if ((edx & 0x000000002) != 0)
-				ADC.TextMode.Write (Kernel.String ("VME "));
+				ADC.TextMode.Write ("VME ");
 
 			if ((edx & 0x000000004) != 0)
-				ADC.TextMode.Write (Kernel.String ("DE "));
+				ADC.TextMode.Write ("DE ");
 
 			if ((edx & 0x000000008) != 0)
-				ADC.TextMode.Write (Kernel.String ("PSE "));
+				ADC.TextMode.Write ("PSE ");
 
 			if ((edx & 0x000000010) != 0)
-				ADC.TextMode.Write (Kernel.String ("TSC "));
+				ADC.TextMode.Write ("TSC ");
 
 			if ((edx & 0x000000020) != 0)
-				ADC.TextMode.Write (Kernel.String ("MSR "));
+				ADC.TextMode.Write ("MSR ");
 
 			if ((edx & 0x000000040) != 0)
-				ADC.TextMode.Write (Kernel.String ("PAE "));
+				ADC.TextMode.Write ("PAE ");
 
 			if ((edx & 0x000000080) != 0)
-				ADC.TextMode.Write (Kernel.String ("MCE "));
+				ADC.TextMode.Write ("MCE ");
 
 			if ((edx & 0x000000100) != 0)
-				ADC.TextMode.Write (Kernel.String ("CX8 "));
+				ADC.TextMode.Write ("CX8 ");
 
 			if ((edx & 0x000000200) != 0)
-				ADC.TextMode.Write (Kernel.String ("APIC "));
+				ADC.TextMode.Write ("APIC ");
 
 			if ((edx & 0x000000800) != 0)
-				ADC.TextMode.Write (Kernel.String ("SEP "));
+				ADC.TextMode.Write ("SEP ");
 
 			if ((edx & 0x000004000) != 0)
-				ADC.TextMode.Write (Kernel.String ("MTRR "));
+				ADC.TextMode.Write ("MTRR ");
 
 			if ((edx & 0x000002000) != 0)
-				ADC.TextMode.Write (Kernel.String ("PGE "));
+				ADC.TextMode.Write ("PGE ");
 
 			if ((edx & 0x000004000) != 0)
-				ADC.TextMode.Write (Kernel.String ("MCA "));
+				ADC.TextMode.Write ("MCA ");
 
 			if ((edx & 0x000008000) != 0)
-				ADC.TextMode.Write (Kernel.String ("CMOV "));
+				ADC.TextMode.Write ("CMOV ");
 
 			if ((edx & 0x000010000) != 0)
-				ADC.TextMode.Write (Kernel.String ("PAT "));
+				ADC.TextMode.Write ("PAT ");
 
 			if ((edx & 0x000020000) != 0)
-				ADC.TextMode.Write (Kernel.String ("PSE36 "));
+				ADC.TextMode.Write ("PSE36 ");
 
 			if ((edx & 0x000100000) != 0)
-				ADC.TextMode.Write (Kernel.String ("NEPP "));
+				ADC.TextMode.Write ("NEPP ");
 
 			if ((edx & 0x000400000) != 0)
-				ADC.TextMode.Write (Kernel.String ("MMXEXT "));
+				ADC.TextMode.Write ("MMXEXT ");
 
 			if ((edx & 0x000800000) != 0)
-				ADC.TextMode.Write (Kernel.String ("MMX "));
+				ADC.TextMode.Write ("MMX ");
 
 			if ((edx & 0x001000000) != 0)
-				ADC.TextMode.Write (Kernel.String ("FXSAVE "));
+				ADC.TextMode.Write ("FXSAVE ");
 
 			if ((edx & 0x002000000) != 0)
-				ADC.TextMode.Write (Kernel.String ("FFXSAVE "));
+				ADC.TextMode.Write ("FFXSAVE ");
 
 			if ((edx & 0x020000000) != 0)
-				ADC.TextMode.Write (Kernel.String ("EM64T "));
+				ADC.TextMode.Write ("EM64T ");
 
 			if ((edx & 0x040000000) != 0)
-				ADC.TextMode.Write (Kernel.String ("3DNOWX "));
+				ADC.TextMode.Write ("3DNOWX ");
 
 			if ((edx & 0x080000000) != 0)
-				ADC.TextMode.Write (Kernel.String ("3DNOW "));
+				ADC.TextMode.Write ("3DNOW ");
 
 			ADC.TextMode.RestoreAttributes ();
 
@@ -133,7 +133,7 @@ namespace SharpOS.ADC.X86 {
 		public unsafe static void WriteNoCPUID ()
 		{
 			ADC.TextMode.SetAttributes (TextColor.LightRed, TextColor.Black);
-			ADC.TextMode.WriteLine (Kernel.String ("No CPUID!"));
+			ADC.TextMode.WriteLine ("No CPUID!");
 			ADC.TextMode.RestoreAttributes ();
 		}
 
@@ -148,7 +148,7 @@ namespace SharpOS.ADC.X86 {
 			Asm.MOV (&edx, R32.EDX);
 			Asm.MOV (&ecx, R32.ECX);
 
-			ADC.TextMode.Write (Kernel.String ("CPU Vendor: "));
+			ADC.TextMode.Write ("CPU Vendor: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteString (ebx);
 			ADC.TextMode.WriteString (edx);
@@ -177,7 +177,7 @@ namespace SharpOS.ADC.X86 {
 		public unsafe static void WriteBrandName ()
 		{
 			// Brand Name
-			ADC.TextMode.Write (Kernel.String ("CPU Brand: "));
+			ADC.TextMode.Write ("CPU Brand: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 
 			for (uint i = 0x80000002; i <= 0x80000004; i++)

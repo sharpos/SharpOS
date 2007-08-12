@@ -82,23 +82,23 @@ namespace SharpOS.Foundation {
 			if (c == 0)
 				c = al;
 
-			TextMode.Write (Kernel.String ("comparing: '"));
+			TextMode.Write ("comparing: '");
 			TextMode.WriteSubstring (a, 0, count);
-			TextMode.Write (Kernel.String ("' to '"));
+			TextMode.Write ("' to '");
 			TextMode.WriteSubstring (b, 0, count);
-			TextMode.WriteLine (Kernel.String ("'"));
+			TextMode.WriteLine ("'");
 			
-			TextMode.WriteLine (Kernel.String ("count: "), c);
+			TextMode.WriteLine ("count: ", c);
 			
 			for (int x = 0; x < c; ++x) {
 			
 				if (x >= c) {
-					TextMode.WriteLine (Kernel.String ("here"));
+					TextMode.WriteLine ("here");
 					break;
 				}
 
 				//TextMode.WriteLine (Kernel.String ("x :"), x);
-				TextMode.WriteLine (Kernel.String ("c :"), c);
+				TextMode.WriteLine ("c :", c);
 				//TextMode.Write (Kernel.String ("comparing: '"));
 				//TextMode.WriteSubstring (a, x, 1);
 				//TextMode.Write (Kernel.String ("' to '"));
@@ -110,7 +110,7 @@ namespace SharpOS.Foundation {
 				}
 			}
 
-			TextMode.WriteLine (Kernel.String ("done"));
+			TextMode.WriteLine ("done");
 			return 0;
 		}
 
@@ -119,14 +119,14 @@ namespace SharpOS.Foundation {
 			byte *ptr1 = Kernel.String ("US"), ptr2 = Kernel.String ("SK");
 
 			if (ByteString.Compare (ptr1, ptr2, 2) == 0)
-				TextMode.WriteLine (Kernel.String ("ByteString.Compare(): test fail: 'US' != 'SK'"));
+				TextMode.WriteLine ("ByteString.Compare(): test fail: 'US' != 'SK'");
 			else
-				TextMode.WriteLine (Kernel.String ("ByteString.Compare(): test pass: 'US' != 'SK'"));
+				TextMode.WriteLine ("ByteString.Compare(): test pass: 'US' != 'SK'");
 
 			if (ByteString.Compare (ptr1, ptr1, 2) == 0)
-				TextMode.WriteLine (Kernel.String ("ByteString.Compare(): test pass: 'US' == 'US'"));
+				TextMode.WriteLine ("ByteString.Compare(): test pass: 'US' == 'US'");
 			else
-				TextMode.WriteLine (Kernel.String ("ByteString.Compare(): test fail: 'US' == 'US'"));
+				TextMode.WriteLine ("ByteString.Compare(): test fail: 'US' == 'US'");
 		}
 	}
 }

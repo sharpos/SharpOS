@@ -30,13 +30,13 @@ namespace SharpOS
 
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 
-			TextMode.WriteLine (Kernel.String ("SharpOS v0.0.0.75 (http://www.sharpos.org)"));
+			TextMode.WriteLine ("SharpOS v0.0.0.75 (http://www.sharpos.org)");
 			TextMode.WriteLine ();
 
 			Arch.Setup ();
 
 			if (!Multiboot.WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd)) {
-				TextMode.WriteLine (Kernel.String ("Error: multiboot loader required!"));
+				TextMode.WriteLine ("Error: multiboot loader required!");
 				return;
 			}
 
@@ -49,8 +49,8 @@ namespace SharpOS
 
 			TextMode.GoTo (0, 23);
 			TextMode.SetAttributes (TextColor.LightGreen, TextColor.Black);
-			TextMode.WriteLine (String ("Pinky: What are we gonna do tonight, Brain?"));
-			TextMode.WriteLine (String ("The Brain: The same thing we do every night, Pinky - Try to take over the world!"));
+			TextMode.WriteLine ("Pinky: What are we gonna do tonight, Brain?");
+			TextMode.WriteLine ("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes ();
 
 			while (true);

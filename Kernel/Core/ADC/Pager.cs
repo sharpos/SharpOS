@@ -51,7 +51,7 @@ namespace SharpOS.ADC {
 				uint size = GetGranularitySize (x, &err);
 
 				if (err != PageAllocator.Errors.Success) {
-					TextMode.Write (Kernel.String ("Error: "));
+					TextMode.Write ("Error: ");
 					TextMode.WriteNumber ((int)err, false);
 					Kernel.Assert (false, _("Failed to get pager granularity!"));
 				}

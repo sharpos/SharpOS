@@ -74,9 +74,9 @@ namespace SharpOS.ADC.X86 {
 		{
 			gdtPointer->Setup ((ushort) (sizeof (Entry) * GDTEntries - 1), (uint) gdt);
 
-			ADC.TextMode.Write (Kernel.String ("GDT Pointer: 0x"));
+			ADC.TextMode.Write ("GDT Pointer: 0x");
 			ADC.TextMode.WriteNumber ((int) gdtPointer->Address, true);
-			ADC.TextMode.Write (Kernel.String (" - 0x"));
+			ADC.TextMode.Write (" - 0x");
 			ADC.TextMode.WriteNumber (gdtPointer->Size, true);
 			ADC.TextMode.WriteLine ();
 

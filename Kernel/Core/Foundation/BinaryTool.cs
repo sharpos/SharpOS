@@ -44,7 +44,7 @@ namespace SharpOS.Foundation
 				shift += 7;
 			} while ((b & 0x80) == 0x80);
 
-			TextMode.WriteLine (Kernel.String ("read7bit: "), ret);
+			TextMode.WriteLine ("read7bit: ", ret);
 			
 			return ret;
 		}
@@ -72,24 +72,24 @@ namespace SharpOS.Foundation
 			size = Read7BitInt (ptr, &ilen);
 			bp += ilen;
 
-			TextMode.Write (Kernel.String ("bufferLen: "));
+			TextMode.Write ("bufferLen: ");
 			TextMode.WriteNumber (bufferLen, false);
 			TextMode.WriteLine ();
 
-			TextMode.Write (Kernel.String ("size: "));
+			TextMode.Write ("size: ");
 			TextMode.WriteNumber (size, false);
 			TextMode.WriteLine ();
 			
-			TextMode.Write (Kernel.String ("ilen: "));
+			TextMode.Write ("ilen: ");
 			TextMode.WriteNumber (ilen, false);
 			TextMode.WriteLine ();
 
-			TextMode.WriteLine (Kernel.String ("&buffer: 0x"), (int)buffer);
-			TextMode.WriteLine (Kernel.String ("&ilen: 0x"), (int)&ilen);
+			TextMode.WriteLine ("&buffer: 0x", (int)buffer);
+			TextMode.WriteLine ("&ilen: 0x", (int)&ilen);
 			buffer [bufferLen-1] = 0;
 			
 			for (x = 0; x < size && x < bufferLen-1; ++x) {
-				TextMode.Write (Kernel.	String ("copying "));
+				TextMode.Write ("copying ");
 				TextMode.WriteChar (bp [x]);
 				TextMode.WriteLine ();
 				buffer [x] = bp [x];
@@ -102,13 +102,13 @@ namespace SharpOS.Foundation
 				*error = 1;	// the buffer was too small
 			*/
 			
-			TextMode.Write (Kernel.String ("size: "));
+			TextMode.Write ("size: ");
 			TextMode.WriteNumber (size, false);
 			TextMode.WriteLine ();
-			TextMode.Write (Kernel.String ("ilen: "));
+			TextMode.Write ("ilen: ");
 			TextMode.WriteNumber (ilen, false);
 			TextMode.WriteLine ();
-			TextMode.Write (Kernel.String ("retx: "));
+			TextMode.Write ("retx: ");
 			TextMode.WriteLine (buffer);
 			return ilen + size;
 		}

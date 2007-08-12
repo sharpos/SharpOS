@@ -27,16 +27,16 @@ namespace SharpOS
 		{
 			if ((mbInfo->Flags & (1<<2)) != 0) {
 				
-				TextMode.Write (Kernel.String ("good cmdline: 0x"));
+				TextMode.Write ("good cmdline: 0x");
 				TextMode.WriteNumber ((int)mbInfo->CmdLine, true);
 				TextMode.WriteLine ();
 				
 				commandLine = (byte*) mbInfo->CmdLine;
-				TextMode.WriteLine (Kernel.String ("getting length"));
+				TextMode.WriteLine ("getting length");
 				length = ByteString.Length (commandLine);
-				TextMode.WriteLine (Kernel.String ("done"));
+				TextMode.WriteLine ("done");
 			} else
-				TextMode.WriteLine (Kernel.String ("No command line available"));
+				TextMode.WriteLine ("No command line available");
 		}
 
 		static byte *commandLine = null;

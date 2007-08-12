@@ -51,7 +51,7 @@ namespace SharpOS.ADC.X86
 		static int shiftedMapLen = 0;
 		
 		public static void Setup () {
-			ADC.TextMode.Write (Kernel.String ("ADC: Setting up keyboard... "));
+			ADC.TextMode.Write ("ADC: Setting up keyboard... ");
 			keyUpEvent = (uint*) Kernel.Alloc (sizeof (uint) * 4);
 			keyUpEventCount = 4;
 			keyDownEvent = (uint*) Kernel.Alloc (sizeof (uint) * 4);
@@ -59,7 +59,7 @@ namespace SharpOS.ADC.X86
 			
 			IDT.SetupIRQ (1, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
 
-			ADC.TextMode.WriteLine (Kernel.String ("done"));
+			ADC.TextMode.WriteLine ("done");
 		}
 
 		public static void SetKeymap (byte *defMap, int defLen, byte *shiftMap,

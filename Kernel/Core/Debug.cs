@@ -8,14 +8,14 @@ namespace SharpOS {
 		{
 			TextMode.SetAttributes (TextColor.Red, TextColor.Black);
 
-			TextMode.Write (String ("Panic! -- "));
+			TextMode.Write ("Panic! -- ");
 			TextMode.WriteLine (msg);
 			
-			TextMode.Write (String ("  Stage: "));
+			TextMode.Write ("  Stage: ");
 			TextMode.WriteNumber ((int)stage, false);
 			TextMode.WriteLine ();
 			
-			TextMode.Write (String ("  Error: "));
+			TextMode.Write ("  Error: ");
 			TextMode.WriteNumber ((int)code, false);
 			TextMode.WriteLine ();
 			
@@ -32,7 +32,7 @@ namespace SharpOS {
 		public static void Assert (bool cond, byte *msg)
 		{
 			if (!cond) {
-				TextMode.Write (String ("Assertion Failed: "));
+				TextMode.Write ("Assertion Failed: ");
 				TextMode.WriteLine (msg);
 				
 				Halt ();
@@ -42,7 +42,7 @@ namespace SharpOS {
 		public static void AssertSuccess (uint err, byte *msg)
 		{
 			if (err != 0) {
-				TextMode.Write (String ("Error: "));
+				TextMode.Write ("Error: ");
 				TextMode.WriteNumber ((int)err, false);
 
 				Assert (false, msg);
@@ -51,7 +51,7 @@ namespace SharpOS {
 		
 		public static void Warning (byte *msg)
 		{
-			TextMode.Write (String ("Warning: "));
+			TextMode.Write ("Warning: ");
 			TextMode.WriteLine (msg);
 			TextMode.WriteLine ();
 		}

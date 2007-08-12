@@ -27,9 +27,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" +
-							method.Method.Name + "(" + parameterTypes +
-							")' is not supported.");
+							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7295,6 +7293,17 @@ namespace SharpOS.AOT.X86 {
 					switch (parameterTypes) {
 						case "TIMES UInt32 Byte":
 							this.TIMES (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							break;
+						
+						default:
+							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+					}
+					break;
+				
+				case "UTF16":
+					switch (parameterTypes) {
+						case "UTF16 String":
+							this.UTF16 ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
 							break;
 						
 						default:

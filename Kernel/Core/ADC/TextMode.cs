@@ -100,17 +100,23 @@ namespace SharpOS.ADC {
 		{
 			WriteNumber (value, hex);
 		}
-		
+
+		public unsafe static void WriteLine (string message, int value)
+		{
+			Write (message);
+			WriteNumber (value, true);
+			WriteLine ();
+		}
+
 		public unsafe static void WriteLine (byte* message)
 		{
 			Write (message);
 			WriteLine ();
 		}
 
-		public unsafe static void WriteLine (byte* message, int value)
+		public unsafe static void WriteLine (string message)
 		{
 			Write (message);
-			WriteNumber (value, true);
 			WriteLine ();
 		}
 
@@ -118,6 +124,13 @@ namespace SharpOS.ADC {
 		{
 			for (int i = 0; message [i] != 0; i++)
 				WriteChar (message [i]);
+		}
+
+		public unsafe static void Write (string message)
+		{
+
+			foreach (char _value in message)
+				WriteChar ((byte) _value);
 		}
 
 		[AOTAttr.ADCStub]

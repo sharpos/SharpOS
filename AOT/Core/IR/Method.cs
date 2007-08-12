@@ -407,8 +407,12 @@ namespace SharpOS.AOT.IR {
 						}
 					}
 
-					if (!found)
-						throw new Exception ("Malformated Try/Catch block in '" + block.Method.MethodDefinition.Name + "'.");
+					if (!found) {
+						if (block.Method.MethodDefinition.Body.ExceptionHandlers.Count == 0)
+							block.Type = Block.BlockType.OneWay;
+						else
+							throw new Exception ("Malformated Try/Catch block in '" + block.Method.MethodDefinition.Name + "'.");
+					}
 						
 				} else if (IsBranch (block.CIL[block.CIL.Count - 1], false)) {
 					block.Type = Block.BlockType.TwoWay;
@@ -475,8 +479,7 @@ namespace SharpOS.AOT.IR {
 			foreach (Block block in this.Preorder ()) 
 				block.ConvertFromCIL ();
 
-			if (/*this.methodDefinition.Body.InitLocals
-					&& */blocks.Count > 0
+			if (blocks.Count > 0
 					&& this.methodDefinition.Body.Variables.Count > 0) {
 				for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
 					VariableDefinition variableDefinition = this.methodDefinition.Body.Variables [this.methodDefinition.Body.Variables.Count - i - 1];
@@ -814,6 +817,11 @@ namespace SharpOS.AOT.IR {
 
 			public SharpOS.AOT.IR.Operands.Identifier key;
 			public List<Block> values;
+
+			public override string ToString ()
+			{
+				return key.ToString ();
+			}
 		}
 
 		/// <summary>
@@ -906,7 +914,6 @@ namespace SharpOS.AOT.IR {
 				}
 
 				this.SSARename (this.blocks [0], count, stack);
-
 			}
 
 			return;
@@ -941,6 +948,10 @@ namespace SharpOS.AOT.IR {
 						foreach (Operand operand in instruction.Value.Operands) {
 							if (operand is Reference) {
 								Identifier identifier = (operand as Reference).Value as Identifier;
+
+								if (identifier is Field
+										&& (identifier as Field).Instance != null)
+									identifier = (identifier as Field).Instance;
 
 								identifier.Version = GetSSAStackValue (stack, identifier.Value);
 
@@ -1334,9 +1345,14 @@ namespace SharpOS.AOT.IR {
 			foreach (Block block in this.blocks) {
 				foreach (Instructions.Instruction instruction in block) {
 					if (instruction.Value != null && instruction.Value.Operands != null) {
-						foreach (Operand operand in instruction.Value.Operands) {
+						for (int i = 0; i < instruction.Value.Operands.Length; i++ ) {
+							Operand operand = instruction.Value.Operands [i];
+							
 							if (!(operand is Identifier))
 								continue;
+
+							if (operand is Reference)
+								operand = (operand as Reference).Value;
 
 							string id = operand.ID;
 
@@ -1425,6 +1441,11 @@ namespace SharpOS.AOT.IR {
 
 						string id = operand.ID;
 
+						if (operand is Reference
+								&& (operand as Reference).Value is Field
+								&& ((operand as Reference).Value as Field).Instance != null)
+							id = ((operand as Reference).Value as Field).Instance.ID;
+
 						if (operand is Field
 								&& (operand as Field).Instance != null)
 							id = (operand as Field).Instance.ID;
@@ -1438,7 +1459,12 @@ namespace SharpOS.AOT.IR {
 						if (instruction.Value is Reference) {
 							Reference reference = instruction.Value as Reference;
 
-							reference.Value = definition.Assignee;
+							if (reference.Value is Field
+									&& (reference.Value as Field).Instance != null)
+								(reference.Value as Field).Instance = definition.Assignee;
+
+							else
+								reference.Value = definition.Assignee;
 
 						} else if (instruction.Value is Field) {
 							Field field = instruction.Value as Field;
@@ -1589,6 +1615,48 @@ namespace SharpOS.AOT.IR {
 		}
 
 
+		private void SharpOSAttributesPropagation (Instructions.Instruction instruction, Operands.Call operand)
+		{
+			for (int i = 0; i < operand.Operands.Length; i++) {
+				Operand parameter = operand.Operands [i];
+				DefUseItem item = null;
+				bool first = true;
+				Assign assign = null;
+
+				do {
+					if (!this.defuse.Contains (parameter.ID))
+						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", parameter.ID));
+
+					item = this.defuse [parameter.ID];
+
+					// Remove it from the usage list
+					if (first) {
+						first = false;
+						item.RemoveUsage (instruction);
+					}
+
+					assign = item.Definition as Assign;
+
+					parameter = assign.Value;
+				}
+				while (parameter is Register);
+
+				operand.Operands [i] = parameter;
+
+				if (parameter is Operands.Address) {
+					Operands.Address address = parameter as Operands.Address;
+
+					if (!this.defuse.Contains (address.Value.ID))
+						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", address.Value.ID));
+
+					item = this.defuse [address.Value.ID];
+
+					// Add it to the new item's usage list
+					item.AddUsage (instruction);
+				}
+			}
+		}
+
 		/// <summary>
 		/// It is a Constant and Copy Propagation but only for SharpOS custom attributes. (e.g. SharpOS.AOT.Attribues.ADCLayerAttribute)
 		/// </summary>
@@ -1596,14 +1664,27 @@ namespace SharpOS.AOT.IR {
 		{
 			foreach (Block block in this.blocks) {
 				foreach (Instructions.Instruction instruction in block) {
-					if (instruction is Instructions.Call)
-					{
+					if (instruction is Instructions.Call) {
 						Instructions.Call call = (instruction as Instructions.Call);
-						Operands.Call operand = (call.Value as Operands.Call);
+						Operands.Call operand = call.Value as Operands.Call;
 
 						if (!engine.HasSharpOSAttribute (operand))
 							continue;
+
+						this.SharpOSAttributesPropagation (instruction, operand);
+
+					} else if (instruction is Instructions.Assign) {
+						Instructions.Assign assign = instruction as Instructions.Assign;
+
+						if (!(assign.Value is Operands.Call))
+							continue;
+
+						Operands.Call operand = assign.Value as Operands.Call;
 						
+						if (!engine.HasSharpOSAttribute (operand))
+							continue;
+
+						this.SharpOSAttributesPropagation (instruction, operand);
 					}
 				}
 			}
@@ -1738,6 +1819,7 @@ namespace SharpOS.AOT.IR {
 				// A = 100
 				else if (definition is Assign
 						&& (definition as Assign).Value is Constant
+						&& ((definition as Assign).Value as Constant).Value.GetType () != typeof (string)
 						&& !((definition as Assign).Assignee is Field)) {
 					bool _break = false;
 
@@ -2556,6 +2638,11 @@ namespace SharpOS.AOT.IR {
 							found = true;
 							Field field = assign.Value as Operands.Field;
 							assign.Assignee.SizeType = this.engine.GetInternalType (field.ID);
+
+						} else if (assign.Value is Operands.Constant
+								&& (assign.Value as Operands.Constant).Value.GetType () == typeof (string)) {
+							found = true;
+							assign.Assignee.SizeType = Operand.InternalSizeType.S;
 
 						} else if (assign.Value.Operands.Length > 0) {
 							foreach (Operand operand in assign.Value.Operands) {

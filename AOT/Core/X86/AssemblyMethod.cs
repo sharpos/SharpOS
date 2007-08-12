@@ -1416,7 +1416,9 @@ namespace SharpOS.AOT.X86 {
 				SharpOS.AOT.IR.Operands.Call call = assign.Value as SharpOS.AOT.IR.Operands.Call;
 
 				if (Assembly.IsKernelString (call)) {
+					assembly.UTF7StringEncoding = true;
 					this.HandleAssign (block, new Assign (assign.Assignee, call.Operands[0]));
+					assembly.UTF7StringEncoding = false;
 
 				} else if (Assembly.IsKernelAlloc (call)) {
 					if (assign.Assignee.IsRegisterSet)
@@ -1917,7 +1919,8 @@ namespace SharpOS.AOT.X86 {
 					|| operand.SizeType == Operand.InternalSizeType.U2
 					|| operand.SizeType == Operand.InternalSizeType.I4
 					|| operand.SizeType == Operand.InternalSizeType.U4
-					|| operand.SizeType == Operand.InternalSizeType.ValueType) {
+					|| operand.SizeType == Operand.InternalSizeType.ValueType
+					|| operand.SizeType == Operand.InternalSizeType.S) {
 				return true;
 			}
 

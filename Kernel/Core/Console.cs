@@ -109,7 +109,7 @@ namespace SharpOS
 			if (key == 0)
 				return;
 
-				key = ASCII.ToUpper (key);
+			key = ASCII.ToUpper (key);
 			
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.WriteChar (key);
@@ -125,7 +125,7 @@ namespace SharpOS
 				int y = TextMode.GetY ();
 				TextMode.GoTo (0, 24); 
 				TextMode.SetAttributes (TextColor.Yellow, TextColor.Red);
-				TextMode.WriteLine (Kernel.String ("Timer ticks: "), (int)ticks);
+				TextMode.WriteLine ("Timer ticks: ", (int)ticks);
 				TextMode.GoTo (x, y);
 			}
 		}

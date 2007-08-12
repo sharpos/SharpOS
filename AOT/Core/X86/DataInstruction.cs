@@ -50,8 +50,7 @@ namespace SharpOS.AOT.X86 {
 			if (this.Value is string) {
 				string value = (string) this.Value;
 
-				for (int i = 0; i < value.Length; i++)
-					binaryWriter.Write (value [i]);
+				binaryWriter.Write (value.ToCharArray ());
 
 			} else if (this.Value is byte) {
 				binaryWriter.Write ((byte) this.Value);

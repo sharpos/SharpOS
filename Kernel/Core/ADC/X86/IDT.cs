@@ -87,9 +87,9 @@ namespace SharpOS.ADC.X86 {
 		{
 			idtPointer->Setup ((ushort) (sizeof (Entry) * Entries - 1), (uint) idt);
 
-			ADC.TextMode.Write (Kernel.String ("IDT Pointer: 0x"));
+			ADC.TextMode.Write ("IDT Pointer: 0x");
 			ADC.TextMode.WriteNumber ((int) idtPointer->Address, true);
-			ADC.TextMode.Write (Kernel.String (" - 0x"));
+			ADC.TextMode.Write (" - 0x");
 			ADC.TextMode.WriteNumber (idtPointer->Size, true);
 			ADC.TextMode.WriteLine ();
 
@@ -112,7 +112,7 @@ namespace SharpOS.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (ISR_0x80)]
 		private static unsafe void ISR0x80 (ISRData data)
 		{
-			ADC.TextMode.WriteLine (Kernel.String ("Running IDT Handler: "), (int) data.Index);
+			ADC.TextMode.WriteLine ("Running IDT Handler: ", (int) data.Index);
 		}
 
 		public static void SetupIRQ (byte index, uint address)
@@ -145,25 +145,25 @@ namespace SharpOS.ADC.X86 {
 		{
 			TextMode.ClearScreen ();
 
-			ADC.TextMode.WriteLine (Kernel.String ("IDT 0x"), (int) data.Index);
-			ADC.TextMode.WriteLine (Kernel.String ("EIP 0x"), (int) data.EIP);
+			ADC.TextMode.WriteLine ("IDT 0x", (int) data.Index);
+			ADC.TextMode.WriteLine ("EIP 0x", (int) data.EIP);
 
-			ADC.TextMode.WriteLine (Kernel.String ("EAX 0x"), (int) data.EAX);
-			ADC.TextMode.WriteLine (Kernel.String ("ECX 0x"), (int) data.ECX);
-			ADC.TextMode.WriteLine (Kernel.String ("EDX 0x"), (int) data.EDX);
-			ADC.TextMode.WriteLine (Kernel.String ("EBX 0x"), (int) data.EBX);
+			ADC.TextMode.WriteLine ("EAX 0x", (int) data.EAX);
+			ADC.TextMode.WriteLine ("ECX 0x", (int) data.ECX);
+			ADC.TextMode.WriteLine ("EDX 0x", (int) data.EDX);
+			ADC.TextMode.WriteLine ("EBX 0x", (int) data.EBX);
 
-			ADC.TextMode.WriteLine (Kernel.String ("ESP 0x"), (int) data.ESP);
-			ADC.TextMode.WriteLine (Kernel.String ("EBP 0x"), (int) data.EBP);
-			ADC.TextMode.WriteLine (Kernel.String ("ESI 0x"), (int) data.ESI);
-			ADC.TextMode.WriteLine (Kernel.String ("EDI 0x"), (int) data.EDI);
+			ADC.TextMode.WriteLine ("ESP 0x", (int) data.ESP);
+			ADC.TextMode.WriteLine ("EBP 0x", (int) data.EBP);
+			ADC.TextMode.WriteLine ("ESI 0x", (int) data.ESI);
+			ADC.TextMode.WriteLine ("EDI 0x", (int) data.EDI);
 
-			ADC.TextMode.WriteLine (Kernel.String ("DS 0x"), (int) data.DS);
-			ADC.TextMode.WriteLine (Kernel.String ("ES 0x"), (int) data.ES);
-			ADC.TextMode.WriteLine (Kernel.String ("FS 0x"), (int) data.FS);
-			ADC.TextMode.WriteLine (Kernel.String ("GS 0x"), (int) data.GS);
-			ADC.TextMode.WriteLine (Kernel.String ("SS 0x"), (int) data.SS);
-			ADC.TextMode.WriteLine (Kernel.String ("CS 0x"), (int) data.CS);
+			ADC.TextMode.WriteLine ("DS 0x", (int) data.DS);
+			ADC.TextMode.WriteLine ("ES 0x", (int) data.ES);
+			ADC.TextMode.WriteLine ("FS 0x", (int) data.FS);
+			ADC.TextMode.WriteLine ("GS 0x", (int) data.GS);
+			ADC.TextMode.WriteLine ("SS 0x", (int) data.SS);
+			ADC.TextMode.WriteLine ("CS 0x", (int) data.CS);
 
 			Asm.HLT ();
 		}
