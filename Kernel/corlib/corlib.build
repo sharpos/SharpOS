@@ -30,13 +30,12 @@
 		<echo message="Building the SharpOS corlib" />
 
 		<csc target="library" output="${path::combine(prefix, 'korlib.dll')}" debug="${debug}" unsafe="true"
-				nostdlib="true" define="NET_1_1">
+				nostdlib="true" define="NET_1_1,INSIDE_CORLIB,ONLY_1_1">
 			<sources>
 				<includesfile name="corlib.dll.sources" />
 				<excludesfile name="corlib.dll.win32-excludes" 
 					if="${platform::is-win32()}" />
-				<includesfile name="corlib.dll.sharpos-includes" />
-				<excludesfile name="corlib.dll.sharpos-excludes" />
+				<include name="common/*.cs" />
 				
 				<!--
 				<include name="**/*.cs" />
