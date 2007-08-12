@@ -7,8 +7,8 @@
     <ProjectGuid>{2a63a2ac-4732-11dc-8314-0800200c9a66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpOS.korlib</RootNamespace>
-    <AssemblyName>SharpOS.korlib</AssemblyName>
+    <RootNamespace>SharpOS.corlib</RootNamespace>
+    <AssemblyName>SharpOS.corlib</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -30,7 +30,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\..\build\SharpOS.korlib.XML</DocumentationFile>
+    <DocumentationFile>..\..\build\SharpOS.corlib.XML</DocumentationFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />

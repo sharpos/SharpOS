@@ -2,3 +2,8 @@
 This code should be synchronized with Mono's implementation of mscorlib. It is located in the
 Mono source code at mono-x.x.x/mcs/class/corlib. We are using SVN branching to develop our 
 kernel-level corlib while keeping synchronized with further developments from Mono.
+
+Additional stuff imported from other parts of the mono source
+----------
+- Put mono-x.x.x/mcs/class/ecma.pub in keys/
+- Put mono-x.x.x/mcs/build/common/MonoTODOAttribute.cs in common/

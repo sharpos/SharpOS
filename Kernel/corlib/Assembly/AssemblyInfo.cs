@@ -66,5 +66,5 @@ using System.Runtime.InteropServices;
 #if ! BOOTSTRAP_WITH_OLDLIB
 [assembly: SecurityPermission (SecurityAction.RequestMinimum, SkipVerification=true)]
 [assembly: AssemblyDelaySign(true)]
-[assembly: AssemblyKeyFile("../ecma.pub")]
+[assembly: AssemblyKeyFile("keys/ecma.pub")]
 #endif

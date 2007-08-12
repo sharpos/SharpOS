@@ -7,7 +7,7 @@
         *
 -->
 
-<project name="SharpOS korlib" default="build">
+<project name="SharpOS corlib" default="build">
 	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../../build" overwrite="false" />
 	<property name="arch" value="X86" readonly="false" overwrite="false" />
@@ -27,13 +27,18 @@
 
 	<target name="build">
 		<!-- create the keymap archive -->
-		<echo message="Building the SharpOS korlib" />
+		<echo message="Building the SharpOS corlib" />
 
 		<csc target="library" output="${path::combine(prefix, 'korlib.dll')}" debug="${debug}" unsafe="true"
 				nostdlib="true" define="NET_1_1">
 			<sources>
-				<include name="**/*.cs" />
+				<includesfile name="corlib.dll.sources" />
+				<excludesfile name="corlib.dll.win32-excludes" 
+					if="${platform::is-win32()}" />
+				<includesfile name="corlib.dll.sharpos-includes" />
+				
 				<!--
+				<include name="**/*.cs" />
 				<include name="System/Object.cs" />
 				<include name="System/ValueType.cs" />
 
