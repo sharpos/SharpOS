@@ -1,0 +1,14 @@
+SharpOS Unified Corlib
+(based on Mono's corlib)
+
+Right Now
+The unmanaged parts of the nanokernel are serviced by the Kernel/korlib library, which
+provides only what is needed in the kernel right now, but cannot be compiled in place of
+the real mscorlib (it is just compiled in).
+
+The Plan
+This corlib will eventually provide the mscorlib needs of both managed/unmanaged parts of the
+kernel core as well as the "userspace" (code outside of the kernel core). We will use 
+conditional compilation to support differences between targets. Initially, we may compile
+this source to separate corlibs, like "korlib.dll" and "mscorlib.dll", but this may 
+eventually be eliminated in leiu of conditional AOT-compiling.

@@ -30,54 +30,12 @@
 		<echo message="Building the SharpOS corlib" />
 
 		<csc target="library" output="${path::combine(prefix, 'korlib.dll')}" debug="${debug}" unsafe="true"
-				nostdlib="true" define="NET_1_1,INSIDE_CORLIB,ONLY_1_1">
+				noconfig="true" nostdlib="true" define="NET_1_1,INSIDE_CORLIB,ONLY_1_1">
 			<sources>
 				<includesfile name="corlib.dll.sources" />
 				<excludesfile name="corlib.dll.win32-excludes" 
 					if="${platform::is-win32()}" />
 				<include name="common/*.cs" />
-				
-				<!--
-				<include name="**/*.cs" />
-				<include name="System/Object.cs" />
-				<include name="System/ValueType.cs" />
-
-				<include name="System/Byte.cs" />
-				<include name="System/SByte.cs" />
-				<include name="System/Int16.cs" />
-				<include name="System/UInt16.cs" />
-				<include name="System/Int32.cs" />
-				<include name="System/UInt32.cs" />
-				<include name="System/Int64.cs" />
-				<include name="System/UInt64.cs" />
-				<include name="System/IntPtr.cs" />
-				<include name="System/Boolean.cs" />
-				<include name="System/Char.cs" />
-
-				<include name="System/Attribute.cs" />
-				<include name="System/ObsoleteAttribute.cs" />
-				<include name="System/AttributeUsageAttribute.cs" />
-				<include name="System/ParamArrayAttribute.cs" />
-				<include name="System/CLSCompliantAttribute.cs" />
-				<include name="System.Runtime.InteropServices/DllImportAttribute.cs" />
-				<include name="System.Runtime.InteropServices/MarshalAsAttribute.cs" />
-				<include name="System.Runtime.InteropServices/InAttribute.cs" />
-				<include name="System.Runtime.InteropServices/OutAttribute.cs" />
-				<include name="System.Runtime.InteropServices/StructLayoutAttribute.cs" />
-				<include name="System.Runtime.InteropServices/FieldOffsetAttribute.cs" />
-				<include name="System.Runtime.InteropServices/DefaultCharSetAttribute.cs" />
-				<include name="System.Runtime.InteropServices/GuidAttribute.cs" />
-				<include name="System.Runtime.CompilerServices/MethodImplAttribute.cs" />
-				<include name="System.Runtime.CompilerServices/CompilerGeneratedAttribute.cs" />
-				<include name="System.Runtime.CompilerServices/FixedBufferAttribute.cs" />
-				<include name="System.Runtime.CompilerServices/DecimalConstantAttribute.cs" />
-				<include name="System.Runtime.CompilerServices/RequiredAttributeAttribute.cs" />
-				
-				<include name="System/Exception.cs" />
-
-				<include name="System/.cs" />
-				<include name="System/Char.cs" />
-				-->
 			</sources>
 		</csc>
 		

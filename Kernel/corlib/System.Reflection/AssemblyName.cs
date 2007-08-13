@@ -138,7 +138,7 @@ namespace System.Reflection {
 			get {
 				if (codebase == null)
 					return null;
-				return Uri.EscapeString (codebase, false, true, true);
+				return Mono.Security.Uri.EscapeString (codebase, false, true, true);
 			}
 		}
 
