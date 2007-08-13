@@ -585,8 +585,8 @@ namespace SharpOS.AOT.IR {
 		/// <param name="current">The current.</param>
 		private void ReversePostorder (List<Block> visited, List<Block> active, List<Block> list, Block current)
 		{
-			/*if (this.blocks.Count == list.Count)
-				return;*/
+			if (this.blocks.Count == list.Count)
+				return;
 
 			if (active.Contains (current)) 
 				return;
