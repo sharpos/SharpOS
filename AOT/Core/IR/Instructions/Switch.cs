@@ -34,7 +34,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="dumpProcessor">The dump processor.</param>
 		public override void Dump (DumpProcessor dumpProcessor)
 		{
-			dumpProcessor.AddElement ("switch", "Switch " + this.Value.ToString (), true, true, false);
+			dumpProcessor.AddElement ("switch", this.FormatedIndex + "Switch " + this.Value.ToString (), true, true, false);
 		}
 	}
 }

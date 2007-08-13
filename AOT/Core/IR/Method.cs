@@ -585,8 +585,8 @@ namespace SharpOS.AOT.IR {
 		/// <param name="current">The current.</param>
 		private void ReversePostorder (List<Block> visited, List<Block> active, List<Block> list, Block current)
 		{
-			if (this.blocks.Count == list.Count)
-				return;
+			/*if (this.blocks.Count == list.Count)
+				return;*/
 
 			if (active.Contains (current)) 
 				return;
@@ -2039,6 +2039,8 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		private const string INTERNAL = "Internal.";
+
 		/// <summary>
 		/// Gets the label.
 		/// </summary>
@@ -2048,7 +2050,12 @@ namespace SharpOS.AOT.IR {
 		{
 			StringBuilder result = new StringBuilder ();
 
-			result.Append (method.DeclaringType.FullName + "." + method.Name);
+			string value = method.DeclaringType.FullName;
+				
+			if (value.StartsWith (INTERNAL))
+				value = value.Substring (INTERNAL.Length);
+
+			result.Append (value + "." + method.Name);
 
 			result.Append ("(");
 
@@ -2439,9 +2446,11 @@ namespace SharpOS.AOT.IR {
 		private void ComputeLiveRanges ()
 		{
 			int index = 0;
-			Dictionary<string, LiveRange> values = new Dictionary<string, LiveRange>();
+			Dictionary<string, LiveRange> values = new Dictionary<string, LiveRange> ();
 
-			foreach (Block block in ReversePostorder ()) {
+			List<Block> reversePostorder = ReversePostorder ();
+
+			foreach (Block block in reversePostorder) {
 				foreach (Instructions.Instruction instruction in block) {
 					instruction.Index = index++;
 

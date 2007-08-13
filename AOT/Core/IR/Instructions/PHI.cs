@@ -39,6 +39,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			string v = "";
 
 			p.PushElement ("assign", true, true, false);
+			p.AddElement ("index", this.FormatedIndex, false, true, false);
 			p.AddElement ("assignee", this.Assignee.ToString (), false, true, false);
 			p.AddElement ("operation", " = ", false, true, false);
 

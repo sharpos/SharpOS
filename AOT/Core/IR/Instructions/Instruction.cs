@@ -66,10 +66,10 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <value>The index.</value>
 		public int Index {
 			get {
-				return index;
+				return this.index;
 			}
 			set {
-				index = value;
+				this.index = value;
 			}
 		}
 
@@ -92,14 +92,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 		}
 
-		/// <summary>
+		/*/// <summary>
 		/// Updates the index.
 		/// </summary>
 		/// <param name="index">The index.</param>
 		public virtual void UpdateIndex (ref int index)
 		{
 			this.index = index++;
-		}
+		}*/
 
 		/// <summary>
 		/// Gets the index of the formated.
@@ -213,7 +213,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="dumpProcessor">The dump processor.</param>
 		public virtual void Dump (DumpProcessor dumpProcessor)
 		{
-			dumpProcessor.AddElement ("code", this.value.ToString (), true, true, false);
+			dumpProcessor.AddElement ("code", this.FormatedIndex + this.value.ToString (), true, true, false);
 		}
 
 		/// <summary>

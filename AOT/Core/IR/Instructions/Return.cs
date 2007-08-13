@@ -43,10 +43,10 @@ namespace SharpOS.AOT.IR.Instructions {
 		public override void Dump (DumpProcessor dumpProcessor)
 		{
 			if (this.Value != null)
-				dumpProcessor.AddElement ("return", "Ret " + this.Value.ToString (), true, true, false);
+				dumpProcessor.AddElement ("return", this.FormatedIndex + "Ret " + this.Value.ToString (), true, true, false);
 
 			else
-				dumpProcessor.AddElement ("return", "Ret", true, true, false);
+				dumpProcessor.AddElement ("return", this.FormatedIndex + "Ret", true, true, false);
 		}
 	}
 }

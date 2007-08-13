@@ -1356,7 +1356,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="p">The Dump Processor.</param>
 		public void Dump (DumpProcessor p)
 		{
-			this.UpdateIndex();
+			//this.UpdateIndex();
 			
 			List<int> ins = new List<int>();
 			List<int> outs = new List<int>();

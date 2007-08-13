@@ -375,6 +375,8 @@ namespace SharpOS.AOT.IR {
 
 			this.AddElement ("name", name);
 			this.AddElement ("reason", reason);
+
+			this.PopElement ();
 		}
 
 		/// <summary>

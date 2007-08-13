@@ -7,9 +7,10 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
+using System;
 using SharpOS.AOT.Attributes;
 
-namespace System {
+namespace Internal.System {
 	public class String {
 		private int capacity;
 		private int length;

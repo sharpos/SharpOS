@@ -45,6 +45,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		public override void Dump (DumpProcessor p)
 		{
 			p.PushElement ("initialize", true, true, false);
+			p.AddElement ("index", this.FormatedIndex, false, true, false);
 			p.AddElement ("operation", "INITIALIZE ", false, true, false);
 			p.AddElement ("assignee", this.Assignee.ToString (), false, true, false);
 			p.PopElement ();

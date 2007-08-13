@@ -32,7 +32,7 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		public override void Dump (DumpProcessor p)
 		{
-			p.AddElement ("call", this.Method.ToString (), true, true, false);
+			p.AddElement ("call", this.FormatedIndex + this.Method.ToString (), true, true, false);
 		}
 	}
 }

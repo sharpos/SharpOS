@@ -61,10 +61,10 @@ namespace SharpOS.AOT.IR.Instructions {
 		public override void Dump (DumpProcessor dumpProcessor)
 		{
 			if (this.Value != null)
-				dumpProcessor.AddElement ("jump", "Jump " + this.Value.ToString (), true, true, false);
+				dumpProcessor.AddElement ("jump", this.FormatedIndex + "Jump " + this.Value.ToString (), true, true, false);
 			
 			else
-				dumpProcessor.AddElement ("jump", "Jump", true, true, false);
+				dumpProcessor.AddElement ("jump", this.FormatedIndex + "Jump", true, true, false);
 		}
 	}
 }
