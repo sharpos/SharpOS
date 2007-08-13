@@ -128,9 +128,8 @@ namespace SharpOS.ADC {
 
 		public unsafe static void Write (string message)
 		{
-
-			foreach (char _value in message)
-				WriteChar ((byte) _value);
+			for (int i = 0; i < message.Length; i++)
+				WriteChar ((byte) message [i]);
 		}
 
 		[AOTAttr.ADCStub]
