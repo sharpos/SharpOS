@@ -26,5 +26,6 @@
 
 	<target name="clean">
 		<delete file="${prefix}/US.bin" failonerror="false" />
+		<delete dir="${prefix}" />
 	</target>
 </project>

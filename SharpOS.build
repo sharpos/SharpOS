@@ -8,7 +8,6 @@
 -->
 
 <project name="SharpOS" default="build">
-	
 	<target name="build">
 		<echo message="Building projects" />
 		<copy todir="build">
@@ -32,14 +31,8 @@
 	</target>
 
 	<target name="dist" depends="build">
-		<echo message="Ahead-of-time compiling the SharpOS kernel" />
-		<nant buildfile="./Kernel/Core/Core.build" 
+		<nant buildfile="./Kernel/Kernel.build" 
 			target="aot" />
-		<copy file="Data/DiskImages/TemplateDisk.img" tofile="build/distro/common/SharpOS.img" />
-		<echo message="Embedding the kernel into a disk image for testing..." />
-		<exec program="build/DiskImageUpdater.exe" 
-			commandline="-o build/distro/common/SharpOS.img -i build/SharpOS.Kernel.bin" />
-		<echo message="Distribution is built at build/distro." />
 	</target>
 	
 	<target name="clean">
@@ -47,5 +40,6 @@
 		<nant buildfile="./AOT/AOT.build" target="clean" />
 		<nant buildfile="./Data/Data.build" target="clean" />
 		<nant buildfile="./Kernel/Kernel.build" target="clean" />
+		<delete dir="./build/Temp" />
 	</target>
 </project>

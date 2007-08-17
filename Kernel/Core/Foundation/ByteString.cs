@@ -1,11 +1,11 @@
-/*
- * SharpOS.EIC/String.cs
- * N:SharpOS.EIC
- *
- * (C) 2007 William Lahti. This software is licensed under the terms of the GNU General
- * Public License.
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	William Lahti <xfurious@gmail.com>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using SharpOS;
 using SharpOS.Memory;
@@ -13,7 +13,8 @@ using SharpOS.ADC;
 
 namespace SharpOS.Foundation {
 
-	public unsafe class ByteString {	
+	public unsafe class ByteString {
+	
 		public static int Length (byte *str)
 		{
 			int len = 0;
@@ -23,18 +24,32 @@ namespace SharpOS.Foundation {
 			
 			return len;
 		}
+
+		public static bool GetBytes (string src, byte *dst, int size)
+		{
+			Kernel.Assert (src != null, "ByteString.GetBytes (): argument `src' is null");
+			Kernel.Assert (dst != null, "ByteString.GetBytes (): argument `dst' is null");
+			Kernel.Assert (size > 0 && size < ByteString.Length (dst),
+				"ByteString.GetBytes (): argument `size' is out of range");
+			Kernel.Assert (size >= src.Length, "ByteString.GetBytes (): buffer is too small");
+			
+			if (src.Length > size)
+				return false;
+
+			for (int x = 0; x < size; ++x)
+				dst [x] = (byte)src[x];
+
+			return true;
+		}
+
+		#region Concat() family
 		
-		/**
-			<summary>
-				Concatenates <paramref name="count" /> bytes of 
-				the string in buffer <paramref name="src" /> 
-				to the end of the string in buffer 
-				<paramref name="buffer" />.
-			</summary>
-			<remarks>
-				
-			</remarks>
-		*/
+		/// <summary>
+		/// Concatenates <paramref name="count" /> bytes of
+		/// the string in buffer <paramref name="src" />
+		/// to the end of the string in buffer
+		/// <paramref name="buffer" />.
+		/// </summary>
 		public static void Concat (byte *buffer, int size, byte *src, int count)
 		{
 			int c = count;
@@ -43,20 +58,20 @@ namespace SharpOS.Foundation {
 			if (c <= 0)
 				c = Length (src);
 			
-			Kernel.Assert (*(buffer+size) == 0,
-				Kernel.String ("Concat: warning, buffer may not have been allocated by ByteString"));
+			Kernel.Assert (*(buffer+size) == 0, "Concat: warning, buffer may not have been allocated by ByteString");
 			
-			Kernel.Assert (start + c < (size+1),
-				Kernel.String ("Concat: buffer is too small"));
+			Kernel.Assert (start + c < (size+1), "Concat: buffer is too small");
 			
 			Copy (buffer, size, src, start, c);
 			*(buffer+start+c) = 0;
 		}
+
+		#endregion
+		#region Copy() family
 		
 		public static void Copy (byte *buffer, int size, byte *src, int index, int count)
 		{
-			Kernel.Assert (index + count < size+1,
-				Kernel.String ("Copy: buffer is too small"));
+			Kernel.Assert (index + count < size+1, "Copy: buffer is too small");
 			
 			byte *ptr = buffer + index;
 			byte *sptr = src;
@@ -67,56 +82,93 @@ namespace SharpOS.Foundation {
 				++sptr;
 			}
 		}
+
+		#endregion
+		#region Compare() family
 		
-		public static int Compare (byte *a, byte *b, int count)
+		public static int Compare (byte *a, int aFrom, byte *b, int bFrom, int count)
 		{
 			int c = count;
 			int al = Length (a), bl = Length (b);
 			
-			if (count == 0 && al != bl) {
+			if (count == 0 && al != bl)
 				return al - bl;
-			} else if (count != 0 && (count > al || count > bl)) {
+			else if (count != 0 && (aFrom + count > al || bFrom + count > bl))
 				return al - bl;
+			
+			if (c == 0)
+				c = al;
+
+			for (int x = 0; x < c; ++x) {
+			
+				if (x >= c)
+					break;
+				if (a [aFrom + x] != b [bFrom + x])
+					return a [aFrom + x] - b [bFrom + x];
+			}
+
+			return 0;
+		}
+
+		public static int Compare (byte *a, int aFrom, string b, int bFrom, int count)
+		{
+			int c = count;
+			int al = Length (a);
+			
+			if (count == 0 && al != b.Length) {
+				return al - b.Length;
+			} else if (count != 0 && (count > al || count > b.Length)) {
+				return al - b.Length;
 			}
 			
 			if (c == 0)
 				c = al;
 
-			TextMode.Write ("comparing: '");
-			TextMode.WriteSubstring (a, 0, count);
-			TextMode.Write ("' to '");
-			TextMode.WriteSubstring (b, 0, count);
-			TextMode.WriteLine ("'");
-			
-			TextMode.WriteLine ("count: ", c);
-			
 			for (int x = 0; x < c; ++x) {
 			
 				if (x >= c) {
-					TextMode.WriteLine ("here");
 					break;
 				}
-
-				//TextMode.WriteLine (Kernel.String ("x :"), x);
-				TextMode.WriteLine ("c :", c);
-				//TextMode.Write (Kernel.String ("comparing: '"));
-				//TextMode.WriteSubstring (a, x, 1);
-				//TextMode.Write (Kernel.String ("' to '"));
-				//TextMode.WriteSubstring (b, x, 1);
-				//TextMode.WriteLine (Kernel.String ("'"));
 	
-				if (a [x] != b [x]) {
-					return a [x] - b [x];
+				if (a [aFrom + x] != (byte) b [bFrom + x]) {
+					return (int)a [aFrom + x] - b [bFrom + x];
 				}
 			}
 
-			TextMode.WriteLine ("done");
 			return 0;
 		}
 
-		public static void Test1 ()
+		public static int Compare (byte *a, byte *b, int count)
 		{
-			byte *ptr1 = Kernel.String ("US"), ptr2 = Kernel.String ("SK");
+			return Compare (a, 0, b, 0, count);
+		}
+
+		public static int Compare (byte *a, byte *b)
+		{
+			return Compare (a, 0, b, 0, 0);
+		}
+
+		public static int Compare (byte *a, string b, int count)
+		{
+			return Compare (a, 0, b, 0, count);
+		}
+
+		public static int Compare (byte *a, string b)
+		{
+			return Compare (a, 0, b, 0, 0);
+		}
+
+		#endregion
+		#region Testcases
+
+		public static void __RunTests ()
+		{
+			__Test1 ();
+		}
+		
+		public static void __Test1 ()
+		{
+			byte *ptr1 = (byte*)Kernel.CString ("US"), ptr2 = (byte*)Kernel.CString ("SK");
 
 			if (ByteString.Compare (ptr1, ptr2, 2) == 0)
 				TextMode.WriteLine ("ByteString.Compare(): test fail: 'US' != 'SK'");
@@ -128,5 +180,7 @@ namespace SharpOS.Foundation {
 			else
 				TextMode.WriteLine ("ByteString.Compare(): test fail: 'US' == 'US'");
 		}
+
+		#endregion
 	}
 }

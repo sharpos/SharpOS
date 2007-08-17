@@ -150,9 +150,9 @@ namespace SharpOS.ADC.X86 {
 
 			ADC.TextMode.Write ("CPU Vendor: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
-			ADC.TextMode.WriteString (ebx);
-			ADC.TextMode.WriteString (edx);
-			ADC.TextMode.WriteString (ecx);
+			ADC.TextMode.WriteSubstring ((byte*)&ebx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*)&edx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*)&ecx, 0, 4);
 			ADC.TextMode.RestoreAttributes ();
 			ADC.TextMode.WriteLine ();
 		}
@@ -168,10 +168,10 @@ namespace SharpOS.ADC.X86 {
 			Asm.MOV (&edx, R32.EDX);
 			Asm.MOV (&ecx, R32.ECX);
 
-			ADC.TextMode.WriteString (eax);
-			ADC.TextMode.WriteString (ebx);
-			ADC.TextMode.WriteString (ecx);
-			ADC.TextMode.WriteString (edx);
+			ADC.TextMode.WriteSubstring ((byte*)&eax, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*)&ebx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*)&ecx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*)&edx, 0, 4);
 		}
 
 		public unsafe static void WriteBrandName ()

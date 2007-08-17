@@ -26,83 +26,126 @@ namespace SharpOS
 		public static void Setup (Multiboot.Info *mbInfo)
 		{
 			if ((mbInfo->Flags & (1<<2)) != 0) {
-				
-				TextMode.Write ("good cmdline: 0x");
-				TextMode.WriteNumber ((int)mbInfo->CmdLine, true);
-				TextMode.WriteLine ();
-				
-				commandLine = (byte*) mbInfo->CmdLine;
-				TextMode.WriteLine ("getting length");
-				length = ByteString.Length (commandLine);
-				TextMode.WriteLine ("done");
-			} else
-				TextMode.WriteLine ("No command line available");
+				commandLine = (CString8*) mbInfo->CmdLine;
+				length = commandLine->Length;
+			}
 		}
 
-		static byte *commandLine = null;
+		static CString8 *commandLine = null;
 		static int length = 0;
 
-		public unsafe static byte *Get ()
+		public unsafe static CString8 *GetString ()
 		{
 			return commandLine;
 		}
 
-		public unsafe static byte *GetOption (byte *option)
+		public unsafe static int IndexOfOption (string option)
 		{
-			int optionLen = 0;
-
+			int index = 0;
+			
 			if (commandLine == null)
-				return null;
-			
-			optionLen = ByteString.Length (option);
-			
-			for (int x = 0; x < length - optionLen; ++x) {
-				if (ByteString.Compare (&commandLine [x], option, optionLen) == 0)
-					return &commandLine [x];
-			}
+				return -1;
 
-			return null;
-		}
-		
-		public unsafe static bool IsOptionPresent (byte *option)
-		{
-			return GetOption (option) != null;
-		}
+			while (index < commandLine->Length - option.Length) {
+				index = commandLine->IndexOf (index, option);
 
-		public static byte *GetArgument (byte *option, int *len)
-		{
-			int optionLen = 0;
-			byte *place = null;
+				if (index == -1)
+					return -1;
 
-			if (commandLine == null)
-				return null;
-			
-			optionLen = ByteString.Length (option);
-			place = GetOption (option);
-			
-			Kernel.Assert (len != null, Kernel.String (
-				"GetArgument (byte *, int *): argument `len' is null"));
-			
-			for (byte *ptr = GetOption (option) + optionLen; ptr < (commandLine + length); ++ptr) {
-				if (*ptr != (byte)' ') {
-					bool found = false;
-					
-					for (byte *px = ptr; px < (commandLine + length); ++px) {
-						if (*px == (byte)' ') {
-							*len = (int) (px - ptr);
-							found = true;
-							break;
-						}
+				if (index + option.Length + 1 < commandLine->Length) {
+					if (commandLine->GetChar (index + option.Length) != ' ') {
+						++index;
+						continue;
+					} else {
+						return index;
 					}
-
-					if (!found)
-						*len = (int)(length - (ptr - commandLine));
-					
-					return ptr;
+				} else {
+					return index;
 				}
 			}
 
-			return null;
+			return -1;
+		}
+		
+		public unsafe static bool ContainsOption (string option)
+		{
+			return IndexOfOption (option) != -1;
+		}
+
+		public static bool GetArgument (string option, PString8 *buf)
+		{
+			int argumentIndex;
+			int argumentLen;
+
+			Kernel.Assert (option != null, "CommandLine.GetArgument(): argument `option' is null");
+			Kernel.Assert (buf != null, "CommandLine.GetArgument(): argument `buf' is null");
+
+			if (commandLine == null)
+				return false;
+			
+			argumentIndex = IndexOfArgument (option);
+
+			if (argumentIndex < 0)
+				return false;
+			
+			argumentLen = GetArgumentLength (argumentIndex);
+			
+			buf->Concat (commandLine, argumentIndex, argumentLen);
+
+			return true;
+		}
+
+		/// <summary>
+		/// Returns the index in the command line string containing the
+		/// first character of the argument to <paramref name="option" />.
+		/// 
+		/// </summary>
+		/// <returns>
+		/// If the option was not found, this function returns -2.
+		/// If the option exists but it does not have an argument, this
+		/// function returns -1. Otherwise, returns the index of the first
+		/// character of the option's argument string.
+		/// </summary>
+		public static int IndexOfArgument (string option)
+		{
+			int optionIndex;
+			int argumentIndex;
+			
+			Kernel.Assert (option != null, "CommandLine.GetArgument(): argument `option' is null");
+			
+			if (commandLine == null)
+				return -1;
+			
+			optionIndex = IndexOfOption (option);
+			argumentIndex = optionIndex + 1;
+			
+			if (optionIndex == -1)
+				return -2;
+			
+			if (optionIndex + 1 >= commandLine->Length)
+				return -1;
+
+			while (argumentIndex < commandLine->Length) {
+				if (commandLine->GetChar (argumentIndex) != ' ')
+					return argumentIndex;
+				
+				++argumentIndex;
+			}
+
+			return -1;
+		}
+
+		public static int GetArgumentLength (int argumentIndex)
+		{
+			int x = argumentIndex;
+
+			Kernel.Assert (argumentIndex < 0 || argumentIndex >= commandLine->Length,
+				"CommandLine.GetArgumentLength(): argument `argumentIndex' is out of range");
+			
+			while (x < commandLine->Length && commandLine->GetChar (x) != ' ')
+				++x;
+
+			return x - argumentIndex;
 		}
 	}
 }

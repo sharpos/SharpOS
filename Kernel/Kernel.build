@@ -8,6 +8,14 @@
 -->
 
 <project name="SharpOS" default="build">
+	<property name="prefix" value="../build" overwrite="true" />
+	<property name="arch" value="X86" readonly="false" overwrite="false" />
+	<property name="aot-options" value="" readonly="false" overwrite="false" />
+	<property name="data-dir" value="../Data" />
+	<property name="temp-dir" value="${path::combine(prefix, 'Temp')}" />
+	<property name="disk-images-dir" value="${path::combine(data-dir, 'DiskImages')}" />
+	<property name="distro-dir" value="${path::combine(prefix, 'distro')}" />
+	<property name="common-dir" value="${path::combine(distro-dir, 'common')}" />
 	
 	<target name="build">
 		<echo message="Building the SharpOS kernel" />
@@ -17,6 +25,18 @@
 
 	<target name="test">
 		<!-- nothing yet -->
+	</target>
+
+	<target name="aot" depends="build">
+		<echo message="AOT compiling the SharpOS Kernel" />
+		<exec program="${path::combine(prefix, 'sharpos-aot.exe')}" 
+			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')} ${path::combine(prefix, 'korlib.dll')}" />
+			
+		<echo message="Update the disk image." />
+		<copy file="${path::combine(disk-images-dir, 'TemplateDisk.img')}" tofile="${path::combine(common-dir, 'SharpOS.img')}" />
+		
+		<exec program="${path::combine(prefix, 'disk-image-updater.exe')}"
+			commandline="-i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>
 	
 	<target name="clean">

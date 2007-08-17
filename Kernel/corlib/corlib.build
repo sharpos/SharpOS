@@ -41,13 +41,6 @@
 		
 	</target>
 
-	<target name="aot">
-		<echo message="AOT compiling the SharpOS korlib" />
-		<exec program="${path::combine(prefix, 'SharpOS.AOT.exe')}" 
-			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.korlib.dll')}" />
-			
-	</target>
-
 	<target name="fxcop" depends="build">
 		<exec program="fxcopcmd.exe"
 			commandline="/p:SharpOS.korlib.fxcop /o:${path::combine(prefix, 'SharpOS.korlib-fxcop.xml')}" 

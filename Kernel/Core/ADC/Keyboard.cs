@@ -110,7 +110,7 @@ namespace SharpOS.ADC
 		}
 	
 		[AOTAttr.ADCStub]
-		public static void SetKeymap (byte *defMap, int defLen, byte *shiftMap,
+		public static void SetKeyMap (byte *defMap, int defLen, byte *shiftMap,
 					      int shiftLen)
 		{
 		}

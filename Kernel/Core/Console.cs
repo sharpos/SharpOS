@@ -19,19 +19,20 @@ using SharpOS.ADC;
 
 namespace SharpOS 
 {
-	/*
-	 * TODO:
-	 *	- text history
-	 *	- ability to move cursor left / right
-	 *	- use modifier keys
-	 *
-	 */
-	
+	/// <summary>
+	/// Provides basic console services
+	/// </summary>
+	/// <todo>
+	/// TODO
+	/// - text history
+	/// - ability to move cursor left / right
+	/// - use modifier keys
+	/// </todo>
 	public unsafe class Console
 	{
-		public const string CONSOLE_KEY_UP_HANDLER		= "CONSOLE_KEY_UP_HANDLER";
-		public const string CONSOLE_KEY_DOWN_HANDLER	= "CONSOLE_KEY_DOWN_HANDLER";
-		public const string CONSOLE_TIMER_HANDLER		= "CONSOLE_TIMER_HANDLER";
+		public const string CONSOLE_KEY_UP_HANDLER = "CONSOLE_KEY_UP_HANDLER";
+		public const string CONSOLE_KEY_DOWN_HANDLER = "CONSOLE_KEY_DOWN_HANDLER";
+		public const string CONSOLE_TIMER_HANDLER = "CONSOLE_TIMER_HANDLER";
 
 		private static bool initialized = false;
 		private static bool overwrite	= false;
@@ -48,7 +49,7 @@ namespace SharpOS
 			Arch.RegisterTimerEvent(Kernel.GetFunctionPointer(CONSOLE_TIMER_HANDLER));
 			
 			initialized = true;
-			TextMode.SetCursor (TextMode.GetX (), TextMode.GetY ());
+			TextMode.RefreshCursor ();
 			SetOverwrite (true);
 
 			capslock	= false;
@@ -57,6 +58,7 @@ namespace SharpOS
 			
 			Keyboard.SetLEDs (capslock, numlock, scrolllock);
 		}
+		
 		public static unsafe void SetOverwrite (bool _overwrite)
 		{
 			overwrite = _overwrite;
@@ -110,10 +112,10 @@ namespace SharpOS
 				return;
 
 			key = ASCII.ToUpper (key);
-			
+
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.WriteChar (key);
-			TextMode.SetCursor (TextMode.GetX (), TextMode.GetY ());
+			TextMode.RefreshCursor ();
 		}
 
 		[SharpOS.AOT.Attributes.Label(CONSOLE_TIMER_HANDLER)]
@@ -121,12 +123,13 @@ namespace SharpOS
 		{
 			if (ticks % SharpOS.ADC.Timer.GetFrequency () == 0)
 			{
-				int x = TextMode.GetX ();
-				int y = TextMode.GetY ();
-				TextMode.GoTo (0, 24); 
+				int x, y;
+				
+				TextMode.GetCursor (&x, &y);
+				TextMode.MoveTo (0, 24);
 				TextMode.SetAttributes (TextColor.Yellow, TextColor.Red);
 				TextMode.WriteLine ("Timer ticks: ", (int)ticks);
-				TextMode.GoTo (x, y);
+				TextMode.MoveTo (x, y);
 			}
 		}
 	}

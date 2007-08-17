@@ -13,6 +13,7 @@
 		<nant buildfile="./KeyCompiler/KeyCompiler.build" />
 		<nant buildfile="./KernelTestsWrapperGen/KernelTestsWrapperGen.build" />
 		<nant buildfile="./DiskImageUpdater/DiskImageUpdater.build" />
+		<nant buildfile="./RuntimeCop/RuntimeCop.build" />
 	</target>
 
 	<target name="test">
@@ -23,5 +24,6 @@
 		<nant buildfile="./KeyCompiler/KeyCompiler.build" target="clean" />
 		<nant buildfile="./KernelTestsWrapperGen/KernelTestsWrapperGen.build" target="clean" />
 		<nant buildfile="./DiskImageUpdater/DiskImageUpdater.build" target="clean" />
+		<nant buildfile="./RuntimeCop/RuntimeCop.build" target="clean" />
 	</target>
 </project>

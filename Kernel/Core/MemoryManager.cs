@@ -1,69 +1,88 @@
-/*
- * SharpOS.Memory/MemoryManager.cs
- * N:SharpOS.Memory
- *
- * (C) 2007 William Lahti. This software is licensed under the terms of the GNU General
- * Public License.
- *
- * TODO: set segment base properly to allow kernel to appear in higher half
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	William Lahti <xfurious@gmail.com>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using SharpOS.AOT;
 using SharpOS.ADC;
 
 namespace SharpOS.Memory {
 	public unsafe class MemoryManager {
-			private static byte *FirstHeaderPage = null;
-			private static byte *NextHeaderPtr = null;
-			private static byte *CurrentHeaderPage = null;
+
+		#region Global state
+		
+		static byte *firstHeaderPage = null;
+		static byte *nextHeaderPtr = null;
+		static byte *currentHeaderPage = null;
+
+		#endregion
+		#region Nested types
+
+		public unsafe struct AllocHeader {
+			public void *Buffer;
+			public uint Size;
+			public byte Priority;
+			public uint Flags;
+		}
+		
+		#endregion
+		#region Setup
+
+		public static unsafe void Setup ()
+		{
+			firstHeaderPage = currentHeaderPage = (byte*) PageAllocator.Alloc ();
+		}
+
+		#endregion
+		#region Alloc () family
+		
+		public static unsafe void *Alloc (int bytes, byte *reason)
+		{
+			if (currentHeaderPage == null || nextHeaderPtr + sizeof (AllocHeader) >=
+					currentHeaderPage + Pager.AtomicPageSize)
+				GrowControlData ();
+
+			/* XXX: TODO
 			
-			public static unsafe void Setup ()
-			{
-				FirstHeaderPage = CurrentHeaderPage = (byte*) PageAllocator.Alloc();
-			}
+			AllocHeader *hdr = (AllocHeader *)nextHeaderPtr;
+			nextHeaderPtr += sizeof (AllocHeader);
+
+			*/
 			
-			public unsafe struct AllocHeader {
-				public void *Buffer;
-				public uint Size;
-				public byte Priority;
-				public uint Flags;
+			return null;
+		}
+
+		public static unsafe void Dealloc (void *ptr, byte *reason)
+		{
+
+		}
+
+		#endregion
+		#region Internal
+
+		static unsafe void GrowControlData ()
+		{
+			if (firstHeaderPage == null) {
+				firstHeaderPage = currentHeaderPage = nextHeaderPtr =
+					(byte *) PageAllocator.RangeAlloc (32);
+				((uint*)firstHeaderPage)[0] = 0;
+				nextHeaderPtr += 4;
+			} else {
+				byte *newpg = (byte*)PageAllocator.Alloc ();
+
+				// link the pages together
+				((uint*)currentHeaderPage)[Pager.AtomicPageSize/4-1] = (uint)newpg;
+				((uint*)newpg)[0] = (uint)currentHeaderPage;
+
+				nextHeaderPtr = newpg+1;
+				currentHeaderPage = newpg;
 			}
-			
-			public static unsafe void *Alloc (int bytes, byte *reason)
-			{
-				if (CurrentHeaderPage == null || NextHeaderPtr + sizeof(AllocHeader) >= 
-						CurrentHeaderPage + Pager.AtomicPageSize)
-					GrowControlData();
-				
-				AllocHeader *hdr = (AllocHeader *)NextHeaderPtr;
-				NextHeaderPtr += sizeof(AllocHeader);
-				
-				return null; // TODO
-			}
-			
-			public static unsafe void Dealloc(void *ptr, byte *reason)
-			{
-				
-			}
-			
-			private static unsafe void GrowControlData()
-			{
-				if (FirstHeaderPage == null) {
-					FirstHeaderPage = CurrentHeaderPage = NextHeaderPtr = 
-						(byte *) PageAllocator.RangeAlloc(32);
-					((uint*)FirstHeaderPage)[0] = 0;
-					NextHeaderPtr += 4;
-				} else {
-					byte *newpg = (byte*)PageAllocator.Alloc();
-					
-					// link the pages together
-					((uint*)CurrentHeaderPage)[Pager.AtomicPageSize/4-1] = (uint)newpg;
-					((uint*)newpg)[0] = (uint)CurrentHeaderPage;
-					
-					NextHeaderPtr = newpg+1;
-					CurrentHeaderPage = newpg;
-				}
-			}
+		}
+		
+		#endregion
 	}
 }

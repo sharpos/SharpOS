@@ -24,7 +24,7 @@ namespace SharpOS.ADC.X86 {
 		public const ushort DataSelector = 16;
 
 		private static DTPointer* gdtPointer = (DTPointer*) Kernel.LabelledAlloc ("GDTPointer", DTPointer.SizeOf);
-		private static Entry* gdt = (Entry*) Kernel.Alloc (Entry.SizeOf * GDTEntries);
+		private static Entry* gdt = (Entry*) Kernel.StaticAlloc (Entry.SizeOf * GDTEntries);
 
 		[StructLayout (LayoutKind.Sequential)]
 		public struct Entry {
@@ -75,9 +75,9 @@ namespace SharpOS.ADC.X86 {
 			gdtPointer->Setup ((ushort) (sizeof (Entry) * GDTEntries - 1), (uint) gdt);
 
 			ADC.TextMode.Write ("GDT Pointer: 0x");
-			ADC.TextMode.WriteNumber ((int) gdtPointer->Address, true);
+			ADC.TextMode.Write ((int) gdtPointer->Address, true);
 			ADC.TextMode.Write (" - 0x");
-			ADC.TextMode.WriteNumber (gdtPointer->Size, true);
+			ADC.TextMode.Write (gdtPointer->Size, true);
 			ADC.TextMode.WriteLine ();
 
 			gdt [SystemSelector >> 3].Setup (0, 0, 0);

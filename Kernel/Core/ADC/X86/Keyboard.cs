@@ -24,12 +24,10 @@ namespace SharpOS.ADC.X86
 	
 	public unsafe class Keyboard
 	{
-		public const string		KEYBOARD_HANDLER	= "KEYBOARD_HANDLER";
-
-		public static uint keyUpEventCount = 0;
-		public static uint *keyUpEvent = null;
-		public static uint keyDownEventCount = 0;
-		public static uint *keyDownEvent = null;
+		#region Global fields
+		
+		unsafe static uint *keyUpEvent = (uint*)Kernel.StaticAlloc (sizeof (uint) * Kernel.MaxEventHandlers);
+		unsafe static uint *keyDownEvent = (uint*)Kernel.StaticAlloc (sizeof (uint) * Kernel.MaxEventHandlers);
 		
 		static bool leftShift;
 		static bool rightShift;
@@ -44,76 +42,24 @@ namespace SharpOS.ADC.X86
 		static bool capsLock;
 		static bool numLock;
 	
-		static byte* defaultMap = null;
-		static byte* shiftedMap = null;
+		unsafe static byte* defaultMap = null;
+		unsafe static byte* shiftedMap = null;
 
 		static int defaultMapLen = 0;
 		static int shiftedMapLen = 0;
-		
-		public static void Setup () {
-			ADC.TextMode.Write ("ADC: Setting up keyboard... ");
-			keyUpEvent = (uint*) Kernel.Alloc (sizeof (uint) * 4);
-			keyUpEventCount = 4;
-			keyDownEvent = (uint*) Kernel.Alloc (sizeof (uint) * 4);
-			keyDownEventCount = 4;
-			
-			IDT.SetupIRQ (1, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
 
-			ADC.TextMode.WriteLine ("done");
-		}
-
-		public static void SetKeymap (byte *defMap, int defLen, byte *shiftMap,
-					      int shiftLen)
-		{
-			defaultMap = defMap;
-			shiftedMap = shiftMap;
-			defaultMapLen = defLen;
-			shiftedMapLen = shiftLen;
-		}
-		
-		#region KeyUpEvent
-		public static EventRegisterStatus RegisterKeyUpEvent(uint address)
-		{
-			for (int x = 0; x < keyUpEventCount; ++x)
-				if (keyUpEvent [x] == address)
-					return EventRegisterStatus.AlreadySubscribed;
-			
-			for (int x = 0; x < keyUpEventCount; ++x) {
-				if (keyUpEvent [x] == 0) {
-					keyUpEvent [x] = address;
-					
-					return EventRegisterStatus.Success;
-				}
-			}
-			
-			return EventRegisterStatus.CapacityExceeded;
-		}
 		#endregion
+		#region Constants
 
-		#region KeyDownEvent
-		public static EventRegisterStatus RegisterKeyDownEvent(uint address)
-		{
-			for (int x = 0; x < keyDownEventCount; ++x)
-				if (keyDownEvent [x] == address)
-					return EventRegisterStatus.AlreadySubscribed;
-			
-			for (int x = 0; x < keyDownEventCount; ++x) {
-				if (keyDownEvent [x] == 0) {
-					keyDownEvent [x] = address;
-					
-					return EventRegisterStatus.Success;
-				}
-			}
-			
-			return EventRegisterStatus.CapacityExceeded;
-		}
+		const string KEYBOARD_HANDLER = "KEYBOARD_HANDLER";
+		
 		#endregion
+		#region Enumerations
 
-		#region KeyboardCommands
 		enum KeyboardCommands
 		{
 			Set_Keyboard_LEDs			= 0xed,
-			Echo						= 0xee,	// (Diagnostics)
+			Echo					= 0xee,	// (Diagnostics)
 			Select_Scancode_Set			= 0xf0,
 			/*
 			 0: return current set number: 1:'C', 2:'A', 3:'?'
@@ -146,136 +92,147 @@ namespace SharpOS.ADC.X86
 			Enable_Keyboard				= 0xf4,	// It clears its buffer and starts scanning.
 			Disable_Scanning			= 0xf5,	// Reset keyboard
 			Enable_Scanning				= 0xf6,	// Reset keyboard
-			Resend_Last_Transmission	= 0xfe,
-			Internal_Diagnostics		= 0xff,
+			Resend_Last_Transmission		= 0xfe,
+			Internal_Diagnostics			= 0xff,
 		}
-		#endregion
 
-		#region KeyboardMessages
 		enum KeyboardMessages
 		{
 			Too_Many_Keys			= 0x00,	// Too many keys are being pressed at once
-			Basic_Assurance_Test	= 0xaa,
+			Basic_Assurance_Test		= 0xaa,
 			Echo_Command_Result		= 0xee,
-			Acknowledge				= 0xfa,	// Sent by every command, except eeh and feh
-			BAT_Failed				= 0xfc,
+			Acknowledge			= 0xfa,	// Sent by every command, except eeh and feh
+			BAT_Failed			= 0xfc,
 			Request_Resend			= 0xfe,	// Resend your data please
 			Keyboard_Error			= 0xff
 		}
-		#endregion
 
-		#region SendCommand
-		private static unsafe void WaitUntillReady()
+		#endregion
+		#region Setup ()
+		
+		public static void Setup ()
 		{
-			while ((IO.In8(IO.Ports.KB_controller_commands) & 0x02) != 0)
-				;
+			IDT.SetupIRQ (1, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
 		}
 
-		private static unsafe void SendCommand(KeyboardCommands command)
+		#endregion
+		#region Internal
+		
+		static void WaitUntilReady ()
+		{
+			while ((IO.In8 (IO.Ports.KB_controller_commands) & 0x02) != 0);
+		}
+
+		static void SendCommand (KeyboardCommands command)
 		{
 			KeyboardMessages message = KeyboardMessages.Acknowledge;
-			do
-			{
-				IO.Out8(IO.Ports.KB_data_port, (byte)command);
 			
-				// Wait for acknowledge...
-				while ((IO.In8(IO.Ports.KB_controller_commands) & 0x01) != 0)
-					;
+			do {
+				IO.Out8 (IO.Ports.KB_data_port, (byte)command);
 			
-				// receive acknowledge
-				message = (KeyboardMessages)IO.In8(IO.Ports.KB_data_port);
+				// Wait for acknowledge and receieve it
+				
+				while ((IO.In8 (IO.Ports.KB_controller_commands) & 0x01) != 0);
+				message = (KeyboardMessages)IO.In8 (IO.Ports.KB_data_port);
+
 				if (message == KeyboardMessages.Request_Resend) 
 					continue; 
-				else 
-				if (message == KeyboardMessages.Acknowledge)
+				else if (message == KeyboardMessages.Acknowledge)
 					return;
-				else
-					//FIXME: We should throw an exception here (or something)
+				else {
+					Kernel.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
 					return;
+				}
+				
 			} while (message != KeyboardMessages.Acknowledge);
 		}
 
-		private static unsafe void SendCommand(KeyboardCommands command, byte value)
+		static void SendCommand (KeyboardCommands command, byte value)
 		{
-			WaitUntillReady ();
+			WaitUntilReady ();
 
 			SendCommand (KeyboardCommands.Set_Keyboard_LEDs);
 
-			WaitUntillReady ();
+			WaitUntilReady ();
 
 			IO.Out8 (IO.Ports.KB_data_port, value);
 		}
-		#endregion
 
-		#region SetLEDs
-		public static unsafe void SetLEDs (bool capslock, bool numlock, bool scrolllock)
-		{
-			byte leds = 0;
-			if (capslock)		leds |= (byte)1;
-			if (numlock)		leds |= (byte)2;
-			if (scrolllock)		leds |= (byte)4;
-
-			SendCommand (KeyboardCommands.Set_Keyboard_LEDs, leds);
-		}
-		#endregion
-
-		[SharpOS.AOT.Attributes.Label(KEYBOARD_HANDLER)]
-		private static unsafe void KeyboardHandler (IDT.ISRData data)
+		[SharpOS.AOT.Attributes.Label (KEYBOARD_HANDLER)]
+		static unsafe void KeyboardHandler (IDT.ISRData data)
 		{
 			// Read from the keyboard's data buffer
-			byte	input		= IO.In8 (IO.Ports.KB_data_port);
-			/*
+			byte input;
+			uint scancode;
+			bool pressed;
+
+			input = IO.In8 (IO.Ports.KB_data_port);
+
+			/* XXX: why is this commented out?
+			
 			if (input == KeyboardMessages.Too_Many_Keys ||
 				input == KeyboardMessages.Keyboard_Error)
 			{
-				//TODO: do something usefull here..
+				// TODO: do something usefull here..
 				return;
-			}*/
+			}
 
-			uint	scancode;
-			bool	pressed;
-
-			if (input == 0xe0)
-			{
+			*/
+			
+			if (input == 0xe0) {
 				input		= IO.In8 (IO.Ports.KB_data_port);
-
 				scancode	= (uint)((input & 0x7F) >> 8) | 0xe0;
 				pressed		= (input & 0x80) == 0;
-			} else
-			if (input == 0xe1)
-			{
+				
+			} else if (input == 0xe1) {
 				input		= IO.In8 (IO.Ports.KB_data_port);
-
 				scancode	= (uint)(input & 0x7F);
 				pressed		= (input & 0x80) == 0;
 				return;
-			} else
-			{
+				
+			} else {
 				scancode	= (uint)(input & 0x7F);
 				pressed		= (input & 0x80) == 0;
 			}
 
-			if (scancode == 0x1d)	{ leftControl	= pressed;	return; } else
-			if (scancode == 0x2a)	{ leftShift		= pressed;	return; } else
-			if (scancode == 0x38)	{ leftAlt		= pressed;	return; } else
-			if (scancode == 0x3a)	{ capsLock		= pressed;	return; } else
-			if (scancode == 0x45)	{ numLock		= pressed;	return; } else
-			if (scancode == 0x46)	{ scrollLock	= pressed;	return; } else
-			if (scancode == 0xe038) { rightAlt		= pressed;	return; } else
-			if (scancode == 0xe01d) { rightControl	= pressed;	return; } else
-			if (scancode == 0xe036) { rightShift	= pressed;	return; }
+			if (scancode == 0x1d) {		 // left control
+				leftControl = pressed;
+				return;
+			} else if (scancode == 0x2a) {	 // left shift
+				leftShift = pressed;
+				return;
+			} else if (scancode == 0x38) {	 // left alt
+				leftAlt = pressed;
+				return;
+			} else if (scancode == 0x3a) {	 // caps-lock
+				capsLock = pressed;
+				return;
+			} else if (scancode == 0x45) {	 // num-lock
+				numLock = pressed;
+				return;
+			} else if (scancode == 0x46) {	 // scroll-lock
+				scrollLock = pressed;
+				return;
+			} else if (scancode == 0xe038) { // right alt
+				rightAlt = pressed;
+				return;
+			} else if (scancode == 0xe01d) { // right control
+				rightControl = pressed;
+				return;
+			} else if (scancode == 0xe036) { // right shift
+				rightShift = pressed;
+				return;
+			}
 
-			if (pressed)
-			{
-				for (int x = 0; x < keyDownEventCount; ++x) {
+			if (pressed) {
+				for (int x = 0; x < Kernel.MaxEventHandlers; ++x) {
 					if (keyDownEvent [x] == 0)
 						continue;
 					
 					Kernel.Call (keyDownEvent [x], scancode);
 				}
-			} else
-			{
-				for (int x = 0; x < keyUpEventCount; ++x) {
+			} else {
+				for (int x = 0; x < Kernel.MaxEventHandlers; ++x) {
 					if (keyUpEvent [x] == 0)
 						continue;
 					
@@ -285,7 +242,69 @@ namespace SharpOS.ADC.X86
 			}
 		}
 
-		public static unsafe bool LeftShift ()
+		#endregion
+		#region ADC implementation
+		
+		public unsafe static void SetKeyMap (byte *defMap, int defLen, byte *shiftMap,
+					      int shiftLen)
+		{
+			defaultMap = defMap;
+			shiftedMap = shiftMap;
+			defaultMapLen = defLen;
+			shiftedMapLen = shiftLen;
+		}
+		
+		public unsafe static EventRegisterStatus RegisterKeyUpEvent (uint address)
+		{
+			for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
+				if (keyUpEvent [x] == address)
+					return EventRegisterStatus.AlreadySubscribed;
+			
+			for (int x = 0; x < Kernel.MaxEventHandlers; ++x) {
+				if (keyUpEvent [x] == 0) {
+					keyUpEvent [x] = address;
+					
+					return EventRegisterStatus.Success;
+				}
+			}
+			
+			return EventRegisterStatus.CapacityExceeded;
+		}
+
+		public unsafe static EventRegisterStatus RegisterKeyDownEvent (uint address)
+		{
+			for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
+				if (keyDownEvent [x] == address)
+					return EventRegisterStatus.AlreadySubscribed;
+			
+			for (int x = 0; x < Kernel.MaxEventHandlers; ++x) {
+				if (keyDownEvent [x] == 0) {
+					keyDownEvent [x] = address;
+					
+					return EventRegisterStatus.Success;
+				}
+			}
+			
+			return EventRegisterStatus.CapacityExceeded;
+		}
+
+		public static void SetLEDs (bool capslock, bool numlock, bool scrolllock)
+		{
+			byte leds = 0;
+			
+			if (capslock)
+				leds |= (byte)1;
+				
+			if (numlock)
+				leds |= (byte)2;
+				
+			if (scrolllock)
+				leds |= (byte)4;
+
+			SendCommand (KeyboardCommands.Set_Keyboard_LEDs, leds);
+		}
+
+		public static bool LeftShift ()
 		{
 			return leftShift;
 		}
@@ -330,30 +349,30 @@ namespace SharpOS.ADC.X86
 			return numLock;
 		}
 	
-		public static byte *GetCurrentDefaultTable (int *ret_len)
+		public unsafe static byte *GetCurrentDefaultTable (int *ret_len)
 		{
 			*ret_len = defaultMapLen;
 			return shiftedMap;
 		}
 		
-		public static byte *GetCurrentShiftedTable (int *ret_len)
+		public unsafe static byte *GetCurrentShiftedTable (int *ret_len)
 		{
 			*ret_len = shiftedMapLen;
 			return shiftedMap;
 		}
 		
-		public static byte Translate (uint scancode, bool shifted)
+		public unsafe static byte Translate (uint scancode, bool shifted)
 		{
-			Kernel.Assert (shiftedMap != null,
-				Kernel.String ("No shifted map is available!"));
-			Kernel.Assert (defaultMap != null,
-				Kernel.String ("No default map is available!"));
+			Kernel.Assert (shiftedMap != null, "No shifted map is available!");
+			Kernel.Assert (defaultMap != null, "No default map is available!");
 
 			if (shifted)
 				return shiftedMap [(byte) scancode];
 			else
 				return defaultMap [(byte) scancode];
 		}
+
+		#endregion
 	}
 }
 

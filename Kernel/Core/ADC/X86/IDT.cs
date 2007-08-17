@@ -23,7 +23,7 @@ namespace SharpOS.ADC.X86 {
 		private const ushort Entries = 256;
 
 		private static DTPointer* idtPointer = (DTPointer*) Kernel.LabelledAlloc (IDT_POINTER, DTPointer.SizeOf);
-		private static Entry* idt = (Entry*) Kernel.Alloc (Entries * Entry.SizeOf);
+		private static Entry* idt = (Entry*) Kernel.StaticAlloc (Entries * Entry.SizeOf);
 		private static uint* ISRTable = (uint*) Kernel.LabelledAlloc (IDT_TABLE, Entries * 4);
 
 		[StructLayout (LayoutKind.Sequential)]
@@ -88,9 +88,9 @@ namespace SharpOS.ADC.X86 {
 			idtPointer->Setup ((ushort) (sizeof (Entry) * Entries - 1), (uint) idt);
 
 			ADC.TextMode.Write ("IDT Pointer: 0x");
-			ADC.TextMode.WriteNumber ((int) idtPointer->Address, true);
+			ADC.TextMode.Write ((int) idtPointer->Address, true);
 			ADC.TextMode.Write (" - 0x");
-			ADC.TextMode.WriteNumber (idtPointer->Size, true);
+			ADC.TextMode.Write (idtPointer->Size, true);
 			ADC.TextMode.WriteLine ();
 
 			for (int i = 0; i < Entries; i++)
@@ -143,8 +143,10 @@ namespace SharpOS.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (ISR_DEFAULT_HANDLER)]
 		private static unsafe void ISRDefaultHandler (ISRData data)
 		{
-			TextMode.ClearScreen ();
-
+			Kernel.SetErrorTextAttributes ();
+			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked.\n");
+			ADC.TextMode.WriteLine ("Register dump:");
+			
 			ADC.TextMode.WriteLine ("IDT 0x", (int) data.Index);
 			ADC.TextMode.WriteLine ("EIP 0x", (int) data.EIP);
 

@@ -39,19 +39,19 @@ namespace SharpOS.ADC.X86 {
 				Gets the ADC platform identifier.
 			</summary>
 		*/
-		public static byte *GetCPU ()
+		public static string GetCPU ()
 		{
-			return Kernel.String("x86");
+			return "x86";
 		}
 		
-		public static byte *GetAuthor ()
+		public static string GetAuthor ()
 		{
-			return Kernel.String("The SharpOS Team");
+			return "The SharpOS Team";
 		}
 		
-		public static byte *GetLayerName ()
+		public static string GetLayerName ()
 		{
-			return Kernel.String("SharpOS.ADC.X86");
+			return "SharpOS.ADC.X86";
 		}
 		
 		public static int GetProcessorCount ()

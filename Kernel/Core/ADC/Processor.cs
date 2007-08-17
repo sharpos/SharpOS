@@ -13,16 +13,16 @@ using AOTAttr = SharpOS.AOT.Attributes;
 namespace SharpOS.ADC {
 
 	public unsafe struct Processor {
-		uint ID;
-		Architecture ArchType;
-		byte *VendorName;
-		uint VendorID;
-		byte *FamilyName;
-		uint FamilyID;
-		byte *ModelName;
-		uint ModelID;
-		uint ClockSpeed;
-		uint CacheSize;
-		void *Flags;
+		public uint ID;
+		public Architecture ArchType;
+		public byte *VendorName;
+		public uint VendorID;
+		public byte *FamilyName;
+		public uint FamilyID;
+		public byte *ModelName;
+		public uint ModelID;
+		public uint ClockSpeed;
+		public uint CacheSize;
+		public void *Flags;
 	}
 }

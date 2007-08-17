@@ -1,0 +1,7 @@
+SharpOS ADC Conventions and Documentation
+Copyright (C) 2007, the SharpOS team (http://sharpos.sf.net/)
+
+Authors:
+	William Lahti <xfurious@gmail.com>
+
+

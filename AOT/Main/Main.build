@@ -18,7 +18,7 @@
 
 		<copy file="../../References/Mono.GetOptions.dll" tofile="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 		<copy file="../../References/Mono.Cecil.dll" tofile="${path::combine(prefix, 'Mono.Cecil.dll')}" />
-		<csc target="exe" output="${path::combine(prefix, 'SharpOS.AOT.exe')}" debug="${debug}" 
+		<csc target="exe" output="${path::combine(prefix, 'sharpos-aot.exe')}" debug="${debug}" 
 				unsafe="true">
 			<references>
 				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
@@ -42,10 +42,10 @@
 	</target>
 
 	<target name="clean">
-		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'SharpOS.AOT.exe.mdb')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'SharpOS.AOT.pdb')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'SharpOS.AOT.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'sharpos-aot.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'sharpos-aot.exe.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'sharpos-aot.pdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'sharpos-aot.xml')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'Mono.GetOptions.dll')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'Mono.Cecil.dll')}" failonerror="false" />
 	</target>

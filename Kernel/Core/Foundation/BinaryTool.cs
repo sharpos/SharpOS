@@ -73,15 +73,15 @@ namespace SharpOS.Foundation
 			bp += ilen;
 
 			TextMode.Write ("bufferLen: ");
-			TextMode.WriteNumber (bufferLen, false);
+			TextMode.Write (bufferLen, false);
 			TextMode.WriteLine ();
 
 			TextMode.Write ("size: ");
-			TextMode.WriteNumber (size, false);
+			TextMode.Write (size, false);
 			TextMode.WriteLine ();
 			
 			TextMode.Write ("ilen: ");
-			TextMode.WriteNumber (ilen, false);
+			TextMode.Write (ilen, false);
 			TextMode.WriteLine ();
 
 			TextMode.WriteLine ("&buffer: 0x", (int)buffer);
@@ -103,10 +103,10 @@ namespace SharpOS.Foundation
 			*/
 			
 			TextMode.Write ("size: ");
-			TextMode.WriteNumber (size, false);
+			TextMode.Write (size, false);
 			TextMode.WriteLine ();
 			TextMode.Write ("ilen: ");
-			TextMode.WriteNumber (ilen, false);
+			TextMode.Write (ilen, false);
 			TextMode.WriteLine ();
 			TextMode.Write ("retx: ");
 			TextMode.WriteLine (buffer);

@@ -15,7 +15,7 @@
 	<target name="build">
 		<echo message="Building DiskImageUpdater" />
 		
-		<csc target="exe" output="${path::combine(prefix, 'DiskImageUpdater.exe')}" debug="${debug}" unsafe="true">
+		<csc target="exe" output="${path::combine(prefix, 'disk-image-updater.exe')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 			</references>
@@ -26,10 +26,10 @@
 	</target>
 	
 	<target name="clean">
-		<delete file="${path::combine(prefix, 'DiskImageUpdater.exe')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'DiskImageUpdater.xml')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'DiskImageUpdater.exe.mdb')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'DiskImageUpdater.pdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'disk-image-updater.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'disk-image-updater.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'disk-image-updater.exe.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'disk-image-updater.pdb')}" failonerror="false" />
 		
 		<delete file="${path::combine(prefix, 'Mono.GetOptions.dll')}" failonerror="false" />
 	</target>

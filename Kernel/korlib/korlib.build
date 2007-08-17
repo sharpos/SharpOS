@@ -1,44 +1,49 @@
 <?xml version="1.0"?>
 
 <!--
-        *  (C) 2007 Johann MacDonagh <johann [at] macdonaghs [dot] com>
+        *  (C) 2007 Mircea-Cristian Racasan  <darx_kies [at] gmx [dot] net>
         *
         *  Licensed under the terms of the GNU GPL License version 2.
         *
 -->
 
-<project name="SharpOS korlib" default="build">
+<project name="SharpOS.Korlib" default="build">
 	<property name="debug" value="false" readonly="false" overwrite="false" />
-	<property name="prefix" value="../../build" overwrite="false" />
-	<property name="arch" value="X86" readonly="false" overwrite="false" />
-	<property name="aot-options" value="" readonly="false" overwrite="false" />
-	<property name="temp-dir" value="${path::combine(prefix, 'Temp')}" />
-	<property name="distro-dir" value="${path::combine(prefix, 'distro')}" />
-	<property name="common-dir" value="${path::combine(distro-dir, 'common')}" />
-	<property name="data-dir" value="../../Data" />
-	<property name="disk-images-dir" value="${path::combine(data-dir, 'DiskImages')}" />
+	<property name="prefix" value="../../build" overwrite="true" />
 
-	<target name="conf">
-		<!-- nothing yet -->		
-	</target>
+	<if test="${platform::is-unix()}">
+		<property name="nant.settings.currentframework" value="mono-1.0" />
+	</if>
+	
+	<if test="${platform::is-win32()}">
+		<property name="nant.settings.currentframework" value="net-1.1" overwrite="true" />
+	</if>
 
 	<target name="build">
-		<echo message="Building the SharpOS korlib" />
+		<!-- create the keymap archive -->
+		<echo message="Building SharpOS.Korlib" />
 
-		<csc target="library" output="${path::combine(prefix, 'SharpOS.korlib.dll')}" debug="${debug}" unsafe="true">
+		<csc target="library" output="${path::combine(prefix, 'korlib.dll')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 			</references>
 			<sources>
-				<include name="**/*.cs" />
+				<include name="System/*.cs" />
 			</sources>
 		</csc>
 		
 	</target>
 
+	<target name="fxcop" depends="build">
+		<exec program="fxcopcmd.exe"
+			commandline="/p:SharpOS.Korlib.fxcop /o:${path::combine(prefix, 'korlib-fxcop.xml')}" 
+			failonerror="false" />
+	</target>
+	
 	<target name="clean">
-		<delete file="${path::combine(prefix, 'SharpOS.korlib.dll')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'SharpOS.korlib.pdb')}" failonerror="false" />
-		<delete file="${path::combine(prefix, 'SharpOS.korlib.dll.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'korlib.dll')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'korlib.bin')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'korlib.pdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'korlib.dll.mdb')}" failonerror="false" />
 	</target>
 </project>

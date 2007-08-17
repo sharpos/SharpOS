@@ -4,173 +4,451 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
+// (**) Please see the ADC conventions and documentation at Kernel/Core/Documents/ADC.txt
+//
 
-using System;
 using System.Runtime.InteropServices;
 using SharpOS;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 using SharpOS.ADC.X86;
-using AOTAttr = SharpOS.AOT.Attributes;
+using SharpOS.Foundation;
 
 namespace SharpOS.ADC {
 	public unsafe class TextMode
 	{
-		[AOTAttr.ADCStub]
-		public static void Setup()
+		#region ADC Interface
+
+		/// <summary>
+		/// Performs architecture-specific setup. 
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void Setup ()
 		{
 		}
 
-		[AOTAttr.ADCStub]
+		/// <summary>
+		/// Writes the ASCII character <paramref name="value" /> to the screen.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void WriteChar (byte value)
+		{
+		}
+
+		/// <summary>
+		/// Move the internal cursor to the specified position,
+		/// but do not update the cursor position displayed on
+		/// the screen. This saves time and reduces flickering
+		/// of the display while doing complex screen changes.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void MoveTo (int _x, int _y)
+		{
+		}
+		
+		/// <summary>
+		/// Change the hardware cursor size.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
 		public unsafe static void SetCursorSize (byte _start, byte _end)
 		{
 		}
 
-		[AOTAttr.ADCStub]
-		public unsafe static void SetCursor(int _x, int _y)
+		/// <summary>
+		/// Change the internal cursor position (like MoveTo()), then
+		/// update the cursor displayed on the screen.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void SetCursor (int _x, int _y)
 		{
 		}
 
-		[AOTAttr.ADCStub]
-		public unsafe static int GetX()
+		/// <summary>
+		/// Retrieve the position of the cursor and the size of the screen simultaneously.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void GetCursor (int *ret_x, int *ret_y)
 		{
-			return 0;
+		}
+		 
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void GetScreenSize (int *ret_w, int *ret_h)
+		{
 		}
 		
-		[AOTAttr.ADCStub]
-		public unsafe static int GetY()
-		{
-			return 0;
-		}
-
-		[AOTAttr.ADCStub]
-		public unsafe static void GoTo (int _x, int _y)
-		{
-		}
-
-		[AOTAttr.ADCStub]
+		/// <summary>
+		/// Clear the screen.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
 		public unsafe static void ClearScreen ()
 		{
 		}
 
+		/// <summary>
+		/// Scroll the screen by <paramref name="value" /> lines.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void ScrollPage (int value)
+		{
+		}
+
+		/// <summary>
+		/// Write <paramref name="value" /> as a decimal value.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void WriteByte (byte value)
+		{
+		}
+
+		/// <summary>
+		/// Write <paramref name="value" /> as a hexadecimal value
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void WriteHex (byte value)
+		{
+		}
+
+		/// <summary>
+		/// Change the attributes used for subsequent Write() calls.
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public static void SetAttributes (TextColor _foreground, TextColor _background)
+		{
+		}
+
+		/// <summary>
+		/// Restores the last set of screen attributes
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public static bool RestoreAttributes ()
+		{
+			return false;
+		}
+		
+		/// <summary>
+		/// Saves the current set of screen attributes
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public static bool SaveAttributes ()
+		{
+			return false;
+		}
+
+		public static TextColor Foreground {
+		
+			[SharpOS.AOT.Attributes.ADCStub]
+			get { return TextColor.Black; }
+			[SharpOS.AOT.Attributes.ADCStub]
+			set { }
+		}
+		
+		public static TextColor Background {
+			[SharpOS.AOT.Attributes.ADCStub]
+			get { return TextColor.Black; }
+			[SharpOS.AOT.Attributes.ADCStub]
+			set { }
+		}
+		
+		#endregion
+		#region Internal
+
+		/// <summary>
+		/// Common Write() implementation. Serves Write(CString8*), Write(PString8*), and
+		/// Write(byte*).
+		/// <summary>
+		unsafe static void Write (byte *str, int len)
+		{
+			for (int i = 0; i < len; i++)
+				WriteChar (str [i]);
+		}
+
+		#endregion
+		#region Cursors
+		
+		/// <summary>
+		/// Makes sure the cursor displayed on the screen is
+		/// in sync with the internal cursor (used to position
+		/// new Write() data).
+		/// </summary>
+		public unsafe static void RefreshCursor ()
+		{
+			int x, y;
+
+			GetCursor (&x, &y);
+			SetCursor (x, y);
+		}
+		
+		#endregion
+		#region Write() family
+		
+		/// <summary>
+		/// Writes a 16-bit string to the screen.
+		/// </summary>
+		public static void Write (string message)
+		{
+			for (int i = 0; i < message.Length; i++)
+				WriteChar ((byte) message [i]);
+		}
+
+		public unsafe static void Write (CString8 *str)
+		{
+			Write (str->Pointer, str->Length);
+		}
+
+		public unsafe static void Write (PString8 *str)
+		{
+			Write (str->Pointer, str->Length);
+		}
+		
+		public unsafe static void Write (byte *str)
+		{
+			Write (str, ByteString.Length (str));
+		}
+		
+		/// <summary>
+		/// Writes an Int32 to the screen in decimal format.
+		/// </summary>
+		public static void Write (int value)
+		{
+			Write (value, false);
+		}
+
+		/// <summary>
+		/// Writes an Int32 to the screen, either in decimal or
+		/// hexadecimal format.
+		/// </summary>
+		public unsafe static void Write (int value, bool hex)
+		{
+			byte* buffer = stackalloc byte [32];
+			int length;
+			
+			length = Convert.ToString (value, hex, buffer, 32, 0);
+
+			for (int x = 0; x < length; ++x)
+				WriteChar (buffer [x]);
+		}
+
+		#endregion
+		#region WriteLine() family
+	
+		/// <summary>
+		/// Writes a newline to the screen.
+		/// </summary>
+		public unsafe static void WriteLine ()
+		{
+			WriteChar ((byte) '\n');
+		}
+
+		/// <summary>
+		/// Writes a string to the screen, followed by a newline.
+		/// </summary>
+		public static void WriteLine (string message)
+		{
+			Write (message);
+			WriteLine ();
+		}
+		
+		/// <summary>
+		/// Writes a CString8* to the screen, followed by a newline.
+		/// </summary>
+		public static void WriteLine (CString8 *message)
+		{
+			Write (message);
+			WriteLine ();
+		}
+		
+		/// <summary>
+		/// Writes a CString8* to the screen, followed by a newline.
+		/// </summary>
+		public static void WriteLine (PString8 *message)
+		{
+			Write (message);
+			WriteLine ();
+		}
+		
+		/// <summary>
+		/// Writes a CString8* to the screen, followed by a newline.
+		/// </summary>
+		public static void WriteLine (byte *message)
+		{
+			Write (message);
+			WriteLine ();
+		}
+
+		/// <summary>
+		/// Writes the string <paramref name="message" /> to the screen,
+		/// then the Int32 <paramref name="value" />, followed by a newline.
+		/// </summary>
+		public static void WriteLine (string message, int value, bool hex)
+		{
+			Write (message);
+			Write (value, hex);
+			WriteLine ();
+		}
+
+		/// <summary>
+		/// Writes the string <paramref name="message" /> to the screen,
+		/// then the Int32 <paramref name="value" />, followed by a newline.
+		/// </summary>
+		public unsafe static void WriteLine (CString8 *message, int value, bool hex)
+		{
+			Write (message);
+			Write (value, hex);
+			WriteLine ();
+		}
+
+		/// <summary>
+		/// Writes the string <paramref name="message" /> to the screen,
+		/// then the Int32 <paramref name="value" />, followed by a newline.
+		/// </summary>
+		public unsafe static void WriteLine (PString8 *message, int value, bool hex)
+		{
+			Write (message);
+			Write (value, hex);
+			WriteLine ();
+		}
+		
+		/// <summary>
+		/// Writes the string <paramref name="message" /> to the screen,
+		/// then the Int32 <paramref name="value" />, followed by a newline.
+		/// </summary>
+		public unsafe static void WriteLine (byte *message, int value, bool hex)
+		{
+			Write (message);
+			Write (value, hex);
+			WriteLine ();
+		}
+
+		public static void WriteLine (string message, int value)
+		{
+			Write (message);
+			Write (value);
+			WriteLine ();
+		}
+
+		public static void WriteLine (CString8 *message, int value)
+		{
+			Write (message);
+			Write (value);
+			WriteLine ();
+		}
+
+		public static void WriteLine (PString8 *message, int value)
+		{
+			Write (message);
+			Write (value);
+			WriteLine ();
+		}
+
+		public static void WriteLine (byte *message, int value)
+		{
+			Write (message);
+			Write (value);
+			WriteLine ();
+		}
+
+		#endregion
+		#region WriteLine() convenient overloads
+		
+		public static void WriteLine (string message, int value, bool hex, string message2)
+		{
+			Write (message);
+			Write (value, hex);
+			Write (message2);
+		}
+
+		public static void WriteLine (string message, int value, string message2)
+		{
+			Write (message);
+			Write (value);
+			Write (message2);
+		}
+		
+		#endregion
+		#region WriteSubstring() family
+		
+		/// <summary>
+		/// Writes <paramref name="len" /> characters of the string
+		/// <paramref name="message" /> to the screen, starting with
+		/// the character at index <paramref name="offset" />.
+		/// </summary>
+		public unsafe static void WriteSubstring (string message, int offset, int len)
+		{
+			for (int i = offset; i < message.Length && i < offset + len; ++i)
+				WriteChar ((byte) message [i]);
+		}
+
+		/// <summary>
+		/// Writes <paramref name="len" /> characters of the string
+		/// <paramref name="message" /> to the screen, starting with
+		/// the character at index <paramref name="offset" />.
+		/// </summary>
+		public unsafe static void WriteSubstring (CString8 *message, int offset, int len)
+		{
+			for (int i = offset; message->GetChar (i) != 0 && i < offset + len; ++i)
+				WriteChar (message->GetChar (i));
+		}
+
+		/// <summary>
+		/// Writes <paramref name="len" /> characters of the string
+		/// <paramref name="message" /> to the screen, starting with
+		/// the character at index <paramref name="offset" />.
+		/// </summary>
+		public unsafe static void WriteSubstring (PString8 *message, int offset, int len)
+		{
+			for (int i = offset; i < message->Length && i < offset + len; ++i)
+				WriteChar (message->GetChar (i));
+		}
+
+		/// <summary>
+		/// Writes <paramref name="len" /> characters of the string
+		/// <paramref name="message" /> to the screen, starting with
+		/// the character at index <paramref name="offset" />.
+		/// </summary>
 		public unsafe static void WriteSubstring (byte *message, int offset, int len)
 		{
 			for (int i = offset; message [i] != 0 && i < (offset+len); ++i)
 				WriteChar (message [i]);
 		}
 
+		#endregion
+		#region Obsolete
+		// TODO: remove all references to these and axe them!		
+		
+		/// <summary>
+		/// Writes a number to the screen in decimal format.
+		/// </summary>
+		[System.Obsolete("Use Write (int value)")]
 		public unsafe static void WriteNumber (int value)
 		{
 			WriteNumber (value, false);
 		}
-		
+
+		/// <summary>
+		/// Writes a number to the screen, either in decimal or
+		/// hexadecimal format.
+		/// </summary>
+		[System.Obsolete("Use Write (int value, bool hex)")]
 		public unsafe static void WriteNumber (int value, bool hex)
 		{
-			byte* buffer = stackalloc byte [32];
-			uint uvalue = (uint) value;
-			ushort divisor = hex ? (ushort) 16 : (ushort) 10;
-			int length = 0;
-
-			if (!hex && value < 0) {
-				buffer [length++] = (byte) '-';
-
-				uvalue = (uint) -value;
-			}
-
-			do {
-				uint remainder = uvalue % divisor;
-
-				if (remainder < 10)
-					buffer [length++] = (byte) ('0' + remainder);
-
-				else
-					buffer [length++] = (byte) ('A' + remainder - 10);
-
-			} while ((uvalue /= divisor) != 0);
-
-			while (length > 0)
-				WriteChar (buffer [--length]);
+			Write (value, hex);
 		}
 
-		[Obsolete ("Use WriteNumber (int value, bool hex) instead")]
+		/// <summary>
+		/// Writes a number to the screen, either in decimal or
+		/// hexadecimal format.
+		/// </summary>
+		[System.Obsolete ("Use WriteNumber (int value, bool hex) instead")]
 		public unsafe static void WriteNumber (bool hex, int value)
 		{
 			WriteNumber (value, hex);
 		}
-
-		public unsafe static void WriteLine (string message, int value)
-		{
-			Write (message);
-			WriteNumber (value, true);
-			WriteLine ();
-		}
-
-		public unsafe static void WriteLine (byte* message)
-		{
-			Write (message);
-			WriteLine ();
-		}
-
-		public unsafe static void WriteLine (string message)
-		{
-			Write (message);
-			WriteLine ();
-		}
-
-		public unsafe static void Write (byte* message)
-		{
-			for (int i = 0; message [i] != 0; i++)
-				WriteChar (message [i]);
-		}
-
-		public unsafe static void Write (string message)
-		{
-			for (int i = 0; i < message.Length; i++)
-				WriteChar ((byte) message [i]);
-		}
-
-		[AOTAttr.ADCStub]
-		public unsafe static void WriteChar (byte value)
-		{
-		}
-
-		[AOTAttr.ADCStub]
-		public unsafe static void ScrollPage(int value)
-		{
-		}
-
-		[AOTAttr.ADCStub]
-		public unsafe static void WriteString (UInt32 value)
-		{
-		}
-
-		public unsafe static void WriteLine ()
-		{
-			WriteChar ((byte) '\n');
-		}
-
-		[AOTAttr.ADCStub]
-		public unsafe static void WriteByte (byte value)
-		{
-		}
-
-		[AOTAttr.ADCStub]
-		public unsafe static void WriteHex (byte value)
-		{
-		}
-
-		[AOTAttr.ADCStub]
-		public static void SetAttributes (TextColor _foreground, TextColor _background)
-		{
-		}
-
-		[AOTAttr.ADCStub]
-		public static void RestoreAttributes ()
-		{
-		}
+		
+		#endregion
 	}
 }
 

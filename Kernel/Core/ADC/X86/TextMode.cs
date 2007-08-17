@@ -4,6 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -18,64 +19,34 @@ using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 
 {
-	
+	/// <summary>
+	/// Handles setting up and working with CGA/EGA/MDA text modes.
+	/// </summary>
+	/// <todo>
+	/// * FIXME: get row size from video card
+	/// </todo>
 	public unsafe class TextMode
 	{
-		//FIXME: get row size from video card
-	
-		static int			x					= 0;
-		static int			y					= 0;
-		static TextColor	foreground			= TextColor.White;
-		static TextColor	background			= TextColor.Black;
-		static byte			attributes			= 0;
-		static byte			oldAttributes		= 0;
+		#region Global state
+		
+		static int x = 0;
+		static int y = 0;
+		static TextColor foreground = TextColor.White;
+		static TextColor background = TextColor.Black;
+		static byte attributes = 0;
+		static byte *savedAttributes = Kernel.StaticAlloc (Kernel.MaxTextAttributeSlots);
 
-		static IO.Ports		CRT_index_register;
-		static IO.Ports		CRT_data_register;
-		static int			width				= 80;
-		static int			scanline			= 80;
-		static int			height				= 25;
-		static uint			address				= 0xB0000;
-		static bool			colorMode			= false;
+		static IO.Ports CRT_index_register;
+		static IO.Ports	CRT_data_register;
+		static int width = 80;
+		static int scanline = 80;
+		static int height = 25;
+		static uint address = 0xB0000;
+		static bool colorMode = false;
 
-		internal static void Setup()
-		{
-			// Find CRT controller addresses
-			bool position = (IO.In8 (IO.Ports.EGA_graphics_1_position_register) & 1) == 1;
-			if (position)
-			{
-				CRT_index_register = IO.Ports.CGA_CRT_index_register;
-				CRT_data_register = IO.Ports.CGA_CRT_data_register;
-				address = 0xB8000;
-				scanline = 160;
-				colorMode = true;
-			} else
-			{
-				CRT_index_register = IO.Ports.MDA_CRT_index_register;
-				CRT_data_register = IO.Ports.MDA_CRT_data_register;
-				address = 0xB0000;
-				scanline = 80;
-				colorMode = false;
-			}
-
-			IO.Out8(CRT_index_register, (byte)CRT_Indices.horizontal_displayed);
-			width = (IO.In8(CRT_data_register) + 1);
-
-			// this returns a funny number... what am i doing wrong here?
-			//IO.Out8(CRT_index_register, (byte)CRT_Indices.vertical_displayed);
-			//height = (IO.In8(CRT_data_register) + 1);
-			ADC.TextMode.WriteNumber (IO.In8(CRT_data_register) + 1);
-			
-			SetAttributes (TextColor.Yellow, TextColor.Black);
-			ClearScreen ();
-			
-			TextMode.GoTo (20, height - 1);
-			ADC.TextMode.WriteNumber (width);
-			TextMode.GoTo (25, height - 1);
-			ADC.TextMode.WriteNumber (height);
-			TextMode.GoTo(0, 0);
-		}
-
+		#endregion
+		#region Nested types
+		
 		private enum CRT_Indices : byte
 		{
 			horizontal_total			= 0x00,
@@ -105,7 +76,60 @@ namespace SharpOS.ADC.X86
 			light_pen_low				= 0x11,
 		}
 
-		public unsafe static void SetCursorSize(byte _start, byte _end)
+		#endregion
+		#region ADC implementation
+		
+		/// <summary>
+		/// ADC portion of the TextMode class setup. For X86, this function
+		/// first locates the addresses of CRT controllers using color (EGA/CGA)
+		/// or alternatively monochrome (MDA) display standards. Finally it
+		/// determines the width and height of the text buffer.
+		/// </summary>
+		/// <reference>http://www.cknow.com/refs/VideoDisplayStandards.html</reference>
+		public static void Setup ()
+		{
+			// Find CRT controller addresses
+			
+			if ((IO.In8 (IO.Ports.EGA_graphics_1_position_register) & 1) == 1) {
+				// CGA/EGA color text mode
+				
+				CRT_index_register = IO.Ports.CGA_CRT_index_register;
+				CRT_data_register = IO.Ports.CGA_CRT_data_register;
+				address = 0xB8000;
+				scanline = 160;
+				colorMode = true;
+			} else {
+				// MDA monochrome text mode
+				
+				CRT_index_register = IO.Ports.MDA_CRT_index_register;
+				CRT_data_register = IO.Ports.MDA_CRT_data_register;
+				address = 0xB0000;
+				scanline = 80;
+				colorMode = false;
+			}
+
+			// read the width
+			
+			IO.Out8(CRT_index_register, (byte)CRT_Indices.horizontal_displayed);
+			width = (IO.In8(CRT_data_register) + 1);
+
+			// this returns a funny number... what am i doing wrong here?
+			//IO.Out8(CRT_index_register, (byte)CRT_Indices.vertical_displayed);
+			//height = (IO.In8(CRT_data_register) + 1);
+			ADC.TextMode.Write (IO.In8(CRT_data_register) + 1);
+		}
+
+		public static TextColor Foreground {
+			get { return foreground; }
+			set { foreground = value; }
+		}
+		
+		public static TextColor Background {
+			get { return background; }
+			set { background = value; }
+		}
+		
+		public static void SetCursorSize (byte _start, byte _end)
 		{
 			IO.Out8(CRT_index_register, (byte)CRT_Indices.cursor_start);
 			IO.Out8(CRT_data_register, (byte)_start);
@@ -114,17 +138,26 @@ namespace SharpOS.ADC.X86
 			IO.Out8(CRT_data_register, (byte)_end);
 		}
 
-		public unsafe static void SetCursor(int _x, int _y)
+		public static void MoveTo (int _x, int _y)
 		{
-			if (_x < 0)
-				_x = 0;
-			if (_x >= width)
-				_x = width - 1;
-			if (_y < 0)
-				_y = 0;
-			if (_y >= height)
-				_y = height - 1;
+			x = _x; 
+			y = _y;
 
+			if (x < 0)
+				x = 0;
+			else if (x >= width)
+				x = width - 1;
+			
+			if (y < 0)
+				y = 0;
+			else if (y >= height)
+				y = height - 1;
+		}
+
+		public static void SetCursor (int _x, int _y)
+		{
+			MoveTo (_x, _y);
+			
 			ushort position = (ushort)(_x + (_y * width));
 
 			// cursor LOW port to vga INDEX register
@@ -136,37 +169,32 @@ namespace SharpOS.ADC.X86
 			IO.Out8(CRT_data_register, (byte)((position >> 8) & 0xFF));
 		}
 
-		public unsafe static int GetX()
+		public static void GetCursor (int *ret_x, int *ret_y)
 		{
-			return x;
+			*ret_x = x;
+			*ret_y = y;
 		}
-
-		public unsafe static int GetY()
+		
+		public static void GetScreenSize (int *ret_w, int *ret_h)
 		{
-			return y;
+			*ret_w = width;
+			*ret_h = height;
 		}
-
-		public unsafe static void GoTo (int _x, int _y)
-		{
-			x = _x; if (x < 0) x = 0; else if (x >= width) x = width - 1;
-			y = _y; if (y < 0) y = 0; else if (y >= height) y = height - 1;
-		}
-
-		public unsafe static void ClearScreen ()
+		
+		public static void ClearScreen ()
 		{
 			x = 0; y = 0;
 
 			uint fill;
 			uint count = (uint)(scanline * height);
-			if (colorMode)
-			{
+			
+			if (colorMode) {
 				fill =
 					((uint)0x20) |
 					((uint)attributes << 8) |
 					((uint)0x20 << 16) |
 					((uint)attributes << 24);
-			} else
-			{
+			} else {
 				fill =
 					((uint)0x20) |
 					((uint)0x20 << 8) |
@@ -176,48 +204,41 @@ namespace SharpOS.ADC.X86
 
 			MemUtils.MemSet32(fill, address, count / 4);
 
-			// ...the code below sometimes causes a crash now and then?
-			/*
+			/*** FIXME: the code below sometimes causes a crash now and then?
+			
 			for (byte* video = (byte*)address; (uint)video < address + width * height; )
 			{
 				*video++ = 0x20;
 				*video++ = 0x00;
-			}*/
+			}
+
+			*/
 		}
 
-		public unsafe static void Write (byte* message)
-		{
-			for (int i = 0; message [i] != 0; i++)
-				WriteChar (message [i]);
-		}
-
-		public unsafe static void WriteChar (byte value)
+		public static void WriteChar (byte value)
 		{
 			byte* video = (byte*)address;
 
-			if (value != (byte) '\n') 
-			{
+			if (value != (byte) '\n') {
 				video += (uint)(y * scanline);
-				if (colorMode)
-				{
+				
+				if (colorMode) {
 					video += x * 2;
 					*video++ = value;
 					*video = attributes;
-				} else
-				{
+				} else {
 					video += x;
 					*video = value;
 				}
+				
 				x++;
 			}
 
-			if (x > (width - 1) || value == (byte)'\n')
-			{
+			if (x > (width - 1) || value == (byte)'\n') {
 				x = 0;
-				if (y != (height - 1))
-				{
+				if (y != (height - 1)) {
 					if (y == (height - 2))
-						ScrollPage(1);
+						ScrollPage (1);
 					else
 						y++;
 				}
@@ -225,58 +246,49 @@ namespace SharpOS.ADC.X86
 			}
 		}
 
-		public unsafe static void ScrollPage(int value)
+		public static void ScrollPage (int value)
 		{
 			if (value <= 0)
-				// scrolldown not implemented
-				return;
+				return;		// scrolldown not implemented
 
-			int		lines	= height - (value + 1);
-			int		count	= lines * scanline;
-			int		count2	= value * scanline;
+			int lines, count, count2;
+			uint src, dst, fill;
+			
+			lines = height - (value + 1);
+			count = lines * scanline;
+			count2 = value * scanline;
 
-			uint	src		= address + (uint)count2;
-			uint	dst		= address;
+			src = address + (uint)count2;
+			dst = address;
 
 			MemUtils.MemCopy32(src, dst, (uint)(count / 4));
 
 			dst = address + (uint)count;
 
-			uint fill;
-			if (colorMode)
-			{
+			if (colorMode) {
 				fill =
 					((uint)0x20) |
 					((uint)attributes << 8) |
 					((uint)0x20 << 16) |
 					((uint)attributes << 24);
-			} else
-			{
+			} else {
 				fill =
 					((uint)0x20) |
 					((uint)0x20 << 8) |
 					((uint)0x20 << 16) |
 					((uint)0x20 << 24);
 			}
+			
 			MemUtils.MemSet32(fill, dst, (uint)(count2 / 4));
 		}
 
-		public unsafe static void WriteString (UInt32 value)
-		{
-			for (int i = 0; i < 4; i++) 
-			{
-				WriteChar ((byte) (value & 0xff));
-				value >>= 8;
-			}
-		}
-
-		public unsafe static void WriteByte (byte value)
+		public static void WriteByte (byte value)
 		{
 			WriteHex ((byte) (value >> 4));
 			WriteHex ((byte) (value & 0x0F));
 		}
 
-		public unsafe static void WriteHex (byte value)
+		public static void WriteHex (byte value)
 		{
 			if (value <= 9)
 				WriteChar ((byte) (48 + value));
@@ -308,14 +320,35 @@ namespace SharpOS.ADC.X86
 			foreground = _foreground;
 			background = _background;
 
-			oldAttributes = attributes;
 			attributes = (byte)((byte)_foreground | ((byte)_background << 4));
 		}
 
-		public static void RestoreAttributes ()
+		public static bool SaveAttributes ()
 		{
-			attributes = oldAttributes;
+			for (int x = 0; x < Kernel.MaxTextAttributeSlots; ++x) {
+				if (savedAttributes [x] == 0xFF) {
+					savedAttributes [x] = attributes;
+					return true;
+				}
+			}
+
+			return false;
 		}
+		
+		public static bool RestoreAttributes ()
+		{
+			for (int x = Kernel.MaxTextAttributeSlots; x >= 0; --x) {
+				if (savedAttributes [x] != 0xFF) {
+					attributes = savedAttributes [x];
+					savedAttributes [x] = 0xFF;
+					
+					return true;
+				}
+			}
+
+			return false;
+		}
+
+		#endregion
 	}
 }
-

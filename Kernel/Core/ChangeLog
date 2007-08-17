@@ -1,3 +1,9 @@
+2007-08-12  William Lahti  <xfurious@gmail.com>
+	* ADC/X86/TextMode.cs: moved WriteString to ADC/TextMode.cs
+	* ADC/TextMode.cs: removed WriteString ADC stub
+	* Pager.cs: moved to PageAllocator.cs
+	* PageAllocator.cs: changed comment style to fit in
+
 2007-08-02  William Lahti  <xfurious@gmail.com>
 	* CommandLine.cs: added code for generic handling of kernel command
 	line arguments.
