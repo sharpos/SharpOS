@@ -27,12 +27,18 @@ namespace SharpOS
 	/// - text history
 	/// - ability to move cursor left / right
 	/// - use modifier keys
+	/// - add capslock/numlock support
+	///		just like we're now passing a 'shifted' boolean value to translate, 
+	///		should we also pass a 'numlock' boolean value to translate?
+	///		maybe this needs to be generalized somehow (eventually)?
+	///		what if a keyboard manifacturer has programmable keys/modes etc.?
+	/// - create keycode-enum for human readable keycodes
 	/// </todo>
 	public unsafe class Console
 	{
-		public const string CONSOLE_KEY_UP_HANDLER = "CONSOLE_KEY_UP_HANDLER";
-		public const string CONSOLE_KEY_DOWN_HANDLER = "CONSOLE_KEY_DOWN_HANDLER";
-		public const string CONSOLE_TIMER_HANDLER = "CONSOLE_TIMER_HANDLER";
+		public const string CONSOLE_KEY_UP_HANDLER		= "CONSOLE_KEY_UP_HANDLER";
+		public const string CONSOLE_KEY_DOWN_HANDLER	= "CONSOLE_KEY_DOWN_HANDLER";
+		public const string	CONSOLE_TIMER_HANDLER		= "CONSOLE_TIMER_HANDLER";
 
 		private static bool initialized = false;
 		private static bool overwrite	= false;
