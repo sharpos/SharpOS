@@ -7,6 +7,8 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
+//#define DISPLAY_GDT_SETUP_SUMMARY
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -74,11 +76,13 @@ namespace SharpOS.ADC.X86 {
 		{
 			gdtPointer->Setup ((ushort) (sizeof (Entry) * GDTEntries - 1), (uint) gdt);
 
+#if DISPLAY_GDT_SETUP_SUMMARY // TO TOGGLE, REFER TO TOP OF FILE
 			ADC.TextMode.Write ("GDT Pointer: 0x");
 			ADC.TextMode.Write ((int) gdtPointer->Address, true);
 			ADC.TextMode.Write (" - 0x");
 			ADC.TextMode.Write (gdtPointer->Size, true);
 			ADC.TextMode.WriteLine ();
+#endif
 
 			gdt [SystemSelector >> 3].Setup (0, 0, 0);
 

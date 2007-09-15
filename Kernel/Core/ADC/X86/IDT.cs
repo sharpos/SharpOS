@@ -7,6 +7,8 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
+//#define DISPLAY_IDT_SETUP_SUMMARY
+
 using System;
 using System.Runtime.InteropServices;
 using SharpOS;
@@ -87,11 +89,13 @@ namespace SharpOS.ADC.X86 {
 		{
 			idtPointer->Setup ((ushort) (sizeof (Entry) * Entries - 1), (uint) idt);
 
+#if DISPLAY_IDT_SETUP_SUMMARY // TO TOGGLE, REFER TO TOP OF FILE
 			ADC.TextMode.Write ("IDT Pointer: 0x");
 			ADC.TextMode.Write ((int) idtPointer->Address, true);
 			ADC.TextMode.Write (" - 0x");
 			ADC.TextMode.Write (idtPointer->Size, true);
 			ADC.TextMode.WriteLine ();
+#endif
 
 			for (int i = 0; i < Entries; i++)
 				ISRTable [i] = Kernel.GetFunctionPointer (ISR_DEFAULT_HANDLER);
