@@ -11,14 +11,6 @@
 	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../../build" overwrite="true" />
 
-	<if test="${platform::is-unix()}">
-		<property name="nant.settings.currentframework" value="mono-1.0" />
-	</if>
-	
-	<if test="${platform::is-win32()}">
-		<property name="nant.settings.currentframework" value="net-1.1" overwrite="true" />
-	</if>
-
 	<target name="build">
 		<!-- create the keymap archive -->
 		<echo message="Building SharpOS.Korlib" />
