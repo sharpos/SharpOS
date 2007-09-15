@@ -101,18 +101,6 @@ namespace SharpOS.ADC.X86 {
 			Asm.LIDT (new SharpOS.AOT.X86.Memory (IDT_POINTER));
 
 			Asm.STI ();
-
-			// Testing the IDT
-			ISRTable [0x80] = Kernel.GetFunctionPointer (ISR_0x80);
-			Asm.INT (0x80);
-		}
-
-		public const string ISR_0x80 = "ISR_0x80";
-
-		[SharpOS.AOT.Attributes.Label (ISR_0x80)]
-		private static unsafe void ISR0x80 (ISRData data)
-		{
-			ADC.TextMode.WriteLine ("Running IDT Handler: ", (int) data.Index);
 		}
 
 		public static void SetupIRQ (byte index, uint address)
