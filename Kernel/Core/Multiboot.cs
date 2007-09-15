@@ -103,27 +103,26 @@ namespace SharpOS {
 			public uint Type;
 		}
 
-		public unsafe static bool WriteMultibootInfo (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
+        public unsafe static Multiboot.Info* LoadMultibootInfo(uint magic, uint pointer, uint kernelStart, uint kernelEnd)
+        {
+            if (magic != (uint)SharpOS.Multiboot.Magic.BootLoader)
+            {
+                TextMode.SetAttributes(TextColor.Red, TextColor.Black);
+                TextMode.WriteLine("LoadMultibootInfo() - invalid magic number");
+
+                return null;
+            }
+            else
+            {
+                return (Multiboot.Info*)pointer;
+            }
+        }
+
+		public unsafe static void WriteMultibootInfoMMap (Multiboot.Info* info)
 		{
-			if (magic != (uint) SharpOS.Multiboot.Magic.BootLoader) {
-				TextMode.SetAttributes (TextColor.Red, TextColor.Black);
-				TextMode.WriteLine ("Invalid magic number.");
+			Multiboot.MemoryMap* mmap = (Multiboot.MemoryMap*) info->MMapAddr;
 
-				return false;
-			}
-
-			Multiboot.Info* multibootInfo = (Multiboot.Info*) pointer;
-
-			WriteMultibootInfo (*multibootInfo, kernelStart, kernelEnd);
-
-			return true;
-		}
-
-		public unsafe static void WriteMultibootInfoMMap (Multiboot.Info info)
-		{
-			Multiboot.MemoryMap* mmap = (Multiboot.MemoryMap*) info.MMapAddr;
-
-			while ((uint) mmap < info.MMapAddr + info.MMapLen) {
+			while ((uint) mmap < info->MMapAddr + info->MMapLen) {
 				TextMode.Write ("Size = 0x");
 				TextMode.Write ((int) mmap->Size, true);
 				TextMode.Write (", Base Address = 0x");
@@ -141,7 +140,7 @@ namespace SharpOS {
 			}
 		}
 
-		public unsafe static void WriteMultibootInfo (Multiboot.Info info, uint kernelStart, uint kernelEnd)
+		public unsafe static void WriteMultibootInfo (Multiboot.Info* info, uint kernelStart, uint kernelEnd)
 		{
 			TextMode.Write ("Kernel Image: 0x");
 			TextMode.Write ((int) kernelStart, true);
@@ -150,34 +149,34 @@ namespace SharpOS {
 			TextMode.WriteLine ();
 
 			TextMode.Write ("Boot Drive: 0x");
-			TextMode.Write ((int) info.BootDevice, true);
+			TextMode.Write ((int) info->BootDevice, true);
 			TextMode.WriteLine ();
 
 			TextMode.Write ("Flags: 0x");
-			TextMode.Write ((int) info.Flags, true);
+			TextMode.Write ((int) info->Flags, true);
 			TextMode.WriteLine ();
 
 			TextMode.Write ("Command Line: ");
-			TextMode.Write ((byte*) info.CmdLine);
+			TextMode.Write ((byte*) info->CmdLine);
 			TextMode.WriteLine ();
 
-			if ((info.Flags & 0x01) != 0) {
+			if ((info->Flags & 0x01) != 0) {
 				TextMode.Write ("Memory Lower: 0x");
-				TextMode.Write ((int) info.MemLower, true);
+				TextMode.Write ((int) info->MemLower, true);
 				TextMode.WriteLine ();
 
 				TextMode.Write ("Memory Upper: 0x");
-				TextMode.Write ((int) info.MemUpper, true);
+				TextMode.Write ((int) info->MemUpper, true);
 				TextMode.WriteLine ();
 			}
 
-			if ((info.Flags & 0x40) != 0) {
+			if ((info->Flags & 0x40) != 0) {
 				TextMode.Write ("MMap Address: 0x");
-				TextMode.Write ((int) info.MMapAddr, true);
+				TextMode.Write ((int) info->MMapAddr, true);
 				TextMode.WriteLine ();
 
 				TextMode.Write ("MMap Length: 0x");
-				TextMode.Write ((int) info.MMapLen, true);
+				TextMode.Write ((int) info->MMapLen, true);
 				TextMode.WriteLine ();
 
 				WriteMultibootInfoMMap (info);

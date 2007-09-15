@@ -78,42 +78,41 @@ namespace SharpOS {
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.ClearScreen ();
 			TextMode.SetCursor (0, 0);
-
-			TextMode.WriteLine ("yes");
 			
-			Arch.Setup ();
+            // Initialize architecture-specific portion of the kernel
+            Arch.Setup ();
 			
-			TextMode.WriteLine ("yes");
-			return;
-			
-			// Banner
-			
+			// Write the banner
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
-			TextMode.WriteLine ("SharpOS v0.0.0.75 (http://www.sharpos.org)");
+			TextMode.WriteLine ("SharpOS v0.0.0.75 (http://sharpos.sourceforge.net/)");
 			TextMode.WriteLine ();
 
-			if (!Multiboot.WriteMultibootInfo (magic, pointer, kernelStart, kernelEnd)) {
-				TextMode.WriteLine ("Error: multiboot loader required!");
-				return;
-			}
+            Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo(magic, pointer, kernelStart, kernelEnd);
+            if (multibootInfo == null)
+            {
+                TextMode.WriteLine("Error: multiboot loader required!");
+                return;
+            }
+            else
+            {
+                //Multiboot.WriteMultibootInfo(multibootInfo, kernelStart, kernelEnd);
+            }
 
-			multibootInfo = (Multiboot.Info*) pointer;
-			
-			CommandLine.Setup ((Multiboot.Info*)pointer);
-			KeyMap.Setup ();
-			Keyboard.Setup();
-			//CPU.Setup ();
-			SharpOS.Console.Setup();
-			//PageAllocator.Setup ((byte*)kernelStart, kernelEnd - kernelStart,
-			//	multibootInfo->MemUpper + 1000);
-			//MemoryManager.Setup ();
+            CommandLine.Setup(multibootInfo);
+            KeyMap.Setup();
+            Keyboard.Setup();
+            //CPU.Setup ();
+            SharpOS.Console.Setup();
+            //PageAllocator.Setup ((byte*)kernelStart, kernelEnd - kernelStart,
+            //	multibootInfo->MemUpper + 1000);
+            //MemoryManager.Setup ();
 
-			TextMode.MoveTo (0, 23);
-			TextMode.SaveAttributes ();
-				TextMode.SetAttributes (TextColor.LightGreen, TextColor.Black);
-				TextMode.WriteLine ("Pinky: What are we gonna do tonight, Brain?");
-				TextMode.WriteLine ("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
-			TextMode.RestoreAttributes ();
+            TextMode.MoveTo(0, 23);
+            TextMode.SaveAttributes();
+            TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
+            TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
+            TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
+            TextMode.RestoreAttributes();
 
 #if KERNEL_TESTS
 			// Testcases
