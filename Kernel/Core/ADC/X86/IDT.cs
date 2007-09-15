@@ -145,27 +145,29 @@ namespace SharpOS.ADC.X86 {
 		{
 			Kernel.SetErrorTextAttributes ();
 			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked.\n");
-			ADC.TextMode.WriteLine ("Register dump:");
-			
-			ADC.TextMode.WriteLine ("IDT 0x", (int) data.Index);
-			ADC.TextMode.WriteLine ("EIP 0x", (int) data.EIP);
+			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.Index);
+            ADC.TextMode.WriteLine();
+            ADC.TextMode.WriteLine ("Register dump:");
 
-			ADC.TextMode.WriteLine ("EAX 0x", (int) data.EAX);
-			ADC.TextMode.WriteLine ("ECX 0x", (int) data.ECX);
-			ADC.TextMode.WriteLine ("EDX 0x", (int) data.EDX);
-			ADC.TextMode.WriteLine ("EBX 0x", (int) data.EBX);
+			ADC.TextMode.WriteLine ("  EIP=0x", (int) data.EIP);
 
-			ADC.TextMode.WriteLine ("ESP 0x", (int) data.ESP);
-			ADC.TextMode.WriteLine ("EBP 0x", (int) data.EBP);
-			ADC.TextMode.WriteLine ("ESI 0x", (int) data.ESI);
-			ADC.TextMode.WriteLine ("EDI 0x", (int) data.EDI);
+			ADC.TextMode.Write ("  EAX=0x", (int) data.EAX);
+			ADC.TextMode.Write ("  ECX=0x", (int) data.ECX);
+			ADC.TextMode.Write ("  EDX=0x", (int) data.EDX);
+			ADC.TextMode.WriteLine ("  EBX=0x", (int) data.EBX);
 
-			ADC.TextMode.WriteLine ("DS 0x", (int) data.DS);
-			ADC.TextMode.WriteLine ("ES 0x", (int) data.ES);
-			ADC.TextMode.WriteLine ("FS 0x", (int) data.FS);
-			ADC.TextMode.WriteLine ("GS 0x", (int) data.GS);
-			ADC.TextMode.WriteLine ("SS 0x", (int) data.SS);
-			ADC.TextMode.WriteLine ("CS 0x", (int) data.CS);
+
+			ADC.TextMode.Write ("  ESP=0x", (int) data.ESP);
+			ADC.TextMode.Write ("  EBP=0x", (int) data.EBP);
+			ADC.TextMode.Write ("  ESI=0x", (int) data.ESI);
+			ADC.TextMode.WriteLine ("  EDI=0x", (int) data.EDI);
+
+			ADC.TextMode.Write ("   DS=0x", (int) data.DS);
+			ADC.TextMode.Write ("   ES=0x", (int) data.ES);
+			ADC.TextMode.Write ("   FS=0x", (int) data.FS);
+			ADC.TextMode.Write ("   GS=0x", (int) data.GS);
+			ADC.TextMode.Write ("   SS=0x", (int) data.SS);
+			ADC.TextMode.WriteLine ("   CS=0x", (int) data.CS);
 
 			Asm.HLT ();
 		}
