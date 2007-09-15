@@ -193,6 +193,11 @@ namespace SharpOS.ADC {
 			for (int i = 0; i < message.Length; i++)
 				WriteChar ((byte) message [i]);
 		}
+        public static void Write(string message, int value)
+        {
+            Write(message);
+            Write(value);
+        }
 
 		public unsafe static void Write (CString8 *str)
 		{
