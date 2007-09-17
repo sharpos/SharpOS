@@ -23,10 +23,10 @@ namespace SharpOS.ADC.X86
 	{
 		public const string		TIMER_HANDLER			= "TIMER_HANDLER";
 
-		private const byte		SquareWave				= 0x36;
+		private const byte		SquareWave			= 0x36;
 		private const uint		PITFrequency			= 1193182;
-		private const ushort	TimerCount				= (ushort)(PITFrequency / HZ);
-		public const ushort		HZ						= 100;
+		private const ushort		TimerCount			= (ushort)(PITFrequency / HZ);
+		public const ushort		HZ				= 100;
 
 		private static uint ticks = 0;
 
@@ -60,7 +60,9 @@ namespace SharpOS.ADC.X86
 		private static unsafe void TimerHandler(IDT.ISRData data)
 		{
 			ticks++;
-			Kernel.Call(timerEvent, ticks);
+			
+			if (timerEvent != 0)
+				Kernel.Call(timerEvent, ticks);
 		}
 	}
 }
