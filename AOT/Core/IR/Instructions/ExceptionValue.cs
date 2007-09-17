@@ -23,7 +23,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Initializes a new instance of the <see cref="ExceptionValue"/> class.
 		/// </summary>
 		public ExceptionValue ()
-			: base ("ExceptionValue", 0)
+			: base ("ExceptionValue", 0, null)
 		{
 		}
 	}

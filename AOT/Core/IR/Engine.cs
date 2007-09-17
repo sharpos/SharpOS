@@ -584,6 +584,26 @@ namespace SharpOS.AOT.IR {
 			else
 				Message (1, "No available ADC layer matches CPU type.");
 
+
+			// Statistics
+			int classes = 0;
+			int methods = 0;
+			int ilInstructions = 0;
+			foreach (Class _class in this.classes) {
+				classes++;
+
+				foreach (Method _method in _class) {
+					methods++;
+
+					ilInstructions += _method.MethodDefinition.Body.Instructions.Count;
+				}
+			}
+
+			Message (1, "Classes: `{0}'", classes);
+			Message (1, "Methods: `{0}'", methods);
+			Message (1, "IL Instructions: `{0}'", ilInstructions);
+
+
 			Message (1, "Processing IR methods...");
 			SetStatus (Status.IRProcessing);
 			
@@ -700,10 +720,19 @@ namespace SharpOS.AOT.IR {
 		/// <param name="type">The type.</param>
 		/// <param name="align">if set to 0 there will be no alignment.</param>
 		/// <returns></returns>
-		public int GetTypeSize (string type, int align)
+		public int GetTypeSize (object type, int align)
 		{
 			int result = 0;
-			Operands.Operand.InternalSizeType sizeType = GetInternalType (type);
+			Operands.Operand.InternalSizeType sizeType;
+
+			if (type is Operand.InternalSizeType)
+				sizeType = (Operands.Operand.InternalSizeType) type;
+
+			else if (type is string)
+				sizeType = GetInternalType (type as string);
+
+			else
+				throw new Exception (string.Format ("'{0}' is not supported.", type.GetType ().ToString ()));
 
 			switch (sizeType) {
 				case Operand.InternalSizeType.I1:
@@ -723,6 +752,7 @@ namespace SharpOS.AOT.IR {
 
 				case Operand.InternalSizeType.I:
 				case Operand.InternalSizeType.U:
+				case Operand.InternalSizeType.S:
 					result = this.asm.IntSize;
 					break;
 

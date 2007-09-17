@@ -88,7 +88,7 @@ namespace KernelTestsWrapperGen {
 					} else {
 						tr.WriteLine ("\t\t\tif (" + entryFullName + " () != 1) {");
 						tr.WriteLine ("\t\t\t\tScreen.WriteLine (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
-						//tr.WriteLine ("\t\t\t\treturn;");
+						tr.WriteLine ("\t\t\t\tfailures++;");
 						tr.WriteLine ("\t\t\t}");
 						tr.WriteLine ("");
 					}
@@ -145,11 +145,15 @@ namespace KernelTestsWrapperGen {
 				tr.WriteLine ("\tpublic unsafe partial class KRNL {");
 				tr.WriteLine ("\t\tprotected static void RunTests ()");
 				tr.WriteLine ("\t\t{");
+				tr.WriteLine ("\t\t\tint failures = 0;");
 
 				ProcessAssembly (false, path, tr, ilDLL, filter);
 				ProcessAssembly (false, path, tr, csDLL, filter);
 
-				tr.WriteLine ("\t\t\tScreen.WriteLine (\"All test cases have completed successfully!\");");
+				tr.WriteLine ("if (failures > 0)");
+				tr.WriteLine ("\t\t\t\tScreen.WriteLine (\"Not all tests passed!\");");
+				tr.WriteLine ("\t\t\telse");
+				tr.WriteLine ("\t\t\t\tScreen.WriteLine (\"All test cases have completed successfully!\");");
 
 				tr.WriteLine ("\t\t}");
 				tr.WriteLine ("\t}");

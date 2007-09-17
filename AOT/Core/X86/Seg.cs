@@ -41,13 +41,13 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public static SegType GetByID (object value)
 		{
+			if (value == null)
+				return null;
+
 			if (value is SegType)
 				return value as SegType;
 
 			switch (Register.GetName (value)) {
-				case null:
-					return null;
-
 				case "DS":
 					return Seg.DS;
 

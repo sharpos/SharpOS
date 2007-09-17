@@ -78,7 +78,7 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
-			return ( (IEnumerable<Method>) this).GetEnumerator ();
+			return ((IEnumerable<Method>) this).GetEnumerator ();
 		}
 
 		/// <summary>

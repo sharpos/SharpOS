@@ -17,9 +17,14 @@ namespace SharpOS.Kernel.Tests.CS {
 				this.x = x;
 				this.y = y;
 			}
+
+			public int GetSum ()
+			{
+				return this.x + this.y;
+			}
 		}
-		
-		public static int Constructor (int a, int b)
+
+		private static int Constructor (int a, int b)
 		{
 			Point point = new Point (a, b);
 
@@ -32,6 +37,110 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 1;
 				
 			return 0;
+		}
+
+		private unsafe static int StructPointer (void* pointer)
+		{
+			Point* point = (Point*) pointer;
+
+			return point->x + point->y;
+		}
+
+		public unsafe static uint CMPStructPointer ()
+		{
+			Point point = new Point (100, 200);
+
+			if (StructPointer (((Point*) &point)) == 300)
+				return 1;
+
+			return 0;
+		}
+
+		private unsafe static int StructPointer2Helper (Point point)
+		{
+			return point.GetSum ();
+		}
+
+		private unsafe static int StructPointer2 (void* pointer)
+		{
+			Point* point = (Point*) pointer;
+
+			return StructPointer2Helper (*point);
+		}
+
+		public unsafe static uint CMPStructPointer2 ()
+		{
+			Point point = new Point (100, 200);
+
+			if (StructPointer2 (((Point*) &point)) == 300)
+				return 1;
+
+			return 0;
+		}
+
+		public unsafe static uint CMPEmptyStruct ()
+		{
+			Point point = new Point ();
+
+			if (point.y == 0 && point.x == 0)
+				return 1;
+
+			return 0;
+		}
+
+		private static int StructParameter (int result, Point point)
+		{
+			return point.GetSum () == result? 1: 0;
+		}
+
+		public static int CMPStructParameter ()
+		{
+			Point point = new Point (100, 200);
+
+			return StructParameter (300, point);
+		}
+
+		private static void NoChanges (Point point)
+		{
+			point.x *= 2;
+			point.y *= 3;
+		}
+
+		public static int CMPNoChanges ()
+		{
+			Point point = new Point (100, 200);
+
+			NoChanges (point);
+
+			return point.GetSum () == 300 ? 1 : 0;
+		}
+
+		private static int Copy (Point point)
+		{
+			Point local = point;
+
+			return local.GetSum ();
+		}
+
+		public static int CMPCopy ()
+		{
+			Point point = new Point (100, 200);
+
+			return Copy (point) == 300 ? 1 : 0;
+		}
+
+		private static Point Return (int x, int y)
+		{
+			Point point = new Point (x, y);
+
+			return point;
+		}
+
+		public static int CMPReturn ()
+		{
+			Return (200, 300);
+
+			return Return (100, 200).GetSum () == 300 ? 1 : 0;
 		}
 	}
 }

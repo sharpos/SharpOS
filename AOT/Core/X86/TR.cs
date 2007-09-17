@@ -39,13 +39,13 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public static TRType GetByID (object value)
 		{
+			if (value == null)
+				return null;
+
 			if (value is TRType)
 				return value as TRType;
 
 			switch (Register.GetName (value)) {
-				case null:
-					return null;
-
 				case "TR3":
 					return TR.TR3;
 

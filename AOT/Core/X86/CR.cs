@@ -37,13 +37,13 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public static CRType GetByID (object value)
 		{
+			if (value == null)
+				return null;
+
 			if (value is CRType)
 				return value as CRType;
 
 			switch (Register.GetName (value)) {
-				case null:
-					return null;
-
 				case "CR0":
 					return CR.CR0;
 

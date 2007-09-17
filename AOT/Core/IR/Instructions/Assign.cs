@@ -42,6 +42,33 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		public override void VisitOperand (Operand.OperandVisitor visitor)
+		{
+			if (this.assignee != null)
+				this.assignee.Visit (true, 0, this, visitor);
+
+			base.VisitOperand (visitor);
+		}
+
+		public override int ReplaceOperand (string id, Operand operand, Operand.OperandReplaceVisitor visitor)
+		{
+			int replacements = 0;
+
+			if (this.assignee != null) {
+				if (this.assignee.ID == id) {
+					if (visitor == null || visitor (this, this.assignee)) {
+						this.assignee = operand as Identifier;
+						replacements++;
+					}
+				} else
+					replacements += this.assignee.ReplaceOperand (id, operand, visitor);
+			}
+
+			replacements += base.ReplaceOperand (id, operand, visitor);
+
+			return replacements;
+		}
+
 		/// <summary>
 		/// Dumps the specified prefix.
 		/// </summary>

@@ -43,13 +43,13 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public static DRType GetByID (object value)
 		{
+			if (value == null)
+				return null;
+
 			if (value is DRType)
 				return value as DRType;
 
 			switch (Register.GetName (value)) {
-				case null:
-					return null;
-
 				case "DR0":
 					return DR.DR0;
 

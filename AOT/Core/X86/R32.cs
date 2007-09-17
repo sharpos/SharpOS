@@ -77,13 +77,13 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>Returns an instance of R32Type that represents an x86 32-bit register</returns>
 		public static R32Type GetByID (object value)
 		{
+			if (value == null)
+				return null;
+
 			if (value is R32Type)
 				return value as R32Type;
 			
 			switch (Register.GetName (value)) {
-				case null:
-					return null;
-
 				case "EAX":
 					return R32.EAX;
 

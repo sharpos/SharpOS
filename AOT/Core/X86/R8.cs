@@ -45,13 +45,13 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public static R8Type GetByID (object value)
 		{
+			if (value == null)
+				return null;
+
 			if (value is R8Type)
 				return value as R8Type;
 
 			switch (Register.GetName (value)) {
-				case null:
-					return null;
-
 				case "AL":
 					return R8.AL;
 

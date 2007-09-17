@@ -26,9 +26,8 @@ namespace SharpOS.AOT.IR {
 	}
 	
 	public enum DumpSection {
-		Root, Dominance, DefineUse, SSATransform, ConstantFolding,
-		ConstantPropagation, CopyPropagation, LiveRanges, 
-		DeadCodeElimination, RegisterAllocation, MethodBlocks,
+		Root, Dominance, DefineUse, SSATransform, Optimizations,
+		LiveRanges, RegisterAllocation, MethodBlocks,
 		
 		Encoding, MethodEncode, DataEncode
 	}
@@ -480,24 +479,12 @@ namespace SharpOS.AOT.IR {
 					this.PushElement ("register-allocation");
 					break;
 
-				case DumpSection.ConstantPropagation:
-					this.PushElement ("constant-propagation");
-					break;
-
-				case DumpSection.CopyPropagation:
-					this.PushElement ("copy-propagation");
+				case DumpSection.Optimizations:
+					this.PushElement ("optimizations");
 					break;
 
 				case DumpSection.LiveRanges:
 					this.PushElement ("live-ranges");
-					break;
-
-				case DumpSection.DeadCodeElimination:
-					this.PushElement ("dead-code-elimination");
-					break;
-
-				case DumpSection.ConstantFolding:
-					this.PushElement ("constant-folding");
 					break;
 
 				case DumpSection.MethodBlocks:

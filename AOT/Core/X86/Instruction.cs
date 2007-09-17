@@ -153,7 +153,7 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the short name only if it is not a label name.
 		/// </summary>
 		/// <value>The name of the short.</value>
-		public string ShortName {
+		public virtual string ShortName {
 			get {
 				string result = name;
 

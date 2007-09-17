@@ -62,6 +62,7 @@ namespace SharpOS.AOT.X86 {
 
 		const uint BASE_ADDRESS = 0x00100000;
 		const uint ALIGNMENT = 16;
+		const uint STACK_SIZE = 64 * 1024;
 
 		internal const string HELPER_LSHL = "LSHL";
 		internal const string HELPER_LSHR = "LSHR";
@@ -415,6 +416,15 @@ namespace SharpOS.AOT.X86 {
 		public void LABEL (string label)
 		{
 			this.instructions.Add (new LabelInstruction (label));
+		}
+
+		/// <summary>
+		/// LABELs the specified label.
+		/// </summary>
+		/// <param name="label">The label.</param>
+		public void COMMENT (string value)
+		{
+			this.instructions.Add (new CommentInstruction (value));
 		}
 
 		/// <summary>
@@ -1238,7 +1248,7 @@ namespace SharpOS.AOT.X86 {
 			foreach (Instruction instruction in bss.instructions)
 				this.instructions.Add (instruction);
 
-			this.TIMES (8192, 0);
+			this.TIMES (STACK_SIZE, 0);
 			this.LABEL (END_STACK);
 
 			this.ALIGN (ALIGNMENT);
@@ -1490,8 +1500,8 @@ namespace SharpOS.AOT.X86 {
 
 			this.LABEL (HELPER_LSHL);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));
-			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 8));
-			this.MOV (R32.EDX, new DWordMemory (null, R32.ESP, null, 0, 4));
+			this.MOV (R32.EDX, new DWordMemory (null, R32.ESP, null, 0, 8));
+			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 4));
 
 			this.AND (R32.ECX, 63);
 
@@ -1546,8 +1556,8 @@ namespace SharpOS.AOT.X86 {
 
 			this.LABEL (HELPER_LSHR);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));
-			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 8));
-			this.MOV (R32.EDX, new DWordMemory (null, R32.ESP, null, 0, 4));
+			this.MOV (R32.EDX, new DWordMemory (null, R32.ESP, null, 0, 8));
+			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 4));
 
 			this.AND (R32.ECX, 63);
 
@@ -1602,8 +1612,8 @@ namespace SharpOS.AOT.X86 {
 
 			this.LABEL (HELPER_LSAR);
 			this.MOV (R32.ECX, new DWordMemory (null, R32.ESP, null, 0, 12));
-			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 8));
-			this.MOV (R32.EDX, new DWordMemory (null, R32.ESP, null, 0, 4));
+			this.MOV (R32.EDX, new DWordMemory (null, R32.ESP, null, 0, 8));
+			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 4));
 
 			this.AND (R32.ECX, 63);
 
@@ -1655,10 +1665,6 @@ namespace SharpOS.AOT.X86 {
 			this.AddLSHL ();
 			this.AddLSHR ();
 			this.AddLSAR ();
-
-			// TODO remove the dummy System.Object constructor
-			// this.LABEL ("System.Object..ctor()");
-			// this.RET ();
 		}
 
 		/// <summary>
@@ -1677,7 +1683,7 @@ namespace SharpOS.AOT.X86 {
 			SharpOS.AOT.IR.Operands.Call call = value as SharpOS.AOT.IR.Operands.Call;
 
 			if (call.Operands.Length == 1) {
-				string parameter = (call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ();
+				string parameter = (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ();
 
 				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
 					return new Memory (parameter);
@@ -1702,8 +1708,8 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (call.Operands.Length == 2) {
-				SegType segment = Seg.GetByID ( (call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
-				string label = (call.Operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ();
+				SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
+				string label = (call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ();
 
 				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
 					return new Memory (segment, label);
@@ -1728,9 +1734,9 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (call.Operands.Length == 3) {
-				SegType segment = Seg.GetByID ( (call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
-				R16Type _base = R16.GetByID ( (call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
-				R16Type index = R16.GetByID ( (call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
+				SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
+				R16Type _base = R16.GetByID ((call.Operands [1] as SharpOS.AOT.IR.Operands.Field).Value);
+				R16Type index = R16.GetByID ((call.Operands [2] as SharpOS.AOT.IR.Operands.Field).Value);
 
 				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
 					return new Memory (segment, _base, index);
@@ -1755,11 +1761,11 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (call.Operands.Length == 4) {
-				if (call.Method.Parameters[1].ParameterType.FullName.IndexOf ("16") != -1) {
-					SegType segment = Seg.GetByID ( (call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
-					R16Type _base = R16.GetByID ( (call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
-					R16Type index = R16.GetByID ( (call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
-					Int16 displacement = Convert.ToInt16 ( (call.Operands[3] as SharpOS.AOT.IR.Operands.Constant).Value);
+				if (call.Method.Parameters [1].ParameterType.FullName.IndexOf ("16") != -1) {
+					SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
+					R16Type _base = R16.GetByID ((call.Operands [1] as SharpOS.AOT.IR.Operands.Field).Value);
+					R16Type index = R16.GetByID ((call.Operands [2] as SharpOS.AOT.IR.Operands.Field).Value);
+					Int16 displacement = Convert.ToInt16 ((call.Operands [3] as SharpOS.AOT.IR.Operands.Constant).Value);
 
 					if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
 						return new Memory (segment, _base, index, displacement);
@@ -1784,11 +1790,10 @@ namespace SharpOS.AOT.X86 {
 					}
 
 				} else {
-					SegType segment = Seg.GetByID ( (call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
-					R32Type _base = R32.GetByID ( (call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
-					//R32Type index = R32.GetByID ((call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
-					R32Type index = call.Operands[2] is Constant ? null : R32.GetByID ( (call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
-					Byte scale = Convert.ToByte ( (call.Operands[3] as SharpOS.AOT.IR.Operands.Constant).Value);
+					SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
+					R32Type _base = R32.GetByID ((call.Operands [1] as SharpOS.AOT.IR.Operands.Field).Value);
+					R32Type index = call.Operands [2] is Constant ? null : R32.GetByID ((call.Operands [2] as SharpOS.AOT.IR.Operands.Field).Value);
+					Byte scale = Convert.ToByte ((call.Operands [3] as SharpOS.AOT.IR.Operands.Constant).Value);
 
 					if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
 						return new Memory (segment, _base, index, scale);
@@ -1814,11 +1819,11 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (call.Operands.Length == 5) {
-				SegType segment = Seg.GetByID ( (call.Operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
-				R32Type _base = R32.GetByID ( (call.Operands[1] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
-				R32Type index = call.Operands[2] is Constant ? null : R32.GetByID ( (call.Operands[2] as SharpOS.AOT.IR.Operands.Field).Value.ToString ());
-				Byte scale = Convert.ToByte ( (call.Operands[3] as SharpOS.AOT.IR.Operands.Constant).Value);
-				Int32 displacement = Convert.ToInt32 ( (call.Operands[4] as SharpOS.AOT.IR.Operands.Constant).Value);
+				SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
+				R32Type _base = R32.GetByID ((call.Operands [1] as SharpOS.AOT.IR.Operands.Field).Value);
+				R32Type index = call.Operands [2] is Constant ? null : R32.GetByID ((call.Operands [2] as SharpOS.AOT.IR.Operands.Field).Value);
+				Byte scale = Convert.ToByte ((call.Operands [3] as SharpOS.AOT.IR.Operands.Constant).Value);
+				Int32 displacement = Convert.ToInt32 ((call.Operands [4] as SharpOS.AOT.IR.Operands.Constant).Value);
 
 				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
 					return new Memory (segment, _base, index, scale, displacement);
@@ -2039,7 +2044,7 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		internal static SharpOS.AOT.X86.R32Type GetRegister (int i)
 		{
-			switch ( (Registers) i) {
+			switch ((Registers) i) {
 
 				case Registers.EBX:
 					return R32.EBX;
@@ -2097,7 +2102,8 @@ namespace SharpOS.AOT.X86 {
 			if (type == Operand.InternalSizeType.I8
 					|| type == Operand.InternalSizeType.U8
 					|| type == Operand.InternalSizeType.R4
-					|| type == Operand.InternalSizeType.R8)
+					|| type == Operand.InternalSizeType.R8
+					|| type == Operand.InternalSizeType.ValueType)
 				return true;
 
 			return false;

@@ -80,13 +80,24 @@ namespace SharpOS.AOT.IR.Operands {
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Operand"/> class.
+		/// </summary>
+		/// <param name="_operator">The _operator.</param>
+		/// <param name="operands">The operands.</param>
+		public Operand (Operator _operator, Operand [] operands)
+		{
+			this._operator = _operator;
+			this.operands = operands;
+		}
+
 		private int register = int.MinValue;
 
 		/// <summary>
 		/// Gets or sets the register.
 		/// </summary>
 		/// <value>The register.</value>
-		public int Register {
+		public virtual int Register {
 			get {
 				return register;
 			}
@@ -101,7 +112,7 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <value>
 		/// 	<c>true</c> if this instance is register set; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsRegisterSet {
+		public virtual bool IsRegisterSet {
 			get {
 				return register != int.MinValue;
 			}
@@ -113,7 +124,7 @@ namespace SharpOS.AOT.IR.Operands {
 		/// Gets or sets the stack.
 		/// </summary>
 		/// <value>The stack.</value>
-		public int Stack {
+		public virtual int Stack {
 			get {
 				return stack;
 			}
@@ -159,6 +170,65 @@ namespace SharpOS.AOT.IR.Operands {
 		public InternalSizeType ConvertSizeType {
 			get {
 				return Operand.GetType (this.convertTo);
+			}
+		}
+
+
+		private Operator _operator = null;
+
+		/// <summary>
+		/// Gets the operator.
+		/// </summary>
+		/// <value>The operator.</value>
+		public Operator Operator {
+			get {
+				return _operator;
+			}
+		}
+
+		protected Operand[] operands = null;
+
+		/// <summary>
+		/// Gets or sets the operands.
+		/// </summary>
+		/// <value>The operands.</value>
+		public virtual Operand[] Operands {
+			get {
+				return operands;
+			}
+			set {
+				this.operands = value;
+			}
+		}
+
+		private int stamp = int.MinValue;
+
+		/// <summary>
+		/// Gets or sets the stamp.
+		/// </summary>
+		/// <value>The stamp.</value>
+		public int Stamp {
+			get {
+				return stamp;
+			}
+			set {
+				stamp = value;
+			}
+		}
+
+
+		private int version = 0;
+
+		/// <summary>
+		/// Gets or sets the version.
+		/// </summary>
+		/// <value>The version.</value>
+		public int Version {
+			get {
+				return version;
+			}
+			set {
+				version = value;
 			}
 		}
 
@@ -253,79 +323,10 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Operand"/> class.
-		/// </summary>
-		/// <param name="_operator">The _operator.</param>
-		/// <param name="operands">The operands.</param>
-		public Operand (Operator _operator, Operand[] operands)
-		{
-			this._operator = _operator;
-			this.operands = operands;
-		}
-
-		private Operator _operator = null;
-
-		/// <summary>
-		/// Gets the operator.
-		/// </summary>
-		/// <value>The operator.</value>
-		public Operator Operator {
-			get {
-				return _operator;
-			}
-		}
-
-		protected Operand[] operands = null;
-
-		/// <summary>
-		/// Gets or sets the operands.
-		/// </summary>
-		/// <value>The operands.</value>
-		public virtual Operand[] Operands {
-			get {
-				return operands;
-			}
-			set {
-				this.operands = value;
-			}
-		}
-
-		private int stamp = int.MinValue;
-
-		/// <summary>
-		/// Gets or sets the stamp.
-		/// </summary>
-		/// <value>The stamp.</value>
-		public int Stamp {
-			get {
-				return stamp;
-			}
-			set {
-				stamp = value;
-			}
-		}
-
-
-		private int version = 0;
-
-		/// <summary>
-		/// Gets or sets the version.
-		/// </summary>
-		/// <value>The version.</value>
-		public int Version {
-			get {
-				return version;
-			}
-			set {
-				version = value;
-			}
-		}
-
-		/// <summary>
 		/// Replaces the specified register values.
 		/// </summary>
 		/// <param name="registerValues">The register values.</param>
-		public void Replace (Dictionary<string, Operand> registerValues)
+		/*public void Replace (Dictionary<string, Operand> registerValues)
 		{
 			if (this.operands == null) 
 				return;
@@ -338,15 +339,15 @@ namespace SharpOS.AOT.IR.Operands {
 				if (operand is Register && registerValues.ContainsKey (operand.ToString())) 
 					this.operands[i] = registerValues[operand.ToString() ];
 			}
-		}
+		}*/
 
 		/// <summary>
 		/// Clones this instance.
 		/// </summary>
 		/// <returns></returns>
-		public SharpOS.AOT.IR.Operands.Operand Clone ()
+		public virtual SharpOS.AOT.IR.Operands.Operand Clone ()
 		{
-			BinaryFormatter binaryFormatter = new BinaryFormatter();
+			/*BinaryFormatter binaryFormatter = new BinaryFormatter();
 			MemoryStream memoryStream = new MemoryStream();
 
 			binaryFormatter.Serialize (memoryStream, this);
@@ -354,7 +355,23 @@ namespace SharpOS.AOT.IR.Operands {
 
 			SharpOS.AOT.IR.Operands.Operand operand = (SharpOS.AOT.IR.Operands.Operand) binaryFormatter.Deserialize (memoryStream);
 
-			return operand;
+			return operand;*/
+
+			throw new EngineException ("Not implemented.");
+		}
+
+		protected virtual void Clone (SharpOS.AOT.IR.Operands.Operand operand)
+		{
+			operand.register = this.register;
+			operand.stack = this.stack;
+			operand.sizeType = this.sizeType;
+			operand.stamp = this.stamp;
+			operand.version = this.version;
+			operand.convertTo = this.convertTo;
+			operand._operator = this._operator;
+
+			if (this.operands != null && this.operands.Length > 0)
+				throw new EngineException ("Not implemented.");
 		}
 
 		/// <summary>
@@ -423,6 +440,37 @@ namespace SharpOS.AOT.IR.Operands {
 				stringBuilder.Append (operatorValue);
 
 			return stringBuilder.ToString ().Trim ();
+		}
+
+		public delegate void OperandVisitor (bool assignee, int level, object parent, Operand operand);
+
+		public virtual void Visit (bool assignee, int level, object parent, OperandVisitor visitor)
+		{
+			if (this.operands != null)
+				foreach (Operand operand in this.operands)
+					operand.Visit (assignee, level + 1, this, visitor);
+		}
+
+
+		public delegate bool OperandReplaceVisitor (object parent, Operand oldValue);
+
+		public virtual int ReplaceOperand (string id, Operand operand, OperandReplaceVisitor visitor)
+		{
+			int replacements = 0;
+
+			if (this.operands != null) {
+				for (int i = 0; i < this.operands.Length; i++) {
+					if (this.operands [i].ID == id) {
+						if (visitor == null || visitor (this, this.operands [i])) {
+							this.operands [i] = operand;
+							replacements++;
+						}
+					} else
+						replacements += this.operands [i].ReplaceOperand (id, operand, visitor);
+				}
+			}
+
+			return replacements;
 		}
 	}
 }

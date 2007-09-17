@@ -1,4 +1,4 @@
-megs: 32
+megs: 64
 debugger_log: debug.log
 log: info.log
 

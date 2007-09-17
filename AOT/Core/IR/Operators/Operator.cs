@@ -26,7 +26,8 @@ namespace SharpOS.AOT.IR.Operators {
 			NewArray, 
 			InternalList, 
 			Argument,
-			Localloc
+			Localloc,
+			InitObj
 		}
 
 		public enum BinaryType {

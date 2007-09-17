@@ -33,7 +33,7 @@ namespace SharpOS.AOT.IR.Operands {
 		/// </summary>
 		/// <param name="name">The name.</param>
 		public Field (string name)
-			: base (name, 0)
+			: base (name, 0, null)
 		{
 		}
 

@@ -29,31 +29,6 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 		}
 
-		/* FIXME: convert to XML dump or kill (effectively the same as base Dump())
-		public override void Dump (string prefix, StringBuilder stringBuilder)
-		{
-			/*stringBuilder.Append(prefix + this.FormatedIndex + "Jump [");
-
-			for (int i = 0; i < this.Branches.Count; i++)
-			{
-			    if (i > 0)
-			    {
-			        stringBuilder.Append(", ");
-			    }
-
-			    stringBuilder.Append(this.Branches[i].FormatedIndex.Trim());
-			}
-
-			stringBuilder.Append("]");
-
-			stringBuilder.Append (prefix + this.FormatedIndex + "Jmp");
-
-			if (this.Value != null) 
-				stringBuilder.Append (" " + this.Value);
-
-			stringBuilder.Append ("\n");
-		}*/
-
 		/// <summary>
 		/// Dumps the instruction.
 		/// </summary>

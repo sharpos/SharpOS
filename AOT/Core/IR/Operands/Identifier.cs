@@ -18,15 +18,20 @@ using Mono.Cecil;
 namespace SharpOS.AOT.IR.Operands {
 	[Serializable]
 	public class Identifier : Operand {
+		protected Identifier ()
+		{
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Identifier"/> class.
 		/// </summary>
 		/// <param name="name">The name.</param>
 		/// <param name="index">The index.</param>
-		public Identifier (string name, int index)
+		public Identifier (string name, int index, string typeName)
 		{
 			this.index = index;
 			this.value = name;
+			this.typeName = typeName;
 		}
 
 		/// <summary>
@@ -38,6 +43,34 @@ namespace SharpOS.AOT.IR.Operands {
 			: base (null, operands)
 		{
 			this.value = name;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Identifier"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="operands">The operands.</param>
+		/// <param name="typeName">Name of the type.</param>
+		public Identifier (string name, Operand [] operands, string typeName)
+			: base (null, operands)
+		{
+			this.value = name;
+			this.typeName = typeName;
+		}
+
+		string typeName;
+
+		/// <summary>
+		/// Gets and sets the name of the type.
+		/// </summary>
+		/// <value>The name of the type.</value>
+		public string TypeName {
+			set {
+				this.typeName = value;
+			}
+			get {
+				return this.typeName;
+			}
 		}
 
 		/// <summary>
@@ -148,6 +181,16 @@ namespace SharpOS.AOT.IR.Operands {
 				stringBuilder.Append ("__" + this.SizeType);
 
 			return stringBuilder.ToString();
+		}
+
+		protected override void Clone (Operand operand)
+		{
+			(operand as Identifier).index = this.index;
+			(operand as Identifier).value = this.value;
+			(operand as Identifier).forceSpill = this.forceSpill;
+			(operand as Identifier).typeName = this.typeName;
+
+			base.Clone (operand);
 		}
 	}
 }

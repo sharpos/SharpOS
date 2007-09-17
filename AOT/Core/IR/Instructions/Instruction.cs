@@ -92,6 +92,55 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 		}
 
+		/// <summary>
+		/// Visits the operands.
+		/// </summary>
+		/// <param name="level">The level.</param>
+		/// <param name="visitor">The visitor.</param>
+		public virtual void VisitOperand (Operand.OperandVisitor visitor)
+		{
+			if (this.value != null)
+				this.value.Visit (false, 0, this, visitor);
+		}
+
+		/// <summary>
+		/// Gets the definition and usage (e.g. A = B + C -> definition: A & usage: [B, C]).
+		/// </summary>
+		/// <param name="usage">The Usage.</param>
+		/// <returns>The Definition</returns>
+		public Operand GetDefinitionAndUsage (List<Operand> usage)
+		{
+			Operand definition = null;
+
+			Operand.OperandVisitor visitor = delegate (bool assignee, int level, object parent, Operand operand) {
+				if (assignee && level == 0)
+					definition = operand;
+				else
+					usage.Add (operand);
+			};
+
+			this.VisitOperand (visitor);
+
+			return definition;
+		}
+
+		public virtual int ReplaceOperand (string id, Operand operand, Operand.OperandReplaceVisitor visitor)
+		{
+			int replacements = 0;
+
+			if (this.value != null) {
+				if (this.value.ID == id) {
+					if (visitor == null || visitor (this, this.value)) {
+						this.value = operand;
+						replacements++;
+					}
+				} else
+					replacements += this.value.ReplaceOperand (id, operand, visitor);
+			}
+
+			return replacements;
+		}
+
 		/*/// <summary>
 		/// Updates the index.
 		/// </summary>
@@ -118,7 +167,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Replaces the specified register values.
 		/// </summary>
 		/// <param name="registerValues">The register values.</param>
-		public void Replace (Dictionary<string, Operand> registerValues)
+		/*public void Replace (Dictionary<string, Operand> registerValues)
 		{
 			if (this.value == null) 
 				return;
@@ -127,7 +176,7 @@ namespace SharpOS.AOT.IR.Instructions {
 				this.value = registerValues [this.value.ToString ()];
 			else
 				this.value.Replace (registerValues);
-		}
+		}*/
 
 		private long startOffset = 0;
 

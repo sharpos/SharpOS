@@ -24,15 +24,15 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Initializes a new instance of the <see cref="Initialize"/> class.
 		/// </summary>
 		/// <param name="assignee">The assignee.</param>
-		public Initialize (Identifier assignee, VariableDefinition variableDefinition)
+		public Initialize (Identifier assignee, string variableDefinition)
 			: base (assignee, null)
 		{
 			this.variableDefinition = variableDefinition;
 		}
 
-		private VariableDefinition variableDefinition;
+		private string variableDefinition;
 
-		public VariableDefinition Type {
+		public string Type {
 			get {
 				return this.variableDefinition;
 			}

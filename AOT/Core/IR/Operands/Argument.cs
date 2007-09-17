@@ -18,27 +18,41 @@ using Mono.Cecil;
 namespace SharpOS.AOT.IR.Operands {
 	[Serializable]
 	public class Argument : Identifier {
+		protected Argument ()
+			: base ()
+		{
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Argument"/> class.
 		/// </summary>
 		/// <param name="i">The index.</param>
 		/// <param name="typeName">Name of the type.</param>
 		public Argument (int i, string typeName)
-			: base ("Arg" + i, i)
+			: base ("Arg" + i, i, typeName)
 		{
-			this.typeName = typeName;
 		}
 
-		string typeName;
-
 		/// <summary>
-		/// Gets the name of the type.
+		/// Visits the specified assignee.
 		/// </summary>
-		/// <value>The name of the type.</value>
-		public string TypeName {
-			get {
-				return this.typeName;
-			}
+		/// <param name="assignee">if set to <c>true</c> [assignee].</param>
+		/// <param name="level">The level.</param>
+		/// <param name="visitor">The visitor.</param>
+		public override void Visit (bool assignee, int level, object parent, OperandVisitor visitor)
+		{
+			visitor (assignee, level, parent, this);
+
+			base.Visit (assignee, level, this, visitor);
+		}
+
+		public override Operand Clone ()
+		{
+			Argument argument = new Argument ();
+
+			base.Clone (argument);
+
+			return argument;
 		}
 	}
 }

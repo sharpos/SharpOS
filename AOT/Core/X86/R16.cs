@@ -46,13 +46,13 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public static R16Type GetByID (object value)
 		{
+			if (value == null)
+				return null;
+
 			if (value is R16Type)
 				return value as R16Type;
 
 			switch (Register.GetName (value)) {
-				case null:
-					return null;
-
 				case "AX":
 					return R16.AX;
 

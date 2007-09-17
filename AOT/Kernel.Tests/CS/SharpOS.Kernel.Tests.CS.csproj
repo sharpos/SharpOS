@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Arguments.cs" />
     <Compile Include="Arithmetic.cs" />
     <Compile Include="Array.cs" />
     <Compile Include="BitwiseOperators.cs" />

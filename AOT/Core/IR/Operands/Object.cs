@@ -24,7 +24,7 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <param name="name">The name.</param>
 		/// <param name="operand">The operand.</param>
 		public Object (string name, Operand operand)
-			: base (name, new Operand[] { operand })
+			: base ("obj", new Operand[] { operand }, name)
 		{
 		}
 
@@ -42,6 +42,40 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		public override int Register
+		{
+			get
+			{
+				return this.Address.Register;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is register set.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is register set; otherwise, <c>false</c>.
+		/// </value>
+		public override bool IsRegisterSet
+		{
+			get
+			{
+				return this.Address.Register != int.MinValue;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the stack.
+		/// </summary>
+		/// <value>The stack.</value>
+		public override int Stack
+		{
+			get
+			{
+				return this.Address.Stack;
+			}
+		}
+
 		/// <summary>
 		/// Toes the string.
 		/// </summary>
@@ -50,9 +84,7 @@ namespace SharpOS.AOT.IR.Operands {
 		{
 			StringBuilder stringBuilder = new StringBuilder ();
 
-			stringBuilder.Append (this.operands [0].ToString () + "->");
-
-			stringBuilder.Append (base.ToString ());
+			stringBuilder.Append ("(" + this.TypeName + ") " + this.operands [0].ToString ());
 
 			return stringBuilder.ToString ();
 		}

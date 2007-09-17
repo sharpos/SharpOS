@@ -412,10 +412,17 @@ namespace SharpOS.AOT.X86 {
 			}
 
 			if (this.displacementSet) {
-				if (stringBuilder.Length > 0)
-					stringBuilder.Append (" + ");
+				if (this.displacement >= 0) {
+					if (stringBuilder.Length > 0)
+						stringBuilder.Append (" + ");
 
-				stringBuilder.Append (string.Format ("0x{0:x}", this.displacement));
+					stringBuilder.Append (string.Format ("0x{0:x}", this.displacement));
+				} else {
+					if (stringBuilder.Length > 0)
+						stringBuilder.Append (" - ");
+
+					stringBuilder.Append (string.Format ("0x{0:x}", 0 - this.displacement));
+				}
 			}
 
 			if (this.segment != null)

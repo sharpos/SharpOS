@@ -132,9 +132,8 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Local GetLocal (int i)
 		{
-			Local local = new Local (i);
-
-			local.SizeType = this.engine.GetInternalType (this.methodDefinition.Body.Variables[i].VariableType.FullName);
+			Local local = new Local (i, this.methodDefinition.Body.Variables [i].VariableType.FullName);
+			local.SizeType = this.engine.GetInternalType (this.methodDefinition.Body.Variables [i].VariableType.FullName);
 
 			return local;
 		}
@@ -204,6 +203,9 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.methodDefinition.Body.Instructions.Count; i++) {
 				Mono.Cecil.Cil.Instruction instruction = this.methodDefinition.Body.Instructions[i];
 
+				if (instruction.OpCode.FlowControl == FlowControl.Phi)
+					continue;
+
 				currentBlock.CIL.Add (instruction);
 
 				if (i < this.methodDefinition.Body.Instructions.Count - 1 && IsBranch (instruction, true)) {
@@ -219,22 +221,24 @@ namespace SharpOS.AOT.IR {
 				found = false;
 
 				foreach (Block source in blocks) {
-					if (IsBranch (source.CIL[source.CIL.Count - 1], false)
-							&& (source.CIL[source.CIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction
-							    || source.CIL[source.CIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction[])) {
+					List<Mono.Cecil.Cil.Instruction> sourceCIL = source.CIL;
+
+					if (IsBranch (sourceCIL[sourceCIL.Count - 1], false)
+							&& (sourceCIL[sourceCIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction
+							    || sourceCIL[sourceCIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction[])) {
 						List<Mono.Cecil.Cil.Instruction> jumps = new List<Mono.Cecil.Cil.Instruction>();
 
-						if (source.CIL[source.CIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction) 
-							jumps.Add (source.CIL[source.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction);
+						if (sourceCIL[sourceCIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction) 
+							jumps.Add (sourceCIL[sourceCIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction);
 						else 
-							jumps = new List<Mono.Cecil.Cil.Instruction> (source.CIL[source.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction[]);
+							jumps = new List<Mono.Cecil.Cil.Instruction> (sourceCIL[sourceCIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction[]);
 
 						foreach (Mono.Cecil.Cil.Instruction jump in jumps) {
 
-							if (jump == source.CIL[source.CIL.Count - 1]
-									&& (source.CIL [source.CIL.Count - 1] != source.CIL [source.CIL.Count - 1].Operand 
-										|| (source.CIL [source.CIL.Count - 1] == source.CIL [source.CIL.Count - 1].Operand
-											&& source.CIL.Count == 1))) 
+							if (jump == sourceCIL[sourceCIL.Count - 1]
+									&& (sourceCIL [sourceCIL.Count - 1] != sourceCIL [sourceCIL.Count - 1].Operand 
+										|| (sourceCIL [sourceCIL.Count - 1] == sourceCIL [sourceCIL.Count - 1].Operand
+											&& sourceCIL.Count == 1))) 
 								continue;
 
 							for (int destinationIndex = 0; destinationIndex < blocks.Count; destinationIndex++) {
@@ -440,7 +444,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Blockses the optimization.
+		/// Merges two blocks that are next to each other and are linked only to each other.
 		/// </summary>
 		public void BlocksOptimization ()
 		{
@@ -472,7 +476,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Converts from CIL.
+		/// Converts from CIL to IR.
 		/// </summary>
 		private void ConvertFromCIL ()
 		{
@@ -483,7 +487,7 @@ namespace SharpOS.AOT.IR {
 					&& this.methodDefinition.Body.Variables.Count > 0) {
 				for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
 					VariableDefinition variableDefinition = this.methodDefinition.Body.Variables [this.methodDefinition.Body.Variables.Count - i - 1];
-					blocks [0].InsertInstruction (0, new Initialize (this.GetLocal (this.methodDefinition.Body.Variables.Count - i - 1), variableDefinition));
+					blocks [0].InsertInstruction (0, new Initialize (this.GetLocal (this.methodDefinition.Body.Variables.Count - i - 1), variableDefinition.VariableType.ToString ()));
 				}
 			}
 
@@ -609,7 +613,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Dominatorses this instance.
+		/// Computes the block dominators.
 		/// </summary>
 		private void Dominators ()
 		{
@@ -659,7 +663,6 @@ namespace SharpOS.AOT.IR {
 					doms.Add (block);
 
 					// Set the new dominators if there are any differences
-
 					if (block.Dominators.Count != doms.Count) {
 						block.Dominators = doms;
 						changed = true;
@@ -779,11 +782,6 @@ namespace SharpOS.AOT.IR {
 			/// <param name="block">The block.</param>
 			internal void AddVariable (Identifier identifier, Block block)
 			{
-				/*if (identifier is SharpOS.AOT.IR.Operands.Register)
-				{
-				    return;
-				}*/
-
 				foreach (IdentifierBlocksItem item in this) {
 					if (item.key.ID.Equals (identifier.ID)) {
 						if (!item.values.Contains (block)) 
@@ -839,10 +837,11 @@ namespace SharpOS.AOT.IR {
 
 					Assign assign = instruction as Assign;
 
-					if (assign.Assignee is Field)
-						continue;
+					List<Operand> usage = new List<Operand> ();
+					Operand definition = instruction.GetDefinitionAndUsage (usage);
 
-					identifierList.AddVariable (assign.Assignee, block);
+					if (definition != null)
+						identifierList.AddVariable (definition as Identifier, block);
 				}
 			}
 
@@ -920,17 +919,16 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the SSA stack value.
+		/// Sets the identifier's version.
 		/// </summary>
 		/// <param name="stack">The stack.</param>
-		/// <param name="name">The name.</param>
-		/// <returns></returns>
-		private static int GetSSAStackValue (Dictionary < string, Stack < int >> stack, string name)
+		/// <param name="identifier">The identifier.</param>
+		private static void SetVersion (Dictionary < string, Stack < int >> stack, Identifier identifier)
 		{
-			if (!stack.ContainsKey (name)) 
-				return 0;
-
-			return stack[name].Peek();
+			if (!stack.ContainsKey (identifier.Value))
+				identifier.Version = 0;
+			else
+				identifier.Version = stack [identifier.Value].Peek ();
 		}
 
 		/// <summary>
@@ -942,72 +940,23 @@ namespace SharpOS.AOT.IR {
 		private void SSARename (Block block, Dictionary<string, int> count, Dictionary<string, Stack<int>> stack)
 		{
 			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
+				List<Operand> usage = new List<Operand> ();
+				Operand definition = instruction.GetDefinitionAndUsage (usage);
+
 				// Update the Operands of the instruction (A = B -> A = B5)
-				if (!(instruction is PHI) && instruction.Value != null) {
-					if (instruction.Value.Operands != null) {
-						foreach (Operand operand in instruction.Value.Operands) {
-							if (operand is Reference) {
-								Identifier identifier = (operand as Reference).Value as Identifier;
-
-								if (identifier is Field
-										&& (identifier as Field).Instance != null)
-									identifier = (identifier as Field).Instance;
-
-								identifier.Version = GetSSAStackValue (stack, identifier.Value);
-
-							} else if (operand is Field) {
-								Identifier identifier = (operand as Field).Instance;
-
-								if (identifier != null)
-									identifier.Version = GetSSAStackValue (stack, identifier.Value);
-
-							} else if (operand is Operands.Object) {
-								Identifier identifier = (operand as Operands.Object).Address;
-
-								identifier.Version = GetSSAStackValue (stack, identifier.Value);
-
-							} else if (operand is Identifier) {
-								Identifier identifier = operand as Identifier;
-
-								identifier.Version = GetSSAStackValue (stack, identifier.Value);
-							}
-						}
-
-					} else if (instruction.Value is Identifier) {
-						Identifier identifier = instruction.Value as Identifier;
-
-						identifier.Version = GetSSAStackValue (stack, identifier.Value);
-					}
+				if (!(instruction is PHI)) {
+					foreach (Operand operand in usage)
+						SetVersion (stack, operand as Identifier);
 				}
 
 				// Update the Definition of a variaable (e.g. A = ... -> A3 = ...)
-				if (instruction is Assign) {
-					Assign assign = instruction as Assign;
+				if (definition != null) {
+					string id = (definition as Identifier).Value;
 
-					if (assign.Assignee is Reference) {
-						Identifier identifier = (assign.Assignee as Reference).Value;
+					count [id]++;
+					stack [id].Push (count [id]);
 
-						identifier.Version = GetSSAStackValue (stack, identifier.Value);
-
-					} else if (assign.Assignee is Field) {
-						Identifier identifier = (assign.Assignee as Field).Instance;
-
-						if (identifier != null)
-							identifier.Version = GetSSAStackValue (stack, identifier.Value);
-
-					} else if (assign.Assignee is Operands.Object) {
-						Identifier identifier = (assign.Assignee as Operands.Object).Address;
-
-						identifier.Version = GetSSAStackValue (stack, identifier.Value);
-
-					} else {
-						string id = assign.Assignee.Value;
-
-						count [id]++;
-						stack [id].Push (count [id]);
-
-						assign.Assignee.Version = count [id];
-					}
+					definition.Version = count [id];
 				}
 			}
 
@@ -1049,10 +998,11 @@ namespace SharpOS.AOT.IR {
 				if (!(instruction is Assign))
 					continue;
 
-				Assign assign = instruction as Assign;
+				List<Operand> usage = new List<Operand> ();
+				Operand definition = instruction.GetDefinitionAndUsage (usage);
 
-				if (!(assign.Assignee is Reference || assign.Assignee is Field || assign.Assignee is Operands.Object))
-					stack [assign.Assignee.Value].Pop ();
+				if (definition != null)
+					stack [(definition as Identifier).Value].Pop ();
 			}
 
 			return;
@@ -1311,7 +1261,7 @@ namespace SharpOS.AOT.IR {
 					return true;
 
 				// ... if it is a reference or address
-				if (assign.Value is Reference)
+				if (assign.Value is Indirect)
 					return true;
 
 				// ... if it is a field
@@ -1344,53 +1294,23 @@ namespace SharpOS.AOT.IR {
 
 			foreach (Block block in this.blocks) {
 				foreach (Instructions.Instruction instruction in block) {
-					if (instruction.Value != null && instruction.Value.Operands != null) {
-						for (int i = 0; i < instruction.Value.Operands.Length; i++ ) {
-							Operand operand = instruction.Value.Operands [i];
-							
-							if (!(operand is Identifier))
-								continue;
+					List<Operand> usage = new List<Operand> ();
 
-							if (operand is Reference)
-								operand = (operand as Reference).Value;
+					Operand definition = instruction.GetDefinitionAndUsage (usage);
 
-							string id = operand.ID;
+					if (definition != null)
+						defuse.SetDefinition (definition.ID, instruction);
 
-							if (operand is Field
-									&& (operand as Field).Instance != null)
-								id = (operand as Field).Instance.ID;
+					foreach (Operand operand in usage) {
+						if (operand.Version == 0) {
+							Instructions.System argument = new Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Argument)));
 
-							if (operand is Operands.Object)
-								id = (operand as Operands.Object).Address.ID;
+							argument.Block = this.blocks [0];
 
-							if (operand.Version == 0) {
-								Instructions.System argument = new Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Argument)));
-
-								argument.Block = this.blocks [0];
-
-								defuse.SetDefinition (id, argument);
-							}
-
-							defuse.AddUsage (id, instruction);
+							defuse.SetDefinition (operand.ID, argument);
 						}
-					}
 
-					if (instruction is Assign) {
-						Assign assign = instruction as Assign;
-
-						string id = assign.Assignee.ID;
-
-						if (assign.Assignee is Reference)
-							defuse.AddUsage (id, instruction);
-
-						else if (assign.Assignee is Field) {
-							Field field = assign.Assignee as Field;
-
-							if (field.Instance != null)
-								defuse.AddUsage (field.Instance.ID, instruction);
-
-						} else
-							defuse.SetDefinition (id, instruction);
+						defuse.AddUsage (operand.ID, instruction);
 					}
 				}
 			}
@@ -1410,80 +1330,8 @@ namespace SharpOS.AOT.IR {
 
 				definition.Assignee.Stamp = stamp++;
 
-				foreach (Instructions.Instruction instruction in item) {
-
-					if (instruction is Assign) {
-						Assign assign = instruction as Assign;
-
-						if (assign.Assignee is Reference) {
-							Reference reference = assign.Assignee as Reference;
-
-							if (reference.Value.ID.Equals (definition.Assignee.ID))
-								reference.Value = definition.Assignee;
-
-						} else if (assign.Assignee is Field) {
-							Field field = (instruction as Assign).Assignee as Field;
-
-							if (field.Instance != null
-									&& field.Instance.ID.Equals (definition.Assignee.ID))
-								field.Instance = definition.Assignee;
-						}
-					}
-
-					if (instruction.Value == null)
-						continue;
-
-					for (int j = 0; j < instruction.Value.Operands.Length; j++) {
-						Operand operand = instruction.Value.Operands [j];
-
-						if (!(operand is Identifier))
-							continue;
-
-						string id = operand.ID;
-
-						if (operand is Reference
-								&& (operand as Reference).Value is Field
-								&& ((operand as Reference).Value as Field).Instance != null)
-							id = ((operand as Reference).Value as Field).Instance.ID;
-
-						if (operand is Field
-								&& (operand as Field).Instance != null)
-							id = (operand as Field).Instance.ID;
-
-						if (operand is Operands.Object)
-							id = (operand as Operands.Object).Address.ID;
-
-						if (!definition.Assignee.ID.Equals (id))
-							continue;
-
-						if (instruction.Value is Reference) {
-							Reference reference = instruction.Value as Reference;
-
-							if (reference.Value is Field
-									&& (reference.Value as Field).Instance != null)
-								(reference.Value as Field).Instance = definition.Assignee;
-
-							else
-								reference.Value = definition.Assignee;
-
-						} else if (instruction.Value is Field) {
-							Field field = instruction.Value as Field;
-
-							if (field.Instance != null)
-								field.Instance = definition.Assignee;
-
-						} else if (instruction.Value is Operands.Object) {
-							Operands.Object _object = instruction.Value as Operands.Object;
-
-							_object.Address = definition.Assignee;
-
-						} else if (instruction.Value is Identifier)
-							instruction.Value = definition.Assignee;
-
-						else
-							instruction.Value.Operands [j] = definition.Assignee;
-					}
-				}
+				foreach (Instructions.Instruction instruction in item)
+					instruction.ReplaceOperand (definition.Assignee.ID, definition.Assignee, null);
 			}
 
 			if (this.engine.Options.Dump)
@@ -1492,83 +1340,50 @@ namespace SharpOS.AOT.IR {
 			return;
 		}
 
-		/// <summary>
-		/// Deads the code elimination.
-		/// </summary>
-		private void DeadCodeElimination ()
+		private void InternalPropagationLogic (List<Instructions.Instruction> remove, Instructions.Instruction call, Operands.Call operand)
 		{
-			List<string> keys = this.defuse.GetKeys ();
-			
-			this.engine.Dump.Section(DumpSection.DeadCodeElimination);
+			for (int i = 0; i < operand.Operands.Length; i++) {
+				Operand parameter = operand.Operands [i];
+				Assign assign = null;
+				Instructions.Instruction instruction = call;
 
-			while (keys.Count > 0) {
-				string key = keys [0];
-				keys.RemoveAt (0);
+				DefUseItem item = null;
 
-				DefUseItem item = this.defuse [key];
+				do {
+					if (!this.defuse.Contains (parameter.ID))
+						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", parameter.ID));
 
-				// This variable is only defined but not used
-				if (item.Count == 0
-					&& !(item.Definition is Assign
-						&& (item.Definition as Assign).Assignee is Field)) {
-					// A = B + C;
-					Instructions.Instruction definition = item.Definition; 
+					item = this.defuse [parameter.ID];
 
-					if (engine.Options.Dump)
-						engine.Dump.Element(definition);
+					// Remove it from the usage list
+					item.RemoveUsage (instruction);
 
-					// Remove the instruction from the block that it is containing it
-					definition.Block.RemoveInstruction (definition);
+					if (item.Count > 0) {
+						// Removing any references in a PHI
+						foreach (Instructions.Instruction entry in item) {
+							if (!(entry is PHI))
+								throw new Exception ("Propagation Core failed.");
+						
+							PHI phi = entry as PHI;
 
-					// Remove the variable from the defuse list
-					defuse.Remove (key);
+							foreach (Operand phiOperand in phi.Value.Operands) {
+								if (phiOperand.ID == parameter.ID)
+									continue;
 
-					if (definition.Value != null
-							&& !(definition is Instructions.System)) {
-						// B & C used in "A = B + C"
-						foreach (Operand operand in definition.Value.Operands) {
-							if (!(operand is Identifier))
-								continue;
+								this.defuse.Remove (phiOperand.ID);
+							}
 
-							string id = operand.ID;
-
-							// Remove "A = B + C" from B & C
-							this.defuse.RemoveUsage (id, definition);
-
-							// Add to the queue B & C to check them it they are used anywhere else
-							if (!keys.Contains (id))
-								keys.Add (id);
+							remove.Add (entry);
 						}
 					}
-				}
-			}
 
-			this.engine.Dump.PopElement();
-			
-			return;
-		}
+					this.defuse.Remove (parameter.ID);
 
-		private void AssemblyCallPropagationLogic (Instructions.Instruction instruction, Operands.Call operand)
-		{
-			for (int i = 0; i < operand.Operands.Length; i++) {
-				Operand parameter = operand.Operands [i];
-				DefUseItem item = null;
-				bool first = true;
-				Assign assign = null;
+					instruction = item.Definition;
 
-				do {
-					if (!this.defuse.Contains (parameter.ID))
-						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", parameter.ID));
+					remove.Add (instruction);
 
-					item = this.defuse [parameter.ID];
-
-					// Remove it from the usage list
-					if (first) {
-						first = false;
-						item.RemoveUsage (instruction);
-					}
-
-					assign = item.Definition as Assign;
+					assign = instruction as Assign;
 
 					parameter = assign.Value;
 				}
@@ -1585,93 +1400,31 @@ namespace SharpOS.AOT.IR {
 					item = this.defuse [address.Value.ID];
 
 					// Add it to the new item's usage list
-					item.AddUsage (instruction);
+					item.AddUsage (call);
 				}
 
-				if (parameter is Operands.Call)
-					this.AssemblyCallPropagationLogic (assign, parameter as Operands.Call);
 			}
 		}
 
 		/// <summary>
-		/// It is a Constant and Copy Propagation but only for Assembly calls. (e.g. Asm.MOV...)
+		/// It is a Constant and Copy Propagation for SharpOS custom attributes. (e.g. SharpOS.AOT.Attribues.ADCLayerAttribute)
+		/// and a Constant and Copy Propagation for Assembly calls. (e.g. Asm.MOV...)
 		/// </summary>
-		/// <returns></returns>
-		private void AssemblyPropagation ()
+		private void InternalPropagation ()
 		{
-			foreach (Block block in this.blocks) {
-				foreach (Instructions.Instruction instruction in block) {
-					if (instruction is Instructions.Call
-							&& engine.Assembly.IsInstruction ((instruction as Instructions.Call).Method.Method.DeclaringType.FullName)) {
-						Instructions.Call call = (instruction as Instructions.Call);
-						Operands.Call operand = (call.Value as Operands.Call);
+			List<Instructions.Instruction> remove = new List<SharpOS.AOT.IR.Instructions.Instruction> ();
 
-						this.AssemblyCallPropagationLogic (instruction, operand);
-					}
-				}
-			}
-
-			return;
-		}
-
-
-		private void SharpOSAttributesPropagation (Instructions.Instruction instruction, Operands.Call operand)
-		{
-			for (int i = 0; i < operand.Operands.Length; i++) {
-				Operand parameter = operand.Operands [i];
-				DefUseItem item = null;
-				bool first = true;
-				Assign assign = null;
-
-				do {
-					if (!this.defuse.Contains (parameter.ID))
-						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", parameter.ID));
-
-					item = this.defuse [parameter.ID];
-
-					// Remove it from the usage list
-					if (first) {
-						first = false;
-						item.RemoveUsage (instruction);
-					}
-
-					assign = item.Definition as Assign;
-
-					parameter = assign.Value;
-				}
-				while (parameter is Register);
-
-				operand.Operands [i] = parameter;
-
-				if (parameter is Operands.Address) {
-					Operands.Address address = parameter as Operands.Address;
-
-					if (!this.defuse.Contains (address.Value.ID))
-						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", address.Value.ID));
-
-					item = this.defuse [address.Value.ID];
-
-					// Add it to the new item's usage list
-					item.AddUsage (instruction);
-				}
-			}
-		}
-
-		/// <summary>
-		/// It is a Constant and Copy Propagation but only for SharpOS custom attributes. (e.g. SharpOS.AOT.Attribues.ADCLayerAttribute)
-		/// </summary>
-		private void SharpOSAttributesPropagation ()
-		{
 			foreach (Block block in this.blocks) {
 				foreach (Instructions.Instruction instruction in block) {
 					if (instruction is Instructions.Call) {
 						Instructions.Call call = (instruction as Instructions.Call);
 						Operands.Call operand = call.Value as Operands.Call;
 
-						if (!engine.HasSharpOSAttribute (operand))
-							continue;
+						if (engine.HasSharpOSAttribute (operand))
+							this.InternalPropagationLogic (remove, instruction, operand);
 
-						this.SharpOSAttributesPropagation (instruction, operand);
+						else if (engine.Assembly.IsInstruction (call.Method.Method.DeclaringType.FullName))
+							this.InternalPropagationLogic (remove, instruction, operand);
 
 					} else if (instruction is Instructions.Assign) {
 						Instructions.Assign assign = instruction as Instructions.Assign;
@@ -1681,104 +1434,34 @@ namespace SharpOS.AOT.IR {
 
 						Operands.Call operand = assign.Value as Operands.Call;
 						
-						if (!engine.HasSharpOSAttribute (operand))
-							continue;
+						if (engine.HasSharpOSAttribute (operand))
+							this.InternalPropagationLogic (remove, instruction, operand);
 
-						this.SharpOSAttributesPropagation (instruction, operand);
+						else if (engine.Assembly.IsInstruction (operand.Method.DeclaringType.FullName))
+							this.InternalPropagationLogic (remove, instruction, operand);
+
 					}
 				}
 			}
+
+			foreach (Instructions.Instruction instruction in remove)
+				instruction.Block.RemoveInstruction (instruction);
 
 			return;
 		}
 
+	
 		/// <summary>
-		/// If there is an instruction like 'a = 1 + 2' is encountered then it gets replaced with 
-		/// 'a = 3'.
+		/// Copy Propagation
+		/// Constant Propagation
+		/// Constant Folding
+		/// Dead Code Elimination
 		/// </summary>
-		/// <returns>It returns true if one of the instructions got changed.</returns>
-		private bool ConstantFolding ()
-		{
-			this.engine.Dump.Section(DumpSection.ConstantFolding);
-
-			bool changed = false;
-
-			foreach (Block block in this.blocks) {
-				foreach (Instructions.Instruction instruction in block) {
-					if (!(instruction is Assign))
-						continue;
-
-					Assign assign = instruction as Assign;
-
-					if (!(assign.Value is Operands.Arithmetic))
-						continue;
-
-					Arithmetic arithmetic = assign.Value as Operands.Arithmetic;
-
-					if (!(arithmetic.Operator is Binary))
-						continue;
-
-					if (!(arithmetic.Operands [0] is Constant
-						&& arithmetic.Operands [1] is Constant))
-						continue;
-
-					Binary binary = arithmetic.Operator as Binary;
-					Constant constant1 = arithmetic.Operands [0] as Constant;
-					Constant constant2 = arithmetic.Operands [1] as Constant;
-
-					this.engine.Dump.Item ();
-					this.engine.Dump.PushElement ("before", true, false, false);
-					this.engine.Dump.Element (assign);
-					this.engine.Dump.PopElement ();
-
-					// TODO implement all the other operators
-					if (binary.Type == Operator.BinaryType.Mul) {
-
-						// TODO implement the other combinations
-						if (constant1.SizeType == Operand.InternalSizeType.I4
-								&& constant2.SizeType == Operand.InternalSizeType.I4) {
-
-							changed = true;
-
-							int value = Convert.ToInt32 (constant1.Value) * Convert.ToInt32 (constant2.Value);
-
-							instruction.Value = new Constant (value);
-							instruction.Value.SizeType = Operand.InternalSizeType.I4;
-						}
-					} else if (binary.Type == Operator.BinaryType.Sub) {
-						// TODO implement the other combinations
-						if (constant1.SizeType == Operand.InternalSizeType.I4
-								&& constant2.SizeType == Operand.InternalSizeType.I4) {
-
-							changed = true;
-
-							int value = Convert.ToInt32 (constant1.Value) - Convert.ToInt32 (constant2.Value);
-
-							instruction.Value = new Constant (value);
-							instruction.Value.SizeType = Operand.InternalSizeType.I4;
-						}
-					}
-
-					this.engine.Dump.PushElement ("after", true, false, false);
-					this.engine.Dump.Element (assign);
-					this.engine.Dump.PopElement ();
-					this.engine.Dump.PopElement ();
-				}
-			}
-
-			this.engine.Dump.PopElement();	// section: constant-folding
-			
-			return changed;
-		}
-
-		/// <summary>
-		/// It looks for instructions like 'a = 100; b = a;' and replaces them with 'b = 100;'
-		/// </summary>
-		private void ConstantPropagation ()
+		private void Optimizations ()
 		{
 			List<string> keys = this.defuse.GetKeys ();
 
-			this.engine.Dump.Section (DumpSection.ConstantPropagation);
+			this.engine.Dump.Section (DumpSection.Optimizations);
 
 			keys.Sort ();
 
@@ -1816,79 +1499,218 @@ namespace SharpOS.AOT.IR {
 					this.defuse.SetDefinition (key, assign, true);
 				}
 
-				// A = 100
+				/// It looks for instructions like 'a = 100; b = a;' and replaces them with 'b = 100;'
 				else if (definition is Assign
 						&& (definition as Assign).Value is Constant
 						&& ((definition as Assign).Value as Constant).Value.GetType () != typeof (string)
-						&& !((definition as Assign).Assignee is Field)) {
-					bool _break = false;
+						&& ((definition as Assign).Assignee is Local
+							|| (definition as Assign).Assignee is Register)) {
+					bool remove = true;
 
-					// The first pass is to find out if the constant propagation can be done for current key
-					// The second pass does the actual constant propagation
-					for (int pass = 0; !_break && pass < 2; pass++) {
-						// "X = A" becomes "X = 100"
-						foreach (Instructions.Instruction used in item) {
-							if (_break)
-								break;
+					// "X = A" becomes "X = 100"
+					foreach (Instructions.Instruction used in item) {
+						List<Operand> usage = new List<Operand> ();
+						Operand definitionOperand = used.GetDefinitionAndUsage (usage);
 
-							if (used.Value != null) {
-								if (pass == 1 && this.engine.Options.Dump) {
-									this.engine.Dump.Item ();
-									this.engine.Dump.Element (definition);
-									this.engine.Dump.PushElement ("before", true, false, false);
-									this.engine.Dump.Element (used);
-									this.engine.Dump.PopElement ();
-								}
+						if (this.engine.Options.Dump) {
+							this.engine.Dump.Item ();
+							this.engine.Dump.Element (definition);
+							this.engine.Dump.PushElement ("before", true, false, false);
+							this.engine.Dump.Element (used);
+							this.engine.Dump.PopElement ();
+						}
 
-								for (int j = 0; !_break && j < used.Value.Operands.Length; j++) {
-									Operand operand = used.Value.Operands [j];
+						Operand.OperandReplaceVisitor visitor = delegate (object parent, Operand old) {
+							if (parent is Indirect
+									|| parent is Address)
+								return false;
 
-									// ref(local) can't be converted to ref(123)
-									if (pass == 0 && operand is SharpOS.AOT.IR.Operands.Reference
-											&& !((operand as SharpOS.AOT.IR.Operands.Reference).Value is SharpOS.AOT.IR.Operands.Register)) {
-										_break = true;
-										break;
-									}
+							return true;
+						};
 
-									// Replace A with 100
-									if (pass == 1 && operand is Identifier
-											&& operand.ID.Equals (key)) {
+						int replacements = used.ReplaceOperand (key, definition.Value, visitor);
 
-										if (used.Value is Identifier)
-											used.Value = definition.Value;
+						if (replacements == 0)
+							remove = false;
 
-										else
-											used.Value.Operands [j] = definition.Value;
-									}
-								}
+						if (this.engine.Options.Dump) {
+							this.engine.Dump.PushElement ("after", true, false, false);
+							this.engine.Dump.Element (used);
+							this.engine.Dump.PopElement ();
+							this.engine.Dump.PopElement ();
+						}
 
-								if (pass == 1 && this.engine.Options.Dump) {
-									this.engine.Dump.PushElement ("after", true, false, false);
-									this.engine.Dump.Element (used);
-									this.engine.Dump.PopElement ();
-									this.engine.Dump.PopElement ();
-								}
-							}
-
-							// Add X to the queue as "X = 100;"
-							if (pass == 1 && used is Assign) {
-								Identifier assignee = (used as Assign).Assignee;
-								string id = assignee.ID;
-
-								// Add to the queue
-								if (!keys.Contains (id)
-										&& !(assignee is Reference || assignee is Field))
-									keys.Add (id);
-							}
+						// Add X to the queue as "X = 100;"
+						if (definitionOperand != null) {
+							string id = definitionOperand.ID;
+							
+							if (!keys.Contains (id))
+								keys.Add (id);
 						}
 					}
 
-					if (!_break) {
+					if (remove) { 
 						// Remove the instruction from the block that it is containing it
 						definition.Block.RemoveInstruction (definition);
 
 						// Remove the variable from the defuse list
 						defuse.Remove (key);
+					}
+				}
+
+				// Copy Propagation
+				// It looks for instructions like 'a = b; c = a;' and replaces them with 'c = b;'
+				else if (!item.SkipCopyPropagation (this.engine)) {
+					Assign assign = definition as Assign;
+
+					// A = B
+					this.engine.Dump.Item();
+					this.engine.Dump.Element(definition);
+
+					//bool _break = false;
+					bool remove = true;
+
+					// "X = A" becomes "X = B"
+					foreach (Instructions.Instruction used in item) {
+						List<Operand> usage = new List<Operand> ();
+						Operand definitionOperand = used.GetDefinitionAndUsage (usage);
+
+						if (this.engine.Options.Dump) {
+							this.engine.Dump.PushElement ("before", true, false, false);
+							this.engine.Dump.Element (used);
+							this.engine.Dump.PopElement ();
+						}
+
+						int replacements = used.ReplaceOperand (key, definition.Value as Identifier, null);
+							
+						if (replacements == 0)
+							remove = false;
+
+						if (definitionOperand != null) {
+							string id = definitionOperand.ID;
+
+							if (!keys.Contains (id))
+								keys.Add (id);
+						}
+
+						if (this.engine.Options.Dump) {
+							this.engine.Dump.PushElement ("after", true, false, false);
+							this.engine.Dump.Element (used);
+							this.engine.Dump.PopElement ();
+						}
+
+					}
+
+					if (remove) {
+						// If A = B and B is still in the queue we remove A = B from the B usage list
+						// and add all the "usage" items from A to the B "usage" list.
+						if (this.defuse.GetKeys ().Contains (assign.Value.ID) == true) {
+							this.defuse.RemoveUsage (assign.Value.ID, assign);
+
+							foreach (Instructions.Instruction usage in this.defuse [key])
+								this.defuse.AddUsage (assign.Value.ID, usage);
+						}
+
+						// Remove the instruction from the block that it is containing it
+						definition.Block.RemoveInstruction (definition);
+
+						// Remove the variable from the defuse list
+						this.defuse.Remove (key);
+					}
+					
+					this.engine.Dump.PopElement();	// item
+				} 
+				
+				// Constant Folding
+				else if (definition is Assign
+					   && (definition as Assign).Value is Operands.Arithmetic) {
+
+					bool changed = false;
+
+					Assign assign = definition as Assign;
+
+					if (!(assign.Value is Operands.Arithmetic))
+						continue;
+
+					Arithmetic arithmetic = assign.Value as Operands.Arithmetic;
+
+					if (!(arithmetic.Operator is Binary))
+						continue;
+
+					if (!(arithmetic.Operands [0] is Constant
+						&& arithmetic.Operands [1] is Constant))
+						continue;
+
+					Binary binary = arithmetic.Operator as Binary;
+					Constant constant1 = arithmetic.Operands [0] as Constant;
+					Constant constant2 = arithmetic.Operands [1] as Constant;
+
+					if (this.engine.Options.Dump) {
+						this.engine.Dump.Item ();
+						this.engine.Dump.PushElement ("before", true, false, false);
+						this.engine.Dump.Element (assign);
+						this.engine.Dump.PopElement ();
+					}
+
+					// TODO implement all the other operators
+					if (binary.Type == Operator.BinaryType.Mul) {
+						// TODO implement the other combinations
+						if (constant1.SizeType == Operand.InternalSizeType.I4
+								&& constant2.SizeType == Operand.InternalSizeType.I4) {
+
+							changed = true;
+
+							int value = Convert.ToInt32 (constant1.Value) * Convert.ToInt32 (constant2.Value);
+
+							definition.Value = new Constant (value);
+							definition.Value.SizeType = Operand.InternalSizeType.I4;
+						}
+					} else if (binary.Type == Operator.BinaryType.Sub) {
+						// TODO implement the other combinations
+						if (constant1.SizeType == Operand.InternalSizeType.I4
+								&& constant2.SizeType == Operand.InternalSizeType.I4) {
+
+							changed = true;
+
+							int value = Convert.ToInt32 (constant1.Value) - Convert.ToInt32 (constant2.Value);
+
+							definition.Value = new Constant (value);
+							definition.Value.SizeType = Operand.InternalSizeType.I4;
+						}
+					}
+
+					if (this.engine.Options.Dump) {
+						this.engine.Dump.PushElement ("after", true, false, false);
+						this.engine.Dump.Element (assign);
+						this.engine.Dump.PopElement ();
+						this.engine.Dump.PopElement ();
+					}
+
+					if (changed)
+						keys.Add (key);
+				}
+
+				// Dead Code Elimination
+				else if (item.Count == 0) {
+					// Remove the instruction from the block that it is containing it
+					definition.Block.RemoveInstruction (definition);
+
+					// Remove the variable from the defuse list
+					defuse.Remove (key);
+
+					List<Operand> usage = new List<Operand> ();
+					definition.GetDefinitionAndUsage (usage);
+
+					// B & C used in "A = B + C"
+					foreach (Operand _entry in usage) {
+						string id = _entry.ID;
+
+						// Remove "A = B + C" from B & C
+						this.defuse.RemoveUsage (id, definition);
+
+						// Add to the queue B & C to check them it they are used anywhere else
+						if (!keys.Contains (id))
+							keys.Add (id);
 					}
 				}
 			}
@@ -1897,137 +1719,6 @@ namespace SharpOS.AOT.IR {
 
 			return;
 		}
-
-		/// <summary>
-		/// It looks for instructions like 'a = b; c = a;' and replaces them with 'c = b;'
-		/// </summary>
-		private void CopyPropagation ()
-		{
-			List<string> keys = this.defuse.GetKeys();
-
-			this.engine.Dump.Section(DumpSection.CopyPropagation);
-
-			while (keys.Count > 0) {
-				string key = keys[0];
-				keys.RemoveAt (0);
-
-				DefUseItem item = this.defuse [key];
-
-				if (item.SkipCopyPropagation (this.engine))
-					continue;
-
-				Instructions.Instruction definition = item.Definition;
-				Assign assign = definition as Assign;
-
-				// A = B
-				this.engine.Dump.Item();
-				this.engine.Dump.Element(definition);
-
-				bool _break = false;
-
-				// The first pass is to find out if the copy propagation can be done for current key
-				// The second pass does the actual copy propagation
-				for (int pass = 0; !_break && pass < 2; pass++) {
-					// "X = A" becomes "X = B"
-					foreach (Instructions.Instruction used in item) {
-						if (_break)
-							break;
-
-						if (pass == 1 && used is Assign
-								&& (used as Assign).Assignee is Reference) {
-							Reference reference = (used as Assign).Assignee as Reference;
-
-							if (reference.ID.Equals (key))
-								reference.Value = definition.Value as Identifier;
-						}
-
-						if (used.Value != null && used.Value.Operands != null) {
-							if (pass == 1) {
-								this.engine.Dump.PushElement ("before", true, false, false);
-								this.engine.Dump.Element (used);
-								this.engine.Dump.PopElement ();
-							}
-							
-							int replacements = 0;
-
-							for (int j = 0; j < used.Value.Operands.Length; j++) {
-								Operand operand = used.Value.Operands [j];
-
-								// Replace A with B
-								if (!(operand is Identifier
-										&& operand.ID.Equals (key)))
-									continue;
-
-								if (pass == 1) {
-									if (used.Value is Reference) {
-										Reference reference = used.Value as Reference;
-
-										reference.Value = definition.Value as Identifier;
-
-									} else if (used.Value is Identifier)
-										used.Value = definition.Value;
-
-									else
-										used.Value.Operands [j] = definition.Value;
-								}
-
-								replacements++;
-							}
-
-							if (pass == 0 && replacements == 0) {
-								_break = true;
-								break;
-							}
-							
-							if (pass == 1) {
-								this.engine.Dump.PushElement ("after", true, false, false);
-								this.engine.Dump.Element (used);
-								this.engine.Dump.PopElement ();
-							}
-						}
-
-						if (pass == 1 && used is Assign) {
-							Identifier assignee = (used as Assign).Assignee;
-							string id = assignee.ID;
-
-							// Add to the queue
-							if (!keys.Contains (id)
-									&& !(assignee is Reference || assignee is Field)) {
-								
-								// TODO: dump?
-								//this.engine.WriteLine (string.Format ("[*]Add Key: {0}", id));
-
-								keys.Add (id);
-							}
-						}
-					}
-				}
-
-				if (!_break) {
-					// If A = B and B is still in the queue we remove A = B from the B usage list
-					// and add all the "usage" items from A to the B "usage" list.
-					if (this.defuse.GetKeys ().Contains (assign.Value.ID) == true) {
-						this.defuse.RemoveUsage (assign.Value.ID, assign);
-
-						foreach (Instructions.Instruction usage in this.defuse [key])
-							this.defuse.AddUsage (assign.Value.ID, usage);
-					}
-
-					// Remove the instruction from the block that it is containing it
-					definition.Block.RemoveInstruction (definition);
-
-					// Remove the variable from the defuse list
-					this.defuse.Remove (key);
-				}
-				
-				this.engine.Dump.PopElement();	// item
-			}
-
-			this.engine.Dump.PopElement();	// section: copy-propagation
-			
-			return;
-		}
-
 
 		/// <summary>
 		/// Gets the full name of the method.
@@ -2122,17 +1813,22 @@ namespace SharpOS.AOT.IR {
 
 				List<Instructions.Instruction> remove = new List<SharpOS.AOT.IR.Instructions.Instruction>();
 
+				List<Instructions.PHI> phiList = new List<SharpOS.AOT.IR.Instructions.PHI> ();
+
 				foreach (Instructions.Instruction instruction in block) {
 					if (!(instruction is PHI))
 						break;
 
 					PHI phi = instruction as PHI;
 
+					phiList.Add (phi);
+				}
+
+				foreach (Instructions.PHI phi in phiList) {
 					for (int i = 0; i < block.Ins.Count; i++) {
 						Block predecessor = block.Ins[i];
 
 						// Skip uninitilized register assignments (Reg1_5=Reg2_0)
-
 						if (phi.Value.Operands[i] is Register
 								&& (phi.Value.Operands[i] as Register).Version == 0) {
 							continue;
@@ -2149,7 +1845,7 @@ namespace SharpOS.AOT.IR {
 
 						predecessor.InsertInstruction (position, assign);
 
-						remove.Add (instruction);
+						remove.Add (phi);
 					}
 				}
 
@@ -2393,51 +2089,6 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		/// <summary>
-		/// Adds the line scan value.
-		/// </summary>
-		/// <param name="values">The values.</param>
-		/// <param name="identifier">The identifier.</param>
-		/// <param name="instruction">The instruction.</param>
-		private void AddLineScanValue (Dictionary<string, LiveRange> values, Identifier identifier, Instructions.Instruction instruction)
-		{
-			// No need to process as it is an Assembly Register
-			if (this.engine.Assembly.IsRegister (identifier.Value))
-				return;
-
-			if (identifier is Address) {
-				identifier = (identifier as Address).Value;
-				identifier.ForceSpill = true;
-			}
-
-			bool asmCall = instruction.Value is Operands.Call
-				       && this.engine.Assembly.IsInstruction ( (instruction.Value as Operands.Call).Method.DeclaringType.FullName);
-
-			if (identifier is Field
-					&& (identifier as Field).Instance != null) {
-				AddLineScanValue (values, (identifier as Field).Instance, instruction);
-
-				return;
-			}
-
-			if (identifier is Argument || identifier is Field)
-				return;
-
-			if (asmCall) 
-				identifier.ForceSpill = true;
-
-			string id = identifier.ID;
-
-			if (!values.ContainsKey (id)) {
-				LiveRange liveRange = new LiveRange (id, instruction);
-				liveRange.Identifier = identifier;
-
-				values[id] = liveRange;
-
-			} else
-				values[id].End = instruction;
-		}
-
 		private List<LiveRange> liveRanges;
 
 		/// <summary>
@@ -2454,15 +2105,30 @@ namespace SharpOS.AOT.IR {
 				foreach (Instructions.Instruction instruction in block) {
 					instruction.Index = index++;
 
-					if (instruction.Value != null && instruction.Value.Operands != null) {
-						foreach (Operand operand in instruction.Value.Operands) {
-							if (operand is Identifier)
-								AddLineScanValue (values, operand as Identifier, instruction);
-						}
-					}
+					Operand.OperandVisitor visitor = delegate (bool assignee, int level, object parent, Operand operand) {
+						// The argument needs no register as it is on the stack
+						if (operand is Argument)
+							return;
 
-					if (instruction is Assign)
-						AddLineScanValue (values, (instruction as Assign).Assignee, instruction);
+						Identifier identifier = (operand as Identifier);
+
+						if (parent is Address)
+							identifier.ForceSpill = true;
+
+						string id = identifier.ID;
+
+						if (!values.ContainsKey (id)) {
+							LiveRange liveRange = new LiveRange (id, instruction);
+							liveRange.Identifier = identifier;
+
+							values [id] = liveRange;
+
+						} else
+							values [id].End = instruction;
+
+					};
+
+					instruction.VisitOperand (visitor);
 				}
 			}
 
@@ -2473,6 +2139,7 @@ namespace SharpOS.AOT.IR {
 
 			this.liveRanges.Sort (new LiveRange.SortByStart ());
 
+			#region Dump
 			if (engine.Options.Dump) {
 				engine.Dump.Section(DumpSection.LiveRanges);
 				
@@ -2481,23 +2148,26 @@ namespace SharpOS.AOT.IR {
 					
 				engine.Dump.PopElement();
 			}
-			
-			return;
+			#endregion
+
+			// No identifier gets a register allocated only a position on the stack.
+			foreach (LiveRange entry in this.liveRanges)
+				(entry.Identifier as Identifier).ForceSpill = true;
 		}
 
 		/// <summary>
 		/// Sets the next stack position.
 		/// </summary>
-		/// <param name="operand">The operand.</param>
-		private void SetNextStackPosition (Operand operand)
+		/// <param name="identifier">The identifier.</param>
+		private void SetNextStackPosition (Identifier identifier)
 		{
-			operand.Stack = this.stackSize;
+			if (identifier.SizeType == Operand.InternalSizeType.ValueType)
+				this.stackSize += this.engine.GetTypeSize (identifier.TypeName, 4) >> 2;
 
-			this.stackSize++;
+			else
+				this.stackSize += this.engine.GetTypeSize (identifier.SizeType, 4) >> 2;
 
-			if (operand.SizeType == Operand.InternalSizeType.I8
-					|| operand.SizeType == Operand.InternalSizeType.R8) 
-				this.stackSize++;
+			identifier.Stack = this.stackSize;
 		}
 
 		/// <summary>
@@ -2507,7 +2177,6 @@ namespace SharpOS.AOT.IR {
 		{
 			List<LiveRange> active = new List<LiveRange>();
 			List<int> registers = new List<int>();
-			int stackPosition = 0;
 
 			for (int i = 0; i < this.engine.Assembly.AvailableRegistersCount; i++)
 				registers.Add (i);
@@ -2517,11 +2186,11 @@ namespace SharpOS.AOT.IR {
 
 				if ((this.liveRanges [i].Identifier as Identifier).ForceSpill
 						|| this.engine.Assembly.Spill (this.liveRanges [i].Identifier.SizeType))
-					SetNextStackPosition (this.liveRanges [i].Identifier);
+					SetNextStackPosition (this.liveRanges [i].Identifier as Identifier);
 
 				else {
 					if (active.Count == this.engine.Assembly.AvailableRegistersCount)
-						SpillAtInterval (active, registers, ref stackPosition, this.liveRanges [i]);
+						SpillAtInterval (active, registers, this.liveRanges [i]);
 
 					else {
 						int register = registers [0];
@@ -2537,6 +2206,7 @@ namespace SharpOS.AOT.IR {
 
 			this.liveRanges.Sort (new LiveRange.SortByRegisterStack ());
 
+			#region Dump
 			if (this.engine.Options.Dump) {
 				this.engine.Dump.Section (DumpSection.RegisterAllocation);
 
@@ -2545,7 +2215,8 @@ namespace SharpOS.AOT.IR {
 
 				this.engine.Dump.PopElement ();
 			}
-			
+			#endregion
+
 			return;
 		}
 
@@ -2557,8 +2228,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="liveRange">The live range.</param>
 		private static void ExpireOldIntervals (List<LiveRange> active, List<int> registers, LiveRange liveRange)
 		{
-
-			List<LiveRange> remove = new List<LiveRange>();
+			List<LiveRange> remove = new List<LiveRange> ();
 
 			foreach (LiveRange value in active) {
 				if (value.End.Index >= liveRange.Start.Index)
@@ -2568,7 +2238,6 @@ namespace SharpOS.AOT.IR {
 			}
 
 			foreach (LiveRange value in remove) {
-
 				registers.Add (value.Identifier.Register);
 
 				active.Remove (value);
@@ -2580,9 +2249,8 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="active">The active.</param>
 		/// <param name="registers">The registers.</param>
-		/// <param name="stackPosition">The stack position.</param>
 		/// <param name="liveRange">The live range.</param>
-		private void SpillAtInterval (List<LiveRange> active, List<int> registers, ref int stackPosition, LiveRange liveRange)
+		private void SpillAtInterval (List<LiveRange> active, List<int> registers, LiveRange liveRange)
 		{
 			LiveRange spill = active [active.Count - 1];
 
@@ -2591,7 +2259,7 @@ namespace SharpOS.AOT.IR {
 
 				spill.Identifier.Register = int.MinValue;
 
-				SetNextStackPosition (spill.Identifier);
+				SetNextStackPosition (spill.Identifier as Identifier);
 
 				active.Remove (spill);
 
@@ -2599,7 +2267,7 @@ namespace SharpOS.AOT.IR {
 				active.Sort (new LiveRange.SortByEnd());
 
 			} else
-				SetNextStackPosition (liveRange.Identifier);
+				SetNextStackPosition (liveRange.Identifier as Identifier);
 		}
 
 		/// <summary>
@@ -2648,10 +2316,11 @@ namespace SharpOS.AOT.IR {
 							Field field = assign.Value as Operands.Field;
 							assign.Assignee.SizeType = this.engine.GetInternalType (field.ID);
 
-						} else if (assign.Value is Operands.Constant
-								&& (assign.Value as Operands.Constant).Value.GetType () == typeof (string)) {
+						} else if (assign.Value is Operands.Constant) {
 							found = true;
-							assign.Assignee.SizeType = Operand.InternalSizeType.S;
+							
+							if ((assign.Value as Operands.Constant).Value is string)
+								assign.Assignee.SizeType = Operand.InternalSizeType.S;
 
 						} else if (assign.Value.Operands.Length > 0) {
 							foreach (Operand operand in assign.Value.Operands) {
@@ -2667,6 +2336,12 @@ namespace SharpOS.AOT.IR {
 								}
 							}
 						}
+
+						if (assign.Assignee is Identifier
+								&& (assign.Assignee as Identifier).TypeName == null
+								&& assign.Value is Identifier
+								&& (assign.Value as Identifier).TypeName != null)
+							(assign.Assignee as Identifier).TypeName = (assign.Value as Identifier).TypeName;
 
 						if (!found)
 							unsolvedCounter++;
@@ -2711,8 +2386,8 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void Process ()
 		{
-			if (engine.Options.Dump)
-				engine.Dump.Element(this.methodDefinition);
+			if (this.engine.Options.Dump)
+				this.engine.Dump.Element(this.methodDefinition);
 			
 			if (this.methodDefinition.Body == null)
 				return;
@@ -2724,84 +2399,55 @@ namespace SharpOS.AOT.IR {
 			this.ConvertFromCIL ();
 			
 			if (this.engine.Options.DumpVerbosity >= 3)
-				DumpBlocks ();
+				this.DumpBlocks ();
 			
 			this.Dominators ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
-				DumpBlocks();
+				this.DumpBlocks ();
 
 			this.TransformationToSSA ();
 			this.EdgeSplit ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
-				DumpBlocks();
+				this.DumpBlocks ();
 
 			this.GetListOfDefUse ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
-				DumpBlocks();
+				this.DumpBlocks ();
 
-			this.AssemblyPropagation ();
+			this.InternalPropagation ();
 
-			if (this.engine.Options.DumpVerbosity >= 3) {
-				DumpDefUse ();
-				DumpBlocks ();
-			}
+			if (this.engine.Options.DumpVerbosity >= 4)
+				this.DumpDefUse ();
 
-			this.SharpOSAttributesPropagation ();
+			if (this.engine.Options.DumpVerbosity >= 3)
+				this.DumpBlocks ();
 
-			if (this.engine.Options.DumpVerbosity >= 3) {
-				DumpDefUse ();
-				DumpBlocks ();
-			}
-
-			this.DeadCodeElimination ();
-
-			this.defuse.Validate ();
-
+			/*this.Optimizations ();
+				
 			if (this.engine.Options.DumpVerbosity >= 4)
 				DumpDefUse ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
 				DumpBlocks ();
 
-			do {
-				this.ConstantPropagation ();
-				
-				this.defuse.Validate ();
-
-				if (this.engine.Options.DumpVerbosity >= 4)
-					DumpDefUse ();
-
-				if (this.engine.Options.DumpVerbosity >= 3)
-					DumpBlocks ();
-
-				this.CopyPropagation ();
-
-				this.defuse.Validate ();
-
-				if (this.engine.Options.DumpVerbosity >= 4)
-					DumpDefUse ();
-
-				if (this.engine.Options.DumpVerbosity >= 3)
-					DumpBlocks ();
-
-			} while (this.ConstantFolding ());
+			this.GetListOfDefUse ();*/
 
 			this.TransformationOutOfSSA ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
-				DumpBlocks ();
+				this.DumpBlocks ();
 			
 			this.ComputeSizeType ();
 			this.ComputeLiveRanges ();
 			this.LinearScanRegisterAllocation ();
 
-			DumpBlocks();
+			this.DumpBlocks();
 
-			if (engine.Options.Dump)
-				engine.Dump.PopElement();	// method
+			if (this.engine.Options.Dump)
+				this.engine.Dump.PopElement();	// method
 				
 			return;
 		}

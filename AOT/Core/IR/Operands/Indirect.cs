@@ -17,15 +17,24 @@ using Mono.Cecil;
 
 namespace SharpOS.AOT.IR.Operands {
 	[Serializable]
-	public class Address : Indirect {
+	public class Indirect : Identifier {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Address"/> class.
+		/// Initializes a new instance of the <see cref="Indirect"/> class.
 		/// </summary>
 		/// <param name="operand">The operand.</param>
-		public Address (Operand operand)
-			: base ("adr", operand)
+		public Indirect (Operand operand)
+			: base ("ref", new Operand[] { operand })
 		{
-			this.SizeType = InternalSizeType.U;
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Indirect"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="operand">The operand.</param>
+		protected Indirect (string name, Operand operand)
+			: base (name, new Operand [] { operand })
+		{
 		}
 
 		/// <summary>
@@ -34,7 +43,8 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <value>The ID.</value>
 		public override string ID {
 			get {
-				return this.ToString ();
+				return this.ToString (); 
+				//this.operands [0].ID;
 			}
 		}
 
@@ -57,7 +67,7 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <returns></returns>
 		public override string ToString ()
 		{
-			return "adr(" + this.Value.ToString() + ")";
+			return "ind(" + this.Value.ToString() + ")";
 		}
 	}
 }

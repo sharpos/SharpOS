@@ -263,13 +263,16 @@ namespace SharpOS.AOT {
 			} else
 				opts.BinaryFilename = opts.OutputFilename;
 
+#if !BYPASS_CATCH
 			try {
+#endif
 				engine = new Engine (opts.GetEngineOptions ());
 				engine.Run ();
 
 				if (opts.CreateImage)
 					CreateImage (engine, opts);
-				
+
+#if !BYPASS_CATCH				
 			} catch (Exception e) {
 				AssemblyDefinition assembly;
 				ModuleDefinition module;
@@ -320,6 +323,7 @@ namespace SharpOS.AOT {
 				
 				return 1;
 			}
+#endif
 
 			return 0;
 		}

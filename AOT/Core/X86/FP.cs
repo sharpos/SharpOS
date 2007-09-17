@@ -45,13 +45,13 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public static FPType GetByID (object value)
 		{
+			if (value == null)
+				return null;
+
 			if (value is FPType)
 				return value as FPType;
 
 			switch (Register.GetName (value)) {
-				case null:
-					return null;
-
 				case "ST0":
 					return FP.ST0;
 
