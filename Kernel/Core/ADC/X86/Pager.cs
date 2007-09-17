@@ -87,8 +87,8 @@ namespace SharpOS.ADC.X86 {
 			uint val = 0;
 			
 			Asm.PUSH (R32.EAX);
-				Asm.MOV (R32.EAX, CR.CR0);
-				Asm.MOV (&val, R32.EAX);
+			Asm.MOV (R32.EAX, CR.CR0);
+			Asm.MOV (&val, R32.EAX);
 			Asm.POP (R32.EAX);
 			
 			return val;
@@ -99,8 +99,8 @@ namespace SharpOS.ADC.X86 {
 			uint val = 0;
 			
 			Asm.PUSH (R32.EAX);
-				Asm.MOV (R32.EAX, CR.CR3);
-				Asm.MOV (&val, R32.EAX);
+			Asm.MOV (R32.EAX, CR.CR3);
+			Asm.MOV (&val, R32.EAX);
 			Asm.POP (R32.EAX);
 			
 			return (void*)val;
@@ -109,16 +109,16 @@ namespace SharpOS.ADC.X86 {
 		private unsafe static void WriteCR0 (uint value)
 		{
 			Asm.PUSH (R32.EAX);
-				Asm.MOV (R32.EAX, &value);
-				Asm.MOV (CR.CR0, R32.EAX);
+			Asm.MOV (R32.EAX, &value);
+			Asm.MOV (CR.CR0, R32.EAX);
 			Asm.POP (R32.EAX);
 		}
 		
 		private static void WriteCR3 (uint ptr)
 		{
 			Asm.PUSH (R32.EAX);
-				Asm.MOV (R32.EAX, &ptr);
-				Asm.MOV (CR.CR3, R32.EAX);
+			Asm.MOV (R32.EAX, &ptr);
+			Asm.MOV (CR.CR3, R32.EAX);
 			Asm.POP (R32.EAX);
 		}
 		

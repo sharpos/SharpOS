@@ -49,7 +49,7 @@
     <Compile Include="**\*.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\..\build\BuiltinKeymaps.ska">
+    <EmbeddedResource Include="..\..\build\Temp\BuiltinKeymaps.ska">
       <LogicalName>BuiltinKeyMaps.ska</LogicalName>
     </EmbeddedResource>
   </ItemGroup>
@@ -62,7 +62,7 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>$(TargetDir)\key-compiler.exe -ar -o:$(TargetDir)\BuiltinKeymaps.ska '@Config/BuiltinKeymaps.cfg'</PreBuildEvent>
+    <PreBuildEvent>$(TargetDir)\key-compiler.exe -ar -o:$(TargetDir)\Temp\BuiltinKeymaps.ska '@Config/BuiltinKeymaps.cfg'</PreBuildEvent>
     <PostBuildEvent>$(TargetDir)\SharpOS.AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll $(TargetDir)\SharpOS.korlib.dll
 copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
 $(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>

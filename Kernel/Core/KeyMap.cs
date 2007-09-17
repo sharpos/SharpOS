@@ -49,7 +49,6 @@ namespace SharpOS
 
 			if (!CommandLine.GetArgument ("-keymap", userKeyMap)) {
 				// pick a default
-			
 				TextMode.WriteLine ("No keymap selected, choosing default (US)");
 
 				userKeyMap->Clear ();
@@ -59,7 +58,7 @@ namespace SharpOS
 			keymapArchive = (void*)Kernel.GetFunctionPointer
 				("SharpOS.Kernel/Resources/BuiltinKeyMaps.ska");
 
-			Kernel.Assert (keymapArchive == null, "KeyMap.Setup(): keymap archive is null");
+			Kernel.Assert (keymapArchive != null, "KeyMap.Setup(): keymap archive is null");
 			
 			keymapEntries = *(int*)keymapArchive;
 			keymapAddr = GetBuiltinKeyMap (userKeyMap);
@@ -82,10 +81,18 @@ namespace SharpOS
 
 		static void *GetBuiltinKeyMap (byte *name, int nameLen)
 		{
+			TextMode.Write ("Key Map Name: ");
+			TextMode.Write (name);
+			TextMode.WriteLine ();
+
+			TextMode.Write ("Key Map Name Length: ");
+			TextMode.Write (nameLen);
+			TextMode.WriteLine ();
+
 			byte *table = (byte*)keymapArchive + 4;
 			byte *buf = getBuiltinKeyMapBuffer;
 
-			Kernel.Assert (nameLen > Kernel.MaxKeyMapNameLength,
+			Kernel.Assert (nameLen <= Kernel.MaxKeyMapNameLength,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too large");
 			
 			for (int x = 0; x < keymapEntries; ++x) {
