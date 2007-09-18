@@ -171,7 +171,7 @@ namespace SharpOS {
 
 		public static void SetWarningTextAttributes ()
 		{
-			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
+			TextMode.SetAttributes (TextColor.Magenta, TextColor.Black);
 		}
 		
 		/// <summary>
@@ -212,11 +212,12 @@ namespace SharpOS {
 		
 		public static void Assert (bool cond, string msg)
 		{
-			if (!cond) {
+			if (!cond)
+			{
 				TextMode.Write ("Assertion Failed: ");
 				TextMode.WriteLine (msg);
-				
-				Halt ();
+
+				Halt();
 			}
 		}
 		
@@ -242,13 +243,17 @@ namespace SharpOS {
 		
 		public static void Warning (string msg)
 		{
+			/*
+			TODO: this doesn't work!
 			PString8 *buf = PString8.Wrap (intermediateStringBuffer, Kernel.MaxMessageLength);
 
 			buf->Concat ("Warning: ");
 			buf->Concat (msg);
-
+			*/
 			SetWarningTextAttributes ();
-			TextMode.WriteLine (buf);
+			//TextMode.WriteLine (buf);
+			TextMode.Write ("Warning: ");
+			TextMode.WriteLine (msg);
 		}
 		
 		public static void Message (string msg)

@@ -41,6 +41,8 @@ namespace SharpOS
 			// use the Keyboard class to set it as
 			// the installed keymap.
 
+
+
 			if (!CommandLine.GetArgument ("-keymap", userKeyMap)) {
 				// pick a default
 				TextMode.WriteLine ("No keymap selected, choosing default (US)");
@@ -61,6 +63,7 @@ namespace SharpOS
 			
 			TextMode.WriteLine ("KeyMap archive: installed at 0x", (int)keymapArchive, true);
 			TextMode.WriteLine ("                ", keymapEntries, " entries");
+			TextMode.WriteLine ("");
 
 			if (keymapAddr == null) {
 				Kernel.Warning ("Failed to install an initial keymap");

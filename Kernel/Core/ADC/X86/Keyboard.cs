@@ -47,6 +47,7 @@ namespace SharpOS.ADC.X86
 
 		static int defaultMapLen = 0;
 		static int shiftedMapLen = 0;
+		static bool keymapInitialized = false;
 
 		#endregion
 		#region Constants
@@ -252,6 +253,7 @@ namespace SharpOS.ADC.X86
 			shiftedMap = shiftMap;
 			defaultMapLen = defLen;
 			shiftedMapLen = shiftLen;
+			keymapInitialized = true;
 		}
 		
 		public unsafe static EventRegisterStatus RegisterKeyUpEvent (uint address)
@@ -363,6 +365,11 @@ namespace SharpOS.ADC.X86
 		
 		public unsafe static byte Translate (uint scancode, bool shifted)
 		{
+			if (!keymapInitialized)
+			{
+				Kernel.Assert(false, "Keymap not initialized!");
+				return (byte)'?';
+			}
 			Kernel.Assert (shiftedMap != null, "No shifted map is available!");
 			Kernel.Assert (defaultMap != null, "No default map is available!");
 

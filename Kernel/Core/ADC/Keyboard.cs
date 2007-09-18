@@ -110,9 +110,10 @@ namespace SharpOS.ADC
 		}
 	
 		[AOTAttr.ADCStub]
-		public static void SetKeyMap (byte *defMap, int defLen, byte *shiftMap,
+		public unsafe static void SetKeyMap (byte *defMap, int defLen, byte *shiftMap,
 					      int shiftLen)
 		{
+			Kernel.Assert(true, "Keyboard.SetKeyMap not implemented!");
 		}
 		
 
