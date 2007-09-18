@@ -12,7 +12,6 @@ using System;
 using SharpOS;
 using SharpOS.ADC;
 using SharpOS.Foundation;
-using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS 
 {

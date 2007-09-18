@@ -44,7 +44,7 @@ namespace SharpOS
 		public static void Setup ()
 		{
 			TextMode.WriteLine ();
-			
+
 			Keyboard.RegisterKeyUpEvent (Kernel.GetFunctionPointer(CONSOLE_KEY_UP_HANDLER));
 			Keyboard.RegisterKeyDownEvent (Kernel.GetFunctionPointer(CONSOLE_KEY_DOWN_HANDLER));
 			Architecture.RegisterTimerEvent(Kernel.GetFunctionPointer(CONSOLE_TIMER_HANDLER));
@@ -108,9 +108,15 @@ namespace SharpOS
 			else
 				key = Keyboard.Translate (scancode, false);
 
-			
+
 			if (key == 0)
+			{
+				// just so that you can actually see that keyboard input works (& we simply don't know what character you just pressed)...
+				TextMode.SetAttributes(TextColor.Red, TextColor.Black);
+				TextMode.WriteChar((byte)'?');
+				TextMode.RefreshCursor();
 				return;
+			}
 
 			key = ASCII.ToUpper (key);
 
