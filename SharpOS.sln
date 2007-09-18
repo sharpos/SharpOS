@@ -15,6 +15,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tools", "Tools", "{181306B4-F099-4B0E-9D9A-C319631E4C8E}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "KeyCompiler", "Tools\KeyCompiler\KeyCompiler.csproj", "{36AF02F0-4105-11DC-8314-0800200C9A66}"
+	ProjectSection(ProjectDependencies) = postProject
+		{740EB78B-4306-41AC-880A-D8A494EA4429} = {740EB78B-4306-41AC-880A-D8A494EA4429}
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiskImageUpdater", "Tools\DiskImageUpdater\DiskImageUpdater.csproj", "{6A1D2DCC-41E8-11DC-8314-0800200C9A66}"
 EndProject

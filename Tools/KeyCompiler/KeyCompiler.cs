@@ -412,6 +412,11 @@ namespace SharpOS.Tools.KeyCompiler
 		public int Compile ()
 		{
 			Stream s = null;
+
+			OutputFile = Path.GetFullPath(OutputFile);
+			string directory = Path.GetDirectoryName(OutputFile);
+			if (!Directory.Exists(directory))
+				Directory.CreateDirectory(directory);
 			
 			if (Decode && Archive) {
 				if (!Directory.Exists (OutputFile) || args.Length != 1) {
