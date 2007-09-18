@@ -12,7 +12,7 @@ using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.ADC {
 
-	public unsafe class Arch {
+	public unsafe class Architecture {
 		/// <summary>
 		/// Checks for compatibility with the current system, using 
 		/// the most well-supported method possible. 

@@ -14,7 +14,7 @@ using SharpOS.AOT;
 using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
-	public unsafe class Arch {
+	public unsafe class Architecture {
 		/**
 			<summary>
 				Checks for compatibility with the current system, using 

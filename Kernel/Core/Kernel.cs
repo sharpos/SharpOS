@@ -80,7 +80,7 @@ namespace SharpOS {
 			TextMode.SetCursor (0, 0);
 			
 			// Initialize architecture-specific portion of the kernel
-			Arch.Setup ();
+			Architecture.Setup ();
 			
 			// Write the banner
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);

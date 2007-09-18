@@ -52,7 +52,7 @@ namespace SharpOS
 			
 			Keyboard.RegisterKeyUpEvent (Kernel.GetFunctionPointer(CONSOLE_KEY_UP_HANDLER));
 			Keyboard.RegisterKeyDownEvent (Kernel.GetFunctionPointer(CONSOLE_KEY_DOWN_HANDLER));
-			Arch.RegisterTimerEvent(Kernel.GetFunctionPointer(CONSOLE_TIMER_HANDLER));
+			Architecture.RegisterTimerEvent(Kernel.GetFunctionPointer(CONSOLE_TIMER_HANDLER));
 			
 			initialized = true;
 			TextMode.RefreshCursor ();
