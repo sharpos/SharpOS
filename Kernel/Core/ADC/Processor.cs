@@ -14,7 +14,7 @@ namespace SharpOS.ADC {
 
 	public unsafe struct Processor {
 		public uint ID;
-		public Architecture ArchType;
+		public ProcessorType ArchType;
 		public byte *VendorName;
 		public uint VendorID;
 		public byte *FamilyName;

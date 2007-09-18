@@ -11,7 +11,7 @@ using SharpOS.AOT;
 using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.ADC {
-	public enum Architecture {
+	public enum ProcessorType {
 		Unknown = 0,
 		IA32,
 		IA64,
