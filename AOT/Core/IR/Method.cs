@@ -9,6 +9,8 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
+#define NEW_BLOCK_HANDLING
+
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -146,47 +148,43 @@ namespace SharpOS.AOT.IR {
 		/// <returns>
 		/// 	<c>true</c> if the specified instruction is branch; otherwise, <c>false</c>.
 		/// </returns>
-		public static bool IsBranch (Mono.Cecil.Cil.Instruction instruction, bool all)
+		public bool IsBranch (Mono.Cecil.Cil.Instruction instruction)
 		{
-			if (all && instruction.OpCode == OpCodes.Ret) 
-				return true;
+			FlowControl flowControl = instruction.OpCode.FlowControl;
 
-			if (instruction.OpCode == OpCodes.Br
-					|| instruction.OpCode == OpCodes.Br_S
-					|| instruction.OpCode == OpCodes.Brfalse
-					|| instruction.OpCode == OpCodes.Brfalse_S
-					|| instruction.OpCode == OpCodes.Brtrue
-					|| instruction.OpCode == OpCodes.Brtrue_S
-					|| instruction.OpCode == OpCodes.Beq
-					|| instruction.OpCode == OpCodes.Beq_S
-					|| instruction.OpCode == OpCodes.Bge
-					|| instruction.OpCode == OpCodes.Bge_S
-					|| instruction.OpCode == OpCodes.Bge_Un
-					|| instruction.OpCode == OpCodes.Bge_Un_S
-					|| instruction.OpCode == OpCodes.Bgt
-					|| instruction.OpCode == OpCodes.Bgt_S
-					|| instruction.OpCode == OpCodes.Bgt_Un
-					|| instruction.OpCode == OpCodes.Bgt_Un_S
-					|| instruction.OpCode == OpCodes.Ble
-					|| instruction.OpCode == OpCodes.Ble_S
-					|| instruction.OpCode == OpCodes.Ble_Un
-					|| instruction.OpCode == OpCodes.Ble_Un_S
-					|| instruction.OpCode == OpCodes.Blt
-					|| instruction.OpCode == OpCodes.Blt_S
-					|| instruction.OpCode == OpCodes.Blt_Un
-					|| instruction.OpCode == OpCodes.Blt_Un_S
-					|| instruction.OpCode == OpCodes.Bne_Un
-					|| instruction.OpCode == OpCodes.Bne_Un_S
-					|| instruction.OpCode == OpCodes.Switch
-					|| instruction.OpCode == OpCodes.Leave
-					|| instruction.OpCode == OpCodes.Leave_S
-					|| instruction.OpCode == OpCodes.Endfinally
-					|| instruction.OpCode == OpCodes.Throw
-					|| instruction.OpCode == OpCodes.Rethrow) {
+			if (flowControl == FlowControl.Break
+					|| flowControl == FlowControl.Branch
+					|| flowControl == FlowControl.Return
+					|| flowControl == FlowControl.Cond_Branch
+					|| flowControl == FlowControl.Throw)
 				return true;
-			}
 
 			return false;
+		}
+
+		private void AddInstructionOffset (List<int> offsets, Mono.Cecil.Cil.Instruction instruction)
+		{
+			if (instruction != null && !offsets.Contains (instruction.Offset))
+				offsets.Add (instruction.Offset);
+		}
+
+		private void LinkBlocks (Dictionary<int, Block> starts, Block current, Mono.Cecil.Cil.Instruction instruction)
+		{
+			if (instruction == null)
+				return;
+
+			int offset = instruction.Offset;
+
+			if (!starts.ContainsKey (offset))
+				throw new Exception (string.Format ("No block found starting at {1} in '{0}'.", this.MethodFullName, offset));
+
+			Block link = starts [offset];
+
+			if (!current.Outs.Contains (link))
+				current.Outs.Add (link);
+
+			if (!link.Ins.Contains (current))
+				link.Ins.Add (current);
 		}
 
 		/// <summary>
@@ -194,253 +192,69 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void BuildBlocks ()
 		{
-			blocks = new List<Block> ();
+			this.blocks = new List<Block> ();
 
-			Block currentBlock = new Block (this);
-			blocks.Add (currentBlock);
+			InstructionCollection instructions = this.methodDefinition.Body.Instructions;
+			List<int> offsets = new List<int> ();
 
-			// 1st Step: Split the code in blocks that branch at the end
-			for (int i = 0; i < this.methodDefinition.Body.Instructions.Count; i++) {
-				Mono.Cecil.Cil.Instruction instruction = this.methodDefinition.Body.Instructions[i];
+			// Add all the offsets of the instructions that start a block
+			if (instructions.Count > 0)
+				offsets.Add (instructions [0].Offset);
 
-				if (instruction.OpCode.FlowControl == FlowControl.Phi)
-					continue;
-
-				currentBlock.CIL.Add (instruction);
-
-				if (i < this.methodDefinition.Body.Instructions.Count - 1 && IsBranch (instruction, true)) {
-					currentBlock = new Block (this);
-					blocks.Add (currentBlock);
-				}
-			}
-
-			// 2nd Step: Split the blocks if their code is referenced by other branches
-			bool found;
-
-			do {
-				found = false;
-
-				foreach (Block source in blocks) {
-					List<Mono.Cecil.Cil.Instruction> sourceCIL = source.CIL;
-
-					if (IsBranch (sourceCIL[sourceCIL.Count - 1], false)
-							&& (sourceCIL[sourceCIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction
-							    || sourceCIL[sourceCIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction[])) {
-						List<Mono.Cecil.Cil.Instruction> jumps = new List<Mono.Cecil.Cil.Instruction>();
-
-						if (sourceCIL[sourceCIL.Count - 1].Operand is Mono.Cecil.Cil.Instruction) 
-							jumps.Add (sourceCIL[sourceCIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction);
-						else 
-							jumps = new List<Mono.Cecil.Cil.Instruction> (sourceCIL[sourceCIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction[]);
-
-						foreach (Mono.Cecil.Cil.Instruction jump in jumps) {
-
-							if (jump == sourceCIL[sourceCIL.Count - 1]
-									&& (sourceCIL [sourceCIL.Count - 1] != sourceCIL [sourceCIL.Count - 1].Operand 
-										|| (sourceCIL [sourceCIL.Count - 1] == sourceCIL [sourceCIL.Count - 1].Operand
-											&& sourceCIL.Count == 1))) 
-								continue;
-
-							for (int destinationIndex = 0; destinationIndex < blocks.Count; destinationIndex++) {
-								Block destination = blocks[destinationIndex];
-								Block newBlock = new Block (this);
-
-								for (int i = 0; i < destination.CIL.Count; i++) {
-									Mono.Cecil.Cil.Instruction instruction = destination.CIL[i];
-
-									if (instruction == jump) {
-										if (i == 0) 
-											break;
-
-										found = true;
-									}
-
-									if (found) 
-										newBlock.CIL.Add (destination.CIL[i]);
-									
-								}
-
-								if (found) {
-									for (int i = 0; i < newBlock.CIL.Count; i++) 
-										destination.CIL.Remove (newBlock.CIL[i]);
-
-									blocks.Insert (destinationIndex + 1, newBlock);
-
-									break;
-								}
-							}
-
-							if (found) 
-								break;
-						}
-					}
-
-					if (found) 
-						break;
-				}
-
-			} while (found);
-
-			// 3rd step: split the try blocks in case they got mixed up with some other code
-			do {
-				found = false;
-
-				foreach (ExceptionHandler exceptionHandler in this.methodDefinition.Body.ExceptionHandlers) {
-					for (int i = 0; i < this.blocks.Count; i++) {
-						Block block = this.blocks[i];
-
-						if (exceptionHandler.TryStart.Offset > block.StartOffset
-								&& exceptionHandler.TryStart.Offset <= block.EndOffset) {
-							Block newBlock = new Block (this);
-
-							for (int j = 0; j < block.CIL.Count; j++) {
-								Mono.Cecil.Cil.Instruction instruction = block.CIL[j];
-
-								if (instruction == exceptionHandler.TryStart) 
-									found = true;
-
-								if (found) 
-									newBlock.CIL.Add (block.CIL[j]);
-							}
-
-							for (int j = 0; j < newBlock.CIL.Count; j++) 
-								block.CIL.Remove (newBlock.CIL[j]);
-
-							blocks.Insert (i + 1, newBlock);
-
-							break;
-						}
-
-						if (block.StartOffset > exceptionHandler.TryStart.Offset) 
-							break;
-					}
-
-					if (found) 
-						break;
-				}
-
-			} while (found);
-
-			return;
-		}
-
-		/// <summary>
-		/// Fills the 'outs' list on the code block <paramref name="destination" />
-		/// with any entries which pertain to this method. The 'outs' list should 
-		/// contain a list of blocks which could be executed immediately after the
-		/// given block.
-		/// </summary>
-		/// <param name="destination">The code block that contains the list of 
-		/// instructions.</param>
-		/// <param name="instructions">The instructions to check.</param>
-		private void FillOuts (Block destination, Mono.Cecil.Cil.Instruction[] instructions)
-		{
 			foreach (Mono.Cecil.Cil.Instruction instruction in instructions) {
-				bool found = false;
+				if (IsBranch (instruction)) {
+					// this is for the conditional jump
+					this.AddInstructionOffset (offsets, instruction.Operand as Mono.Cecil.Cil.Instruction);
 
-				foreach (Block block in blocks) {
-					if (block.CIL[0] == instruction) {
-						found = true;
+					// This is for a 'switch', which can have lots of targets
+					Mono.Cecil.Cil.Instruction [] targets = instruction.Operand as Mono.Cecil.Cil.Instruction [];
 
-						destination.Outs.Add (block);
-
-						break;
-					}
-				}
-
-				if (!found) 
-					throw new Exception ("Could not find the block for the instruction at offset '" + instruction.Offset + "'.");
-			}
-
-			return;
-		}
-
-		/// <summary>
-		/// Classifies the and link blocks. FIXME
-		/// </summary>
-		private void ClassifyAndLinkBlocks ()
-		{
-			for (int i = 0; i < blocks.Count; i++) {
-				Block block = blocks[i];
-
-				if (block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Ret) {
-					block.Type = Block.BlockType.Return;
-
-				} else if (block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Switch) {
-					block.Type = Block.BlockType.NWay;
-
-					// In case none of the switch tests are true it has to continue with the next block 
-					// so it has to be added to the "outs"
-					block.Outs.Add (blocks [i + 1]);
-
-					this.FillOuts (block, block.CIL [block.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction []);
-
-				} else if (block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Br
-						|| block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Br_S) {
-					block.Type = Block.BlockType.OneWay;
-
-					this.FillOuts (block, new Mono.Cecil.Cil.Instruction[] { block.CIL[block.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction });
-
-				} else if (block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Endfinally) {
-					block.Type = Block.BlockType.OneWay; // Block.BlockType.Finally;
-
-				} else if (block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Throw
-						|| block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Rethrow) {
-					block.Type = Block.BlockType.Throw;
-
-				} else if (block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Leave
-						|| block.CIL[block.CIL.Count - 1].OpCode == OpCodes.Leave_S) {
-					Mono.Cecil.Cil.Instruction lastInstruction = block.CIL[block.CIL.Count - 1];
-
-					this.FillOuts (block, new Mono.Cecil.Cil.Instruction[] { block.CIL[block.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction });
-
-					bool found = false;
-
-					foreach (ExceptionHandler exceptionHandler in block.Method.MethodDefinition.Body.ExceptionHandlers) {
-						if (exceptionHandler.TryEnd.Previous == lastInstruction) {
-							found = true;
-							block.Type = Block.BlockType.OneWay; // Block.BlockType.Try;
-
-							break;
-
-						} else if (exceptionHandler.HandlerEnd.Previous == lastInstruction) {
-							found = true;
-							block.Type = Block.BlockType.OneWay; // Block.BlockType.Catch;
-
-							break;
-						}
+					if (targets != null) {
+						foreach (Mono.Cecil.Cil.Instruction value in targets)
+							this.AddInstructionOffset (offsets, value);
 					}
 
-					if (!found) {
-						if (block.Method.MethodDefinition.Body.ExceptionHandlers.Count == 0)
-							block.Type = Block.BlockType.OneWay;
-						else
-							throw new Exception ("Malformated Try/Catch block in '" + block.Method.MethodDefinition.Name + "'.");
-					}
-						
-				} else if (IsBranch (block.CIL[block.CIL.Count - 1], false)) {
-					block.Type = Block.BlockType.TwoWay;
-
-					this.FillOuts (block, new Mono.Cecil.Cil.Instruction[] { block.CIL[block.CIL.Count - 1].Operand as Mono.Cecil.Cil.Instruction });
-
-					block.Outs.Add (blocks[i + 1]);
-
-				} else {
-					block.Type = Block.BlockType.Fall;
-					block.Outs.Add (blocks[i + 1]);
+					this.AddInstructionOffset (offsets, instruction.Next);
 				}
 			}
 
-			// Fill The Ins
-			for (int i = 0; i < blocks.Count; i++) {
-				for (int j = 0; j < blocks.Count; j++) {
-					if (blocks[j].Outs.Contains (blocks[i])
-							|| (j + 1 == i && blocks[j].Type == Block.BlockType.NWay))
-						blocks[i].Ins.Add (blocks[j]);
+			offsets.Sort ();
+
+			// Build the blocks
+			Dictionary<int, Block> starts = new Dictionary<int, Block> ();
+			int index = 0;
+			Block current = null;
+			foreach (Mono.Cecil.Cil.Instruction instruction in instructions) {
+				if (index < offsets.Count && instruction.Offset == offsets [index]) {
+					current = new Block (this);
+					this.blocks.Add (current);
+
+					starts [instruction.Offset] = current;
+
+					index++;
 				}
+
+				current.CIL.Add (instruction);
 			}
 
-			return;
+			// Link the blocks
+			foreach (Block block in this.blocks) {
+				Mono.Cecil.Cil.Instruction instruction = block.CIL [block.CIL.Count - 1];
+
+				// this is for the conditional jump
+				LinkBlocks (starts, block, instruction.Operand as Mono.Cecil.Cil.Instruction);
+
+				if (instruction.OpCode.FlowControl != FlowControl.Branch)
+					LinkBlocks (starts, block, instruction.Next);
+
+				// This is for a 'switch', which can have lots of targets
+				Mono.Cecil.Cil.Instruction [] targets = instruction.Operand as Mono.Cecil.Cil.Instruction [];
+
+				if (targets != null) {
+					foreach (Mono.Cecil.Cil.Instruction value in targets)
+						LinkBlocks (starts, block, value);
+				}
+			}
 		}
 
 		/// <summary>
@@ -1791,7 +1605,6 @@ namespace SharpOS.AOT.IR {
 
 					split.SSABlock = true;
 					split.Index = this.blocks [this.blocks.Count - 1].Index + 1;
-					split.Type = Block.BlockType.OneWay;
 					split.InsertInstruction (0, new Jump ());
 					split.Ins.Add (predecessor);
 					split.Outs.Add (block);
@@ -1858,7 +1671,6 @@ namespace SharpOS.AOT.IR {
 
 			foreach (Block block in this.blocks) {
 				if (block.SSABlock
-						&& block.Type == Block.BlockType.OneWay
 						&& block.Ins.Count == 1
 						&& block.InstructionsCount == 1) {
 
@@ -2394,7 +2206,6 @@ namespace SharpOS.AOT.IR {
 
 			this.BuildBlocks ();
 
-			this.ClassifyAndLinkBlocks ();
 			this.BlocksOptimization ();
 			this.ConvertFromCIL ();
 			

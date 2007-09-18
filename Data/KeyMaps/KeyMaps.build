@@ -18,7 +18,7 @@
 	<property name="compiler" value="../../build/key-compiler.exe" />
 
 	<target name="build">
-		<echo message="Building SharpOS AOT compiler" />
+		<echo message="Building Key compiler" />
 		<mkdir dir="${prefix}" />
 		<nant buildfile="../../Tools/KeyCompiler/KeyCompiler.build" />
 		<exec program="${compiler}" commandline="US.skm -o:${prefix}/US.bin" />

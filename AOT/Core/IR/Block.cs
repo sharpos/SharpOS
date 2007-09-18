@@ -121,21 +121,6 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		private BlockType type;
-
-		/// <summary>
-		/// Gets or sets the type.
-		/// </summary>
-		/// <value>The type.</value>
-		public BlockType Type {
-			get {
-				return type;
-			}
-			set {
-				type = value;
-			}
-		}
-
 		private List<Block> ins = new List<Block> ();
 
 		/// <summary>
@@ -2176,10 +2161,9 @@ namespace SharpOS.AOT.IR {
 		public void Merge (Block block)
 		{
 			// Remove the jump that connects this block with the block parameter
-			if (this.type == BlockType.OneWay) 
+			//if (this.type == BlockType.OneWay) 
+			if (this.outs.Count == 1)
 				this.cil.Remove (this.cil[this.cil.Count - 1]);
-
-			this.type = block.type;
 
 			this.outs = block.outs;
 
