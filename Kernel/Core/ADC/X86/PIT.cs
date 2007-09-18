@@ -62,7 +62,7 @@ namespace SharpOS.ADC.X86
 			ticks++;
 			
 			if (timerEvent != 0)
-				Kernel.Call(timerEvent, ticks);
+				Memory.Call(timerEvent, ticks);
 		}
 	}
 }

@@ -1,9 +1,10 @@
 using System;
 using SharpOS.AOT.X86;
+using SharpOS.AOT.IR;
 
-namespace SharpOS
+namespace SharpOS.ADC.X86
 {
-	public static class MemUtils
+	public static class Memory
 	{
 		public static unsafe void MemSet32(uint value, uint dst, uint count)
 		{
@@ -21,6 +22,12 @@ namespace SharpOS
 			Asm.MOV(R32.EDI, &dst);
 			Asm.REP();
 			Asm.MOVSD();
+		}
+
+		public unsafe static void Call(uint address, uint value)
+		{
+			Asm.PUSH(&value);
+			Asm.CALL(&address);
 		}
 	}
 }

@@ -276,16 +276,6 @@ namespace SharpOS {
 		}
 
 		#endregion
-		#region Call() family
-
-		//[Obsolete ("Use the architecture-safe SharpOS.ADC.MethodCall class")]
-		public unsafe static void Call (uint address, uint value)
-		{
-			Asm.PUSH(&value);
-			Asm.CALL(&address);
-		}
-
-		#endregion
 		#region Stubs
 		
 		/// <summary>

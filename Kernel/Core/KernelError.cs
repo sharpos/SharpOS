@@ -8,5 +8,10 @@ namespace SharpOS {
 		
 		Success,
 		MultibootError,
+
+		/// <summary>
+		/// Scheduler Queue is empty and this was not expected
+		/// </summary>
+		SchedulerQueueEmpty
 	}
 }

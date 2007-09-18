@@ -70,5 +70,16 @@ namespace SharpOS.ADC {
 		{
 			return EventRegisterStatus.NotSupported;
 		}
+		
+
+		/// <summary>
+		///		Disable interrupts
+		/// </summary>
+		[AOTAttr.ADCStub] public static void		DisableInterrupts	() { }
+
+		/// <summary>
+		///		Enable interrupts
+		/// </summary>
+		[AOTAttr.ADCStub] public static void		EnableInterrupts	() { }
 	}
 }

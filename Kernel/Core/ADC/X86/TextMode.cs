@@ -202,7 +202,7 @@ namespace SharpOS.ADC.X86
 					((uint)0x20 << 24);
 			}
 
-			MemUtils.MemSet32(fill, address, count / 4);
+			Memory.MemSet32(fill, address, count / 4);
 
 			/*** FIXME: the code below sometimes causes a crash now and then?
 			
@@ -261,7 +261,7 @@ namespace SharpOS.ADC.X86
 			src = address + (uint)count2;
 			dst = address;
 
-			MemUtils.MemCopy32(src, dst, (uint)(count / 4));
+			Memory.MemCopy32(src, dst, (uint)(count / 4));
 
 			dst = address + (uint)count;
 
@@ -278,8 +278,8 @@ namespace SharpOS.ADC.X86
 					((uint)0x20 << 16) |
 					((uint)0x20 << 24);
 			}
-			
-			MemUtils.MemSet32(fill, dst, (uint)(count2 / 4));
+
+			Memory.MemSet32(fill, dst, (uint)(count2 / 4));
 		}
 
 		public static void WriteByte (byte value)

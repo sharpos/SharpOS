@@ -11,6 +11,8 @@
 
 using SharpOS;
 using SharpOS.AOT;
+using SharpOS.AOT.X86;
+using SharpOS.AOT.IR;
 using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
@@ -67,6 +69,28 @@ namespace SharpOS.ADC.X86 {
 		public static EventRegisterStatus RegisterTimerEvent (uint func)
 		{
 			return PIT.RegisterTimerEvent (func);
+		}
+
+		/// <summary>
+		///		Disable interrupts
+		/// </summary>
+		/// <remarks>
+		/// This function should be made "inline" by the AOT
+		/// </remarks>
+		public static void DisableInterrupts()
+		{
+			Asm.CLI();
+		}
+
+		/// <summary>
+		///		Enable interrupts
+		/// </summary>
+		/// <remarks>
+		/// This function should be made "inline" by the AOT
+		/// </remarks>
+		public static void EnableInterrupts()
+		{
+			Asm.STI();
 		}
 	}
 }
