@@ -8,8 +8,8 @@
 // Licensed under the terms of the GNU GPL License version 2.
 //
 
-using System.Runtime.InteropServices;
 using SharpOS.ADC;
+using System.Runtime.InteropServices;
 
 namespace SharpOS {
 	public unsafe class Multiboot {

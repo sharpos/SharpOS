@@ -10,10 +10,7 @@
 //
 
 using System;
-using System.Runtime.InteropServices;
 using SharpOS;
-using SharpOS.AOT.X86;
-using SharpOS.AOT.IR;
 using SharpOS.ADC;
 using SharpOS.Foundation;
 using SharpOS.Memory;

@@ -10,7 +10,6 @@
 using SharpOS;
 using SharpOS.AOT;
 using SharpOS.Memory;
-using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.ADC {
 	public unsafe struct PagingMemoryRequirements {

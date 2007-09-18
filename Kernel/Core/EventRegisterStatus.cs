@@ -8,7 +8,6 @@
 //
 
 using SharpOS.AOT;
-using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.ADC {
 

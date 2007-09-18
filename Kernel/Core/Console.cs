@@ -9,12 +9,7 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using SharpOS;
-using SharpOS.AOT.X86;
-using SharpOS.AOT.IR;
 using SharpOS.ADC;
 
 namespace SharpOS 
