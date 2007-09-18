@@ -51,13 +51,15 @@ namespace SharpOS
 				userKeyMap->Concat ("US");
 			}
 
-			keymapArchive = (void*)Kernel.GetFunctionPointer
+			keymapArchive = (void*)Kernel.GetLabelAddress
 				("SharpOS.Kernel/Resources/BuiltinKeyMaps.ska");
 
 			Kernel.Assert (keymapArchive != null, "KeyMap.Setup(): keymap archive is null");
-			
+
 			keymapEntries = *(int*)keymapArchive;
-			keymapAddr = GetBuiltinKeyMap (userKeyMap);
+			//TODO: Fix PString, it doesn't work!
+			//keymapAddr = GetBuiltinKeyMap (userKeyMap);	
+			keymapAddr = GetBuiltinKeyMap("US");
 
 			// print some info
 			
@@ -89,10 +91,13 @@ namespace SharpOS
 			byte *table = (byte*)keymapArchive + 4;
 			byte *buf = getBuiltinKeyMapBuffer;
 
+			Kernel.Assert(nameLen < 0,
+				"KeyMap.GetBuiltinKeyMap(): key map name is too small");
 			Kernel.Assert (nameLen <= Kernel.MaxKeyMapNameLength,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too large");
 			
-			for (int x = 0; x < keymapEntries; ++x) {
+			for (int x = 0; x < keymapEntries; ++x) 
+			{
 				int nSize = 0;
 				int tSize = 0;
 				int error = 0;
