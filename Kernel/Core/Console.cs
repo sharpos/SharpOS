@@ -95,19 +95,29 @@ namespace SharpOS
 				return;
 		}
 
+		public static bool capsLock = false;
+
 		[SharpOS.AOT.Attributes.Label (CONSOLE_KEY_DOWN_HANDLER)]
 		public static unsafe void KeyDown (uint scancode)
 		{
 			if (!initialized)
 				return;
 
-			byte key = 0;
-			
-			if (Keyboard.LeftShift () || Keyboard.RightShift ())
-				key = Keyboard.Translate (scancode, true);
-			else
-				key = Keyboard.Translate (scancode, false);
+			byte	key = 0;
 
+			bool upperCase = (Keyboard.LeftShift() || Keyboard.RightShift()) ^ Keyboard.CapsLock();			
+			key = Keyboard.Translate(scancode, upperCase);
+
+			if (capsLock != Keyboard.CapsLock())
+			{
+				capsLock = Keyboard.CapsLock();
+				TextMode.MoveTo(79, 24);
+				TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
+				if (capsLock)
+					TextMode.Write("C");
+				else
+					TextMode.Write(" ");
+			}
 
 			if (key == 0)
 			{

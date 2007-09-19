@@ -113,6 +113,7 @@ namespace SharpOS.ADC.X86
 		
 		public static void Setup ()
 		{
+			SetLEDs();
 			IDT.RegisterIRQ (IDT.IRQ.Keyboard, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
 		}
 
@@ -195,32 +196,44 @@ namespace SharpOS.ADC.X86
 				scancode	= (uint)(input & 0x7F);
 				pressed		= (input & 0x80) == 0;
 			}
-
-			if (scancode == 0x1d) {		 // left control
+			
+			if (scancode == (uint)Keys.CapsLock) {					// CapsLock
+				if (pressed)
+				{
+					capsLock = !capsLock;
+					SetLEDs();
+				}
+				return;
+			} else if (scancode == (uint)Keys.NumLock) {			// NumLock
+				if (!pressed)
+				{
+					numLock = !numLock;
+					SetLEDs();
+				}
+				return;
+			} else if (scancode == (uint)Keys.ScrollLock) {			// ScrollLock
+				if (!pressed)
+				{
+					scrollLock = !scrollLock;
+					SetLEDs();
+				}
+				return;
+			} else if (scancode == (uint)Keys.LeftControl) {		 // left control
 				leftControl = pressed;
 				return;
-			} else if (scancode == 0x2a) {	 // left shift
+			} else if (scancode == (uint)Keys.LeftShift) {	 // left shift
 				leftShift = pressed;
 				return;
-			} else if (scancode == 0x38) {	 // left alt
+			} else if (scancode == (uint)Keys.LeftAlt) {	 // left alt
 				leftAlt = pressed;
 				return;
-			} else if (scancode == 0x3a) {	 // caps-lock
-				capsLock = pressed;
-				return;
-			} else if (scancode == 0x45) {	 // num-lock
-				numLock = pressed;
-				return;
-			} else if (scancode == 0x46) {	 // scroll-lock
-				scrollLock = pressed;
-				return;
-			} else if (scancode == 0xe038) { // right alt
+			} else if (scancode == (uint)Keys.RightAlt) { // right alt
 				rightAlt = pressed;
 				return;
-			} else if (scancode == 0xe01d) { // right control
+			} else if (scancode == (uint)Keys.RightControl) { // right control
 				rightControl = pressed;
 				return;
-			} else if (scancode == 0x36) { // right shift
+			} else if (scancode == (uint)Keys.RightShift) { // right shift
 				rightShift = pressed;
 				return;
 			}
@@ -290,17 +303,17 @@ namespace SharpOS.ADC.X86
 			return EventRegisterStatus.CapacityExceeded;
 		}
 
-		public static void SetLEDs (bool capslock, bool numlock, bool scrolllock)
+		public static void SetLEDs ()
 		{
 			byte leds = 0;
 			
-			if (capslock)
+			if (capsLock)
 				leds |= (byte)1;
 				
-			if (numlock)
+			if (numLock)
 				leds |= (byte)2;
 				
-			if (scrolllock)
+			if (scrollLock)
 				leds |= (byte)4;
 
 			SendCommand (KeyboardCommands.Set_Keyboard_LEDs, leds);

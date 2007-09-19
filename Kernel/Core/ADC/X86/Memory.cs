@@ -29,5 +29,20 @@ namespace SharpOS.ADC.X86
 			Asm.PUSH(&value);
 			Asm.CALL(&address);
 		}
+
+		public unsafe static void Call(void* address, uint value)
+		{
+			Asm.PUSH(&value);
+			Asm.CALL((uint)address);
+		}
+
+/*		// sigh.. one can only dream...
+		public delegate void call_function(uint value);
+		public unsafe static void Call(call_function function, uint value)
+		{
+			Asm.PUSH(&value);
+			Asm.CALL(function);
+		}
+*/
 	}
 }

@@ -23,15 +23,42 @@ namespace SharpOS.ADC.X86
 	/// </summary>
 	public unsafe class PIT
 	{
-		public const string		TIMER_HANDLER			= "TIMER_HANDLER";
+		public const string 	TIMER_HANDLER		= "TIMER_HANDLER";
 
-		private const byte		SquareWave			= 0x36;
-		private const uint		PITFrequency			= 1193182;
-		private const ushort		TimerCount			= (ushort)(PITFrequency / HZ);
-		public const ushort		HZ				= 100;
+		private const byte  	SquareWave   		= 0x36;
+		private const uint  	PITFrequency 		= 1193182;
+		private const ushort	TimerCount   		= (ushort)(PITFrequency / HZ);
+		public  const ushort	HZ           		= 100;
 
-		private static uint ticks = 0;
+		private static uint 	ticks        		= 0;
+		public static uint		timerEvent			= 0;
 
+		/*
+		// sigh.. one can only dream
+		public delegate void somefunction(uint value);
+		unsafe static somefunction[] timerEvents = (somefunction[])Kernel.StaticAlloc<somefunction>(Kernel.MaxEventHandlers);		
+		public event somefunction function
+		{
+			add 
+			{
+				for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
+					if (timerEvents[x] == value)
+						return;
+			
+				for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
+					if (timerEvents[x] == null)
+						timerEvents[x] = value;
+			}
+			remove
+			{
+				for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
+					if (timerEvents[x] == value)
+						timerEvents[x] = null;
+			}
+		}
+		*/
+
+		#region Setup
 		public static void Setup()
 		{
 			IO.Out8(IO.Ports.PIT_mode_control_port, SquareWave);
@@ -41,10 +68,9 @@ namespace SharpOS.ADC.X86
 
 			IDT.RegisterIRQ(IDT.IRQ.SystemTimer, Kernel.GetFunctionPointer(TIMER_HANDLER));
 		}
+		#endregion
 
-		#region TimerEvent
-		public static uint timerEvent = 0;
-		
+		#region TimerEvent		
 		public static EventRegisterStatus RegisterTimerEvent (uint address)
 		{
 			if (timerEvent != 0)
@@ -58,6 +84,7 @@ namespace SharpOS.ADC.X86
 		}
 		#endregion
 
+		#region TimerHandler
 		[SharpOS.AOT.Attributes.Label(TIMER_HANDLER)]
 		private static unsafe void TimerHandler(IDT.ISRData data)
 		{
@@ -66,6 +93,7 @@ namespace SharpOS.ADC.X86
 			if (timerEvent != 0)
 				Memory.Call(timerEvent, ticks);
 		}
+		#endregion
 	}
 }
 
