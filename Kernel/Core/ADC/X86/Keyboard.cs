@@ -319,6 +319,22 @@ namespace SharpOS.ADC.X86
 			SendCommand (KeyboardCommands.Set_Keyboard_LEDs, leds);
 		}
 
+        public static void SetLEDs(bool capslock, bool numlock, bool scrolllock)
+        {
+            byte leds = 0;
+            
+            if (capslock)
+                leds |= (byte)1;
+            
+            if (numlock)
+                leds |= (byte)2;
+            
+            if (scrolllock)
+                leds |= (byte)4;
+
+            SendCommand(KeyboardCommands.Set_Keyboard_LEDs, leds);
+        }
+
 		public static bool LeftShift ()
 		{
 			return leftShift;
