@@ -771,8 +771,8 @@ namespace SharpOS.Tools.KeyCompiler
 		{
 			CompilerOptions opts = new CompilerOptions (args);
 			Compiler c = null;
-			
-			if (opts.RemainingArguments.Length == 9) {
+
+			if (args.Length == 0 || opts.RemainingArguments.Length == 9) {
 				Console.Error.WriteLine ("Usage: KeyCompiler [options] <input-file> ...");
 				Console.Error.WriteLine ("Run `KeyCompiler -help` for more information.");
 				return 1;
