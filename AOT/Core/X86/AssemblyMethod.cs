@@ -301,7 +301,7 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Handles the assembly stub.
+		/// This handles the Asm.XXX calls.
 		/// </summary>
 		/// <param name="block">The block.</param>
 		/// <param name="instruction">The instruction.</param>
@@ -343,6 +343,13 @@ namespace SharpOS.AOT.X86 {
 			parameterTypes = call.Method.Method.Name + " " + parameterTypes;
 
 			parameterTypes = parameterTypes.Trim();
+
+			// Checking if the operands are all valid.
+			foreach (object operand in operands) {
+				if (operand is Identifier
+						&& !operand.ToString ().StartsWith ("SharpOS.AOT.X86"))
+					throw new Exception (string.Format ("'{0}' in '{1}' is containing wrong operands.", instruction, this.method.MethodFullName));
+			}
 
 			assembly.GetAssemblyInstruction (call.Method, operands, parameterTypes);
 
