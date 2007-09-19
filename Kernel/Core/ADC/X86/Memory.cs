@@ -32,8 +32,10 @@ namespace SharpOS.ADC.X86
 
 		public unsafe static void Call(void* address, uint value)
 		{
+			uint _address = (uint) address;
+
 			Asm.PUSH(&value);
-			Asm.CALL((uint)address);
+			Asm.CALL(&_address);
 		}
 
 /*		// sigh.. one can only dream...
