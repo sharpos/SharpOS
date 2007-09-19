@@ -220,7 +220,7 @@ namespace SharpOS.ADC.X86
 			} else if (scancode == 0xe01d) { // right control
 				rightControl = pressed;
 				return;
-			} else if (scancode == 0xe036) { // right shift
+			} else if (scancode == 0x36) { // right shift
 				rightShift = pressed;
 				return;
 			}
