@@ -111,7 +111,6 @@ namespace SharpOS {
 			TextMode.RestoreAttributes();
 
 
-			Warning("test");
 
 #if KERNEL_TESTS
 			// Testcases
