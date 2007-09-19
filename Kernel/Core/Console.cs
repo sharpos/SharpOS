@@ -118,7 +118,7 @@ namespace SharpOS
 				return;
 			}
 
-			key = ASCII.ToUpper (key);
+			//key = ASCII.ToUpper (key);
 
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.WriteChar (key);

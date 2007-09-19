@@ -86,8 +86,9 @@ namespace SharpOS
 			TextMode.Write (nameLen);
 			TextMode.WriteLine ();
 
-			byte *table = (byte*)keymapArchive + 4;
-			byte *buf = getBuiltinKeyMapBuffer;
+			byte* table		= (byte*)keymapArchive + 4;
+			byte* ret_table;
+			byte *buf		= getBuiltinKeyMapBuffer;
 
 			Kernel.Assert(nameLen > 0,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too small");
@@ -113,23 +114,31 @@ namespace SharpOS
 
 				TextMode.Write ("found keymap: ");
 				TextMode.WriteLine (buf);
-				
-				if (nSize == nameLen && ByteString.Compare (name, buf, nameLen) == 0)
-					return table;
+
+				ret_table = table;
 
 				table += 2; // keymask/statebit
 
 				// default table
-				
+
 				tSize = *(int*)table;
+				TextMode.Write("Default-table size:");
+				TextMode.Write(tSize);
+				TextMode.WriteLine("");
 				table += 4;
 				table += tSize;
 
 				// shifted table
-				
+
 				tSize = *(int*)table;
+				TextMode.Write("Shifted-table size:");
+				TextMode.Write(tSize);
+				TextMode.WriteLine("");
 				table += 4;
 				table += tSize;
+				
+				if (nSize == nameLen && ByteString.Compare(name, buf, nameLen) == 0)
+					return ret_table;
 			}
 
 			return null;
@@ -247,11 +256,19 @@ namespace SharpOS
 		/// </summary>
 		public static void SetDirectKeyMap (void *keymap)
 		{
+			byte* keymapAddress = (byte*)keymap;
 			byte *defmap = null, shiftmap = null;
 			int defmapLen = 0, shiftmapLen = 0;
 
-			defmap = GetDefaultTable (keymapAddr, &defmapLen);
-			shiftmap = GetShiftedTable (keymapAddr, &shiftmapLen);
+			//TODO: what to do with these bits?
+			byte keymask = *(keymapAddress + 0);
+			byte statebit = *(keymapAddress + 1);
+
+			keymapAddress += 2;
+
+
+			defmap = GetDefaultTable (keymapAddress, &defmapLen);
+			shiftmap = GetShiftedTable (keymapAddress, &shiftmapLen);
 
 			Keyboard.SetKeyMap (defmap, defmapLen, shiftmap, shiftmapLen);
 		}
@@ -291,10 +308,9 @@ namespace SharpOS
 		/// </summary>
 		public static byte *GetDefaultTable (void *keymap, int *ret_len)
 		{
-			int nlen = *(int*)keymap;
-			*ret_len = *(int*)((byte*)keymap + 6 + nlen);
+			*ret_len = *(int*)keymap;
 			
-			return (byte*)keymap + 10;
+			return (byte*)keymap + 4;
 		}
 
 		/// <summary>
