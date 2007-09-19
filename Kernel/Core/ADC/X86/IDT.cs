@@ -519,7 +519,6 @@ namespace SharpOS.ADC.X86 {
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_8");
-			Asm.PUSH ((byte)0);
 			Asm.PUSH ((uint)8);
 			Asm.JMP ("ISRDispatcher");
 
@@ -529,27 +528,22 @@ namespace SharpOS.ADC.X86 {
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_10");
-			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 10);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_11");
-			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 11);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_12");
-			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 12);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_13");
-			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 13);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_14");
-			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 14);
 			Asm.JMP ("ISRDispatcher");
 
