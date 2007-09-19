@@ -29,28 +29,44 @@ namespace SharpOS.Foundation {
 			uint uvalue = (uint) value;
 			ushort divisor = hex ? (ushort) 16 : (ushort) 10;
 			int length = 0;
+			int count = 0;
+			uint temp;
+			bool negative = false;
 
 			if (!hex && value < 0) {
-				buffer [length++] = (byte) '-';
+				count++;
 
 				uvalue = (uint) -value;
 			}
 
+			temp = uvalue;
+
 			do {
+				temp /= divisor;
+				count++;
+			}
+			while (temp != 0);
+
+			Kernel.Assert (offset + count < bufferLen, "Convert.ToString: buffer too small.");
+
+			length = count;
+
+			if (negative) {
+				buffer [offset++] = (byte) '-';
+				count--;
+			}
+
+			for (int i = 0; i < count; i++) {
 				uint remainder = uvalue % divisor;
 
-				if (offset + length >= bufferLen)
-					return length;
-				
 				if (remainder < 10)
-					buffer [offset + (length++)] =
-						(byte) ('0' + remainder);
+					buffer [offset + count - 1 - i] = (byte) ('0' + remainder);
 
 				else
-					buffer [offset + (length++)] =
-						(byte) ('A' + remainder - 10);
+					buffer [offset + count - 1 - i] = (byte) ('A' + remainder - 10);
 
-			} while ((uvalue /= divisor) != 0);
+				uvalue /= divisor;
+			}
 
 			return length;
 		}
