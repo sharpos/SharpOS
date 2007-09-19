@@ -21,21 +21,21 @@ namespace SharpOS.ADC.X86 {
 	{
 		public enum IRQ
 		{
-			SystemTimer = 0,
-			Keyboard = 1,
-			COM2Default = 3,
-			COM4User = 3,
-			COM1Default = 4,
-			COM3User = 4,
-			ParallelPort2 = 5,
-			FloppyDiskController = 6,
-			ParallelPort1 = 7,
-			SoundCard = 7,
-			RealTimeClock = 8,
-			PS2Mouse = 12,
-			ISA = 13,
-			PrimaryIDE = 14,
-			SecondaryIDE = 15
+			SystemTimer				= 0,
+			Keyboard				= 1,
+			COM2Default				= 3,
+			COM4User				= 3,
+			COM1Default				= 4,
+			COM3User				= 4,
+			ParallelPort2			= 5,
+			FloppyDiskController	= 6,
+			ParallelPort1			= 7,
+			SoundCard				= 7,
+			RealTimeClock			= 8,
+			PS2Mouse				= 12,
+			ISA						= 13,
+			PrimaryIDE				= 14,
+			SecondaryIDE			= 15
 		}
 
 		#region Function Label Constants
@@ -104,7 +104,7 @@ namespace SharpOS.ADC.X86 {
 			public uint EDX;
 			public uint ECX;
 			public uint EAX;
-			public uint Index;
+			public uint IrqIndex;
 			public uint Error;
 			public uint EIP;
 			public uint CS;
@@ -162,10 +162,10 @@ namespace SharpOS.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (IRQ_CLEAN_UP)]
 		private static unsafe void IRQCleanUp (ISRData data)
 		{
-			if (data.Index >= PIC.MasterIRQBase && data.Index < PIC.MasterIRQBase + 8)
+			if (data.IrqIndex >= PIC.MasterIRQBase && data.IrqIndex < PIC.MasterIRQBase + 8)
 				PIC.SendMasterEndOfInterrupt ();
 
-			else if (data.Index >= PIC.SlaveIRQBase && data.Index < PIC.SlaveIRQBase + 8) {
+			else if (data.IrqIndex >= PIC.SlaveIRQBase && data.IrqIndex < PIC.SlaveIRQBase + 8) {
 				PIC.SendSlaveEndOfInterrupt ();
 				PIC.SendMasterEndOfInterrupt ();
 			}
@@ -178,7 +178,7 @@ namespace SharpOS.ADC.X86 {
 		{
 			Kernel.SetErrorTextAttributes ();
 			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked.\n");
-			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.Index);
+			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.IrqIndex);
 			ADC.TextMode.WriteLine ();
             ADC.TextMode.WriteLine ("Register dump:");
 
@@ -203,7 +203,7 @@ namespace SharpOS.ADC.X86 {
 			ADC.TextMode.Write ("   FS=0x", (int) data.FS);
 			ADC.TextMode.Write ("   GS=0x", (int) data.GS);
 			ADC.TextMode.Write ("   SS=0x", (int) data.SS);
-			ADC.TextMode.Write ("   CS=0x", (int)data.CS);
+			ADC.TextMode.Write ("   CS=0x", (int) data.CS);
 			ADC.TextMode.WriteLine ();
 
 			Asm.HLT ();
@@ -477,6 +477,7 @@ namespace SharpOS.ADC.X86 {
 		#region ISRHandlers
 		private static unsafe void ISRHandlers ()
 		{
+			#region ISR Dispatchers
 			Asm.LABEL ("ISR_0");
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 0);
@@ -518,7 +519,8 @@ namespace SharpOS.ADC.X86 {
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_8");
-			Asm.PUSH ((uint) 8);
+			Asm.PUSH ((byte)0);
+			Asm.PUSH ((uint)8);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_9");
@@ -527,22 +529,27 @@ namespace SharpOS.ADC.X86 {
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_10");
+			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 10);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_11");
+			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 11);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_12");
+			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 12);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_13");
+			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 13);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_14");
+			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 14);
 			Asm.JMP ("ISRDispatcher");
 
@@ -1750,7 +1757,8 @@ namespace SharpOS.ADC.X86 {
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 255);
 			Asm.JMP ("ISRDispatcher");
-			
+			#endregion
+
 			Asm.LABEL ("ISRDispatcher");
 			Asm.CLI ();
 			Asm.PUSHA ();
