@@ -17,6 +17,9 @@ using SharpOS.AOT.IR;
 
 namespace SharpOS.ADC.X86
 {
+	/// <summary>
+	/// Programmable Interrupt Controller (PIC)
+	/// </summary>
 	public unsafe class PIC
 	{
 		private static byte MasterIRQMask = 0xFB;

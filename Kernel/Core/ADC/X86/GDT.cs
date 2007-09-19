@@ -19,6 +19,9 @@ using SharpOS.AOT.IR;
 using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
+	///<summary>
+	/// The Global Descriptor Table (GDT)
+	/// </summary>
 	public unsafe class GDT {
 		private const ushort GDTEntries = 3;
 		private const ushort SystemSelector = 0;

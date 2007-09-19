@@ -18,7 +18,9 @@ using SharpOS.AOT.IR;
 
 namespace SharpOS.ADC.X86
 {
-	// Periodic Interrupt Timer (PIT)
+	/// <summary>
+	/// Periodic Interrupt Timer (PIT)
+	/// </summary>
 	public unsafe class PIT
 	{
 		public const string		TIMER_HANDLER			= "TIMER_HANDLER";
@@ -37,7 +39,7 @@ namespace SharpOS.ADC.X86
 			IO.Out8(IO.Ports.PIT_counter_0_counter_divisor, (TimerCount & 0xFF));
 			IO.Out8(IO.Ports.PIT_counter_0_counter_divisor, ((TimerCount >> 8) & 0xFF));
 
-			IDT.SetupIRQ(0, Kernel.GetFunctionPointer(TIMER_HANDLER));
+			IDT.RegisterIRQ(IDT.IRQ.SystemTimer, Kernel.GetFunctionPointer(TIMER_HANDLER));
 		}
 
 		#region TimerEvent

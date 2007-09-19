@@ -17,17 +17,42 @@ using SharpOS.AOT.IR;
 using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
-	public unsafe class IDT {
+	public unsafe class IDT
+	{
+		public enum IRQ
+		{
+			SystemTimer = 0,
+			Keyboard = 1,
+			COM2Default = 3,
+			COM4User = 3,
+			COM1Default = 4,
+			COM3User = 4,
+			ParallelPort2 = 5,
+			FloppyDiskController = 6,
+			ParallelPort1 = 7,
+			SoundCard = 7,
+			RealTimeClock = 8,
+			PS2Mouse = 12,
+			ISA = 13,
+			PrimaryIDE = 14,
+			SecondaryIDE = 15
+		}
+
+		#region Function Label Constants
 		private const string IDT_POINTER = "IDTPointer";
 		private const string IDT_TABLE = "IDTTable";
 		private const string ISR_DEFAULT_HANDLER = "ISRDefaultHandler";
 		private const string IRQ_CLEAN_UP = "IRQ_CLEAN_UP";
-		private const ushort Entries = 256;
+		#endregion
 
+		#region Tables
+		private const ushort Entries = 256;
 		private static DTPointer* idtPointer = (DTPointer*) Kernel.LabelledAlloc (IDT_POINTER, DTPointer.SizeOf);
 		private static Entry* idt = (Entry*) Kernel.StaticAlloc (Entries * Entry.SizeOf);
 		private static uint* ISRTable = (uint*) Kernel.LabelledAlloc (IDT_TABLE, Entries * 4);
+		#endregion
 
+		#region IDT Entry class
 		[StructLayout (LayoutKind.Sequential)]
 		public struct Entry {
 			public enum Type : ushort {
@@ -61,7 +86,9 @@ namespace SharpOS.ADC.X86 {
 				this.Options = options;
 			}
 		}
+		#endregion
 
+		#region ISRData struct
 		[StructLayout (LayoutKind.Sequential)]
 		public struct ISRData {
 			public uint SS;
@@ -84,7 +111,9 @@ namespace SharpOS.ADC.X86 {
 			public uint EFlags;
 			public uint UserESP;
 		}
+		#endregion
 
+		#region Setup
 		internal static void Setup ()
 		{
 			idtPointer->Setup ((ushort) (sizeof (Entry) * Entries - 1), (uint) idt);
@@ -106,8 +135,10 @@ namespace SharpOS.ADC.X86 {
 
 			Asm.STI ();
 		}
+		#endregion
 
-		public static void SetupIRQ (byte index, uint address)
+		#region RegisterIRQ
+		public static void RegisterIRQ (byte index, uint address)
 		{
 			if (index < 8)
 				ISRTable [PIC.MasterIRQBase + index] = address;
@@ -120,6 +151,14 @@ namespace SharpOS.ADC.X86 {
 			PIC.EnableIRQ (index);
 		}
 
+		public static void RegisterIRQ(IRQ irq, uint address)
+		{
+			byte index = (byte)irq;
+			RegisterIRQ(index, address);
+		}
+		#endregion
+
+		#region IRQCleanUp
 		[SharpOS.AOT.Attributes.Label (IRQ_CLEAN_UP)]
 		private static unsafe void IRQCleanUp (ISRData data)
 		{
@@ -131,39 +170,47 @@ namespace SharpOS.ADC.X86 {
 				PIC.SendMasterEndOfInterrupt ();
 			}
 		}
+		#endregion
 
+		#region ISRDefaultHandler
 		[SharpOS.AOT.Attributes.Label (ISR_DEFAULT_HANDLER)]
 		private static unsafe void ISRDefaultHandler (ISRData data)
 		{
 			Kernel.SetErrorTextAttributes ();
 			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked.\n");
 			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.Index);
-            ADC.TextMode.WriteLine();
+			ADC.TextMode.WriteLine ();
             ADC.TextMode.WriteLine ("Register dump:");
 
-			ADC.TextMode.WriteLine ("  EIP=0x", (int) data.EIP);
+			ADC.TextMode.Write ("  EIP=0x", (int) data.EIP);
+			ADC.TextMode.WriteLine ();
 
 			ADC.TextMode.Write ("  EAX=0x", (int) data.EAX);
 			ADC.TextMode.Write ("  ECX=0x", (int) data.ECX);
 			ADC.TextMode.Write ("  EDX=0x", (int) data.EDX);
-			ADC.TextMode.WriteLine ("  EBX=0x", (int) data.EBX);
+			ADC.TextMode.Write ("  EBX=0x", (int) data.EBX);
+			ADC.TextMode.WriteLine ();
 
 
 			ADC.TextMode.Write ("  ESP=0x", (int) data.ESP);
 			ADC.TextMode.Write ("  EBP=0x", (int) data.EBP);
 			ADC.TextMode.Write ("  ESI=0x", (int) data.ESI);
-			ADC.TextMode.WriteLine ("  EDI=0x", (int) data.EDI);
+			ADC.TextMode.Write ("  EDI=0x", (int) data.EDI);
+			ADC.TextMode.WriteLine ();
 
 			ADC.TextMode.Write ("   DS=0x", (int) data.DS);
 			ADC.TextMode.Write ("   ES=0x", (int) data.ES);
 			ADC.TextMode.Write ("   FS=0x", (int) data.FS);
 			ADC.TextMode.Write ("   GS=0x", (int) data.GS);
 			ADC.TextMode.Write ("   SS=0x", (int) data.SS);
-			ADC.TextMode.WriteLine ("   CS=0x", (int) data.CS);
+			ADC.TextMode.Write ("   CS=0x", (int)data.CS);
+			ADC.TextMode.WriteLine ();
 
 			Asm.HLT ();
 		}
+		#endregion
 
+		#region SetupISR
 		private static unsafe void SetupISR ()
 		{
 			byte type = (byte) (IDT.Entry.Type.Present | IDT.Entry.Type.Privilege_Ring_0 | IDT.Entry.Type.OperandSize_32Bit | IDT.Entry.Type.Interrupt_Gate);
@@ -425,7 +472,9 @@ namespace SharpOS.ADC.X86 {
 			idt [254].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_254"), type);
 			idt [255].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_255"), type);
 		}
-		
+		#endregion
+
+		#region ISRHandlers
 		private static unsafe void ISRHandlers ()
 		{
 			Asm.LABEL ("ISR_0");
@@ -1736,5 +1785,6 @@ namespace SharpOS.ADC.X86 {
 			Asm.STI ();
 			Asm.IRET ();
 		}
+		#endregion
 	}
 }

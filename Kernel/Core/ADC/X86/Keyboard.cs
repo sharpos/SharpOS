@@ -113,7 +113,7 @@ namespace SharpOS.ADC.X86
 		
 		public static void Setup ()
 		{
-			IDT.SetupIRQ (1, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
+			IDT.RegisterIRQ (IDT.IRQ.Keyboard, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
 		}
 
 		#endregion
