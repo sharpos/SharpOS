@@ -110,6 +110,9 @@ namespace SharpOS {
 			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes();
 
+
+			Warning("test");
+
 #if KERNEL_TESTS
 			// Testcases
 			
@@ -243,17 +246,16 @@ namespace SharpOS {
 		
 		public static void Warning (string msg)
 		{
-			/*
-			TODO: this doesn't work!
-			PString8 *buf = PString8.Wrap (intermediateStringBuffer, Kernel.MaxMessageLength);
+			TextMode.SaveAttributes();
+			PString8* buf = PString8.Wrap(intermediateStringBuffer, Kernel.MaxMessageLength);
 
-			buf->Concat ("Warning: ");
-			buf->Concat (msg);
-			*/
-			SetWarningTextAttributes ();
-			//TextMode.WriteLine (buf);
-			TextMode.Write ("Warning: ");
-			TextMode.WriteLine (msg);
+			SetWarningTextAttributes();
+
+			buf->Concat("Warning: ");
+			buf->Concat(msg);
+			TextMode.WriteLine(buf);
+			
+			TextMode.RestoreAttributes();
 		}
 		
 		public static void Message (string msg)

@@ -62,8 +62,8 @@ namespace SharpOS.Foundation {
 				len = strLen - offset;
 
 			Kernel.Assert (offset + len >= strLen, "PString8.Concat(): offset + len >= strLen");
-			
-			for (int x = 0; x < len; ++x)
+
+			for (int x = 0; x < strLen; ++x)
 				Concat (str [offset + x]);
 
 			return len;
@@ -195,8 +195,8 @@ namespace SharpOS.Foundation {
 			if (len + offset > str.Length)
 				return -1;
 
-			for (int x = 0; x < len; ++x)
-				Concat ((byte) str [x]);
+			for (int x = 0; x < str.Length; ++x)
+				Concat((byte)str[x]);
 
 			return len;
 		}

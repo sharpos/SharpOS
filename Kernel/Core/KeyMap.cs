@@ -57,10 +57,8 @@ namespace SharpOS
 			Kernel.Assert (keymapArchive != null, "KeyMap.Setup(): keymap archive is null");
 
 			keymapEntries = *(int*)keymapArchive;
-			//TODO: Fix PString, it doesn't work!
-			//keymapAddr = GetBuiltinKeyMap (userKeyMap);	
-			keymapAddr = GetBuiltinKeyMap("US");
-
+			keymapAddr = GetBuiltinKeyMap (userKeyMap);	
+			
 			// print some info
 			
 			TextMode.WriteLine ("KeyMap archive: installed at 0x", (int)keymapArchive, true);
@@ -91,7 +89,7 @@ namespace SharpOS
 			byte *table = (byte*)keymapArchive + 4;
 			byte *buf = getBuiltinKeyMapBuffer;
 
-			Kernel.Assert(nameLen < 0,
+			Kernel.Assert(nameLen > 0,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too small");
 			Kernel.Assert (nameLen <= Kernel.MaxKeyMapNameLength,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too large");
