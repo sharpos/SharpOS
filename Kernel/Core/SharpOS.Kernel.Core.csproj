@@ -7,7 +7,7 @@
     <ProjectGuid>{1BDA3EE0-BC5F-4C4A-986C-31730A8EFADC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpOS.Kernel</RootNamespace>
+    <RootNamespace>SharpOS</RootNamespace>
     <AssemblyName>SharpOS.Kernel</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
