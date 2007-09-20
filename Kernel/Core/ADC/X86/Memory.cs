@@ -1,3 +1,12 @@
+//
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Sander van Rossen <sander.vanrossen@gmail.com>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
+
 using System;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
@@ -13,6 +22,23 @@ namespace SharpOS.ADC.X86
 			Asm.MOV(R32.EDI, &dst);
 			Asm.REP();
 			Asm.STOSD();
+		}
+
+		public static unsafe void MemCopy(uint src, uint dst, uint count)
+		{
+							    	Asm.MOV(R32.ECX, &count);
+							    	Asm.MOV(R32.ESI, &src);
+							    	Asm.MOV(R32.EDI, &dst);
+
+							    	Asm.SHR(R32.ECX, 1);		// divide count by 2 (8bit -> 16bit blocks)
+									Asm.JNC("Move16");			// if carry flag has not been set, skip next instruction
+							    	Asm.MOVSB();				// move a byte (8bit) first
+
+			Asm.LABEL("Move16");	Asm.SHR(R32.ECX, 1);		// divide count by 2 (16bit -> 32bit blocks)
+							    	Asm.JNC("Move32");			// if carry flag has not been set, skip next instruction
+									Asm.MOVSW();				// move short (16bit) first
+
+			Asm.LABEL("Move32");	Asm.REP(); Asm.MOVSD();		// move everything else in 32bit blocks
 		}
 
 		public static unsafe void MemCopy32(uint src, uint dst, uint count)

@@ -47,6 +47,11 @@ namespace SharpOS {
 		/// Defines the amount of nested TextMode.SaveAttributes() are possible.
 		/// </summary>
 		public const int MaxTextAttributeSlots = 5;
+
+		/// <summary>
+		/// Defines the amount of threads that are possible.
+		/// </summary>
+		public const uint MaxThreads = 10;
 		
 		#endregion
 		#region Entry point
@@ -77,7 +82,8 @@ namespace SharpOS {
 			TextMode.SetCursor (0, 0);
 			
 			// Initialize architecture-specific portion of the kernel
-			Architecture.Setup ();
+			Architecture.Setup();
+			Scheduler.Setup();
 			
 			// Write the banner
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);

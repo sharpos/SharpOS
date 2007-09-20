@@ -27,8 +27,7 @@ namespace SharpOS.ADC.X86
 
 		private const byte  	SquareWave   		= 0x36;
 		private const uint  	PITFrequency 		= 1193182;
-		private const ushort	TimerCount   		= (ushort)(PITFrequency / HZ);
-		public  const ushort	HZ           		= 100;
+		public static ushort	HZ           		= 100;
 
 		private static uint 	ticks        		= 0;
 		public static uint		timerEvent			= 0;
@@ -61,16 +60,24 @@ namespace SharpOS.ADC.X86
 		#region Setup
 		public static void Setup()
 		{
-			IO.Out8(IO.Ports.PIT_mode_control_port, SquareWave);
-			
-			IO.Out8(IO.Ports.PIT_counter_0_counter_divisor, (TimerCount & 0xFF));
-			IO.Out8(IO.Ports.PIT_counter_0_counter_divisor, ((TimerCount >> 8) & 0xFF));
+			SetTimerFrequency(HZ);
 
 			IDT.RegisterIRQ(IDT.IRQ.SystemTimer, Kernel.GetFunctionPointer(TIMER_HANDLER));
 		}
 		#endregion
 
-		#region TimerEvent		
+		#region SetTimerFrequency
+		public static void SetTimerFrequency(ushort Hz)
+		{
+			ushort TimerCount = (ushort)(PITFrequency / Hz);
+			IO.Out8(IO.Ports.PIT_mode_control_port, SquareWave);
+
+			IO.Out8(IO.Ports.PIT_counter_0_counter_divisor, (byte)(TimerCount & 0xFF));
+			IO.Out8(IO.Ports.PIT_counter_0_counter_divisor, (byte)((TimerCount >> 8) & 0xFF));
+		}
+		#endregion
+
+		#region TimerEvent
 		public static EventRegisterStatus RegisterTimerEvent (uint address)
 		{
 			if (timerEvent != 0)
@@ -88,10 +95,12 @@ namespace SharpOS.ADC.X86
 		[SharpOS.AOT.Attributes.Label(TIMER_HANDLER)]
 		private static unsafe void TimerHandler(IDT.ISRData data)
 		{
-			ticks++;
-			
+			ticks++;			
 			if (timerEvent != 0)
 				Memory.Call(timerEvent, ticks);
+
+			// run scheduler here..
+			data = *((IDT.ISRData*)ADC.Scheduler.GetNextThread((void*)&data));
 		}
 		#endregion
 	}
