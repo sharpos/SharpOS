@@ -113,7 +113,6 @@ namespace SharpOS.ADC.X86
 		
 		public static void Setup ()
 		{
-			SetLEDs();
 			IDT.RegisterIRQ (IDT.IRQ.Keyboard, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
 		}
 
@@ -201,21 +200,21 @@ namespace SharpOS.ADC.X86
 				if (pressed)
 				{
 					capsLock = !capsLock;
-					SetLEDs();
+					//SetLEDs();
 				}
 				return;
 			} else if (scancode == (uint)Keys.NumLock) {			// NumLock
 				if (!pressed)
 				{
 					numLock = !numLock;
-					SetLEDs();
+					//SetLEDs();
 				}
 				return;
 			} else if (scancode == (uint)Keys.ScrollLock) {			// ScrollLock
 				if (!pressed)
 				{
 					scrollLock = !scrollLock;
-					SetLEDs();
+					//SetLEDs();
 				}
 				return;
 			} else if (scancode == (uint)Keys.LeftControl) {		 // left control

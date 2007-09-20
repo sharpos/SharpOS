@@ -37,6 +37,11 @@ namespace SharpOS.ADC
 		{
 			return EventRegisterStatus.NotSupported;
 		}
+
+		[AOTAttr.ADCStub]
+		public static void SetLEDs ()
+		{
+		}
 		
 		[AOTAttr.ADCStub]
 		public static void SetLEDs (bool capslock, bool numlock, bool scrolllock)
