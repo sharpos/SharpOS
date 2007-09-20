@@ -97,7 +97,6 @@ namespace SharpOS {
 			KeyMap.Setup();
 			Keyboard.Setup();
 			//CPU.Setup ();
-			SharpOS.Console.Setup();
 			//PageAllocator.Setup ((byte*)kernelStart, kernelEnd - kernelStart,
 			//	multibootInfo->MemUpper + 1000);
 			//MemoryManager.Setup ();
@@ -109,6 +108,9 @@ namespace SharpOS {
 			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
 			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes();
+
+			TextMode.WriteLine();
+			SharpOS.Console.Setup();
 
 
 

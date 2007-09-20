@@ -208,7 +208,7 @@ namespace SharpOS.ADC.X86
 			///						</list>
 			///		</item>
 			///		<item>21-3F	read	reads the byte specified in the lower 5 bits of
-			///						the command in the 804xs internal RAM</item>
+			///						the command in the 804x's internal RAM</item>
 			///		<item>60-7F	dbl		writes the data byte to the address specified in
 			///						the 5 lower bits of the command.
 			///						Alternate description KB IO command 60 summary:

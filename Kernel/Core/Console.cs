@@ -37,14 +37,9 @@ namespace SharpOS
 
 		private static bool initialized = false;
 		private static bool overwrite	= false;
-		private static bool capslock	= false;
-		private static bool numlock		= false;
-		private static bool scrolllock	= false;
 
 		public static void Setup ()
 		{
-			TextMode.WriteLine ();
-
 			Keyboard.RegisterKeyUpEvent (Kernel.GetFunctionPointer(CONSOLE_KEY_UP_HANDLER));
 			Keyboard.RegisterKeyDownEvent (Kernel.GetFunctionPointer(CONSOLE_KEY_DOWN_HANDLER));
 			Architecture.RegisterTimerEvent(Kernel.GetFunctionPointer(CONSOLE_TIMER_HANDLER));
@@ -52,12 +47,6 @@ namespace SharpOS
 			initialized = true;
 			TextMode.RefreshCursor ();
 			SetOverwrite (true);
-
-			capslock	= false;
-			numlock		= true;
-			scrolllock	= true;
-			
-			Keyboard.SetLEDs (capslock, numlock, scrolllock);
 		}
 		
 		public static unsafe void SetOverwrite (bool _overwrite)
@@ -70,32 +59,12 @@ namespace SharpOS
 				TextMode.SetCursorSize(13, 15);
 		}
 
-		public static unsafe void SetCapsLock (bool _capslock)
-		{
-			capslock = _capslock;
-			Keyboard.SetLEDs (capslock, numlock, scrolllock);
-		}
-
-		public static unsafe void SetNumLock (bool _numlock)
-		{
-			numlock = _numlock;
-			Keyboard.SetLEDs (capslock, numlock, scrolllock);
-		}
-
-		public static unsafe void SetScrollLock (bool _scrolllock)
-		{
-			scrolllock = _scrolllock;
-			Keyboard.SetLEDs (capslock, numlock, scrolllock);
-		}
-
 		[SharpOS.AOT.Attributes.Label (CONSOLE_KEY_UP_HANDLER)]
 		public static unsafe void KeyUp (uint scancode)
 		{
 			if (!initialized)
 				return;
 		}
-
-		public static bool capsLock = false;
 
 		[SharpOS.AOT.Attributes.Label (CONSOLE_KEY_DOWN_HANDLER)]
 		public static unsafe void KeyDown (uint scancode)
@@ -107,17 +76,6 @@ namespace SharpOS
 
 			bool upperCase = (Keyboard.LeftShift() || Keyboard.RightShift()) ^ Keyboard.CapsLock();			
 			key = Keyboard.Translate(scancode, upperCase);
-
-			if (capsLock != Keyboard.CapsLock())
-			{
-				capsLock = Keyboard.CapsLock();
-				TextMode.MoveTo(79, 24);
-				TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
-				if (capsLock)
-					TextMode.Write("C");
-				else
-					TextMode.Write(" ");
-			}
 
 			if (key == 0)
 			{

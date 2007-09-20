@@ -39,16 +39,6 @@ namespace SharpOS.ADC
 		}
 
 		[AOTAttr.ADCStub]
-		public static void SetLEDs ()
-		{
-		}
-		
-		[AOTAttr.ADCStub]
-		public static void SetLEDs (bool capslock, bool numlock, bool scrolllock)
-		{
-		}
-		
-		[AOTAttr.ADCStub]
 		public static bool LeftShift ()
 		{
 			return false;

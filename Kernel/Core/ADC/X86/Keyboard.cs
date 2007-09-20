@@ -38,9 +38,13 @@ namespace SharpOS.ADC.X86
 		static bool leftControl;
 		static bool rightControl;
 
-		static bool scrollLock;
-		static bool capsLock;
-		static bool numLock;
+		static bool scrollLock = false;
+		static bool capsLock = false;
+		static bool numLock = false;
+
+		static bool scrollLockReleased = true;
+		static bool capsLockReleased = true;
+		static bool numLockReleased = true;
 	
 		unsafe static byte* defaultMap = null;
 		unsafe static byte* shiftedMap = null;
@@ -127,13 +131,15 @@ namespace SharpOS.ADC.X86
 		static void SendCommand (KeyboardCommands command)
 		{
 			KeyboardMessages message = KeyboardMessages.Acknowledge;
-			
-			do {
+
+			do
+			{
 				IO.Out8 (IO.Ports.KB_data_port, (byte)command);
 			
 				// Wait for acknowledge and receieve it
-				
-				while ((IO.In8 (IO.Ports.KB_controller_commands) & 0x01) != 0);
+
+				WaitUntilReady();
+
 				message = (KeyboardMessages)IO.In8 (IO.Ports.KB_data_port);
 
 				if (message == KeyboardMessages.Request_Resend) 
@@ -154,9 +160,9 @@ namespace SharpOS.ADC.X86
 
 			SendCommand (KeyboardCommands.Set_Keyboard_LEDs);
 
-			WaitUntilReady ();
+			WaitUntilReady();
 
-			IO.Out8 (IO.Ports.KB_data_port, value);
+			IO.Out8(IO.Ports.KB_data_port, value);
 		}
 
 		[SharpOS.AOT.Attributes.Label (KEYBOARD_HANDLER)]
@@ -199,23 +205,32 @@ namespace SharpOS.ADC.X86
 			if (scancode == (uint)Keys.CapsLock) {					// CapsLock
 				if (pressed)
 				{
-					capsLock = !capsLock;
-					//SetLEDs();
-				}
+					if (capsLockReleased)
+						capsLock = !capsLock;
+					capsLockReleased = false;
+					SetLEDs();
+				} else
+					capsLockReleased = true;
 				return;
 			} else if (scancode == (uint)Keys.NumLock) {			// NumLock
-				if (!pressed)
+				if (pressed)
 				{
-					numLock = !numLock;
-					//SetLEDs();
-				}
+					if (numLockReleased)
+						numLock = !numLock;
+					numLockReleased = false;
+					SetLEDs();
+				} else
+					numLockReleased = true;
 				return;
 			} else if (scancode == (uint)Keys.ScrollLock) {			// ScrollLock
-				if (!pressed)
+				if (pressed)
 				{
-					scrollLock = !scrollLock;
-					//SetLEDs();
-				}
+					if (scrollLockReleased)
+						scrollLock = !scrollLock;
+					scrollLockReleased = false;
+					SetLEDs();
+				} else
+					scrollLockReleased = true;
 				return;
 			} else if (scancode == (uint)Keys.LeftControl) {		 // left control
 				leftControl = pressed;
@@ -305,34 +320,18 @@ namespace SharpOS.ADC.X86
 		public static void SetLEDs ()
 		{
 			byte leds = 0;
-			
-			if (capsLock)
+
+			if (scrollLock)
 				leds |= (byte)1;
 				
 			if (numLock)
 				leds |= (byte)2;
 				
-			if (scrollLock)
+			if (capsLock)
 				leds |= (byte)4;
 
 			SendCommand (KeyboardCommands.Set_Keyboard_LEDs, leds);
 		}
-
-        public static void SetLEDs(bool capslock, bool numlock, bool scrolllock)
-        {
-            byte leds = 0;
-            
-            if (capslock)
-                leds |= (byte)1;
-            
-            if (numlock)
-                leds |= (byte)2;
-            
-            if (scrolllock)
-                leds |= (byte)4;
-
-            SendCommand(KeyboardCommands.Set_Keyboard_LEDs, leds);
-        }
 
 		public static bool LeftShift ()
 		{
