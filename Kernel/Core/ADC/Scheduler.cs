@@ -21,7 +21,7 @@ namespace SharpOS.ADC
 		}
 
 		private static int				position				= -1;
-		private static void**			ThreadScheduled			= (void**)Kernel.StaticAlloc((uint)(sizeof(void*) * Kernel.MaxThreads));
+		private static void**			ThreadScheduled			= (void**)Kernel.StaticAlloc((uint)(4 * Kernel.MaxThreads));
 
 		public static bool ScheduleThread(void* newThread)
 		{
@@ -43,19 +43,21 @@ namespace SharpOS.ADC
 		public static void* GetNextThread(void* currentThread)
 		{
 			// do scheduling here...
-			// for now, just return the current thread ...
-			/*
-			if (position != -1)
+/*
+			if (ThreadScheduled[0] != null)
 			{
-				ThreadScheduled[position] = currentThread;
+				// for now, just return the current thread ...
+				if (position != -1)
+				{
+					ThreadScheduled[position] = currentThread;
+				}
+				position++;
+				if (position >= Kernel.MaxThreads || ThreadScheduled[position] == null)
+					position = 0;
+
+				currentThread = ThreadScheduled[position];
 			}
-			position++;
-			if (position >= Kernel.MaxThreads || ThreadScheduled[position] == null)
-				position = 0;
-
-			currentThread = ThreadScheduled[position];
-			*/
-
+*/
 			return currentThread;
 		}
 
