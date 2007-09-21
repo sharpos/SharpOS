@@ -43,21 +43,21 @@ namespace SharpOS.ADC
 		public static void* GetNextThread(void* currentThread)
 		{
 			// do scheduling here...
-/*
+
 			if (ThreadScheduled[0] != null)
 			{
 				// for now, just return the current thread ...
 				if (position != -1)
 				{
-					ThreadScheduled[position] = currentThread;
+					ThreadScheduled[position] = currentThread;	// does this properly copy the structure?
 				}
 				position++;
 				if (position >= Kernel.MaxThreads || ThreadScheduled[position] == null)
 					position = 0;
 
-				currentThread = ThreadScheduled[position];
+				currentThread = ThreadScheduled[position];	// does this properly copy the structure?
 			}
-*/
+
 			return currentThread;
 		}
 

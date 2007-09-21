@@ -113,15 +113,19 @@ namespace SharpOS {
 			TextMode.WriteLine ("");
 			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
 			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
-			
-			void* testThread = Scheduler.CreateThread(Kernel.GetFunctionPointer(KERNEL_TEST));
-			TextMode.WriteLine((testThread==null)?"testThread failed":"testThread created");
-			Scheduler.ScheduleThread(testThread);
-
 			TextMode.RestoreAttributes();
 
+			TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
 			TextMode.WriteLine();
 			SharpOS.Console.Setup();
+
+/*
+			//scheduler testing code:
+			void* testThread = Scheduler.CreateThread(Kernel.GetFunctionPointer(KERNEL_TEST));
+			TextMode.WriteLine((testThread == null) ? "testThread failed" : "testThread created");
+			Scheduler.ScheduleThread(testThread);
+*/
+
 
 #if KERNEL_TESTS
 			// Testcases
@@ -133,7 +137,6 @@ namespace SharpOS {
 		}
 
 		const string KERNEL_TEST = "KERNEL_TEST";		
-
 		[SharpOS.AOT.Attributes.Label(KERNEL_TEST)]
 		static unsafe void TestThread()
 		{

@@ -35,19 +35,14 @@ namespace SharpOS.ADC.X86
 				{
 					ThreadMemoryUsed[i] = true;
 
-					// memset has not been tested yet:
-					//Memory.MemSet32(0, (uint)(void*)&(ThreadMemory[i]), (uint)(sizeof(IDT.ISRData) / 4));
-
-
-
-					// ... data/code segments need to be set etc.
-
-					ushort ds, cs, es, fs, gs;
+					// ... temp code
+					ushort ds, cs, es, fs, gs, ss;
 					Asm.MOV(R16.AX, Seg.DS); Asm.MOV(&ds, R16.AX);
 					Asm.MOV(R16.AX, Seg.CS); Asm.MOV(&cs, R16.AX);
 					Asm.MOV(R16.AX, Seg.ES); Asm.MOV(&es, R16.AX);
 					Asm.MOV(R16.AX, Seg.FS); Asm.MOV(&fs, R16.AX);
 					Asm.MOV(R16.AX, Seg.GS); Asm.MOV(&gs, R16.AX);
+					Asm.MOV(R16.AX, Seg.SS); Asm.MOV(&ss, R16.AX);
 
 					ThreadMemory[i].EIP = function_address;
 					ThreadMemory[i].FS = (uint)fs;
@@ -55,6 +50,7 @@ namespace SharpOS.ADC.X86
 					ThreadMemory[i].ES = (uint)es;
 					ThreadMemory[i].DS = (uint)ds;
 					ThreadMemory[i].CS = (uint)cs;
+					ThreadMemory[i].SS = (uint)ss;
 
 					ThreadMemory[i].EDI = ThreadMemory[i].ESI = ThreadMemory[i].EBP = 0;
 					ThreadMemory[i].EBX = ThreadMemory[i].EDX = ThreadMemory[i].ECX = ThreadMemory[i].EAX = 0;
