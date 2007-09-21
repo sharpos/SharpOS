@@ -119,12 +119,19 @@ namespace SharpOS {
 			TextMode.WriteLine();
 			SharpOS.Console.Setup();
 
-/*
+
 			//scheduler testing code:
-			void* testThread = Scheduler.CreateThread(Kernel.GetFunctionPointer(KERNEL_TEST));
-			TextMode.WriteLine((testThread == null) ? "testThread failed" : "testThread created");
-			Scheduler.ScheduleThread(testThread);
-*/
+			/*
+			// once a thread starts, it seems as if interrupts don't fire anymore, 
+			// so the scheduler never gets the chance to schedule the next thread..
+			void* testThread1 = Scheduler.CreateThread(Kernel.GetFunctionPointer(KERNEL_TEST1));
+			void* testThread2 = Scheduler.CreateThread(Kernel.GetFunctionPointer(KERNEL_TEST2));
+			TextMode.WriteLine((testThread1 == null) ? "testThread1 failed" : "testThread1 created");
+			TextMode.WriteLine((testThread2 == null) ? "testThread2 failed" : "testThread2 created");
+			Scheduler.ScheduleThread(testThread1);
+			Scheduler.ScheduleThread(testThread2);
+			*/
+			Scheduler.DumpThreads();
 
 
 #if KERNEL_TESTS
@@ -136,13 +143,29 @@ namespace SharpOS {
 			while (stayInLoop);
 		}
 
-		const string KERNEL_TEST = "KERNEL_TEST";		
-		[SharpOS.AOT.Attributes.Label(KERNEL_TEST)]
+		const string KERNEL_TEST1 = "KERNEL_TEST1";		
+		[SharpOS.AOT.Attributes.Label(KERNEL_TEST1)]
 		static unsafe void TestThread()
 		{
+			int i = 0;
 			while (stayInLoop)
 			{
-				TextMode.Write("!");
+				if (i < 100)
+					TextMode.Write("a");
+				i++;
+			}
+		}
+
+		const string KERNEL_TEST2 = "KERNEL_TEST2";
+		[SharpOS.AOT.Attributes.Label(KERNEL_TEST2)]
+		static unsafe void TestThread2()
+		{
+			int i = 0;
+			while (stayInLoop)
+			{
+				if (i < 100)
+					TextMode.Write("b");
+				i++;
 			}
 		}
 

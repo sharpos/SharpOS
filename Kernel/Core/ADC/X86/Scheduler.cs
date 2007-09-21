@@ -27,13 +27,15 @@ namespace SharpOS.ADC.X86
 
 		public static unsafe void* CreateThread(uint function_address)
 		{
-			//UNTESTED! does this work?
 			Asm.CLI();
 			for (int i = 0; i < Kernel.MaxThreads; i++)
 			{
 				if (ThreadMemoryUsed[i] == false)
 				{
 					ThreadMemoryUsed[i] = true;
+
+					// memset has not been tested yet:
+					Memory.MemSet32(0, (uint)(void*)&(ThreadMemory[i]), (uint)(sizeof(IDT.ISRData) / 4));
 
 					// ... temp code
 					ushort ds, cs, es, fs, gs, ss;
@@ -51,9 +53,11 @@ namespace SharpOS.ADC.X86
 					ThreadMemory[i].DS = (uint)ds;
 					ThreadMemory[i].CS = (uint)cs;
 					ThreadMemory[i].SS = (uint)ss;
+					ThreadMemory[i].EFlags = 0x0200;	// ... this doesn't seem to work?
+					//ThreadMemory[i].UserESP = 0;
 
-					ThreadMemory[i].EDI = ThreadMemory[i].ESI = ThreadMemory[i].EBP = 0;
-					ThreadMemory[i].EBX = ThreadMemory[i].EDX = ThreadMemory[i].ECX = ThreadMemory[i].EAX = 0;
+					//ThreadMemory[i].EDI = ThreadMemory[i].ESI = ThreadMemory[i].EBP = 0;
+					//ThreadMemory[i].EBX = ThreadMemory[i].EDX = ThreadMemory[i].ECX = ThreadMemory[i].EAX = 0;
 
 					Asm.STI();
 					return (void*)&ThreadMemory[i];

@@ -23,6 +23,22 @@ namespace SharpOS.ADC
 		private static int				position				= -1;
 		private static void**			ThreadScheduled			= (void**)Kernel.StaticAlloc((uint)(4 * Kernel.MaxThreads));
 
+		public static void DumpThreads()
+		{
+			Architecture.DisableInterrupts();
+			for (int i = 0; i < Kernel.MaxThreads; i++)
+			{
+				if (ThreadScheduled[i] == null)
+					continue;
+
+				TextMode.Write("Thread");
+				TextMode.Write(i);
+				TextMode.WriteLine();
+			}
+			TextMode.WriteLine();
+			Architecture.EnableInterrupts();
+		}
+
 		public static bool ScheduleThread(void* newThread)
 		{
 			Architecture.DisableInterrupts();
@@ -49,13 +65,17 @@ namespace SharpOS.ADC
 				// for now, just return the current thread ...
 				if (position != -1)
 				{
-					ThreadScheduled[position] = currentThread;	// does this properly copy the structure?
+					ThreadScheduled[position] = currentThread;
 				}
+
 				position++;
-				if (position >= Kernel.MaxThreads || ThreadScheduled[position] == null)
+				if (position >= Kernel.MaxThreads || 
+					ThreadScheduled[position] == null)
 					position = 0;
 
-				currentThread = ThreadScheduled[position];	// does this properly copy the structure?
+				TextMode.Write(position);
+
+				currentThread = ThreadScheduled[position];
 			}
 
 			return currentThread;
