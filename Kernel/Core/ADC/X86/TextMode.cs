@@ -36,8 +36,8 @@ namespace SharpOS.ADC.X86
 		static byte attributes = 0;
 		static byte *savedAttributes = Kernel.StaticAlloc (Kernel.MaxTextAttributeSlots);
 
-		static IO.Ports CRT_index_register;
-		static IO.Ports	CRT_data_register;
+		static IO.Port CRT_index_register;
+		static IO.Port	CRT_data_register;
 		static int width = 80;
 		static int scanline = 80;
 		static int height = 25;
@@ -90,19 +90,19 @@ namespace SharpOS.ADC.X86
 		{
 			// Find CRT controller addresses
 			
-			if ((IO.In8 (IO.Ports.EGA_graphics_1_position_register) & 1) == 1) {
+			if ((IO.In8 (IO.Port.EGA_graphics_1_position_register) & 1) == 1) {
 				// CGA/EGA color text mode
 				
-				CRT_index_register = IO.Ports.CGA_CRT_index_register;
-				CRT_data_register = IO.Ports.CGA_CRT_data_register;
+				CRT_index_register = IO.Port.CGA_CRT_index_register;
+				CRT_data_register = IO.Port.CGA_CRT_data_register;
 				address = 0xB8000;
 				scanline = 160;
 				colorMode = true;
 			} else {
 				// MDA monochrome text mode
 				
-				CRT_index_register = IO.Ports.MDA_CRT_index_register;
-				CRT_data_register = IO.Ports.MDA_CRT_data_register;
+				CRT_index_register = IO.Port.MDA_CRT_index_register;
+				CRT_data_register = IO.Port.MDA_CRT_data_register;
 				address = 0xB0000;
 				scanline = 80;
 				colorMode = false;

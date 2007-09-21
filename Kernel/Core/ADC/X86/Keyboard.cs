@@ -125,7 +125,7 @@ namespace SharpOS.ADC.X86
 		
 		static void WaitUntilReady ()
 		{
-			while ((IO.In8 (IO.Ports.KB_controller_commands) & 0x02) != 0);
+			while ((IO.In8 (IO.Port.KB_controller_commands) & 0x02) != 0);
 		}
 
 		static void SendCommand (KeyboardCommands command)
@@ -134,13 +134,13 @@ namespace SharpOS.ADC.X86
 
 			do
 			{
-				IO.Out8 (IO.Ports.KB_data_port, (byte)command);
+				IO.Out8 (IO.Port.KB_data_port, (byte)command);
 			
 				// Wait for acknowledge and receieve it
 
 				WaitUntilReady();
 
-				message = (KeyboardMessages)IO.In8 (IO.Ports.KB_data_port);
+				message = (KeyboardMessages)IO.In8 (IO.Port.KB_data_port);
 
 				if (message == KeyboardMessages.Request_Resend) 
 					continue; 
@@ -162,7 +162,7 @@ namespace SharpOS.ADC.X86
 
 			WaitUntilReady();
 
-			IO.Out8(IO.Ports.KB_data_port, value);
+			IO.Out8(IO.Port.KB_data_port, value);
 		}
 
 		[SharpOS.AOT.Attributes.Label (KEYBOARD_HANDLER)]
@@ -173,7 +173,7 @@ namespace SharpOS.ADC.X86
 			uint scancode;
 			bool pressed;
 
-			input = IO.In8 (IO.Ports.KB_data_port);
+			input = IO.In8 (IO.Port.KB_data_port);
 
 			/* XXX: why is this commented out?
 			
@@ -187,12 +187,12 @@ namespace SharpOS.ADC.X86
 			*/
 			
 			if (input == 0xe0) {
-				input		= IO.In8 (IO.Ports.KB_data_port);
+				input		= IO.In8 (IO.Port.KB_data_port);
 				scancode	= (uint)((input & 0x7F) >> 8) | 0xe0;
 				pressed		= (input & 0x80) == 0;
 				
 			} else if (input == 0xe1) {
-				input		= IO.In8 (IO.Ports.KB_data_port);
+				input		= IO.In8 (IO.Port.KB_data_port);
 				scancode	= (uint)(input & 0x7F);
 				pressed		= (input & 0x80) == 0;
 				return;

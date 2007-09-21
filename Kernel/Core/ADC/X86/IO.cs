@@ -21,7 +21,7 @@ namespace SharpOS.ADC.X86
 	public class IO
 	{
 		#region Ports
-		public enum Ports : ushort
+		public enum Port : ushort
 		{
 			//0000-001F - First Direct Memory Access (DMA) Controller
 
@@ -463,7 +463,7 @@ namespace SharpOS.ADC.X86
 		#endregion
 
 		#region In8
-		public unsafe static byte In8 (Ports port)
+		public unsafe static byte In8 (Port port)
 		{
 			byte value = 0;
 
@@ -477,7 +477,7 @@ namespace SharpOS.ADC.X86
 		#endregion
 		
 		#region In16
-		public unsafe static ushort In16 (Ports port)
+		public unsafe static ushort In16 (Port port)
 		{
 			ushort value = 0;
 
@@ -491,7 +491,7 @@ namespace SharpOS.ADC.X86
 		#endregion
 		
 		#region In32
-		public unsafe static uint In32 (Ports port)
+		public unsafe static uint In32 (Port port)
 		{
 			uint value = 0;
 
@@ -505,7 +505,7 @@ namespace SharpOS.ADC.X86
 		#endregion
 		
 		#region Out8
-		public unsafe static void Out8 (Ports port, byte value)
+		public unsafe static void Out8 (Port port, byte value)
 		{
 			Asm.MOV(R16.DX, (ushort*)&port);
 			Asm.MOV(R8.AL, &value);
@@ -514,7 +514,7 @@ namespace SharpOS.ADC.X86
 		#endregion
 		
 		#region Out16
-		public unsafe static void Out16 (Ports port, ushort value)
+		public unsafe static void Out16 (Port port, ushort value)
 		{
 			Asm.MOV(R16.DX, (ushort*)&port);
 			Asm.MOV(R16.AX, &value);
@@ -523,7 +523,7 @@ namespace SharpOS.ADC.X86
 		#endregion
 		
 		#region Out32
-		public unsafe static void Out32 (Ports port, uint value)
+		public unsafe static void Out32 (Port port, uint value)
 		{
 			Asm.MOV(R16.DX, (ushort*)&port);
 			Asm.MOV(R32.EAX, &value);
