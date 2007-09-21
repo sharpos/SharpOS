@@ -785,7 +785,9 @@ namespace SharpOS.Tools.KeyCompiler
 			c.Force = opts.Force;
 			c.Archive = opts.Archive;
 			c.WorkingDirectory = opts.WorkingDirectory;
-			
+
+			Environment.CurrentDirectory = Path.GetFullPath(c.WorkingDirectory); 
+
 			return c.Compile ();
 		}
 	}
