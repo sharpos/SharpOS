@@ -67,7 +67,7 @@ namespace SharpOS.ADC
 				{
 					ThreadScheduled[position] = currentThread;
 				}
-
+				
 				position++;
 				if (position >= Kernel.MaxThreads || 
 					ThreadScheduled[position] == null)

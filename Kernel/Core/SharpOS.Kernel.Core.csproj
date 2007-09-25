@@ -51,6 +51,7 @@
     <Compile Include="ADC\Keyboard.cs" />
     <Compile Include="ADC\Keys.cs" />
     <Compile Include="ADC\Memory.cs" />
+    <Compile Include="ADC\MemoryManager.cs" />
     <Compile Include="ADC\Pager.cs" />
     <Compile Include="ADC\Processor.cs" />
     <Compile Include="ADC\ProcessorType.cs" />

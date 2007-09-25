@@ -59,27 +59,31 @@ namespace SharpOS.ADC
 			// calculate the position of the block to return
 			void*	currentBlock	= (void*)(((byte*)currentNode) + sizeof(Header));
 			
+
 			//
 			// Remove the first node from the empty list (current node)
 			//
-			firstEmptyNode			= currentNode->nextNode;
-			currentNode->prevNode	= null;
-
-
+			firstEmptyNode				= currentNode->nextNode;
+			firstEmptyNode->prevNode	= null;
+			currentNode->prevNode		= null;
+			
 			//
 			// Add new node to the start of the used node list (new nodes are more likely to live short than long)
 			//
 			currentNode->nextNode = firstUsedNode;
 			if (firstUsedNode != null)
+			{
 				firstUsedNode->prevNode = currentNode;
+			}
 			firstUsedNode = currentNode;
-			
 			
 			//
 			// Check if new allocation size is (almost) equal to size of node
 			//
 			if (allocate_size >= (currentNode->nodeSize - minimumBlockSize))
+			{
 				return currentBlock;	// our work is done...
+			}
 			
 			//
 			// Create a new node with the remainder of the block
@@ -97,8 +101,57 @@ namespace SharpOS.ADC
 			// Add node to empty list
 			//
 			AddToEmpty(newNode);
-
+			
 			return currentBlock;
+		}
+
+		public static unsafe void Dump()
+		{
+			ADC.TextMode.SaveAttributes();
+
+			ADC.TextMode.SetAttributes(TextColor.Cyan, TextColor.Black);
+
+			Header* iterator = firstEmptyNode;
+			ADC.TextMode.WriteLine("Empty:");
+			while (iterator != null)
+			{
+				Dump(iterator);
+				iterator = iterator->nextNode;
+			}
+
+			iterator = firstUsedNode;
+			ADC.TextMode.WriteLine("Used:");
+			while (iterator != null)
+			{
+				Dump(iterator);
+				iterator = iterator->nextNode;
+			}
+
+			ADC.TextMode.WriteLine();
+			ADC.TextMode.RestoreAttributes();
+		}
+
+		private static unsafe void Dump(Header* currentNode)
+		{
+			if (currentNode == null)
+			{
+				ADC.TextMode.Write("null ");
+			} else
+			{
+				ADC.TextMode.Write("Pointer: ");
+				ADC.TextMode.Write((int)currentNode);
+
+				ADC.TextMode.Write(" Size: ");
+				ADC.TextMode.Write((int)currentNode->nodeSize);
+
+				ADC.TextMode.Write(" Next: ");
+				ADC.TextMode.Write((int)currentNode->nextNode);
+
+				ADC.TextMode.Write(" Prev: ");
+				ADC.TextMode.Write((int)currentNode->prevNode);
+			}
+
+			ADC.TextMode.WriteLine();
 		}
 
 		// TODO: Look for adjacent memory blocks and merge them
@@ -115,7 +168,8 @@ namespace SharpOS.ADC
 				// check if the new node needs to be added to the start
 				if (firstEmptyNode->nodeSize < currentNode->nodeSize)
 				{
-					currentNode->nextNode = firstEmptyNode->nextNode;
+					firstEmptyNode->prevNode = currentNode;
+					currentNode->nextNode = firstEmptyNode;
 					currentNode->prevNode = null;
 					firstEmptyNode = currentNode;
 					return;
@@ -128,9 +182,9 @@ namespace SharpOS.ADC
 					iterator = iterator->nextNode;
 					if (iterator->nodeSize < currentNode->nodeSize)
 					{
+						currentNode->nextNode	= iterator;
 						currentNode->prevNode	= iterator->prevNode;
 						iterator->prevNode		= currentNode;
-						currentNode->nextNode	= iterator;
 						return;
 					}
 				}
@@ -157,36 +211,47 @@ namespace SharpOS.ADC
 			//
 			// Some sanity checking ..
 			//
-			bool valid = true;
-			if (((uint)memory & 3) != 0 || (currentNode->nodeSize & 3) != 0)
+			if (((uint)memory & 3) != 0)
 			{
-				valid = false;
+				Kernel.Error("((uint)memory & 3) != 0");
+				return;
+			} else
+			if ((currentNode->nodeSize & 3) != 0)
+			{
+				Kernel.Error("(currentNode->nodeSize & 3) != 0");
+				return;
 			} else
 			{
 				if (((uint)memoryStart + currentNode->nodeSize) > (uint)memoryEnd)
-					valid = false;
+				{
+					Kernel.Error("((uint)memoryStart + currentNode->nodeSize) > (uint)memoryEnd");
+					return;
+				}
 
 				if (currentNode->prevNode == null)
 				{
-					if (firstUsedNode != currentNode) 
-						valid = false;
+					if (firstUsedNode != currentNode)
+					{
+						Kernel.Error("firstUsedNode != currentNode");
+						return;
+					}
 				} else
 				{
 					if (currentNode->prevNode->nextNode != currentNode)
-						valid = false;
+					{
+						Kernel.Error("currentNode->prevNode->nextNode != currentNode");
+						return;
+					}
 				}
 				if (currentNode->nextNode != null)
 				{
 					if (currentNode->nextNode->prevNode != currentNode)
-						valid = false;
+					{
+						Kernel.Error("currentNode->nextNode->prevNode != currentNode");
+						return;
+					}
 				}
 			}
-			if (!valid)
-			{
-				Kernel.Error("Invalid or corrupted memory handle");
-				return;
-			}
-
 			
 			//
 			// Find allocated node ...

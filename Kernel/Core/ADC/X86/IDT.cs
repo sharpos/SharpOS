@@ -90,7 +90,8 @@ namespace SharpOS.ADC.X86 {
 
 		#region ISRData struct
 		[StructLayout (LayoutKind.Sequential)]
-		public struct ISRData {
+		public struct ISRData
+		{
 			public uint SS;
 			public uint FS;
 			public uint GS;
@@ -1755,7 +1756,7 @@ namespace SharpOS.ADC.X86 {
 
 			Asm.LABEL ("ISRDispatcher");
 			Asm.CLI ();
-			Asm.PUSHA ();
+			Asm.PUSHAD ();
 			Asm.PUSH (Seg.DS);
 			Asm.PUSH (Seg.ES);
 			Asm.PUSH (Seg.GS);
@@ -1776,16 +1777,16 @@ namespace SharpOS.ADC.X86 {
 			Asm.CALL (R32.EAX);
 
 			Asm.CALL (IRQ_CLEAN_UP);
-
+			
 			Asm.POP (Seg.SS);
 			Asm.POP (Seg.FS);
 			Asm.POP (Seg.GS);
 			Asm.POP (Seg.ES);
 			Asm.POP (Seg.DS);
-			Asm.POPA ();
+			Asm.POPAD ();
 			Asm.ADD (R32.ESP, 0x08);
-			Asm.STI ();
-			Asm.IRET ();
+			Asm.STI();
+			Asm.IRETD ();
 		}
 		#endregion
 	}
