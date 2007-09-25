@@ -12,18 +12,18 @@ using SharpOS.Memory;
 
 namespace SharpOS.Foundation {
 	public unsafe class Convert {
-		public unsafe static int ToByteString (string str, byte *buffer, int bufferLen, int offset)
+		public unsafe static int ToByteString (string str, byte* buffer, int bufferLen, int offset)
 		{
 			if (offset + str.Length + 1 > bufferLen)
 				return -1;
 
 			for (int x = 0; x < str.Length; ++x)
-				buffer [offset + x] = (byte)str [x];
+				buffer [offset + x] = (byte) str [x];
 
 			return 0;
 		}
-		
-		public unsafe static int ToString (int value, bool hex, byte *buffer,
+
+		public unsafe static int ToString (int value, bool hex, byte* buffer,
 						    int bufferLen, int offset)
 		{
 			uint uvalue = (uint) value;

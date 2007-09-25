@@ -497,7 +497,6 @@ namespace SharpOS.AOT.IR {
 			foreach (Block block in blocks) {
 				foreach (Block immediateDominator in block.Dominators) {
 					// An Immediate Dominator can't be the block itself
-
 					if (immediateDominator == block)
 						continue;
 

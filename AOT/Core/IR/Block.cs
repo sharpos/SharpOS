@@ -2334,6 +2334,8 @@ namespace SharpOS.AOT.IR {
 			return null;
 		}
 
+		#region CONV
+
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			return this.Convert (Operands.Operand.ConvertType.Conv_I);
@@ -2499,122 +2501,138 @@ namespace SharpOS.AOT.IR {
 			return this.Convert (Operands.Operand.ConvertType.Conv_U8);
 		}
 
+		#endregion
+
+		#region ADD
+
 		private SharpOS.AOT.IR.Instructions.Instruction Add (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.Add), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return AddHandler (Operator.BinaryType.Add);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Add_Ovf (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.AddSignedWithOverflowCheck), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return AddHandler (Operator.BinaryType.AddSignedWithOverflowCheck);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Add_Ovf_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.AddUnsignedWithOverflowCheck), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			return AddHandler (Operator.BinaryType.AddUnsignedWithOverflowCheck);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction AddHandler (Operator.BinaryType type)
+		{
+			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
 
 			Register assignee = this.SetRegister (stack - 2);
 
 			return new Assign (assignee, value);
 		}
 
+		#endregion
+
+		#region SUB
+
 		private SharpOS.AOT.IR.Instructions.Instruction Sub (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.Sub), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return SubHandler (Operator.BinaryType.Sub);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Sub_Ovf (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.SubSignedWithOverflowCheck), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return SubHandler (Operator.BinaryType.SubSignedWithOverflowCheck);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Sub_Ovf_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.SubUnsignedWithOverflowCheck), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			return SubHandler (Operator.BinaryType.SubUnsignedWithOverflowCheck);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction SubHandler (Operator.BinaryType type)
+		{
+			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
 
 			Register assignee = this.SetRegister (stack - 2);
 
 			return new Assign (assignee, value);
 		}
 
+		#endregion
+
+		#region MUL
+
 		private SharpOS.AOT.IR.Instructions.Instruction Mul (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.Mul), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return MulHandler (Operator.BinaryType.Mul);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Mul_Ovf (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.MulSignedWithOverflowCheck), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return MulHandler (Operator.BinaryType.MulSignedWithOverflowCheck);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Mul_Ovf_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.MulUnsignedWithOverflowCheck), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			return MulHandler (Operator.BinaryType.MulUnsignedWithOverflowCheck);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction MulHandler (Operator.BinaryType type)
+		{
+			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
 
 			Register assignee = this.SetRegister (stack - 2);
 
 			return new Assign (assignee, value);
 		}
 
+		#endregion
+
+		#region DIV
+
 		private SharpOS.AOT.IR.Instructions.Instruction Div (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.Div), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return DivHandler (Operator.BinaryType.Div);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Div_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.DivUnsigned), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			return DivHandler (Operator.BinaryType.DivUnsigned);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction DivHandler (Operator.BinaryType type)
+		{
+			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
 
 			Register assignee = this.SetRegister (stack - 2);
 
 			return new Assign (assignee, value);
 		}
 
+		#endregion
+
+		#region REM
+
 		private SharpOS.AOT.IR.Instructions.Instruction Rem (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.Remainder), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return RemHandler (Operator.BinaryType.Remainder);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Rem_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.RemainderUnsigned), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			return RemHandler (Operator.BinaryType.RemainderUnsigned);
+		}
+
+
+		private SharpOS.AOT.IR.Instructions.Instruction RemHandler (Operator.BinaryType type)
+		{
+			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
 
 			Register assignee = this.SetRegister (stack - 2);
 
 			return new Assign (assignee, value);
 		}
+
+		#endregion
 
 		private SharpOS.AOT.IR.Instructions.Instruction Neg (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
@@ -2670,143 +2688,166 @@ namespace SharpOS.AOT.IR {
 			return new Assign (assignee, value);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction Shr (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.SHR), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
-		}
+		#region SHR
 
 		private SharpOS.AOT.IR.Instructions.Instruction Shr_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.SHRUnsigned), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			return ShrHandler (Operator.BinaryType.SHRUnsigned);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction Shr (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return ShrHandler (Operator.BinaryType.SHR);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction ShrHandler (Operator.BinaryType type)
+		{
+			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
 
 			Register assignee = this.SetRegister (stack - 2);
 
 			return new Assign (assignee, value);
 		}
 
+		#endregion
+
+		#region Branch
+
 		private SharpOS.AOT.IR.Instructions.Instruction Beq (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.Equal), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.Equal);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Beq_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.Equal), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.Equal);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bge (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqual), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.GreaterThanOrEqual);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bge_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqual), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.GreaterThanOrEqual);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bge_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bge_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bgt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThan), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.GreaterThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bgt_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThan), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.GreaterThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bgt_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.GreaterThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bgt_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.GreaterThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ble (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqual), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.LessThanOrEqual);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ble_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqual), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.LessThanOrEqual);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ble_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ble_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Blt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThan), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.LessThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Blt_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThan), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.LessThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Blt_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.LessThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Blt_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.LessThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bne_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.NotEqualOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.NotEqualOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bne_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.NotEqualOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			return BranchHandler (Operator.RelationalType.NotEqualOrUnordered);
 		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction BranchHandler (Operator.RelationalType type)
+		{
+			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+		}
+
+		#endregion
+
+		#region BR True/False
 
 		private SharpOS.AOT.IR.Instructions.Instruction Brfalse (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.False), this.GetRegister (stack - 1)));
+			return BrTrueFalseHandler (Operator.BooleanType.False);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Brfalse_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.False), this.GetRegister (stack - 1)));
+			return BrTrueFalseHandler (Operator.BooleanType.False);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Brtrue (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.True), this.GetRegister (stack - 1)));
+			return BrTrueFalseHandler (Operator.BooleanType.True);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Brtrue_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.True), this.GetRegister (stack - 1)));
+			return BrTrueFalseHandler (Operator.BooleanType.True);
 		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction BrTrueFalseHandler (Operator.BooleanType type)
+		{
+			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (type), this.GetRegister (stack - 1)));
+		}
+
+		#endregion
 
 		private SharpOS.AOT.IR.Instructions.Instruction Br_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
@@ -2893,50 +2934,43 @@ namespace SharpOS.AOT.IR {
 			return new Assign (assignee, value);
 		}
 
+		#region Conditional Check
+
 		private SharpOS.AOT.IR.Instructions.Instruction Ceq (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Operands.Boolean value = new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.Equal), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-			
-			return new Assign (assignee, value);
+			return ConditionCheckHandler (Operator.RelationalType.Equal);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Cgt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Operands.Boolean value = new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.GreaterThan), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return ConditionCheckHandler (Operator.RelationalType.GreaterThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Cgt_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Operands.Boolean value = new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return ConditionCheckHandler (Operator.RelationalType.GreaterThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Clt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Operands.Boolean value = new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.LessThan), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-
-			Register assignee = this.SetRegister (stack - 2);
-
-			return new Assign (assignee, value);
+			return ConditionCheckHandler (Operator.RelationalType.LessThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Clt_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Operands.Boolean value = new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			return ConditionCheckHandler (Operator.RelationalType.LessThanUnsignedOrUnordered);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction ConditionCheckHandler (Operator.RelationalType type)
+		{
+			Operands.Boolean value = new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
 
 			Register assignee = this.SetRegister (stack - 2);
 
 			return new Assign (assignee, value);
 		}
+
+		#endregion
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldlen (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
@@ -3121,6 +3155,11 @@ namespace SharpOS.AOT.IR {
 		{
 			return LdindHandler (Operand.InternalSizeType.U4, cilInstruction);
 		}
+		
+		private SharpOS.AOT.IR.Instructions.Instruction Ldind_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			throw new Exception ("Not implemented yet.");
+		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction LdindHandler (Operand.InternalSizeType sizeType, Mono.Cecil.Cil.Instruction cilInstruction)
 		{
@@ -3296,6 +3335,11 @@ namespace SharpOS.AOT.IR {
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_R8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			return StindHandler (Operand.InternalSizeType.R8, cilInstruction);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction Stind_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			throw new Exception ("Not implemented yet.");
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction StindHandler (Operand.InternalSizeType sizeType, Mono.Cecil.Cil.Instruction cilInstruction)
@@ -3628,11 +3672,6 @@ namespace SharpOS.AOT.IR {
 		}
 		#endregion
 
-		private SharpOS.AOT.IR.Instructions.Instruction Newarr (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new Exception ("Not implemented yet.");
-		}
-
 		#region Stelem
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
@@ -3769,22 +3808,17 @@ namespace SharpOS.AOT.IR {
 		}
 		#endregion
 
+		private SharpOS.AOT.IR.Instructions.Instruction Newarr (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			throw new Exception ("Not implemented yet.");
+		}
+
 		private SharpOS.AOT.IR.Instructions.Instruction Break (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new Exception ("Not implemented yet.");
 		}
 		
 		private SharpOS.AOT.IR.Instructions.Instruction Calli (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new Exception ("Not implemented yet.");
-		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction Ldind_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new Exception ("Not implemented yet.");
-		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction Stind_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new Exception ("Not implemented yet.");
 		}
