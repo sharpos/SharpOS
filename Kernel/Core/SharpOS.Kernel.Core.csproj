@@ -46,56 +46,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ADC\Architecture.cs" />
-    <Compile Include="ADC\BootControl.cs" />
-    <Compile Include="ADC\Keyboard.cs" />
-    <Compile Include="ADC\Keys.cs" />
-    <Compile Include="ADC\Memory.cs" />
-    <Compile Include="ADC\MemoryManager.cs" />
-    <Compile Include="ADC\Pager.cs" />
-    <Compile Include="ADC\Processor.cs" />
-    <Compile Include="ADC\ProcessorType.cs" />
-    <Compile Include="ADC\Scheduler.cs" />
-    <Compile Include="ADC\TextColor.cs" />
-    <Compile Include="ADC\TextMode.cs" />
-    <Compile Include="ADC\Timer.cs" />
-    <Compile Include="ADC\X86\Architecture.cs" />
-    <Compile Include="ADC\X86\AssemblyAttributes.cs" />
-    <Compile Include="ADC\X86\BootControl.cs" />
-    <Compile Include="ADC\X86\Constants.cs" />
-    <Compile Include="ADC\X86\CPU.cs" />
-    <Compile Include="ADC\X86\DTPointer.cs" />
-    <Compile Include="ADC\X86\GDT.cs" />
-    <Compile Include="ADC\X86\IDT.cs" />
-    <Compile Include="ADC\X86\IO.cs" />
-    <Compile Include="ADC\X86\Keyboard.cs" />
-    <Compile Include="ADC\X86\Memory.cs" />
-    <Compile Include="ADC\X86\Pager.cs" />
-    <Compile Include="ADC\X86\PIC.cs" />
-    <Compile Include="ADC\X86\PIT.cs" />
-    <Compile Include="ADC\X86\Scheduler.cs" />
-    <Compile Include="ADC\X86\TextMode.cs" />
-    <Compile Include="ADC\X86\Timer.cs" />
-    <Compile Include="ASCII.cs" />
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="CommandLine.cs" />
-    <Compile Include="Console.cs" />
-    <Compile Include="EventRegisterStatus.cs" />
-    <Compile Include="Foundation\BinaryTool.cs" />
-    <Compile Include="Foundation\ByteString.cs" />
-    <Compile Include="Foundation\Convert.cs" />
-    <Compile Include="Foundation\CString8.cs" />
-    <Compile Include="Foundation\PString8.cs" />
-    <Compile Include="Foundation\StringBuilder.cs" />
-    <Compile Include="Kernel.cs" />
-    <Compile Include="KernelError.cs" />
-    <Compile Include="KernelStage.cs" />
-    <Compile Include="KeyMap.cs" />
-    <Compile Include="MemoryManager.cs" />
-    <Compile Include="Multiboot.cs" />
-    <Compile Include="PageAllocator.cs" />
-    <Compile Include="PageAttributes.cs" />
-    <Compile Include="PagingMemoryRequirements.cs" />
+    <Compile Include="ADC\*.cs" />
+    <Compile Include="ADC\X86\*.cs" />
+    <Compile Include="Foundation\*.cs" />
+    <Compile Include="*.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\build\Temp\BuiltinKeymaps.ska">
