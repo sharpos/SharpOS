@@ -33,7 +33,7 @@ namespace SharpOS.ADC.X86
 		static int y = 0;
 		static TextColor foreground = TextColor.White;
 		static TextColor background = TextColor.Black;
-		static byte attributes = 0;
+		static byte attributes = (byte)((byte)foreground | ((byte)background << 4));
 		static byte *savedAttributes = Kernel.StaticAlloc (Kernel.MaxTextAttributeSlots);
 
 		static IO.Port CRT_index_register;
@@ -117,6 +117,9 @@ namespace SharpOS.ADC.X86
 			//IO.Out8(CRT_index_register, (byte)CRT_Indices.vertical_displayed);
 			//height = (IO.In8(CRT_data_register) + 1);
 			ADC.TextMode.Write (IO.In8(CRT_data_register) + 1);
+
+			for (int x = 0; x < Kernel.MaxTextAttributeSlots; x++)
+				savedAttributes [x] = 0xFF;	
 		}
 
 		public static TextColor Foreground {
@@ -187,13 +190,14 @@ namespace SharpOS.ADC.X86
 
 			uint fill;
 			uint count = (uint)(scanline * height);
-			
+
 			if (colorMode) {
+				uint attr = attributes;
 				fill =
 					((uint)0x20) |
-					((uint)attributes << 8) |
+					(attr << 8) |
 					((uint)0x20 << 16) |
-					((uint)attributes << 24);
+					(attr << 24);
 			} else {
 				fill =
 					((uint)0x20) |
@@ -266,11 +270,12 @@ namespace SharpOS.ADC.X86
 			dst = address + (uint)count;
 
 			if (colorMode) {
+				uint attr = attributes;
 				fill =
 					((uint)0x20) |
-					((uint)attributes << 8) |
+					(attr << 8) |
 					((uint)0x20 << 16) |
-					((uint)attributes << 24);
+					(attr << 24);
 			} else {
 				fill =
 					((uint)0x20) |
@@ -331,21 +336,18 @@ namespace SharpOS.ADC.X86
 					return true;
 				}
 			}
-
 			return false;
 		}
 		
 		public static bool RestoreAttributes ()
 		{
-			for (int x = Kernel.MaxTextAttributeSlots; x >= 0; --x) {
+			for (int x = Kernel.MaxTextAttributeSlots - 1; x >= 0; --x) {
 				if (savedAttributes [x] != 0xFF) {
 					attributes = savedAttributes [x];
-					savedAttributes [x] = 0xFF;
-					
+					savedAttributes [x] = 0xFF;		
 					return true;
 				}
 			}
-
 			return false;
 		}
 

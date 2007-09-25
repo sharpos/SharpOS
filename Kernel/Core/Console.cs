@@ -22,7 +22,7 @@ namespace SharpOS
 	/// - text history
 	/// - ability to move cursor left / right
 	/// - use modifier keys
-	/// - add capslock/numlock support
+	/// - add numlock support
 	///		just like we're now passing a 'shifted' boolean value to translate, 
 	///		should we also pass a 'numlock' boolean value to translate?
 	///		maybe this needs to be generalized somehow (eventually)?
@@ -46,7 +46,7 @@ namespace SharpOS
 			
 			initialized = true;
 			TextMode.RefreshCursor ();
-			SetOverwrite (true);
+			SetOverwrite(overwrite);
 		}
 		
 		public static unsafe void SetOverwrite (bool _overwrite)
@@ -74,21 +74,67 @@ namespace SharpOS
 
 			byte	key = 0;
 
-			bool upperCase = (Keyboard.LeftShift() || Keyboard.RightShift()) ^ Keyboard.CapsLock();			
+			bool upperCase = (Keyboard.LeftShift() || Keyboard.RightShift()) ^ Keyboard.CapsLock();
+
+			TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
+
+			switch ((ADC.Keys)scancode)
+			{
+				case Keys.Insert: 
+					overwrite = !overwrite;
+					SetOverwrite(overwrite);
+					return;
+				case Keys.Delete:
+					break;
+
+				case Keys.Backspace:
+					int x, y, width, height;
+
+					TextMode.GetScreenSize(&width, &height);
+					TextMode.GetCursor(&x, &y); 
+					x--;
+					if (x < 0)
+					{
+						x = width - 1;
+						y--;
+						if (y < 0)
+						{
+							y = 0;
+							return;
+						}
+					}
+					TextMode.MoveTo(x, y);
+					TextMode.WriteChar((byte)' ');
+					TextMode.MoveTo(x, y);
+					TextMode.RefreshCursor();
+					return;
+
+				case Keys.LeftArrow:
+					return;
+				case Keys.RightArrow:
+					return;
+
+				case Keys.UpArrow:
+					return;
+				case Keys.DownArrow:
+					return;
+
+				case Keys.Enter:
+					TextMode.WriteLine();
+					TextMode.RefreshCursor();
+					return;
+			}
+
 			key = Keyboard.Translate(scancode, upperCase);
 
 			if (key == 0)
 			{
 				// just so that you can actually see that keyboard input works (& we simply don't know what character you just pressed)...
-				TextMode.SetAttributes(TextColor.Red, TextColor.Black);
 				TextMode.WriteChar((byte)'?');
 				TextMode.RefreshCursor();
 				return;
 			}
 
-			//key = ASCII.ToUpper (key);
-
-			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.WriteChar (key);
 			TextMode.RefreshCursor ();
 		}
@@ -99,12 +145,14 @@ namespace SharpOS
 			if (ticks % SharpOS.ADC.Timer.GetFrequency () == 0)
 			{
 				int x, y;
-				
-				TextMode.GetCursor (&x, &y);
+
+				TextMode.GetCursor(&x, &y);
+				TextMode.SaveAttributes();
 				TextMode.MoveTo (0, 24);
 				TextMode.SetAttributes (TextColor.Yellow, TextColor.Red);
-				TextMode.WriteLine ("Timer ticks: ", (int)ticks);
-				TextMode.MoveTo (x, y);
+				TextMode.WriteLine("Timer ticks: ", (int)ticks);
+				TextMode.RestoreAttributes();
+				TextMode.MoveTo(x, y);
 			}
 		}
 	}

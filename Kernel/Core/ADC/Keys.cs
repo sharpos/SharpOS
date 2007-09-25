@@ -1,6 +1,6 @@
 namespace SharpOS.ADC
 {
-	public enum Keys
+	public enum Keys : uint
 	{
 		Backspace		= 0x000E,
 		Tab				= 0x000F,
