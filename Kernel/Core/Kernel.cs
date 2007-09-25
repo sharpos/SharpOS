@@ -139,7 +139,7 @@ namespace SharpOS {
 			//TODO: need to use some reasonable values here + use paging to avoid using memory used by hardware, applications
 			//		& eventually other processes
 			ADC.MemoryManager.Setup((void*)multibootInfo->MemLower, (void*)0xa0000);
-/*
+
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
 
@@ -152,20 +152,20 @@ namespace SharpOS {
 
 			ADC.MemoryManager.Dump();
 
+			ADC.MemoryManager.Release(data);
 			ADC.MemoryManager.Release(data3);
 			ADC.MemoryManager.Release(data2);
-			ADC.MemoryManager.Release(data);
 
 			ADC.MemoryManager.Dump();
 
-			data3 = ADC.MemoryManager.Allocate(400);
+			data = ADC.MemoryManager.Allocate(400);
 			data2 = ADC.MemoryManager.Allocate(200);
-			data = ADC.MemoryManager.Allocate(100);
+			data3 = ADC.MemoryManager.Allocate(100);
 			
 			ADC.MemoryManager.Dump();
 
 			TextMode.RestoreAttributes();
-*/
+
 #if KERNEL_TESTS
 			// Testcases
 			

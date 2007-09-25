@@ -12,10 +12,11 @@ namespace SharpOS.ADC
 		private static uint		memoryStart			= 0;
 		private static uint		minimumBlockSize	= 0;
 
+		//TODO: remove prevnode dependency
 		private struct Header
 		{
 			public Header*		nextNode;
-			public Header*		prevNode;	//TODO: remove dependency on this one..
+			public Header*		prevNode;
 			public uint			nodeSize;
 		}
 
@@ -41,7 +42,6 @@ namespace SharpOS.ADC
 			firstEmptyNode->nodeSize = (uint)((memoryEnd - memoryStart) - sizeof(Header));
 		}
 
-		// TODO: Don't just use the largest block, but try to find a block which is exactly the right size first
 		public static unsafe void* Allocate(uint allocate_size)
 		{
 			// Align size to 32bit..
@@ -50,8 +50,18 @@ namespace SharpOS.ADC
 				allocate_size -= allocate_size & 3;
 				allocate_size += 4;
 			}
-
+						
 			Header* currentNode		= firstEmptyNode;
+			// Try to find a node with the exact same size...
+			while (currentNode != null)
+			{
+				if (currentNode->nodeSize == allocate_size)
+					break;
+				currentNode = currentNode->nextNode;
+			}
+			if (currentNode == null)
+				currentNode = firstEmptyNode;
+
 			if (allocate_size > currentNode->nodeSize)
 				// couldn't find a large enough block..
 				return null;
@@ -61,11 +71,16 @@ namespace SharpOS.ADC
 			
 
 			//
-			// Remove the first node from the empty list (current node)
+			// Remove the node from the empty list (current node)
 			//
-			firstEmptyNode				= currentNode->nextNode;
-			firstEmptyNode->prevNode	= null;
-			currentNode->prevNode		= null;
+			if (currentNode->prevNode != null)
+				currentNode->prevNode->nextNode = currentNode->nextNode;
+			else
+				firstEmptyNode = currentNode->nextNode;
+
+			if (currentNode->nextNode != null)
+				currentNode->nextNode->prevNode = currentNode->prevNode;
+			currentNode->prevNode = null;
 			
 			//
 			// Add new node to the start of the used node list (new nodes are more likely to live short than long)
@@ -141,22 +156,80 @@ namespace SharpOS.ADC
 				ADC.TextMode.Write("Pointer: ");
 				ADC.TextMode.Write((int)currentNode);
 
-				ADC.TextMode.Write(" Size: ");
-				ADC.TextMode.Write((int)currentNode->nodeSize);
+				ADC.TextMode.Write(" Prev: ");
+				ADC.TextMode.Write((int)currentNode->prevNode);
 
 				ADC.TextMode.Write(" Next: ");
 				ADC.TextMode.Write((int)currentNode->nextNode);
 
-				ADC.TextMode.Write(" Prev: ");
-				ADC.TextMode.Write((int)currentNode->prevNode);
+				ADC.TextMode.Write(" Size: ");
+				ADC.TextMode.Write((int)currentNode->nodeSize);
 			}
 
 			ADC.TextMode.WriteLine();
 		}
 
-		// TODO: Look for adjacent memory blocks and merge them
 		private static unsafe void AddToEmpty(Header* currentNode)
 		{
+			//
+			// Look for adjacent memory blocks and merge them
+			//
+			Header* iterator	= firstEmptyNode;
+			Header*	nextNode	= (Header*)(((byte*)currentNode) + currentNode->nodeSize + sizeof(Header));
+			Header* nextIteratorNode;
+			while (iterator != null)
+			{
+				nextIteratorNode = (Header*)(((byte*)iterator) + iterator->nodeSize + sizeof(Header));
+				if (nextIteratorNode == currentNode) // iterator lies in front of currentNode
+				{
+					//
+					// Remove node from list
+					//
+					if (iterator->prevNode != null)
+						iterator->prevNode->nextNode = iterator->nextNode;
+					else
+						firstEmptyNode = iterator->nextNode;
+
+					if (iterator->nextNode != null)
+						iterator->nextNode->prevNode = iterator->prevNode;
+					
+					//
+					// Merge nodes
+					//
+					uint offset = (uint)(currentNode->nodeSize + sizeof(Header));
+					iterator->nodeSize += offset;
+					nextNode = (Header*)(((byte*)iterator) + iterator->nodeSize + sizeof(Header));
+					currentNode = iterator;
+
+					// Probably not the most efficient choice...
+					iterator = firstEmptyNode;
+				} else
+				if (iterator == nextNode)	// currentNode lies in front of iterator
+				{
+					//
+					// Remove node from list
+					//
+					if (iterator->prevNode != null)
+						iterator->prevNode->nextNode = iterator->nextNode;
+					else
+						firstEmptyNode = iterator->nextNode;
+
+					if (iterator->nextNode != null)
+						iterator->nextNode->prevNode = iterator->prevNode;
+
+					//
+					// Merge nodes
+					//
+					uint offset = (uint)(iterator->nodeSize + sizeof(Header));
+					currentNode->nodeSize += offset;
+					nextNode += offset;
+
+					// Probably not the most efficient choice...
+					iterator = firstEmptyNode;
+				} else
+					iterator = iterator->nextNode;
+			}
+
 			if (firstEmptyNode == null)
 			{
 				// set the start of the linked list to the new node
@@ -176,23 +249,23 @@ namespace SharpOS.ADC
 				}
 
 				// find the position to place the of the new empty node
-				Header* iterator = firstEmptyNode;
-				while (iterator->nextNode != null)
+				Header* insert_iterator = firstEmptyNode;
+				while (insert_iterator->nextNode != null)
 				{
-					iterator = iterator->nextNode;
-					if (iterator->nodeSize < currentNode->nodeSize)
+					insert_iterator = insert_iterator->nextNode;
+					if (insert_iterator->nodeSize < currentNode->nodeSize)
 					{
-						currentNode->nextNode	= iterator;
-						currentNode->prevNode	= iterator->prevNode;
-						iterator->prevNode		= currentNode;
+						currentNode->nextNode		= insert_iterator;
+						currentNode->prevNode		= insert_iterator->prevNode;
+						insert_iterator->prevNode	= currentNode;
 						return;
 					}
 				}
 
 				// add node to end of list
-				iterator->nextNode		= currentNode;
-				currentNode->prevNode	= iterator;
-				currentNode->nextNode	= null;
+				insert_iterator->nextNode	= currentNode;
+				currentNode->prevNode		= insert_iterator;
+				currentNode->nextNode		= null;
 			}
 		}
 		
