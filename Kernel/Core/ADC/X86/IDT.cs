@@ -173,6 +173,44 @@ namespace SharpOS.ADC.X86 {
 		}
 		#endregion
 
+		#region ErrorInterrupts
+		public enum ErrorInterrupts
+		{
+			DivideError				= 0x00,	// AAM/DIV/IDIV divide by zero, DIV/IDIV result too large
+			Debug					= 0x01,	//
+			NonMaskableInterrupt	= 0x02,	// non-maskable interrupt
+			BreakPoint				= 0x03,	//
+			Overflow				= 0x04,	//
+			BoundaryRangeExceeded	= 0x05,	//
+			UndefinedOpcode			= 0x06,	//
+			DeviceNotAvailable		= 0x07,	//
+			DoubleFault				= 0x08,	// exceptions during exception handler invocation
+			//Reserved				= 0x09,	
+			InvalidTSS				= 0x0A,	// implicit TSS accesses
+			NotPresent				= 0x0B,	// Segment register loads, explicit/implicit segment register accesses
+			StackSegment			= 0x0C,	// SS loads, explicit/implicit SS accesses
+			GeneralProtection		= 0x0D,	//
+			PageFault				= 0x0E,	//
+			//Reserved				= 0x0F,	
+			MathFault				= 0x10,	//
+			AlignmentChecking		= 0x11,	// Misaligned accesses / Lock accross cache line or page boundary 
+			MachineCheck			= 0x12,	// Internal error, bus error, or bus error detected by external agent
+			ExtendedMathFault		= 0x13,	//
+			//Reserved				= 0x14,	
+			//Reserved				= 0x15,	
+			//Reserved				= 0x16,	
+			//Reserved				= 0x17,	
+			//Reserved				= 0x18,	
+			//Reserved				= 0x19,	
+			//Reserved				= 0x1A,	
+			//Reserved				= 0x1B,	
+			//Reserved				= 0x1C,	
+			//Reserved				= 0x1D,	
+			//Reserved				= 0x1E,	
+			//Reserved				= 0x1F,	
+		}
+		#endregion
+
 		#region ISRDefaultHandler
 		[SharpOS.AOT.Attributes.Label (ISR_DEFAULT_HANDLER)]
 		private static unsafe void ISRDefaultHandler (ISRData data)
@@ -180,6 +218,27 @@ namespace SharpOS.ADC.X86 {
 			Kernel.SetErrorTextAttributes ();
 			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked.\n");
 			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.IrqIndex);
+			switch ((ErrorInterrupts)data.IrqIndex)
+			{
+				case ErrorInterrupts.DivideError:			ADC.TextMode.WriteLine ("          Divide Error"); break;
+				case ErrorInterrupts.Debug:					ADC.TextMode.WriteLine ("          Debug"); break;
+				case ErrorInterrupts.NonMaskableInterrupt:	ADC.TextMode.WriteLine ("          NonMaskable Interrupt"); break;
+				case ErrorInterrupts.BreakPoint:			ADC.TextMode.WriteLine ("          Break Point"); break;
+				case ErrorInterrupts.Overflow:				ADC.TextMode.WriteLine ("          Overflow"); break;
+				case ErrorInterrupts.BoundaryRangeExceeded: ADC.TextMode.WriteLine ("          Boundary Range Exceeded"); break;
+				case ErrorInterrupts.UndefinedOpcode:		ADC.TextMode.WriteLine ("          Undefined Opcode"); break;
+				case ErrorInterrupts.DeviceNotAvailable:	ADC.TextMode.WriteLine ("          Device Not Available"); break;
+				case ErrorInterrupts.DoubleFault:			ADC.TextMode.WriteLine ("          Double Fault"); break;
+				case ErrorInterrupts.InvalidTSS:			ADC.TextMode.WriteLine ("          Invalid TSS"); break;
+				case ErrorInterrupts.NotPresent:			ADC.TextMode.WriteLine ("          Not Present"); break;
+				case ErrorInterrupts.StackSegment:			ADC.TextMode.WriteLine ("          Stack Segment"); break;
+				case ErrorInterrupts.GeneralProtection:		ADC.TextMode.WriteLine ("          General Protection"); break;
+				case ErrorInterrupts.PageFault:				ADC.TextMode.WriteLine ("          Page Fault"); break;
+				case ErrorInterrupts.MathFault:				ADC.TextMode.WriteLine ("          Math Fault"); break;
+				case ErrorInterrupts.AlignmentChecking:		ADC.TextMode.WriteLine ("          Alignment Checking"); break;
+				case ErrorInterrupts.MachineCheck:			ADC.TextMode.WriteLine ("          Machine Check"); break;
+				case ErrorInterrupts.ExtendedMathFault:		ADC.TextMode.WriteLine ("          Extended Math Fault"); break;
+			}
 			ADC.TextMode.WriteLine ();
             ADC.TextMode.WriteLine ("Register dump:");
 
