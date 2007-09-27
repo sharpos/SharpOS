@@ -15,6 +15,23 @@ namespace SharpOS.ADC.X86
 {
 	public static class Memory
 	{
+		public static unsafe void MemSet(uint value, uint dst, uint count)
+		{
+									Asm.MOV(R32.ECX, &count);
+									Asm.MOV(R32.EAX, &value);
+									Asm.MOV(R32.EDI, &dst);
+
+									Asm.SHR(R32.ECX, 1);		// divide count by 2 (8bit -> 16bit blocks)
+									Asm.JNC("Set16");			// if carry flag has not been set, skip next instruction
+							    	Asm.STOSB();				// move a byte (8bit) first
+
+			Asm.LABEL("Set16");		Asm.SHR(R32.ECX, 1);		// divide count by 2 (16bit -> 32bit blocks)
+							    	Asm.JNC("Set32");			// if carry flag has not been set, skip next instruction
+									Asm.STOSW();				// move short (16bit) first
+
+			Asm.LABEL("Set32");		Asm.REP(); Asm.STOSD();
+		}
+
 		public static unsafe void MemSet32(uint value, uint dst, uint count)
 		{
 			Asm.MOV(R32.ECX, &count);

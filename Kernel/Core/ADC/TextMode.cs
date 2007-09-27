@@ -89,6 +89,14 @@ namespace SharpOS.ADC {
 		}
 
 		/// <summary>
+		/// Clear to end of line
+		/// </summary>
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void ClearToEndOfLine()
+		{
+		}
+
+		/// <summary>
 		/// Scroll the screen by <paramref name="value" /> lines.
 		/// </summary>
 		[SharpOS.AOT.Attributes.ADCStub]

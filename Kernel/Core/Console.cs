@@ -20,14 +20,16 @@ namespace SharpOS
 	/// <todo>
 	/// TODO
 	/// - text history
-	/// - ability to move cursor left / right
-	/// - use modifier keys
-	/// - add numlock support
+	///		- move up with pgup/pgdown
+	/// - typing in command
+	///		- move left/right in command
+	///		- insert overwrite
+	/// - add capslock/numlock support
 	///		just like we're now passing a 'shifted' boolean value to translate, 
 	///		should we also pass a 'numlock' boolean value to translate?
 	///		maybe this needs to be generalized somehow (eventually)?
 	///		what if a keyboard manifacturer has programmable keys/modes etc.?
-	/// - create keycode-enum for human readable keycodes
+	///		capslock is also not exactly the same as shift, because shift+1 is not the same as capslock+1
 	/// </todo>
 	public unsafe class Console
 	{
@@ -72,26 +74,29 @@ namespace SharpOS
 			if (!initialized)
 				return;
 
-			byte	key = 0;
-
-			bool upperCase = (Keyboard.LeftShift() || Keyboard.RightShift()) ^ Keyboard.CapsLock();
+			// actually not correct because capslock does not behave like shift on all characters...
+			bool	upperCase	= (Keyboard.LeftShift() || Keyboard.RightShift()) ^ Keyboard.CapsLock();
 
 			TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
 
 			switch ((ADC.Keys)scancode)
 			{
-				case Keys.Insert: 
+				case Keys.Insert:
+				{
 					overwrite = !overwrite;
 					SetOverwrite(overwrite);
 					return;
+				}
 				case Keys.Delete:
-					break;
-
+				{
+					return;
+				}
 				case Keys.Backspace:
+				{
 					int x, y, width, height;
 
 					TextMode.GetScreenSize(&width, &height);
-					TextMode.GetCursor(&x, &y); 
+					TextMode.GetCursor(&x, &y);
 					x--;
 					if (x < 0)
 					{
@@ -108,25 +113,61 @@ namespace SharpOS
 					TextMode.MoveTo(x, y);
 					TextMode.RefreshCursor();
 					return;
-
+				}
 				case Keys.LeftArrow:
-					return;
-				case Keys.RightArrow:
-					return;
+				{
+					int x, y, width, height;
 
-				case Keys.UpArrow:
-					return;
-				case Keys.DownArrow:
-					return;
-
-				case Keys.Enter:
-					TextMode.WriteLine();
+					TextMode.GetScreenSize(&width, &height);
+					TextMode.GetCursor(&x, &y);
+					x = x - 1; if (x < 0) x = 0;
+					TextMode.MoveTo(x, y);
 					TextMode.RefreshCursor();
 					return;
+				}
+				case Keys.RightArrow:
+				{
+					int x, y, width, height;
+
+					TextMode.GetScreenSize(&width, &height);
+					TextMode.GetCursor(&x, &y);
+					x = x + 1; if (x >= width) x = width - 1;
+					TextMode.MoveTo(x, y);
+					TextMode.RefreshCursor();
+					return;
+				}
+				case Keys.UpArrow:
+				{
+					int x, y, width, height;
+
+					TextMode.GetScreenSize(&width, &height);
+					TextMode.GetCursor(&x, &y);
+					y = y - 1; if (y < 0) y = 0;
+					TextMode.MoveTo(x, y);
+					TextMode.RefreshCursor();
+					return;
+				}
+				case Keys.DownArrow:
+				{
+					int x, y, width, height;
+
+					TextMode.GetScreenSize(&width, &height);
+					TextMode.GetCursor(&x, &y);
+					y = y + 1; if (y >= height) y = height - 1;
+					TextMode.MoveTo(x, y);
+					TextMode.RefreshCursor();
+					return;
+				}
+				case Keys.Enter:
+				{
+					TextMode.WriteLine();
+					TextMode.ClearToEndOfLine();
+					TextMode.RefreshCursor();
+					return;
+				}
 			}
 
-			key = Keyboard.Translate(scancode, upperCase);
-
+			byte key = Keyboard.Translate(scancode, upperCase);
 			if (key == 0)
 			{
 				// just so that you can actually see that keyboard input works (& we simply don't know what character you just pressed)...

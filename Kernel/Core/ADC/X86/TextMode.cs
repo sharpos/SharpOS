@@ -29,20 +29,24 @@ namespace SharpOS.ADC.X86
 	{
 		#region Global state
 		
-		static int x = 0;
-		static int y = 0;
-		static TextColor foreground = TextColor.White;
-		static TextColor background = TextColor.Black;
-		static byte attributes = (byte)((byte)foreground | ((byte)background << 4));
-		static byte *savedAttributes = Kernel.StaticAlloc (Kernel.MaxTextAttributeSlots);
+		static int			x = 0;
+		static int			y = 0;
+		static TextColor	foreground		= TextColor.White;
+		static TextColor	background		= TextColor.Black;
+		static byte			attributes		= (byte)((byte)foreground | ((byte)background << 4));
+		static byte *		savedAttributes = Kernel.StaticAlloc (Kernel.MaxTextAttributeSlots);
 
-		static IO.Port CRT_index_register;
-		static IO.Port	CRT_data_register;
-		static int width = 80;
-		static int scanline = 80;
-		static int height = 25;
-		static uint address = 0xB0000;
-		static bool colorMode = false;
+		static IO.Port		CRT_index_register;
+		static IO.Port		CRT_data_register;
+
+		static int			width		= 80;
+		static uint			scanline	= 80;
+		static int			bytePerChar = 1;
+		static int			height		= 25;
+		static uint			address		= 0xB0000;
+		static uint			screenSize	= 80 * 25;
+		static uint			maxLines	= Kernel.MaxTextBufferLines;
+		static bool			colorMode	= false;
 
 		#endregion
 		#region Nested types
@@ -88,15 +92,17 @@ namespace SharpOS.ADC.X86
 		/// <reference>http://www.cknow.com/refs/VideoDisplayStandards.html</reference>
 		public static void Setup ()
 		{
-			// Find CRT controller addresses
-			
+			for (int x = 0; x < Kernel.MaxTextAttributeSlots; x++)
+				savedAttributes[x] = 0xFF;
+
+			// Find CRT controller addresses			
 			if ((IO.In8 (IO.Port.EGA_graphics_1_position_register) & 1) == 1) {
 				// CGA/EGA color text mode
 				
 				CRT_index_register = IO.Port.CGA_CRT_index_register;
 				CRT_data_register = IO.Port.CGA_CRT_data_register;
 				address = 0xB8000;
-				scanline = 160;
+				bytePerChar = 2;
 				colorMode = true;
 			} else {
 				// MDA monochrome text mode
@@ -104,9 +110,10 @@ namespace SharpOS.ADC.X86
 				CRT_index_register = IO.Port.MDA_CRT_index_register;
 				CRT_data_register = IO.Port.MDA_CRT_data_register;
 				address = 0xB0000;
-				scanline = 80;
+				bytePerChar = 1;
 				colorMode = false;
 			}
+			maxLines = (uint)(Kernel.MaxTextBufferLines / bytePerChar);
 
 			// read the width
 			
@@ -114,12 +121,17 @@ namespace SharpOS.ADC.X86
 			width = (IO.In8(CRT_data_register) + 1);
 
 			// this returns a funny number... what am i doing wrong here?
-			//IO.Out8(CRT_index_register, (byte)CRT_Indices.vertical_displayed);
-			//height = (IO.In8(CRT_data_register) + 1);
-			ADC.TextMode.Write (IO.In8(CRT_data_register) + 1);
+			/*
+			IO.Out8(CRT_index_register, (byte)CRT_Indices.vertical_displayed);
+			height = (IO.In8(CRT_data_register) + 1);
 
-			for (int x = 0; x < Kernel.MaxTextAttributeSlots; x++)
-				savedAttributes [x] = 0xFF;	
+			ADC.TextMode.Write("height: ");
+			ADC.TextMode.Write(height);
+			ADC.TextMode.WriteLine();*/
+			height = 25;
+
+			scanline = (uint)(width * bytePerChar);
+			screenSize = (uint)(scanline * height);
 		}
 
 		public static TextColor Foreground {
@@ -189,7 +201,6 @@ namespace SharpOS.ADC.X86
 			x = 0; y = 0;
 
 			uint fill;
-			uint count = (uint)(scanline * height);
 
 			if (colorMode) {
 				uint attr = attributes;
@@ -206,17 +217,38 @@ namespace SharpOS.ADC.X86
 					((uint)0x20 << 24);
 			}
 
-			Memory.MemSet32(fill, address, count / 4);
+			Memory.MemSet(fill, address, screenSize);
+		}
 
-			/*** FIXME: the code below sometimes causes a crash now and then?
-			
-			for (byte* video = (byte*)address; (uint)video < address + width * height; )
+		/// <summary>
+		/// Clear to end of line
+		/// </summary>
+		public unsafe static void ClearToEndOfLine()
+		{
+			uint fill;
+			uint count = (uint)(bytePerChar * (width - x));
+
+			if (colorMode)
 			{
-				*video++ = 0x20;
-				*video++ = 0x00;
+				uint attr = attributes;
+				fill =
+					((uint)0x20) |
+					(attr << 8) |
+					((uint)0x20 << 16) |
+					(attr << 24);
+			}
+			else
+			{
+				fill =
+					((uint)0x20) |
+					((uint)0x20 << 8) |
+					((uint)0x20 << 16) |
+					((uint)0x20 << 24);
 			}
 
-			*/
+			byte* video = (byte*)address;
+			video += (uint)(x + (y * scanline));
+			Memory.MemSet(fill, (uint)video, count);
 		}
 
 		public static void WriteChar (byte value)
@@ -255,12 +287,12 @@ namespace SharpOS.ADC.X86
 			if (value <= 0)
 				return;		// scrolldown not implemented
 
-			int lines, count, count2;
+			uint lines, count, count2;
 			uint src, dst, fill;
 			
-			lines = height - (value + 1);
+			lines = (uint)(height - (value + 1));
 			count = lines * scanline;
-			count2 = value * scanline;
+			count2 = (uint)(value * scanline);
 
 			src = address + (uint)count2;
 			dst = address;
@@ -287,37 +319,17 @@ namespace SharpOS.ADC.X86
 			Memory.MemSet32(fill, dst, (uint)(count2 / 4));
 		}
 
+		private const string hexValues = "0123456789ABCDEF";
 		public static void WriteByte (byte value)
 		{
-			WriteHex ((byte) (value >> 4));
-			WriteHex ((byte) (value & 0x0F));
+			WriteChar((byte)hexValues[((value >> 4) & 0x0F)]);
+			WriteChar((byte)hexValues[((value     ) & 0x0F)]);
 		}
 
 		public static void WriteHex (byte value)
 		{
-			if (value <= 9)
-				WriteChar ((byte) (48 + value));
-
-			else if (value == 10)
-				WriteChar ((byte) 'A');
-
-			else if (value == 11)
-				WriteChar ((byte) 'B');
-
-			else if (value == 12)
-				WriteChar ((byte) 'C');
-
-			else if (value == 13)
-				WriteChar ((byte) 'D');
-
-			else if (value == 14)
-				WriteChar ((byte) 'E');
-
-			else if (value == 15)
-				WriteChar ((byte) 'F');
-
-			else
-				WriteChar ((byte) 'X');
+			if (value > 15) WriteChar((byte)'X');
+			else			WriteChar((byte)hexValues[value]);
 		}
 
 		public static void SetAttributes (TextColor _foreground, TextColor _background)
