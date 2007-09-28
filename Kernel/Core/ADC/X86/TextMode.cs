@@ -24,33 +24,73 @@ namespace SharpOS.ADC.X86
 	/// </summary>
 	/// <todo>
 	/// * FIXME: get row size from video card
+	/// * Cleanup naming & usage of functions
 	/// </todo>
 	public unsafe class TextMode
 	{
 		#region Global state
-		
+
+		// Hardware
+		static IO.Port		CRT_index_register;
+		static IO.Port		CRT_data_register;
+		static uint			addressStart	= 0xB0000;
+		static uint			addressEnd		= 0xB8000;
+		static int			bytePerChar		= 1;
+		static bool			colorMode		= false;
+		static bool			haveBuffer		= false;
+		static int			height			= 25;
+		static int			width			= 80;
+		static int			bufferHeight	= 25;
+		static uint			bufferSize		= 0;
+		static uint			scanline		= 80;
+
 		static int			x = 0;
 		static int			y = 0;
+		static int			readY	= 0;
+		static int			writeY	= 0;
 		static TextColor	foreground		= TextColor.White;
 		static TextColor	background		= TextColor.Black;
+
+		static uint			fill			= 0;
 		static byte			attributes		= (byte)((byte)foreground | ((byte)background << 4));
 		static byte *		savedAttributes = Kernel.StaticAlloc (Kernel.MaxTextAttributeSlots);
 
-		static IO.Port		CRT_index_register;
-		static IO.Port		CRT_data_register;
+		#endregion
+		#region Properties
+		
+		public static TextColor Foreground
+		{
+			get { return foreground; }
+			set
+			{
+				SetAttributes(value, background);
+			}
+		}
 
-		static int			width		= 80;
-		static uint			scanline	= 80;
-		static int			bytePerChar = 1;
-		static int			height		= 25;
-		static uint			address		= 0xB0000;
-		static uint			screenSize	= 80 * 25;
-		static uint			maxLines	= Kernel.MaxTextBufferLines;
-		static bool			colorMode	= false;
+		public static TextColor Background
+		{
+			get { return background; }
+			set
+			{
+				SetAttributes(foreground, value);
+			}
+		}
+
+		public static int X
+		{
+			get { return x; }
+			set { x = value; }
+		}
+
+		public static int Y
+		{
+			get { return y; }
+			set { y = value; }
+		}
 
 		#endregion
 		#region Nested types
-		
+
 		private enum CRT_Indices : byte
 		{
 			horizontal_total			= 0x00,
@@ -70,14 +110,40 @@ namespace SharpOS.ADC.X86
 			cursor_start				= 0x0A,
 			cursor_end					= 0x0B,
 			
+			start_address				= 0x0C,
 			start_address_high			= 0x0C,
 			start_address_low			= 0x0D,
 			
+			cursor_location				= 0x0E,
 			cursor_location_high		= 0x0E,
 			cursor_location_low			= 0x0F,
-
+			
+			light_pen					= 0x10,
 			light_pen_high				= 0x10,
 			light_pen_low				= 0x11,
+		}
+
+		#endregion
+		#region HardwareCommand
+
+		private static int HardwareCommand(CRT_Indices index)
+		{
+			IO.Out8(CRT_index_register, (byte)index);
+			return IO.In8(CRT_data_register);
+		}
+
+		private static void HardwareCommand(CRT_Indices index, byte value)
+		{
+			IO.Out8(CRT_index_register, (byte)index);
+			IO.Out8(CRT_data_register, (byte)value);
+		}
+
+		private static void HardwareCommand(CRT_Indices index, ushort value)
+		{
+			// high
+			HardwareCommand(index, (byte)((value >> 8) & 0xff));
+			// low
+			HardwareCommand((CRT_Indices)(index + 1), (byte)(value & 0xff));
 		}
 
 		#endregion
@@ -92,70 +158,63 @@ namespace SharpOS.ADC.X86
 		/// <reference>http://www.cknow.com/refs/VideoDisplayStandards.html</reference>
 		public static void Setup ()
 		{
-			for (int x = 0; x < Kernel.MaxTextAttributeSlots; x++)
-				savedAttributes[x] = 0xFF;
-
 			// Find CRT controller addresses			
 			if ((IO.In8 (IO.Port.EGA_graphics_1_position_register) & 1) == 1) {
 				// CGA/EGA color text mode
 				
 				CRT_index_register = IO.Port.CGA_CRT_index_register;
 				CRT_data_register = IO.Port.CGA_CRT_data_register;
-				address = 0xB8000;
-				bytePerChar = 2;
-				colorMode = true;
+				addressStart = 0xB8000;
+				addressEnd	 = 0xBC000;	// CGA has 16kb video memory
+										// ideally we'd poll how much video memory
+										// we can use, but we can't so we're
+										// being conservative and only use 16kb.
+				bytePerChar  = 2;
+				colorMode    = true;
+				haveBuffer   = true;
 			} else {
 				// MDA monochrome text mode
 				
 				CRT_index_register = IO.Port.MDA_CRT_index_register;
 				CRT_data_register = IO.Port.MDA_CRT_data_register;
-				address = 0xB0000;
-				bytePerChar = 1;
-				colorMode = false;
+				addressStart = 0xB0000;
+				addressEnd	 = 0xB1000;	// MDA has 16kb video memory
+				bytePerChar	 = 1;
+				colorMode    = false;
+				haveBuffer   = false;
 			}
-			maxLines = (uint)(Kernel.MaxTextBufferLines / bytePerChar);
 
-			// read the width
-			
-			IO.Out8(CRT_index_register, (byte)CRT_Indices.horizontal_displayed);
-			width = (IO.In8(CRT_data_register) + 1);
+			// read the width			
+			width			= HardwareCommand(CRT_Indices.horizontal_displayed) + 1;
 
 			// this returns a funny number... what am i doing wrong here?
-			/*
-			IO.Out8(CRT_index_register, (byte)CRT_Indices.vertical_displayed);
-			height = (IO.In8(CRT_data_register) + 1);
+			//height = HardwareCommand(CRT_Indices.vertical_displayed) + 1;
+			height			= 25;
 
-			ADC.TextMode.Write("height: ");
-			ADC.TextMode.Write(height);
-			ADC.TextMode.WriteLine();*/
-			height = 25;
+			scanline		= (uint)(width * bytePerChar);
 
-			scanline = (uint)(width * bytePerChar);
-			screenSize = (uint)(scanline * height);
-		}
+			if (haveBuffer)
+				bufferHeight = (int)((addressEnd - addressStart) / scanline) - 1;
+			else
+				bufferHeight = height;
 
-		public static TextColor Foreground {
-			get { return foreground; }
-			set { foreground = value; }
-		}
+			bufferSize = (uint)bufferHeight * scanline;
+			readY = 0;
+			writeY = 0;
 		
-		public static TextColor Background {
-			get { return background; }
-			set { background = value; }
+			for (int x = 0; x < Kernel.MaxTextAttributeSlots; x++)
+				savedAttributes[x] = 0xFF;
 		}
 		
 		public static void SetCursorSize (byte _start, byte _end)
 		{
-			IO.Out8(CRT_index_register, (byte)CRT_Indices.cursor_start);
-			IO.Out8(CRT_data_register, (byte)_start);
-
-			IO.Out8(CRT_index_register, (byte)CRT_Indices.cursor_end);
-			IO.Out8(CRT_data_register, (byte)_end);
+			HardwareCommand(CRT_Indices.cursor_start,	_start);
+			HardwareCommand(CRT_Indices.cursor_end,		_end);
 		}
 
 		public static void MoveTo (int _x, int _y)
 		{
-			x = _x; 
+			x = _x;
 			y = _y;
 
 			if (x < 0)
@@ -165,23 +224,16 @@ namespace SharpOS.ADC.X86
 			
 			if (y < 0)
 				y = 0;
-			else if (y >= height)
-				y = height - 1;
+			else if (y >= bufferHeight)
+				y = (bufferHeight - 1);
 		}
 
 		public static void SetCursor (int _x, int _y)
 		{
 			MoveTo (_x, _y);
-			
-			ushort position = (ushort)(_x + (_y * width));
 
-			// cursor LOW port to vga INDEX register
-			IO.Out8(CRT_index_register, (byte)CRT_Indices.cursor_location_low);
-			IO.Out8(CRT_data_register, (byte)(position & 0xFF));
-		   
-			// cursor HIGH port to vga INDEX register
-			IO.Out8(CRT_index_register, (byte)CRT_Indices.cursor_location_high);
-			IO.Out8(CRT_data_register, (byte)((position >> 8) & 0xFF));
+			ushort position = (ushort)(x + ((y + writeY) * width));
+			HardwareCommand(CRT_Indices.cursor_location, position);
 		}
 
 		public static void GetCursor (int *ret_x, int *ret_y)
@@ -195,29 +247,60 @@ namespace SharpOS.ADC.X86
 			*ret_w = width;
 			*ret_h = height;
 		}
+
+		public static int GetBufferHeight()
+		{
+			return bufferHeight;
+		}
+
+		public static int GetReadPosition()
+		{
+			return readY;
+		}
+
+		public static void SetReadPos(int position)
+		{
+			if (!haveBuffer)
+				return;
+
+			if (position < 0)
+				position = 0;
+
+			if (position > (bufferHeight - height))
+				position = (bufferHeight - height);
+			
+			readY = position;
+
+			HardwareCommand(CRT_Indices.start_address, (ushort)(position * width));
+		}
+
+		public static int GetWritePosition()
+		{
+			return writeY;
+		}
+
+		public static void SetWritePos(int position)
+		{
+			if (!haveBuffer)
+				return;
+
+			if (position < 0)
+				position = 0;
+
+			if (position > (bufferHeight - height))
+				position = (bufferHeight - height);
+
+			writeY = position;
+			SetCursor(x, y);
+		}
 		
 		public static void ClearScreen ()
 		{
 			x = 0; y = 0;
-
-			uint fill;
-
-			if (colorMode) {
-				uint attr = attributes;
-				fill =
-					((uint)0x20) |
-					(attr << 8) |
-					((uint)0x20 << 16) |
-					(attr << 24);
-			} else {
-				fill =
-					((uint)0x20) |
-					((uint)0x20 << 8) |
-					((uint)0x20 << 16) |
-					((uint)0x20 << 24);
-			}
-
-			Memory.MemSet(fill, address, screenSize);
+			Memory.MemSet(fill, addressStart, bufferSize);
+			SetReadPos(0);
+			writeY = 0;
+			SetCursor(x, y);
 		}
 
 		/// <summary>
@@ -225,38 +308,85 @@ namespace SharpOS.ADC.X86
 		/// </summary>
 		public unsafe static void ClearToEndOfLine()
 		{
-			uint fill;
-			uint count = (uint)(bytePerChar * (width - x));
-
-			if (colorMode)
-			{
-				uint attr = attributes;
-				fill =
-					((uint)0x20) |
-					(attr << 8) |
-					((uint)0x20 << 16) |
-					(attr << 24);
-			}
-			else
-			{
-				fill =
-					((uint)0x20) |
-					((uint)0x20 << 8) |
-					((uint)0x20 << 16) |
-					((uint)0x20 << 24);
-			}
-
-			byte* video = (byte*)address;
-			video += (uint)(x + (y * scanline));
+			uint	count = (uint)(bytePerChar * (width - x));
+			byte*	video = (byte*)addressStart;
+			video += (uint)(x + ((y + writeY) * scanline));
 			Memory.MemSet(fill, (uint)video, count);
+		}
+
+		public static void MovePage(int value)
+		{
+			uint move_count, move_src, move_dst;
+			uint fill_count, fill_dst;
+
+			if (value > 0)
+			{
+				fill_count = (uint)(value * scanline);
+				move_count = bufferSize - fill_count;
+				move_src = addressStart + fill_count;
+				move_dst = addressStart;
+				fill_dst = addressStart + move_count;
+			} else
+			{
+				fill_count = (uint)((-value) * scanline);
+				move_count = bufferSize - fill_count;
+				move_src = addressStart;
+				move_dst = addressStart + fill_count;
+				fill_dst = addressStart;
+			}
+
+			Memory.MemCopy(move_src, move_dst, move_count);
+			Memory.MemSet(fill, fill_dst, fill_count);
+		}
+
+		public static void ScrollPageWrite(int value)
+		{
+			int newPos = writeY + value;
+			value = 0;
+			if (newPos < 0)
+			{
+				value  = -newPos;
+				newPos = 0;
+			} else
+			if (newPos > (bufferHeight - height))
+			{
+				value  = newPos - (bufferHeight - height);
+				newPos = (bufferHeight - height);
+			}
+			writeY = newPos;
+			if (newPos != readY)
+				SetReadPos(newPos);
+			if (value != 0)
+				MovePage(value);
+			SetCursor(x, y);
+		}
+		
+		/// <summary>
+		/// Scrolls the text on the screen
+		/// </summary>
+		/// <param name="value">Positive value is down, negative is up</param>
+		public static void ScrollPage(int value)
+		{
+			int newPos = readY + value;
+			//value = 0;
+			if (newPos < 0)
+			{
+				newPos = 0;
+			} else
+			if (newPos > writeY)
+			{
+				newPos = writeY;
+			}
+			if (newPos != readY)
+				SetReadPos(newPos);
 		}
 
 		public static void WriteChar (byte value)
 		{
-			byte* video = (byte*)address;
+			byte* video = (byte*)addressStart;
 
 			if (value != (byte) '\n') {
-				video += (uint)(y * scanline);
+				video += (uint)((y + writeY) * scanline);
 				
 				if (colorMode) {
 					video += x * 2;
@@ -274,7 +404,7 @@ namespace SharpOS.ADC.X86
 				x = 0;
 				if (y != (height - 1)) {
 					if (y == (height - 2))
-						ScrollPage (1);
+						ScrollPageWrite(1);
 					else
 						y++;
 				}
@@ -282,43 +412,7 @@ namespace SharpOS.ADC.X86
 			}
 		}
 
-		public static void ScrollPage (int value)
-		{
-			if (value <= 0)
-				return;		// scrolldown not implemented
-
-			uint lines, count, count2;
-			uint src, dst, fill;
-			
-			lines = (uint)(height - (value + 1));
-			count = lines * scanline;
-			count2 = (uint)(value * scanline);
-
-			src = address + (uint)count2;
-			dst = address;
-
-			Memory.MemCopy32(src, dst, (uint)(count / 4));
-
-			dst = address + (uint)count;
-
-			if (colorMode) {
-				uint attr = attributes;
-				fill =
-					((uint)0x20) |
-					(attr << 8) |
-					((uint)0x20 << 16) |
-					(attr << 24);
-			} else {
-				fill =
-					((uint)0x20) |
-					((uint)0x20 << 8) |
-					((uint)0x20 << 16) |
-					((uint)0x20 << 24);
-			}
-
-			Memory.MemSet32(fill, dst, (uint)(count2 / 4));
-		}
-
+		#region Writing Hex values
 		private const string hexValues = "0123456789ABCDEF";
 		public static void WriteByte (byte value)
 		{
@@ -331,13 +425,32 @@ namespace SharpOS.ADC.X86
 			if (value > 15) WriteChar((byte)'X');
 			else			WriteChar((byte)hexValues[value]);
 		}
+		#endregion
 
+		#region Attributes
 		public static void SetAttributes (TextColor _foreground, TextColor _background)
 		{
 			foreground = _foreground;
 			background = _background;
 
 			attributes = (byte)((byte)_foreground | ((byte)_background << 4));
+			
+			if (colorMode)
+			{
+				uint attr = attributes;	//FIXME: AOT bug, can't use attribute directly
+				fill =
+					((uint)0x20) |
+					(attr << 8) |
+					((uint)0x20 << 16) |
+					(attr << 24);
+			} else
+			{
+				fill =
+					((uint)0x20) |
+					((uint)0x20 << 8) |
+					((uint)0x20 << 16) |
+					((uint)0x20 << 24);
+			}
 		}
 
 		public static bool SaveAttributes ()
@@ -355,13 +468,15 @@ namespace SharpOS.ADC.X86
 		{
 			for (int x = Kernel.MaxTextAttributeSlots - 1; x >= 0; --x) {
 				if (savedAttributes [x] != 0xFF) {
-					attributes = savedAttributes [x];
-					savedAttributes [x] = 0xFF;		
+					byte attr = savedAttributes[x];
+					savedAttributes [x] = 0xFF;
+					SetAttributes((TextColor)(attr & 0x0F), (TextColor)((attr >> 4) & 0x0F));
 					return true;
 				}
 			}
 			return false;
 		}
+		#endregion
 
 		#endregion
 	}

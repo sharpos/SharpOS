@@ -74,6 +74,29 @@ namespace SharpOS.ADC {
 		public unsafe static void GetCursor (int *ret_x, int *ret_y)
 		{
 		}
+
+		[SharpOS.AOT.Attributes.ADCStub]
+		public static int GetReadPosition()
+		{
+			return 0;
+		}
+
+		[SharpOS.AOT.Attributes.ADCStub]
+		public static int GetWritePosition()
+		{
+			return 0;
+		}
+
+		[SharpOS.AOT.Attributes.ADCStub]
+		public static void SetReadPos(int position)
+		{
+		}
+
+		[SharpOS.AOT.Attributes.ADCStub]
+		public static int GetBufferHeight()
+		{
+			return 0;
+		}
 		 
 		[SharpOS.AOT.Attributes.ADCStub]
 		public unsafe static void GetScreenSize (int *ret_w, int *ret_h)

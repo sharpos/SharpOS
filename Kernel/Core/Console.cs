@@ -19,8 +19,6 @@ namespace SharpOS
 	/// </summary>
 	/// <todo>
 	/// TODO
-	/// - text history
-	///		- move up with pgup/pgdown
 	/// - typing in command
 	///		- move left/right in command
 	///		- insert overwrite
@@ -49,6 +47,7 @@ namespace SharpOS
 			initialized = true;
 			TextMode.RefreshCursor ();
 			SetOverwrite(overwrite);
+
 		}
 		
 		public static unsafe void SetOverwrite (bool _overwrite)
@@ -68,6 +67,8 @@ namespace SharpOS
 				return;
 		}
 
+		public static uint pos = 0;
+
 		[SharpOS.AOT.Attributes.Label (CONSOLE_KEY_DOWN_HANDLER)]
 		public static unsafe void KeyDown (uint scancode)
 		{
@@ -79,104 +80,133 @@ namespace SharpOS
 
 			TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
 
-			switch ((ADC.Keys)scancode)
+			
+			ADC.Keys key = (ADC.Keys)scancode;
+			// switch statement doesn't for all cases somehow..
+			//switch (key)
+			//{
+			//case Keys.Insert:
+			if (key == Keys.Insert)
 			{
-				case Keys.Insert:
-				{
-					overwrite = !overwrite;
-					SetOverwrite(overwrite);
-					return;
-				}
-				case Keys.Delete:
-				{
-					return;
-				}
-				case Keys.Backspace:
-				{
-					int x, y, width, height;
-
-					TextMode.GetScreenSize(&width, &height);
-					TextMode.GetCursor(&x, &y);
-					x--;
-					if (x < 0)
-					{
-						x = width - 1;
-						y--;
-						if (y < 0)
-						{
-							y = 0;
-							return;
-						}
-					}
-					TextMode.MoveTo(x, y);
-					TextMode.WriteChar((byte)' ');
-					TextMode.MoveTo(x, y);
-					TextMode.RefreshCursor();
-					return;
-				}
-				case Keys.LeftArrow:
-				{
-					int x, y, width, height;
-
-					TextMode.GetScreenSize(&width, &height);
-					TextMode.GetCursor(&x, &y);
-					x = x - 1; if (x < 0) x = 0;
-					TextMode.MoveTo(x, y);
-					TextMode.RefreshCursor();
-					return;
-				}
-				case Keys.RightArrow:
-				{
-					int x, y, width, height;
-
-					TextMode.GetScreenSize(&width, &height);
-					TextMode.GetCursor(&x, &y);
-					x = x + 1; if (x >= width) x = width - 1;
-					TextMode.MoveTo(x, y);
-					TextMode.RefreshCursor();
-					return;
-				}
-				case Keys.UpArrow:
-				{
-					int x, y, width, height;
-
-					TextMode.GetScreenSize(&width, &height);
-					TextMode.GetCursor(&x, &y);
-					y = y - 1; if (y < 0) y = 0;
-					TextMode.MoveTo(x, y);
-					TextMode.RefreshCursor();
-					return;
-				}
-				case Keys.DownArrow:
-				{
-					int x, y, width, height;
-
-					TextMode.GetScreenSize(&width, &height);
-					TextMode.GetCursor(&x, &y);
-					y = y + 1; if (y >= height) y = height - 1;
-					TextMode.MoveTo(x, y);
-					TextMode.RefreshCursor();
-					return;
-				}
-				case Keys.Enter:
-				{
-					TextMode.WriteLine();
-					TextMode.ClearToEndOfLine();
-					TextMode.RefreshCursor();
-					return;
-				}
+				overwrite = !overwrite;
+				SetOverwrite(overwrite);
+				return;
 			}
+			//case Keys.Delete:
+			else if (key == Keys.Delete)
+			{
+				return;
+			}
+			//case Keys.PageUp:
+			else if (key == Keys.PageUp)
+			{
+				TextMode.ScrollPage(-1);
+				return;
+			}
+			//case Keys.PageDown:
+			else if (key == Keys.PageDown)
+			{
+				TextMode.ScrollPage(+1);
+				return;
+			}
+			//case Keys.Backspace:
+			else if (key == Keys.Backspace)
+			{
+				int x, y, width, height;
 
-			byte key = Keyboard.Translate(scancode, upperCase);
-			if (key == 0)
+				TextMode.GetScreenSize(&width, &height);
+				TextMode.GetCursor(&x, &y);
+				x--;
+				if (x < 0)
+				{
+					x = width - 1;
+					y--;
+					if (y < 0)
+					{
+						y = 0;
+						return;
+					}
+				}
+				TextMode.MoveTo(x, y);
+				TextMode.WriteChar((byte)' ');
+				TextMode.MoveTo(x, y);
+				TextMode.RefreshCursor();
+				return;
+			}
+			//case Keys.LeftArrow:
+			else if (key == Keys.LeftArrow)
+			{
+				int x, y, width, height;
+
+				TextMode.GetScreenSize(&width, &height);
+				TextMode.GetCursor(&x, &y);
+				x = x - 1; if (x < 0) x = 0;
+				TextMode.MoveTo(x, y);
+				TextMode.RefreshCursor();
+				return;
+			}
+			//case Keys.RightArrow:
+			else if (key == Keys.RightArrow)
+			{
+				int x, y, width, height;
+
+				TextMode.GetScreenSize(&width, &height);
+				TextMode.GetCursor(&x, &y);
+				x = x + 1; if (x >= width) x = width - 1;
+				TextMode.MoveTo(x, y);
+				TextMode.RefreshCursor();
+				return;
+			}
+			//case Keys.UpArrow:
+			else if (key == Keys.UpArrow)
+			{
+				int x, y, width, height;
+
+				TextMode.GetScreenSize(&width, &height);
+				TextMode.GetCursor(&x, &y);
+				y = y - 1; if (y < 0) y = 0;
+				TextMode.MoveTo(x, y);
+				TextMode.RefreshCursor();
+				return;
+			}
+			//case Keys.DownArrow:
+			else if (key == Keys.DownArrow)
+			{
+				int x, y, width, height;
+
+				TextMode.GetScreenSize(&width, &height);
+				TextMode.GetCursor(&x, &y);
+				y = y + 1; if (y >= height) y = height - 1;
+				TextMode.MoveTo(x, y);
+				TextMode.RefreshCursor();
+				return;
+			}
+			//case Keys.Enter:
+			else if (key == Keys.Enter)
+			{
+				TextMode.WriteLine();
+				TextMode.ClearToEndOfLine();
+				TextMode.RefreshCursor();
+				return;
+			}
+			//}
+
+			byte character = Keyboard.Translate(scancode, upperCase);
+			if (character == 0)
 			{
 				// just so that you can actually see that keyboard input works (& we simply don't know what character you just pressed)...
 				TextMode.WriteChar((byte)'?');
+				TextMode.Write((int)scancode);
 				TextMode.RefreshCursor();
 				return;
 			}
 
-			TextMode.WriteChar (key);
+			int read = TextMode.GetReadPosition();
+			int write = TextMode.GetWritePosition();
+			if (read != write)
+				TextMode.SetReadPos(write);
+
+			TextMode.WriteChar(character);
 			TextMode.RefreshCursor ();
 		}
 
