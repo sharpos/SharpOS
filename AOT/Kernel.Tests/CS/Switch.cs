@@ -59,6 +59,38 @@ namespace SharpOS.Kernel.Tests.CS {
 					return 1;
 			}
 		}
+		
+		/// <summary>
+		/// 'int' switch, value = 0x51, explicit case
+		/// </summary>
+		public static uint CMP3()
+		{
+			int value = 0x51;
+			
+			// FIXME!
+			//	This doesn't work.
+			//	Change the values or remove one of the cases and it'll work again.
+			//	A & C won't work, but B will.
+			//  Modifying the order of or Adding new cases has no effect..
+			switch (value)
+			{
+				case 0x4D:	//A
+				{
+					return 0;
+				}
+				case 0x50:	//B
+				{
+					return 0;
+				}
+				case 0x51:	//C
+				{
+					return 1;
+				}
+				default:
+					return 2;
+			}
+		}
+
 		public unsafe static uint Misc2 (uint granularity)
 		{
 			switch (granularity) {

@@ -48,6 +48,31 @@
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Test|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>bin\Debug Test\</OutputPath>
+    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>..\..\build\SharpOS.AOT.Core.XML</DocumentationFile>
+    <DebugType>full</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>D:\Program Files\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Test|AnyCPU' ">
+    <OutputPath>bin\Release Test\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DocumentationFile>..\..\build\SharpOS.AOT.Core.XML</DocumentationFile>
+    <DebugType>pdbonly</DebugType>
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <CodeAnalysisRuleAssemblies>D:\Program Files\Microsoft Visual Studio 8\Team Tools\Static Analysis Tools\FxCop\\rules</CodeAnalysisRuleAssemblies>
+    <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
+    <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
+    <ErrorReport>prompt</ErrorReport>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Cecil, Version=0.5.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
       <SpecificVersion>False</SpecificVersion>
@@ -58,102 +83,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="Attributes\ADCInterfaceAttribute.cs" />
-    <Compile Include="Attributes\ADCLayerAttribute.cs" />
-    <Compile Include="Attributes\ADCStubAttribute.cs" />
-    <Compile Include="Attributes\AllocAttribute.cs" />
-    <Compile Include="Attributes\KernelMainAttribute.cs" />
-    <Compile Include="Attributes\LabelAddressAttribute.cs" />
-    <Compile Include="Attributes\LabelAttribute.cs" />
-    <Compile Include="Attributes\LabelledAllocAttribute.cs" />
-    <Compile Include="Attributes\StringAttribute.cs" />
-    <Compile Include="COFF.cs" />
-    <Compile Include="IR\Block.cs" />
-    <Compile Include="IR\Class.cs" />
-    <Compile Include="IR\Dump.cs" />
-    <Compile Include="IR\Engine.cs" />
-    <Compile Include="IR\EngineException.cs" />
-    <Compile Include="IR\EngineOptions.cs" />
-    <Compile Include="IR\IAssembly.cs" />
-    <Compile Include="IR\Instructions\Assign.cs" />
-    <Compile Include="IR\Instructions\Call.cs" />
-    <Compile Include="IR\Instructions\ConditionalJump.cs" />
-    <Compile Include="IR\Instructions\End.cs" />
-    <Compile Include="IR\Instructions\ExceptionValue.cs" />
-    <Compile Include="IR\Instructions\Initialize.cs" />
-    <Compile Include="IR\Instructions\Instruction.cs" />
-    <Compile Include="IR\Instructions\Jump.cs" />
-    <Compile Include="IR\Instructions\PHI.cs" />
-    <Compile Include="IR\Instructions\Pop.cs" />
-    <Compile Include="IR\Instructions\Return.cs" />
-    <Compile Include="IR\Instructions\Switch.cs" />
-    <Compile Include="IR\Instructions\System.cs" />
-    <Compile Include="IR\Method.cs" />
-    <Compile Include="IR\Operands\Address.cs" />
-    <Compile Include="IR\Operands\Argument.cs" />
-    <Compile Include="IR\Operands\Arithmetic.cs" />
-    <Compile Include="IR\Operands\ArrayElement.cs" />
-    <Compile Include="IR\Operands\Boolean.cs" />
-    <Compile Include="IR\Operands\Call.cs" />
-    <Compile Include="IR\Operands\Conditional.cs" />
-    <Compile Include="IR\Operands\Constant.cs" />
-    <Compile Include="IR\Operands\Field.cs" />
-    <Compile Include="IR\Operands\Identifier.cs" />
-    <Compile Include="IR\Operands\Indirect.cs" />
-    <Compile Include="IR\Operands\Local.cs" />
-    <Compile Include="IR\Operands\MethodReference.cs" />
-    <Compile Include="IR\Operands\Miscellaneous.cs" />
-    <Compile Include="IR\Operands\Object.cs" />
-    <Compile Include="IR\Operands\Operand.cs" />
-    <Compile Include="IR\Operands\Register.cs" />
-    <Compile Include="IR\Operators\Binary.cs" />
-    <Compile Include="IR\Operators\Boolean.cs" />
-    <Compile Include="IR\Operators\Miscellaneous.cs" />
-    <Compile Include="IR\Operators\Operator.cs" />
-    <Compile Include="IR\Operators\OperatorImplementation.cs" />
-    <Compile Include="IR\Operators\Relational.cs" />
-    <Compile Include="IR\Operators\Unary.cs" />
-    <Compile Include="X86\AlignInstruction.cs" />
-    <Compile Include="X86\Asm.cs" />
-    <Compile Include="X86\Assembly.cs" />
-    <Compile Include="X86\AssemblyMethod.cs" />
-    <Compile Include="X86\Bits32Instruction.cs" />
-    <Compile Include="X86\ByteDataInstruction.cs" />
-    <Compile Include="X86\ByteMemory.cs" />
-    <Compile Include="X86\CommentInstruction.cs" />
-    <Compile Include="X86\CR.cs" />
-    <Compile Include="X86\CRType.cs" />
-    <Compile Include="X86\DataInstruction.cs" />
-    <Compile Include="X86\DR.cs" />
-    <Compile Include="X86\DRType.cs" />
-    <Compile Include="X86\DWordDataInstruction.cs" />
-    <Compile Include="X86\DWordMemory.cs" />
-    <Compile Include="X86\Engine.cs" />
-    <Compile Include="X86\FP.cs" />
-    <Compile Include="X86\FPType.cs" />
-    <Compile Include="X86\Instruction.cs" />
-    <Compile Include="X86\Instructions.cs" />
-    <Compile Include="X86\LabelInstruction.cs" />
-    <Compile Include="X86\Memory.cs" />
-    <Compile Include="X86\OffsetInstruction.cs" />
-    <Compile Include="X86\OrgInstruction.cs" />
-    <Compile Include="X86\QWordMemory.cs" />
-    <Compile Include="X86\R16.cs" />
-    <Compile Include="X86\R16Type.cs" />
-    <Compile Include="X86\R32.cs" />
-    <Compile Include="X86\R32Type.cs" />
-    <Compile Include="X86\R8.cs" />
-    <Compile Include="X86\R8Type.cs" />
-    <Compile Include="X86\Register.cs" />
-    <Compile Include="X86\Seg.cs" />
-    <Compile Include="X86\SegType.cs" />
-    <Compile Include="X86\TimesInstruction.cs" />
-    <Compile Include="X86\TR.cs" />
-    <Compile Include="X86\TRType.cs" />
-    <Compile Include="X86\TWordMemory.cs" />
-    <Compile Include="X86\WordDataInstruction.cs" />
-    <Compile Include="X86\WordMemory.cs" />
+    <Compile Include="*.cs" />
+    <Compile Include="Attributes\*.cs" />
+    <Compile Include="IR\*.cs" />
+    <Compile Include="IR\Instructions\*.cs" />
+    <Compile Include="IR\Operands\*.cs" />
+    <Compile Include="IR\Operators\*.cs" />
+    <Compile Include="X86\*.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

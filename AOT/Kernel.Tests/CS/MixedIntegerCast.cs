@@ -40,6 +40,22 @@ namespace SharpOS.Kernel.Tests.CS {
 			else
 				return 0;
 		}
+
+		/// <summary>
+		/// uint -> byte
+		/// </summary>
+		public static uint CMPUInt2Byte()
+		{
+			uint ivalue = 0x80;
+			byte bvalue = 0;
+
+			bvalue = (byte)ivalue;
+
+			if (bvalue == 0x80)
+				return 1;
+			else
+				return 0;
+		}
 		
 		/// <summary>
 		/// byte -> int
