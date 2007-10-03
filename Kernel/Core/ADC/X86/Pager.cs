@@ -122,6 +122,34 @@ namespace SharpOS.ADC.X86 {
 			Asm.POP (R32.EAX);
 		}
 		
+		private static void SetTable (uint page)
+		{
+			Asm.CLI();
+
+			//ReadCR0()
+			uint val = 0;
+			Asm.PUSH(R32.EAX);
+			Asm.MOV(R32.EAX, CR.CR0);
+			Asm.MOV(&val, R32.EAX);
+			Asm.POP(R32.EAX);
+
+			val |= (uint)CR0.PG;
+
+			//WriteCR3((uint)PageDirectory);
+			Asm.PUSH(R32.EAX);
+			Asm.MOV(R32.EAX, &page);
+			Asm.MOV(CR.CR3, R32.EAX);
+			Asm.POP(R32.EAX);
+
+			//WriteCR0(value | mod);
+			Asm.PUSH(R32.EAX);
+			Asm.MOV(R32.EAX, &val);
+			Asm.MOV(CR.CR0, R32.EAX);
+			Asm.POP(R32.EAX);
+
+			Asm.STI();
+		}
+		
 		private static void PagePtrToTables (void *page, uint *ret_pde, uint *ret_pte)
 		{
 			*ret_pde = (uint)page / 4194304;
@@ -226,11 +254,7 @@ namespace SharpOS.ADC.X86 {
 		
 		public static PageAllocator.Errors Enable ()
 		{
-			uint value = ReadCR0 ();
-			uint mod = (uint) CR0.PG;
-			
-			WriteCR3 ((uint) PageDirectory);
-			WriteCR0 (value | mod);
+			SetTable((uint)PageDirectory);
 
 			return PageAllocator.Errors.Success;
 		}

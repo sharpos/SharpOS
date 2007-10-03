@@ -55,6 +55,7 @@ namespace SharpOS {
 		
 		#endregion
 		#region Entry point
+
 		
 		/// <summary>
 		/// The kernel entry point. This function is called after static
@@ -75,51 +76,56 @@ namespace SharpOS {
 		[SharpOS.AOT.Attributes.KernelMain]
 		public unsafe static void BootEntry (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
 		{
+			// Initialize architecture-specific portion of the kernel
+			Architecture.Setup();
+
 			// Set up text mode display
 			TextMode.Setup();
+
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.ClearScreen ();
 			TextMode.SetCursor (0, 0);
 			
-			// Initialize architecture-specific portion of the kernel
-			Architecture.Setup();
-			Scheduler.Setup();
-			
 			// Write the banner
-			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
+			TextMode.SaveAttributes();
+			TextMode.SetAttributes (TextColor.BrightWhite, TextColor.Black);
 			TextMode.WriteLine ("SharpOS v0.0.0.75 (http://sharpos.sourceforge.net/)");
 			TextMode.WriteLine ();
-
-			Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo(magic, pointer, kernelStart, kernelEnd);
-			
-			if (multibootInfo == null) {
-				TextMode.WriteLine("Error: multiboot loader required!");
-				return;
-			} else {
-				//Multiboot.WriteMultibootInfo(multibootInfo, kernelStart, kernelEnd);
-			}
-
-
-			CommandLine.Setup(multibootInfo);
-			KeyMap.Setup();
-			Keyboard.Setup();
-			//CPU.Setup ();
-			//PageAllocator.Setup ((byte*)kernelStart, kernelEnd - kernelStart,
-			//	multibootInfo->MemUpper + 1000);
-			//MemoryManager.Setup ();
-
-			//TextMode.MoveTo(0, 23);
-			TextMode.SaveAttributes();
-			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
-			TextMode.WriteLine ("");
-			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
-			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes();
 
-			TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
-			TextMode.WriteLine();
-			SharpOS.Console.Setup();
+			StageMessage("Multiboot setup.");
+			Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo(magic, pointer, kernelStart, kernelEnd);
+			if (multibootInfo == null)
+			{
+				StageError("Error: multiboot loader required!");
+				return;
+			} else
+			{
+				Multiboot.WriteMultibootInfo(multibootInfo, kernelStart, kernelEnd);
+			}
 
+			StageMessage("Commandline setup.");
+			CommandLine.Setup(multibootInfo);
+
+			StageMessage("Keymap setup.");
+			KeyMap.Setup();
+			
+			StageMessage("Keyboard setup.");
+			Keyboard.Setup();
+
+			//StageMessage("CPU setup.");
+			//CPU.Setup ();
+
+			StageMessage("PageAllocator setup.");
+			PageAllocator.Setup ((byte*)kernelStart, kernelEnd - kernelStart,
+				multibootInfo->MemUpper + 1000);
+
+			StageMessage("MemoryManager setup.");
+			ADC.MemoryManager.Setup();
+			//MemoryManager.Setup ();
+
+			StageMessage("Scheduler setup.");
+			Scheduler.Setup();
 
 			//scheduler testing code:
 			/*
@@ -135,13 +141,10 @@ namespace SharpOS {
 			Scheduler.DumpThreads();
 			*/
 
+			StageMessage("Console setup.");
+			SharpOS.Console.Setup();
 
-			//TODO: need to use some reasonable values here + use paging to avoid using memory used by hardware, applications
-			//		& eventually other processes
-			ADC.MemoryManager.Setup((void*)multibootInfo->MemLower, (void*)0xa0000);
-
-			TextMode.SaveAttributes();
-			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
+			// memory testing code
 
 			void* data;
 			void* data2;
@@ -152,9 +155,9 @@ namespace SharpOS {
 
 			ADC.MemoryManager.Dump();
 
-			ADC.MemoryManager.Release(data);
-			ADC.MemoryManager.Release(data3);
-			ADC.MemoryManager.Release(data2);
+			ADC.MemoryManager.Free(data);
+			ADC.MemoryManager.Free(data3);
+			ADC.MemoryManager.Free(data2);
 
 			ADC.MemoryManager.Dump();
 
@@ -164,6 +167,11 @@ namespace SharpOS {
 			
 			ADC.MemoryManager.Dump();
 
+			TextMode.SaveAttributes();
+			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
+			TextMode.WriteLine("");
+			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
+			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes();
 
 #if KERNEL_TESTS
@@ -201,6 +209,21 @@ namespace SharpOS {
 			}
 		}
 
+		static unsafe void StageMessage(string message)
+		{
+			TextMode.SaveAttributes();
+			TextMode.SetAttributes(TextColor.Green, TextColor.Black);
+			TextMode.WriteLine(message);
+			TextMode.RestoreAttributes();
+		}
+
+		static unsafe void StageError(string message)
+		{
+			TextMode.SaveAttributes();
+			TextMode.SetAttributes(TextColor.Red, TextColor.Black);
+			TextMode.WriteLine(message);
+			TextMode.RestoreAttributes();
+		}
 
 		#endregion
 		#region Kernel properties
@@ -254,7 +277,7 @@ namespace SharpOS {
 
 		public static void SetWarningTextAttributes ()
 		{
-			TextMode.SetAttributes (TextColor.Magenta, TextColor.Black);
+			TextMode.SetAttributes (TextColor.Brown, TextColor.Black);
 		}
 		
 		/// <summary>

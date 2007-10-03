@@ -30,10 +30,10 @@ namespace SharpOS.ADC.X86 {
 
 		public static void Setup ()
 		{
-			GDT.Setup ();
-			PIC.Setup ();
-			IDT.Setup ();
-			PIT.Setup ();
+			GDT.Setup ();	// Global Descriptor Table
+			PIC.Setup ();	// Programmable Interrupt Controller
+			IDT.Setup ();	// Interrupt Descriptor table
+			PIT.Setup ();	// Periodic Interrupt Timer
 		}
 		
 		/**

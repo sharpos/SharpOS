@@ -17,6 +17,9 @@ using SharpOS.AOT.IR;
 using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
+	/// <summary>
+	/// Interrupt Descriptor table
+	/// </summary>
 	public unsafe class IDT
 	{
 		public enum IRQ
