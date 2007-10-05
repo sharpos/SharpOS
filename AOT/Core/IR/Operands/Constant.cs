@@ -51,6 +51,55 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 
 		/// <summary>
+		/// Gets the value as an uint32. (makes sure it's correctly converted)
+		/// </summary>
+		/// <value>The value.</value>
+		public UInt32 UInt32Value {
+			get {
+				switch (this.SizeType) {
+					case InternalSizeType.I4:
+						return unchecked ((UInt32) Convert.ToInt32 (value));
+					default:
+					case InternalSizeType.U4:
+						return Convert.ToUInt32 (value);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the value as an uint16. (makes sure it's correctly converted)
+		/// </summary>
+		/// <value>The value.</value>
+		public UInt16 UInt16Value {
+			get {
+				switch (this.SizeType) {
+					case InternalSizeType.I2:
+						return unchecked ((UInt16) Convert.ToInt16 (value));
+					default:
+					case InternalSizeType.U2:
+						return Convert.ToUInt16 (value);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Gets the value as an Byte. (makes sure it's correctly converted)
+		/// </summary>
+		/// <value>The value.</value>
+		public Byte ByteValue {
+			get {
+				switch (this.SizeType) {
+					case InternalSizeType.I1:
+						return unchecked ((Byte) Convert.ToSByte (value));
+					default:
+					case InternalSizeType.U1:
+						return Convert.ToByte (value);
+				}
+			}
+		}
+
+
+		/// <summary>
 		/// Gets or sets the operands.
 		/// </summary>
 		/// <value>The operands.</value>

@@ -16,8 +16,12 @@ using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 
 namespace SharpOS.AOT.IR.Operands {
-	[Serializable]
+	/// <summary>
+	/// </summary>
+	[Serializable]	
 	public abstract class Operand {
+		/// <summary>
+		/// </summary>
 		public enum ConvertType {
 			NotSet, 
 			Conv_I, 
@@ -55,6 +59,8 @@ namespace SharpOS.AOT.IR.Operands {
 			Conv_U8
 		}
 
+		/// <summary>
+		/// </summary>
 		public enum InternalSizeType {
 			NotSet, 
 			I, 

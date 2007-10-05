@@ -38,7 +38,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AAD Byte":
-							this.AAD (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AAD ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -53,7 +53,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AAM Byte":
-							this.AAM (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AAM ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -75,7 +75,7 @@ namespace SharpOS.AOT.X86 {
 				case "ADC":
 					switch (parameterTypes) {
 						case "ADC ByteMemory Byte":
-							this.ADC (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADC ByteMemory R8Type":
@@ -83,7 +83,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC DWordMemory Byte":
-							this.ADC (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADC DWordMemory R32Type":
@@ -91,11 +91,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC DWordMemory UInt32":
-							this.ADC (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "ADC R16Type Byte":
-							this.ADC (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADC R16Type R16Type":
@@ -103,7 +103,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC R16Type UInt16":
-							this.ADC (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "ADC R16Type WordMemory":
@@ -111,7 +111,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC R32Type Byte":
-							this.ADC (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADC R32Type DWordMemory":
@@ -123,11 +123,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC R32Type UInt32":
-							this.ADC (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "ADC R8Type Byte":
-							this.ADC (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADC R8Type ByteMemory":
@@ -139,7 +139,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC WordMemory Byte":
-							this.ADC (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADC WordMemory R16Type":
@@ -147,7 +147,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC WordMemory UInt16":
-							this.ADC (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADC (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -158,7 +158,7 @@ namespace SharpOS.AOT.X86 {
 				case "ADD":
 					switch (parameterTypes) {
 						case "ADD ByteMemory Byte":
-							this.ADD (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADD ByteMemory R8Type":
@@ -166,7 +166,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD DWordMemory Byte":
-							this.ADD (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADD DWordMemory R32Type":
@@ -174,11 +174,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD DWordMemory UInt32":
-							this.ADD (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "ADD R16Type Byte":
-							this.ADD (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADD R16Type R16Type":
@@ -186,7 +186,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD R16Type UInt16":
-							this.ADD (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "ADD R16Type WordMemory":
@@ -194,7 +194,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD R32Type Byte":
-							this.ADD (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADD R32Type DWordMemory":
@@ -206,11 +206,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD R32Type UInt32":
-							this.ADD (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "ADD R8Type Byte":
-							this.ADD (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADD R8Type ByteMemory":
@@ -222,7 +222,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD WordMemory Byte":
-							this.ADD (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ADD WordMemory R16Type":
@@ -230,7 +230,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD WordMemory UInt16":
-							this.ADD (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ADD (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -241,7 +241,7 @@ namespace SharpOS.AOT.X86 {
 				case "ALIGN":
 					switch (parameterTypes) {
 						case "ALIGN UInt32":
-							this.ALIGN (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ALIGN ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -252,7 +252,7 @@ namespace SharpOS.AOT.X86 {
 				case "AND":
 					switch (parameterTypes) {
 						case "AND ByteMemory Byte":
-							this.AND (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "AND ByteMemory R8Type":
@@ -260,7 +260,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND DWordMemory Byte":
-							this.AND (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "AND DWordMemory R32Type":
@@ -268,11 +268,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND DWordMemory UInt32":
-							this.AND (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "AND R16Type Byte":
-							this.AND (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "AND R16Type R16Type":
@@ -280,7 +280,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND R16Type UInt16":
-							this.AND (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "AND R16Type WordMemory":
@@ -288,7 +288,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND R32Type Byte":
-							this.AND (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "AND R32Type DWordMemory":
@@ -300,11 +300,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND R32Type UInt32":
-							this.AND (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "AND R8Type Byte":
-							this.AND (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "AND R8Type ByteMemory":
@@ -316,7 +316,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND WordMemory Byte":
-							this.AND (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "AND WordMemory R16Type":
@@ -324,7 +324,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND WordMemory UInt16":
-							this.AND (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.AND (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -433,7 +433,7 @@ namespace SharpOS.AOT.X86 {
 				case "BT":
 					switch (parameterTypes) {
 						case "BT DWordMemory Byte":
-							this.BT (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BT (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BT DWordMemory R32Type":
@@ -441,7 +441,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BT R16Type Byte":
-							this.BT (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BT (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BT R16Type R16Type":
@@ -449,7 +449,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BT R32Type Byte":
-							this.BT (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BT (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BT R32Type R32Type":
@@ -457,7 +457,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BT WordMemory Byte":
-							this.BT (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BT (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BT WordMemory R16Type":
@@ -472,7 +472,7 @@ namespace SharpOS.AOT.X86 {
 				case "BTC":
 					switch (parameterTypes) {
 						case "BTC DWordMemory Byte":
-							this.BTC (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTC (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTC DWordMemory R32Type":
@@ -480,7 +480,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTC R16Type Byte":
-							this.BTC (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTC (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTC R16Type R16Type":
@@ -488,7 +488,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTC R32Type Byte":
-							this.BTC (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTC (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTC R32Type R32Type":
@@ -496,7 +496,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTC WordMemory Byte":
-							this.BTC (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTC (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTC WordMemory R16Type":
@@ -511,7 +511,7 @@ namespace SharpOS.AOT.X86 {
 				case "BTR":
 					switch (parameterTypes) {
 						case "BTR DWordMemory Byte":
-							this.BTR (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTR DWordMemory R32Type":
@@ -519,7 +519,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTR R16Type Byte":
-							this.BTR (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTR R16Type R16Type":
@@ -527,7 +527,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTR R32Type Byte":
-							this.BTR (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTR R32Type R32Type":
@@ -535,7 +535,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTR WordMemory Byte":
-							this.BTR (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTR WordMemory R16Type":
@@ -550,7 +550,7 @@ namespace SharpOS.AOT.X86 {
 				case "BTS":
 					switch (parameterTypes) {
 						case "BTS DWordMemory Byte":
-							this.BTS (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTS (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTS DWordMemory R32Type":
@@ -558,7 +558,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTS R16Type Byte":
-							this.BTS (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTS (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTS R16Type R16Type":
@@ -566,7 +566,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTS R32Type Byte":
-							this.BTS (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTS (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTS R32Type R32Type":
@@ -574,7 +574,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTS WordMemory Byte":
-							this.BTS (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BTS (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "BTS WordMemory R16Type":
@@ -605,15 +605,15 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CALL UInt16 UInt16":
-							this.CALL (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CALL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "CALL UInt16 UInt32":
-							this.CALL (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CALL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "CALL UInt32":
-							this.CALL (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CALL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "CALL WordMemory":
@@ -1421,7 +1421,7 @@ namespace SharpOS.AOT.X86 {
 				case "CMP":
 					switch (parameterTypes) {
 						case "CMP ByteMemory Byte":
-							this.CMP (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "CMP ByteMemory R8Type":
@@ -1429,7 +1429,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP DWordMemory Byte":
-							this.CMP (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "CMP DWordMemory R32Type":
@@ -1437,11 +1437,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP DWordMemory UInt32":
-							this.CMP (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "CMP R16Type Byte":
-							this.CMP (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "CMP R16Type R16Type":
@@ -1449,7 +1449,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP R16Type UInt16":
-							this.CMP (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "CMP R16Type WordMemory":
@@ -1457,7 +1457,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP R32Type Byte":
-							this.CMP (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "CMP R32Type DWordMemory":
@@ -1469,11 +1469,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP R32Type UInt32":
-							this.CMP (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "CMP R8Type Byte":
-							this.CMP (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "CMP R8Type ByteMemory":
@@ -1485,7 +1485,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP WordMemory Byte":
-							this.CMP (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "CMP WordMemory R16Type":
@@ -1493,7 +1493,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP WordMemory UInt16":
-							this.CMP (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.CMP (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -1634,7 +1634,7 @@ namespace SharpOS.AOT.X86 {
 				case "DATA":
 					switch (parameterTypes) {
 						case "DATA Byte":
-							this.DATA (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.DATA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "DATA String":
@@ -1642,7 +1642,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "DATA String Byte":
-							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "DATA String String":
@@ -1650,19 +1650,19 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "DATA String UInt16":
-							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "DATA String UInt32":
-							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "DATA UInt16":
-							this.DATA (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.DATA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "DATA UInt32":
-							this.DATA (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.DATA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -1746,7 +1746,7 @@ namespace SharpOS.AOT.X86 {
 				case "ENTER":
 					switch (parameterTypes) {
 						case "ENTER UInt16 Byte":
-							this.ENTER (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ENTER ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -3492,7 +3492,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R16Type Byte":
-							this.IMUL (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "IMUL R16Type R16Type":
@@ -3500,15 +3500,15 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R16Type R16Type Byte":
-							this.IMUL (R16.GetByID (operands [0]), R16.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "IMUL R16Type R16Type UInt16":
-							this.IMUL (R16.GetByID (operands [0]), R16.GetByID (operands [1]), Convert.ToUInt16 ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "IMUL R16Type UInt16":
-							this.IMUL (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "IMUL R16Type WordMemory":
@@ -3516,11 +3516,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R16Type WordMemory Byte":
-							this.IMUL (R16.GetByID (operands [0]), GetWordMemory (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R16.GetByID (operands [0]), GetWordMemory (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "IMUL R16Type WordMemory UInt16":
-							this.IMUL (R16.GetByID (operands [0]), GetWordMemory (operands [1]), Convert.ToUInt16 ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R16.GetByID (operands [0]), GetWordMemory (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "IMUL R32Type":
@@ -3528,7 +3528,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R32Type Byte":
-							this.IMUL (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "IMUL R32Type DWordMemory":
@@ -3536,11 +3536,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R32Type DWordMemory Byte":
-							this.IMUL (R32.GetByID (operands [0]), GetDWordMemory (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R32.GetByID (operands [0]), GetDWordMemory (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "IMUL R32Type DWordMemory UInt32":
-							this.IMUL (R32.GetByID (operands [0]), GetDWordMemory (operands [1]), Convert.ToUInt32 ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R32.GetByID (operands [0]), GetDWordMemory (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "IMUL R32Type R32Type":
@@ -3548,15 +3548,15 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R32Type R32Type Byte":
-							this.IMUL (R32.GetByID (operands [0]), R32.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "IMUL R32Type R32Type UInt32":
-							this.IMUL (R32.GetByID (operands [0]), R32.GetByID (operands [1]), Convert.ToUInt32 ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "IMUL R32Type UInt32":
-							this.IMUL (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IMUL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "IMUL R8Type":
@@ -3639,7 +3639,7 @@ namespace SharpOS.AOT.X86 {
 				case "INT":
 					switch (parameterTypes) {
 						case "INT Byte":
-							this.INT (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.INT ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -3683,7 +3683,7 @@ namespace SharpOS.AOT.X86 {
 				case "IN_AL":
 					switch (parameterTypes) {
 						case "IN_AL Byte":
-							this.IN_AL (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IN_AL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -3705,7 +3705,7 @@ namespace SharpOS.AOT.X86 {
 				case "IN_AX":
 					switch (parameterTypes) {
 						case "IN_AX Byte":
-							this.IN_AX (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IN_AX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -3727,7 +3727,7 @@ namespace SharpOS.AOT.X86 {
 				case "IN_EAX":
 					switch (parameterTypes) {
 						case "IN_EAX Byte":
-							this.IN_EAX (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.IN_EAX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -3782,7 +3782,7 @@ namespace SharpOS.AOT.X86 {
 				case "JA":
 					switch (parameterTypes) {
 						case "JA Byte":
-							this.JA (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JA String":
@@ -3790,7 +3790,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JA UInt32":
-							this.JA (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3801,7 +3801,7 @@ namespace SharpOS.AOT.X86 {
 				case "JAE":
 					switch (parameterTypes) {
 						case "JAE Byte":
-							this.JAE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JAE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JAE String":
@@ -3809,7 +3809,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JAE UInt32":
-							this.JAE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JAE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3820,7 +3820,7 @@ namespace SharpOS.AOT.X86 {
 				case "JB":
 					switch (parameterTypes) {
 						case "JB Byte":
-							this.JB (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JB ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JB String":
@@ -3828,7 +3828,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JB UInt32":
-							this.JB (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JB ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3839,7 +3839,7 @@ namespace SharpOS.AOT.X86 {
 				case "JBE":
 					switch (parameterTypes) {
 						case "JBE Byte":
-							this.JBE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JBE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JBE String":
@@ -3847,7 +3847,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JBE UInt32":
-							this.JBE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JBE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3858,7 +3858,7 @@ namespace SharpOS.AOT.X86 {
 				case "JC":
 					switch (parameterTypes) {
 						case "JC Byte":
-							this.JC (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JC ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JC String":
@@ -3866,7 +3866,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JC UInt32":
-							this.JC (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JC ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3877,7 +3877,7 @@ namespace SharpOS.AOT.X86 {
 				case "JCXZ":
 					switch (parameterTypes) {
 						case "JCXZ Byte":
-							this.JCXZ (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JCXZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -3888,7 +3888,7 @@ namespace SharpOS.AOT.X86 {
 				case "JE":
 					switch (parameterTypes) {
 						case "JE Byte":
-							this.JE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JE String":
@@ -3896,7 +3896,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JE UInt32":
-							this.JE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3907,7 +3907,7 @@ namespace SharpOS.AOT.X86 {
 				case "JECXZ":
 					switch (parameterTypes) {
 						case "JECXZ Byte":
-							this.JECXZ (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JECXZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -3918,7 +3918,7 @@ namespace SharpOS.AOT.X86 {
 				case "JG":
 					switch (parameterTypes) {
 						case "JG Byte":
-							this.JG (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JG String":
@@ -3926,7 +3926,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JG UInt32":
-							this.JG (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3937,7 +3937,7 @@ namespace SharpOS.AOT.X86 {
 				case "JGE":
 					switch (parameterTypes) {
 						case "JGE Byte":
-							this.JGE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JGE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JGE String":
@@ -3945,7 +3945,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JGE UInt32":
-							this.JGE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JGE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3956,7 +3956,7 @@ namespace SharpOS.AOT.X86 {
 				case "JL":
 					switch (parameterTypes) {
 						case "JL Byte":
-							this.JL (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JL String":
@@ -3964,7 +3964,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JL UInt32":
-							this.JL (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3975,7 +3975,7 @@ namespace SharpOS.AOT.X86 {
 				case "JLE":
 					switch (parameterTypes) {
 						case "JLE Byte":
-							this.JLE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JLE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JLE String":
@@ -3983,7 +3983,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JLE UInt32":
-							this.JLE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JLE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -3994,7 +3994,7 @@ namespace SharpOS.AOT.X86 {
 				case "JMP":
 					switch (parameterTypes) {
 						case "JMP Byte":
-							this.JMP (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JMP DWordMemory":
@@ -4014,19 +4014,19 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JMP UInt16 String":
-							this.JMP (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), (operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
 							break;
 						
 						case "JMP UInt16 UInt16":
-							this.JMP (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "JMP UInt16 UInt32":
-							this.JMP (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "JMP UInt32":
-							this.JMP (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "JMP WordMemory":
@@ -4056,7 +4056,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNA":
 					switch (parameterTypes) {
 						case "JNA Byte":
-							this.JNA (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNA String":
@@ -4064,7 +4064,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNA UInt32":
-							this.JNA (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4075,7 +4075,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNAE":
 					switch (parameterTypes) {
 						case "JNAE Byte":
-							this.JNAE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNAE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNAE String":
@@ -4083,7 +4083,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNAE UInt32":
-							this.JNAE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNAE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4094,7 +4094,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNB":
 					switch (parameterTypes) {
 						case "JNB Byte":
-							this.JNB (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNB ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNB String":
@@ -4102,7 +4102,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNB UInt32":
-							this.JNB (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNB ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4113,7 +4113,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNBE":
 					switch (parameterTypes) {
 						case "JNBE Byte":
-							this.JNBE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNBE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNBE String":
@@ -4121,7 +4121,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNBE UInt32":
-							this.JNBE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNBE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4132,7 +4132,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNC":
 					switch (parameterTypes) {
 						case "JNC Byte":
-							this.JNC (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNC ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNC String":
@@ -4140,7 +4140,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNC UInt32":
-							this.JNC (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNC ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4151,7 +4151,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNE":
 					switch (parameterTypes) {
 						case "JNE Byte":
-							this.JNE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNE String":
@@ -4159,7 +4159,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNE UInt32":
-							this.JNE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4170,7 +4170,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNG":
 					switch (parameterTypes) {
 						case "JNG Byte":
-							this.JNG (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNG String":
@@ -4178,7 +4178,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNG UInt32":
-							this.JNG (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4189,7 +4189,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNGE":
 					switch (parameterTypes) {
 						case "JNGE Byte":
-							this.JNGE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNGE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNGE String":
@@ -4197,7 +4197,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNGE UInt32":
-							this.JNGE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNGE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4208,7 +4208,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNL":
 					switch (parameterTypes) {
 						case "JNL Byte":
-							this.JNL (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNL String":
@@ -4216,7 +4216,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNL UInt32":
-							this.JNL (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4227,7 +4227,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNLE":
 					switch (parameterTypes) {
 						case "JNLE Byte":
-							this.JNLE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNLE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNLE String":
@@ -4235,7 +4235,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNLE UInt32":
-							this.JNLE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNLE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4246,7 +4246,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNO":
 					switch (parameterTypes) {
 						case "JNO Byte":
-							this.JNO (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNO String":
@@ -4254,7 +4254,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNO UInt32":
-							this.JNO (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4265,7 +4265,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNP":
 					switch (parameterTypes) {
 						case "JNP Byte":
-							this.JNP (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNP String":
@@ -4273,7 +4273,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNP UInt32":
-							this.JNP (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4284,7 +4284,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNS":
 					switch (parameterTypes) {
 						case "JNS Byte":
-							this.JNS (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNS ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNS String":
@@ -4292,7 +4292,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNS UInt32":
-							this.JNS (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNS ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4303,7 +4303,7 @@ namespace SharpOS.AOT.X86 {
 				case "JNZ":
 					switch (parameterTypes) {
 						case "JNZ Byte":
-							this.JNZ (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JNZ String":
@@ -4311,7 +4311,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JNZ UInt32":
-							this.JNZ (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JNZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4322,7 +4322,7 @@ namespace SharpOS.AOT.X86 {
 				case "JO":
 					switch (parameterTypes) {
 						case "JO Byte":
-							this.JO (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JO String":
@@ -4330,7 +4330,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JO UInt32":
-							this.JO (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4341,7 +4341,7 @@ namespace SharpOS.AOT.X86 {
 				case "JP":
 					switch (parameterTypes) {
 						case "JP Byte":
-							this.JP (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JP String":
@@ -4349,7 +4349,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JP UInt32":
-							this.JP (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4360,7 +4360,7 @@ namespace SharpOS.AOT.X86 {
 				case "JPE":
 					switch (parameterTypes) {
 						case "JPE Byte":
-							this.JPE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JPE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JPE String":
@@ -4368,7 +4368,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JPE UInt32":
-							this.JPE (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JPE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4379,7 +4379,7 @@ namespace SharpOS.AOT.X86 {
 				case "JPO":
 					switch (parameterTypes) {
 						case "JPO Byte":
-							this.JPO (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JPO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JPO String":
@@ -4387,7 +4387,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JPO UInt32":
-							this.JPO (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JPO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4398,7 +4398,7 @@ namespace SharpOS.AOT.X86 {
 				case "JS":
 					switch (parameterTypes) {
 						case "JS Byte":
-							this.JS (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JS ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JS String":
@@ -4406,7 +4406,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JS UInt32":
-							this.JS (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JS ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4417,7 +4417,7 @@ namespace SharpOS.AOT.X86 {
 				case "JZ":
 					switch (parameterTypes) {
 						case "JZ Byte":
-							this.JZ (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "JZ String":
@@ -4425,7 +4425,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JZ UInt32":
-							this.JZ (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.JZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -4674,7 +4674,7 @@ namespace SharpOS.AOT.X86 {
 				case "LOOP":
 					switch (parameterTypes) {
 						case "LOOP Byte":
-							this.LOOP (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.LOOP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -4685,7 +4685,7 @@ namespace SharpOS.AOT.X86 {
 				case "LOOPE":
 					switch (parameterTypes) {
 						case "LOOPE Byte":
-							this.LOOPE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.LOOPE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -4696,7 +4696,7 @@ namespace SharpOS.AOT.X86 {
 				case "LOOPNE":
 					switch (parameterTypes) {
 						case "LOOPNE Byte":
-							this.LOOPNE (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.LOOPNE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -4707,7 +4707,7 @@ namespace SharpOS.AOT.X86 {
 				case "LOOPNZ":
 					switch (parameterTypes) {
 						case "LOOPNZ Byte":
-							this.LOOPNZ (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.LOOPNZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -4718,7 +4718,7 @@ namespace SharpOS.AOT.X86 {
 				case "LOOPZ":
 					switch (parameterTypes) {
 						case "LOOPZ Byte":
-							this.LOOPZ (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.LOOPZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -4793,7 +4793,7 @@ namespace SharpOS.AOT.X86 {
 				case "MOV":
 					switch (parameterTypes) {
 						case "MOV ByteMemory Byte":
-							this.MOV (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "MOV ByteMemory R8Type":
@@ -4817,7 +4817,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV DWordMemory UInt32":
-							this.MOV (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "MOV R16Type R16Type":
@@ -4833,7 +4833,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV R16Type UInt16":
-							this.MOV (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "MOV R16Type WordMemory":
@@ -4869,11 +4869,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV R32Type UInt32":
-							this.MOV (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "MOV R8Type Byte":
-							this.MOV (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "MOV R8Type ByteMemory":
@@ -4913,7 +4913,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV WordMemory UInt16":
-							this.MOV (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -5019,7 +5019,7 @@ namespace SharpOS.AOT.X86 {
 				case "MOV_AL":
 					switch (parameterTypes) {
 						case "MOV_AL Byte":
-							this.MOV_AL (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV_AL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -5030,7 +5030,7 @@ namespace SharpOS.AOT.X86 {
 				case "MOV_AX":
 					switch (parameterTypes) {
 						case "MOV_AX UInt16":
-							this.MOV_AX (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV_AX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -5041,7 +5041,7 @@ namespace SharpOS.AOT.X86 {
 				case "MOV_EAX":
 					switch (parameterTypes) {
 						case "MOV_EAX UInt32":
-							this.MOV_EAX (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV_EAX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -5052,7 +5052,7 @@ namespace SharpOS.AOT.X86 {
 				case "MOV__AL":
 					switch (parameterTypes) {
 						case "MOV__AL Byte":
-							this.MOV__AL (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV__AL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -5063,7 +5063,7 @@ namespace SharpOS.AOT.X86 {
 				case "MOV__AX":
 					switch (parameterTypes) {
 						case "MOV__AX UInt16":
-							this.MOV__AX (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV__AX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -5074,7 +5074,7 @@ namespace SharpOS.AOT.X86 {
 				case "MOV__EAX":
 					switch (parameterTypes) {
 						case "MOV__EAX UInt32":
-							this.MOV__EAX (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.MOV__EAX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -5189,7 +5189,7 @@ namespace SharpOS.AOT.X86 {
 				case "OFFSET":
 					switch (parameterTypes) {
 						case "OFFSET UInt32":
-							this.OFFSET (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OFFSET ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -5200,7 +5200,7 @@ namespace SharpOS.AOT.X86 {
 				case "OR":
 					switch (parameterTypes) {
 						case "OR ByteMemory Byte":
-							this.OR (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "OR ByteMemory R8Type":
@@ -5208,7 +5208,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR DWordMemory Byte":
-							this.OR (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "OR DWordMemory R32Type":
@@ -5216,11 +5216,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR DWordMemory UInt32":
-							this.OR (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "OR R16Type Byte":
-							this.OR (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "OR R16Type R16Type":
@@ -5228,7 +5228,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR R16Type UInt16":
-							this.OR (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "OR R16Type WordMemory":
@@ -5236,7 +5236,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR R32Type Byte":
-							this.OR (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "OR R32Type DWordMemory":
@@ -5248,11 +5248,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR R32Type UInt32":
-							this.OR (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "OR R8Type Byte":
-							this.OR (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "OR R8Type ByteMemory":
@@ -5264,7 +5264,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR WordMemory Byte":
-							this.OR (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "OR WordMemory R16Type":
@@ -5272,7 +5272,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR WordMemory UInt16":
-							this.OR (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -5283,7 +5283,7 @@ namespace SharpOS.AOT.X86 {
 				case "ORG":
 					switch (parameterTypes) {
 						case "ORG UInt32":
-							this.ORG (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ORG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						default:
@@ -5360,7 +5360,7 @@ namespace SharpOS.AOT.X86 {
 				case "OUT__AL":
 					switch (parameterTypes) {
 						case "OUT__AL Byte":
-							this.OUT__AL (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OUT__AL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -5371,7 +5371,7 @@ namespace SharpOS.AOT.X86 {
 				case "OUT__AX":
 					switch (parameterTypes) {
 						case "OUT__AX Byte":
-							this.OUT__AX (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OUT__AX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -5382,7 +5382,7 @@ namespace SharpOS.AOT.X86 {
 				case "OUT__EAX":
 					switch (parameterTypes) {
 						case "OUT__EAX Byte":
-							this.OUT__EAX (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.OUT__EAX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -5541,7 +5541,7 @@ namespace SharpOS.AOT.X86 {
 				case "PUSH":
 					switch (parameterTypes) {
 						case "PUSH Byte":
-							this.PUSH (Convert.ToByte ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.PUSH ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "PUSH DWordMemory":
@@ -5561,11 +5561,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "PUSH UInt16":
-							this.PUSH (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.PUSH ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "PUSH UInt32":
-							this.PUSH (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.PUSH ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "PUSH WordMemory":
@@ -5646,27 +5646,27 @@ namespace SharpOS.AOT.X86 {
 				case "RCL":
 					switch (parameterTypes) {
 						case "RCL ByteMemory Byte":
-							this.RCL (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCL DWordMemory Byte":
-							this.RCL (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCL R16Type Byte":
-							this.RCL (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCL R32Type Byte":
-							this.RCL (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCL R8Type Byte":
-							this.RCL (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCL WordMemory Byte":
-							this.RCL (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCL (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -5708,27 +5708,27 @@ namespace SharpOS.AOT.X86 {
 				case "RCR":
 					switch (parameterTypes) {
 						case "RCR ByteMemory Byte":
-							this.RCR (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCR DWordMemory Byte":
-							this.RCR (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCR R16Type Byte":
-							this.RCR (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCR R32Type Byte":
-							this.RCR (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCR R8Type Byte":
-							this.RCR (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "RCR WordMemory Byte":
-							this.RCR (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RCR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -5862,7 +5862,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "RET UInt16":
-							this.RET (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RET ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -5877,7 +5877,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "RETF UInt16":
-							this.RETF (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RETF ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -5892,7 +5892,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "RETN UInt16":
-							this.RETN (Convert.ToUInt16 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.RETN ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -5903,27 +5903,27 @@ namespace SharpOS.AOT.X86 {
 				case "ROL":
 					switch (parameterTypes) {
 						case "ROL ByteMemory Byte":
-							this.ROL (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROL DWordMemory Byte":
-							this.ROL (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROL R16Type Byte":
-							this.ROL (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROL R32Type Byte":
-							this.ROL (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROL R8Type Byte":
-							this.ROL (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROL WordMemory Byte":
-							this.ROL (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROL (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -5965,27 +5965,27 @@ namespace SharpOS.AOT.X86 {
 				case "ROR":
 					switch (parameterTypes) {
 						case "ROR ByteMemory Byte":
-							this.ROR (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROR DWordMemory Byte":
-							this.ROR (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROR R16Type Byte":
-							this.ROR (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROR R32Type Byte":
-							this.ROR (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROR R8Type Byte":
-							this.ROR (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "ROR WordMemory Byte":
-							this.ROR (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.ROR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -6049,27 +6049,27 @@ namespace SharpOS.AOT.X86 {
 				case "SAL":
 					switch (parameterTypes) {
 						case "SAL ByteMemory Byte":
-							this.SAL (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAL DWordMemory Byte":
-							this.SAL (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAL R16Type Byte":
-							this.SAL (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAL R32Type Byte":
-							this.SAL (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAL R8Type Byte":
-							this.SAL (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAL WordMemory Byte":
-							this.SAL (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAL (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -6122,27 +6122,27 @@ namespace SharpOS.AOT.X86 {
 				case "SAR":
 					switch (parameterTypes) {
 						case "SAR ByteMemory Byte":
-							this.SAR (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAR DWordMemory Byte":
-							this.SAR (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAR R16Type Byte":
-							this.SAR (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAR R32Type Byte":
-							this.SAR (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAR R8Type Byte":
-							this.SAR (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SAR WordMemory Byte":
-							this.SAR (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SAR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -6184,7 +6184,7 @@ namespace SharpOS.AOT.X86 {
 				case "SBB":
 					switch (parameterTypes) {
 						case "SBB ByteMemory Byte":
-							this.SBB (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SBB ByteMemory R8Type":
@@ -6192,7 +6192,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB DWordMemory Byte":
-							this.SBB (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SBB DWordMemory R32Type":
@@ -6200,11 +6200,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB DWordMemory UInt32":
-							this.SBB (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "SBB R16Type Byte":
-							this.SBB (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SBB R16Type R16Type":
@@ -6212,7 +6212,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB R16Type UInt16":
-							this.SBB (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "SBB R16Type WordMemory":
@@ -6220,7 +6220,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB R32Type Byte":
-							this.SBB (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SBB R32Type DWordMemory":
@@ -6232,11 +6232,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB R32Type UInt32":
-							this.SBB (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "SBB R8Type Byte":
-							this.SBB (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SBB R8Type ByteMemory":
@@ -6248,7 +6248,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB WordMemory Byte":
-							this.SBB (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SBB WordMemory R16Type":
@@ -6256,7 +6256,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB WordMemory UInt16":
-							this.SBB (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SBB (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -6772,27 +6772,27 @@ namespace SharpOS.AOT.X86 {
 				case "SHL":
 					switch (parameterTypes) {
 						case "SHL ByteMemory Byte":
-							this.SHL (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHL DWordMemory Byte":
-							this.SHL (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHL R16Type Byte":
-							this.SHL (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHL R32Type Byte":
-							this.SHL (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHL R8Type Byte":
-							this.SHL (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHL WordMemory Byte":
-							this.SHL (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHL (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -6803,19 +6803,19 @@ namespace SharpOS.AOT.X86 {
 				case "SHLD":
 					switch (parameterTypes) {
 						case "SHLD DWordMemory R32Type Byte":
-							this.SHLD (GetDWordMemory (operands [0]), R32.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHLD (GetDWordMemory (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHLD R16Type R16Type Byte":
-							this.SHLD (R16.GetByID (operands [0]), R16.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHLD (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHLD R32Type R32Type Byte":
-							this.SHLD (R32.GetByID (operands [0]), R32.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHLD (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHLD WordMemory R16Type Byte":
-							this.SHLD (GetWordMemory (operands [0]), R16.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHLD (GetWordMemory (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -6880,27 +6880,27 @@ namespace SharpOS.AOT.X86 {
 				case "SHR":
 					switch (parameterTypes) {
 						case "SHR ByteMemory Byte":
-							this.SHR (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHR DWordMemory Byte":
-							this.SHR (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHR R16Type Byte":
-							this.SHR (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHR R32Type Byte":
-							this.SHR (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHR R8Type Byte":
-							this.SHR (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHR WordMemory Byte":
-							this.SHR (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -6911,19 +6911,19 @@ namespace SharpOS.AOT.X86 {
 				case "SHRD":
 					switch (parameterTypes) {
 						case "SHRD DWordMemory R32Type Byte":
-							this.SHRD (GetDWordMemory (operands [0]), R32.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHRD (GetDWordMemory (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHRD R16Type R16Type Byte":
-							this.SHRD (R16.GetByID (operands [0]), R16.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHRD (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHRD R32Type R32Type Byte":
-							this.SHRD (R32.GetByID (operands [0]), R32.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHRD (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SHRD WordMemory R16Type Byte":
-							this.SHRD (GetWordMemory (operands [0]), R16.GetByID (operands [1]), Convert.ToByte ((operands [2] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SHRD (GetWordMemory (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -7110,7 +7110,7 @@ namespace SharpOS.AOT.X86 {
 				case "SUB":
 					switch (parameterTypes) {
 						case "SUB ByteMemory Byte":
-							this.SUB (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SUB ByteMemory R8Type":
@@ -7118,7 +7118,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB DWordMemory Byte":
-							this.SUB (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SUB DWordMemory R32Type":
@@ -7126,11 +7126,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB DWordMemory UInt32":
-							this.SUB (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "SUB R16Type Byte":
-							this.SUB (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SUB R16Type R16Type":
@@ -7138,7 +7138,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB R16Type UInt16":
-							this.SUB (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "SUB R16Type WordMemory":
@@ -7146,7 +7146,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB R32Type Byte":
-							this.SUB (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SUB R32Type DWordMemory":
@@ -7158,11 +7158,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB R32Type UInt32":
-							this.SUB (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "SUB R8Type Byte":
-							this.SUB (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SUB R8Type ByteMemory":
@@ -7174,7 +7174,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB WordMemory Byte":
-							this.SUB (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "SUB WordMemory R16Type":
@@ -7182,7 +7182,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB WordMemory UInt16":
-							this.SUB (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.SUB (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -7237,7 +7237,7 @@ namespace SharpOS.AOT.X86 {
 				case "TEST":
 					switch (parameterTypes) {
 						case "TEST ByteMemory Byte":
-							this.TEST (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "TEST ByteMemory R8Type":
@@ -7249,7 +7249,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "TEST DWordMemory UInt32":
-							this.TEST (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "TEST R16Type R16Type":
@@ -7257,7 +7257,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "TEST R16Type UInt16":
-							this.TEST (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "TEST R32Type R32Type":
@@ -7265,11 +7265,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "TEST R32Type UInt32":
-							this.TEST (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "TEST R8Type Byte":
-							this.TEST (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "TEST R8Type R8Type":
@@ -7281,7 +7281,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "TEST WordMemory UInt16":
-							this.TEST (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TEST (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:
@@ -7292,7 +7292,7 @@ namespace SharpOS.AOT.X86 {
 				case "TIMES":
 					switch (parameterTypes) {
 						case "TIMES UInt32 Byte":
-							this.TIMES (Convert.ToUInt32 ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.TIMES ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						default:
@@ -7473,7 +7473,7 @@ namespace SharpOS.AOT.X86 {
 				case "XOR":
 					switch (parameterTypes) {
 						case "XOR ByteMemory Byte":
-							this.XOR (GetByteMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "XOR ByteMemory R8Type":
@@ -7481,7 +7481,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR DWordMemory Byte":
-							this.XOR (GetDWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "XOR DWordMemory R32Type":
@@ -7489,11 +7489,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR DWordMemory UInt32":
-							this.XOR (GetDWordMemory (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "XOR R16Type Byte":
-							this.XOR (R16.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "XOR R16Type R16Type":
@@ -7501,7 +7501,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR R16Type UInt16":
-							this.XOR (R16.GetByID (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						case "XOR R16Type WordMemory":
@@ -7509,7 +7509,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR R32Type Byte":
-							this.XOR (R32.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "XOR R32Type DWordMemory":
@@ -7521,11 +7521,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR R32Type UInt32":
-							this.XOR (R32.GetByID (operands [0]), Convert.ToUInt32 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
 							break;
 						
 						case "XOR R8Type Byte":
-							this.XOR (R8.GetByID (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "XOR R8Type ByteMemory":
@@ -7537,7 +7537,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR WordMemory Byte":
-							this.XOR (GetWordMemory (operands [0]), Convert.ToByte ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
 							break;
 						
 						case "XOR WordMemory R16Type":
@@ -7545,7 +7545,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR WordMemory UInt16":
-							this.XOR (GetWordMemory (operands [0]), Convert.ToUInt16 ((operands [1] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.XOR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
 							break;
 						
 						default:

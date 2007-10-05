@@ -79,6 +79,14 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
+
+		public static uint CMPUnsignedShiftLeft()
+		{
+			if (ShiftLeft (1, 31) == 2147483648U)
+				return 1;
+
+			return 0;
+		}
 		
 		public static uint CMPSimpleShiftRight ()
 		{
