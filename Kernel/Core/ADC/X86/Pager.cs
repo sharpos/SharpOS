@@ -121,30 +121,39 @@ namespace SharpOS.ADC.X86 {
 			Asm.MOV (CR.CR3, R32.EAX);
 			Asm.POP (R32.EAX);
 		}
-		
-		private static void SetTable (uint page)
+
+		private static void SetDirectory (uint page)
 		{
 			Asm.CLI();
 
 			//ReadCR0()
-			uint val = 0;
+			//uint val = 0;
 			Asm.PUSH(R32.EAX);
+			Asm.PUSH(R32.EBX);
+			Asm.PUSH(R32.ECX);
 			Asm.MOV(R32.EAX, CR.CR0);
-			Asm.MOV(&val, R32.EAX);
-			Asm.POP(R32.EAX);
+			//Asm.MOV(&val, R32.EAX);
+			Asm.MOV(R32.EBX, 1u<<31);
+			Asm.SHL(R32.EBX, 31);
+			Asm.OR(R32.EAX, R32.EBX);
+			Asm.MOV(R32.EAX, R32.ECX);
+			//Asm.POP(R32.EAX);
 
-			val |= (uint)CR0.PG;
+			//val |= (uint)CR0.PG;
 
 			//WriteCR3((uint)PageDirectory);
-			Asm.PUSH(R32.EAX);
+			//Asm.PUSH(R32.EAX);
 			Asm.MOV(R32.EAX, &page);
 			Asm.MOV(CR.CR3, R32.EAX);
-			Asm.POP(R32.EAX);
+			//Asm.POP(R32.EAX);
 
 			//WriteCR0(value | mod);
-			Asm.PUSH(R32.EAX);
-			Asm.MOV(R32.EAX, &val);
-			Asm.MOV(CR.CR0, R32.EAX);
+			//Asm.PUSH(R32.EAX);
+			//Asm.MOV(R32.ECX, &val);
+			Asm.MOV(CR.CR0, R32.ECX);
+
+			Asm.POP(R32.ECX);
+			Asm.POP(R32.EBX);
 			Asm.POP(R32.EAX);
 
 			Asm.STI();
@@ -254,7 +263,7 @@ namespace SharpOS.ADC.X86 {
 		
 		public static PageAllocator.Errors Enable ()
 		{
-			SetTable((uint)PageDirectory);
+			SetDirectory ((uint)PageDirectory);
 
 			return PageAllocator.Errors.Success;
 		}

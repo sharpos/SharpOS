@@ -82,10 +82,10 @@ namespace SharpOS.Memory {
 			
 			// Determine the pages used by the kernel and the total pages in the system
 			kernelStartPage = (byte*)PtrToPage(kernelOffset);
-			kernelSize = (_kernelSize / (Pager.AtomicPageSize / 1024)) + 1;
+			kernelSize = (_kernelSize / Pager.AtomicPageSize) + 1;
 			totalPages = totalMem / (Pager.AtomicPageSize / 1024);
 			
-			start = (byte*)(((uint)kernelStartPage + _kernelSize) * Pager.AtomicPageSize);
+			start = (byte*)((uint)kernelStartPage + (kernelSize * Pager.AtomicPageSize));
 			
 			// Allocate the free page stack
 			fpStack = (uint*)start;
@@ -110,16 +110,19 @@ namespace SharpOS.Memory {
 			ReservePageRange (fpStack, fpStackSize);
 			ReservePageRange (rpStack, rpStackSize);
 			ReservePageRange (pagingData, pagingDataSize);
+			//ReservePageRange((void*)0xB8000, (uint)((0xBC000 - 0xB8000) / Pager.AtomicPageSize));
 
-			if (CommandLine.ContainsOption ("-paging")) {
+			bool paging = CommandLine.ContainsOption ("-paging");
+			if (paging)
 				Pager.Setup (totalMem, pagingData, pagingDataSize);
-				Pager.Enable();	// <-- this causes a rebooting crash...
-				TextMode.WriteLine("Hurray! we didn't crash!!!");
-			} else
+			else
 				Kernel.Warning("Paging not set in commandline!");
 		
 			for (int page = 0; page < totalPages; ++page)
 				PushFreePage ((void*)(page * Pager.AtomicPageSize));
+
+			if (paging)
+				Pager.Enable();
 		}
 		
 		#endregion
@@ -417,8 +420,10 @@ namespace SharpOS.Memory {
 		/// </param>
 		public static bool ReservePageRange(void *firstPage, uint pages)
 		{
-			// TODO
-			Kernel.Warning("ReservePageRange - unimplemented!");
+			TextMode.Write((int)(pages * Pager.AtomicPageSize));
+			TextMode.WriteLine();
+			for(int i=0;i<pages;i++)
+				PushReservedPage((void*)(((byte*)firstPage) + (pages * Pager.AtomicPageSize)));
 			return false;
 		}
 		
