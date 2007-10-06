@@ -27,7 +27,7 @@ namespace SharpOS.ADC.X86 {
 		
 		[System.Flags]
 		private enum PageAttr: uint {
-			Present = 1,
+			Present = (1<<0),
 			ReadWrite = (1<<1),
 			User = (1<<2),
 			Accessed = (1<<5),
@@ -46,7 +46,7 @@ namespace SharpOS.ADC.X86 {
 		
 		private static PageAttr GetNativePMA (PageAttributes attr)
 		{
-			if ((uint)attr == 0xFFFFFFFF)
+			if ((uint) attr == 0xFFFFFFFF)
 				return (PageAttr)attr;
 			
 			PageAttr attrMask = 0;
@@ -82,6 +82,7 @@ namespace SharpOS.ADC.X86 {
 			return ret;
 		}
 		
+		/*
 		private static uint ReadCR0()
 		{
 			uint val = 0;
@@ -121,39 +122,24 @@ namespace SharpOS.ADC.X86 {
 			Asm.MOV (CR.CR3, R32.EAX);
 			Asm.POP (R32.EAX);
 		}
+		*/
 
 		private static void SetDirectory (uint page)
 		{
 			Asm.CLI();
 
-			//ReadCR0()
-			//uint val = 0;
 			Asm.PUSH(R32.EAX);
-			Asm.PUSH(R32.EBX);
 			Asm.PUSH(R32.ECX);
-			Asm.MOV(R32.EAX, CR.CR0);
-			//Asm.MOV(&val, R32.EAX);
-			Asm.MOV(R32.EBX, 1u<<31);
-			Asm.SHL(R32.EBX, 31);
-			Asm.OR(R32.EAX, R32.EBX);
-			Asm.MOV(R32.EAX, R32.ECX);
-			//Asm.POP(R32.EAX);
 
-			//val |= (uint)CR0.PG;
-
-			//WriteCR3((uint)PageDirectory);
-			//Asm.PUSH(R32.EAX);
 			Asm.MOV(R32.EAX, &page);
+			
+			Asm.MOV(R32.ECX, CR.CR0);
+			Asm.OR(R32.ECX, (uint)CR0.PG);
+			
 			Asm.MOV(CR.CR3, R32.EAX);
-			//Asm.POP(R32.EAX);
-
-			//WriteCR0(value | mod);
-			//Asm.PUSH(R32.EAX);
-			//Asm.MOV(R32.ECX, &val);
 			Asm.MOV(CR.CR0, R32.ECX);
 
 			Asm.POP(R32.ECX);
-			Asm.POP(R32.EBX);
 			Asm.POP(R32.EAX);
 
 			Asm.STI();
@@ -203,53 +189,54 @@ namespace SharpOS.ADC.X86 {
 		public static void GetMemoryRequirements (uint totalMem, PagingMemoryRequirements *req)
 		{
 			req->AtomicPages = ComputeControlReq (totalMem);
-			req->Start = null;
+			// this can't be right??
+			//req->Start = null;	
 			req->Error = PageAllocator.Errors.Success;
 		}
 		
-		public static PageAllocator.Errors Setup (uint totalMem, byte *pagemap, uint pagemapLen)
+		public static PageAllocator.Errors Setup (uint totalMem, byte *pagemap, uint pagemapLen, PageAllocator.Errors* error)
 		{
-			if (pagemapLen < ComputeControlReq (totalMem))
-				return PageAllocator.Errors.UnusablePageControlBuffer;
+			if (pagemap == null ||
+				pagemapLen < ComputeControlReq(totalMem))
+			{
+				*error = PageAllocator.Errors.UnusablePageControlBuffer;
+				return *error;
+			}
+
+			uint totalBytes = totalMem * 1024;	// more intuitive to think in bytes than in kibibytes
+
+			PageDirectory = (uint*)pagemap;
+			PageTables = (uint*)(((byte*)PageDirectory) + 4096);
 			
-			PageTables = (uint*)pagemap;
-			PageDirectory = (uint*) (pagemap + (totalMem / 4 / 1024));
-			
-			uint addr = 0;
-			byte *table = (byte*)PageTables;
-			uint totalPages = totalMem / 4;
+			uint	addr			= 0;
+			uint*	table			= (uint*)PageTables;
+			uint	totalPages		= totalBytes / 4096;
+			uint	totalTables		= totalPages / 1024;
+
+			Memory.MemSet32(0, (uint)PageDirectory, 1024);
 			
 			// enough page tables to cover all existing pages
 			
-			for (int x = 0; x < (totalPages / 1024); ++x) {
+			for (int x = 0; x < totalTables; ++x) {
 				for (int i = 0; i < 1024; ++i) {
-					uint val = addr | (uint)PageAttr.ReadWrite;
-					
-					if (x * 1024 * 4096 + i * 4096 <= totalMem * 1024)
-						val = addr | (uint)PageAttr.Present;
-						
-					PageTables[i] = val;
+					uint val = (addr & (uint)PageAttr.FrameMask) |
+						(uint)(PageAttr.ReadWrite);
+
+					if (addr <= totalBytes)
+						val |= (uint)PageAttr.Present;
+
+					table[i] = val;
 					addr += 4096;
 				}
+
+				// top-level page directory (level-1)
+				PageDirectory[x] = (uint)table |
+					(uint)(PageAttr.ReadWrite | PageAttr.Present);
 				
-				table += 1024;
+				table += 1024;	// 1024 x sizeof(int) = 4k
 			}
-			
-			// top-level page directory (level-1)
-			
-			table = (byte*)PageTables;
-			
-			for (uint i = 0; i < (totalPages / 1024); ++i) {
-				PageDirectory[i] = (uint)table | (uint)(PageAttr.ReadWrite |
-					PageAttr.Present);
-				table += 1024;
-			}
-			
-			for (uint i = (totalPages / 1024) + 1; i < 1024; ++i)
-				PageDirectory[i] = 0;
 		
 			// Reserve memory below 0x100000 (1MB) for the BIOS/video memory
-			
 			uint ceil = 0x100000;
 			byte *page = null;
 			
@@ -258,14 +245,22 @@ namespace SharpOS.ADC.X86 {
 				page += 4096;
 			}
 
-			return PageAllocator.Errors.Success;
+			*error = PageAllocator.Errors.Success;
+			return *error;
 		}
 		
-		public static PageAllocator.Errors Enable ()
+		public static PageAllocator.Errors Enable (PageAllocator.Errors* error)
 		{
+			if (PageDirectory == null)
+			{
+				*error = PageAllocator.Errors.UnusablePageControlBuffer;
+				return *error;
+			}
+
 			SetDirectory ((uint)PageDirectory);
 
-			return PageAllocator.Errors.Success;
+			*error = PageAllocator.Errors.Success;
+			return *error;
 		}
 		
 		/**
@@ -325,11 +320,11 @@ namespace SharpOS.ADC.X86 {
 
 			if (granularity < 0 || granularity > 1)
 				return PageAllocator.Errors.UnsupportedGranularity;
-			
-			Kernel.Assert (nativeAttr == 0xFFFFFFFF, 
+
+			Kernel.Assert(nativeAttr != 0xFFFFFFFF, 
 				"X86.Pager::SetPageAttributes(): bad page map attributes");
 
-			Kernel.Assert (ADC.Pager.GetPointerGranularity (page) == granularity,
+			Kernel.Assert(ADC.Pager.GetPointerGranularity(page) == granularity,
 				"X86.Pager::SetPageAttributes(): bad alignment on page pointer");
 			
 			PagePtrToTables (page, &pde, &pte);

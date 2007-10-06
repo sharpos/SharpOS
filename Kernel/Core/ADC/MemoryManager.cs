@@ -28,12 +28,15 @@ namespace SharpOS.ADC
 
 		public static unsafe void Setup()
 		{
+			Architecture.DisableInterrupts();
 			memoryEnd = memoryStart =
-				(uint)PageAllocator.RangeAlloc(numberOfPages);
+				(uint)PageAllocator.Alloc();
+				//(uint)PageAllocator.RangeAlloc(numberOfPages);
 
 			if (memoryStart == 0)
 			{
 				Kernel.Error("Failed to initialize memory manager");
+				Architecture.EnableInterrupts();
 				return;
 			}
 
@@ -57,6 +60,7 @@ namespace SharpOS.ADC
 			firstEmptyNode->nextNode = null;
 			firstEmptyNode->prevNode = null;
 			firstEmptyNode->nodeSize = (uint)((memoryEnd - memoryStart) - sizeof(Header));
+			Architecture.EnableInterrupts();
 		}
 
 		public static unsafe void* Allocate(uint allocate_size)

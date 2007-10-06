@@ -32,8 +32,9 @@ namespace SharpOS.ADC {
 		/// <see cref="M:GetMemoryRequirements" />.
 		/// </returns>
 		[AOTAttr.ADCStub]
-		public static PageAllocator.Errors Setup (uint totalMem, byte *pagemap, uint pagemapLen)
+		public static PageAllocator.Errors Setup (uint totalMem, byte *pagemap, uint pagemapLen, PageAllocator.Errors* error)
 		{
+			Kernel.Warning("Pager.Setup - not implemented!");
 			return PageAllocator.Errors.NotImplemented;
 		}
 		
@@ -45,6 +46,7 @@ namespace SharpOS.ADC {
 		[AOTAttr.ADCStub]
 		public static uint GetGranularitySize (uint granularity, PageAllocator.Errors *ret_err)
 		{
+			Kernel.Warning("Pager.GetGranularitySize - not implemented!");
 			*ret_err = PageAllocator.Errors.NotImplemented;
 			return 0;
 		}
@@ -55,6 +57,7 @@ namespace SharpOS.ADC {
 		[AOTAttr.ADCStub]
 		public static uint GetBigGranularity ()
 		{
+			Kernel.Warning("Pager.GetBigGranularity - not implemented!");
 			return 0;
 		}
 		
@@ -72,14 +75,16 @@ namespace SharpOS.ADC {
 		[AOTAttr.ADCStub]
 		public static void GetMemoryRequirements (uint totalMem, PagingMemoryRequirements *req)
 		{
+			Kernel.Warning("Pager.GetMemoryRequirements - not implemented!");
 		}
 		
 		/// <summary>
 		/// Causes paging to be enabled and active after this call.
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static PageAllocator.Errors Enable ()
+		public static PageAllocator.Errors Enable (PageAllocator.Errors* error)
 		{
+			Kernel.Warning("Pager.Enable - not implemented!");
 			return PageAllocator.Errors.NotImplemented;
 		}
 		
@@ -92,6 +97,7 @@ namespace SharpOS.ADC {
 		public static PageAllocator.Errors MapPage (void *page, void *phys_page, uint granularity,
 					     PageAttributes attr)
 		{
+			Kernel.Warning("Pager.MapPage - not implemented!");
 			return PageAllocator.Errors.NotImplemented;
 		}
 		
@@ -99,6 +105,7 @@ namespace SharpOS.ADC {
 		public static PageAllocator.Errors SetPageAttributes (void *page, uint granularity,
 						       PageAttributes attr)
 		{
+			Kernel.Warning("Pager.SetPageAttributes - not implemented!");
 			return PageAllocator.Errors.NotImplemented;
 		}
 		
@@ -107,6 +114,7 @@ namespace SharpOS.ADC {
 								     PageAllocator.Errors *ret_err)
 		{
 			*ret_err = PageAllocator.Errors.NotImplemented;
+			Kernel.Warning("Pager.GetPageAttributes - not implemented!");
 			return 0;
 		}
 

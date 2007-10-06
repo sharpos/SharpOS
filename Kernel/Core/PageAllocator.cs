@@ -84,7 +84,7 @@ namespace SharpOS.Memory {
 			kernelStartPage = (byte*)PtrToPage(kernelOffset);
 			kernelSize = (_kernelSize / Pager.AtomicPageSize) + 1;
 			totalPages = totalMem / (Pager.AtomicPageSize / 1024);
-			
+
 			start = (byte*)((uint)kernelStartPage + (kernelSize * Pager.AtomicPageSize));
 			
 			// Allocate the free page stack
@@ -100,29 +100,65 @@ namespace SharpOS.Memory {
 			rpStackSize = 1;
 			
 			// Allocate paging information
-			pagingMemory->Start = start;
+			pagingMemory->Start = (byte*)PtrToPage(start + (rpStackSize * 1024) + (Pager.AtomicPageSize - 1));
 			Pager.GetMemoryRequirements (totalMem, pagingMemory);
 			pagingData = (byte*)pagingMemory->Start;
 			pagingDataSize = pagingMemory->AtomicPages;
 			
 			// Reserve the memory ranges we're using.
-			ReservePageRange (kernelStartPage, kernelSize);
-			ReservePageRange (fpStack, fpStackSize);
-			ReservePageRange (rpStack, rpStackSize);
-			ReservePageRange (pagingData, pagingDataSize);
-			//ReservePageRange((void*)0xB8000, (uint)((0xBC000 - 0xB8000) / Pager.AtomicPageSize));
+			ReservePageRange (kernelStartPage, kernelSize, "kernel");
+			ReservePageRange (fpStack, fpStackSize, "fpstack");
+			ReservePageRange (rpStack, rpStackSize, "rpstack");
+			ReservePageRange (pagingData, pagingDataSize, "paging");
+			
+			byte* page = (byte*)0;
+			for (int i = 0; i < totalPages; ++i, page += Pager.AtomicPageSize)
+			{
+				//if (!PageAllocator.IsPageReserved(page))	//..ugh
+					PushFreePage(page);
+			}
 
-			bool paging = CommandLine.ContainsOption ("-paging");
+			bool paging = true;//CommandLine.ContainsOption ("-paging");
 			if (paging)
-				Pager.Setup (totalMem, pagingData, pagingDataSize);
-			else
+			{
+				// FIXME: the value we get back from Pager.Setup is not the same value that 
+				//		  we 'return' from inside the method itself!!!!
+				Errors error = Errors.Unknown;
+				Pager.Setup(totalMem, pagingData, pagingDataSize, &error);
+				
+				if (error != Errors.Success)
+				{
+					PrintError(error);
+					return;
+				}
+			} else
 				Kernel.Warning("Paging not set in commandline!");
-		
-			for (int page = 0; page < totalPages; ++page)
-				PushFreePage ((void*)(page * Pager.AtomicPageSize));
-
+			
 			if (paging)
-				Pager.Enable();
+			{
+				Errors error = Errors.Unknown;
+				Pager.Enable(&error);
+				if (error != Errors.Success)
+					PrintError(error);
+			}
+		}
+
+		private static void PrintError(Errors error)
+		{
+			ADC.TextMode.Write("(");
+			ADC.TextMode.Write((int)error);
+			ADC.TextMode.Write(") ");
+
+			switch (error)
+			{
+				case Errors.NoAttributesForGranularity:	Kernel.Error("NoAttributesForGranularity"); return;
+				case Errors.NotImplemented:				Kernel.Error("NotImplemented"); return;
+				case Errors.Unknown:					Kernel.Error("Unknown"); return;
+				case Errors.UnsupportedGranularity:		Kernel.Error("UnsupportedGranularity"); return;
+				case Errors.UnusablePageControlBuffer:	Kernel.Error("UnusablePageControlBuffer"); return;
+				case Errors.Success:					Kernel.Error("Success"); return;
+				default:								Kernel.Error("Garbage"); return;
+			}
 		}
 		
 		#endregion
@@ -418,12 +454,15 @@ namespace SharpOS.Memory {
 		/// <param name="pages">
 		/// The amount of pages to reserve.
 		/// </param>
-		public static bool ReservePageRange(void *firstPage, uint pages)
+		public static bool ReservePageRange(void *firstPage, uint pages, string name)
 		{
-			TextMode.Write((int)(pages * Pager.AtomicPageSize));
-			TextMode.WriteLine();
-			for(int i=0;i<pages;i++)
-				PushReservedPage((void*)(((byte*)firstPage) + (pages * Pager.AtomicPageSize)));
+			byte*	page = (byte*)firstPage;
+			for (int i = 0; i < pages; i++)
+			{
+				//if (!IsPageReserved(page))	// ugh...
+					PushReservedPage(page);
+				page += Pager.AtomicPageSize;
+			}
 			return false;
 		}
 		

@@ -121,8 +121,8 @@ namespace SharpOS {
 				multibootInfo->MemUpper + 1000);
 
 			StageMessage("MemoryManager setup.");
-			ADC.MemoryManager.Setup();
-			//MemoryManager.Setup ();
+			//ADC.MemoryManager.Setup();
+			//Memory.MemoryManager.Setup ();
 
 			StageMessage("Scheduler setup.");
 			Scheduler.Setup();
@@ -140,12 +140,13 @@ namespace SharpOS {
 			
 			Scheduler.DumpThreads();
 			*/
-
+			
 			StageMessage("Console setup.");
 			SharpOS.Console.Setup();
-
+			
+			
 			// memory testing code
-
+			/*
 			void* data;
 			void* data2;
 			void* data3;
@@ -166,14 +167,14 @@ namespace SharpOS {
 			data3 = ADC.MemoryManager.Allocate(100);
 			
 			ADC.MemoryManager.Dump();
-
+			*/
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
 			TextMode.WriteLine("");
 			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
 			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes();
-
+			
 #if KERNEL_TESTS
 			// Testcases
 			
