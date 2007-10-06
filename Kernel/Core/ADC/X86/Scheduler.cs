@@ -27,7 +27,6 @@ namespace SharpOS.ADC.X86
 
 		public static unsafe void* CreateThread(uint function_address)
 		{
-			Asm.CLI();
 			for (int i = 0; i < Kernel.MaxThreads; i++)
 			{
 				if (ThreadMemoryUsed[i] == false)
@@ -37,29 +36,34 @@ namespace SharpOS.ADC.X86
 					Memory.MemSet32(0, (uint)(void*)&(ThreadMemory[i]), (uint)(sizeof(IDT.ISRData) / 4));
 
 					// ... temp code
-					ushort ds, cs, es, fs, gs, ss;
-					Asm.MOV(R16.AX, Seg.DS); Asm.MOV(&ds, R16.AX);
-					Asm.MOV(R16.AX, Seg.CS); Asm.MOV(&cs, R16.AX);
-					Asm.MOV(R16.AX, Seg.ES); Asm.MOV(&es, R16.AX);
-					Asm.MOV(R16.AX, Seg.FS); Asm.MOV(&fs, R16.AX);
-					Asm.MOV(R16.AX, Seg.GS); Asm.MOV(&gs, R16.AX);
-					Asm.MOV(R16.AX, Seg.SS); Asm.MOV(&ss, R16.AX);
-
-					ThreadMemory[i].FS = (uint)fs;
-					ThreadMemory[i].GS = (uint)gs;
-					ThreadMemory[i].ES = (uint)es;
-					ThreadMemory[i].DS = (uint)ds;
-					ThreadMemory[i].CS = (uint)cs;
-					ThreadMemory[i].SS = (uint)ss;
-
-					ThreadMemory[i].EFlags	= 0x0200;
+					ThreadMemory[i].FS		= GDT.DataSelector;
+					ThreadMemory[i].GS		= GDT.DataSelector;
+					ThreadMemory[i].ES		= GDT.DataSelector;
+					ThreadMemory[i].DS		= GDT.DataSelector;
+					ThreadMemory[i].SS		= GDT.DataSelector;
+					ThreadMemory[i].CS		= GDT.CodeSelector;
 					ThreadMemory[i].EIP		= function_address;
 
-					Asm.STI();
+					ThreadMemory[i].EFlags	= 0x00000202;
+					// set up stack etc.
+					//ThreadMemory[i].SS	= (uint)ss;				// stack segment
+					//ThreadMemory[i].ESP	= stack + stacksize;	// stack pointer
+					//ThreadMemory[i].EBP	= ...;					// no need to set?
+
+					//ThreadMemory[i].CS	= (uint)cs;				// code segment
+					//ThreadMemory[i].EIP	= function_address;		// instruction pointer
+					
+					// |------| start of stack memory
+					// |      |
+					// |      |  = ESP
+					// | DATA |
+					// | DATA |  = BSP
+					// | DATA |
+					// |------| end of stack memory
+
 					return (void*)&ThreadMemory[i];
 				}
 			}
-			Asm.STI();
 			return null;
 		}
 	}

@@ -26,8 +26,8 @@ namespace SharpOS.ADC.X86
 			//0000-001F - First Direct Memory Access (DMA) Controller
 
 			#region 0020-0021 - Programmable Interrupt (PIC) Controller
-			PIC_CommandPort						= 0x0020,
-			PIC_DataPort						= 0x0021,
+			Master_PIC_CommandPort					= 0x0020,
+			Master_PIC_DataPort						= 0x0021,
 			#endregion
 
 			//0022-002B - Intel 82355, part of chipset for 386sx
@@ -263,7 +263,10 @@ namespace SharpOS.ADC.X86
 			#endregion
 
 			//0080-008F - DMA page registers
-			//00A0-00AF - Second Programmable Interrupt Controller (PIC) Controller
+			#region 00A0-00AF - Second Programmable Interrupt Controller (PIC) Controller
+			Slave_PIC_CommandPort				= 0x00A0,
+			Slave_PIC_DataPort					= 0x00A1,
+			#endregion
 			//00C0-00DF - Second Direct Memory Access (DMA) Controller
 			//00F0-00FF - coprocessor (8087..80387)
 			//0130-0133 - Adaptec 154xB/154xC SCSI adapter

@@ -22,23 +22,86 @@ namespace SharpOS.ADC.X86 {
 	/// </summary>
 	public unsafe class IDT
 	{
-		public enum IRQ
+		public enum Interrupt
 		{
-			SystemTimer				= 0,
-			Keyboard				= 1,
-			COM2Default				= 3,
-			COM4User				= 3,
-			COM1Default				= 4,
-			COM3User				= 4,
-			ParallelPort2			= 5,
-			FloppyDiskController	= 6,
-			ParallelPort1			= 7,
-			SoundCard				= 7,
-			RealTimeClock			= 8,
-			PS2Mouse				= 12,
-			ISA						= 13,
-			PrimaryIDE				= 14,
-			SecondaryIDE			= 15
+			// CPU Exceptions
+
+			DivideError				= 0x00,	// AAM/DIV/IDIV divide by zero, DIV/IDIV result too large
+			Debug					= 0x01,	//
+			NonMaskableInterrupt	= 0x02,	// non-maskable interrupt
+			BreakPoint				= 0x03,	// INT 3, debugger breakpoint
+			Overflow				= 0x04,	// INTO instruction detected overflow 
+			BoundaryRangeExceeded	= 0x05,	// BOUND instruction detected overrange 
+			UndefinedOpcode			= 0x06,	// invalid instruction opcode 
+			DeviceNotAvailable		= 0x07,	// no coprocessor (ESC, WAIT instructions)
+			DoubleFault				= 0x08,	// exceptions during exception handler invocation
+			//Reserved				= 0x09,	
+			InvalidTSS				= 0x0A,	// implicit TSS accesses
+			NotPresent				= 0x0B,	// Segment register loads, explicit/implicit segment register accesses
+			StackSegment			= 0x0C,	// SS loads, explicit/implicit SS accesses
+			GeneralProtection		= 0x0D,	//
+			PageFault				= 0x0E,	//
+			//Reserved				= 0x0F,	
+			MathFault				= 0x10,	// coprocessor error (ESC, WAIT instructions)
+			AlignmentChecking		= 0x11,	// Misaligned accesses / Lock accross cache line or page boundary (486+ only)
+			MachineCheck			= 0x12,	// Internal error, bus error, or bus error detected by external agent (Pentium+ only)
+			ExtendedMathFault		= 0x13,	//
+			//Reserved				= 0x14,	
+			//Reserved				= 0x15,	
+			//Reserved				= 0x16,	
+			//Reserved				= 0x17,	
+			//Reserved				= 0x18,	
+			//Reserved				= 0x19,	
+			//Reserved				= 0x1A,	
+			//Reserved				= 0x1B,	
+			//Reserved				= 0x1C,	
+			//Reserved				= 0x1D,	
+			//Reserved				= 0x1E,	
+			//Reserved				= 0x1F,	
+
+			LastException			= 0x1F,
+
+			// Hardware Interrupts
+			
+			IRQ0					= 0x20,
+			IRQ1					= 0x21,
+			IRQ2					= 0x22,
+			IRQ3					= 0x23,
+			IRQ4					= 0x24,
+			IRQ5					= 0x25,
+			IRQ6					= 0x26,
+			IRQ7					= 0x27,
+			IRQ8					= 0x28,
+			IRQ9					= 0x29,
+			IRQ10					= 0x2A,
+			IRQ11					= 0x2B,
+			IRQ12					= 0x2C,
+			IRQ13					= 0x2D,
+			IRQ14					= 0x2E,
+			IRQ15					= 0x2F,
+
+			SystemTimer				= Interrupt.IRQ0,
+			Keyboard				= Interrupt.IRQ1,
+			COM2Default				= Interrupt.IRQ3,
+			COM4User				= Interrupt.IRQ3,
+			COM1Default				= Interrupt.IRQ4,
+			COM3User				= Interrupt.IRQ4,
+			ParallelPort2			= Interrupt.IRQ5,
+			FloppyDiskController	= Interrupt.IRQ6,
+			ParallelPort1			= Interrupt.IRQ7,
+			SoundCard				= Interrupt.IRQ7,
+			RealTimeClock			= Interrupt.IRQ8,
+			PS2Mouse				= Interrupt.IRQ12,
+			ISA						= Interrupt.IRQ13,
+			CoProcessor386			= Interrupt.IRQ13,
+			PrimaryIDE				= Interrupt.IRQ14,
+			SecondaryIDE			= Interrupt.IRQ15,
+
+			LastHardwareIRQ			= Interrupt.IRQ15,
+
+			SysCall					= 0x30, // This is the only interrupt with a ring 3 gate descriptor. 
+
+			// CONFIRM: all interrupts above Causes Double Fault?
 		}
 
 		#region Function Label Constants
@@ -50,43 +113,57 @@ namespace SharpOS.ADC.X86 {
 
 		#region Tables
 		private const ushort Entries = 256;
-		private static DTPointer* idtPointer = (DTPointer*) Kernel.LabelledAlloc (IDT_POINTER, DTPointer.SizeOf);
-		private static Entry* idt = (Entry*) Kernel.StaticAlloc (Entries * Entry.SizeOf);
-		private static uint* ISRTable = (uint*) Kernel.LabelledAlloc (IDT_TABLE, Entries * 4);
+		private static DTPointer*		idtPointer	= (DTPointer*) Kernel.LabelledAlloc (IDT_POINTER, DTPointer.SizeOf);
+		private static IDTDescriptor*	idtTable	= (IDTDescriptor*) Kernel.StaticAlloc(Entries * IDTDescriptor.SizeOf);
+		private static uint*			ISRTable	= (uint*) Kernel.LabelledAlloc (IDT_TABLE, Entries * 4);
+		#endregion
+		
+		#region ISROptions
+		[Flags]
+		public enum ISROptions : byte {
+			Call_Gate			= 4,
+			Task_Gate			= 5,
+			Interrupt_Gate		= 6,
+			Trap_Gate			= 7,
+			OperandSize_16Bit	= 0,
+			OperandSize_32Bit	= 8,
+			Privilege_Ring_0	= 0,
+			Privilege_Ring_1	= 32,
+			Privilege_Ring_2	= 64,
+			Privilege_Ring_3	= 96,
+			Present				= 128
+		}
 		#endregion
 
-		#region IDT Entry class
+		#region IDT Descriptor class
 		[StructLayout (LayoutKind.Sequential)]
-		public struct Entry {
-			public enum Type : ushort {
-				Call_Gate = 4,
-				Task_Gate = 5,
-				Interrupt_Gate = 6,
-				Trap_Gate = 7,
-				OperandSize_16Bit = 0,
-				OperandSize_32Bit = 8,
-				Privilege_Ring_0 = 0,
-				Privilege_Ring_1 = 32,
-				Privilege_Ring_2 = 64,
-				Privilege_Ring_3 = 96,
-				Present = 128,
-
-			}
-
+		public struct IDTDescriptor {
 			public const uint SizeOf = 8;
 
-			public ushort OffsetLow;
-			public ushort Selector;
-			public byte Unused;
-			public byte Options;
-			public ushort OffsetHigh;
+			private ushort		OffsetLow;
+			public ushort		Selector;
+			private byte		Unused;
+			public ISROptions	Options;
+			private ushort		OffsetHigh;
 
-			public void Setup (ushort selector, uint offset, byte options)
+			public uint		Offset
 			{
-				this.Selector = selector;
-				this.OffsetLow = (ushort) (offset & 0xFFFF);
-				this.OffsetHigh = (byte) ((offset >> 16) & 0xFFFF);
-				this.Options = options;
+				get
+				{
+					return (uint)(((uint)this.OffsetLow) | (((uint)this.OffsetHigh) << 16));	
+				}
+				set
+				{
+					this.OffsetLow	= (ushort)((value	   ) & 0xFFFF);
+					this.OffsetHigh = (ushort)((value >> 16) & 0xFFFF);
+				}
+			}
+
+			public void Setup (ushort selector, uint offset, ISROptions options)
+			{
+				this.Selector	= selector;
+				this.Offset		= offset;
+				this.Options	= options;
 			}
 		}
 		#endregion
@@ -120,7 +197,7 @@ namespace SharpOS.ADC.X86 {
 		#region Setup
 		internal static void Setup ()
 		{
-			idtPointer->Setup ((ushort) (sizeof (Entry) * Entries - 1), (uint) idt);
+			idtPointer->Setup ((ushort) (sizeof (IDTDescriptor) * Entries - 1), (uint) idtTable);
 
 #if DISPLAY_IDT_SETUP_SUMMARY // TO TOGGLE, REFER TO TOP OF FILE
 			ADC.TextMode.Write ("IDT Pointer: 0x");
@@ -142,23 +219,11 @@ namespace SharpOS.ADC.X86 {
 		#endregion
 
 		#region RegisterIRQ
-		public static void RegisterIRQ (byte index, uint address)
-		{
-			if (index < 8)
-				ISRTable [PIC.MasterIRQBase + index] = address;
-
-			else if (index < 16)
-				ISRTable [PIC.SlaveIRQBase + index] = address;
-			
-			// TODO else output an error?
-
-			PIC.EnableIRQ (index);
-		}
-
-		public static void RegisterIRQ(IRQ irq, uint address)
+		public static void RegisterIRQ(Interrupt irq, uint address)
 		{
 			byte index = (byte)irq;
-			RegisterIRQ(index, address);
+			ISRTable[index] = address;
+			PIC.EnableIRQ(index);
 		}
 		#endregion
 
@@ -166,51 +231,7 @@ namespace SharpOS.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (IRQ_CLEAN_UP)]
 		private static unsafe void IRQCleanUp (ISRData data)
 		{
-			if (data.IrqIndex >= PIC.MasterIRQBase && data.IrqIndex < PIC.MasterIRQBase + 8)
-				PIC.SendMasterEndOfInterrupt ();
-
-			else if (data.IrqIndex >= PIC.SlaveIRQBase && data.IrqIndex < PIC.SlaveIRQBase + 8) {
-				PIC.SendSlaveEndOfInterrupt ();
-				PIC.SendMasterEndOfInterrupt ();
-			}
-		}
-		#endregion
-
-		#region ErrorInterrupts
-		public enum ErrorInterrupts
-		{
-			DivideError				= 0x00,	// AAM/DIV/IDIV divide by zero, DIV/IDIV result too large
-			Debug					= 0x01,	//
-			NonMaskableInterrupt	= 0x02,	// non-maskable interrupt
-			BreakPoint				= 0x03,	//
-			Overflow				= 0x04,	//
-			BoundaryRangeExceeded	= 0x05,	//
-			UndefinedOpcode			= 0x06,	//
-			DeviceNotAvailable		= 0x07,	//
-			DoubleFault				= 0x08,	// exceptions during exception handler invocation
-			//Reserved				= 0x09,	
-			InvalidTSS				= 0x0A,	// implicit TSS accesses
-			NotPresent				= 0x0B,	// Segment register loads, explicit/implicit segment register accesses
-			StackSegment			= 0x0C,	// SS loads, explicit/implicit SS accesses
-			GeneralProtection		= 0x0D,	//
-			PageFault				= 0x0E,	//
-			//Reserved				= 0x0F,	
-			MathFault				= 0x10,	//
-			AlignmentChecking		= 0x11,	// Misaligned accesses / Lock accross cache line or page boundary 
-			MachineCheck			= 0x12,	// Internal error, bus error, or bus error detected by external agent
-			ExtendedMathFault		= 0x13,	//
-			//Reserved				= 0x14,	
-			//Reserved				= 0x15,	
-			//Reserved				= 0x16,	
-			//Reserved				= 0x17,	
-			//Reserved				= 0x18,	
-			//Reserved				= 0x19,	
-			//Reserved				= 0x1A,	
-			//Reserved				= 0x1B,	
-			//Reserved				= 0x1C,	
-			//Reserved				= 0x1D,	
-			//Reserved				= 0x1E,	
-			//Reserved				= 0x1F,	
+			PIC.SendEndOfInterrupt((byte)data.IrqIndex);
 		}
 		#endregion
 
@@ -218,32 +239,39 @@ namespace SharpOS.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (ISR_DEFAULT_HANDLER)]
 		private static unsafe void ISRDefaultHandler (ISRData data)
 		{
+			uint cr2 = 0;
+			Asm.MOV(R32.EAX, CR.CR2);
+			Asm.MOV(&cr2, R32.EAX);
+
 			Kernel.SetErrorTextAttributes ();
-			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked.\n");
+			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked!.\n");
 			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.IrqIndex);
-			switch ((ErrorInterrupts)data.IrqIndex)
+			switch ((Interrupt)data.IrqIndex)
 			{
-				case ErrorInterrupts.DivideError:			ADC.TextMode.WriteLine ("          Divide Error"); break;
-				case ErrorInterrupts.Debug:					ADC.TextMode.WriteLine ("          Debug"); break;
-				case ErrorInterrupts.NonMaskableInterrupt:	ADC.TextMode.WriteLine ("          NonMaskable Interrupt"); break;
-				case ErrorInterrupts.BreakPoint:			ADC.TextMode.WriteLine ("          Break Point"); break;
-				case ErrorInterrupts.Overflow:				ADC.TextMode.WriteLine ("          Overflow"); break;
-				case ErrorInterrupts.BoundaryRangeExceeded: ADC.TextMode.WriteLine ("          Boundary Range Exceeded"); break;
-				case ErrorInterrupts.UndefinedOpcode:		ADC.TextMode.WriteLine ("          Undefined Opcode"); break;
-				case ErrorInterrupts.DeviceNotAvailable:	ADC.TextMode.WriteLine ("          Device Not Available"); break;
-				case ErrorInterrupts.DoubleFault:			ADC.TextMode.WriteLine ("          Double Fault"); break;
-				case ErrorInterrupts.InvalidTSS:			ADC.TextMode.WriteLine ("          Invalid TSS"); break;
-				case ErrorInterrupts.NotPresent:			ADC.TextMode.WriteLine ("          Not Present"); break;
-				case ErrorInterrupts.StackSegment:			ADC.TextMode.WriteLine ("          Stack Segment"); break;
-				case ErrorInterrupts.GeneralProtection:		ADC.TextMode.WriteLine ("          General Protection"); break;
-				case ErrorInterrupts.PageFault:				ADC.TextMode.WriteLine ("          Page Fault"); break;
-				case ErrorInterrupts.MathFault:				ADC.TextMode.WriteLine ("          Math Fault"); break;
-				case ErrorInterrupts.AlignmentChecking:		ADC.TextMode.WriteLine ("          Alignment Checking"); break;
-				case ErrorInterrupts.MachineCheck:			ADC.TextMode.WriteLine ("          Machine Check"); break;
-				case ErrorInterrupts.ExtendedMathFault:		ADC.TextMode.WriteLine ("          Extended Math Fault"); break;
+				case Interrupt.DivideError:			ADC.TextMode.WriteLine ("          Divide Error"); break;
+				case Interrupt.Debug:					ADC.TextMode.WriteLine ("          Debug"); break;
+				case Interrupt.NonMaskableInterrupt:	ADC.TextMode.WriteLine ("          NonMaskable Interrupt"); break;
+				case Interrupt.BreakPoint:			ADC.TextMode.WriteLine ("          Break Point"); break;
+				case Interrupt.Overflow:				ADC.TextMode.WriteLine ("          Overflow"); break;
+				case Interrupt.BoundaryRangeExceeded: ADC.TextMode.WriteLine ("          Boundary Range Exceeded"); break;
+				case Interrupt.UndefinedOpcode:		ADC.TextMode.WriteLine ("          Undefined Opcode"); break;
+				case Interrupt.DeviceNotAvailable:	ADC.TextMode.WriteLine ("          Device Not Available"); break;
+				case Interrupt.DoubleFault:			ADC.TextMode.WriteLine ("          Double Fault"); break;
+				case Interrupt.InvalidTSS:			ADC.TextMode.WriteLine ("          Invalid TSS"); break;
+				case Interrupt.NotPresent:			ADC.TextMode.WriteLine ("          Not Present"); break;
+				case Interrupt.StackSegment:			ADC.TextMode.WriteLine ("          Stack Segment"); break;
+				case Interrupt.GeneralProtection:		ADC.TextMode.WriteLine ("          General Protection"); break;
+				case Interrupt.PageFault:				ADC.TextMode.WriteLine ("          Page Fault"); break;
+				case Interrupt.MathFault:				ADC.TextMode.WriteLine ("          Math Fault"); break;
+				case Interrupt.AlignmentChecking:		ADC.TextMode.WriteLine ("          Alignment Checking"); break;
+				case Interrupt.MachineCheck:			ADC.TextMode.WriteLine ("          Machine Check"); break;
+				case Interrupt.ExtendedMathFault:		ADC.TextMode.WriteLine ("          Extended Math Fault"); break;
 			}
 			ADC.TextMode.WriteLine ();
             ADC.TextMode.WriteLine ("Register dump:");
+
+			ADC.TextMode.Write("  CR2=0x", (int)cr2);
+			ADC.TextMode.WriteLine();
 
 			ADC.TextMode.Write ("  EIP=0x", (int) data.EIP);
 			ADC.TextMode.WriteLine ();
@@ -269,6 +297,7 @@ namespace SharpOS.ADC.X86 {
 			ADC.TextMode.Write ("   CS=0x", (int) data.CS);
 			ADC.TextMode.WriteLine ();
 
+			Asm.CLI ();
 			Asm.HLT ();
 		}
 		#endregion
@@ -276,264 +305,267 @@ namespace SharpOS.ADC.X86 {
 		#region SetupISR
 		private static unsafe void SetupISR ()
 		{
-			byte type = (byte) (IDT.Entry.Type.Present | IDT.Entry.Type.Privilege_Ring_0 | IDT.Entry.Type.OperandSize_32Bit | IDT.Entry.Type.Interrupt_Gate);
+			ISROptions type = (	ISROptions.Present |
+								ISROptions.Privilege_Ring_0 |
+								ISROptions.OperandSize_32Bit |
+								ISROptions.Interrupt_Gate);
 			
-			idt [0].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_0"), type);
-			idt [1].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_1"), type);
-			idt [2].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_2"), type);
-			idt [3].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_3"), type);
-			idt [4].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_4"), type);
-			idt [5].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_5"), type);
-			idt [6].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_6"), type);
-			idt [7].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_7"), type);
-			idt [8].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_8"), type);
-			idt [9].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_9"), type);
-			idt [10].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_10"), type);
-			idt [11].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_11"), type);
-			idt [12].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_12"), type);
-			idt [13].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_13"), type);
-			idt [14].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_14"), type);
-			idt [15].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_15"), type);
-			idt [16].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_16"), type);
-			idt [17].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_17"), type);
-			idt [18].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_18"), type);
-			idt [19].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_19"), type);
-			idt [20].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_20"), type);
-			idt [21].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_21"), type);
-			idt [22].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_22"), type);
-			idt [23].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_23"), type);
-			idt [24].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_24"), type);
-			idt [25].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_25"), type);
-			idt [26].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_26"), type);
-			idt [27].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_27"), type);
-			idt [28].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_28"), type);
-			idt [29].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_29"), type);
-			idt [30].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_30"), type);
-			idt [31].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_31"), type);
-			idt [32].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_32"), type);
-			idt [33].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_33"), type);
-			idt [34].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_34"), type);
-			idt [35].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_35"), type);
-			idt [36].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_36"), type);
-			idt [37].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_37"), type);
-			idt [38].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_38"), type);
-			idt [39].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_39"), type);
-			idt [40].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_40"), type);
-			idt [41].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_41"), type);
-			idt [42].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_42"), type);
-			idt [43].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_43"), type);
-			idt [44].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_44"), type);
-			idt [45].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_45"), type);
-			idt [46].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_46"), type);
-			idt [47].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_47"), type);
-			idt [48].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_48"), type);
-			idt [49].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_49"), type);
-			idt [50].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_50"), type);
-			idt [51].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_51"), type);
-			idt [52].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_52"), type);
-			idt [53].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_53"), type);
-			idt [54].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_54"), type);
-			idt [55].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_55"), type);
-			idt [56].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_56"), type);
-			idt [57].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_57"), type);
-			idt [58].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_58"), type);
-			idt [59].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_59"), type);
-			idt [60].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_60"), type);
-			idt [61].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_61"), type);
-			idt [62].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_62"), type);
-			idt [63].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_63"), type);
-			idt [64].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_64"), type);
-			idt [65].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_65"), type);
-			idt [66].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_66"), type);
-			idt [67].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_67"), type);
-			idt [68].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_68"), type);
-			idt [69].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_69"), type);
-			idt [70].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_70"), type);
-			idt [71].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_71"), type);
-			idt [72].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_72"), type);
-			idt [73].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_73"), type);
-			idt [74].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_74"), type);
-			idt [75].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_75"), type);
-			idt [76].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_76"), type);
-			idt [77].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_77"), type);
-			idt [78].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_78"), type);
-			idt [79].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_79"), type);
-			idt [80].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_80"), type);
-			idt [81].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_81"), type);
-			idt [82].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_82"), type);
-			idt [83].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_83"), type);
-			idt [84].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_84"), type);
-			idt [85].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_85"), type);
-			idt [86].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_86"), type);
-			idt [87].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_87"), type);
-			idt [88].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_88"), type);
-			idt [89].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_89"), type);
-			idt [90].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_90"), type);
-			idt [91].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_91"), type);
-			idt [92].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_92"), type);
-			idt [93].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_93"), type);
-			idt [94].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_94"), type);
-			idt [95].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_95"), type);
-			idt [96].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_96"), type);
-			idt [97].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_97"), type);
-			idt [98].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_98"), type);
-			idt [99].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_99"), type);
-			idt [100].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_100"), type);
-			idt [101].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_101"), type);
-			idt [102].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_102"), type);
-			idt [103].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_103"), type);
-			idt [104].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_104"), type);
-			idt [105].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_105"), type);
-			idt [106].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_106"), type);
-			idt [107].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_107"), type);
-			idt [108].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_108"), type);
-			idt [109].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_109"), type);
-			idt [110].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_110"), type);
-			idt [111].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_111"), type);
-			idt [112].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_112"), type);
-			idt [113].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_113"), type);
-			idt [114].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_114"), type);
-			idt [115].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_115"), type);
-			idt [116].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_116"), type);
-			idt [117].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_117"), type);
-			idt [118].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_118"), type);
-			idt [119].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_119"), type);
-			idt [120].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_120"), type);
-			idt [121].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_121"), type);
-			idt [122].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_122"), type);
-			idt [123].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_123"), type);
-			idt [124].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_124"), type);
-			idt [125].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_125"), type);
-			idt [126].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_126"), type);
-			idt [127].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_127"), type);
-			idt [128].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_128"), type);
-			idt [129].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_129"), type);
-			idt [130].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_130"), type);
-			idt [131].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_131"), type);
-			idt [132].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_132"), type);
-			idt [133].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_133"), type);
-			idt [134].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_134"), type);
-			idt [135].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_135"), type);
-			idt [136].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_136"), type);
-			idt [137].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_137"), type);
-			idt [138].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_138"), type);
-			idt [139].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_139"), type);
-			idt [140].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_140"), type);
-			idt [141].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_141"), type);
-			idt [142].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_142"), type);
-			idt [143].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_143"), type);
-			idt [144].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_144"), type);
-			idt [145].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_145"), type);
-			idt [146].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_146"), type);
-			idt [147].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_147"), type);
-			idt [148].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_148"), type);
-			idt [149].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_149"), type);
-			idt [150].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_150"), type);
-			idt [151].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_151"), type);
-			idt [152].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_152"), type);
-			idt [153].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_153"), type);
-			idt [154].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_154"), type);
-			idt [155].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_155"), type);
-			idt [156].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_156"), type);
-			idt [157].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_157"), type);
-			idt [158].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_158"), type);
-			idt [159].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_159"), type);
-			idt [160].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_160"), type);
-			idt [161].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_161"), type);
-			idt [162].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_162"), type);
-			idt [163].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_163"), type);
-			idt [164].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_164"), type);
-			idt [165].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_165"), type);
-			idt [166].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_166"), type);
-			idt [167].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_167"), type);
-			idt [168].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_168"), type);
-			idt [169].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_169"), type);
-			idt [170].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_170"), type);
-			idt [171].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_171"), type);
-			idt [172].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_172"), type);
-			idt [173].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_173"), type);
-			idt [174].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_174"), type);
-			idt [175].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_175"), type);
-			idt [176].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_176"), type);
-			idt [177].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_177"), type);
-			idt [178].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_178"), type);
-			idt [179].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_179"), type);
-			idt [180].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_180"), type);
-			idt [181].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_181"), type);
-			idt [182].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_182"), type);
-			idt [183].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_183"), type);
-			idt [184].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_184"), type);
-			idt [185].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_185"), type);
-			idt [186].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_186"), type);
-			idt [187].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_187"), type);
-			idt [188].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_188"), type);
-			idt [189].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_189"), type);
-			idt [190].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_190"), type);
-			idt [191].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_191"), type);
-			idt [192].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_192"), type);
-			idt [193].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_193"), type);
-			idt [194].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_194"), type);
-			idt [195].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_195"), type);
-			idt [196].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_196"), type);
-			idt [197].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_197"), type);
-			idt [198].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_198"), type);
-			idt [199].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_199"), type);
-			idt [200].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_200"), type);
-			idt [201].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_201"), type);
-			idt [202].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_202"), type);
-			idt [203].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_203"), type);
-			idt [204].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_204"), type);
-			idt [205].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_205"), type);
-			idt [206].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_206"), type);
-			idt [207].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_207"), type);
-			idt [208].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_208"), type);
-			idt [209].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_209"), type);
-			idt [210].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_210"), type);
-			idt [211].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_211"), type);
-			idt [212].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_212"), type);
-			idt [213].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_213"), type);
-			idt [214].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_214"), type);
-			idt [215].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_215"), type);
-			idt [216].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_216"), type);
-			idt [217].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_217"), type);
-			idt [218].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_218"), type);
-			idt [219].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_219"), type);
-			idt [220].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_220"), type);
-			idt [221].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_221"), type);
-			idt [222].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_222"), type);
-			idt [223].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_223"), type);
-			idt [224].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_224"), type);
-			idt [225].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_225"), type);
-			idt [226].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_226"), type);
-			idt [227].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_227"), type);
-			idt [228].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_228"), type);
-			idt [229].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_229"), type);
-			idt [230].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_230"), type);
-			idt [231].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_231"), type);
-			idt [232].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_232"), type);
-			idt [233].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_233"), type);
-			idt [234].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_234"), type);
-			idt [235].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_235"), type);
-			idt [236].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_236"), type);
-			idt [237].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_237"), type);
-			idt [238].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_238"), type);
-			idt [239].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_239"), type);
-			idt [240].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_240"), type);
-			idt [241].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_241"), type);
-			idt [242].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_242"), type);
-			idt [243].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_243"), type);
-			idt [244].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_244"), type);
-			idt [245].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_245"), type);
-			idt [246].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_246"), type);
-			idt [247].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_247"), type);
-			idt [248].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_248"), type);
-			idt [249].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_249"), type);
-			idt [250].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_250"), type);
-			idt [251].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_251"), type);
-			idt [252].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_252"), type);
-			idt [253].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_253"), type);
-			idt [254].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_254"), type);
-			idt [255].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_255"), type);
+			idtTable [0].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_0"), type);
+			idtTable [1].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_1"), type);
+			idtTable [2].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_2"), type);
+			idtTable [3].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_3"), type);
+			idtTable [4].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_4"), type);
+			idtTable [5].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_5"), type);
+			idtTable [6].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_6"), type);
+			idtTable [7].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_7"), type);
+			idtTable [8].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_8"), type);
+			idtTable [9].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_9"), type);
+			idtTable [10].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_10"), type);
+			idtTable [11].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_11"), type);
+			idtTable [12].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_12"), type);
+			idtTable [13].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_13"), type);
+			idtTable [14].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_14"), type);
+			idtTable [15].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_15"), type);
+			idtTable [16].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_16"), type);
+			idtTable [17].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_17"), type);
+			idtTable [18].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_18"), type);
+			idtTable [19].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_19"), type);
+			idtTable [20].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_20"), type);
+			idtTable [21].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_21"), type);
+			idtTable [22].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_22"), type);
+			idtTable [23].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_23"), type);
+			idtTable [24].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_24"), type);
+			idtTable [25].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_25"), type);
+			idtTable [26].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_26"), type);
+			idtTable [27].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_27"), type);
+			idtTable [28].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_28"), type);
+			idtTable [29].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_29"), type);
+			idtTable [30].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_30"), type);
+			idtTable [31].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_31"), type);
+			idtTable [32].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_32"), type);
+			idtTable [33].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_33"), type);
+			idtTable [34].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_34"), type);
+			idtTable [35].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_35"), type);
+			idtTable [36].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_36"), type);
+			idtTable [37].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_37"), type);
+			idtTable [38].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_38"), type);
+			idtTable [39].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_39"), type);
+			idtTable [40].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_40"), type);
+			idtTable [41].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_41"), type);
+			idtTable [42].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_42"), type);
+			idtTable [43].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_43"), type);
+			idtTable [44].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_44"), type);
+			idtTable [45].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_45"), type);
+			idtTable [46].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_46"), type);
+			idtTable [47].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_47"), type);
+			idtTable [48].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_48"), type);
+			idtTable [49].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_49"), type);
+			idtTable [50].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_50"), type);
+			idtTable [51].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_51"), type);
+			idtTable [52].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_52"), type);
+			idtTable [53].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_53"), type);
+			idtTable [54].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_54"), type);
+			idtTable [55].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_55"), type);
+			idtTable [56].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_56"), type);
+			idtTable [57].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_57"), type);
+			idtTable [58].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_58"), type);
+			idtTable [59].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_59"), type);
+			idtTable [60].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_60"), type);
+			idtTable [61].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_61"), type);
+			idtTable [62].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_62"), type);
+			idtTable [63].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_63"), type);
+			idtTable [64].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_64"), type);
+			idtTable [65].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_65"), type);
+			idtTable [66].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_66"), type);
+			idtTable [67].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_67"), type);
+			idtTable [68].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_68"), type);
+			idtTable [69].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_69"), type);
+			idtTable [70].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_70"), type);
+			idtTable [71].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_71"), type);
+			idtTable [72].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_72"), type);
+			idtTable [73].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_73"), type);
+			idtTable [74].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_74"), type);
+			idtTable [75].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_75"), type);
+			idtTable [76].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_76"), type);
+			idtTable [77].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_77"), type);
+			idtTable [78].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_78"), type);
+			idtTable [79].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_79"), type);
+			idtTable [80].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_80"), type);
+			idtTable [81].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_81"), type);
+			idtTable [82].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_82"), type);
+			idtTable [83].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_83"), type);
+			idtTable [84].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_84"), type);
+			idtTable [85].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_85"), type);
+			idtTable [86].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_86"), type);
+			idtTable [87].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_87"), type);
+			idtTable [88].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_88"), type);
+			idtTable [89].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_89"), type);
+			idtTable [90].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_90"), type);
+			idtTable [91].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_91"), type);
+			idtTable [92].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_92"), type);
+			idtTable [93].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_93"), type);
+			idtTable [94].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_94"), type);
+			idtTable [95].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_95"), type);
+			idtTable [96].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_96"), type);
+			idtTable [97].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_97"), type);
+			idtTable [98].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_98"), type);
+			idtTable [99].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_99"), type);
+			idtTable [100].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_100"), type);
+			idtTable [101].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_101"), type);
+			idtTable [102].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_102"), type);
+			idtTable [103].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_103"), type);
+			idtTable [104].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_104"), type);
+			idtTable [105].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_105"), type);
+			idtTable [106].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_106"), type);
+			idtTable [107].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_107"), type);
+			idtTable [108].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_108"), type);
+			idtTable [109].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_109"), type);
+			idtTable [110].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_110"), type);
+			idtTable [111].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_111"), type);
+			idtTable [112].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_112"), type);
+			idtTable [113].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_113"), type);
+			idtTable [114].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_114"), type);
+			idtTable [115].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_115"), type);
+			idtTable [116].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_116"), type);
+			idtTable [117].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_117"), type);
+			idtTable [118].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_118"), type);
+			idtTable [119].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_119"), type);
+			idtTable [120].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_120"), type);
+			idtTable [121].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_121"), type);
+			idtTable [122].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_122"), type);
+			idtTable [123].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_123"), type);
+			idtTable [124].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_124"), type);
+			idtTable [125].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_125"), type);
+			idtTable [126].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_126"), type);
+			idtTable [127].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_127"), type);
+			idtTable [128].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_128"), type);
+			idtTable [129].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_129"), type);
+			idtTable [130].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_130"), type);
+			idtTable [131].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_131"), type);
+			idtTable [132].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_132"), type);
+			idtTable [133].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_133"), type);
+			idtTable [134].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_134"), type);
+			idtTable [135].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_135"), type);
+			idtTable [136].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_136"), type);
+			idtTable [137].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_137"), type);
+			idtTable [138].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_138"), type);
+			idtTable [139].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_139"), type);
+			idtTable [140].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_140"), type);
+			idtTable [141].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_141"), type);
+			idtTable [142].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_142"), type);
+			idtTable [143].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_143"), type);
+			idtTable [144].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_144"), type);
+			idtTable [145].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_145"), type);
+			idtTable [146].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_146"), type);
+			idtTable [147].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_147"), type);
+			idtTable [148].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_148"), type);
+			idtTable [149].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_149"), type);
+			idtTable [150].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_150"), type);
+			idtTable [151].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_151"), type);
+			idtTable [152].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_152"), type);
+			idtTable [153].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_153"), type);
+			idtTable [154].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_154"), type);
+			idtTable [155].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_155"), type);
+			idtTable [156].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_156"), type);
+			idtTable [157].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_157"), type);
+			idtTable [158].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_158"), type);
+			idtTable [159].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_159"), type);
+			idtTable [160].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_160"), type);
+			idtTable [161].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_161"), type);
+			idtTable [162].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_162"), type);
+			idtTable [163].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_163"), type);
+			idtTable [164].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_164"), type);
+			idtTable [165].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_165"), type);
+			idtTable [166].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_166"), type);
+			idtTable [167].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_167"), type);
+			idtTable [168].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_168"), type);
+			idtTable [169].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_169"), type);
+			idtTable [170].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_170"), type);
+			idtTable [171].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_171"), type);
+			idtTable [172].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_172"), type);
+			idtTable [173].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_173"), type);
+			idtTable [174].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_174"), type);
+			idtTable [175].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_175"), type);
+			idtTable [176].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_176"), type);
+			idtTable [177].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_177"), type);
+			idtTable [178].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_178"), type);
+			idtTable [179].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_179"), type);
+			idtTable [180].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_180"), type);
+			idtTable [181].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_181"), type);
+			idtTable [182].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_182"), type);
+			idtTable [183].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_183"), type);
+			idtTable [184].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_184"), type);
+			idtTable [185].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_185"), type);
+			idtTable [186].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_186"), type);
+			idtTable [187].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_187"), type);
+			idtTable [188].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_188"), type);
+			idtTable [189].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_189"), type);
+			idtTable [190].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_190"), type);
+			idtTable [191].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_191"), type);
+			idtTable [192].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_192"), type);
+			idtTable [193].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_193"), type);
+			idtTable [194].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_194"), type);
+			idtTable [195].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_195"), type);
+			idtTable [196].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_196"), type);
+			idtTable [197].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_197"), type);
+			idtTable [198].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_198"), type);
+			idtTable [199].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_199"), type);
+			idtTable [200].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_200"), type);
+			idtTable [201].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_201"), type);
+			idtTable [202].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_202"), type);
+			idtTable [203].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_203"), type);
+			idtTable [204].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_204"), type);
+			idtTable [205].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_205"), type);
+			idtTable [206].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_206"), type);
+			idtTable [207].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_207"), type);
+			idtTable [208].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_208"), type);
+			idtTable [209].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_209"), type);
+			idtTable [210].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_210"), type);
+			idtTable [211].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_211"), type);
+			idtTable [212].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_212"), type);
+			idtTable [213].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_213"), type);
+			idtTable [214].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_214"), type);
+			idtTable [215].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_215"), type);
+			idtTable [216].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_216"), type);
+			idtTable [217].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_217"), type);
+			idtTable [218].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_218"), type);
+			idtTable [219].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_219"), type);
+			idtTable [220].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_220"), type);
+			idtTable [221].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_221"), type);
+			idtTable [222].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_222"), type);
+			idtTable [223].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_223"), type);
+			idtTable [224].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_224"), type);
+			idtTable [225].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_225"), type);
+			idtTable [226].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_226"), type);
+			idtTable [227].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_227"), type);
+			idtTable [228].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_228"), type);
+			idtTable [229].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_229"), type);
+			idtTable [230].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_230"), type);
+			idtTable [231].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_231"), type);
+			idtTable [232].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_232"), type);
+			idtTable [233].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_233"), type);
+			idtTable [234].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_234"), type);
+			idtTable [235].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_235"), type);
+			idtTable [236].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_236"), type);
+			idtTable [237].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_237"), type);
+			idtTable [238].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_238"), type);
+			idtTable [239].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_239"), type);
+			idtTable [240].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_240"), type);
+			idtTable [241].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_241"), type);
+			idtTable [242].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_242"), type);
+			idtTable [243].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_243"), type);
+			idtTable [244].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_244"), type);
+			idtTable [245].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_245"), type);
+			idtTable [246].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_246"), type);
+			idtTable [247].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_247"), type);
+			idtTable [248].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_248"), type);
+			idtTable [249].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_249"), type);
+			idtTable [250].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_250"), type);
+			idtTable [251].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_251"), type);
+			idtTable [252].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_252"), type);
+			idtTable [253].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_253"), type);
+			idtTable [254].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_254"), type);
+			idtTable [255].Setup (GDT.CodeSelector, Kernel.GetFunctionPointer ("ISR_255"), type);
 		}
 		#endregion
 

@@ -117,7 +117,7 @@ namespace SharpOS.ADC.X86
 		
 		public static void Setup ()
 		{
-			IDT.RegisterIRQ (IDT.IRQ.Keyboard, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
+			IDT.RegisterIRQ (IDT.Interrupt.Keyboard, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
 		}
 
 		#endregion
@@ -168,6 +168,7 @@ namespace SharpOS.ADC.X86
 		[SharpOS.AOT.Attributes.Label (KEYBOARD_HANDLER)]
 		static unsafe void KeyboardHandler (IDT.ISRData data)
 		{
+
 			// Read from the keyboard's data buffer
 			byte input;
 			uint scancode;

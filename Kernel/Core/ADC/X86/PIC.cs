@@ -22,77 +22,101 @@ namespace SharpOS.ADC.X86
 	/// </summary>
 	public unsafe class PIC
 	{
-		private static byte MasterIRQMask = 0xFB;
-		private static byte SlaveIRQMask = 0xFF;
+		#region Constants
+		private static byte MasterIRQMask	= 0xFB;
+		private static byte SlaveIRQMask	= 0xFF;
 
-		public const byte EndOfInterrupt = 0x20;
+		private const byte	EndOfInterrupt	= 0x20;
 
-		public const byte MasterIRQBase = 0x20;
-		private const byte MasterICW1 = 0x11;
-		private const byte MasterICW3 = 0x04; // Connect IRQ2 to the Slave
-		private const byte MasterICW4 = 0x01;
+		private const byte	MasterIRQBase	= ((byte)IDT.Interrupt.LastException + 1);
+		private const byte	MasterICW1		= 0x11;
+		private const byte	MasterICW3		= 0x04; // Connect IRQ2 to the Slave
+		private const byte	MasterICW4		= 0x01;
 
-		public const byte SlaveIRQBase = 0x28;
-		private const byte SlaveICW1 = 0x11;
-		private const byte SlaveICW3 = 0x02; // Connect IRQ2 to the Slave
-		private const byte SlaveICW4 = 0x01;
+		private const byte	SlaveIRQBase	= MasterIRQBase + 0x8;
+		private const byte	SlaveICW1		= 0x11;
+		private const byte	SlaveICW3		= 0x02; // Connect IRQ2 to the Slave
+		private const byte	SlaveICW4		= 0x01;
 
+		public const byte LastSlaveIRQ = SlaveIRQBase + 0x8;
+		#endregion
+
+		#region Setup
 		public static void Setup()
 		{
+			byte mask1, mask2;
+
+			// save masks
+			mask1 = IO.In8(IO.Port.Master_PIC_DataPort);
+			mask2 = IO.In8(IO.Port.Slave_PIC_DataPort);
+
+
 			// Remap the IRQ
-			IO.Out8(IO.Port.PIC_CommandPort, MasterICW1);
+			IO.Out8(IO.Port.Master_PIC_CommandPort, MasterICW1);
 			IO.Delay();
 
-			IO.Out8(IO.Port.PIC_DataPort, MasterIRQBase);
+			IO.Out8(IO.Port.Master_PIC_DataPort, MasterIRQBase);
 			IO.Delay();
 
-			IO.Out8(IO.Port.PIC_DataPort, MasterICW3);
+			IO.Out8(IO.Port.Master_PIC_DataPort, MasterICW3);
 			IO.Delay();
 
-			IO.Out8(IO.Port.PIC_DataPort, MasterICW4);
+			IO.Out8(IO.Port.Master_PIC_DataPort, MasterICW4);
 			IO.Delay();
 
 
-			IO.Out8(IO.Port.RTC_CommandPort, SlaveICW1);
+			IO.Out8(IO.Port.Slave_PIC_CommandPort, SlaveICW1);
 			IO.Delay();
 
-			IO.Out8(IO.Port.RTC_DataPort, SlaveIRQBase);
+			IO.Out8(IO.Port.Slave_PIC_DataPort, SlaveIRQBase);
 			IO.Delay();
 
-			IO.Out8(IO.Port.RTC_DataPort, SlaveICW3);
+			IO.Out8(IO.Port.Slave_PIC_DataPort, SlaveICW3);
 			IO.Delay();
 
-			IO.Out8(IO.Port.RTC_DataPort, SlaveICW4);
+			IO.Out8(IO.Port.Slave_PIC_DataPort, SlaveICW4);
 			IO.Delay();
 
+
+			// restore saved masks.
+			IO.Out8(IO.Port.Master_PIC_DataPort, mask1);
+			IO.Out8(IO.Port.Slave_PIC_DataPort, mask2);
 
 			DisableAllIRQs();
 		}
+		#endregion
 
-		public static void SendMasterEndOfInterrupt()
+		#region SendEndOfInterrupt
+		public static void SendEndOfInterrupt(byte value)
 		{
-			IO.Out8(IO.Port.PIC_CommandPort, EndOfInterrupt);
-		}
+			// Check if this is a hardware interrupt
+			if (value < MasterIRQBase ||
+				value > LastSlaveIRQ)
+				return;
 
-		public static void SendSlaveEndOfInterrupt()
-		{
-			IO.Out8(IO.Port.RTC_CommandPort, EndOfInterrupt);
+			if (value >= SlaveIRQBase)
+				IO.Out8(IO.Port.Slave_PIC_CommandPort, EndOfInterrupt);
+			IO.Out8(IO.Port.Master_PIC_CommandPort, EndOfInterrupt);
 		}
+		#endregion
 
+		#region DisableAllIRQs
 		public static void DisableAllIRQs()
 		{
 			MasterIRQMask = (byte)0xFF;
 
-			IO.Out8(IO.Port.PIC_DataPort, MasterIRQMask);
+			IO.Out8(IO.Port.Master_PIC_DataPort, MasterIRQMask);
 			IO.Delay();
 
 			SlaveIRQMask = (byte)0xFF;
 
-			IO.Out8(IO.Port.RTC_DataPort, SlaveIRQMask);
+			IO.Out8(IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
 			IO.Delay();
 		}
+		#endregion
 
-		public static void EnableMasterIRQ(byte value)
+		#region EnableIRQ
+		private static void EnableMasterIRQ(byte value)
 		{
 			value &= 7;
 
@@ -101,28 +125,34 @@ namespace SharpOS.ADC.X86
 
 			MasterIRQMask &= (byte)~(1 << value);
 
-			IO.Out8(IO.Port.PIC_DataPort, MasterIRQMask);
+			IO.Out8(IO.Port.Master_PIC_DataPort, MasterIRQMask);
 		}
 
-		public static void EnableSlaveIRQ(byte value)
+		private static void EnableSlaveIRQ(byte value)
 		{
 			value &= 7;
 
 			SlaveIRQMask &= (byte)~(1 << value);
 
-			IO.Out8(IO.Port.RTC_DataPort, SlaveIRQMask);
+			IO.Out8(IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
 		}
 
 		public static void EnableIRQ(byte value)
 		{
-			if (value < 8)
-				EnableMasterIRQ(value);
-
-			else if (value < 16)
-				EnableSlaveIRQ((byte)(value - 8));
+			// Check if this is a hardware interrupt
+			if (value < MasterIRQBase ||
+				value > LastSlaveIRQ)
+				// TODO: ... what to do with all the other interrupts??
+				return;
+			if (value < SlaveIRQBase)
+				EnableMasterIRQ((byte)(value - MasterIRQBase));
+			else
+				EnableSlaveIRQ((byte)(value - SlaveIRQBase));
 		}
+		#endregion
 
-		public static void DisableMasterIRQ(byte value)
+		#region DisableIRQ
+		private static void DisableMasterIRQ(byte value)
 		{
 			value &= 7;
 
@@ -131,26 +161,31 @@ namespace SharpOS.ADC.X86
 
 			MasterIRQMask |= (byte)(1 << value);
 
-			IO.Out8(IO.Port.PIC_DataPort, MasterIRQMask);
+			IO.Out8(IO.Port.Master_PIC_DataPort, MasterIRQMask);
 		}
 
-		public static void DisableSlaveIRQ(byte value)
+		private static void DisableSlaveIRQ(byte value)
 		{
 			value &= 7;
 
 			SlaveIRQMask |= (byte)(1 << value);
 
-			IO.Out8(IO.Port.RTC_DataPort, SlaveIRQMask);
+			IO.Out8(IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
 		}
 
 		public static void DisableIRQ(byte value)
 		{
-			if (value < 8)
-				DisableMasterIRQ(value);
-
-			else if (value < 16)
-				DisableSlaveIRQ((byte)(value - 8));
+			// Check if this is a hardware interrupt
+			if (value < MasterIRQBase ||
+				value > LastSlaveIRQ)
+				// TODO: ... what to do with all the other interrupts??
+				return;
+			if (value < SlaveIRQBase)
+				DisableMasterIRQ((byte)(value - MasterIRQBase));
+			else
+				DisableSlaveIRQ((byte)(value - SlaveIRQBase));
 		}
+		#endregion
 	}
 }
 

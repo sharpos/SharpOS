@@ -62,7 +62,7 @@ namespace SharpOS.ADC.X86
 		{
 			SetTimerFrequency(HZ);
 
-			IDT.RegisterIRQ(IDT.IRQ.SystemTimer, Kernel.GetFunctionPointer(TIMER_HANDLER));
+			IDT.RegisterIRQ(IDT.Interrupt.SystemTimer, Kernel.GetFunctionPointer(TIMER_HANDLER));
 		}
 		#endregion
 
