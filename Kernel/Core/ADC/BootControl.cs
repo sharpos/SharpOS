@@ -13,10 +13,28 @@ using AOTAttr = SharpOS.AOT.Attributes;
 namespace SharpOS.ADC {
 	public unsafe class BootControl {
 		/// <summary>
-		/// Halt the system.
+		/// Powers down the system.
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static void Halt()
+		public static void PowerOff()
+		{
+		}
+
+		/// <summary>
+		/// Freezes the system. 
+		/// Usually used after a crash to display information after which the user 
+		/// can turn of the machine.
+		/// </summary>
+		[AOTAttr.ADCStub]
+		public static void Freeze()
+		{
+		}
+
+		/// <summary>
+		/// Puts the system into sleep mode.
+		/// </summary>
+		[AOTAttr.ADCStub]
+		public static void Sleep()
 		{
 		}
 		
