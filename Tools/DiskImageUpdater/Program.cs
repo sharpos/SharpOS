@@ -49,8 +49,10 @@ namespace Ext2 {
 
 			} catch (FileNotFoundException exception) {
 				Console.WriteLine (string.Format ("Could not find '{0}'.", exception.FileName));
-			} catch (IOException exception) {
+				return 1;
+			} catch (Exception exception) {
 				Console.WriteLine (exception.Message);
+				return 1;
 			}
 
 			return 0;
