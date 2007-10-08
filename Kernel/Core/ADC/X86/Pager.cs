@@ -1,13 +1,12 @@
-/*
- * SharpOS.ADC.X86/PagerImpl.cs
- * N:SharpOS.ADC
- *
- * (C) 2007 William Lahti. This software is licensed under the terms of the
- * GNU General Public License.
- *
- * Author: William Lahti <xfurious@gmail.com>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	Sander van Rossen <sander.vanrossen@gmail.com>
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using SharpOS;
 using SharpOS.AOT.X86;

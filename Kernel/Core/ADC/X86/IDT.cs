@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	Sander van Rossen <sander.vanrossen@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -18,10 +19,13 @@ using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
 	/// <summary>
-	/// Interrupt Descriptor table
+	/// The Interrupt Descriptor Table (IDT) is a data structure used by the x86 architecture 
+	/// to implement an interrupt vector table. The IDT is used by the processor to determine 
+	/// the correct response to interrupts and exceptions.
 	/// </summary>
 	public unsafe class IDT
 	{
+		#region Interrupt list
 		public enum Interrupt
 		{
 			// CPU Exceptions
@@ -100,9 +104,8 @@ namespace SharpOS.ADC.X86 {
 			LastHardwareIRQ			= Interrupt.IRQ15,
 
 			SysCall					= 0x30, // This is the only interrupt with a ring 3 gate descriptor. 
-
-			// CONFIRM: all interrupts above Causes Double Fault?
 		}
+		#endregion
 
 		#region Function Label Constants
 		private const string IDT_POINTER = "IDTPointer";

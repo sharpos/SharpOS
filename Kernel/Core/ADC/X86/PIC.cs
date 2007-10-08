@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	Sander van Rossen <sander.vanrossen@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //

@@ -19,8 +19,12 @@ using SharpOS.AOT.IR;
 using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
-	///<summary>
-	/// The Global Descriptor Table (GDT)
+	/// <summary>
+	/// The Global Descriptor Table (GDT) is a data structure used by Intel x86-family 
+	/// processors starting with the 80286 in order to define the characteristics of the
+	/// various memory areas used during program execution, for example the base address, 
+	/// the size and access privileges like executability and writability. 
+	/// These memory areas are called segments in Intel terminology.
 	/// </summary>
 	public unsafe class GDT {
 		private const ushort GDTEntries = 3;

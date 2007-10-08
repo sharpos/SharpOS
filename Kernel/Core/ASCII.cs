@@ -1,3 +1,11 @@
+// 
+// (C) 2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	(??)
+//
+// Licensed under the terms of the GNU GPL License version 2.
+//
 
 using System;
 
