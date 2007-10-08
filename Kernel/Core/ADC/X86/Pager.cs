@@ -14,6 +14,14 @@ using SharpOS.Memory;
 using ADC = SharpOS.ADC;
 
 namespace SharpOS.ADC.X86 {
+	/// <summary>
+	/// Hardware specific paging layer
+	/// </summary>
+	/// <todo>
+	/// - Add support for PAE (Physical Address Extensions) so we can have 64 gb of virtual memory
+	/// - Add support for the paging exceptions that can occur
+	/// - Initialisation should be done in 'Architecture'
+	/// </todo>
 	public unsafe class Pager {
 	
 		#region Global State
