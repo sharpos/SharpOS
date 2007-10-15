@@ -25,33 +25,6 @@ namespace SharpOS.ADC.X86
 		#region Setup
 		public static void Setup()
 		{
-			daysmonth[10] = 0;
-			daysmonth[11] = 31;
-			daysmonth[12] = 28;
-			daysmonth[13] = 31;
-			daysmonth[14] = 30;
-			daysmonth[15] = 31;
-			daysmonth[16] = 30;
-			daysmonth[17] = 31;
-			daysmonth[18] = 31;
-			daysmonth[19] = 30;
-			daysmonth[10] = 31;
-			daysmonth[11] = 30;
-			daysmonth[12] = 31;
-			daysmonthleap[0] = 0;
-			daysmonthleap[1] = 31;
-			daysmonthleap[2] = 29;
-			daysmonthleap[3] = 31;
-			daysmonthleap[4] = 30;
-			daysmonthleap[5] = 31;
-			daysmonthleap[6] = 30;
-			daysmonthleap[7] = 31;
-			daysmonthleap[8] = 31;
-			daysmonthleap[9] = 30;
-			daysmonthleap[10] = 31;
-			daysmonthleap[11] = 30;
-			daysmonthleap[12] = 31;
-
 			int		seconds;
 			int		minutes;
 			int		hour;
