@@ -110,13 +110,8 @@ namespace SharpOS.Memory {
 			ReservePageRange (fpStack, fpStackSize, "fpstack");
 			ReservePageRange (rpStack, rpStackSize, "rpstack");
 			ReservePageRange (pagingData, pagingDataSize, "paging");
+
 			
-			byte* page = (byte*)0;
-			for (int i = 0; i < totalPages; ++i, page += Pager.AtomicPageSize)
-			{
-				//if (!PageAllocator.IsPageReserved(page))	//..ugh
-					PushFreePage(page);
-			}
 
 			bool paging = true;//CommandLine.ContainsOption ("-paging");
 			if (paging)
@@ -133,6 +128,15 @@ namespace SharpOS.Memory {
 				}
 			} else
 				Kernel.Warning("Paging not set in commandline!");
+			
+			// NOTE: 0x0000 page is reserved
+			for (int i = (int)(totalPages - 1); i >= 1; --i)
+			{
+				// we should be doing this but it's so slow!
+				// it needs to be rewritten to be fast enough to do..
+				//if (!IsPageReserved(page))
+					PushFreePage((byte*)(i * Pager.AtomicPageSize));
+			}
 			
 			if (paging)
 			{
@@ -217,12 +221,14 @@ namespace SharpOS.Memory {
 			
 			if (fpStackPointer == 0)
 				return null;
-			
+
 			do {
 				page = PopFreePage ();
-			} while ((uint)page != 0x1U || IsPageReserved (page));
+				if (!IsPageReserved(page))	// slow!
+					return page;
+			} while (page != null);
 			
-			return page;
+			return null;
 		}
 		
 		/// <summary>
@@ -436,6 +442,13 @@ namespace SharpOS.Memory {
 		/// </param>
 		public static bool ReservePage(void *page)
 		{
+			if (page == null)
+				return false;
+
+			// we should be doing this.. but it's so slow..
+			if (IsPageReserved(page))	// ugh...
+				return true;
+
 			//if (!IsPageFree(page, &fsp))
 			//	return false;
 			
@@ -459,8 +472,7 @@ namespace SharpOS.Memory {
 			byte*	page = (byte*)firstPage;
 			for (int i = 0; i < pages; i++)
 			{
-				//if (!IsPageReserved(page))	// ugh...
-					PushReservedPage(page);
+				PushReservedPage(page);
 				page += Pager.AtomicPageSize;
 			}
 			return false;
@@ -539,14 +551,38 @@ namespace SharpOS.Memory {
 		
 		private static void *PopFreePage()
 		{
-			return (void*)fpStack[fpStackPointer--];
+			if (fpStackPointer == 0)
+				return null;
+			return (void*)fpStack[--fpStackPointer];
 		}
 		
 		private static void PushReservedPage(void *page)
 		{
 			rpStack[rpStackPointer++] = (uint)page;
 		}
-		
+
+		#endregion
+		#region Debug
+
+		public static void Dump(uint*	stack, uint stackptr, int count)
+		{
+			for (int i = (int)stackptr - 1; i >= 0 && i>= stackptr - count; i--)
+			{
+				ADC.TextMode.Write(i);
+				ADC.TextMode.Write(":");
+				ADC.TextMode.Write((int)stack[i]);
+				ADC.TextMode.WriteLine();
+			}
+		}
+
+		public static void Dump(int count)
+		{
+			ADC.TextMode.WriteLine("Free");
+			Dump(fpStack, fpStackPointer, count);
+			ADC.TextMode.WriteLine("Reserved");
+			Dump(rpStack, rpStackPointer, count);
+		}
+
 		#endregion
 	}
 }

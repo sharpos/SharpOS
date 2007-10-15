@@ -37,7 +37,6 @@ namespace SharpOS.ADC
 
 		public static unsafe void Setup()
 		{
-			Architecture.DisableInterrupts();
 			memoryEnd = memoryStart =
 				(uint)PageAllocator.Alloc();
 				//(uint)PageAllocator.RangeAlloc(numberOfPages);
@@ -50,13 +49,12 @@ namespace SharpOS.ADC
 			}
 
 			memoryEnd += (numberOfPages * Pager.AtomicPageSize);
-
+			
 			TextMode.Write("Memory: ");
 			TextMode.Write((int)memoryStart);
 			TextMode.Write(" - ");
 			TextMode.Write((int)memoryEnd);
 			TextMode.WriteLine();
-
 
 			// align to 32bit
 			if ((((uint)memoryStart) & 3) != 0)
@@ -64,12 +62,10 @@ namespace SharpOS.ADC
 			// align to 32bit
 			memoryEnd -= ((uint)memoryEnd) & 3;
 
-
 			firstEmptyNode = (Header*)memoryStart;
 			firstEmptyNode->nextNode = null;
 			firstEmptyNode->prevNode = null;
 			firstEmptyNode->nodeSize = (uint)((memoryEnd - memoryStart) - sizeof(Header));
-			Architecture.EnableInterrupts();
 		}
 
 		public static unsafe void* Allocate(uint allocate_size)

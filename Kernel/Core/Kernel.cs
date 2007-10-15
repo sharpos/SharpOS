@@ -120,8 +120,15 @@ namespace SharpOS {
 			PageAllocator.Setup ((byte*)kernelStart, kernelEnd - kernelStart,
 				multibootInfo->MemUpper + 1000);
 
+			//PageAllocator.Dump();
+
+			//test
+			//uint value = (uint)PageAllocator.Alloc();
+			//TextMode.Write((int)value);
+			//TextMode.WriteLine();
+
 			StageMessage("MemoryManager setup.");
-			//ADC.MemoryManager.Setup();
+			ADC.MemoryManager.Setup();
 			//Memory.MemoryManager.Setup ();
 
 			StageMessage("Scheduler setup.");
@@ -146,7 +153,6 @@ namespace SharpOS {
 			
 			
 			// memory testing code
-			/*
 			void* data;
 			void* data2;
 			void* data3;
@@ -167,7 +173,7 @@ namespace SharpOS {
 			data3 = ADC.MemoryManager.Allocate(100);
 			
 			ADC.MemoryManager.Dump();
-			*/
+			
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
 			TextMode.WriteLine("");
