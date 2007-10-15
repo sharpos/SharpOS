@@ -255,7 +255,7 @@ namespace SharpOS {
 		public unsafe static void Halt ()
 		{
 			SetKernelStage (KernelStage.Halt);
-			BootControl.Halt ();
+			BootControl.Freeze ();
 		}
 		
 		/// <summary>

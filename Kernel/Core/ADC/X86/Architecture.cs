@@ -33,6 +33,7 @@ namespace SharpOS.ADC.X86 {
 			GDT.Setup ();	// Global Descriptor Table
 			PIC.Setup ();	// Programmable Interrupt Controller
 			IDT.Setup ();	// Interrupt Descriptor table
+			RTC.Setup ();	// Real Time Clock
 			PIT.Setup ();	// Periodic Interrupt Timer
 		}
 		
