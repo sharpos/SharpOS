@@ -33,8 +33,8 @@ namespace SharpOS.ADC.X86
 			int		year;
 			
 			// wait while update is in progress
-			IO.Out8(IO.Port.RTC_CommandPort, 0x10);
-			while ((IO.In8(IO.Port.RTC_DataPort) & 0x80) == 0);
+			//IO.Out8(IO.Port.RTC_CommandPort, 0x10);
+			//while ((IO.In8(IO.Port.RTC_DataPort) & 0x80) == 0);
 
 			do {
 				seconds		= CMOSRead(0);			// Get seconds (00 to 59)
