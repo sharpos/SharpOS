@@ -245,12 +245,8 @@ namespace SharpOS.ADC.X86 {
 		
 			// Reserve memory below 0x100000 (1MB) for the BIOS/video memory
 			uint ceil = 0x100000;
-			byte *page = null;
-			
-			while ((uint)page < ceil) {
-				PageAllocator.ReservePage (page);
-				page += 4096;
-			}
+			byte* page = (byte*)null;
+			PageAllocator.ReservePageRange(page, (ceil / ADC.Pager.AtomicPageSize), "Reserve memory below 0x100000 (1MB) for the BIOS/video memory");
 
 			*error = PageAllocator.Errors.Success;
 			return *error;
