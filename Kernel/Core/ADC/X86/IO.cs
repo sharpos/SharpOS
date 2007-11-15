@@ -1,4 +1,4 @@
-// 
+﻿// 
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -459,9 +459,39 @@ namespace SharpOS.ADC.X86
 			//03DF CRT/CPU page register (PCjr only)
 			#endregion
 
-			//03E8-03EF - serial port, same as 02E8, 02F8 and 03F8
-			//03F0-03F7 - First Floppy Disk Controller
-			//03F8-03FF - serial port (8250,8251,16450,16550)
+            #region 03E8-03EF - serial port, same as 02E8, 02F8 and 03F8
+            /// <summary>
+            /// Port 0x03F8
+            /// </summary>
+            UART_Transmit_Receive_Buffer = 0x03F8,
+            /// <summary>
+            /// Port 0x03F9
+            /// </summary>
+            UART_Interrupt_Enable_Register = 0x03F9,
+            /// <summary>
+            /// Port 0x03FA
+            /// </summary>
+            UART_Interrupt_Identification_Register = 0x03FA,
+            /// <summary>
+            /// Port 0x03FB
+            /// </summary>
+            UART_Line_Control_Register = 0x03FB,
+            /// <summary>
+            /// Port 0x03FC
+            /// </summary>
+            UART_Modem_Control_Register = 0x03FC,
+            /// <summary>
+            /// Port 0x03FD
+            /// </summary>
+            UART_Line_Status_Register = 0x03FD,
+            /// <summary>
+            /// Port 0x03FE
+            /// </summary>
+            UART_Modem_Status_Register = 0x03FE
+            #endregion
+
+            //03F0-03F7 - First Floppy Disk Controller
+            //03F8-03FF - serial port (8250,8251,16450,16550)
 		};
 		#endregion
 
