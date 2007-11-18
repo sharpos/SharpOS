@@ -400,21 +400,6 @@ namespace SharpOS.AOT.IR {
 			return result;
 		}
 
-		/// <summary>
-		/// Converts the specified type.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <returns></returns>
-		private SharpOS.AOT.IR.Instructions.Instruction Convert (Operands.Operand.ConvertType type)
-		{
-			Register value = this.GetRegister (stack - 1);
-			value.ConvertTo = type;
-
-			Register assignee = this.SetRegister (stack - 1);
-
-			return new Assign (assignee, value);;
-		}
-
 		private Register SetRegister (int value)
 		{
 			if (value < 0)
@@ -2335,6 +2320,21 @@ namespace SharpOS.AOT.IR {
 		}
 
 		#region CONV
+
+		/// <summary>
+		/// Converts the specified type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
+		private SharpOS.AOT.IR.Instructions.Instruction Convert (Operands.Operand.ConvertType type)
+		{
+			Register value = this.GetRegister (stack - 1);
+			value.ConvertTo = type;
+
+			Register assignee = this.SetRegister (stack - 1);
+
+			return new Assign (assignee, value);
+		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
