@@ -268,6 +268,22 @@ namespace SharpOS.ADC {
 				WriteChar (buffer [x]);
 		}
 
+		/// <summary>
+		/// Writes an bool to the screen
+		/// </summary>
+		/// <param name="value">boolean value to write</param>
+		public static void Write(bool value)
+		{
+			if (value)
+			{
+				Write("true");
+			}
+			else
+			{
+				Write("false");
+			}
+		}
+
 		#endregion
 		#region WriteLine() family
 	

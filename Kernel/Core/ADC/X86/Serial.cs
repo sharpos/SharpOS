@@ -2,7 +2,7 @@
 // (C) 2007 The SharpOS Project Team (http://sharpos.sourceforge.net)
 //
 // Authors:
-//	Ásgeir Halldórsson <asgeir@ec.is>
+//	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2
 //

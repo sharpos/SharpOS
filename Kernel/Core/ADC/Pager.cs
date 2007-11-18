@@ -3,6 +3,7 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
+//	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -102,15 +103,19 @@ namespace SharpOS.ADC {
 		}
 		
 		[AOTAttr.ADCStub]
-		public static PageAllocator.Errors SetPageAttributes (void *page, uint granularity,
+		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
+		// public static PageAllocator.Errors SetPageAttributes (void *page, uint granularity, PageAttributes attr)
+		public static uint SetPageAttributes (void *page, uint granularity,
 						       PageAttributes attr)
 		{
 			Kernel.Warning("Pager.SetPageAttributes - not implemented!");
-			return PageAllocator.Errors.NotImplemented;
+			return (uint)PageAllocator.Errors.NotImplemented;
 		}
-		
+
 		[AOTAttr.ADCStub]
-		public static PageAttributes GetPageAttributes (void *page, uint granularity,
+		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
+		// public static PageAttributes GetPageAttributes (void *page, uint granularity,PageAllocator.Errors *ret_err)
+		public static uint GetPageAttributes (void *page, uint granularity,
 								     PageAllocator.Errors *ret_err)
 		{
 			*ret_err = PageAllocator.Errors.NotImplemented;

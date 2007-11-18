@@ -4,6 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
+//  Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
 //
 // Licensed under the terms of the GNU GPL License version 2.
 //
@@ -112,6 +113,7 @@ namespace SharpOS.ADC.X86 {
 		private const string IDT_TABLE = "IDTTable";
 		private const string ISR_DEFAULT_HANDLER = "ISRDefaultHandler";
 		private const string IRQ_CLEAN_UP = "IRQ_CLEAN_UP";
+		private const string ISR_PAGE_FAULT = "ISR_PAGE_FAULT";
 		#endregion
 
 		#region Tables
@@ -213,6 +215,8 @@ namespace SharpOS.ADC.X86 {
 			for (int i = 0; i < Entries; i++)
 				ISRTable [i] = Kernel.GetFunctionPointer (ISR_DEFAULT_HANDLER);
 
+			ISRTable[(int)Interrupt.PageFault] = Kernel.GetFunctionPointer(ISR_PAGE_FAULT);
+
 			SetupISR ();
 
 			Asm.LIDT (new SharpOS.AOT.X86.Memory (IDT_POINTER));
@@ -235,6 +239,46 @@ namespace SharpOS.ADC.X86 {
 		private static unsafe void IRQCleanUp (ISRData data)
 		{
 			PIC.SendEndOfInterrupt((byte)data.IrqIndex);
+		}
+		#endregion
+
+		#region ISRPageFault
+		[SharpOS.AOT.Attributes.Label(ISR_PAGE_FAULT)]
+		private static unsafe void ISRPageFault(ISRData data)
+		{
+			uint cr2 = 0;
+
+			Asm.PUSH(R32.EAX);
+			
+			Asm.MOV(R32.EAX, CR.CR2);
+			Asm.MOV(&cr2, R32.EAX);
+
+			Asm.POP(R32.EAX);
+
+			// FIXME: If I dont call Write function the variables in align and map get offset or something
+			ADC.TextMode.Write("");
+
+			//ADC.TextMode.Write("");
+			//ADC.TextMode.WriteLine("Page fault invoked!.\n");
+
+			/*
+			ADC.TextMode.Write("Page: ");
+			ADC.TextMode.Write((int)cr2);
+			ADC.TextMode.Write(", EIP: ");
+			ADC.TextMode.Write((int)data.EIP);
+			ADC.TextMode.WriteLine();
+			*/
+
+			// Align to correct page
+			void* align = ADC.Pager.PageAlign((void*)cr2, 0);
+			void* alloc = SharpOS.Memory.PageAllocator.Alloc();
+
+			if (alloc == null)
+			{
+				Kernel.Panic("Out of memory exception");
+			}
+			
+			ADC.Pager.MapPage(align, alloc, 0, SharpOS.Memory.PageAttributes.Present | SharpOS.Memory.PageAttributes.ReadWrite);
 		}
 		#endregion
 
