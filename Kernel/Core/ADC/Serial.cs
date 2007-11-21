@@ -4,7 +4,8 @@
 // Authors:
 //	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
 //
-// Licensed under the terms of the GNU GPL License version 2
+// Licensed under the terms of the GNU GPL v3,
+//  with Classpath Linking Exception for Libraries
 //
 
 using System;

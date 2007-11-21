@@ -1,10 +1,11 @@
 // 
-// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+// (C) 2006-2007 The SharpOS Project Team (http://sharpos.sourceforge.net)
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //
-// Licensed under the terms of the GNU GPL License version 2.
+// Licensed under the terms of the GNU GPL v3,
+//  with Classpath Linking Exception for Libraries
 //
 
 using System;
@@ -100,12 +101,13 @@ namespace KernelTestsWrapperGen {
 		{
 			TextWriter tr = new StreamWriter (File.Open (name, FileMode.Create));
 			tr.WriteLine ("//");
-			tr.WriteLine ("// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)");
+			tr.WriteLine ("// (C) 2006-2007 The SharpOS Project Team (http://sharpos.sourceforge.net)");
 			tr.WriteLine ("//");
 			tr.WriteLine ("// Authors:");
 			tr.WriteLine ("//	Mircea-Cristian Racasan <darx_kies@gmx.net>");
 			tr.WriteLine ("//");
-			tr.WriteLine ("// Licensed under the terms of the GNU GPL License version 2.");
+			tr.WriteLine ("// Licensed under the terms of the GNU GPL v3,");
+            tr.WriteLine ("//  with Classpath Linking Exception for Libraries");
 			tr.WriteLine ("//");
 
 			tr.WriteLine ("");
