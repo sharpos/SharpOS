@@ -115,5 +115,34 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 1;
 		}
+
+		private static IntEnum ReturnA()
+		{
+			return IntEnum.A;
+		}
+
+		private static IntEnum ReturnB()
+		{
+			return IntEnum.B;
+		}
+
+		private static IntEnum ReturnC()
+		{
+			return IntEnum.C;
+		}
+
+		public static int CMPEnumReturn()
+		{
+			if (ReturnA() != IntEnum.A)
+				return 0;
+
+			if (ReturnB() != IntEnum.B)
+				return 0;
+
+			if (ReturnC() != IntEnum.C)
+				return 0;
+
+			return 1;
+		}
 	}
 }

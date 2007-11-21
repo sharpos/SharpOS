@@ -143,5 +143,35 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return Return (100, 200).GetSum () == 300 ? 1 : 0;
 		}
+
+		public unsafe static int CMPSizeof1()
+		{
+			int size = sizeof(Point);
+
+			if (size != 8)
+				return 0;
+
+			return 1;
+		}
+
+		unsafe struct Header
+		{
+			Header* Next;
+			Header* Prev;
+			byte test;
+		}
+
+		public unsafe static int CMPSizeof2()
+		{
+			uint ptr = 0x1000000;
+			byte* testPtr = (byte*)ptr;
+
+			byte* test = testPtr + sizeof(Header);
+
+			if ((ptr + 9) != (uint)test)
+				return 0;
+
+			return 1;
+		}
 	}
 }
