@@ -12,6 +12,40 @@ using SharpOS.AOT.X86;
 
 namespace SharpOS.Kernel.Tests.CS {
 	public class Misc {
+		public unsafe static uint CMP1 ()
+		{
+			byte foreground = 0xA;
+			byte background = 0x5;
+
+			byte attributes = (byte) ((byte) foreground | ((byte) background << 4));
+
+			uint attr = attributes;	//FIXME: AOT bug, can't use attribute directly
+			uint fill =
+				((uint) 0x20) |
+				(attr << 8) |
+				((uint) 0x20 << 16) |
+				(attr << 24);
+
+			if (fill == 0x5a205a20)
+				return 1;
+
+			return 0;
+		}
+
+		public unsafe static uint CMP2 ()
+		{
+			uint fill =
+					((uint) 0x20) |
+					((uint) 0x20 << 8) |
+					((uint) 0x20 << 16) |
+					((uint) 0x20 << 24);
+
+			if (fill == 0x20202020)
+				return 1;
+
+			return 0;
+		}
+
 		public unsafe static uint CMP0 ()
 		{
 			byte *buf = stackalloc byte [3];
