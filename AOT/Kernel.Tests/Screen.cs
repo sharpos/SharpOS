@@ -101,8 +101,8 @@ namespace SharpOS {
 
 		public unsafe static void WriteMessage (string message)
 		{
-			foreach (char value in message)
-				WriteChar (value);
+			for (int i = 0; i < message.Length; i++)
+				WriteChar (message [i]);
 		}
 
 		public unsafe static void WriteChar (char value)
