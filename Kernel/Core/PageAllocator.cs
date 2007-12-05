@@ -224,14 +224,11 @@ namespace SharpOS.Memory
 			ReservedPages* ptr = rpStack;
 			uint pageAddr = (uint)page;
 
-			while (sp < rpStackPointer)
-			{
-				if (pageAddr >= ptr->Address && pageAddr <= (ptr->Address + (ptr->Size * Pager.AtomicPageSize)))
-				{
+			while (sp < rpStackPointer) {
+				if (pageAddr >= ptr [sp].Address && pageAddr < (ptr [sp].Address + (ptr [sp].Size * Pager.AtomicPageSize)))
 					return true;
-				}
-				++sp;
-				++ptr;
+
+				sp++;
 			}
 
 			return false;

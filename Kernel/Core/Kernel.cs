@@ -179,7 +179,7 @@ namespace SharpOS {
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
 			TextMode.WriteLine("");
 			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
-			TextMode.WriteLine("Da Brain: The same thing we do every night, Pinky - Try to take over the world!");
+			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes();
 			
 #if KERNEL_TESTS
