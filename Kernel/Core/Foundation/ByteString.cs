@@ -164,7 +164,28 @@ namespace SharpOS.Foundation {
 
 		public static void __RunTests ()
 		{
-			__Test1 ();
+            TextMode.SetAttributes(TextColor.Blue, TextColor.White);
+            TextMode.WriteLine();
+            TextMode.WriteLine("ByteString and CString8 Tests:");
+            TextMode.WriteLine("------------------------------");
+
+            CString8* str1 = CString8.Copy("This is a test string!");
+            TextMode.Write("str1: "); TextMode.WriteLine(str1);
+
+            __Test1();
+
+            int indexOfSpace = str1->IndexOf(Stubs.CString(" "));
+            Diagnostics.Assert(indexOfSpace == 4, "indexOfSpace does not equal 4!");
+            TextMode.Write("IndexOfSpace: "); TextMode.Write(indexOfSpace); TextMode.WriteLine();
+            CString8* str2 = str1->Substring(indexOfSpace + 1);
+            TextMode.Write("str2: "); TextMode.WriteLine(str2);
+
+            CString8* str3 = str1->Substring(0, indexOfSpace + 1);
+            TextMode.Write("str3: "); TextMode.WriteLine(str3);
+
+            ADC.MemoryManager.Free((void*)str1);
+            ADC.MemoryManager.Free((void*)str2);
+            ADC.MemoryManager.Free((void*)str3);
 		}
 		
 		public static void __Test1 ()
