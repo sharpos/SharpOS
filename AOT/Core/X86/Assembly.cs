@@ -16,9 +16,8 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using SharpOS.AOT.IR;
-using SharpOS.AOT.IR.Instructions;
 using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
+using SharpOS.AOT.IR.Instructions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
@@ -59,6 +58,7 @@ namespace SharpOS.AOT.X86 {
 		const string PE_SIZE_OF_RAW_DATA = "SizeOfRawData";
 		const string PE_POINTER_TO_RAW_DATA = "PointerToRawData";
 		const ushort PE_CODE_SECTION = 1;
+		const ushort PE_DATA_SECTION = 2;
 #endif 		
 
 		const uint BASE_ADDRESS = 0x00100000;
@@ -68,6 +68,7 @@ namespace SharpOS.AOT.X86 {
 		internal const string HELPER_LSHL = "LSHL";
 		internal const string HELPER_LSHR = "LSHR";
 		internal const string HELPER_LSAR = "LSAR";
+		internal const string HELPER_LMUL = "LMUL";
 
 		Engine engine;
 		Assembly data;
@@ -149,24 +150,42 @@ namespace SharpOS.AOT.X86 {
 					// We remember the index for the next instruction that needs to be updated
 					this.symbols [i].Index = this.instructions.Count;
 
-					// The offset to the code that the label points to int he binary
+					// The offset to the code that the label points to in the binary
 					this.DATA ((uint) 0);
 
 					// The section
-					this.DATA (PE_CODE_SECTION);
+					if (this.symbols [i] is COFF.Static)
+						this.DATA (PE_DATA_SECTION);
+					else
+						this.DATA (PE_CODE_SECTION);
 
 					// The type
-					this.DATA ((ushort) (this.symbols [i] is COFF.Function ? 0x20 : 0));
+					if (this.symbols [i] is COFF.Function)
+						this.DATA ((ushort) 0x20);
+
+					else if (this.symbols [i] is COFF.Static)
+						this.DATA ((ushort) 0x04);
+
+					else
+						this.DATA ((ushort) 0x00);
+					
 
 					// The storage class
-					this.DATA ((byte) (this.symbols [i] is COFF.Function ? COFF.Symbol.StorageClassType.C_EXT : COFF.Symbol.StorageClassType.C_LABEL));
+					if (this.symbols [i] is COFF.Function)
+						this.DATA ((byte) COFF.Symbol.StorageClassType.C_EXT);
+					
+					else if (this.symbols [i] is COFF.Static)
+						this.DATA ((byte) COFF.Symbol.StorageClassType.C_STAT);
+
+					else
+						this.DATA ((byte) COFF.Symbol.StorageClassType.C_LABEL);
 
 					// Number of Auxiliary Records
 					this.DATA ((byte) 0);
 
 					stringTableOffset += (uint) ((this.symbols [i] as COFF.Label).Name.Length + 1);
 				} else
-					throw new Exception ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
+					throw new EngineException ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
 			}
 
 			// Write String Table Length
@@ -178,21 +197,25 @@ namespace SharpOS.AOT.X86 {
 					this.DATA ((byte) 0);
 
 				} else
-					throw new Exception ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
+					throw new EngineException ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
 			}
 		}
 
 		private void PatchSymbolOffsets ()
 		{
 			uint startCode = this.instructions [this.GetLabelIndex (START_CODE)].Offset;
-
+			uint startData = this.instructions [this.GetLabelIndex (START_DATA)].Offset;
 			for (int i = 0; i < this.symbols.Count; i++) {
-				if (this.symbols [i] is COFF.Label) {
+				if (this.symbols [i] is COFF.Static) {
+					uint offset = this.instructions [this.GetLabelIndex ((this.symbols [i] as COFF.Label).Name)].Offset - startData;
+					this.instructions [this.symbols [i].Index].Value = offset;
+
+				} else if (this.symbols [i] is COFF.Label) {
 					uint offset = this.instructions [this.GetLabelIndex ((this.symbols [i] as COFF.Label).Name)].Offset - startCode;
 					this.instructions [this.symbols [i].Index].Value = offset;
 
 				} else
-					throw new Exception ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
+					throw new EngineException ("COFF Symbol '" + this.symbols [i].GetType () + "' is not supported.");
 			}
 		}
 		#endregion
@@ -230,25 +253,25 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns></returns>
-		public SharpOS.AOT.IR.Operands.Operand.InternalSizeType GetRegisterSizeType (string value)
+		public InternalType GetRegisterSizeType (string value)
 		{
 			if (value.Equals ("SharpOS.AOT.X86.R8Type"))
-				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U1;
+				return InternalType.U1;
 
 			else if (value.StartsWith ("SharpOS.AOT.X86.R16Type"))
-				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U2;
+				return InternalType.U2;
 			
 			else if (value.StartsWith ("SharpOS.AOT.X86.SegType"))
-				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U2;
+				return InternalType.U2;
 
 			else if (value.StartsWith ("SharpOS.AOT.X86.R32Type"))
-				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U4;
+				return InternalType.U4;
 				
 			else if (value.StartsWith ("SharpOS.AOT.X86.CRType"))
-				return SharpOS.AOT.IR.Operands.Operand.InternalSizeType.U4;
+				return InternalType.U4;
 			
 			else
-				throw new Exception ("'" + value + "' is not supported.");
+				throw new EngineException ("'" + value + "' is not supported.");
 		}
 
 		/// <summary>
@@ -454,15 +477,12 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns></returns>
-		public int GetFieldOffset (string value)
+		public int GetFieldOffset (FieldReference value)
 		{
 			int result = 0;
 
-			if (value.IndexOf ("::") == -1)
-				throw new Exception ("'" + value + "' is no field definition.");
-
-			string objectName = value.Substring (0, value.IndexOf ("::"));
-			string fieldName = value.Substring (value.IndexOf ("::") + 2);
+			string objectName = value.DeclaringType.FullName;
+			string fieldName = value.Name;
 
 			foreach (Class _class in this.engine) {
 				if (_class.ClassDefinition.FullName.Equals (objectName)) {
@@ -486,7 +506,7 @@ namespace SharpOS.AOT.X86 {
 				}
 			}
 
-			throw new Exception ("'" + value + "' has not been found.");
+			throw new EngineException ("'" + value + "' has not been found.");
 		}
 
 		/// <summary>
@@ -499,7 +519,7 @@ namespace SharpOS.AOT.X86 {
 			label = Assembly.FormatLabelName (label);
 
 			if (this.labels.ContainsKey (label) == false)
-				throw new Exception ("Label '" + label + "' has not been found.");
+				throw new EngineException ("Label '" + label + "' has not been found.");
 
 			return this.labels [label].Index;
 		}
@@ -514,7 +534,7 @@ namespace SharpOS.AOT.X86 {
 			label = Assembly.FormatLabelName (label);
 
 			if (this.labels.ContainsKey (label) == false)
-				throw new Exception ("Label '" + label + "' has not been found.");
+				throw new EngineException ("Label '" + label + "' has not been found.");
 
 			return this.labels [label].Offset;
 		}
@@ -528,134 +548,6 @@ namespace SharpOS.AOT.X86 {
 			set {
 				this.utf7StringEncoding = value;
 			}
-		}
-	
-		/// <summary>
-		/// Determines whether the given call is marked with a StringAttribute.
-		/// </summary>
-		/// <param name="call">The call operand.</param>
-		/// <returns>
-		/// 	<c>true</c> if the method is a String stub; otherwise, <c>false</c>.
-		/// </returns>
-		internal static bool IsKernelString (SharpOS.AOT.IR.Operands.Call call)
-		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
-				return false;
-
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
-				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.StringAttribute).ToString ()))
-					continue;
-
-				if (call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
-						&& call.Method.Parameters.Count == 1
-						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String"))
-					return true;
-
-				throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'String' method.");
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Determines whether the given call is marked with an AllocAttribute.
-		/// </summary>
-		/// <param name="call">The call.</param>
-		/// <returns>
-		/// 	<c>true</c> if the method being called is an Alloc stub; otherwise, <c>false</c>.
-		/// </returns>
-		internal static bool IsKernelAlloc (SharpOS.AOT.IR.Operands.Call call)
-		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
-				return false;
-
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
-				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString ()))
-					continue;
-
-				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
-						&& call.Method.Parameters.Count == 1
-						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.UInt32")))
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method.");
-
-				if (!(call.Operands [0] is SharpOS.AOT.IR.Operands.Constant
-						&& Convert.ToUInt32((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value) > 0))
-					throw new Exception ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
-
-				return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Determines if the method being called in <paramref name="call" /> is
-		/// marked with a LabelledAllocAttribute.
-		/// </summary>
-		/// <param name="call">The call operand.</param>
-		/// <returns>
-		/// 	<c>true</c> if the call is a LabelledAlloc stub; otherwise, <c>false</c>.
-		/// </returns>
-		internal static bool IsKernelLabelledAlloc (SharpOS.AOT.IR.Operands.Call call)
-		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
-				return false;
-
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
-				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString ()))
-					continue;
-
-				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
-						&& call.Method.Parameters.Count == 2
-						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String")
-						&& call.Method.Parameters [1].ParameterType.FullName.Equals ("System.UInt32")))
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method.");
-
-				if (!(call.Operands [0] is SharpOS.AOT.IR.Operands.Constant
-						&& call.Operands [1] is SharpOS.AOT.IR.Operands.Constant
-						&& ((string) (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value).Length > 0
-						&& Convert.ToUInt32 ((call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value) > 0))
-					throw new Exception ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
-
-				return true;
-			}
-
-			return false;
-		}
-
-		/// <summary>
-		/// Determines whether the method being called is marked with LabelAddressAttribute.
-		/// </summary>
-		/// <param name="call">The call.</param>
-		/// <returns>
-		/// 	<c>true</c> if the method is a LabelAddress stub; otherwise, <c>false</c>.
-		/// </returns>
-		internal static bool IsKernelLabelAddress (SharpOS.AOT.IR.Operands.Call call)
-		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
-				return false;
-
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
-				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString ()))
-					continue;
-
-				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.UInt32")
-						&& call.Method.Parameters.Count == 1
-						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String")))
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method.");
-
-				if (!(call.Operands [0] is SharpOS.AOT.IR.Operands.Constant
-						&& ((string) (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value).Length > 0))
-					throw new Exception ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
-
-				return true;
-			}
-
-			return false;
 		}
 
 		/// <summary>
@@ -1184,51 +1076,54 @@ namespace SharpOS.AOT.X86 {
 					continue;
 
 				foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-					string fullname = field.DeclaringType.FullName + "::" + field.Name;
+					string fullname = field.ToString ();
+					//field.DeclaringType.FullName + "::" + field.Name;
 
 					if (!field.IsStatic) {
-						this.engine.Dump.IgnoreMember (fullname, 
+						this.engine.Dump.IgnoreMember (fullname,
 								"Non-static field");
 
 						continue;
 					}
 
+					this.AddSymbol (new COFF.Static (fullname));
 					this.LABEL (fullname);
 
 					switch (engine.GetInternalType (field.FieldType.FullName)) {
-						case Operand.InternalSizeType.I1:
-						case Operand.InternalSizeType.U1:
-							this.DATA ( (byte) 0);
+						case InternalType.I1:
+						case InternalType.U1:
+							this.DATA ((byte) 0);
 							break;
 
-						case Operand.InternalSizeType.I2:
-						case Operand.InternalSizeType.U2:
-							this.DATA ( (ushort) 0);
+						case InternalType.I2:
+						case InternalType.U2:
+							this.DATA ((ushort) 0);
 							break;
 
-						case Operand.InternalSizeType.I:
-						case Operand.InternalSizeType.U:
-						case Operand.InternalSizeType.I4:
-						case Operand.InternalSizeType.U4:
-						case Operand.InternalSizeType.R4:
-							this.DATA ( (uint) 0);
+						case InternalType.O:
+						case InternalType.I:
+						case InternalType.U:
+						case InternalType.I4:
+						case InternalType.U4:
+						case InternalType.R4:
+							this.DATA ((uint) 0);
 							break;
 
-						case Operand.InternalSizeType.I8:
-						case Operand.InternalSizeType.U8:
-						case Operand.InternalSizeType.R8:
-							this.DATA ( (uint) 0);
-							this.DATA ( (uint) 0);
+						case InternalType.I8:
+						case InternalType.U8:
+						case InternalType.R8:
+							this.DATA ((uint) 0);
+							this.DATA ((uint) 0);
 							break;
 
 						default:
-							throw new Exception ("'" + field.FieldType + "' is not supported.");
+							throw new NotImplementedEngineException ("'" + field.FieldType + "' is not supported.");
 					}
 				}
 			}
 
 			this.engine.Dump.PopElement ();	// section: DataEncode
-			
+
 			foreach (Instruction instruction in data.instructions)
 				this.instructions.Add (instruction);
 
@@ -1263,7 +1158,7 @@ namespace SharpOS.AOT.X86 {
 					kvp.Key);
 				
 				if (!kvp.Key.Contains ("/Resources/"))
-					throw new Exception ("Bad label for resource: " +
+					throw new EngineException ("Bad label for resource: " +
 						kvp.Key);
 				
 				this.LABEL (kvp.Key);
@@ -1407,7 +1302,7 @@ namespace SharpOS.AOT.X86 {
 								org = -((int) offset);
 
 							else
-								org = Convert.ToInt32 (instruction.Value);
+								org = System.Convert.ToInt32 (instruction.Value);
 
 						} else if (instruction is Bits32Instruction)
 							this.bits32 = (bool) instruction.Value;
@@ -1416,7 +1311,7 @@ namespace SharpOS.AOT.X86 {
 							offset = (UInt32) instruction.Value;
 
 							if (offset < binaryWriter.BaseStream.Length)
-								throw new Exception ("Wrong offset '" + offset.ToString () + "'.");
+								throw new EngineException ("Wrong offset '" + offset.ToString () + "'.");
 
 							while (pass == 1 && !bss && binaryWriter.BaseStream.Length < instruction.Offset)
 								binaryWriter.Write ((byte) 0);
@@ -1445,7 +1340,7 @@ namespace SharpOS.AOT.X86 {
 
 							if (instruction.Label.Length > 0) {
 								if (this.labels.ContainsKey (instruction.Label))
-									throw new Exception (string.Format (
+									throw new EngineException (string.Format (
 										"The label '{0}' has been defined more than once. Definition 1 = '{1}', Definition 2 = '{2}'",
 										instruction.Label, this.labels [instruction.Label], instruction));
 
@@ -1495,7 +1390,6 @@ namespace SharpOS.AOT.X86 {
 		{
 			string end = HELPER_LSHL + " EXIT";
 			string hiShift = HELPER_LSHL + " HI_SHIFT";
-			string start = HELPER_LSHL + " START";
 
 			this.AddSymbol (new COFF.Label (HELPER_LSHL));
 
@@ -1658,6 +1552,65 @@ namespace SharpOS.AOT.X86 {
 			this.RET ();
 		}
 
+		private void AddLMUL ()
+		{
+			string firstNotSigned = HELPER_LMUL + " FIRST NOT SIGNED";
+			string secondNotSigned = HELPER_LMUL + " SECOND NOT SIGNED";
+			string dontSignResult = HELPER_LMUL + " DONT SIGN RESULT";
+			
+			this.AddSymbol (new COFF.Label (HELPER_LMUL));
+
+			this.LABEL (HELPER_LMUL);
+
+			this.MOV (R32.ECX, 0);
+
+			this.CMP (new DWordMemory (null, R32.ESP, null, 0, 8), 0);
+			this.JNS (firstNotSigned);
+			this.NOT (new DWordMemory (null, R32.ESP, null, 0, 4));
+			this.NOT (new DWordMemory (null, R32.ESP, null, 0, 8));
+			this.ADD (new DWordMemory (null, R32.ESP, null, 0, 4), (byte) 1);
+			this.ADC (new DWordMemory (null, R32.ESP, null, 0, 8), (byte) 0);
+			this.MOV (R32.ECX, (byte) 1);
+			this.LABEL (firstNotSigned);
+
+
+			this.CMP (new DWordMemory (null, R32.ESP, null, 0, 16), 0);
+			this.JNS (secondNotSigned);
+			this.NOT (new DWordMemory (null, R32.ESP, null, 0, 12));
+			this.NOT (new DWordMemory (null, R32.ESP, null, 0, 16));
+			this.ADD (new DWordMemory (null, R32.ESP, null, 0, 12), (byte) 1);
+			this.ADC (new DWordMemory (null, R32.ESP, null, 0, 16), (byte) 0);
+			this.XOR (R32.ECX, (byte) 1);
+			this.LABEL (secondNotSigned);
+
+
+			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 4));
+			this.MUL (new DWordMemory (null, R32.ESP, null, 0, 12));
+			this.MOV (new DWordMemory (null, R32.ESP, null, 0, -4), R32.EAX);
+			this.MOV (new DWordMemory (null, R32.ESP, null, 0, -8), R32.EDX);
+
+			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 8));
+			this.MUL (new DWordMemory (null, R32.ESP, null, 0, 12));
+			this.ADD (new DWordMemory (null, R32.ESP, null, 0, -8), R32.EAX);
+
+			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, 4));
+			this.MUL (new DWordMemory (null, R32.ESP, null, 0, 16));
+			this.ADD (new DWordMemory (null, R32.ESP, null, 0, -8), R32.EAX);
+
+			this.TEST (R32.ECX, 1);
+			this.JZ (dontSignResult);
+			this.NOT (new DWordMemory (null, R32.ESP, null, 0, -4));
+			this.NOT (new DWordMemory (null, R32.ESP, null, 0, -8));
+			this.ADD (new DWordMemory (null, R32.ESP, null, 0, -4), (byte) 1);
+			this.ADC (new DWordMemory (null, R32.ESP, null, 0, -8), (byte) 0);
+			this.LABEL (dontSignResult);
+
+			this.MOV (R32.EAX, new DWordMemory (null, R32.ESP, null, 0, -4));
+			this.MOV (R32.EDX, new DWordMemory (null, R32.ESP, null, 0, -8));
+
+			this.RET ();
+		}
+
 		/// <summary>
 		/// Adds the helper functions.
 		/// </summary>
@@ -1666,6 +1619,7 @@ namespace SharpOS.AOT.X86 {
 			this.AddLSHL ();
 			this.AddLSHR ();
 			this.AddLSAR ();
+			this.AddLMUL ();
 		}
 
 		/// <summary>
@@ -1678,179 +1632,7 @@ namespace SharpOS.AOT.X86 {
 			if (value is Memory)
 				return value as Memory;
 
-			if (!(value is SharpOS.AOT.IR.Operands.Call))
-				throw new Exception ("'" + value.ToString () + "' is not supported.");
-
-			SharpOS.AOT.IR.Operands.Call call = value as SharpOS.AOT.IR.Operands.Call;
-
-			if (call.Operands.Length == 1) {
-				string parameter = (call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ();
-
-				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
-					return new Memory (parameter);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
-					return new ByteMemory (parameter);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
-					return new WordMemory (parameter);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
-					return new DWordMemory (parameter);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
-					return new QWordMemory (parameter);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
-					return new TWordMemory (parameter);
-
-				} else {
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
-				}
-
-			} else if (call.Operands.Length == 2) {
-				SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
-				string label = (call.Operands [1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ();
-
-				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
-					return new Memory (segment, label);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
-					return new ByteMemory (segment, label);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
-					return new WordMemory (segment, label);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
-					return new DWordMemory (segment, label);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
-					return new QWordMemory (segment, label);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
-					return new TWordMemory (segment, label);
-
-				} else {
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
-				}
-
-			} else if (call.Operands.Length == 3) {
-				SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
-				R16Type _base = R16.GetByID ((call.Operands [1] as SharpOS.AOT.IR.Operands.Field).Value);
-				R16Type index = R16.GetByID ((call.Operands [2] as SharpOS.AOT.IR.Operands.Field).Value);
-
-				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
-					return new Memory (segment, _base, index);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
-					return new ByteMemory (segment, _base, index);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
-					return new WordMemory (segment, _base, index);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
-					return new DWordMemory (segment, _base, index);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
-					return new QWordMemory (segment, _base, index);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
-					return new TWordMemory (segment, _base, index);
-
-				} else {
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
-				}
-
-			} else if (call.Operands.Length == 4) {
-				if (call.Method.Parameters [1].ParameterType.FullName.IndexOf ("16") != -1) {
-					SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
-					R16Type _base = R16.GetByID ((call.Operands [1] as SharpOS.AOT.IR.Operands.Field).Value);
-					R16Type index = R16.GetByID ((call.Operands [2] as SharpOS.AOT.IR.Operands.Field).Value);
-					Int16 displacement = Convert.ToInt16 ((call.Operands [3] as SharpOS.AOT.IR.Operands.Constant).Value);
-
-					if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
-						return new Memory (segment, _base, index, displacement);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
-						return new ByteMemory (segment, _base, index, displacement);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
-						return new WordMemory (segment, _base, index, displacement);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
-						return new DWordMemory (segment, _base, index, displacement);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
-						return new QWordMemory (segment, _base, index, displacement);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
-						return new TWordMemory (segment, _base, index, displacement);
-
-					} else {
-						throw new Exception ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
-					}
-
-				} else {
-					SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
-					R32Type _base = R32.GetByID ((call.Operands [1] as SharpOS.AOT.IR.Operands.Field).Value);
-					R32Type index = call.Operands [2] is Constant ? null : R32.GetByID ((call.Operands [2] as SharpOS.AOT.IR.Operands.Field).Value);
-					Byte scale = Convert.ToByte ((call.Operands [3] as SharpOS.AOT.IR.Operands.Constant).Value);
-
-					if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
-						return new Memory (segment, _base, index, scale);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
-						return new ByteMemory (segment, _base, index, scale);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
-						return new WordMemory (segment, _base, index, scale);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
-						return new DWordMemory (segment, _base, index, scale);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
-						return new QWordMemory (segment, _base, index, scale);
-
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
-						return new TWordMemory (segment, _base, index, scale);
-
-					} else {
-						throw new Exception ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
-					}
-				}
-
-			} else if (call.Operands.Length == 5) {
-				SegType segment = Seg.GetByID ((call.Operands [0] as SharpOS.AOT.IR.Operands.Constant).Value);
-				R32Type _base = R32.GetByID ((call.Operands [1] as SharpOS.AOT.IR.Operands.Field).Value);
-				R32Type index = call.Operands [2] is Constant ? null : R32.GetByID ((call.Operands [2] as SharpOS.AOT.IR.Operands.Field).Value);
-				Byte scale = Convert.ToByte ((call.Operands [3] as SharpOS.AOT.IR.Operands.Constant).Value);
-				Int32 displacement = Convert.ToInt32 ((call.Operands [4] as SharpOS.AOT.IR.Operands.Constant).Value);
-
-				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
-					return new Memory (segment, _base, index, scale, displacement);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
-					return new ByteMemory (segment, _base, index, scale, displacement);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
-					return new WordMemory (segment, _base, index, scale, displacement);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
-					return new DWordMemory (segment, _base, index, scale, displacement);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
-					return new QWordMemory (segment, _base, index, scale, displacement);
-
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
-					return new TWordMemory (segment, _base, index, scale, displacement);
-
-				} else {
-					throw new Exception ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
-				}
-
-			} else {
-				throw new Exception ("'" + call.Method.Name + "' has wrong parameters.");
-			}
+			throw new EngineException ("'" + value.ToString () + "' is not supported.");
 		}
 
 		/// <summary>
@@ -1937,7 +1719,7 @@ namespace SharpOS.AOT.X86 {
 				return R32.EDX;
 
 			} else
-				throw new Exception ("No spare registers.");
+				throw new EngineException ("No spare registers.");
 		}
 
 		/// <summary>
@@ -1950,24 +1732,20 @@ namespace SharpOS.AOT.X86 {
 				if (EAX)
 					EAX = false;
 				else
-					throw new Exception ("EAX is already free.");
+					throw new EngineException ("EAX is already free.");
 
 			} else if (register == R32.ECX) {
 				if (ECX)
 					ECX = false;
 				else
-					throw new Exception ("ECX is already free.");
+					throw new EngineException ("ECX is already free.");
 
 			} else if (register == R32.EDX) {
 				if (EDX)
 					EDX = false;
 				else
-					throw new Exception ("EDX is already free.");
+					throw new EngineException ("EDX is already free.");
 			}
-
-			/*else {
-				//throw new Exception ("'" + register + "' is not a spare register.");
-			}*/
 		}
 
 		/// <summary>
@@ -1990,7 +1768,7 @@ namespace SharpOS.AOT.X86 {
 				return R8.BL;
 
 			else
-				throw new Exception ("'" + register + "' has no 8-Bit register.");
+				throw new EngineException ("'" + register + "' has no 8-Bit register.");
 		}
 
 		/// <summary>
@@ -2013,7 +1791,7 @@ namespace SharpOS.AOT.X86 {
 				return R16.BX;
 
 			else
-				throw new Exception ("'" + register + "' has no 16-Bit register.");
+				throw new EngineException ("'" + register + "' has no 16-Bit register.");
 		}
 
 		enum Registers : int {
@@ -2066,7 +1844,7 @@ namespace SharpOS.AOT.X86 {
 					return R32.ECX;
 
 				default:
-					throw new Exception ("'" + i.ToString () + "' is no valid register.");
+					throw new EngineException ("'" + i.ToString () + "' is no valid register.");
 			}
 		}
 
@@ -2095,16 +1873,16 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns></returns>
-		public bool Spill (Operand.InternalSizeType type)
+		public bool Spill (InternalType type)
 		{
-			if (type == Operand.InternalSizeType.NotSet)
-				throw new Exception ("Size Type not set.");
+			if (type == InternalType.NotSet)
+				throw new EngineException ("Size Type not set.");
 
-			if (type == Operand.InternalSizeType.I8
-					|| type == Operand.InternalSizeType.U8
-					|| type == Operand.InternalSizeType.R4
-					|| type == Operand.InternalSizeType.R8
-					|| type == Operand.InternalSizeType.ValueType)
+			if (type == InternalType.I8
+					|| type == InternalType.U8
+					|| type == InternalType.R4
+					|| type == InternalType.R8
+					|| type == InternalType.ValueType)
 				return true;
 
 			return false;

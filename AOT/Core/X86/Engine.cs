@@ -9,6 +9,7 @@
 //
 
 using System;
+using SharpOS.AOT.IR;
 
 namespace SharpOS.AOT.X86 {
 	public partial class Assembly {
@@ -18,7 +19,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="method">The method.</param>
 		/// <param name="operands">The operands.</param>
 		/// <param name="parameterTypes">The parameter types.</param>
-		internal void GetAssemblyInstruction (SharpOS.AOT.IR.Operands.Call method, object [] operands, string parameterTypes)
+		internal void GetAssemblyInstruction (SharpOS.AOT.IR.Instructions.Call method, object [] operands, string parameterTypes)
 		{
 			switch (method.Method.Name) {
 				case "AAA":
@@ -28,7 +29,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -39,11 +40,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AAD Byte":
-							this.AAD ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.AAD ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -54,11 +55,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AAM Byte":
-							this.AAM ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.AAM ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -69,14 +70,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "ADC":
 					switch (parameterTypes) {
 						case "ADC ByteMemory Byte":
-							this.ADC (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADC (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC ByteMemory R8Type":
@@ -84,7 +85,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC DWordMemory Byte":
-							this.ADC (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADC (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC DWordMemory R32Type":
@@ -92,11 +93,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC DWordMemory UInt32":
-							this.ADC (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.ADC (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC R16Type Byte":
-							this.ADC (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADC (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC R16Type R16Type":
@@ -104,7 +105,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC R16Type UInt16":
-							this.ADC (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.ADC (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC R16Type WordMemory":
@@ -112,7 +113,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC R32Type Byte":
-							this.ADC (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADC (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC R32Type DWordMemory":
@@ -124,11 +125,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC R32Type UInt32":
-							this.ADC (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.ADC (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC R8Type Byte":
-							this.ADC (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADC (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC R8Type ByteMemory":
@@ -140,7 +141,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC WordMemory Byte":
-							this.ADC (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADC (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADC WordMemory R16Type":
@@ -148,18 +149,18 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADC WordMemory UInt16":
-							this.ADC (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.ADC (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "ADD":
 					switch (parameterTypes) {
 						case "ADD ByteMemory Byte":
-							this.ADD (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADD (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD ByteMemory R8Type":
@@ -167,7 +168,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD DWordMemory Byte":
-							this.ADD (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADD (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD DWordMemory R32Type":
@@ -175,11 +176,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD DWordMemory UInt32":
-							this.ADD (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.ADD (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD R16Type Byte":
-							this.ADD (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADD (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD R16Type R16Type":
@@ -187,7 +188,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD R16Type UInt16":
-							this.ADD (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.ADD (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD R16Type WordMemory":
@@ -195,7 +196,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD R32Type Byte":
-							this.ADD (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADD (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD R32Type DWordMemory":
@@ -207,11 +208,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD R32Type UInt32":
-							this.ADD (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.ADD (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD R8Type Byte":
-							this.ADD (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADD (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD R8Type ByteMemory":
@@ -223,7 +224,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD WordMemory Byte":
-							this.ADD (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ADD (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ADD WordMemory R16Type":
@@ -231,29 +232,29 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "ADD WordMemory UInt16":
-							this.ADD (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.ADD (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "ALIGN":
 					switch (parameterTypes) {
 						case "ALIGN UInt32":
-							this.ALIGN ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.ALIGN ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "AND":
 					switch (parameterTypes) {
 						case "AND ByteMemory Byte":
-							this.AND (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.AND (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND ByteMemory R8Type":
@@ -261,7 +262,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND DWordMemory Byte":
-							this.AND (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.AND (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND DWordMemory R32Type":
@@ -269,11 +270,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND DWordMemory UInt32":
-							this.AND (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.AND (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND R16Type Byte":
-							this.AND (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.AND (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND R16Type R16Type":
@@ -281,7 +282,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND R16Type UInt16":
-							this.AND (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.AND (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND R16Type WordMemory":
@@ -289,7 +290,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND R32Type Byte":
-							this.AND (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.AND (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND R32Type DWordMemory":
@@ -301,11 +302,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND R32Type UInt32":
-							this.AND (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.AND (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND R8Type Byte":
-							this.AND (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.AND (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND R8Type ByteMemory":
@@ -317,7 +318,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND WordMemory Byte":
-							this.AND (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.AND (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "AND WordMemory R16Type":
@@ -325,11 +326,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "AND WordMemory UInt16":
-							this.AND (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.AND (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -344,18 +345,18 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "BITS32":
 					switch (parameterTypes) {
 						case "BITS32 Boolean":
-							this.BITS32 (Convert.ToBoolean ((operands [0] as SharpOS.AOT.IR.Operands.Constant).Value));
+							this.BITS32 (Convert.ToBoolean  ((operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value));
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -370,7 +371,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -393,7 +394,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -416,7 +417,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -427,14 +428,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "BT":
 					switch (parameterTypes) {
 						case "BT DWordMemory Byte":
-							this.BT (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BT (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BT DWordMemory R32Type":
@@ -442,7 +443,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BT R16Type Byte":
-							this.BT (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BT (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BT R16Type R16Type":
@@ -450,7 +451,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BT R32Type Byte":
-							this.BT (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BT (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BT R32Type R32Type":
@@ -458,7 +459,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BT WordMemory Byte":
-							this.BT (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BT (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BT WordMemory R16Type":
@@ -466,14 +467,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "BTC":
 					switch (parameterTypes) {
 						case "BTC DWordMemory Byte":
-							this.BTC (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTC (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTC DWordMemory R32Type":
@@ -481,7 +482,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTC R16Type Byte":
-							this.BTC (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTC (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTC R16Type R16Type":
@@ -489,7 +490,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTC R32Type Byte":
-							this.BTC (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTC (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTC R32Type R32Type":
@@ -497,7 +498,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTC WordMemory Byte":
-							this.BTC (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTC (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTC WordMemory R16Type":
@@ -505,14 +506,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "BTR":
 					switch (parameterTypes) {
 						case "BTR DWordMemory Byte":
-							this.BTR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTR (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTR DWordMemory R32Type":
@@ -520,7 +521,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTR R16Type Byte":
-							this.BTR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTR (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTR R16Type R16Type":
@@ -528,7 +529,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTR R32Type Byte":
-							this.BTR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTR (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTR R32Type R32Type":
@@ -536,7 +537,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTR WordMemory Byte":
-							this.BTR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTR (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTR WordMemory R16Type":
@@ -544,14 +545,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "BTS":
 					switch (parameterTypes) {
 						case "BTS DWordMemory Byte":
-							this.BTS (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTS (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTS DWordMemory R32Type":
@@ -559,7 +560,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTS R16Type Byte":
-							this.BTS (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTS (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTS R16Type R16Type":
@@ -567,7 +568,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTS R32Type Byte":
-							this.BTS (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTS (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTS R32Type R32Type":
@@ -575,7 +576,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "BTS WordMemory Byte":
-							this.BTS (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.BTS (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "BTS WordMemory R16Type":
@@ -583,7 +584,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -602,19 +603,19 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CALL String":
-							this.CALL ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.CALL ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "CALL UInt16 UInt16":
-							this.CALL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.CALL ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value, (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CALL UInt16 UInt32":
-							this.CALL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.CALL ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value, (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CALL UInt32":
-							this.CALL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.CALL ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CALL WordMemory":
@@ -622,7 +623,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -637,7 +638,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -648,7 +649,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -659,7 +660,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -670,7 +671,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -681,7 +682,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -692,7 +693,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -703,7 +704,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -714,7 +715,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -725,7 +726,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -748,7 +749,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -771,7 +772,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -794,7 +795,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -817,7 +818,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -840,7 +841,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -863,7 +864,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -886,7 +887,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -909,7 +910,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -932,7 +933,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -955,7 +956,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -978,7 +979,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1001,7 +1002,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1024,7 +1025,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1047,7 +1048,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1070,7 +1071,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1093,7 +1094,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1116,7 +1117,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1139,7 +1140,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1162,7 +1163,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1185,7 +1186,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1208,7 +1209,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1231,7 +1232,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1254,7 +1255,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1277,7 +1278,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1300,7 +1301,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1323,7 +1324,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1346,7 +1347,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1369,7 +1370,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1392,7 +1393,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1415,14 +1416,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "CMP":
 					switch (parameterTypes) {
 						case "CMP ByteMemory Byte":
-							this.CMP (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.CMP (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP ByteMemory R8Type":
@@ -1430,7 +1431,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP DWordMemory Byte":
-							this.CMP (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.CMP (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP DWordMemory R32Type":
@@ -1438,11 +1439,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP DWordMemory UInt32":
-							this.CMP (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.CMP (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP R16Type Byte":
-							this.CMP (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.CMP (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP R16Type R16Type":
@@ -1450,7 +1451,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP R16Type UInt16":
-							this.CMP (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.CMP (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP R16Type WordMemory":
@@ -1458,7 +1459,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP R32Type Byte":
-							this.CMP (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.CMP (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP R32Type DWordMemory":
@@ -1470,11 +1471,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP R32Type UInt32":
-							this.CMP (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.CMP (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP R8Type Byte":
-							this.CMP (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.CMP (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP R8Type ByteMemory":
@@ -1486,7 +1487,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP WordMemory Byte":
-							this.CMP (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.CMP (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "CMP WordMemory R16Type":
@@ -1494,11 +1495,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "CMP WordMemory UInt16":
-							this.CMP (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.CMP (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1509,7 +1510,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1520,7 +1521,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1531,7 +1532,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1562,7 +1563,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1573,7 +1574,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1584,7 +1585,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1595,7 +1596,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1606,7 +1607,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1617,7 +1618,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1628,46 +1629,46 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "DATA":
 					switch (parameterTypes) {
 						case "DATA Byte":
-							this.DATA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.DATA ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "DATA String":
-							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "DATA String Byte":
-							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString (), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "DATA String String":
-							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), (operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString (), (operands[1] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "DATA String UInt16":
-							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString (), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "DATA String UInt32":
-							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString (), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.DATA ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString (), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "DATA UInt16":
-							this.DATA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.DATA ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "DATA UInt32":
-							this.DATA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.DATA ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1698,7 +1699,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1729,7 +1730,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1740,18 +1741,18 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "ENTER":
 					switch (parameterTypes) {
 						case "ENTER UInt16 Byte":
-							this.ENTER ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ENTER ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value, (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1762,7 +1763,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1773,7 +1774,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1792,7 +1793,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1803,7 +1804,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1814,7 +1815,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1825,7 +1826,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1836,7 +1837,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1847,7 +1848,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1858,7 +1859,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1869,7 +1870,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1880,7 +1881,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1891,7 +1892,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1902,7 +1903,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1913,7 +1914,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1924,7 +1925,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1935,7 +1936,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1946,7 +1947,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1957,7 +1958,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1968,7 +1969,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1979,7 +1980,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -1990,7 +1991,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2001,7 +2002,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2012,7 +2013,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2023,7 +2024,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2034,7 +2035,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2045,7 +2046,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2056,7 +2057,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2075,7 +2076,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2086,7 +2087,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2097,7 +2098,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2108,7 +2109,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2119,7 +2120,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2138,7 +2139,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2149,7 +2150,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2160,7 +2161,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2171,7 +2172,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2182,7 +2183,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2193,7 +2194,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2204,7 +2205,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2223,7 +2224,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2234,7 +2235,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2245,7 +2246,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2264,7 +2265,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2275,7 +2276,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2286,7 +2287,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2297,7 +2298,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2308,7 +2309,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2319,7 +2320,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2330,7 +2331,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2341,7 +2342,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2352,7 +2353,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2363,7 +2364,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2378,7 +2379,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2393,7 +2394,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2408,7 +2409,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2423,7 +2424,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2438,7 +2439,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2457,7 +2458,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2472,7 +2473,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2483,7 +2484,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2494,7 +2495,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2509,7 +2510,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2528,7 +2529,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2543,7 +2544,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2558,7 +2559,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2581,7 +2582,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2592,7 +2593,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2603,7 +2604,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2614,7 +2615,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2625,7 +2626,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2636,7 +2637,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2647,7 +2648,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2658,7 +2659,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2669,7 +2670,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2680,7 +2681,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2699,7 +2700,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2710,7 +2711,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2721,7 +2722,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2732,7 +2733,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2743,7 +2744,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2754,7 +2755,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2765,7 +2766,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2776,7 +2777,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2787,7 +2788,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2798,7 +2799,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2809,7 +2810,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2820,7 +2821,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2831,7 +2832,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2842,7 +2843,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2853,7 +2854,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2864,7 +2865,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2875,7 +2876,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2886,7 +2887,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2897,7 +2898,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2908,7 +2909,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2919,7 +2920,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2930,7 +2931,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2941,7 +2942,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2952,7 +2953,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2963,7 +2964,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2974,7 +2975,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -2985,7 +2986,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3004,7 +3005,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3015,7 +3016,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3026,7 +3027,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3049,7 +3050,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3060,7 +3061,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3071,7 +3072,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3090,7 +3091,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3101,7 +3102,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3112,7 +3113,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3131,7 +3132,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3142,7 +3143,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3153,7 +3154,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3164,7 +3165,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3175,7 +3176,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3186,7 +3187,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3197,7 +3198,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3208,7 +3209,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3219,7 +3220,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3230,7 +3231,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3241,7 +3242,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3252,7 +3253,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3263,7 +3264,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3274,7 +3275,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3285,7 +3286,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3296,7 +3297,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3307,7 +3308,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3318,7 +3319,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3329,7 +3330,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3344,7 +3345,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3355,7 +3356,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3366,7 +3367,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3377,7 +3378,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3388,7 +3389,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3399,7 +3400,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3410,7 +3411,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3421,7 +3422,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3432,7 +3433,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3443,7 +3444,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3474,7 +3475,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3493,7 +3494,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R16Type Byte":
-							this.IMUL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IMUL (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R16Type R16Type":
@@ -3501,15 +3502,15 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R16Type R16Type Byte":
-							this.IMUL (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IMUL (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R16Type R16Type UInt16":
-							this.IMUL (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.IMUL (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (UInt16) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R16Type UInt16":
-							this.IMUL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.IMUL (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R16Type WordMemory":
@@ -3517,11 +3518,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R16Type WordMemory Byte":
-							this.IMUL (R16.GetByID (operands [0]), GetWordMemory (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IMUL (R16.GetByID (operands [0]), GetWordMemory (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R16Type WordMemory UInt16":
-							this.IMUL (R16.GetByID (operands [0]), GetWordMemory (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.IMUL (R16.GetByID (operands [0]), GetWordMemory (operands [1]), (UInt16) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R32Type":
@@ -3529,7 +3530,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R32Type Byte":
-							this.IMUL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IMUL (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R32Type DWordMemory":
@@ -3537,11 +3538,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R32Type DWordMemory Byte":
-							this.IMUL (R32.GetByID (operands [0]), GetDWordMemory (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IMUL (R32.GetByID (operands [0]), GetDWordMemory (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R32Type DWordMemory UInt32":
-							this.IMUL (R32.GetByID (operands [0]), GetDWordMemory (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.IMUL (R32.GetByID (operands [0]), GetDWordMemory (operands [1]), (UInt32) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R32Type R32Type":
@@ -3549,15 +3550,15 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "IMUL R32Type R32Type Byte":
-							this.IMUL (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IMUL (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R32Type R32Type UInt32":
-							this.IMUL (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.IMUL (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (UInt32) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R32Type UInt32":
-							this.IMUL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.IMUL (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "IMUL R8Type":
@@ -3569,7 +3570,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3600,7 +3601,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3611,7 +3612,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3622,7 +3623,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3633,18 +3634,18 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "INT":
 					switch (parameterTypes) {
 						case "INT Byte":
-							this.INT ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.INT ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3655,7 +3656,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3666,7 +3667,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3677,18 +3678,18 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "IN_AL":
 					switch (parameterTypes) {
 						case "IN_AL Byte":
-							this.IN_AL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IN_AL ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3699,18 +3700,18 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "IN_AX":
 					switch (parameterTypes) {
 						case "IN_AX Byte":
-							this.IN_AX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IN_AX ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3721,18 +3722,18 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "IN_EAX":
 					switch (parameterTypes) {
 						case "IN_EAX Byte":
-							this.IN_EAX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.IN_EAX ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3743,7 +3744,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3754,7 +3755,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3765,7 +3766,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -3776,226 +3777,226 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JA":
 					switch (parameterTypes) {
 						case "JA Byte":
-							this.JA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JA ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JA String":
-							this.JA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JA ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JA UInt32":
-							this.JA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JA ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JAE":
 					switch (parameterTypes) {
 						case "JAE Byte":
-							this.JAE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JAE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JAE String":
-							this.JAE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JAE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JAE UInt32":
-							this.JAE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JAE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JB":
 					switch (parameterTypes) {
 						case "JB Byte":
-							this.JB ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JB ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JB String":
-							this.JB ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JB ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JB UInt32":
-							this.JB ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JB ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JBE":
 					switch (parameterTypes) {
 						case "JBE Byte":
-							this.JBE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JBE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JBE String":
-							this.JBE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JBE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JBE UInt32":
-							this.JBE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JBE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JC":
 					switch (parameterTypes) {
 						case "JC Byte":
-							this.JC ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JC ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JC String":
-							this.JC ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JC ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JC UInt32":
-							this.JC ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JC ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JCXZ":
 					switch (parameterTypes) {
 						case "JCXZ Byte":
-							this.JCXZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JCXZ ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JE":
 					switch (parameterTypes) {
 						case "JE Byte":
-							this.JE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JE String":
-							this.JE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JE UInt32":
-							this.JE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JECXZ":
 					switch (parameterTypes) {
 						case "JECXZ Byte":
-							this.JECXZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JECXZ ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JG":
 					switch (parameterTypes) {
 						case "JG Byte":
-							this.JG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JG ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JG String":
-							this.JG ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JG ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JG UInt32":
-							this.JG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JG ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JGE":
 					switch (parameterTypes) {
 						case "JGE Byte":
-							this.JGE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JGE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JGE String":
-							this.JGE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JGE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JGE UInt32":
-							this.JGE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JGE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JL":
 					switch (parameterTypes) {
 						case "JL Byte":
-							this.JL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JL ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JL String":
-							this.JL ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JL ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JL UInt32":
-							this.JL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JL ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JLE":
 					switch (parameterTypes) {
 						case "JLE Byte":
-							this.JLE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JLE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JLE String":
-							this.JLE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JLE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JLE UInt32":
-							this.JLE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JLE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JMP":
 					switch (parameterTypes) {
 						case "JMP Byte":
-							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JMP ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JMP DWordMemory":
@@ -4011,23 +4012,23 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "JMP String":
-							this.JMP ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JMP ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JMP UInt16 String":
-							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JMP ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value, (operands[1] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JMP UInt16 UInt16":
-							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.JMP ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value, (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JMP UInt16 UInt32":
-							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JMP ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value, (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JMP UInt32":
-							this.JMP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JMP ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JMP WordMemory":
@@ -4035,7 +4036,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4050,398 +4051,398 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNA":
 					switch (parameterTypes) {
 						case "JNA Byte":
-							this.JNA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNA ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNA String":
-							this.JNA ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNA ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNA UInt32":
-							this.JNA ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNA ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNAE":
 					switch (parameterTypes) {
 						case "JNAE Byte":
-							this.JNAE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNAE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNAE String":
-							this.JNAE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNAE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNAE UInt32":
-							this.JNAE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNAE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNB":
 					switch (parameterTypes) {
 						case "JNB Byte":
-							this.JNB ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNB ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNB String":
-							this.JNB ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNB ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNB UInt32":
-							this.JNB ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNB ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNBE":
 					switch (parameterTypes) {
 						case "JNBE Byte":
-							this.JNBE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNBE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNBE String":
-							this.JNBE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNBE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNBE UInt32":
-							this.JNBE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNBE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNC":
 					switch (parameterTypes) {
 						case "JNC Byte":
-							this.JNC ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNC ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNC String":
-							this.JNC ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNC ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNC UInt32":
-							this.JNC ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNC ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNE":
 					switch (parameterTypes) {
 						case "JNE Byte":
-							this.JNE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNE String":
-							this.JNE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNE UInt32":
-							this.JNE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNG":
 					switch (parameterTypes) {
 						case "JNG Byte":
-							this.JNG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNG ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNG String":
-							this.JNG ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNG ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNG UInt32":
-							this.JNG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNG ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNGE":
 					switch (parameterTypes) {
 						case "JNGE Byte":
-							this.JNGE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNGE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNGE String":
-							this.JNGE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNGE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNGE UInt32":
-							this.JNGE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNGE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNL":
 					switch (parameterTypes) {
 						case "JNL Byte":
-							this.JNL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNL ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNL String":
-							this.JNL ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNL ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNL UInt32":
-							this.JNL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNL ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNLE":
 					switch (parameterTypes) {
 						case "JNLE Byte":
-							this.JNLE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNLE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNLE String":
-							this.JNLE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNLE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNLE UInt32":
-							this.JNLE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNLE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNO":
 					switch (parameterTypes) {
 						case "JNO Byte":
-							this.JNO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNO ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNO String":
-							this.JNO ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNO ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNO UInt32":
-							this.JNO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNO ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNP":
 					switch (parameterTypes) {
 						case "JNP Byte":
-							this.JNP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNP ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNP String":
-							this.JNP ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNP ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNP UInt32":
-							this.JNP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNP ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNS":
 					switch (parameterTypes) {
 						case "JNS Byte":
-							this.JNS ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNS ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNS String":
-							this.JNS ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNS ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNS UInt32":
-							this.JNS ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNS ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JNZ":
 					switch (parameterTypes) {
 						case "JNZ Byte":
-							this.JNZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JNZ ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JNZ String":
-							this.JNZ ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JNZ ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JNZ UInt32":
-							this.JNZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JNZ ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JO":
 					switch (parameterTypes) {
 						case "JO Byte":
-							this.JO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JO ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JO String":
-							this.JO ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JO ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JO UInt32":
-							this.JO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JO ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JP":
 					switch (parameterTypes) {
 						case "JP Byte":
-							this.JP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JP ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JP String":
-							this.JP ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JP ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JP UInt32":
-							this.JP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JP ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JPE":
 					switch (parameterTypes) {
 						case "JPE Byte":
-							this.JPE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JPE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JPE String":
-							this.JPE ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JPE ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JPE UInt32":
-							this.JPE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JPE ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JPO":
 					switch (parameterTypes) {
 						case "JPO Byte":
-							this.JPO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JPO ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JPO String":
-							this.JPO ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JPO ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JPO UInt32":
-							this.JPO ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JPO ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JS":
 					switch (parameterTypes) {
 						case "JS Byte":
-							this.JS ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JS ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JS String":
-							this.JS ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JS ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JS UInt32":
-							this.JS ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JS ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "JZ":
 					switch (parameterTypes) {
 						case "JZ Byte":
-							this.JZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.JZ ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "JZ String":
-							this.JZ ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.JZ ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "JZ UInt32":
-							this.JZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.JZ ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "LABEL":
 					switch (parameterTypes) {
 						case "LABEL String":
-							this.LABEL ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.LABEL ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4452,7 +4453,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4475,7 +4476,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4490,7 +4491,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4505,7 +4506,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4516,7 +4517,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4531,7 +4532,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4542,7 +4543,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4557,7 +4558,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4568,7 +4569,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4583,7 +4584,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4594,7 +4595,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4609,7 +4610,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4624,7 +4625,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4635,7 +4636,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4646,7 +4647,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4657,7 +4658,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4668,62 +4669,62 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "LOOP":
 					switch (parameterTypes) {
 						case "LOOP Byte":
-							this.LOOP ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.LOOP ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "LOOPE":
 					switch (parameterTypes) {
 						case "LOOPE Byte":
-							this.LOOPE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.LOOPE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "LOOPNE":
 					switch (parameterTypes) {
 						case "LOOPNE Byte":
-							this.LOOPNE ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.LOOPNE ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "LOOPNZ":
 					switch (parameterTypes) {
 						case "LOOPNZ Byte":
-							this.LOOPNZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.LOOPNZ ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "LOOPZ":
 					switch (parameterTypes) {
 						case "LOOPZ Byte":
-							this.LOOPZ ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.LOOPZ ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4746,7 +4747,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4761,7 +4762,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4776,7 +4777,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4787,14 +4788,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "MOV":
 					switch (parameterTypes) {
 						case "MOV ByteMemory Byte":
-							this.MOV (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.MOV (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "MOV ByteMemory R8Type":
@@ -4818,7 +4819,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV DWordMemory UInt32":
-							this.MOV (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.MOV (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "MOV R16Type R16Type":
@@ -4830,11 +4831,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV R16Type String":
-							this.MOV (R16.GetByID (operands [0]), (operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.MOV (R16.GetByID (operands [0]), (operands[1] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "MOV R16Type UInt16":
-							this.MOV (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.MOV (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "MOV R16Type WordMemory":
@@ -4862,7 +4863,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV R32Type String":
-							this.MOV (R32.GetByID (operands [0]), (operands[1] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.MOV (R32.GetByID (operands [0]), (operands[1] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						case "MOV R32Type TRType":
@@ -4870,11 +4871,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV R32Type UInt32":
-							this.MOV (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.MOV (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "MOV R8Type Byte":
-							this.MOV (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.MOV (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "MOV R8Type ByteMemory":
@@ -4914,11 +4915,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "MOV WordMemory UInt16":
-							this.MOV (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.MOV (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4929,7 +4930,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4940,7 +4941,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4951,7 +4952,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -4982,7 +4983,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5013,73 +5014,73 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "MOV_AL":
 					switch (parameterTypes) {
 						case "MOV_AL Byte":
-							this.MOV_AL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.MOV_AL ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "MOV_AX":
 					switch (parameterTypes) {
 						case "MOV_AX UInt16":
-							this.MOV_AX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.MOV_AX ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "MOV_EAX":
 					switch (parameterTypes) {
 						case "MOV_EAX UInt32":
-							this.MOV_EAX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.MOV_EAX ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "MOV__AL":
 					switch (parameterTypes) {
 						case "MOV__AL Byte":
-							this.MOV__AL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.MOV__AL ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "MOV__AX":
 					switch (parameterTypes) {
 						case "MOV__AX UInt16":
-							this.MOV__AX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.MOV__AX ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "MOV__EAX":
 					switch (parameterTypes) {
 						case "MOV__EAX UInt32":
-							this.MOV__EAX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.MOV__EAX ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5110,7 +5111,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5141,7 +5142,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5152,7 +5153,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5183,25 +5184,25 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "OFFSET":
 					switch (parameterTypes) {
 						case "OFFSET UInt32":
-							this.OFFSET ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.OFFSET ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "OR":
 					switch (parameterTypes) {
 						case "OR ByteMemory Byte":
-							this.OR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OR (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR ByteMemory R8Type":
@@ -5209,7 +5210,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR DWordMemory Byte":
-							this.OR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OR (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR DWordMemory R32Type":
@@ -5217,11 +5218,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR DWordMemory UInt32":
-							this.OR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.OR (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR R16Type Byte":
-							this.OR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OR (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR R16Type R16Type":
@@ -5229,7 +5230,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR R16Type UInt16":
-							this.OR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.OR (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR R16Type WordMemory":
@@ -5237,7 +5238,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR R32Type Byte":
-							this.OR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OR (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR R32Type DWordMemory":
@@ -5249,11 +5250,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR R32Type UInt32":
-							this.OR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.OR (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR R8Type Byte":
-							this.OR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OR (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR R8Type ByteMemory":
@@ -5265,7 +5266,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR WordMemory Byte":
-							this.OR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OR (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "OR WordMemory R16Type":
@@ -5273,22 +5274,22 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "OR WordMemory UInt16":
-							this.OR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.OR (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "ORG":
 					switch (parameterTypes) {
 						case "ORG UInt32":
-							this.ORG ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.ORG ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5299,7 +5300,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5310,7 +5311,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5321,7 +5322,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5332,7 +5333,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5343,7 +5344,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5354,40 +5355,40 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "OUT__AL":
 					switch (parameterTypes) {
 						case "OUT__AL Byte":
-							this.OUT__AL ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OUT__AL ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "OUT__AX":
 					switch (parameterTypes) {
 						case "OUT__AX Byte":
-							this.OUT__AX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OUT__AX ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "OUT__EAX":
 					switch (parameterTypes) {
 						case "OUT__EAX Byte":
-							this.OUT__EAX ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.OUT__EAX ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5398,7 +5399,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5425,7 +5426,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5436,7 +5437,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5447,7 +5448,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5458,7 +5459,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5469,7 +5470,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5480,7 +5481,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5491,7 +5492,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5502,7 +5503,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5513,7 +5514,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5524,7 +5525,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5535,14 +5536,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "PUSH":
 					switch (parameterTypes) {
 						case "PUSH Byte":
-							this.PUSH ((operands [0] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.PUSH ((byte) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "PUSH DWordMemory":
@@ -5562,11 +5563,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "PUSH UInt16":
-							this.PUSH ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.PUSH ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "PUSH UInt32":
-							this.PUSH ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.PUSH ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "PUSH WordMemory":
@@ -5574,7 +5575,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5585,7 +5586,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5596,7 +5597,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5607,7 +5608,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5618,7 +5619,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5629,7 +5630,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5640,38 +5641,38 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "RCL":
 					switch (parameterTypes) {
 						case "RCL ByteMemory Byte":
-							this.RCL (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCL (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCL DWordMemory Byte":
-							this.RCL (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCL (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCL R16Type Byte":
-							this.RCL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCL (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCL R32Type Byte":
-							this.RCL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCL (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCL R8Type Byte":
-							this.RCL (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCL (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCL WordMemory Byte":
-							this.RCL (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCL (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5702,38 +5703,38 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "RCR":
 					switch (parameterTypes) {
 						case "RCR ByteMemory Byte":
-							this.RCR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCR (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCR DWordMemory Byte":
-							this.RCR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCR (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCR R16Type Byte":
-							this.RCR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCR (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCR R32Type Byte":
-							this.RCR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCR (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCR R8Type Byte":
-							this.RCR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCR (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "RCR WordMemory Byte":
-							this.RCR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.RCR (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5764,7 +5765,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5775,7 +5776,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5786,7 +5787,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5797,7 +5798,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5808,7 +5809,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5819,7 +5820,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5830,7 +5831,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5841,7 +5842,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5852,7 +5853,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5863,11 +5864,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "RET UInt16":
-							this.RET ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.RET ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5878,11 +5879,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "RETF UInt16":
-							this.RETF ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.RETF ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5893,42 +5894,42 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "RETN UInt16":
-							this.RETN ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.RETN ((UInt16) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "ROL":
 					switch (parameterTypes) {
 						case "ROL ByteMemory Byte":
-							this.ROL (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROL (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROL DWordMemory Byte":
-							this.ROL (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROL (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROL R16Type Byte":
-							this.ROL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROL (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROL R32Type Byte":
-							this.ROL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROL (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROL R8Type Byte":
-							this.ROL (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROL (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROL WordMemory Byte":
-							this.ROL (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROL (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -5959,38 +5960,38 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "ROR":
 					switch (parameterTypes) {
 						case "ROR ByteMemory Byte":
-							this.ROR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROR (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROR DWordMemory Byte":
-							this.ROR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROR (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROR R16Type Byte":
-							this.ROR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROR (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROR R32Type Byte":
-							this.ROR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROR (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROR R8Type Byte":
-							this.ROR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROR (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "ROR WordMemory Byte":
-							this.ROR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.ROR (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6021,7 +6022,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6032,7 +6033,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6043,38 +6044,38 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "SAL":
 					switch (parameterTypes) {
 						case "SAL ByteMemory Byte":
-							this.SAL (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAL (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAL DWordMemory Byte":
-							this.SAL (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAL (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAL R16Type Byte":
-							this.SAL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAL (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAL R32Type Byte":
-							this.SAL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAL (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAL R8Type Byte":
-							this.SAL (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAL (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAL WordMemory Byte":
-							this.SAL (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAL (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6085,7 +6086,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6116,38 +6117,38 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "SAR":
 					switch (parameterTypes) {
 						case "SAR ByteMemory Byte":
-							this.SAR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAR (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAR DWordMemory Byte":
-							this.SAR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAR (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAR R16Type Byte":
-							this.SAR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAR (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAR R32Type Byte":
-							this.SAR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAR (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAR R8Type Byte":
-							this.SAR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAR (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SAR WordMemory Byte":
-							this.SAR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SAR (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6178,14 +6179,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "SBB":
 					switch (parameterTypes) {
 						case "SBB ByteMemory Byte":
-							this.SBB (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SBB (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB ByteMemory R8Type":
@@ -6193,7 +6194,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB DWordMemory Byte":
-							this.SBB (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SBB (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB DWordMemory R32Type":
@@ -6201,11 +6202,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB DWordMemory UInt32":
-							this.SBB (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.SBB (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB R16Type Byte":
-							this.SBB (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SBB (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB R16Type R16Type":
@@ -6213,7 +6214,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB R16Type UInt16":
-							this.SBB (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.SBB (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB R16Type WordMemory":
@@ -6221,7 +6222,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB R32Type Byte":
-							this.SBB (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SBB (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB R32Type DWordMemory":
@@ -6233,11 +6234,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB R32Type UInt32":
-							this.SBB (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.SBB (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB R8Type Byte":
-							this.SBB (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SBB (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB R8Type ByteMemory":
@@ -6249,7 +6250,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB WordMemory Byte":
-							this.SBB (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SBB (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SBB WordMemory R16Type":
@@ -6257,11 +6258,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SBB WordMemory UInt16":
-							this.SBB (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.SBB (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6272,7 +6273,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6283,7 +6284,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6294,7 +6295,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6309,7 +6310,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6324,7 +6325,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6339,7 +6340,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6354,7 +6355,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6369,7 +6370,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6384,7 +6385,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6399,7 +6400,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6414,7 +6415,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6429,7 +6430,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6444,7 +6445,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6459,7 +6460,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6474,7 +6475,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6489,7 +6490,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6504,7 +6505,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6519,7 +6520,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6534,7 +6535,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6549,7 +6550,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6564,7 +6565,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6579,7 +6580,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6594,7 +6595,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6609,7 +6610,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6624,7 +6625,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6639,7 +6640,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6654,7 +6655,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6669,7 +6670,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6684,7 +6685,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6699,7 +6700,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6714,7 +6715,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6729,7 +6730,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6744,7 +6745,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6755,7 +6756,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6766,61 +6767,61 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "SHL":
 					switch (parameterTypes) {
 						case "SHL ByteMemory Byte":
-							this.SHL (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHL (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHL DWordMemory Byte":
-							this.SHL (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHL (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHL R16Type Byte":
-							this.SHL (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHL (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHL R32Type Byte":
-							this.SHL (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHL (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHL R8Type Byte":
-							this.SHL (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHL (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHL WordMemory Byte":
-							this.SHL (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHL (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "SHLD":
 					switch (parameterTypes) {
 						case "SHLD DWordMemory R32Type Byte":
-							this.SHLD (GetDWordMemory (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHLD (GetDWordMemory (operands [0]), R32.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHLD R16Type R16Type Byte":
-							this.SHLD (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHLD (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHLD R32Type R32Type Byte":
-							this.SHLD (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHLD (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHLD WordMemory R16Type Byte":
-							this.SHLD (GetWordMemory (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHLD (GetWordMemory (operands [0]), R16.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6843,7 +6844,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6874,61 +6875,61 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "SHR":
 					switch (parameterTypes) {
 						case "SHR ByteMemory Byte":
-							this.SHR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHR (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHR DWordMemory Byte":
-							this.SHR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHR (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHR R16Type Byte":
-							this.SHR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHR (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHR R32Type Byte":
-							this.SHR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHR (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHR R8Type Byte":
-							this.SHR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHR (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHR WordMemory Byte":
-							this.SHR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHR (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "SHRD":
 					switch (parameterTypes) {
 						case "SHRD DWordMemory R32Type Byte":
-							this.SHRD (GetDWordMemory (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHRD (GetDWordMemory (operands [0]), R32.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHRD R16Type R16Type Byte":
-							this.SHRD (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHRD (R16.GetByID (operands [0]), R16.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHRD R32Type R32Type Byte":
-							this.SHRD (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHRD (R32.GetByID (operands [0]), R32.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SHRD WordMemory R16Type Byte":
-							this.SHRD (GetWordMemory (operands [0]), R16.GetByID (operands [1]), (operands [2] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SHRD (GetWordMemory (operands [0]), R16.GetByID (operands [1]), (byte) (operands [2] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6951,7 +6952,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6982,7 +6983,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -6993,7 +6994,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7008,7 +7009,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7023,7 +7024,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7034,7 +7035,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7045,7 +7046,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7056,7 +7057,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7067,7 +7068,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7078,7 +7079,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7089,7 +7090,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7104,14 +7105,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "SUB":
 					switch (parameterTypes) {
 						case "SUB ByteMemory Byte":
-							this.SUB (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SUB (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB ByteMemory R8Type":
@@ -7119,7 +7120,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB DWordMemory Byte":
-							this.SUB (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SUB (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB DWordMemory R32Type":
@@ -7127,11 +7128,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB DWordMemory UInt32":
-							this.SUB (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.SUB (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB R16Type Byte":
-							this.SUB (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SUB (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB R16Type R16Type":
@@ -7139,7 +7140,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB R16Type UInt16":
-							this.SUB (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.SUB (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB R16Type WordMemory":
@@ -7147,7 +7148,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB R32Type Byte":
-							this.SUB (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SUB (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB R32Type DWordMemory":
@@ -7159,11 +7160,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB R32Type UInt32":
-							this.SUB (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.SUB (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB R8Type Byte":
-							this.SUB (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SUB (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB R8Type ByteMemory":
@@ -7175,7 +7176,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB WordMemory Byte":
-							this.SUB (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.SUB (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "SUB WordMemory R16Type":
@@ -7183,11 +7184,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "SUB WordMemory UInt16":
-							this.SUB (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.SUB (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7198,7 +7199,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7209,7 +7210,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7220,7 +7221,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7231,14 +7232,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "TEST":
 					switch (parameterTypes) {
 						case "TEST ByteMemory Byte":
-							this.TEST (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.TEST (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "TEST ByteMemory R8Type":
@@ -7250,7 +7251,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "TEST DWordMemory UInt32":
-							this.TEST (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.TEST (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "TEST R16Type R16Type":
@@ -7258,7 +7259,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "TEST R16Type UInt16":
-							this.TEST (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.TEST (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "TEST R32Type R32Type":
@@ -7266,11 +7267,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "TEST R32Type UInt32":
-							this.TEST (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.TEST (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "TEST R8Type Byte":
-							this.TEST (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.TEST (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "TEST R8Type R8Type":
@@ -7282,33 +7283,33 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "TEST WordMemory UInt16":
-							this.TEST (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.TEST (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "TIMES":
 					switch (parameterTypes) {
 						case "TIMES UInt32 Byte":
-							this.TIMES ((operands [0] as SharpOS.AOT.IR.Operands.Constant).UInt32Value, (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.TIMES ((UInt32) (operands [0] as SharpOS.AOT.IR.Operands.IntConstant).Value, (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "UTF16":
 					switch (parameterTypes) {
 						case "UTF16 String":
-							this.UTF16 ((operands[0] as SharpOS.AOT.IR.Operands.Constant).Value.ToString ());
+							this.UTF16 ((operands[0] as SharpOS.AOT.IR.Operands.StringConstant).Value.ToString ());
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7323,7 +7324,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7338,7 +7339,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7349,7 +7350,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7360,7 +7361,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7371,7 +7372,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7402,7 +7403,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7445,7 +7446,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7456,7 +7457,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
@@ -7467,14 +7468,14 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				case "XOR":
 					switch (parameterTypes) {
 						case "XOR ByteMemory Byte":
-							this.XOR (GetByteMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.XOR (GetByteMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR ByteMemory R8Type":
@@ -7482,7 +7483,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR DWordMemory Byte":
-							this.XOR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.XOR (GetDWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR DWordMemory R32Type":
@@ -7490,11 +7491,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR DWordMemory UInt32":
-							this.XOR (GetDWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.XOR (GetDWordMemory (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR R16Type Byte":
-							this.XOR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.XOR (R16.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR R16Type R16Type":
@@ -7502,7 +7503,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR R16Type UInt16":
-							this.XOR (R16.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.XOR (R16.GetByID (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR R16Type WordMemory":
@@ -7510,7 +7511,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR R32Type Byte":
-							this.XOR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.XOR (R32.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR R32Type DWordMemory":
@@ -7522,11 +7523,11 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR R32Type UInt32":
-							this.XOR (R32.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt32Value);
+							this.XOR (R32.GetByID (operands [0]), (UInt32) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR R8Type Byte":
-							this.XOR (R8.GetByID (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.XOR (R8.GetByID (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR R8Type ByteMemory":
@@ -7538,7 +7539,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR WordMemory Byte":
-							this.XOR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).ByteValue);
+							this.XOR (GetWordMemory (operands [0]), (byte) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						case "XOR WordMemory R16Type":
@@ -7546,16 +7547,16 @@ namespace SharpOS.AOT.X86 {
 							break;
 						
 						case "XOR WordMemory UInt16":
-							this.XOR (GetWordMemory (operands [0]), (operands [1] as SharpOS.AOT.IR.Operands.Constant).UInt16Value);
+							this.XOR (GetWordMemory (operands [0]), (UInt16) (operands [1] as SharpOS.AOT.IR.Operands.IntConstant).Value);
 							break;
 						
 						default:
-							throw new Exception ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
+							throw new EngineException ("'" + method.Method.Name + "(" + parameterTypes + ")' is not supported.");
 					}
 					break;
 				
 				default:
-					throw new Exception ("'" + method.Method.Name + "' is not supported.");
+					throw new EngineException ("'" + method.Method.Name + "' is not supported.");
 			}
 		}
 	}

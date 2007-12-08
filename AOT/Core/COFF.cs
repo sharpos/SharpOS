@@ -93,4 +93,11 @@ namespace SharpOS.AOT.COFF {
 		{
 		}
 	}
+
+	internal class Static : Label {
+		public Static (string name)
+			: base (name)
+		{
+		}
+	}
 }

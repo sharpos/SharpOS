@@ -13,9 +13,6 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using SharpOS.AOT.IR;
-using SharpOS.AOT.IR.Instructions;
-using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
@@ -68,7 +65,7 @@ namespace SharpOS.AOT.X86 {
 					return Seg.GS;
 
 				default:
-					throw new Exception ("Unknown Seg Register '" + value.ToString () + "'");
+					throw new EngineException ("Unknown Seg Register '" + value.ToString () + "'");
 			}
 		}
 	}

@@ -20,9 +20,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.IO;
 using SharpOS.AOT.IR;
-using SharpOS.AOT.IR.Instructions;
 using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
+using SharpOS.AOT.IR.Instructions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
@@ -97,8 +96,10 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void DumpDefUse ()
 		{
-			this.defuse.Dump (this.engine.Dump);
+//			this.defuse.Dump (this.engine.Dump);
 		}
+
+		List<Argument> arguments = new List<Argument> ();
 
 		/// <summary>
 		/// Gets an Argument object that represents the numbered method 
@@ -108,25 +109,18 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Argument GetArgument (int i)
 		{
-			Argument argument;
+			i--;
 
-			if (this.methodDefinition.HasThis) {
-				if (i == 1) {
-					argument = new Argument (i, this.methodDefinition.DeclaringType.FullName);
-					argument.SizeType = Operand.InternalSizeType.U;
+			if (i < 0)
+				throw new EngineException (string.Format ("Argument Index may not be negative. ({0})", this.MethodFullName));
 
-				} else {
-					argument = new Argument (i, this.methodDefinition.Parameters [i - 2].ParameterType.FullName);
-					argument.SizeType = this.engine.GetInternalType (argument.TypeName);
-				}
+			if (i >= this.arguments.Count)
+				throw new EngineException (string.Format ("Argument Index out of range. ({0})", this.MethodFullName));
 
-			} else {
-				argument = new Argument (i, this.methodDefinition.Parameters [i - 1].ParameterType.FullName);
-				argument.SizeType = this.engine.GetInternalType (argument.TypeName);
-			}
-
-			return argument;
+			return this.arguments [i];
 		}
+
+		List<Local> locals = new List<Local> ();
 
 		/// <summary>
 		/// Gets a local variable with the index given by <paramref name="i" />.
@@ -135,10 +129,13 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Local GetLocal (int i)
 		{
-			Local local = new Local (i, this.methodDefinition.Body.Variables [i].VariableType.FullName);
-			local.SizeType = this.engine.GetInternalType (this.methodDefinition.Body.Variables [i].VariableType.FullName);
+			if (i < 0)
+				throw new EngineException (string.Format ("Local Index may not be negative. ({0})", this.MethodFullName));
+				
+			if (i >= this.locals.Count)
+				throw new EngineException (string.Format ("Local Index out of range. ({0})", this.MethodFullName));
 
-			return local;
+			return this.locals [i];
 		}
 
 		/// <summary>
@@ -169,23 +166,30 @@ namespace SharpOS.AOT.IR {
 				offsets.Add (instruction.Offset);
 		}
 
-		private void LinkBlocks (Dictionary<int, Block> starts, Block current, Mono.Cecil.Cil.Instruction instruction)
+		private void LinkBlocks (Block current, Mono.Cecil.Cil.Instruction instruction)
 		{
 			if (instruction == null)
 				return;
 
 			int offset = instruction.Offset;
 
-			if (!starts.ContainsKey (offset))
-				throw new Exception (string.Format ("No block found starting at {1} in '{0}'.", this.MethodFullName, offset));
-
-			Block link = starts [offset];
+			Block link = GetBlockByOffset (offset);
 
 			if (!current.Outs.Contains (link))
 				current.Outs.Add (link);
 
 			if (!link.Ins.Contains (current))
 				link.Ins.Add (current);
+		}
+
+		Dictionary<int, Block> offsetToBlock = new Dictionary<int, Block> ();
+
+		public Block GetBlockByOffset (int i)
+		{
+			if (!offsetToBlock.ContainsKey (i))
+				throw new EngineException (string.Format ("No block found starting at {1} in '{0}'.", this.MethodFullName, i));
+
+			return this.offsetToBlock [i];
 		}
 
 		/// <summary>
@@ -222,7 +226,6 @@ namespace SharpOS.AOT.IR {
 			offsets.Sort ();
 
 			// Build the blocks
-			Dictionary<int, Block> starts = new Dictionary<int, Block> ();
 			int index = 0;
 			Block current = null;
 			foreach (Mono.Cecil.Cil.Instruction instruction in instructions) {
@@ -230,7 +233,7 @@ namespace SharpOS.AOT.IR {
 					current = new Block (this);
 					this.blocks.Add (current);
 
-					starts [instruction.Offset] = current;
+					offsetToBlock [instruction.Offset] = current;
 
 					index++;
 				}
@@ -243,17 +246,17 @@ namespace SharpOS.AOT.IR {
 				Mono.Cecil.Cil.Instruction instruction = block.CIL [block.CIL.Count - 1];
 
 				// this is for the conditional jump
-				LinkBlocks (starts, block, instruction.Operand as Mono.Cecil.Cil.Instruction);
+				LinkBlocks (block, instruction.Operand as Mono.Cecil.Cil.Instruction);
 
 				if (instruction.OpCode.FlowControl != FlowControl.Branch)
-					LinkBlocks (starts, block, instruction.Next);
+					LinkBlocks (block, instruction.Next);
 
 				// This is for a 'switch', which can have lots of targets
 				Mono.Cecil.Cil.Instruction [] targets = instruction.Operand as Mono.Cecil.Cil.Instruction [];
 
 				if (targets != null) {
 					foreach (Mono.Cecil.Cil.Instruction value in targets)
-						LinkBlocks (starts, block, value);
+						LinkBlocks (block, value);
 				}
 			}
 		}
@@ -289,21 +292,57 @@ namespace SharpOS.AOT.IR {
 
 			return;
 		}
+		
+		List<int> registerVersions = new List<int> ();
+
+		/// <summary>
+		/// Holds the register versions used mainly by the SSA.
+		/// </summary>
+		/// <value>The register versions.</value>
+		public List<int> RegisterVersions {
+			get {
+				return registerVersions;
+			}
+		}
 
 		/// <summary>
 		/// Converts from CIL to IR.
 		/// </summary>
 		private void ConvertFromCIL ()
 		{
+			this.registerVersions = new List<int> ();
+
+			for (int i = 0; i < this.methodDefinition.Body.MaxStack; i++)
+				this.registerVersions.Add (0);
+
 			foreach (Block block in this.Preorder ()) 
 				block.ConvertFromCIL ();
 
+			// Insert Initialize instructions to initialize the local variables
 			if (blocks.Count > 0
 					&& this.methodDefinition.Body.Variables.Count > 0) {
 				for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
 					VariableDefinition variableDefinition = this.methodDefinition.Body.Variables [this.methodDefinition.Body.Variables.Count - i - 1];
-					blocks [0].InsertInstruction (0, new Initialize (this.GetLocal (this.methodDefinition.Body.Variables.Count - i - 1), variableDefinition.VariableType.ToString ()));
+
+					Instructions.Instruction instruction = new Initialize (this.GetLocal (this.methodDefinition.Body.Variables.Count - i - 1), variableDefinition.VariableType);
+
+					blocks [0].InsertInstruction (0, instruction);
 				}
+			}
+
+			foreach (Block block in this.blocks) {
+				// If the current block is connected to more than one block
+				// and they have not the same number of entries on the stack 
+				// then throw an exception.
+				if (block.Ins.Count > 1) {
+					int stackSize = block.Ins [0].Stack.Count;
+
+					for (int i = 1; i < block.Ins.Count; i++)
+						if (block.Ins [i].Stack.Count != stackSize)
+							throw new EngineException (string.Format ("The branches of the block #{0} have not the same number of stack entries. ({1})", block.Index, this.MethodFullName));
+				}
+
+				block.EndCILConversion ();
 			}
 
 			return;
@@ -556,667 +595,24 @@ namespace SharpOS.AOT.IR {
 			return;
 		}
 
-		private class IdentifierBlocks : KeyedCollection<SharpOS.AOT.IR.Operands.Identifier, IdentifierBlocksItem> {
-			/// <summary>
-			/// Initializes a new instance of the <see cref="IdentifierBlocks"/> class.
-			/// </summary>
-			internal IdentifierBlocks () 
-				: base ()
-			{
-			}
-
-			/// <summary>
-			/// When implemented in a derived class, extracts the key from the specified element.
-			/// </summary>
-			/// <param name="item">The element from which to extract the key.</param>
-			/// <returns>The key for the specified element.</returns>
-			protected override SharpOS.AOT.IR.Operands.Identifier GetKeyForItem (IdentifierBlocksItem item)
-			{
-				return item.key;
-			}
-
-			/// <summary>
-			/// Gets the keys.
-			/// </summary>
-			/// <returns></returns>
-			internal List<SharpOS.AOT.IR.Operands.Identifier> GetKeys ()
-			{
-				List<SharpOS.AOT.IR.Operands.Identifier> values = new List<SharpOS.AOT.IR.Operands.Identifier>();
-
-				foreach (IdentifierBlocksItem item in this)
-					values.Add (item.key);
-
-				return values;
-			}
-
-			/// <summary>
-			/// Adds the variable.
-			/// </summary>
-			/// <param name="identifier">The identifier.</param>
-			/// <param name="block">The block.</param>
-			internal void AddVariable (Identifier identifier, Block block)
-			{
-				foreach (IdentifierBlocksItem item in this) {
-					if (item.key.ID.Equals (identifier.ID)) {
-						if (!item.values.Contains (block)) 
-							item.values.Add (block);
-
-						return;
-					}
-				}
-
-				List<Block> list = new List<Block> ();
-				list.Add (block);
-
-				IdentifierBlocksItem value = new IdentifierBlocksItem (identifier.Clone() as Identifier, list);
-				this.Add (value);
-
+		private void InternalPropagationLogic (Instructions.Instruction instruction)
+		{
+			if (instruction.Use == null)
 				return;
-			}
-		}
 
-		private class IdentifierBlocksItem {
-			/// <summary>
-			/// Initializes a new instance of the <see cref="IdentifierBlocksItem"/> class.
-			/// </summary>
-			/// <param name="key">The key.</param>
-			/// <param name="values">The values.</param>
-			public IdentifierBlocksItem (SharpOS.AOT.IR.Operands.Identifier key, List<Block> values)
-			{
-				this.key = key;
-				this.values = values;
-			}
+			for (int i = 0; i < instruction.Use.Length; i++) {
+				Operand operand = instruction.Use [i];
 
-			public SharpOS.AOT.IR.Operands.Identifier key;
-			public List<Block> values;
-
-			public override string ToString ()
-			{
-				return key.ToString ();
-			}
-		}
-
-		/// <summary>
-		/// Transformations to SSA.
-		/// </summary>
-		private void TransformationToSSA ()
-		{
-			IdentifierBlocks identifierList = new IdentifierBlocks ();
-
-			// Find out in which blocks every variable gets defined
-			foreach (Block block in blocks) {
-				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
-					if (!(instruction is Assign))
-						continue;
-
-					Assign assign = instruction as Assign;
-
-					List<Operand> usage = new List<Operand> ();
-					Operand definition = instruction.GetDefinitionAndUsage (usage);
-
-					if (definition != null)
-						identifierList.AddVariable (definition as Identifier, block);
-				}
-			}
-
-			this.engine.Dump.Section (DumpSection.SSATransform);
-
-			// Insert PHI
-			foreach (IdentifierBlocksItem item in identifierList) {
-				this.engine.Dump.PHI (item.key.ToString ());
-
-				List<Block> list = item.values;
-				List<Block> everProcessed = new List<Block> ();
-
-				foreach (Block block in list)
-					everProcessed.Add (block);
-
-				do {
-					Block block = list [0];
-					list.RemoveAt (0);
-
-					foreach (Block dominanceFrontier in block.DominanceFrontiers) {
-						bool found = false;
-
-						// Is the PHI for the current variable already in the block?
-						foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in dominanceFrontier) {
-							if (!(instruction is PHI))
-								break;
-
-							Assign phi = instruction as Assign;
-
-							string id = phi.Assignee.Value;
-
-							if (id.Equals (item.key.Value)) {
-								found = true;
-								break;
-							}
-						}
-
-						if (!found) {
-							Operand [] operands = new Operand [dominanceFrontier.Ins.Count];
-
-							for (int i = 0; i < operands.Length; i++)
-								operands [i] = item.key.Clone ();
-
-							PHI phi = new PHI (item.key.Clone () as Identifier, new Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.InternalList), operands));
-
-							dominanceFrontier.InsertInstruction (0, phi);
-
-							if (!everProcessed.Contains (dominanceFrontier)) {
-								everProcessed.Add (dominanceFrontier);
-								list.Add (dominanceFrontier);
-							}
-						}
-					}
-
-				} while (list.Count > 0);
-			}
-
-			this.engine.Dump.PopElement ();
-
-			// Rename the Variables
-			foreach (Block block in blocks) {
-				Dictionary<string, int> count = new Dictionary<string, int> ();
-				Dictionary<string, Stack<int>> stack = new Dictionary<string, Stack<int>> ();
-
-				foreach (IdentifierBlocksItem item in identifierList) {
-					count [item.key.Value] = 0;
-					stack [item.key.Value] = new Stack<int> ();
-					stack [item.key.Value].Push (0);
-				}
-
-				this.SSARename (this.blocks [0], count, stack);
-			}
-
-			return;
-		}
-
-		/// <summary>
-		/// Sets the identifier's version.
-		/// </summary>
-		/// <param name="stack">The stack.</param>
-		/// <param name="identifier">The identifier.</param>
-		private static void SetVersion (Dictionary < string, Stack < int >> stack, Identifier identifier)
-		{
-			if (!stack.ContainsKey (identifier.Value))
-				identifier.Version = 0;
-			else
-				identifier.Version = stack [identifier.Value].Peek ();
-		}
-
-		/// <summary>
-		/// SSAs the rename.
-		/// </summary>
-		/// <param name="block">The block.</param>
-		/// <param name="count">The count.</param>
-		/// <param name="stack">The stack.</param>
-		private void SSARename (Block block, Dictionary<string, int> count, Dictionary<string, Stack<int>> stack)
-		{
-			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
-				List<Operand> usage = new List<Operand> ();
-				Operand definition = instruction.GetDefinitionAndUsage (usage);
-
-				// Update the Operands of the instruction (A = B -> A = B5)
-				if (!(instruction is PHI)) {
-					foreach (Operand operand in usage)
-						SetVersion (stack, operand as Identifier);
-				}
-
-				// Update the Definition of a variaable (e.g. A = ... -> A3 = ...)
-				if (definition != null) {
-					string id = (definition as Identifier).Value;
-
-					count [id]++;
-					stack [id].Push (count [id]);
-
-					definition.Version = count [id];
-				}
-			}
-
-			// Now update the PHI of the successors
-			foreach (Block successor in block.Outs) {
-				int j = 0;
-				bool found = false;
-
-				// Find the position of the link to the successor in the successor itself
-				foreach (Block predecessor in successor.Ins) {
-					if (predecessor == block) {
-						found = true;
-						break;
-					}
-
-					j++;
-				}
-
-				if (!found)
-					throw new Exception ("Could not find the successor position.");
-
-				// The update the PHI Values
-				foreach (Instructions.Instruction instruction in successor) {
-					if (!(instruction is PHI))
-						break;
-
-					PHI phi = instruction as PHI;
-
-					phi.Value.Operands [j].Version = stack [(phi as Assign).Assignee.Value].Peek ();
-				}
-			}
-
-			// Descend in the Dominator Tree and do the "SSA Thing"
-			foreach (Block child in block.ImmediateDominatorOf)
-				this.SSARename (child, count, stack);
-
-			// Pull from the stack the variable versions of the current block
-			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
-				if (!(instruction is Assign))
-					continue;
-
-				List<Operand> usage = new List<Operand> ();
-				Operand definition = instruction.GetDefinitionAndUsage (usage);
-
-				if (definition != null)
-					stack [(definition as Identifier).Value].Pop ();
-			}
-
-			return;
-		}
-
-		private class DefUse : KeyedCollection<string, DefUseItem> {
-			/// <summary>
-			/// Initializes a new instance of the <see cref="DefUse"/> class.
-			/// </summary>
-			public DefUse () 
-				: base ()
-			{
-			}
-
-			/// <summary>
-			/// When implemented in a derived class, extracts the key from the specified element.
-			/// </summary>
-			/// <param name="item">The element from which to extract the key.</param>
-			/// <returns>The key for the specified element.</returns>
-			protected override string GetKeyForItem (DefUseItem item)
-			{
-				return item.key;
-			}
-
-			/// <summary>
-			/// Gets the keys.
-			/// </summary>
-			/// <returns></returns>
-			public List<string> GetKeys ()
-			{
-				List<string> values = new List<string>();
-
-				foreach (DefUseItem item in this)
-					values.Add (item.key);
-
-				return values;
-			}
-
-			/// <summary>
-			/// Gets the item.
-			/// </summary>
-			/// <param name="key">The key.</param>
-			/// <returns></returns>
-			private DefUseItem GetItem (string key)
-			{
-				if (!this.Contains (key))
-					this.Add (new DefUseItem (key));
-
-				return this [key];
-			}
-
-			/// <summary>
-			/// Sets the definition.
-			/// </summary>
-			/// <param name="key">The key.</param>
-			/// <param name="value">The value.</param>
-			public void SetDefinition (string key, Instructions.Instruction value)
-			{
-				this.SetDefinition (key, value, false);
-			}
-
-			/// <summary>
-			/// Sets the definition.
-			/// </summary>
-			/// <param name="key">The key.</param>
-			/// <param name="value">The value.</param>
-			/// <param name="force">if set to <c>true</c> no checks are performed.</param>
-			public void SetDefinition (string key, Instructions.Instruction value, bool force)
-			{
-				this.GetItem (key).SetDefinition (value, force);
-			}
-
-			/// <summary>
-			/// Adds the usage.
-			/// </summary>
-			/// <param name="key">The key.</param>
-			/// <param name="value">The value.</param>
-			public void AddUsage (string key, Instructions.Instruction value)
-			{
-				this.GetItem (key).AddUsage (value);
-			}
-
-			/// <summary>
-			/// Removes the usage.
-			/// </summary>
-			/// <param name="key">The key.</param>
-			/// <param name="value">The value.</param>
-			public void RemoveUsage (string key, Instructions.Instruction value)
-			{
-				this.GetItem (key).RemoveUsage (value);
-			}
-
-			/// <summary>
-			/// Dumps the specified dump processor.
-			/// </summary>
-			/// <param name="dumpProcessor">The dump processor.</param>
-			public void Dump (DumpProcessor dumpProcessor)
-			{
-				dumpProcessor.Section (DumpSection.DefineUse);
-
-				foreach (DefUseItem item in this)
-					dumpProcessor.Element (item);
-
-				dumpProcessor.PopElement ();
-			}
-
-			/// <summary>
-			/// Validates this instance.
-			/// </summary>
-			public void Validate ()
-			{
-				foreach (DefUseItem item in this)
-					item.Validate ();
-			}
-		}
-
-		public class DefUseItem : IEnumerable<SharpOS.AOT.IR.Instructions.Instruction> {
-			public string key;
-			Instructions.Instruction definition = null;
-			List<Instructions.Instruction> usage = new List<Instructions.Instruction> ();
-
-			/// <summary>
-			/// Gets the definition of the current key.
-			/// </summary>
-			/// <value>The definition.</value>
-			public Instructions.Instruction Definition {
-				get {
-					return this.definition;
-				}
-			}
-
-			/// <summary>
-			/// Gets the number of instructions where the current key is being used.
-			/// </summary>
-			/// <value>The count.</value>
-			public int Count {
-				get {
-					return this.usage.Count;
-				}
-			}
-
-			/// <summary>
-			/// Initializes a new instance of the <see cref="DefUseItem"/> class.
-			/// </summary>
-			/// <param name="key">The key.</param>
-			/// <param name="values">The values.</param>
-			public DefUseItem (string key)
-			{
-				this.key = key;
-			}
-
-			/// <summary>
-			/// Sets the definition.
-			/// </summary>
-			/// <param name="value">The value.</param>
-			public void SetDefinition (Instructions.Instruction value)
-			{
-				this.SetDefinition (value, false);
-			}
-
-			/// <summary>
-			/// Sets the definition.
-			/// </summary>
-			/// <param name="value">The value.</param>
-			/// <param name="force">if set to <c>true</c> no checks are performed.</param>
-			public void SetDefinition (Instructions.Instruction value, bool force)
-			{
-				if (force)
-					this.definition = value;
-				else if (this.definition == null)
-					this.definition = value;
-
-				else if (!(value is Instructions.System))
-					throw new Exception ("'" + value + "' is defined again.");
-			}
-
-			/// <summary>
-			/// Adds the instruction.
-			/// </summary>
-			/// <param name="instruction">The instruction.</param>
-			public void AddUsage (Instructions.Instruction instruction)
-			{
-				if (!this.usage.Contains (instruction))
-					this.usage.Add (instruction);
+				Register register = operand as Register;
 				
-				// TODO else log?
-			}
+				if (register != null) {
+					if (register.Parent == null)
+						throw new EngineException (string.Format ("Instruction '{0}' can't be processed by the Internal Propagation. ({1})", instruction, this.MethodFullName));
 
-			/// <summary>
-			/// Removes the instruction.
-			/// </summary>
-			/// <param name="instruction">The instruction.</param>
-			public void RemoveUsage (Instructions.Instruction instruction)
-			{
-				if (this.usage.Contains (instruction))
-					this.usage.Remove (instruction);
+					register.Parent.Ignore = true;
 
-				// TODO else log?
-			}
-
-			/// <summary>
-			/// Returns an enumerator that iterates through the collection.
-			/// </summary>
-			/// <returns>
-			/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
-			/// </returns>
-			IEnumerator<SharpOS.AOT.IR.Instructions.Instruction> IEnumerable<SharpOS.AOT.IR.Instructions.Instruction>.GetEnumerator ()
-			{
-				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.usage)
-					yield return instruction;
-			}
-
-			/// <summary>
-			/// Returns an enumerator that iterates through a collection.
-			/// </summary>
-			/// <returns>
-			/// An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
-			/// </returns>
-			IEnumerator IEnumerable.GetEnumerator ()
-			{
-				return ((IEnumerable<SharpOS.AOT.IR.Instructions.Instruction>) this).GetEnumerator ();
-			}
-
-			/// <summary>
-			/// Validates this instance.
-			/// </summary>
-			public void Validate ()
-			{
-				if (this.definition.Removed)
-					throw new Exception ("The definition '" + this.definition.ToString () + "' should not be in the def-use list anymore.");
-
-				foreach (Instructions.Instruction instruction in this.usage)
-					if (this.definition.Removed)
-						throw new Exception ("The instruction '" + this.definition.ToString () + "' should not be in the usage list anymore.");
-			}
-
-			public bool SkipCopyPropagation (Engine engine) 
-			{
-				// ... if it is no assign instruction
-				if (!(definition is Assign))
-					return true;
-
-				// ... if it is an initialization of a varible
-				if (definition is Initialize)
-					return true;
-
-				// ... if it is not used by any other instruction
-				if (this.Count == 0)
-					return true;
-
-
-				Assign assign = definition as Assign;
-
-				// ... if it is a conversion
-				if (assign.Value.ConvertTo != SharpOS.AOT.IR.Operands.Operand.ConvertType.NotSet)
-					return true;
-
-				// ... if it is a reference or address
-				if (assign.Value is Indirect)
-					return true;
-
-				// ... if it is a field
-				if (assign.Value is Field)
-					return true;
-				
-				// ... else 
-				if (assign.Assignee is Identifier
-						&& assign.Value is Identifier)
-					return false;
-
-				return true;
-			}
-
-			public override string ToString ()
-			{
-				return this.definition.ToString ();
-			}
-		}
-
-		DefUse defuse;
-
-		/// <summary>
-		/// The first entry in every list of each variable is the definition instruction,
-		/// the others are the instructions that use the variable.
-		/// </summary>
-		private void GetListOfDefUse ()
-		{
-			defuse = new DefUse ();
-
-			foreach (Block block in this.blocks) {
-				foreach (Instructions.Instruction instruction in block) {
-					List<Operand> usage = new List<Operand> ();
-
-					Operand definition = instruction.GetDefinitionAndUsage (usage);
-
-					if (definition != null)
-						defuse.SetDefinition (definition.ID, instruction);
-
-					foreach (Operand operand in usage) {
-						if (operand.Version == 0) {
-							Instructions.System argument = new Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Argument)));
-
-							argument.Block = this.blocks [0];
-
-							defuse.SetDefinition (operand.ID, argument);
-						}
-
-						defuse.AddUsage (operand.ID, instruction);
-					}
+					InternalPropagationLogic (register.Parent);
 				}
-			}
-
-			int stamp = 0;
-
-			foreach (DefUseItem item in defuse) {
-				string key = item.key;
-
-				if (item.Definition == null)
-					throw new Exception ("Def statement for '" + key + "' in '" + this.MethodFullName + "' not found.");
-
-				Assign definition = item.Definition as Assign;
-
-				if (definition == null)
-					continue;
-
-				definition.Assignee.Stamp = stamp++;
-
-				foreach (Instructions.Instruction instruction in item)
-					instruction.ReplaceOperand (definition.Assignee.ID, definition.Assignee, null);
-			}
-
-			if (this.engine.Options.Dump)
-				DumpDefUse ();
-
-			return;
-		}
-
-		private void InternalPropagationLogic (List<Instructions.Instruction> remove, Instructions.Instruction call, Operands.Call operand)
-		{
-			for (int i = 0; i < operand.Operands.Length; i++) {
-				Operand parameter = operand.Operands [i];
-				Assign assign = null;
-				Instructions.Instruction instruction = call;
-
-				DefUseItem item = null;
-
-				do {
-					if (!this.defuse.Contains (parameter.ID))
-						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", parameter.ID));
-
-					item = this.defuse [parameter.ID];
-
-					// Remove it from the usage list
-					item.RemoveUsage (instruction);
-
-					if (item.Count > 0) {
-						// Removing any references in a PHI
-						foreach (Instructions.Instruction entry in item) {
-							if (!(entry is PHI))
-								throw new Exception ("Propagation Core failed.");
-						
-							PHI phi = entry as PHI;
-
-							foreach (Operand phiOperand in phi.Value.Operands) {
-								if (phiOperand.ID == parameter.ID)
-									continue;
-
-								this.defuse.Remove (phiOperand.ID);
-							}
-
-							remove.Add (entry);
-						}
-					}
-
-					this.defuse.Remove (parameter.ID);
-
-					instruction = item.Definition;
-
-					remove.Add (instruction);
-
-					assign = instruction as Assign;
-
-					parameter = assign.Value;
-				}
-				while (parameter is Register);
-
-				operand.Operands [i] = parameter;
-
-				if (parameter is Operands.Address) {
-					Operands.Address address = parameter as Operands.Address;
-
-					if (!this.defuse.Contains (address.Value.ID))
-						throw new Exception (string.Format ("Could not find the defuse key '{0}'.", address.Value.ID));
-
-					item = this.defuse [address.Value.ID];
-
-					// Add it to the new item's usage list
-					item.AddUsage (call);
-				}
-
 			}
 		}
 
@@ -1232,34 +628,17 @@ namespace SharpOS.AOT.IR {
 				foreach (Instructions.Instruction instruction in block) {
 					if (instruction is Instructions.Call) {
 						Instructions.Call call = (instruction as Instructions.Call);
-						Operands.Call operand = call.Value as Operands.Call;
 
-						if (engine.HasSharpOSAttribute (operand))
-							this.InternalPropagationLogic (remove, instruction, operand);
-
-						else if (engine.Assembly.IsInstruction (call.Method.Method.DeclaringType.FullName))
-							this.InternalPropagationLogic (remove, instruction, operand);
-
-					} else if (instruction is Instructions.Assign) {
-						Instructions.Assign assign = instruction as Instructions.Assign;
-
-						if (!(assign.Value is Operands.Call))
+						if (!engine.HasSharpOSAttribute (call)
+								&& !engine.Assembly.IsInstruction (call.Method.DeclaringType.FullName))
 							continue;
 
-						Operands.Call operand = assign.Value as Operands.Call;
-						
-						if (engine.HasSharpOSAttribute (operand))
-							this.InternalPropagationLogic (remove, instruction, operand);
+						instruction.IsSpecialCase = true;
 
-						else if (engine.Assembly.IsInstruction (operand.Method.DeclaringType.FullName))
-							this.InternalPropagationLogic (remove, instruction, operand);
-
-					}
+						this.InternalPropagationLogic (instruction);
+					} 
 				}
 			}
-
-			foreach (Instructions.Instruction instruction in remove)
-				instruction.Block.RemoveInstruction (instruction);
 
 			return;
 		}
@@ -1273,7 +652,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void Optimizations ()
 		{
-			List<string> keys = this.defuse.GetKeys ();
+/*			List<string> keys = this.defuse.GetKeys ();
 
 			this.engine.Dump.Section (DumpSection.Optimizations);
 
@@ -1469,27 +848,27 @@ namespace SharpOS.AOT.IR {
 					// TODO implement all the other operators
 					if (binary.Type == Operator.BinaryType.Mul) {
 						// TODO implement the other combinations
-						if (constant1.SizeType == Operand.InternalSizeType.I4
-								&& constant2.SizeType == Operand.InternalSizeType.I4) {
+						if (constant1.SizeType == InternalType.I4
+								&& constant2.SizeType == InternalType.I4) {
 
 							changed = true;
 
-							int value = Convert.ToInt32 (constant1.Value) * Convert.ToInt32 (constant2.Value);
+							int value = System.Convert.ToInt32 (constant1.Value) * System.Convert.ToInt32 (constant2.Value);
 
 							definition.Value = new Constant (value);
-							definition.Value.SizeType = Operand.InternalSizeType.I4;
+							definition.Value.SizeType = InternalType.I4;
 						}
 					} else if (binary.Type == Operator.BinaryType.Sub) {
 						// TODO implement the other combinations
-						if (constant1.SizeType == Operand.InternalSizeType.I4
-								&& constant2.SizeType == Operand.InternalSizeType.I4) {
+						if (constant1.SizeType == InternalType.I4
+								&& constant2.SizeType == InternalType.I4) {
 
 							changed = true;
 
-							int value = Convert.ToInt32 (constant1.Value) - Convert.ToInt32 (constant2.Value);
+							int value = System.Convert.ToInt32 (constant1.Value) - System.Convert.ToInt32 (constant2.Value);
 
 							definition.Value = new Constant (value);
-							definition.Value.SizeType = Operand.InternalSizeType.I4;
+							definition.Value.SizeType = InternalType.I4;
 						}
 					}
 
@@ -1530,7 +909,7 @@ namespace SharpOS.AOT.IR {
 			}
 
 			this.engine.Dump.PopElement ();	// section: const-propagation
-
+			*/
 			return;
 		}
 
@@ -1578,137 +957,12 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// If a block that has many predecessors is linked to a block that has many successors
-		/// then an empty edge is inserted. Its used later for the transformation out of SSA.
-		/// </summary>
-		public void EdgeSplit ()
-		{
-			foreach (Block block in Preorder ()) {
-				if (block.Ins.Count <= 1)
-					continue;
-
-				for (int i = 0; i < block.Ins.Count; i++) {
-					Block predecessor = block.Ins [i];
-
-					if (predecessor.Outs.Count <= 1)
-						continue;
-
-					int position = 0;
-
-					for (; position < predecessor.Outs.Count && predecessor.Outs [position] != block; position++)
-						;
-
-					if (position == predecessor.Outs.Count)
-						throw new Exception ("In '" + this.MethodFullName + "' Block " + predecessor.Index + " is not linked to the Block " + block.Index + ".");
-
-					Block split = new Block ();
-
-					split.SSABlock = true;
-					split.Index = this.blocks [this.blocks.Count - 1].Index + 1;
-					split.InsertInstruction (0, new Jump ());
-					split.Ins.Add (predecessor);
-					split.Outs.Add (block);
-
-					predecessor.Outs [position] = split;
-					block.Ins [i] = split;
-
-					this.blocks.Add (split);
-				}
-			}
-		}
-
-		/// <summary>
 		/// Transformation out of SSA
 		/// </summary>
 		private void TransformationOutOfSSA()
 		{
-			foreach (Block block in this.blocks) {
-
-				List<Instructions.Instruction> remove = new List<SharpOS.AOT.IR.Instructions.Instruction>();
-
-				List<Instructions.PHI> phiList = new List<SharpOS.AOT.IR.Instructions.PHI> ();
-
-				foreach (Instructions.Instruction instruction in block) {
-					if (!(instruction is PHI))
-						break;
-
-					PHI phi = instruction as PHI;
-
-					phiList.Add (phi);
-				}
-
-				foreach (Instructions.PHI phi in phiList) {
-					for (int i = 0; i < block.Ins.Count; i++) {
-						Block predecessor = block.Ins[i];
-
-						// Skip uninitilized register assignments (Reg1_5=Reg2_0)
-						if (phi.Value.Operands[i] is Register
-								&& (phi.Value.Operands[i] as Register).Version == 0) {
-							continue;
-						}
-
-						Assign assign = new Assign (phi.Assignee, phi.Value.Operands[i]);
-
-						int position = predecessor.InstructionsCount;
-
-						if (predecessor.InstructionsCount > 0
-								&& predecessor[predecessor.InstructionsCount - 1] is Jump) {
-							position--;
-						}
-
-						predecessor.InsertInstruction (position, assign);
-
-						remove.Add (phi);
-					}
-				}
-
-				foreach (Instructions.Instruction instruction in remove)
-					block.RemoveInstruction (instruction);
-			}
-
-			// Remove the empty blocks inserted by the SSA
-			List<Block> removeBlocks = new List<Block> ();
-
-			foreach (Block block in this.blocks) {
-				if (block.SSABlock
-						&& block.Ins.Count == 1
-						&& block.InstructionsCount == 1) {
-
-					removeBlocks.Add (block);
-
-					Block _in = block.Ins [0];
-					Block _out = block.Outs [0];
-
-					bool found = false;
-
-					for (int i = 0; i < _in.Outs.Count; i++) {
-						if (_in.Outs [i] == block) {
-							found = true;
-							_in.Outs [i] = _out;
-							break;
-						}
-					}
-
-					if (!found)
-						throw new Exception ("Missing In-Block in '" + this.MethodFullName + "'.");
-
-					found = false;
-
-					for (int i = 0; i < _out.Ins.Count; i++) {
-						if (_out.Ins [i] == block) {
-							found = true;
-							_out.Ins [i] = _in;
-							break;
-						}
-					}
-
-					if (!found)
-						throw new Exception ("Missing Out-Block in '" + this.MethodFullName + "'.");
-				}
-			}
-
-			foreach (Block block in removeBlocks)
-				this.blocks.Remove (block);
+			foreach (Block block in this.blocks)
+				block.TransformationOutOfSSA ();
 		}
 
 		public class LiveRange : IComparable {
@@ -1769,13 +1023,13 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
-			private Operand identifier = null;
+			private Identifier identifier = null;
 
 			/// <summary>
 			/// Gets or sets the identifier.
 			/// </summary>
 			/// <value>The identifier.</value>
-			public Operand Identifier {
+			public Identifier Identifier {
 				get {
 					return identifier;
 				}
@@ -1903,6 +1157,42 @@ namespace SharpOS.AOT.IR {
 
 		private List<LiveRange> liveRanges;
 
+		private void AddKeyLiveRange (Dictionary<string, LiveRange> values, Instructions.Instruction instruction, Operand operand)
+		{
+			if (operand is Register) {
+				Register register = operand as Register;
+
+				if (register.Parent.Ignore)
+					return;
+			}
+
+			if (operand is Argument)
+				return;
+
+			Identifier identifier = operand as Identifier;
+
+			if (identifier == null)
+				return;
+
+			if (identifier is Register
+					&& (identifier as Register).PHI != null) {
+				do {
+					identifier = (identifier as Register).PHI;
+				} while ((identifier as Register).PHI != null);
+			}
+
+			string id = identifier.ID;
+
+			if (!values.ContainsKey (id)) {
+				LiveRange liveRange = new LiveRange (id, instruction);
+				liveRange.Identifier = identifier;
+
+				values [id] = liveRange;
+
+			} else
+				values [id].End = instruction;
+		}
+
 		/// <summary>
 		/// Computes the live ranges.
 		/// </summary>
@@ -1917,30 +1207,13 @@ namespace SharpOS.AOT.IR {
 				foreach (Instructions.Instruction instruction in block) {
 					instruction.Index = index++;
 
-					Operand.OperandVisitor visitor = delegate (bool assignee, int level, object parent, Operand operand) {
-						// The argument needs no register as it is on the stack
-						if (operand is Argument)
-							return;
+					if (!instruction.Ignore)
+						AddKeyLiveRange (values, instruction, instruction.Def);
 
-						Identifier identifier = (operand as Identifier);
-
-						if (parent is Address)
-							identifier.ForceSpill = true;
-
-						string id = identifier.ID;
-
-						if (!values.ContainsKey (id)) {
-							LiveRange liveRange = new LiveRange (id, instruction);
-							liveRange.Identifier = identifier;
-
-							values [id] = liveRange;
-
-						} else
-							values [id].End = instruction;
-
-					};
-
-					instruction.VisitOperand (visitor);
+					if (instruction.Use != null) {
+						foreach (Operand operand in instruction.Use)
+							AddKeyLiveRange (values, instruction, operand);
+					}
 				}
 			}
 
@@ -1965,7 +1238,7 @@ namespace SharpOS.AOT.IR {
 			// No identifier gets a register allocated only a position on the stack.
 			foreach (LiveRange entry in this.liveRanges)
 				(entry.Identifier as Identifier).ForceSpill = true;
-		}
+ 		}
 
 		/// <summary>
 		/// Sets the next stack position.
@@ -1973,11 +1246,11 @@ namespace SharpOS.AOT.IR {
 		/// <param name="identifier">The identifier.</param>
 		private void SetNextStackPosition (Identifier identifier)
 		{
-			if (identifier.SizeType == Operand.InternalSizeType.ValueType)
-				this.stackSize += this.engine.GetTypeSize (identifier.TypeName, 4) >> 2;
+			if (identifier.InternalType == InternalType.ValueType)
+				this.stackSize += this.engine.GetTypeSize (identifier.Type.ToString (), 4) >> 2;
 
 			else
-				this.stackSize += this.engine.GetTypeSize (identifier.SizeType, 4) >> 2;
+				this.stackSize += this.engine.GetTypeSize (identifier.InternalType, 4) >> 2;
 
 			identifier.Stack = this.stackSize;
 		}
@@ -1997,7 +1270,7 @@ namespace SharpOS.AOT.IR {
 				ExpireOldIntervals (active, registers, this.liveRanges [i]);
 
 				if ((this.liveRanges [i].Identifier as Identifier).ForceSpill
-						|| this.engine.Assembly.Spill (this.liveRanges [i].Identifier.SizeType))
+						|| this.engine.Assembly.Spill (this.liveRanges [i].Identifier.InternalType))
 					SetNextStackPosition (this.liveRanges [i].Identifier as Identifier);
 
 				else {
@@ -2029,6 +1302,9 @@ namespace SharpOS.AOT.IR {
 			}
 			#endregion
 
+			foreach (Block block in this.blocks)
+				block.UpdateRegisterAndStackValues ();
+
 			return;
 		}
 
@@ -2054,6 +1330,7 @@ namespace SharpOS.AOT.IR {
 
 				active.Remove (value);
 			}
+
 		}
 
 		/// <summary>
@@ -2080,93 +1357,9 @@ namespace SharpOS.AOT.IR {
 
 			} else
 				SetNextStackPosition (liveRange.Identifier as Identifier);
+ 
 		}
 
-		/// <summary>
-		/// Computes the type of the size.
-		/// </summary>
-		private void ComputeSizeType ()
-		{
-			int unsolvedCounter = 0;
-			int lastUnsolvedCounter = 0;
-
-			do {
-				lastUnsolvedCounter = unsolvedCounter;
-				unsolvedCounter = 0;
-
-				foreach (Block block in this.ReversePostorder()) {
-					foreach (Instructions.Instruction instruction in block) {
-						if (!(instruction is Assign)) 
-							continue;
-
-						Assign assign = instruction as Assign;
-
-						if (assign.Assignee.SizeType != Operand.InternalSizeType.NotSet)
-							continue;
-
-						bool found = false;
-
-						if (assign.Value.ConvertTo != Operand.ConvertType.NotSet) {
-							found = true;
-							assign.Assignee.SizeType = assign.Value.ConvertSizeType;
-
-						} else if (assign.Value.SizeType != Operand.InternalSizeType.NotSet) {
-							found = true;
-							assign.Assignee.SizeType = assign.Value.SizeType;
-
-						} else if (assign.Value is Operands.Call) {
-							found = true;
-							Operands.Call call = assign.Value as Operands.Call;
-							assign.Assignee.SizeType = this.engine.GetInternalType (call.Method.ReturnType.ReturnType.FullName);
-
-						} else if (assign.Value is Operands.Boolean) {
-							found = true;
-							assign.Assignee.SizeType = Operand.InternalSizeType.I;
-
-						} else if (assign.Value is Operands.Field) {
-							found = true;
-							Field field = assign.Value as Operands.Field;
-							assign.Assignee.SizeType = this.engine.GetInternalType (field.ID);
-
-						} else if (assign.Value is Operands.Constant) {
-							found = true;
-							
-							if ((assign.Value as Operands.Constant).Value is string)
-								assign.Assignee.SizeType = Operand.InternalSizeType.S;
-
-						} else if (assign.Value.Operands.Length > 0) {
-							foreach (Operand operand in assign.Value.Operands) {
-								if (operand.ConvertTo != Operand.ConvertType.NotSet) {
-									found = true;
-									assign.Assignee.SizeType = operand.ConvertSizeType;
-									break;
-
-								} else if (operand.SizeType != Operand.InternalSizeType.NotSet) {
-									found = true;
-									assign.Assignee.SizeType = operand.SizeType;
-									break;
-								}
-							}
-						}
-
-						if (assign.Assignee is Identifier
-								&& (assign.Assignee as Identifier).TypeName == null
-								&& assign.Value is Identifier
-								&& (assign.Value as Identifier).TypeName != null)
-							(assign.Assignee as Identifier).TypeName = (assign.Value as Identifier).TypeName;
-
-						if (!found)
-							unsolvedCounter++;
-					}
-				}
-
-				if (unsolvedCounter != 0 && lastUnsolvedCounter == unsolvedCounter)
-					throw new Exception ("Could not compute variable sizes in '" + this.MethodFullName + "'.");
-
-			} while (unsolvedCounter != 0);
-
-			return;
-		}
 
 		/// <summary>
 		/// Dumps a representation of the blocks that comprise this method
@@ -2192,7 +1385,39 @@ namespace SharpOS.AOT.IR {
 				p.PopElement ();
 			}
 		}
-		
+
+		private void PreProcess ()
+		{
+			for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
+				TypeReference typeReference = this.methodDefinition.Body.Variables [i].VariableType;
+
+				Local local = new Local (i, typeReference);
+				local.InternalType = this.Engine.GetInternalType (typeReference.ToString ());
+
+				this.locals.Add (local);
+			}
+
+			if (this.methodDefinition.HasThis) {
+				TypeReference typeReference = this.methodDefinition.DeclaringType;
+
+				Argument argument = new Argument (0, typeReference);
+				argument.InternalType = InternalType.M; // this.engine.GetInternalType (typeReference.ToString ());
+
+				this.arguments.Add (argument);
+			}
+
+			int delta = this.arguments.Count;
+
+			for (int i = 0; i < this.methodDefinition.Parameters.Count; i++) {
+				TypeReference typeReference = this.methodDefinition.Parameters [i].ParameterType;
+
+				Argument argument = new Argument (delta + i, typeReference);
+				argument.InternalType = this.engine.GetInternalType (typeReference.ToString ());
+
+				this.arguments.Add (argument);
+			}
+		}
+
 		/// <summary>
 		/// Processes this instance.
 		/// </summary>
@@ -2204,58 +1429,46 @@ namespace SharpOS.AOT.IR {
 			if (this.methodDefinition.Body == null)
 				return;
 
+			this.PreProcess ();
+
 			this.BuildBlocks ();
 
 			this.BlocksOptimization ();
+
 			this.ConvertFromCIL ();
 			
 			if (this.engine.Options.DumpVerbosity >= 3)
 				this.DumpBlocks ();
 			
-			this.Dominators ();
+			/*this.Dominators ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
 				this.DumpBlocks ();
-
-			this.TransformationToSSA ();
-			this.EdgeSplit ();
-
-			if (this.engine.Options.DumpVerbosity >= 3)
-				this.DumpBlocks ();
-
-			this.GetListOfDefUse ();
-
-			if (this.engine.Options.DumpVerbosity >= 3)
-				this.DumpBlocks ();
+			*/
 
 			this.InternalPropagation ();
-
-			if (this.engine.Options.DumpVerbosity >= 4)
-				this.DumpDefUse ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
 				this.DumpBlocks ();
 
 			/*this.Optimizations ();
 				
-			if (this.engine.Options.DumpVerbosity >= 4)
-				DumpDefUse ();
-
 			if (this.engine.Options.DumpVerbosity >= 3)
 				DumpBlocks ();
-
-			this.GetListOfDefUse ();*/
+			*/
 
 			this.TransformationOutOfSSA ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
 				this.DumpBlocks ();
 			
-			this.ComputeSizeType ();
+			
 			this.ComputeLiveRanges ();
+
 			this.LinearScanRegisterAllocation ();
 
-			this.DumpBlocks();
+			if (this.engine.Options.DumpVerbosity >= 3)
+				this.DumpBlocks ();
 
 			if (this.engine.Options.Dump)
 				this.engine.Dump.PopElement();	// method

@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOS.AOT.Core", "Core\SharpOS.AOT.Core.csproj", "{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SharpOS.AOT", "Main\SharpOS.AOT.csproj", "{5AADA544-40FE-11DC-8314-0800200C9A66}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug Test|Any CPU = Debug Test|Any CPU
+		Debug|Any CPU = Debug|Any CPU
+		Release Test|Any CPU = Release Test|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}.Debug Test|Any CPU.ActiveCfg = Debug Test|Any CPU
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}.Debug Test|Any CPU.Build.0 = Debug Test|Any CPU
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}.Release Test|Any CPU.ActiveCfg = Release Test|Any CPU
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}.Release Test|Any CPU.Build.0 = Release Test|Any CPU
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5AADA544-40FE-11DC-8314-0800200C9A66}.Debug Test|Any CPU.ActiveCfg = Debug Test|Any CPU
+		{5AADA544-40FE-11DC-8314-0800200C9A66}.Debug Test|Any CPU.Build.0 = Debug Test|Any CPU
+		{5AADA544-40FE-11DC-8314-0800200C9A66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5AADA544-40FE-11DC-8314-0800200C9A66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5AADA544-40FE-11DC-8314-0800200C9A66}.Release Test|Any CPU.ActiveCfg = Release Test|Any CPU
+		{5AADA544-40FE-11DC-8314-0800200C9A66}.Release Test|Any CPU.Build.0 = Release Test|Any CPU
+		{5AADA544-40FE-11DC-8314-0800200C9A66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5AADA544-40FE-11DC-8314-0800200C9A66}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

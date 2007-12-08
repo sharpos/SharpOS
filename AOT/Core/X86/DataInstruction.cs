@@ -13,9 +13,6 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using SharpOS.AOT.IR;
-using SharpOS.AOT.IR.Instructions;
-using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
@@ -63,7 +60,7 @@ namespace SharpOS.AOT.X86 {
 				binaryWriter.Write ((UInt32) this.Value);
 
 			} else
-				throw new Exception ("Wrong data type.");
+				throw new EngineException ("Wrong data type.");
 
 			return true;
 		}

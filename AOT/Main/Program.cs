@@ -38,9 +38,6 @@ namespace SharpOS.AOT {
 		[GetOpts.Option("The binary output (when -image is present)", "bin-out")]
 		public string BinaryFilename = null;
 		
-		[GetOpts.Option("Output a bootable image", 'i', "image")]
-		public bool CreateImage = false;
-		
 		[GetOpts.Option("Choose the platform to compile", 'c', "cpu")]
 		public string CPU = "X86";
 		
@@ -128,88 +125,6 @@ namespace SharpOS.AOT {
 	}
 	
 	public class Compiler {
-		static void CreateImage (Engine engine, Options opts)
-		{
-			string tmpScript = System.IO.Path.GetTempFileName();
-			string interp = null;
-			Stream stm = null;
-			
-			engine.Message(1, "Creating filesystem image `{0}'...",
-				opts.ImageFilename);
-			
-			if (Environment.OSVersion.Platform == PlatformID.Unix) {
-				// Linux/UNIX style system
-				engine.Message(1, " - Chose UNIX/Linux filesystem creator");
-				
-				File.Move(tmpScript, tmpScript + ".sh");
-				tmpScript += ".sh";
-				interp = "bash";
-				stm = System.Reflection.Assembly.GetCallingAssembly().
-					GetManifestResourceStream("ImageBuilder.sh");
-			} else {
-				// Assume Windows for the time being. (UNTESTED)
-				engine.Message(1, " - Chose Win32 filesystem creator");
-				
-				File.Move(tmpScript, tmpScript + ".bat");
-				tmpScript += ".bat";
-				interp = tmpScript;
-				stm = System.Reflection.Assembly.GetCallingAssembly().
-					GetManifestResourceStream("ImageBuilder.bat");	
-			}
-			
-			using (StreamReader sr = new StreamReader(stm)) {
-				using (StreamWriter sw = new StreamWriter(tmpScript)) {
-					sw.Write(sr.ReadToEnd ());
-				}
-			}
-			
-			{
-				// Write the template image from resources to our output image.
-				
-				Stream templImg = System.Reflection.Assembly.GetCallingAssembly().
-					GetManifestResourceStream("Template.img");
-				Stream imageFile = File.Open(opts.ImageFilename, FileMode.Create,
-								FileAccess.Write);
-				byte[] buffer = new byte[4096];
-				int len = 0;
-				
-				while ((len = templImg.Read(buffer, 0, 4096)) != 0)
-					imageFile.Write(buffer, 0, len);
-				
-				templImg.Close();
-				imageFile.Close();
-			}
-			
-			stm.Close ();
-			
-			// TODO: set executable status before running
-
-			string param;
-			if (tmpScript != interp) 
-				param = string.Format("\"{0}\" \"{1}\" \"{2}\"",
-					tmpScript, opts.BinaryFilename,
-					opts.ImageFilename);
-			else
-				param = string.Format("\"{0}\" \"{1}\"",
-					opts.BinaryFilename,
-					opts.ImageFilename);
-
-			engine.Message(1, "Start process (" + interp + " " + param + ")");
-			Process p = Process.Start(interp, param);
-
-			p.WaitForExit ();
-
-			if (p.ExitCode != 0)
-				throw new EngineException (string.Format (
-							   "Failed to generate image `{0}'",
-							   opts.ImageFilename));
-
-			File.Delete (tmpScript);
-
-			if (opts.TempOutput)
-				File.Delete (opts.BinaryFilename);
-		}
-
 		static int Main (string [] args)
 		{
 			Options opts = new Options (args);
@@ -244,9 +159,6 @@ namespace SharpOS.AOT {
 			if (opts.OutputFilename == null) {
 				string suffix = "bin";
 
-				if (opts.CreateImage)
-					suffix = "img";
-				
 				if (opts.Assemblies [0].EndsWith (".dll"))
 					opts.OutputFilename = opts.Assemblies [0].Substring (0,
 						opts.Assemblies [0].LastIndexOf ('.'))
@@ -255,24 +167,14 @@ namespace SharpOS.AOT {
 					opts.OutputFilename = opts.Assemblies [0] + ".bin";
 			}
 
-			if (opts.CreateImage) {
-				opts.ImageFilename = opts.OutputFilename;
-				if (opts.BinaryFilename == null) {
-					opts.BinaryFilename = Path.GetTempFileName ();
-					opts.TempOutput = true;
-				}
-			} else
-				opts.BinaryFilename = opts.OutputFilename;
+			opts.BinaryFilename = opts.OutputFilename;
 
 #if !BYPASS_CATCH
 			try {
 #endif
 				engine = new Engine (opts.GetEngineOptions ());
 				engine.Run ();
-
-				if (opts.CreateImage)
-					CreateImage (engine, opts);
-
+				
 #if !BYPASS_CATCH				
 			} catch (Exception e) {
 				AssemblyDefinition assembly;

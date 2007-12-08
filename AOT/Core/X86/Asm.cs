@@ -9,6 +9,7 @@
 //
 
 using System;
+using SharpOS.AOT.IR;
 
 namespace SharpOS.AOT.X86 {
 	/// <summary>

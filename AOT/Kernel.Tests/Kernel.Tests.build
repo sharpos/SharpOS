@@ -63,7 +63,7 @@
 
 		<echo message="AOT compiling testcases..." />
 		<exec program="${path::combine (prefix, 'sharpos-aot.exe')}" 
-		  commandline="-v -o:${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')} ${path::combine(prefix, 'SharpOS.korlib.dll')}" />
+		  commandline="-v -o:${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')} ${path::combine(prefix, 'korlib.dll')}" />
 		<copy file="../../Data/DiskImages/TemplateDisk.img" tofile="${path::combine(common-dir, 'SharpOS.img')}" />
 		<exec program="${path::combine (prefix, 'disk-image-updater.exe')}"
 		  commandline="-i ${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />

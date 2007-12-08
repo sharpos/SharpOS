@@ -13,9 +13,6 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using SharpOS.AOT.IR;
-using SharpOS.AOT.IR.Instructions;
-using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
@@ -71,24 +68,13 @@ namespace SharpOS.AOT.X86 {
 
 		public static string GetName (object value)
 		{
-			string result;
-
+			if (value is IR.Operands.Field)
+				return (value as IR.Operands.Field).Type.Name;
+			
 			if (value is System.String)
-				result = value as System.String;
-
-			else if (value is SharpOS.AOT.IR.Operands.Identifier)
-				result = (value as SharpOS.AOT.IR.Operands.Identifier).Value.ToString();
-	
-			else
-				throw new Exception ("'" + value.ToString() + "' is not supported.");
-
-			if (result.IndexOf ("::") != -1)
-				result = result.Substring (result.IndexOf ("::") + 2);
-
-			if (result.ToLower ().Equals ("null"))
-				return null;
-
-			return result;
+				return value as System.String;
+		
+			throw new EngineException (string.Format ("Could not get the register name from '{0}'", value.ToString ()));
 		}
 	}
 }

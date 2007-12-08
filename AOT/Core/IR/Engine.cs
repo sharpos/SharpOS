@@ -20,7 +20,6 @@ using System.IO;
 using SharpOS.AOT.IR;
 using SharpOS.AOT.IR.Instructions;
 using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using AOTAttr = SharpOS.AOT.Attributes;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -396,7 +395,7 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		internal bool HasSharpOSAttribute (SharpOS.AOT.IR.Operands.Call call)
+		internal bool HasSharpOSAttribute (SharpOS.AOT.IR.Instructions.Call call)
 		{
 			if (!(call.Method is MethodDefinition)
 					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
@@ -616,7 +615,7 @@ namespace SharpOS.AOT.IR {
 				
 				foreach (Method _method in _class) {
 					if (defNames.Contains (_method.MethodDefinition.ToString ()))
-						throw new Exception ("Already compiled this method: " + 
+						throw new EngineException ("Already compiled this method: " + 
 							_method.MethodDefinition.ToString ());
 					defNames.Add (_method.MethodDefinition.ToString ());
 					this.currentMethod = _method.MethodDefinition;
@@ -706,16 +705,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the size of the object.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <returns></returns>
-		/*public int GetObjectSize (string type)
-		{
-			return this.GetTypeSize (type, 4);
-		}*/
-
-		/// <summary>
 		/// Gets the size of the type.
 		/// </summary>
 		/// <param name="type">The type.</param>
@@ -724,53 +713,54 @@ namespace SharpOS.AOT.IR {
 		public int GetTypeSize (object type, int align)
 		{
 			int result = 0;
-			Operands.Operand.InternalSizeType sizeType;
+			Operands.InternalType sizeType;
 
-			if (type is Operand.InternalSizeType)
-				sizeType = (Operands.Operand.InternalSizeType) type;
+			if (type is InternalType)
+				sizeType = (Operands.InternalType) type;
 
 			else if (type is string)
 				sizeType = GetInternalType (type as string);
 
 			else
-				throw new Exception (string.Format ("'{0}' is not supported.", type.GetType ().ToString ()));
+				throw new EngineException (string.Format ("'{0}' is not supported.", type.GetType ().ToString ()));
 
 			switch (sizeType) {
-				case Operand.InternalSizeType.I1:
-				case Operand.InternalSizeType.U1:
+				case InternalType.I1:
+				case InternalType.U1:
 					result = 1;
 					break;
 
-				case Operand.InternalSizeType.I2:
-				case Operand.InternalSizeType.U2:
+				case InternalType.I2:
+				case InternalType.U2:
 					result = 2;
 					break;
 
-				case Operand.InternalSizeType.I4:
-				case Operand.InternalSizeType.U4:
+				case InternalType.I4:
+				case InternalType.U4:
 					result = 4;
 					break;
 
-				case Operand.InternalSizeType.I:
-				case Operand.InternalSizeType.U:
-				case Operand.InternalSizeType.S:
+				case InternalType.I:
+				case InternalType.U:
+				case InternalType.O:
+				case InternalType.M:
 					result = this.asm.IntSize;
 					break;
 
-				case Operand.InternalSizeType.I8:
-				case Operand.InternalSizeType.U8:
+				case InternalType.I8:
+				case InternalType.U8:
 					result = 8;
 					break;
 
-				case Operand.InternalSizeType.R4:
+				case InternalType.R4:
 					result = 4;
 					break;
 
-				case Operand.InternalSizeType.R8:
+				case InternalType.R8:
 					result = 8;
 					break;
 
-				case Operand.InternalSizeType.ValueType:
+				case InternalType.ValueType:
 					foreach (Class _class in this.classes) {
 						if (_class.ClassDefinition.FullName.Equals (type)) {
 							if (_class.ClassDefinition.IsEnum) {
@@ -780,6 +770,8 @@ namespace SharpOS.AOT.IR {
 										break;
 									}
 								}
+
+								break;
 
 							} else if (_class.ClassDefinition.IsValueType) {
 								if ((_class.ClassDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
@@ -793,6 +785,8 @@ namespace SharpOS.AOT.IR {
 											result = value;
 									}
 
+									break;
+
 								} else {
 									foreach (FieldReference field in _class.ClassDefinition.Fields) {
 										if ((field as FieldDefinition).IsStatic)
@@ -800,6 +794,8 @@ namespace SharpOS.AOT.IR {
 
 										result += this.GetFieldSize (field.FieldType.FullName);
 									}
+
+									break;
 								}
 
 							} else
@@ -811,7 +807,7 @@ namespace SharpOS.AOT.IR {
 			}
 
 			if (result == 0)
-				throw new Exception ("'" + type + "' not supported.");
+				throw new EngineException ("'" + type + "' not supported.");
 
 			if (align != 0 && result % align != 0)
 				result = ((result / align) + 1) * align;
@@ -820,7 +816,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets a <see cref="Operands.Operand.InternalSizeType" /> that 
+		/// Gets a <see cref="Operands.InternalType" /> that 
 		/// represents the type <paramref name="type" />.
 		/// </summary>
 		/// <param name="type">
@@ -829,75 +825,76 @@ namespace SharpOS.AOT.IR {
 		/// `System.Int16', `System.Boolean').
 		/// </param>
 		/// <returns></returns>
-		public Operands.Operand.InternalSizeType GetInternalType (string type)
+		public Operands.InternalType GetInternalType (string type)
 		{
 			if (type.EndsWith ("*"))
-				return Operands.Operand.InternalSizeType.U;
+				return Operands.InternalType.U;
 			else if (type.EndsWith ("&"))
-				return Operands.Operand.InternalSizeType.U;
+				return Operands.InternalType.U;
 			else if (type.EndsWith ("[]"))
-				return Operands.Operand.InternalSizeType.U;
+				return Operands.InternalType.U;
 
 			else if (type.Equals ("void"))
-				return Operands.Operand.InternalSizeType.NotSet;
+				return Operands.InternalType.NotSet;
 			else if (type.Equals ("System.Void"))
-				return Operands.Operand.InternalSizeType.NotSet;
+				return Operands.InternalType.NotSet;
 			
 			else if (type.Equals ("System.Boolean"))
-				return Operands.Operand.InternalSizeType.U1;
+				return Operands.InternalType.U1;
 			else if (type.Equals ("bool"))
-				return Operands.Operand.InternalSizeType.U1;
+				return Operands.InternalType.U1;
 
 			else if (type.Equals ("System.Byte"))
-				return Operands.Operand.InternalSizeType.U1;
+				return Operands.InternalType.U1;
 			else if (type.Equals ("System.SByte"))
-				return Operands.Operand.InternalSizeType.I1;
+				return Operands.InternalType.I1;
 
 			else if (type.Equals ("char"))
-				return Operands.Operand.InternalSizeType.U2;
+				return Operands.InternalType.U2;
 			else if (type.Equals ("System.Char"))
-				return Operands.Operand.InternalSizeType.U2;
+				return Operands.InternalType.U2;
 			else if (type.Equals ("short"))
-				return Operands.Operand.InternalSizeType.I2;
+				return Operands.InternalType.I2;
 			else if (type.Equals ("ushort"))
-				return Operands.Operand.InternalSizeType.U2;
+				return Operands.InternalType.U2;
 			else if (type.Equals ("System.UInt16"))
-				return Operands.Operand.InternalSizeType.U2;
+				return Operands.InternalType.U2;
 			else if (type.Equals ("System.Int16"))
-				return Operands.Operand.InternalSizeType.I2;
+				return Operands.InternalType.I2;
 
 			else if (type.Equals ("int"))
-				return Operands.Operand.InternalSizeType.I4;
+				return Operands.InternalType.I4;
 			else if (type.Equals ("uint"))
-				return Operands.Operand.InternalSizeType.U4;
+				return Operands.InternalType.U4;
 			else if (type.Equals ("System.UInt32"))
-				return Operands.Operand.InternalSizeType.U4;
+				return Operands.InternalType.U4;
 			else if (type.Equals ("System.Int32"))
-				return Operands.Operand.InternalSizeType.I4;
+				return Operands.InternalType.I4;
 
 			else if (type.Equals ("long"))
-				return Operands.Operand.InternalSizeType.I8;
+				return Operands.InternalType.I8;
 			else if (type.Equals ("ulong"))
-				return Operands.Operand.InternalSizeType.U8;
+				return Operands.InternalType.U8;
 			else if (type.Equals ("System.UInt64"))
-				return Operands.Operand.InternalSizeType.U8;
+				return Operands.InternalType.U8;
 			else if (type.Equals ("System.Int64"))
-				return Operands.Operand.InternalSizeType.I8;
+				return Operands.InternalType.I8;
 
 			else if (type.Equals ("float"))
-				return Operands.Operand.InternalSizeType.R4;
+				return Operands.InternalType.R4;
 			else if (type.Equals ("System.Single"))
-				return Operands.Operand.InternalSizeType.R4;
+				return Operands.InternalType.R4;
 
 			else if (type.Equals ("double"))
-				return Operands.Operand.InternalSizeType.R8;
+				return Operands.InternalType.R8;
 			else if (type.Equals ("System.Double"))
-				return Operands.Operand.InternalSizeType.R8;
+				return Operands.InternalType.R8;
 
 			else if (type.Equals ("string"))
-				return Operands.Operand.InternalSizeType.U;
+				return Operands.InternalType.O;
 			else if (type.Equals ("System.String"))
-				return Operands.Operand.InternalSizeType.U;
+				return Operands.InternalType.O;
+
 			else if (this.Assembly != null && this.Assembly.IsRegister (type))
 				return this.Assembly.GetRegisterSizeType (type);
 
@@ -923,15 +920,18 @@ namespace SharpOS.AOT.IR {
 									return this.GetInternalType (field.FieldType.FullName);
 							}
 
-						} else
-							return Operands.Operand.InternalSizeType.ValueType;
+						} else if (_class.ClassDefinition.IsValueType)
+							return Operands.InternalType.ValueType;
+						
+						else if (_class.ClassDefinition.IsClass)
+							return Operands.InternalType.O;
 					}
 				}
 			}
 
 			Console.Error.WriteLine ("WARNING: '" + type + "' not supported.");
 			
-			return Operand.InternalSizeType.NotSet;
+			return InternalType.NotSet;
 		}
 	}
 }

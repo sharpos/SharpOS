@@ -13,9 +13,6 @@ using System.IO;
 using System.Text;
 using System.Collections.Generic;
 using SharpOS.AOT.IR;
-using SharpOS.AOT.IR.Instructions;
-using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
@@ -28,13 +25,13 @@ namespace SharpOS.AOT.X86 {
 		private void Check32Values ()
 		{
 			if ( (index == R32.ESP && scale > 0) || (index == R32.ESP && scale == 0 && _base == R32.ESP))
-				throw new Exception ("ESP can't be used as index.");
+				throw new EngineException ("ESP can't be used as index.");
 
-			if (scale > 3) 
-				throw new Exception ("The Scale can be 0, 1, 2 or 3.");
+			if (scale > 3)
+				throw new EngineException ("The Scale can be 0, 1, 2 or 3.");
 
 			if (_base == null && index == null && !this.displacementSet)
-				throw new Exception ("No valid 32bit address.");
+				throw new EngineException ("No valid 32bit address.");
 		}
 
 		/// <summary>
@@ -44,16 +41,16 @@ namespace SharpOS.AOT.X86 {
 		{
 			if (_base != null) {
 				if (_base != R16.BX && _base != R16.BP && _base != R16.SI && _base != R16.DI)
-					throw new Exception ("16bit Register '" + _base.Name + "' is not allowed.");
+					throw new EngineException ("16bit Register '" + _base.Name + "' is not allowed.");
 
 				if (index != null && index != R16.SI && index != R16.DI)
-					throw new Exception ("16bit Register '" + index.Name + "' is not allowed.");
+					throw new EngineException ("16bit Register '" + index.Name + "' is not allowed.");
 					
 			} else if (index != null)
-				throw new Exception ("16bit Index Register is defined and the Base Register is missing.");
+				throw new EngineException ("16bit Index Register is defined and the Base Register is missing.");
 
 			if (_base == null && index == null && !displacementSet)
-				throw new Exception ("No valid 16bit address.");
+				throw new EngineException ("No valid 16bit address.");
 		}
 
 		/// <summary>
@@ -136,6 +133,23 @@ namespace SharpOS.AOT.X86 {
 			this.Displacement = displacement;
 
 			Check32Values ();
+		}
+
+		public Memory (Memory memory)
+		{
+			displacement = memory.displacement;
+			displacementSet = memory.displacementSet;
+
+
+			bits32Address = memory.bits32Address;
+			scale = memory.scale;
+			index = memory.index;
+			_base = memory._base;
+
+			reference = memory.reference;
+
+
+			segment = memory.segment;
 		}
 
 		/// <summary>
@@ -231,7 +245,7 @@ namespace SharpOS.AOT.X86 {
 			byte value = (byte) (spareRegister * 8);
 
 			if (bits32 != this.bits32Address && (this._base != null || this.index != null))
-				throw new Exception ("Wrong kind of address. (16bit/32bit mix not allowed)");
+				throw new EngineException ("Wrong kind of address. (16bit/32bit mix not allowed)");
 
 			if (bits32) {
 				R32Type _base = (R32Type) this._base, index = (R32Type) this.index;

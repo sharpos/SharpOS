@@ -12,10 +12,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using SharpOS.AOT.IR;
-using SharpOS.AOT.IR.Instructions;
-using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
@@ -86,6 +82,14 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="index">The index.</param>
 		public TWordMemory (SegType segment, R16Type _base, R16Type index)
 			: base (segment, _base, index)
+		{
+		}
+
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TWordMemory"/> class.
+		/// </summary>
+		/// <param name="memory">The memory.</param>
+		public TWordMemory (Memory memory): base (memory)
 		{
 		}
 	}

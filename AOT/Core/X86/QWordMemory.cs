@@ -12,10 +12,6 @@ using System;
 using System.IO;
 using System.Text;
 using System.Collections.Generic;
-using SharpOS.AOT.IR;
-using SharpOS.AOT.IR.Instructions;
-using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
@@ -89,5 +85,12 @@ namespace SharpOS.AOT.X86 {
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="QWordMemory"/> class.
+		/// </summary>
+		/// <param name="memory">The memory.</param>
+		public QWordMemory (Memory memory): base (memory)
+		{
+		}
 	}
 }

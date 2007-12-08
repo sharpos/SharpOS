@@ -16,7 +16,6 @@ using System.Collections.Generic;
 using System.Text;
 using SharpOS.AOT.IR;
 using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using SharpOS.AOT.IR.Instructions;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
@@ -31,18 +30,6 @@ namespace SharpOS.AOT.IR {
 			TwoWay,
 			NWay,
 			Fall
-		}
-
-		private int stack = 0;
-
-		/// <summary>
-		/// Gets the stack.
-		/// </summary>
-		/// <value>The stack.</value>
-		public int Stack {
-			get {
-				return stack;
-			}
 		}
 
 		private Method method = null;
@@ -300,121 +287,41 @@ namespace SharpOS.AOT.IR {
 		/// <param name="visitor">The visitor.</param>
 		public void Visit (BlockVisitor visitor)
 		{
-			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.instructions) 
+			// TODO
+			/*foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.instructions) 
 				instruction.VisitBlock (visitor);
 
-			visitor (this);
+			visitor (this);*/
 		}
 
-		/// <summary>
-		/// Gets the stack delta.
-		/// </summary>
-		/// <param name="instruction">The instruction.</param>
-		/// <returns></returns>
-		private int GetStackDelta (Mono.Cecil.Cil.Instruction instruction)
-		{
-			int result = 0;
+		Stack<Register> stack = new Stack<Register> ();
 
-			switch (instruction.OpCode.StackBehaviourPop) {
-				case StackBehaviour.PopAll:
-					result = -this.stack;
-					break;
-
-				case StackBehaviour.Pop0:
-					break;
-
-				case StackBehaviour.Pop1:
-				case StackBehaviour.Popi:
-				case StackBehaviour.Popref:
-					result--;
-					break;
-
-				case StackBehaviour.Pop1_pop1:
-				case StackBehaviour.Popi_pop1:
-				case StackBehaviour.Popi_popi:
-				case StackBehaviour.Popi_popi8:
-				case StackBehaviour.Popi_popr4:
-				case StackBehaviour.Popi_popr8:
-				case StackBehaviour.Popref_pop1:
-				case StackBehaviour.Popref_popi:
-					result -= 2;
-					break;
-
-				case StackBehaviour.Popi_popi_popi:
-				case StackBehaviour.Popref_popi_popi:
-				case StackBehaviour.Popref_popi_popi8:
-				case StackBehaviour.Popref_popi_popr4:
-				case StackBehaviour.Popref_popi_popr8:
-				case StackBehaviour.Popref_popi_popref:
-					result -= 3;
-					break;
-
-				case StackBehaviour.Varpop:
-					if (instruction.OpCode.Value == OpCodes.Ret.Value) {
-						if (this.method.MethodDefinition.ReturnType.ReturnType.FullName != Constants.Void)
-							result--;
-
-					} else if (instruction.OpCode.FlowControl == FlowControl.Call) {
-						Mono.Cecil.MethodReference calledMethod = instruction.Operand as Mono.Cecil.MethodReference;
-
-						result -= calledMethod.Parameters.Count;
-
-						if (calledMethod.HasThis && instruction.OpCode.Value != OpCodes.Newobj.Value)
-							result--;
-					}
-					break;
-
-				default:
-					throw new Exception ("Not implemented.");
+		public Stack<Register> Stack {
+			get {
+				return stack;
 			}
-
-			switch (instruction.OpCode.StackBehaviourPush) {
-				case StackBehaviour.Push0:
-					break;
-
-				case StackBehaviour.Push1:
-				case StackBehaviour.Pushi:
-				case StackBehaviour.Pushi8:
-				case StackBehaviour.Pushr4:
-				case StackBehaviour.Pushr8:
-				case StackBehaviour.Pushref:
-					result++;
-					break;
-
-				case StackBehaviour.Push1_push1:
-					result += 2;
-					break;
-
-				case StackBehaviour.Varpush:
-					if (instruction.OpCode.FlowControl == FlowControl.Call) {
-						Mono.Cecil.MethodReference calledMethod = instruction.Operand as Mono.Cecil.MethodReference;
-
-						if (calledMethod.ReturnType.ReturnType.FullName != Constants.Void)
-							result++;
-					}
-
-					break;
-				default:
-					throw new Exception ("Not implemented.");
-			}
-
-			return result;
 		}
 
-		private Register SetRegister (int value)
+		private Register SetRegister ()
 		{
-			if (value < 0)
-				throw new Exception ("The register number may not be negative. ('" + this.method.MethodFullName + "')");
+			if (this.stack.Count > this.method.MethodDefinition.Body.MaxStack)
+				throw new EngineException ("Stack overflow. ('" + this.method.MethodFullName + "')");
 
-			return new Register (value);
+			Register register = new Register (this.stack.Count);
+
+			register.Version = ++this.method.RegisterVersions [this.stack.Count];
+
+			this.stack.Push (register);
+
+			return register;
 		}
 
-		private Register GetRegister (int value)
+		private Register GetRegister ()
 		{
-			if (value < 0)
-				throw new Exception ("The register number may not be negative. ('" + this.method.MethodFullName + "')");
+			if (this.stack.Count == 0)
+				throw new EngineException ("Stack underflow. ('" + this.method.MethodFullName + "')");
 
-			return new Register (value);
+			return this.stack.Pop ();
 		}
 
 		private Argument GetArgument (int value)
@@ -442,7 +349,8 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void ConvertFromCIL ()
 		{
-			this.stack = 0;
+			this.instructions = new List<SharpOS.AOT.IR.Instructions.Instruction> ();
+
 			bool found = false;
 
 			// We get the number of stack values from one of the blocks that has been processed and lead to the current one.
@@ -450,1694 +358,114 @@ namespace SharpOS.AOT.IR {
 				if (_in.converted) {
 					found = true;
 
-					this.stack = _in.stack;
+					for (int i = 0; i < _in.stack.Count; i++) {
+						Register [] operands = new Register [this.ins.Count];
+						
+						Register result = this.SetRegister ();
+
+						PHI phi = new PHI (result, operands);
+
+						this.instructions.Add (phi);
+					}
 				}
 
-			if (!found && this.ins.Count > 0)
-				throw new Exception ("The conversion from CIL in '" + this.method.MethodFullName + "' for block #'" + this.index + "' failed.");
+			// Throw an error if none of the blocks that lead to this one has been previously processed
+			if (!found && this.ins.Count > 0 && this.index > 0)
+				throw new EngineException ("The conversion from CIL in '" + this.method.MethodFullName + "' for block #'" + this.index + "' failed.");
 
-			this.instructions = new List <SharpOS.AOT.IR.Instructions.Instruction> ();
-
+/*			
 			// Catch
 			if (this.method.MethodDefinition.Body.ExceptionHandlers.Count > 0 && this.cil.Count > 0) {
 				foreach (ExceptionHandler exceptionHandler in this.method.MethodDefinition.Body.ExceptionHandlers) {
 					if (exceptionHandler.CatchType != null
 							&& exceptionHandler.HandlerStart == this.cil[0]) {
-						this.AddInstruction (new Assign (this.SetRegister (stack++), new ExceptionValue()));
+						this.AddInstruction (new Assign (this.SetRegister (this.stack.Count++), new ExceptionValue()));
 						break;
 					}
 				}
 			}
-
+*/
 			foreach (Mono.Cecil.Cil.Instruction cilInstruction in this.cil) {
+				int oldState = this.stack.Count;
 
-				SharpOS.AOT.IR.Instructions.Instruction instruction = null;
-#if true
-#if true
-				instruction = Block.ilDispatcher [(int) cilInstruction.OpCode.Code](this, cilInstruction);
-#else
-				switch (cilInstruction.OpCode.Code)
-				{
-					case Code.Nop:
-						instruction = this.Nop(cilInstruction);
-						break;
+				Instructions.Instruction instruction = Block.ilDispatcher [(int) cilInstruction.OpCode.Code](this, cilInstruction);
 
-					case Code.Break:
-						instruction = this.Break(cilInstruction);
-						break;
-
-					case Code.Ldarg_0:
-						instruction = this.Ldarg_0(cilInstruction);
-						break;
-
-					case Code.Ldarg_1:
-						instruction = this.Ldarg_1(cilInstruction);
-						break;
-
-					case Code.Ldarg_2:
-						instruction = this.Ldarg_2(cilInstruction);
-						break;
-
-					case Code.Ldarg_3:
-						instruction = this.Ldarg_3(cilInstruction);
-						break;
-
-					case Code.Ldloc_0:
-						instruction = this.Ldloc_0(cilInstruction);
-						break;
-
-					case Code.Ldloc_1:
-						instruction = this.Ldloc_1(cilInstruction);
-						break;
-
-					case Code.Ldloc_2:
-						instruction = this.Ldloc_2(cilInstruction);
-						break;
-
-					case Code.Ldloc_3:
-						instruction = this.Ldloc_3(cilInstruction);
-						break;
-
-					case Code.Stloc_0:
-						instruction = this.Stloc_0(cilInstruction);
-						break;
-
-					case Code.Stloc_1:
-						instruction = this.Stloc_1(cilInstruction);
-						break;
-
-					case Code.Stloc_2:
-						instruction = this.Stloc_2(cilInstruction);
-						break;
-
-					case Code.Stloc_3:
-						instruction = this.Stloc_3(cilInstruction);
-						break;
-
-					case Code.Ldarg_S:
-						instruction = this.Ldarg_S(cilInstruction);
-						break;
-
-					case Code.Ldarga_S:
-						instruction = this.Ldarga_S(cilInstruction);
-						break;
-
-					case Code.Starg_S:
-						instruction = this.Starg_S(cilInstruction);
-						break;
-
-					case Code.Ldloc_S:
-						instruction = this.Ldloc_S(cilInstruction);
-						break;
-
-					case Code.Ldloca_S:
-						instruction = this.Ldloca_S(cilInstruction);
-						break;
-
-					case Code.Stloc_S:
-						instruction = this.Stloc_S(cilInstruction);
-						break;
-
-					case Code.Ldnull:
-						instruction = this.Ldnull(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_M1:
-						instruction = this.Ldc_I4_M1(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_0:
-						instruction = this.Ldc_I4_0(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_1:
-						instruction = this.Ldc_I4_1(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_2:
-						instruction = this.Ldc_I4_2(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_3:
-						instruction = this.Ldc_I4_3(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_4:
-						instruction = this.Ldc_I4_4(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_5:
-						instruction = this.Ldc_I4_5(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_6:
-						instruction = this.Ldc_I4_6(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_7:
-						instruction = this.Ldc_I4_7(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_8:
-						instruction = this.Ldc_I4_8(cilInstruction);
-						break;
-
-					case Code.Ldc_I4_S:
-						instruction = this.Ldc_I4_S(cilInstruction);
-						break;
-
-					case Code.Ldc_I4:
-						instruction = this.Ldc_I4(cilInstruction);
-						break;
-
-					case Code.Ldc_I8:
-						instruction = this.Ldc_I8(cilInstruction);
-						break;
-
-					case Code.Ldc_R4:
-						instruction = this.Ldc_R4(cilInstruction);
-						break;
-
-					case Code.Ldc_R8:
-						instruction = this.Ldc_R8(cilInstruction);
-						break;
-
-					case Code.Dup:
-						instruction = this.Dup(cilInstruction);
-						break;
-
-					case Code.Pop:
-						instruction = this.Pop(cilInstruction);
-						break;
-
-					case Code.Jmp:
-						instruction = this.Jmp(cilInstruction);
-						break;
-
-					case Code.Call:
-						instruction = this.Call(cilInstruction);
-						break;
-
-					case Code.Calli:
-						instruction = this.Calli(cilInstruction);
-						break;
-
-					case Code.Ret:
-						instruction = this.Ret(cilInstruction);
-						break;
-
-					case Code.Br_S:
-						instruction = this.Br_S(cilInstruction);
-						break;
-
-					case Code.Brfalse_S:
-						instruction = this.Brfalse_S(cilInstruction);
-						break;
-
-					case Code.Brtrue_S:
-						instruction = this.Brtrue_S(cilInstruction);
-						break;
-
-					case Code.Beq_S:
-						instruction = this.Beq_S(cilInstruction);
-						break;
-
-					case Code.Bge_S:
-						instruction = this.Bge_S(cilInstruction);
-						break;
-
-					case Code.Bgt_S:
-						instruction = this.Bgt_S(cilInstruction);
-						break;
-
-					case Code.Ble_S:
-						instruction = this.Ble_S(cilInstruction);
-						break;
-
-					case Code.Blt_S:
-						instruction = this.Blt_S(cilInstruction);
-						break;
-
-					case Code.Bne_Un_S:
-						instruction = this.Bne_Un_S(cilInstruction);
-						break;
-
-					case Code.Bge_Un_S:
-						instruction = this.Bge_Un_S(cilInstruction);
-						break;
-
-					case Code.Bgt_Un_S:
-						instruction = this.Bgt_Un_S(cilInstruction);
-						break;
-
-					case Code.Ble_Un_S:
-						instruction = this.Ble_Un_S(cilInstruction);
-						break;
-
-					case Code.Blt_Un_S:
-						instruction = this.Blt_Un_S(cilInstruction);
-						break;
-
-					case Code.Br:
-						instruction = this.Br(cilInstruction);
-						break;
-
-					case Code.Brfalse:
-						instruction = this.Brfalse(cilInstruction);
-						break;
-
-					case Code.Brtrue:
-						instruction = this.Brtrue(cilInstruction);
-						break;
-
-					case Code.Beq:
-						instruction = this.Beq(cilInstruction);
-						break;
-
-					case Code.Bge:
-						instruction = this.Bge(cilInstruction);
-						break;
-
-					case Code.Bgt:
-						instruction = this.Bgt(cilInstruction);
-						break;
-
-					case Code.Ble:
-						instruction = this.Ble(cilInstruction);
-						break;
-
-					case Code.Blt:
-						instruction = this.Blt(cilInstruction);
-						break;
-
-					case Code.Bne_Un:
-						instruction = this.Bne_Un(cilInstruction);
-						break;
-
-					case Code.Bge_Un:
-						instruction = this.Bge_Un(cilInstruction);
-						break;
-
-					case Code.Bgt_Un:
-						instruction = this.Bgt_Un(cilInstruction);
-						break;
-
-					case Code.Ble_Un:
-						instruction = this.Ble_Un(cilInstruction);
-						break;
-
-					case Code.Blt_Un:
-						instruction = this.Blt_Un(cilInstruction);
-						break;
-
-					case Code.Switch:
-						instruction = this.Switch(cilInstruction);
-						break;
-
-					case Code.Ldind_I1:
-						instruction = this.Ldind_I1(cilInstruction);
-						break;
-
-					case Code.Ldind_U1:
-						instruction = this.Ldind_U1(cilInstruction);
-						break;
-
-					case Code.Ldind_I2:
-						instruction = this.Ldind_I2(cilInstruction);
-						break;
-
-					case Code.Ldind_U2:
-						instruction = this.Ldind_U2(cilInstruction);
-						break;
-
-					case Code.Ldind_I4:
-						instruction = this.Ldind_I4(cilInstruction);
-						break;
-
-					case Code.Ldind_U4:
-						instruction = this.Ldind_U4(cilInstruction);
-						break;
-
-					case Code.Ldind_I8:
-						instruction = this.Ldind_I8(cilInstruction);
-						break;
-
-					case Code.Ldind_I:
-						instruction = this.Ldind_I(cilInstruction);
-						break;
-
-					case Code.Ldind_R4:
-						instruction = this.Ldind_R4(cilInstruction);
-						break;
-
-					case Code.Ldind_R8:
-						instruction = this.Ldind_R8(cilInstruction);
-						break;
-
-					case Code.Ldind_Ref:
-						instruction = this.Ldind_Ref(cilInstruction);
-						break;
-
-					case Code.Stind_Ref:
-						instruction = this.Stind_Ref(cilInstruction);
-						break;
-
-					case Code.Stind_I1:
-						instruction = this.Stind_I1(cilInstruction);
-						break;
-
-					case Code.Stind_I2:
-						instruction = this.Stind_I2(cilInstruction);
-						break;
-
-					case Code.Stind_I4:
-						instruction = this.Stind_I4(cilInstruction);
-						break;
-
-					case Code.Stind_I8:
-						instruction = this.Stind_I8(cilInstruction);
-						break;
-
-					case Code.Stind_R4:
-						instruction = this.Stind_R4(cilInstruction);
-						break;
-
-					case Code.Stind_R8:
-						instruction = this.Stind_R8(cilInstruction);
-						break;
-
-					case Code.Add:
-						instruction = this.Add(cilInstruction);
-						break;
-
-					case Code.Sub:
-						instruction = this.Sub(cilInstruction);
-						break;
-
-					case Code.Mul:
-						instruction = this.Mul(cilInstruction);
-						break;
-
-					case Code.Div:
-						instruction = this.Div(cilInstruction);
-						break;
-
-					case Code.Div_Un:
-						instruction = this.Div_Un(cilInstruction);
-						break;
-
-					case Code.Rem:
-						instruction = this.Rem(cilInstruction);
-						break;
-
-					case Code.Rem_Un:
-						instruction = this.Rem_Un(cilInstruction);
-						break;
-
-					case Code.And:
-						instruction = this.And(cilInstruction);
-						break;
-
-					case Code.Or:
-						instruction = this.Or(cilInstruction);
-						break;
-
-					case Code.Xor:
-						instruction = this.Xor(cilInstruction);
-						break;
-
-					case Code.Shl:
-						instruction = this.Shl(cilInstruction);
-						break;
-
-					case Code.Shr:
-						instruction = this.Shr(cilInstruction);
-						break;
-
-					case Code.Shr_Un:
-						instruction = this.Shr_Un(cilInstruction);
-						break;
-
-					case Code.Neg:
-						instruction = this.Neg(cilInstruction);
-						break;
-
-					case Code.Not:
-						instruction = this.Not(cilInstruction);
-						break;
-
-					case Code.Conv_I1:
-						instruction = this.Conv_I1(cilInstruction);
-						break;
-
-					case Code.Conv_I2:
-						instruction = this.Conv_I2(cilInstruction);
-						break;
-
-					case Code.Conv_I4:
-						instruction = this.Conv_I4(cilInstruction);
-						break;
-
-					case Code.Conv_I8:
-						instruction = this.Conv_I8(cilInstruction);
-						break;
-
-					case Code.Conv_R4:
-						instruction = this.Conv_R4(cilInstruction);
-						break;
-
-					case Code.Conv_R8:
-						instruction = this.Conv_R8(cilInstruction);
-						break;
-
-					case Code.Conv_U4:
-						instruction = this.Conv_U4(cilInstruction);
-						break;
-
-					case Code.Conv_U8:
-						instruction = this.Conv_U8(cilInstruction);
-						break;
-
-					case Code.Callvirt:
-						instruction = this.Callvirt(cilInstruction);
-						break;
-
-					case Code.Cpobj:
-						instruction = this.Cpobj(cilInstruction);
-						break;
-
-					case Code.Ldobj:
-						instruction = this.Ldobj(cilInstruction);
-						break;
-
-					case Code.Ldstr:
-						instruction = this.Ldstr(cilInstruction);
-						break;
-
-					case Code.Newobj:
-						instruction = this.Newobj(cilInstruction);
-						break;
-
-					case Code.Castclass:
-						instruction = this.Castclass(cilInstruction);
-						break;
-
-					case Code.Isinst:
-						instruction = this.Isinst(cilInstruction);
-						break;
-
-					case Code.Conv_R_Un:
-						instruction = this.Conv_R_Un(cilInstruction);
-						break;
-
-					case Code.Unbox:
-						instruction = this.Unbox(cilInstruction);
-						break;
-
-					case Code.Throw:
-						instruction = this.Throw(cilInstruction);
-						break;
-
-					case Code.Ldfld:
-						instruction = this.Ldfld(cilInstruction);
-						break;
-
-					case Code.Ldflda:
-						instruction = this.Ldflda(cilInstruction);
-						break;
-
-					case Code.Stfld:
-						instruction = this.Stfld(cilInstruction);
-						break;
-
-					case Code.Ldsfld:
-						instruction = this.Ldsfld(cilInstruction);
-						break;
-
-					case Code.Ldsflda:
-						instruction = this.Ldsflda(cilInstruction);
-						break;
-
-					case Code.Stsfld:
-						instruction = this.Stsfld(cilInstruction);
-						break;
-
-					case Code.Stobj:
-						instruction = this.Stobj(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I1_Un:
-						instruction = this.Conv_Ovf_I1_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I2_Un:
-						instruction = this.Conv_Ovf_I2_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I4_Un:
-						instruction = this.Conv_Ovf_I4_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I8_Un:
-						instruction = this.Conv_Ovf_I8_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U1_Un:
-						instruction = this.Conv_Ovf_U1_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U2_Un:
-						instruction = this.Conv_Ovf_U2_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U4_Un:
-						instruction = this.Conv_Ovf_U4_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U8_Un:
-						instruction = this.Conv_Ovf_U8_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I_Un:
-						instruction = this.Conv_Ovf_I_Un(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U_Un:
-						instruction = this.Conv_Ovf_U_Un(cilInstruction);
-						break;
-
-					case Code.Box:
-						instruction = this.Box(cilInstruction);
-						break;
-
-					case Code.Newarr:
-						instruction = this.Newarr(cilInstruction);
-						break;
-
-					case Code.Ldlen:
-						instruction = this.Ldlen(cilInstruction);
-						break;
-
-					case Code.Ldelema:
-						instruction = this.Ldelema(cilInstruction);
-						break;
-
-					case Code.Ldelem_I1:
-						instruction = this.Ldelem_I1(cilInstruction);
-						break;
-
-					case Code.Ldelem_U1:
-						instruction = this.Ldelem_U1(cilInstruction);
-						break;
-
-					case Code.Ldelem_I2:
-						instruction = this.Ldelem_I2(cilInstruction);
-						break;
-
-					case Code.Ldelem_U2:
-						instruction = this.Ldelem_U2(cilInstruction);
-						break;
-
-					case Code.Ldelem_I4:
-						instruction = this.Ldelem_I4(cilInstruction);
-						break;
-
-					case Code.Ldelem_U4:
-						instruction = this.Ldelem_U4(cilInstruction);
-						break;
-
-					case Code.Ldelem_I8:
-						instruction = this.Ldelem_I8(cilInstruction);
-						break;
-
-					case Code.Ldelem_I:
-						instruction = this.Ldelem_I(cilInstruction);
-						break;
-
-					case Code.Ldelem_R4:
-						instruction = this.Ldelem_R4(cilInstruction);
-						break;
-
-					case Code.Ldelem_R8:
-						instruction = this.Ldelem_R8(cilInstruction);
-						break;
-
-					case Code.Ldelem_Ref:
-						instruction = this.Ldelem_Ref(cilInstruction);
-						break;
-
-					case Code.Stelem_I:
-						instruction = this.Stelem_I(cilInstruction);
-						break;
-
-					case Code.Stelem_I1:
-						instruction = this.Stelem_I1(cilInstruction);
-						break;
-
-					case Code.Stelem_I2:
-						instruction = this.Stelem_I2(cilInstruction);
-						break;
-
-					case Code.Stelem_I4:
-						instruction = this.Stelem_I4(cilInstruction);
-						break;
-
-					case Code.Stelem_I8:
-						instruction = this.Stelem_I8(cilInstruction);
-						break;
-
-					case Code.Stelem_R4:
-						instruction = this.Stelem_R4(cilInstruction);
-						break;
-
-					case Code.Stelem_R8:
-						instruction = this.Stelem_R8(cilInstruction);
-						break;
-
-					case Code.Stelem_Ref:
-						instruction = this.Stelem_Ref(cilInstruction);
-						break;
-
-					case Code.Ldelem_Any:
-						instruction = this.Ldelem_Any(cilInstruction);
-						break;
-
-					case Code.Stelem_Any:
-						instruction = this.Stelem_Any(cilInstruction);
-						break;
-
-					case Code.Unbox_Any:
-						instruction = this.Unbox_Any(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I1:
-						instruction = this.Conv_Ovf_I1(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U1:
-						instruction = this.Conv_Ovf_U1(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I2:
-						instruction = this.Conv_Ovf_I2(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U2:
-						instruction = this.Conv_Ovf_U2(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I4:
-						instruction = this.Conv_Ovf_I4(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U4:
-						instruction = this.Conv_Ovf_U4(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I8:
-						instruction = this.Conv_Ovf_I8(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U8:
-						instruction = this.Conv_Ovf_U8(cilInstruction);
-						break;
-
-					case Code.Refanyval:
-						instruction = this.Refanyval(cilInstruction);
-						break;
-
-					case Code.Ckfinite:
-						instruction = this.Ckfinite(cilInstruction);
-						break;
-
-					case Code.Mkrefany:
-						instruction = this.Mkrefany(cilInstruction);
-						break;
-
-					case Code.Ldtoken:
-						instruction = this.Ldtoken(cilInstruction);
-						break;
-
-					case Code.Conv_U2:
-						instruction = this.Conv_U2(cilInstruction);
-						break;
-
-					case Code.Conv_U1:
-						instruction = this.Conv_U1(cilInstruction);
-						break;
-
-					case Code.Conv_I:
-						instruction = this.Conv_I(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_I:
-						instruction = this.Conv_Ovf_I(cilInstruction);
-						break;
-
-					case Code.Conv_Ovf_U:
-						instruction = this.Conv_Ovf_U(cilInstruction);
-						break;
-
-					case Code.Add_Ovf:
-						instruction = this.Add_Ovf(cilInstruction);
-						break;
-
-					case Code.Add_Ovf_Un:
-						instruction = this.Add_Ovf_Un(cilInstruction);
-						break;
-
-					case Code.Mul_Ovf:
-						instruction = this.Mul_Ovf(cilInstruction);
-						break;
-
-					case Code.Mul_Ovf_Un:
-						instruction = this.Mul_Ovf_Un(cilInstruction);
-						break;
-
-					case Code.Sub_Ovf:
-						instruction = this.Sub_Ovf(cilInstruction);
-						break;
-
-					case Code.Sub_Ovf_Un:
-						instruction = this.Sub_Ovf_Un(cilInstruction);
-						break;
-
-					case Code.Endfinally:
-						instruction = this.Endfinally(cilInstruction);
-						break;
-
-					case Code.Leave:
-						instruction = this.Leave(cilInstruction);
-						break;
-
-					case Code.Leave_S:
-						instruction = this.Leave_S(cilInstruction);
-						break;
-
-					case Code.Stind_I:
-						instruction = this.Stind_I(cilInstruction);
-						break;
-
-					case Code.Conv_U:
-						instruction = this.Conv_U(cilInstruction);
-						break;
-
-					case Code.Arglist:
-						instruction = this.Arglist(cilInstruction);
-						break;
-
-					case Code.Ceq:
-						instruction = this.Ceq(cilInstruction);
-						break;
-
-					case Code.Cgt:
-						instruction = this.Cgt(cilInstruction);
-						break;
-
-					case Code.Cgt_Un:
-						instruction = this.Cgt_Un(cilInstruction);
-						break;
-
-					case Code.Clt:
-						instruction = this.Clt(cilInstruction);
-						break;
-
-					case Code.Clt_Un:
-						instruction = this.Clt_Un(cilInstruction);
-						break;
-
-					case Code.Ldftn:
-						instruction = this.Ldftn(cilInstruction);
-						break;
-
-					case Code.Ldvirtftn:
-						instruction = this.Ldvirtftn(cilInstruction);
-						break;
-
-					case Code.Ldarg:
-						instruction = this.Ldarg(cilInstruction);
-						break;
-
-					case Code.Ldarga:
-						instruction = this.Ldarga(cilInstruction);
-						break;
-
-					case Code.Starg:
-						instruction = this.Starg(cilInstruction);
-						break;
-
-					case Code.Ldloc:
-						instruction = this.Ldloc(cilInstruction);
-						break;
-
-					case Code.Ldloca:
-						instruction = this.Ldloca(cilInstruction);
-						break;
-
-					case Code.Stloc:
-						instruction = this.Stloc(cilInstruction);
-						break;
-
-					case Code.Localloc:
-						instruction = this.Localloc(cilInstruction);
-						break;
-
-					case Code.Endfilter:
-						instruction = this.Endfilter(cilInstruction);
-						break;
-
-					case Code.Unaligned:
-						instruction = this.Unaligned(cilInstruction);
-						break;
-
-					case Code.Volatile:
-						instruction = this.Volatile(cilInstruction);
-						break;
-
-					case Code.Tail:
-						instruction = this.Tail(cilInstruction);
-						break;
-
-					case Code.Initobj:
-						instruction = this.Initobj(cilInstruction);
-						break;
-
-					case Code.Constrained:
-						instruction = this.Constrained(cilInstruction);
-						break;
-
-					case Code.Cpblk:
-						instruction = this.Cpblk(cilInstruction);
-						break;
-
-					case Code.Initblk:
-						instruction = this.Initblk(cilInstruction);
-						break;
-
-					case Code.No:
-						instruction = this.No(cilInstruction);
-						break;
-
-					case Code.Rethrow:
-						instruction = this.Rethrow(cilInstruction);
-						break;
-
-					case Code.Sizeof:
-						instruction = this.Sizeof(cilInstruction);
-						break;
-
-					case Code.Refanytype:
-						instruction = this.Refanytype(cilInstruction);
-						break;
-
-					case Code.Readonly:
-						instruction = this.Readonly(cilInstruction);
-						break;
-
-					default:
-						throw new Exception ("Instruction '" + cilInstruction.OpCode.Name + "' is not implemented. (Found in '" + this.method.MethodFullName + "')");
-				}
-#endif
-#else					
-				if (cilInstruction.OpCode == OpCodes.Nop) {
-					continue;
-				} 
-				
-				// Convert
-				else if (cilInstruction.OpCode == OpCodes.Conv_I) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_I);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_I1) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_I1);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_I2) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_I2);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_I4) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_I4);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_I8) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_I8);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I1) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I1);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I1_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I1_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I2) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I2);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I2_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I2_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I4) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I4);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I4_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I4_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I8) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I8);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_I8_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I8_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U1) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U1);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U1_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U1_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U2) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U2);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U2_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U2_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U4) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U4);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U4_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U4_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U8) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U8);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_Ovf_U8_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U8_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_R_Un) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_R_Un);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_R4) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_R4);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_R8) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_R8);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_U) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_U);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_U1) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_U1);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_U2) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_U2);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_U4) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_U4);
-
-				} else if (cilInstruction.OpCode == OpCodes.Conv_U8) {
-					instruction = this.Convert (Operands.Operand.ConvertType.Conv_U8);
-				}
-
-				// Arithmetic
-				else if (cilInstruction.OpCode == OpCodes.Add) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Add), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Add_Ovf) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.AddSignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Add_Ovf_Un) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.AddUnsignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Sub) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Sub), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Sub_Ovf) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SubSignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Sub_Ovf_Un) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SubUnsignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Mul) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Mul), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Mul_Ovf) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.MulSignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Mul_Ovf_Un) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.MulUnsignedWithOverflowCheck), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Div) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Div), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Div_Un) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.DivUnsigned), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Rem) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Remainder), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Rem_Un) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.RemainderUnsigned), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Neg) {
-					instruction = new Assign (this.Register (stack - 1), new Arithmetic (new Unary (Operator.UnaryType.Negation), this.Register (stack - 1)));
-				}
-
-				// Bitwise
-				else if (cilInstruction.OpCode == OpCodes.And) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.And), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Or) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Or), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Xor) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.Xor), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Not) {
-					instruction = new Assign (this.Register (stack - 1), new Arithmetic (new Unary (Operator.UnaryType.Not), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Shl) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHL), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Shr) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHR), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Shr_Un) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Binary (Operator.BinaryType.SHRUnsigned), this.Register (stack - 2), this.Register (stack - 1)));
-				}
-
-				// Branch
-				else if (cilInstruction.OpCode == OpCodes.Beq || cilInstruction.OpCode == OpCodes.Beq_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.Equal), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Bge || cilInstruction.OpCode == OpCodes.Bge_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqual), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Bge_Un || cilInstruction.OpCode == OpCodes.Bge_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Bgt || cilInstruction.OpCode == OpCodes.Bgt_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThan), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Bgt_Un || cilInstruction.OpCode == OpCodes.Bgt_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ble || cilInstruction.OpCode == OpCodes.Ble_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqual), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ble_Un || cilInstruction.OpCode == OpCodes.Ble_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Blt || cilInstruction.OpCode == OpCodes.Blt_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThan), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Blt_Un || cilInstruction.OpCode == OpCodes.Blt_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Bne_Un || cilInstruction.OpCode == OpCodes.Bne_Un_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (Operator.RelationalType.NotEqualOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Brfalse || cilInstruction.OpCode == OpCodes.Brfalse_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.False), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Brtrue || cilInstruction.OpCode == OpCodes.Brtrue_S) {
-					instruction = new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (Operator.BooleanType.True), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Br || cilInstruction.OpCode == OpCodes.Br_S) {
-					instruction = new Jump();
-
-				} else if (cilInstruction.OpCode == OpCodes.Leave
-						|| cilInstruction.OpCode == OpCodes.Leave_S
-						|| cilInstruction.OpCode == OpCodes.Endfinally) {
-					instruction = new Jump();
-
-				} else if (cilInstruction.OpCode == OpCodes.Throw) {
-					instruction = new SharpOS.AOT.IR.Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.Throw), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Rethrow) {
-					instruction = new SharpOS.AOT.IR.Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.Throw)));
-				}
-
-				// Misc
-				else if (cilInstruction.OpCode == OpCodes.Ret) {
-					if (this.method.MethodDefinition.ReturnType.ReturnType.FullName.Equals ("System.Void"))
-						instruction = new Return();
-
-					else if (stack > 0)
-						instruction = new Return (this.Register (stack - 1));
-
-					else
-						instruction = new Return (this.Register (0));
-
-				} else if (cilInstruction.OpCode == OpCodes.Switch) {
-					instruction = new Switch (this.Register (stack - 1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Pop) {
-					instruction = new Pop (this.Register (stack - 1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Dup) {
-					instruction = new Assign (this.Register (stack), this.Register (stack - 1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Sizeof) {
-					instruction = new Assign (this.Register (stack), new Constant (this.method.Engine.GetTypeSize (cilInstruction.Operand.ToString())));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Localloc) {
-					instruction = new Assign (this.Register (stack - 1), new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Localloc), this.Register (stack - 1)));
-					(instruction as Assign).Assignee.SizeType = Operand.InternalSizeType.U;
-				}
-
-				// Check
-				else if (cilInstruction.OpCode == OpCodes.Ceq) {
-					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.Equal), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Cgt) {
-					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.GreaterThan), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Cgt_Un) {
-					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.GreaterThanUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Clt) {
-					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.LessThan), this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Clt_Un) {
-					instruction = new Assign (this.Register (stack - 2), new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (Operator.RelationalType.LessThanUnsignedOrUnordered), this.Register (stack - 2), this.Register (stack - 1)));
-				}
-
-				// Load
-				else if (cilInstruction.OpCode == OpCodes.Ldlen) {
-					instruction = new Assign (this.Register (stack - 2), new Arithmetic (new Unary (Operator.UnaryType.ArraySize), this.Register (stack - 1)));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldtoken) {
-					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldnull) {
-					// TODO change that to something else not "null"
-					instruction = new Assign (this.Register (stack), new Constant ("null"));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldstr) {
-					//instruction = new Assign(this.Register(stack), new Constant("\"" + cilInstruction.Operand.ToString() + "\""));
-					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand.ToString ()));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldftn) {
-					instruction = new Assign(this.Register(stack), new Operands.MethodReference(cilInstruction.Operand as Mono.Cecil.MethodReference));
-				}
-
-				// Load Constants
-				else if (cilInstruction.OpCode == OpCodes.Ldc_I4_0) {
-					instruction = new Assign (this.Register (stack), new Constant (0));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_1) {
-					instruction = new Assign (this.Register (stack), new Constant (1));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_2) {
-					instruction = new Assign (this.Register (stack), new Constant (2));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_3) {
-					instruction = new Assign (this.Register (stack), new Constant (3));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_4) {
-					instruction = new Assign (this.Register (stack), new Constant (4));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_5) {
-					instruction = new Assign (this.Register (stack), new Constant (5));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_6) {
-					instruction = new Assign (this.Register (stack), new Constant (6));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_7) {
-					instruction = new Assign (this.Register (stack), new Constant (7));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_8) {
-					instruction = new Assign (this.Register (stack), new Constant (8));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_M1) {
-					instruction = new Assign (this.Register (stack), new Constant (-1));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4_S) {
-					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I4) {
-					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_I8) {
-					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.I8;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_R4) {
-					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.R4;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldc_R8) {
-					instruction = new Assign (this.Register (stack), new Constant (cilInstruction.Operand));
-					(instruction.Value as Constant).SizeType = Operand.InternalSizeType.R8;
-				}
-
-				// Indirect Load
-				else if (cilInstruction.OpCode == OpCodes.Ldind_I) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.I;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_I1) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.I1;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I1;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_I2) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.I2;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I2;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_I4) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.I4;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I4;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_I8) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.I8;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I8;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_R4) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.R4;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.R4;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_R8) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.R8;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.R8;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_U1) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.U1;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.U1;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_U2) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.U2;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.U2;
-
-					instruction = new Assign (register, indirect);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldind_U4) {
-					Indirect indirect = new Indirect (this.Register (stack - 1));
-					indirect.SizeType = Operand.InternalSizeType.U4;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.U4;
-
-					instruction = new Assign (register, indirect);
-				}
-
-				// Object
-				else if (cilInstruction.OpCode == OpCodes.Newobj) {
-					Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
-
-					Operand [] operands = new Operand [call.Parameters.Count];
-
-					for (int i = 0; i < call.Parameters.Count; i++)
-						operands [i] = this.Register (stack - call.Parameters.Count + i);
-
-					Register register = this.Register (stack - call.Parameters.Count);
-					register.SizeType = Operand.InternalSizeType.I;
-
-					instruction = new Assign (register, new SharpOS.AOT.IR.Operands.Call (call, operands));
-
-					stack -= call.Parameters.Count;
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldobj) {
-					Operands.Object _object = new Operands.Object ((cilInstruction.Operand as TypeReference).FullName, this.Register (stack - 1));
-					_object.SizeType = Operand.InternalSizeType.ValueType;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.ValueType;
-
-					instruction = new Assign (register, _object);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stobj) {
-					Operands.Object _object = new Operands.Object ((cilInstruction.Operand as TypeReference).FullName, this.Register (stack - 2));
-					_object.SizeType = Operand.InternalSizeType.ValueType;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.ValueType;
-
-					instruction = new Assign (_object, register);
-
-				} else if (cilInstruction.OpCode == OpCodes.Initobj) {
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.ValueType;
-
-					instruction = new Initialize (register, cilInstruction.Operand.ToString ());
-				}
-				
-				// Load Locales
-				else if (cilInstruction.OpCode == OpCodes.Ldloca || cilInstruction.OpCode == OpCodes.Ldloca_S) {
-					Address address = new Address (this.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
-					address.SizeType = Operand.InternalSizeType.I;
-
-					instruction = new Assign (this.Register (stack), address);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldloc || cilInstruction.OpCode == OpCodes.Ldloc_S) {
-					instruction = new Assign (this.Register (stack), this.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldloc_0) {
-					instruction = new Assign (this.Register (stack), this.GetLocal (0));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldloc_1) {
-					instruction = new Assign (this.Register (stack), this.GetLocal (1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldloc_2) {
-					instruction = new Assign (this.Register (stack), this.GetLocal (2));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldloc_3) {
-					instruction = new Assign (this.Register (stack), this.GetLocal (3));
-				}
-
-				// Indirect Store
-				else if (cilInstruction.OpCode == OpCodes.Stind_I) {
-					Indirect indirect = new Indirect (this.Register (stack - 2));
-					indirect.SizeType = Operand.InternalSizeType.I;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I;
-
-					instruction = new Assign (reference, register);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stind_I1) {
-					Indirect indirect = new Indirect (this.Register (stack - 2));
-					indirect.SizeType = Operand.InternalSizeType.I1;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I1;
-
-					instruction = new Assign (reference, register);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stind_I2) {
-					Indirect indirect = new Indirect (this.Register (stack - 2));
-					indirect.SizeType = Operand.InternalSizeType.I2;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I2;
-
-					instruction = new Assign (reference, register);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stind_I4) {
-					Indirect indirect = new Indirect (this.Register (stack - 2));
-					indirect.SizeType = Operand.InternalSizeType.I4;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I4;
-
-					instruction = new Assign (reference, register);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stind_I8) {
-					Indirect indirect = new Indirect (this.Register (stack - 2));
-					indirect.SizeType = Operand.InternalSizeType.I8;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.I8;
-
-					instruction = new Assign (reference, register);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stind_R4) {
-					Indirect indirect = new Indirect (this.Register (stack - 2));
-					indirect.SizeType = Operand.InternalSizeType.R4;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.R4;
-
-					instruction = new Assign (reference, register);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stind_R8) {
-					Indirect indirect = new Indirect (this.Register (stack - 2));
-					indirect.SizeType = Operand.InternalSizeType.R8;
-
-					Register register = this.Register (stack - 1);
-					register.SizeType = Operand.InternalSizeType.R8;
-
-					instruction = new Assign (reference, register);
-				}
-
-				// Store Locales
-				else if (cilInstruction.OpCode == OpCodes.Stloc || cilInstruction.OpCode == OpCodes.Stloc_S) {
-					instruction = new Assign (this.GetLocal ((cilInstruction.Operand as VariableDefinition).Index), this.Register (stack - 1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Stloc_0) {
-					instruction = new Assign (this.GetLocal (0), this.Register (stack - 1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Stloc_1) {
-					instruction = new Assign (this.GetLocal (1), this.Register (stack - 1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Stloc_2) {
-					instruction = new Assign (this.GetLocal (2), this.Register (stack - 1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Stloc_3) {
-					instruction = new Assign (this.GetLocal (3), this.Register (stack - 1));
-				}
-
-				// Arguments Load
-				else if (cilInstruction.OpCode == OpCodes.Ldarg) {
-					instruction = new Assign (this.Register (stack), this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldarg_S) {
-					instruction = new Assign (this.Register (stack), this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldarga || cilInstruction.OpCode == OpCodes.Ldarga_S) {
-					if (cilInstruction.Operand is ParameterDefinition) {
-						Address address = new Address (this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
-						address.SizeType = Operand.InternalSizeType.I;
-
-						instruction = new Assign (this.Register (stack), address);
-
-					} else {
-						Address address = new Address (this.GetArgument ((int) cilInstruction.Operand));
-						address.SizeType = Operand.InternalSizeType.I;
-
-						instruction = new Assign (this.Register (stack), address);
-					}
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldarg_0) {
-					instruction = new Assign (this.Register (stack), this.GetArgument (1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldarg_1) {
-					instruction = new Assign (this.Register (stack), this.GetArgument (2));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldarg_2) {
-					instruction = new Assign (this.Register (stack), this.GetArgument (3));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldarg_3) {
-					instruction = new Assign (this.Register (stack), this.GetArgument (4));
-				}
-
-				// Argument Store
-				else if (cilInstruction.OpCode == OpCodes.Starg || cilInstruction.OpCode == OpCodes.Starg_S) {
-					instruction = new Assign (this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence), this.Register (stack - 1));
-				}
-
-				// Call
-				else if (cilInstruction.OpCode == OpCodes.Call
-						|| cilInstruction.OpCode == OpCodes.Callvirt
-						|| cilInstruction.OpCode == OpCodes.Jmp) {
-
-					Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
-					MethodDefinition def = this.Method.Engine.GetCILDefinition (call);
-
-					if (def != null) {
-						foreach (CustomAttribute attr in def.CustomAttributes) {
-							if (attr.Constructor.DeclaringType.FullName ==
-									typeof (SharpOS.AOT.Attributes.ADCStubAttribute)
-									.FullName) {
-								// replace this call with an equivalent call
-								// to the ADC layer
-								call = this.Method.Engine.FixupADCMethod (call);
-							}
-						}
-					}
-
-					// TODO: if def == null, only allow stubs past this, fail gracefully
-					// otherwise.
-					
-					Operand [] operands;
-
-					// If it is not static include the register of the instance into the operands
-					if (call.HasThis)
-						operands = new Operand [call.Parameters.Count + 1];
-
-					else
-						operands = new Operand [call.Parameters.Count];
-
-					for (int i = 0; i < operands.Length; i++)
-						operands [i] = this.Register (stack - operands.Length + i);
-
-					if (call.ReturnType.ReturnType.FullName.Equals ("System.Void")) {
-						instruction = new SharpOS.AOT.IR.Instructions.Call (new SharpOS.AOT.IR.Operands.Call (call, operands));
-
-						stack--;
-
-					} else
-						instruction = new Assign (this.Register (stack - operands.Length), new SharpOS.AOT.IR.Operands.Call (call, operands));
-
-					stack -= operands.Length;
-				}
-
-				// Field
-				else if (cilInstruction.OpCode == OpCodes.Ldfld) {
-					MemberReference field = cilInstruction.Operand as MemberReference;
-					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
-
-					if ((field as FieldDefinition).IsStatic)
-						instruction = new Assign (this.Register (stack - 1), new Field (fieldName));
-
-					else
-						instruction = new Assign (this.Register (stack - 1), new Field (fieldName, this.Register (stack - 1)));
-
-					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (fieldName);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldflda) {
-					FieldReference field = cilInstruction.Operand as FieldReference;
-					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
-
-					instruction = new Assign(this.Register(stack - 1), new Operands.Address (new Field((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, this.Register(stack - 1))));
-					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-					(instruction.Value as Address).Value.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldsfld) {
-					FieldReference field = cilInstruction.Operand as FieldReference;
-					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
-
-					instruction = new Assign (this.Register (stack), new Field (fieldName));
-					(instruction.Value as Identifier).SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldsflda) {
-					FieldReference field = cilInstruction.Operand as FieldReference;
-					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
-
-					instruction = new Assign (this.Register (stack), new Operands.Address (new Field ((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name)));
-					(instruction.Value as Identifier).SizeType = Operand.InternalSizeType.U;
-					(instruction.Value as Address).Value.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stfld) {
-					MemberReference field = cilInstruction.Operand as MemberReference;
-					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
-
-					if ((field as FieldDefinition).IsStatic)
-						instruction = new Assign (new Field (fieldName), this.Register (stack - 1));
-
-					else
-						instruction = new Assign (new Field (fieldName, this.Register (stack - 2)), this.Register (stack - 1));
-
-					(instruction as Assign).Assignee.SizeType = this.method.Engine.GetInternalType (fieldName);
-
-				} else if (cilInstruction.OpCode == OpCodes.Stsfld) {
-					FieldReference field = cilInstruction.Operand as FieldReference;
-					string fieldName = field.DeclaringType.FullName + "::" + field.Name;
-
-					instruction = new Assign (new Field (fieldName), this.Register (stack - 1));
-					(instruction as Assign).Assignee.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
-				}
-
-				// Array
-				else if (cilInstruction.OpCode == OpCodes.Newarr) {
-					// TODO managed/unmanaged
-					throw new Exception ("Not implemented yet.");
-					//instruction = new Assign (this.Register (stack - 1), new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.NewArray), cilInstruction.Operand ));
-
-				} else if (cilInstruction.OpCode == OpCodes.Stelem_Ref
-						|| cilInstruction.OpCode == OpCodes.Stelem_Any
-						|| cilInstruction.OpCode == OpCodes.Stelem_I
-						|| cilInstruction.OpCode == OpCodes.Stelem_I1
-						|| cilInstruction.OpCode == OpCodes.Stelem_I2
-						|| cilInstruction.OpCode == OpCodes.Stelem_I4
-						|| cilInstruction.OpCode == OpCodes.Stelem_I8
-						|| cilInstruction.OpCode == OpCodes.Stelem_R4
-						|| cilInstruction.OpCode == OpCodes.Stelem_R8) {
-					instruction = new Assign (new ArrayElement (this.Register (stack - 3), this.Register (stack - 2)), this.Register (stack - 1));
-
-				} else if (cilInstruction.OpCode == OpCodes.Ldelem_Ref
-						|| cilInstruction.OpCode == OpCodes.Ldelem_I
-						|| cilInstruction.OpCode == OpCodes.Ldelem_I1
-						|| cilInstruction.OpCode == OpCodes.Ldelem_I2
-						|| cilInstruction.OpCode == OpCodes.Ldelem_I4
-						|| cilInstruction.OpCode == OpCodes.Ldelem_I8
-						|| cilInstruction.OpCode == OpCodes.Ldelem_R4
-						|| cilInstruction.OpCode == OpCodes.Ldelem_R8
-						|| cilInstruction.OpCode == OpCodes.Ldelem_U1
-						|| cilInstruction.OpCode == OpCodes.Ldelem_U2
-						|| cilInstruction.OpCode == OpCodes.Ldelem_U4
-						|| cilInstruction.OpCode == OpCodes.Ldelem_Any
-						|| cilInstruction.OpCode == OpCodes.Ldelema) {
-					// TODO Signed/Unsigned
-					// TODO ldelema -> new Address()
-					instruction = new Assign (this.Register (stack - 1), new ArrayElement (this.Register (stack - 2), this.Register (stack - 1)));
-
-				} else
-					throw new Exception ("Instruction '" + cilInstruction.OpCode.Name + "' is not implemented. (Found in '" + this.method.MethodFullName + "')");
-#endif
-
-				if (instruction != null)
+				if (instruction != null) {
 					this.AddInstruction (instruction);
-
-				this.stack += GetStackDelta (cilInstruction);
-
-				if (this.stack < 0)
-					throw new Exception (string.Format ("The stack is negative in '{0}'", this.method.MethodFullName));
+				}
 			}
 
 			this.converted = true;
+
+			if (this.outs.Count == 0 && this.stack.Count > 0)
+				throw new EngineException (string.Format ("The stack is not empty when leaving in '{0}'", this.method.MethodFullName));
+		}
+
+		public void EndCILConversion ()
+		{
+			foreach (Instructions.Instruction instruction in this.instructions) {
+				if (instruction is PHI) {
+					PHI phi = instruction as PHI;
+
+					int index = (phi.Def as Register).Index;
+
+					int i = 0;
+					foreach (Block block in this.ins) {
+						if (index >= block.stack.Count)
+							throw new EngineException (string.Format ("Inconsistent stack. ({0})", this.method.MethodFullName));
+
+						phi.Use [i] = block.stack.ToArray () [index];
+
+						i++;
+					}
+				}
+
+				instruction.Process (this.method);
+
+				if (instruction.Def != null
+						&& instruction.Def is Register)
+					(instruction.Def as Register).Parent = instruction;
+
+				// TODO Check the type of all operands if they are set especially the def's
+			}
+		}
+
+		private List<PHI> phiList = new List<PHI> ();
+
+		public void TransformationOutOfSSA ()
+		{
+			foreach (Instructions.Instruction instruction in this.instructions) {
+				if (!(instruction is PHI))
+					break;
+
+				PHI phi = instruction as PHI;
+
+				this.phiList.Add (phi);
+			}
+
+			foreach (PHI phi in this.phiList) {
+				phi.Attach ();
+
+				this.instructions.Remove (phi);
+			}
+		}
+
+		public void UpdateRegisterAndStackValues ()
+		{
+			foreach (IR.Instructions.Instruction instruction in this.instructions)
+				if (instruction.Def != null
+						&& instruction.Def is IR.Operands.Register
+						&& (instruction.Def as IR.Operands.Register).PHI != null) {
+					IR.Operands.Register parent = (instruction.Def as IR.Operands.Register);
+					IR.Operands.Register identifier = parent;
+
+					do {
+						identifier = identifier.PHI as IR.Operands.Register;
+					} while (identifier.PHI != null);
+
+					parent.Register = identifier.Register;
+					parent.Stack = identifier.Stack;
+				}
 		}
 
 		/// <summary>
@@ -2147,7 +475,6 @@ namespace SharpOS.AOT.IR {
 		public void Merge (Block block)
 		{
 			// Remove the jump that connects this block with the block parameter
-			//if (this.type == BlockType.OneWay) 
 			if (this.outs.Count == 1)
 				this.cil.Remove (this.cil[this.cil.Count - 1]);
 
@@ -2327,179 +654,179 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns></returns>
-		private SharpOS.AOT.IR.Instructions.Instruction Convert (Operands.Operand.ConvertType type)
+
+		private SharpOS.AOT.IR.Instructions.Instruction Convert (Instructions.Convert.Type type)
 		{
-			Register value = this.GetRegister (stack - 1);
-			value.ConvertTo = type;
+			Register value = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 1);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Instructions.Convert (type, assignee, value);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction Conv_I (Mono.Cecil.Cil.Instruction cilInstruction)
+ 		private SharpOS.AOT.IR.Instructions.Instruction Conv_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_I);
+			return this.Convert (Instructions.Convert.Type.Conv_I);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_I1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_I1);
+			return this.Convert (Instructions.Convert.Type.Conv_I1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_I2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_I2);
+			return this.Convert (Instructions.Convert.Type.Conv_I2);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_I4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_I4);
+			return this.Convert (Instructions.Convert.Type.Conv_I4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_I8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_I8);
+			return this.Convert (Instructions.Convert.Type.Conv_I8);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I1);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I1_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I1_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I1_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I2);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I2);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I2_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I2_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I2_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I4);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I4_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I4_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I4_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I8);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I8);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_I8_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_I8_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_I8_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U1);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U1_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U1_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U1_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U2);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U2);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U2_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U2_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U2_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U4);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U4_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U4_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U4_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U8);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U8);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_Ovf_U8_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_Ovf_U8_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_Ovf_U8_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_R_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_R_Un);
+			return this.Convert (Instructions.Convert.Type.Conv_R_Un);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_R4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_R4);
+			return this.Convert (Instructions.Convert.Type.Conv_R4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_R8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_R8);
+			return this.Convert (Instructions.Convert.Type.Conv_R8);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_U (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_U);
+			return this.Convert (Instructions.Convert.Type.Conv_U);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_U1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_U1);
+			return this.Convert (Instructions.Convert.Type.Conv_U1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_U2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_U2);
+			return this.Convert (Instructions.Convert.Type.Conv_U2);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_U4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_U4);
+			return this.Convert (Instructions.Convert.Type.Conv_U4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Conv_U8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return this.Convert (Operands.Operand.ConvertType.Conv_U8);
+			return this.Convert (Instructions.Convert.Type.Conv_U8);
 		}
 
 		#endregion
@@ -2508,26 +835,27 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Add (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return AddHandler (Operator.BinaryType.Add);
+			return AddHandler (Instructions.Add.Type.Add);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Add_Ovf (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return AddHandler (Operator.BinaryType.AddSignedWithOverflowCheck);
+			return AddHandler (Instructions.Add.Type.AddSignedWithOverflowCheck);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Add_Ovf_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return AddHandler (Operator.BinaryType.AddUnsignedWithOverflowCheck);
+			return AddHandler (Instructions.Add.Type.AddUnsignedWithOverflowCheck);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction AddHandler (Operator.BinaryType type)
+		private SharpOS.AOT.IR.Instructions.Instruction AddHandler (SharpOS.AOT.IR.Instructions.Add.Type type)
 		{
-			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new SharpOS.AOT.IR.Instructions.Add (type, assignee, second, first);
 		}
 
 		#endregion
@@ -2536,26 +864,27 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Sub (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return SubHandler (Operator.BinaryType.Sub);
+			return SubHandler (Instructions.Sub.Type.Sub);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Sub_Ovf (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return SubHandler (Operator.BinaryType.SubSignedWithOverflowCheck);
+			return SubHandler (Instructions.Sub.Type.SubSignedWithOverflowCheck);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Sub_Ovf_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return SubHandler (Operator.BinaryType.SubUnsignedWithOverflowCheck);
+			return SubHandler (Instructions.Sub.Type.SubUnsignedWithOverflowCheck);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction SubHandler (Operator.BinaryType type)
+		private SharpOS.AOT.IR.Instructions.Instruction SubHandler (SharpOS.AOT.IR.Instructions.Sub.Type type)
 		{
-			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new SharpOS.AOT.IR.Instructions.Sub (type, assignee, second, first);
 		}
 
 		#endregion
@@ -2564,26 +893,27 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Mul (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return MulHandler (Operator.BinaryType.Mul);
+			return MulHandler (Instructions.Mul.Type.Mul);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Mul_Ovf (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return MulHandler (Operator.BinaryType.MulSignedWithOverflowCheck);
+			return MulHandler (Instructions.Mul.Type.MulSignedWithOverflowCheck);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Mul_Ovf_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return MulHandler (Operator.BinaryType.MulUnsignedWithOverflowCheck);
+			return MulHandler (Instructions.Mul.Type.MulUnsignedWithOverflowCheck);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction MulHandler (Operator.BinaryType type)
+		private SharpOS.AOT.IR.Instructions.Instruction MulHandler (SharpOS.AOT.IR.Instructions.Mul.Type type)
 		{
-			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new SharpOS.AOT.IR.Instructions.Mul (type, assignee, second, first);
 		}
 
 		#endregion
@@ -2592,21 +922,22 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Div (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return DivHandler (Operator.BinaryType.Div);
+			return DivHandler (Instructions.Div.Type.Div);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Div_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return DivHandler (Operator.BinaryType.DivUnsigned);
+			return DivHandler (Instructions.Div.Type.DivUnsigned);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction DivHandler (Operator.BinaryType type)
+		private SharpOS.AOT.IR.Instructions.Instruction DivHandler (SharpOS.AOT.IR.Instructions.Div.Type type)
 		{
-			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new SharpOS.AOT.IR.Instructions.Div (type, assignee, second, first);
 		}
 
 		#endregion
@@ -2615,99 +946,104 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Rem (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return RemHandler (Operator.BinaryType.Remainder);
+			return RemHandler (Instructions.Rem.Type.Remainder);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Rem_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return RemHandler (Operator.BinaryType.RemainderUnsigned);
+			return RemHandler (Instructions.Rem.Type.RemainderUnsigned);
 		}
 
-
-		private SharpOS.AOT.IR.Instructions.Instruction RemHandler (Operator.BinaryType type)
+		private SharpOS.AOT.IR.Instructions.Instruction RemHandler (Rem.Type type)
 		{
-			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new SharpOS.AOT.IR.Instructions.Rem (type, assignee, second, first);
 		}
 
 		#endregion
 
 		private SharpOS.AOT.IR.Instructions.Instruction Neg (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Unary (Operator.UnaryType.Negation), this.GetRegister (stack - 1));
+			Register value = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 1);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Neg (assignee, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction And (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.And), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new And (assignee, second, first);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Or (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.Or), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Or (assignee, second, first);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Xor (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.Xor), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Xor (assignee, second, first);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Not (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Unary (Operator.UnaryType.Not), this.GetRegister (stack - 1));
+			Register value = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 1);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Not (assignee, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Shl (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Binary (Operator.BinaryType.SHL), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Shl (assignee, second, first);
 		}
 
 		#region SHR
 
 		private SharpOS.AOT.IR.Instructions.Instruction Shr_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return ShrHandler (Operator.BinaryType.SHRUnsigned);
+			return ShrHandler (Instructions.Shr.Type.SHRUnsigned);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Shr (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return ShrHandler (Operator.BinaryType.SHR);
+			return ShrHandler (Instructions.Shr.Type.SHR);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction ShrHandler (Operator.BinaryType type)
+		private SharpOS.AOT.IR.Instructions.Instruction ShrHandler (Instructions.Shr.Type type)
 		{
-			Arithmetic value = new Arithmetic (new Binary (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new SharpOS.AOT.IR.Instructions.Shr (type, assignee, second, first);
 		}
 
 		#endregion
@@ -2716,107 +1052,110 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Beq (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.Equal);
+			return BranchHandler (RelationalType.Equal);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Beq_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.Equal);
+			return BranchHandler (RelationalType.Equal);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bge (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.GreaterThanOrEqual);
+			return BranchHandler (RelationalType.GreaterThanOrEqual);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bge_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.GreaterThanOrEqual);
+			return BranchHandler (RelationalType.GreaterThanOrEqual);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bge_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered);
+			return BranchHandler (RelationalType.GreaterThanOrEqualUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bge_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.GreaterThanOrEqualUnsignedOrUnordered);
+			return BranchHandler (RelationalType.GreaterThanOrEqualUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bgt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.GreaterThan);
+			return BranchHandler (RelationalType.GreaterThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bgt_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.GreaterThan);
+			return BranchHandler (RelationalType.GreaterThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bgt_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.GreaterThanUnsignedOrUnordered);
+			return BranchHandler (RelationalType.GreaterThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bgt_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.GreaterThanUnsignedOrUnordered);
+			return BranchHandler (RelationalType.GreaterThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ble (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.LessThanOrEqual);
+			return BranchHandler (RelationalType.LessThanOrEqual);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ble_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.LessThanOrEqual);
+			return BranchHandler (RelationalType.LessThanOrEqual);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ble_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered);
+			return BranchHandler (RelationalType.LessThanOrEqualUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ble_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.LessThanOrEqualUnsignedOrUnordered);
+			return BranchHandler (RelationalType.LessThanOrEqualUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Blt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.LessThan);
+			return BranchHandler (RelationalType.LessThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Blt_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.LessThan);
+			return BranchHandler (RelationalType.LessThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Blt_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.LessThanUnsignedOrUnordered);
+			return BranchHandler (RelationalType.LessThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Blt_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.LessThanUnsignedOrUnordered);
+			return BranchHandler (RelationalType.LessThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bne_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.NotEqualOrUnordered);
+			return BranchHandler (RelationalType.NotEqualOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Bne_Un_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BranchHandler (Operator.RelationalType.NotEqualOrUnordered);
+			return BranchHandler (RelationalType.NotEqualOrUnordered);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction BranchHandler (Operator.RelationalType type)
+		private SharpOS.AOT.IR.Instructions.Instruction BranchHandler (RelationalType type)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new Relational (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1)));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
+
+			return new SharpOS.AOT.IR.Instructions.Branch (type, second, first);
 		}
 
 		#endregion
@@ -2825,27 +1164,29 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Brfalse (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BrTrueFalseHandler (Operator.BooleanType.False);
+			return BrTrueFalseHandler (Instructions.SimpleBranch.Type.False);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Brfalse_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BrTrueFalseHandler (Operator.BooleanType.False);
+			return BrTrueFalseHandler (Instructions.SimpleBranch.Type.False);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Brtrue (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BrTrueFalseHandler (Operator.BooleanType.True);
+			return BrTrueFalseHandler (Instructions.SimpleBranch.Type.True);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Brtrue_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return BrTrueFalseHandler (Operator.BooleanType.True);
+			return BrTrueFalseHandler (Instructions.SimpleBranch.Type.True);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction BrTrueFalseHandler (Operator.BooleanType type)
+		private SharpOS.AOT.IR.Instructions.Instruction BrTrueFalseHandler (SharpOS.AOT.IR.Instructions.SimpleBranch.Type type)
 		{
-			return new ConditionalJump (new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Boolean (type), this.GetRegister (stack - 1)));
+			Register register = this.GetRegister ();
+
+			return new SharpOS.AOT.IR.Instructions.SimpleBranch (type, register);
 		}
 
 		#endregion
@@ -2877,12 +1218,12 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Throw (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new SharpOS.AOT.IR.Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.Throw), this.GetRegister (stack - 1)));
+			return new Throw (this.GetRegister ());
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Rethrow (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new SharpOS.AOT.IR.Instructions.System (new SharpOS.AOT.IR.Operands.Miscellaneous (new SharpOS.AOT.IR.Operators.Miscellaneous (Operator.MiscellaneousType.Throw)));
+			return new Throw ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ret (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -2890,287 +1231,282 @@ namespace SharpOS.AOT.IR {
 			if (this.method.MethodDefinition.ReturnType.ReturnType.FullName.Equals ("System.Void"))
 				return new Return ();
 
-			else if (stack > 0)
-				return new Return (this.GetRegister (stack - 1));
-
-			return new Return (this.GetRegister (0));
+			return new Return (this.GetRegister ());
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Switch (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new Switch (this.GetRegister (stack - 1));
+			Mono.Cecil.Cil.Instruction [] instructions = (cilInstruction.Operand as Mono.Cecil.Cil.Instruction []);
+
+			Block [] blocks = new Block [instructions.Length];
+
+			for (int i = 0; i < instructions.Length; i++)
+				blocks [i] = this.method.GetBlockByOffset (instructions [i].Offset);
+
+			return new Switch (this.GetRegister (), blocks);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Pop (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new Pop (this.GetRegister (stack - 1));
+			return new Pop (this.GetRegister ());
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Dup (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Register value = this.GetRegister (stack - 1);
+			Register value = this.stack.Peek ();
 
-			Register assignee = this.SetRegister (stack);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Dup (assignee, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Sizeof (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Constant constant = new Constant (this.method.Engine.GetTypeSize (cilInstruction.Operand.ToString ()));
-			constant.SizeType = Operand.InternalSizeType.I4;
+			Register assignee = this.SetRegister ();
 
-			Register assignee = this.SetRegister (stack);
-
-			return new Assign (assignee, constant);
+			return new SizeOf (assignee, cilInstruction.Operand as TypeReference);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Localloc (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Operands.Miscellaneous value = new SharpOS.AOT.IR.Operands.Miscellaneous (new Operators.Miscellaneous (Operator.MiscellaneousType.Localloc), this.GetRegister (stack - 1));
+			Register value = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 1);
-			assignee.SizeType = Operand.InternalSizeType.U;
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Localloc (assignee, value);
 		}
 
 		#region Conditional Check
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ceq (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return ConditionCheckHandler (Operator.RelationalType.Equal);
+			return ConditionCheckHandler (RelationalType.Equal);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Cgt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return ConditionCheckHandler (Operator.RelationalType.GreaterThan);
+			return ConditionCheckHandler (RelationalType.GreaterThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Cgt_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return ConditionCheckHandler (Operator.RelationalType.GreaterThanUnsignedOrUnordered);
+			return ConditionCheckHandler (RelationalType.GreaterThanUnsignedOrUnordered);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Clt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return ConditionCheckHandler (Operator.RelationalType.LessThan);
+			return ConditionCheckHandler (RelationalType.LessThan);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Clt_Un (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return ConditionCheckHandler (Operator.RelationalType.LessThanUnsignedOrUnordered);
+			return ConditionCheckHandler (RelationalType.LessThanUnsignedOrUnordered);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction ConditionCheckHandler (Operator.RelationalType type)
+		private SharpOS.AOT.IR.Instructions.Instruction ConditionCheckHandler (RelationalType type)
 		{
-			Operands.Boolean value = new SharpOS.AOT.IR.Operands.Boolean (new SharpOS.AOT.IR.Operators.Relational (type), this.GetRegister (stack - 2), this.GetRegister (stack - 1));
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new SharpOS.AOT.IR.Instructions.ConditionCheck (type, assignee, second, first);
 		}
 
 		#endregion
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldlen (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Arithmetic value = new Arithmetic (new Unary (Operator.UnaryType.ArraySize), this.GetRegister (stack - 1));
+			Register value = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 2);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Ldlen (assignee, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldtoken (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Constant value = new Constant (cilInstruction.Operand);
+			TokenConstant value = new TokenConstant (cilInstruction.Operand.ToString());
 			
-			Register assignee = this.SetRegister (stack);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Ldtoken (assignee, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldnull (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Constant value = new Constant (null);
-
-			Register assignee = this.SetRegister (stack);
-			assignee.SizeType = Operand.InternalSizeType.U;
-
-			return new Assign (assignee, value);
+			return new Ldnull (this.SetRegister ());
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldstr (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Constant value = new Constant (cilInstruction.Operand.ToString ());
+			StringConstant value = new StringConstant (cilInstruction.Operand.ToString ());
 
-			Register assignee = this.SetRegister (stack);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Ldstr (assignee, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldftn (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Operands.MethodReference value = new Operands.MethodReference (cilInstruction.Operand as Mono.Cecil.MethodReference);
+			TokenConstant value = new TokenConstant ((cilInstruction.Operand as Mono.Cecil.MethodReference).ToString ());
 
-			Register assignee = this.SetRegister (stack);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Ldftn (assignee, value);
 		}
 
 		#region Ldc
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_0 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 0);
+			return LdcIntHandler (0);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 1);
+			return LdcIntHandler (1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 2);
+			return LdcIntHandler (2);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_3 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 3);
+			return LdcIntHandler (3);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 4);
+			return LdcIntHandler (4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_5 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 5);
+			return LdcIntHandler (5);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_6 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 6);
+			return LdcIntHandler (6);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_7 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 7);
+			return LdcIntHandler (7);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, 8);
+			return LdcIntHandler (8);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_M1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, -1);
+			return LdcIntHandler (-1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, cilInstruction.Operand);
+			return LdcIntHandler (System.Convert.ToInt32 (cilInstruction.Operand));
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I4, cilInstruction.Operand);
+			return LdcIntHandler (System.Convert.ToInt32 (cilInstruction.Operand));
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction LdcIntHandler (int value)
+		{
+			return LdcHandler (new IntConstant (value));
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_I8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.I8, cilInstruction.Operand);
+			return LdcHandler (new LongConstant (System.Convert.ToInt64 (cilInstruction.Operand)));
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_R4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.R4, cilInstruction.Operand);
+			return LdcHandler (new FloatConstant (System.Convert.ToSingle (cilInstruction.Operand)));
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldc_R8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdcHandler (Operand.InternalSizeType.R8, cilInstruction.Operand);
+			return LdcHandler (new DoubleConstant (System.Convert.ToDouble (cilInstruction.Operand)));
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction LdcHandler (Operand.InternalSizeType sizeType, object value)
+		private SharpOS.AOT.IR.Instructions.Instruction LdcHandler (Constant value)
 		{
-			Constant constant = new Constant (value);
-			constant.SizeType = sizeType;
+			Register assignee = this.SetRegister ();
 
-			Register assignee = this.SetRegister (stack);
-
-			return new Assign (assignee, constant);
+			return new Ldc (assignee, value);
 		}
 		#endregion
 
 		#region Ldind
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.I, cilInstruction);
+			return LdindHandler (InternalType.I, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_I1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.I1, cilInstruction);
+			return LdindHandler (InternalType.I1, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_I2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.I2, cilInstruction);
+			return LdindHandler (InternalType.I2, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_I4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.I4, cilInstruction);
+			return LdindHandler (InternalType.I4, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_I8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.I8, cilInstruction);
+			return LdindHandler (InternalType.I8, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_R4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.R4, cilInstruction);
+			return LdindHandler (InternalType.R4, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_R8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.R8, cilInstruction);
+			return LdindHandler (InternalType.R8, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_U1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.U1, cilInstruction);
+			return LdindHandler (InternalType.U1, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_U2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.U2, cilInstruction);
+			return LdindHandler (InternalType.U2, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_U4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdindHandler (Operand.InternalSizeType.U4, cilInstruction);
+			return LdindHandler (InternalType.U4, cilInstruction);
 		}
 		
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			return LdindHandler (InternalType.O, cilInstruction);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction LdindHandler (Operand.InternalSizeType sizeType, Mono.Cecil.Cil.Instruction cilInstruction)
+		private SharpOS.AOT.IR.Instructions.Instruction LdindHandler (InternalType sizeType, Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Indirect indirect = new Indirect (this.GetRegister (stack - 1));
-			indirect.SizeType = sizeType;
+			Register indirect = this.GetRegister ();
+			Register assignee = this.SetRegister ();
 
-			Register register = this.SetRegister (stack - 1);
-			register.SizeType = sizeType;
-
-			return new Assign (register, indirect);
+			return new Ldind (sizeType, assignee, indirect);
 		}
 		#endregion
 
@@ -3182,49 +1518,42 @@ namespace SharpOS.AOT.IR {
 			Operand [] operands = new Operand [call.Parameters.Count];
 
 			for (int i = 0; i < call.Parameters.Count; i++)
-				operands [i] = this.GetRegister (stack - call.Parameters.Count + i);
+				operands [call.Parameters.Count - 1 - i] = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - call.Parameters.Count);
-			assignee.SizeType = Operand.InternalSizeType.I;
-			assignee.TypeName = call.DeclaringType.ToString ();
+			Register assignee = this.SetRegister ();
 
-			Operands.Call callParameter = new SharpOS.AOT.IR.Operands.Call (call, operands);
-
-			//stack -= call.Parameters.Count;
-
-			return new Assign (assignee, callParameter);
+			return new Newobj (call, assignee, operands);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldobj (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Operands.Object _object = new Operands.Object ((cilInstruction.Operand as TypeReference).FullName, this.GetRegister (stack - 1));
-			_object.SizeType = Operand.InternalSizeType.ValueType;
+			TypeReference typeReference = cilInstruction.Operand as TypeReference; 
+				
+			Register instance = this.GetRegister ();
 
-			Register register = this.SetRegister (stack - 1);
-			register.SizeType = Operand.InternalSizeType.ValueType;
-			register.TypeName = (cilInstruction.Operand as TypeReference).FullName;
+			Register register = this.SetRegister ();
 
-			return new Assign (register, _object);
+			return new Ldobj (register, typeReference, instance);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stobj (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Register register = this.GetRegister (stack - 1);
-			register.SizeType = Operand.InternalSizeType.ValueType;
+			TypeReference typeReference = cilInstruction.Operand as TypeReference;
 
-			Operands.Object _object = new Operands.Object ((cilInstruction.Operand as TypeReference).FullName, this.SetRegister (stack - 2));
-			_object.SizeType = Operand.InternalSizeType.ValueType;
+			Register register = this.GetRegister ();
 
-			return new Assign (_object, register);
+			Register instance = this.GetRegister ();
+
+			return new Stobj (typeReference, instance, register);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Initobj (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Register register = this.GetRegister (stack - 1);
-			register.SizeType = Operand.InternalSizeType.ValueType;
-			register.TypeName = cilInstruction.Operand.ToString ();
+			TypeReference typeReference = cilInstruction.Operand as TypeReference;
 
-			return new Instructions.System (new Operands.Miscellaneous (new Operators.Miscellaneous (Operators.Miscellaneous.MiscellaneousType.InitObj), register));
+			Register instance = this.GetRegister ();
+
+			return new Initobj (typeReference, instance);
 		}
 		#endregion
 
@@ -3241,12 +1570,11 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction LdlocaHandler (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Address address = new Address (this.GetLocal ((cilInstruction.Operand as VariableDefinition).Index));
+			Local value = this.GetLocal ((cilInstruction.Operand as VariableDefinition).Index);
 
-			Register assignee = this.SetRegister (stack);
-			assignee.TypeName = (cilInstruction.Operand as VariableDefinition).VariableType.ToString ();
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, address);
+			return new Ldloca (assignee, value);
 		}
 		#endregion
 
@@ -3263,11 +1591,7 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction LdlocHandler (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Local value = this.GetLocal ((cilInstruction.Operand as VariableDefinition).Index);
-
-			Register assignee = this.SetRegister (stack);
-
-			return new Assign (assignee, value);
+			return LdlocHandler ((cilInstruction.Operand as VariableDefinition).Index, cilInstruction);
 		}
 		#endregion
 
@@ -3296,62 +1620,59 @@ namespace SharpOS.AOT.IR {
 		{
 			Local value = this.GetLocal (index);
 
-			Register assignee = this.SetRegister (stack);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, value);
+			return new Ldloc (assignee, value);
 		}
 		#endregion
 
 		#region Stind
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StindHandler (Operand.InternalSizeType.I, cilInstruction);
+			return StindHandler (InternalType.I, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_I1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StindHandler (Operand.InternalSizeType.I1, cilInstruction);
+			return StindHandler (InternalType.I1, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_I2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StindHandler (Operand.InternalSizeType.I2, cilInstruction);
+			return StindHandler (InternalType.I2, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_I4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StindHandler (Operand.InternalSizeType.I4, cilInstruction);
+			return StindHandler (InternalType.I4, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_I8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StindHandler (Operand.InternalSizeType.I8, cilInstruction);
+			return StindHandler (InternalType.I8, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_R4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StindHandler (Operand.InternalSizeType.R4, cilInstruction);
+			return StindHandler (InternalType.R4, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_R8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StindHandler (Operand.InternalSizeType.R8, cilInstruction);
+			return StindHandler (InternalType.R8, cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stind_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			return StindHandler (InternalType.O, cilInstruction);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction StindHandler (Operand.InternalSizeType sizeType, Mono.Cecil.Cil.Instruction cilInstruction)
+		private SharpOS.AOT.IR.Instructions.Instruction StindHandler (InternalType sizeType, Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Register register = this.GetRegister (stack - 1);
-			register.SizeType = sizeType;
-
-			Indirect indirect = new Indirect (this.GetRegister (stack - 2));
-			indirect.SizeType = sizeType;
-
-			return new Assign (indirect, register);
+			Register register = this.GetRegister ();
+			Register assignee = this.GetRegister ();
+			
+			return new Stind (sizeType, assignee, register);
 		}
 		#endregion
 
@@ -3368,11 +1689,7 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction StlocHandler (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Register value = this.GetRegister (stack - 1);
-
-			Local assignee = this.SetLocal ((cilInstruction.Operand as VariableDefinition).Index);
-
-			return new Assign (assignee, value);
+			return StlocHandler ((cilInstruction.Operand as VariableDefinition).Index, cilInstruction);
 		}
 		#endregion
 
@@ -3399,11 +1716,11 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction StlocHandler (int index, Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Register value = this.GetRegister (stack - 1);
+			Register value = this.GetRegister ();
 
 			Local assignee = this.SetLocal (index);
 
-			return new Assign (assignee, value);
+			return new Stloc (assignee, value);
 		}
 		#endregion
 
@@ -3420,15 +1737,11 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction LdargHandler (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Argument value = this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence);
-
-			Register assignee = this.SetRegister (stack);
-
-			return new Assign (assignee, value);
+			return LdargHandler ((cilInstruction.Operand as ParameterDefinition).Sequence, cilInstruction);
 		}
 		#endregion
 
-		#region Starga
+		#region Ldarga
 		private SharpOS.AOT.IR.Instructions.Instruction Ldarga (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			return LdargaHandler (cilInstruction);
@@ -3441,20 +1754,16 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction LdargaHandler (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			if (cilInstruction.Operand is ParameterDefinition) {
-				Address address = new Address (this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence));
+			Argument value;
 
-				Register assignee = this.SetRegister (stack);
+			if (cilInstruction.Operand is ParameterDefinition)
+				value = this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence);
+			else
+				value = this.GetArgument ((int) cilInstruction.Operand);
 
-				return new Assign (assignee, address);
+			Register assignee = this.SetRegister ();
 
-			} else {
-				Address address = new Address (this.GetArgument ((int) cilInstruction.Operand));
-
-				Register assignee = this.SetRegister (stack);
-
-				return new Assign (assignee, address);
-			}
+			return new Ldarga (assignee, value);
 		}
 		#endregion
 
@@ -3482,10 +1791,11 @@ namespace SharpOS.AOT.IR {
 		private SharpOS.AOT.IR.Instructions.Instruction LdargHandler (int i, Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			Argument value = this.GetArgument (i);
+			
+			Register assignee = this.SetRegister ();
 
-			Register assignee = this.SetRegister (stack);
+			return new Ldarg (assignee, value);
 
-			return new Assign (assignee, value);
 		}
 		#endregion
 
@@ -3502,16 +1812,21 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction StargHandler (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			Register value = this.GetRegister (stack - 1);
+			Register value = this.GetRegister ();
 
 			Argument assignee = this.SetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence);
 
-			return new Assign (assignee, value);
+			return new Starg (assignee, value);
 		}
 		#endregion
 
 		#region Call
 		private SharpOS.AOT.IR.Instructions.Instruction Call (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return CallHandling (cilInstruction);
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction Calli (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			return CallHandling (cilInstruction);
 		}
@@ -3550,383 +1865,337 @@ namespace SharpOS.AOT.IR {
 				operands = new Operand [call.Parameters.Count];
 
 			for (int i = 0; i < operands.Length; i++)
-				operands [i] = this.GetRegister (stack - operands.Length + i);
+				operands [operands.Length - 1 - i] = this.GetRegister ();
 
-			if (call.ReturnType.ReturnType.FullName == Constants.Void) {
-				//stack--;
-				//stack -= operands.Length;
+			if (call.ReturnType.ReturnType.FullName == Constants.Void)
+				return new Call (call, null, operands);
 
-				return new SharpOS.AOT.IR.Instructions.Call (new SharpOS.AOT.IR.Operands.Call (call, operands));
-			}
+			Register assignee = this.SetRegister ();
 
-			Register assignee = this.SetRegister (stack - operands.Length);
-			assignee.TypeName = call.ReturnType.ReturnType.FullName;
-
-			//stack -= operands.Length;
-
-			return new Assign (assignee, new SharpOS.AOT.IR.Operands.Call (call, operands));
+			return new Call (call, assignee, operands);
 		}
 		#endregion
 
 		#region Fld
 		private SharpOS.AOT.IR.Instructions.Instruction Ldfld (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			MemberReference field = cilInstruction.Operand as MemberReference;
-			string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
 
-			Field fieldOperand;
-			Register assignee;
+			Register instance = this.GetRegister ();
 
-			if ((field as FieldDefinition).IsStatic) {
-				fieldOperand = new Field (fieldName);
-				fieldOperand.SizeType = this.method.Engine.GetInternalType (fieldName);
+			Field field = new Field (fieldReference, instance);
 
-				assignee = this.SetRegister (stack - 1);
+			Register assignee = this.SetRegister ();
 
-				return new Assign (assignee, fieldOperand);
-			}
-
-			fieldOperand = new Field (fieldName, this.GetRegister (stack - 1));
-			fieldOperand.SizeType = this.method.Engine.GetInternalType (fieldName);
-
-			assignee = this.SetRegister (stack - 1);
-
-			return new Assign (assignee, fieldOperand);
+			return new Ldfld (assignee, field);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldflda (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			FieldReference field = cilInstruction.Operand as FieldReference;
-			string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
 
-			Operands.Address address = new Operands.Address (new Field ((cilInstruction.Operand as FieldDefinition).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldDefinition).Name, this.GetRegister (stack - 1)));
-			address.Value.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
+			Register instance = this.GetRegister ();
 
-			Register assignee = this.SetRegister (stack - 1);
+			Field field = new Field (fieldReference, instance);
+			
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, address);
+			return new Ldflda (assignee, field);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldsfld (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			FieldReference field = cilInstruction.Operand as FieldReference;
-			string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
 
-			Field fieldOperand = new Field (fieldName);
-			fieldOperand.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
+			Field field = new Field (fieldReference);
 
-			Register assignee = this.SetRegister (stack);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, fieldOperand);
+			return new Ldsfld (assignee, field);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldsflda (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			FieldReference field = cilInstruction.Operand as FieldReference;
-			string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
 
-			Operands.Address address = new Operands.Address (new Field ((cilInstruction.Operand as FieldReference).DeclaringType.FullName + "::" + (cilInstruction.Operand as FieldReference).Name));
-			address.Value.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
+			Field field = new Field (fieldReference);
 
-			Register assignee = this.SetRegister (stack);
+			Register assignee = this.SetRegister ();
 
-			return new Assign (assignee, address);
+			return new Ldsflda (assignee, field);
 		}
-
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stfld (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			MemberReference field = cilInstruction.Operand as MemberReference;
-			string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
+			
+			Register value = this.GetRegister ();
 
-			Field fieldOperand;
-			Register value;
+			Register instance = this.GetRegister ();
 
-			if ((field as FieldDefinition).IsStatic) {
-				value = this.GetRegister (stack - 1);
+			Field field = new Field (fieldReference, instance);
 
-				fieldOperand = new Field (fieldName);
-				fieldOperand.SizeType = this.method.Engine.GetInternalType (fieldName);
-
-				return new Assign (fieldOperand, value);
-			}
-
-			value = this.GetRegister (stack - 1);
-
-			fieldOperand = new Field (fieldName, this.GetRegister (stack - 2));
-			fieldOperand.SizeType = this.method.Engine.GetInternalType (fieldName);
-
-			return new Assign (fieldOperand, value);
+			return new Stfld (field, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stsfld (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			FieldReference field = cilInstruction.Operand as FieldReference;
-			string fieldName = field.DeclaringType.FullName + "::" + field.Name;
+			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
 
-			Register value = this.GetRegister (stack - 1);
+			Register value = this.GetRegister ();
 
-			Field fieldOperand = new Field (fieldName);
-			fieldOperand.SizeType = this.method.Engine.GetInternalType (field.FieldType.FullName);
+			Field field = new Field (fieldReference);
 
-			return new Assign (fieldOperand, value);
+			return new Stsfld (field, value);
 		}
 		#endregion
 
 		#region Stelem
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
-		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction Stelem_Any (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new Exception ("Not implemented yet.");
+			return StelemHandler (cilInstruction, InternalType.O);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StelemHandler (cilInstruction, Operand.InternalSizeType.I);
+			return StelemHandler (cilInstruction, InternalType.I);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_I1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StelemHandler (cilInstruction, Operand.InternalSizeType.I1);
+			return StelemHandler (cilInstruction, InternalType.I1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_I2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StelemHandler (cilInstruction, Operand.InternalSizeType.I2);
+			return StelemHandler (cilInstruction, InternalType.I2);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_I4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StelemHandler (cilInstruction, Operand.InternalSizeType.I4);
+			return StelemHandler (cilInstruction, InternalType.I4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_I8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StelemHandler (cilInstruction, Operand.InternalSizeType.I8);
+			return StelemHandler (cilInstruction, InternalType.I8);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_R4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StelemHandler (cilInstruction, Operand.InternalSizeType.R4);
+			return StelemHandler (cilInstruction, InternalType.R4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stelem_R8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return StelemHandler (cilInstruction, Operand.InternalSizeType.R8);
+			return StelemHandler (cilInstruction, InternalType.R8);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction StelemHandler (Mono.Cecil.Cil.Instruction cilInstruction, Operand.InternalSizeType sizeType)
+		private SharpOS.AOT.IR.Instructions.Instruction StelemHandler (Mono.Cecil.Cil.Instruction cilInstruction, InternalType sizeType)
 		{
-			Register value = this.GetRegister (stack - 1);
-			value.SizeType = sizeType;
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
+			Register value = this.GetRegister ();
 
-			ArrayElement arrayElement = new ArrayElement (this.GetRegister (stack - 3), this.GetRegister (stack - 2));
-			arrayElement.SizeType = sizeType;
-
-			return new Assign (arrayElement, value);
+			return new Stelem (sizeType, second, first, value);
 		}
 		#endregion
 
 		#region Ldelem
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			return LdelemHandler (cilInstruction, InternalType.O);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.I);
+			return LdelemHandler (cilInstruction, InternalType.I);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_I1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.I1);
+			return LdelemHandler (cilInstruction, InternalType.I1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_I2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.I2);
+			return LdelemHandler (cilInstruction, InternalType.I2);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_I4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.I4);
+			return LdelemHandler (cilInstruction, InternalType.I4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_I8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.I8);
+			return LdelemHandler (cilInstruction, InternalType.I8);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_R4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.R4);
+			return LdelemHandler (cilInstruction, InternalType.R4);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_R8 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.R8);
+			return LdelemHandler (cilInstruction, InternalType.R8);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_U1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.U1);
+			return LdelemHandler (cilInstruction, InternalType.U1);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_U2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.U2);
+			return LdelemHandler (cilInstruction, InternalType.U2);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_U4 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdelemHandler (cilInstruction, Operand.InternalSizeType.U4);
+			return LdelemHandler (cilInstruction, InternalType.U4);
 		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction LdelemHandler (Mono.Cecil.Cil.Instruction cilInstruction, InternalType sizeType)
+		{
+			Register first = this.GetRegister ();
+			Register second = this.GetRegister ();
+
+			Register assignee = this.SetRegister ();
+
+			return new Ldelem (sizeType, assignee, second, first);
+		}
+		#endregion
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_Any (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction Stelem_Any (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelema (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction LdelemHandler (Mono.Cecil.Cil.Instruction cilInstruction, Operand.InternalSizeType sizeType)
-		{
-			Register assignee = this.SetRegister (stack - 1);
-			assignee.SizeType = sizeType;
-
-			ArrayElement arrayElement = new ArrayElement (this.GetRegister (stack - 2), this.GetRegister (stack - 1));
-			arrayElement.SizeType = sizeType;
-
-			return new Assign (assignee, arrayElement);
-		}
-		#endregion
 
 		private SharpOS.AOT.IR.Instructions.Instruction Newarr (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Break (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 		
-		private SharpOS.AOT.IR.Instructions.Instruction Calli (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new Exception ("Not implemented yet.");
-		}
-
 		private SharpOS.AOT.IR.Instructions.Instruction Cpobj (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Castclass (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Isinst (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
-		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction Unbox (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Box (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction Unbox (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Refanyval (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ckfinite (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Mkrefany (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Arglist (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldvirtftn (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Endfilter (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Unaligned (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Volatile (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Tail (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Constrained (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Cpblk (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Initblk (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction No (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Refanytype (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Unbox_Any (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Readonly (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new Exception ("Not implemented yet.");
+			throw new NotImplementedEngineException ();
 		}
 
 		#region Dispatcher

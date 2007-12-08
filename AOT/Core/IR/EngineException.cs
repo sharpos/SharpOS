@@ -25,4 +25,20 @@ namespace SharpOS.AOT.IR {
 		{
 		}
 	}
+
+	/// <summary>
+	/// Thrown only when something still needs to be implemented.
+	/// </summary>
+	public class NotImplementedEngineException : EngineException {
+		public NotImplementedEngineException ()
+			:
+			base ("Not implemented yet.")
+		{
+		}
+
+		public NotImplementedEngineException (string message)
+			: base (message)
+		{
+		}
+	}
 }

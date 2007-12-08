@@ -305,7 +305,7 @@ namespace SharpOS.AOT.IR {
 		{
 			this.PushElement ("item");
 		}
-
+/*
 		/// <summary>
 		/// Elements the specified item.
 		/// </summary>
@@ -329,7 +329,7 @@ namespace SharpOS.AOT.IR {
 
 			this.PopElement ();
 		}
-
+*/
 		/// <summary>
 		/// Elements the specified assembly definition.
 		/// </summary>
@@ -505,7 +505,7 @@ namespace SharpOS.AOT.IR {
 					break;
 
 				default:
-					throw new Exception("dump: unknown section " + sect);
+					throw new EngineException("dump: unknown section " + sect);
 			}
 		}
 
@@ -572,7 +572,7 @@ namespace SharpOS.AOT.IR {
 
 			this.PopElement ();
 
-			/*if (this.Type == DumpType.XML) {
+			if (this.Type == DumpType.XML) {
 				Append ("<instruction index=\"{0}\" type=\"{1}\" block=\"{2}\"", 
 							ins.Index, ins.GetType().Name, block);
 				

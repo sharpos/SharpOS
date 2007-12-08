@@ -9,6 +9,7 @@
 //
 
 using System;
+using SharpOS.AOT.IR;
 
 namespace SharpOS.AOT.X86 {
 	public partial class Assembly {
@@ -208,12 +209,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "15", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.ADC (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/2", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADC", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/2", "id"}));
 			}
 		}
 		
@@ -380,12 +376,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "05", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.ADD (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/0", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "ADD", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/0", "id"}));
 			}
 		}
 		
@@ -562,12 +553,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "25", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.AND (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/4", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "AND", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/4", "id"}));
 			}
 		}
 		
@@ -2198,12 +2184,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "3D", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.CMP (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/7", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "CMP", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/7", "id"}));
 			}
 		}
 		
@@ -6145,12 +6126,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "0D", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.OR (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/1", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "OR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/1", "id"}));
 			}
 		}
 		
@@ -6299,7 +6275,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "POP_SS", "SS", null, null, null, null, new string [] {"17"}));
 			else
 			{
-				throw new Exception ("Parameters not supported.");
+				throw new EngineException ("Parameters not supported.");
 			}
 		}
 		
@@ -6465,7 +6441,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "PUSH_FS", "FS", null, null, null, null, new string [] {"0F", "A0"}));
 			else
 			{
-				throw new Exception ("Parameters not supported.");
+				throw new EngineException ("Parameters not supported.");
 			}
 		}
 		
@@ -7556,12 +7532,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "1D", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.SBB (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/3", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SBB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/3", "id"}));
 			}
 		}
 		
@@ -8732,12 +8703,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "2D", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.SUB (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/5", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "SUB", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/5", "id"}));
 			}
 		}
 		
@@ -8906,12 +8872,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "A9", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.TEST (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "F7", "/0", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "TEST", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "F7", "/0", "id"}));
 			}
 		}
 		
@@ -9268,12 +9229,7 @@ namespace SharpOS.AOT.X86 {
 				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR_EAX", "EAX" + ", " + string.Format ("0x{0:x}", source), null, null, null, new UInt32 [] {source}, new string [] {"o32", "35", "id"}));
 			else
 			{
-				if ((Int32)source >= -128 && (Int32)source <= 127)
-					this.XOR (target, (byte)source);
-				else
-				{
-					this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/6", "id"}));
-				}
+				this.instructions.Add (new Instruction (true, string.Empty, string.Empty, "XOR", target.ToString () + ", " + string.Format ("0x{0:x}", source), null, target, null, new UInt32 [] {source}, new string [] {"o32", "81", "/6", "id"}));
 			}
 		}
 		

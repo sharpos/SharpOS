@@ -17,7 +17,6 @@ using System.IO;
 using SharpOS.AOT.IR;
 using SharpOS.AOT.IR.Instructions;
 using SharpOS.AOT.IR.Operands;
-using SharpOS.AOT.IR.Operators;
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
