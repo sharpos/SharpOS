@@ -9,6 +9,8 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+//#define VERBOSE_BinaryTool
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -45,7 +47,9 @@ namespace SharpOS.Foundation
 				shift += 7;
 			} while ((b & 0x80) == 0x80);
 
+#if VERBOSE_BinaryTool
 			TextMode.WriteLine ("read7bit: ", ret);
+#endif
 			
 			return ret;
 		}
@@ -73,6 +77,7 @@ namespace SharpOS.Foundation
 			size = Read7BitInt (ptr, &ilen);
 			bp += ilen;
 
+#if VERBOSE_BinaryTool
 			TextMode.Write ("bufferLen: ");
 			TextMode.Write (bufferLen, false);
 			TextMode.WriteLine ();
@@ -87,12 +92,15 @@ namespace SharpOS.Foundation
 
 			TextMode.WriteLine ("&buffer: 0x", (int)buffer);
 			TextMode.WriteLine ("&ilen: 0x", (int)&ilen);
+#endif
 			buffer [bufferLen-1] = 0;
 			
 			for (x = 0; x < size && x < bufferLen-1; ++x) {
+#if VERBOSE_BinaryTool
 				TextMode.Write ("copying ");
 				TextMode.WriteChar (bp [x]);
 				TextMode.WriteLine ();
+#endif
 				buffer [x] = bp [x];
 			}
 			
@@ -103,6 +111,7 @@ namespace SharpOS.Foundation
 				*error = 1;	// the buffer was too small
 			*/
 			
+#if VERBOSE_BinaryTool
 			TextMode.Write ("size: ");
 			TextMode.Write (size, false);
 			TextMode.WriteLine ();
@@ -111,6 +120,7 @@ namespace SharpOS.Foundation
 			TextMode.WriteLine ();
 			TextMode.Write ("retx: ");
 			TextMode.WriteLine (buffer);
+#endif
 			return ilen + size;
 		}
 

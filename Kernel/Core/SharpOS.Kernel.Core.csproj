@@ -70,10 +70,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ADC\*.cs" />
-    <Compile Include="ADC\X86\*.cs" />
-    <Compile Include="Foundation\*.cs" />
-    <Compile Include="*.cs" />
+    <Compile Include="**\*.cs" Exclude="*.svn" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\build\Temp\BuiltinKeymaps.ska">

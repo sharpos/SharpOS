@@ -9,6 +9,8 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+//#define VERBOSE_KeyMap_INIT
+
 using System;
 using SharpOS;
 using SharpOS.ADC;
@@ -60,11 +62,12 @@ namespace SharpOS
 			keymapEntries = *(int*)keymapArchive;
 			keymapAddr = GetBuiltinKeyMap (userKeyMap);	
 			
+#if VERBOSE_KeyMap_INIT
 			// print some info
-			
 			TextMode.WriteLine ("KeyMap archive: installed at 0x", (int)keymapArchive, true);
 			TextMode.WriteLine ("                ", keymapEntries, " entries");
 			TextMode.WriteLine ("");
+#endif
 
 			if (keymapAddr == null) {
 				Kernel.Warning ("Failed to install an initial keymap");
@@ -79,6 +82,7 @@ namespace SharpOS
 
 		static void *GetBuiltinKeyMap (byte *name, int nameLen)
 		{
+#if VERBOSE_KeyMap_INIT
 			TextMode.Write ("Key Map Name: ");
 			TextMode.Write (name);
 			TextMode.WriteLine ();
@@ -86,6 +90,7 @@ namespace SharpOS
 			TextMode.Write ("Key Map Name Length: ");
 			TextMode.Write (nameLen);
 			TextMode.WriteLine ();
+#endif
 
 			byte* table		= (byte*)keymapArchive + 4;
 			byte* ret_table;
@@ -109,32 +114,36 @@ namespace SharpOS
 				table += strSize;
 				nSize = ByteString.Length (buf);
 				
+#if VERBOSE_KeyMap_INIT
 				TextMode.Write ("nsize: ");
 				TextMode.Write (nSize);
 				TextMode.WriteLine ();
 
 				TextMode.Write ("found keymap: ");
 				TextMode.WriteLine (buf);
+#endif
 
 				ret_table = table;
 
 				table += 2; // keymask/statebit
 
 				// default table
-
 				tSize = *(int*)table;
+#if VERBOSE_KeyMap_INIT
 				TextMode.Write("Default-table size:");
 				TextMode.Write(tSize);
 				TextMode.WriteLine("");
+#endif
 				table += 4;
 				table += tSize;
 
 				// shifted table
-
 				tSize = *(int*)table;
+#if VERBOSE_KeyMap_INIT
 				TextMode.Write("Shifted-table size:");
 				TextMode.Write(tSize);
 				TextMode.WriteLine("");
+#endif
 				table += 4;
 				table += tSize;
 				

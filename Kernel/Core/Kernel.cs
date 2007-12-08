@@ -94,7 +94,7 @@ namespace SharpOS {
 			TextMode.WriteLine ();
 			TextMode.RestoreAttributes();
 
-			StageMessage("Multiboot setup.");
+			StageMessage("Multiboot setup...");
 			Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo(magic, pointer, kernelStart, kernelEnd);
 			if (multibootInfo == null)
 			{
@@ -102,78 +102,30 @@ namespace SharpOS {
 				return;
 			} else
 			{
-				Multiboot.WriteMultibootInfo(multibootInfo, kernelStart, kernelEnd);
+				//Multiboot.WriteMultibootInfo(multibootInfo, kernelStart, kernelEnd);
 			}
 
-			StageMessage("Commandline setup.");
+			StageMessage("Commandline setup...");
 			CommandLine.Setup(multibootInfo);
 
-			StageMessage("Keymap setup.");
+			StageMessage("Keymap setup...");
 			KeyMap.Setup();
 			
-			StageMessage("Keyboard setup.");
+			StageMessage("Keyboard setup...");
 			Keyboard.Setup();
 
-			//StageMessage("CPU setup.");
-			//CPU.Setup ();
-
-			StageMessage("PageAllocator setup.");
+			StageMessage("PageAllocator setup...");
 			PageAllocator.Setup ((byte*)kernelStart, kernelEnd - kernelStart,
 				multibootInfo->MemUpper + 1000);
 
-			//PageAllocator.Dump();
-
-			//test
-			//uint value = (uint)PageAllocator.Alloc();
-			//TextMode.Write((int)value);
-			//TextMode.WriteLine();
-
-			StageMessage("MemoryManager setup.");
+			StageMessage("MemoryManager setup...");
 			ADC.MemoryManager.Setup();
-			//Memory.MemoryManager.Setup ();
 
-			StageMessage("Scheduler setup.");
+			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
-
-			//scheduler testing code:
-			/*
-			// once a thread starts, it seems as if interrupts don't fire anymore, 
-			// so the scheduler never gets the chance to schedule the next thread..
-			void* testThread1 = Scheduler.CreateThread(Kernel.GetFunctionPointer(KERNEL_TEST1));
-			void* testThread2 = Scheduler.CreateThread(Kernel.GetFunctionPointer(KERNEL_TEST2));
-			TextMode.WriteLine((testThread1 == null) ? "testThread1 failed" : "testThread1 created");
-			TextMode.WriteLine((testThread2 == null) ? "testThread2 failed" : "testThread2 created");
-			Scheduler.ScheduleThread(testThread1);
-			Scheduler.ScheduleThread(testThread2);
 			
-			Scheduler.DumpThreads();
-			*/
-			
-			StageMessage("Console setup.");
+			StageMessage("Console setup...");
 			SharpOS.Console.Setup();
-			
-			
-			// memory testing code
-			void* data;
-			void* data2;
-			void* data3;
-			data = ADC.MemoryManager.Allocate(100);
-			data2 = ADC.MemoryManager.Allocate(200);
-			data3 = ADC.MemoryManager.Allocate(400);
-
-			ADC.MemoryManager.Dump();
-
-			ADC.MemoryManager.Free(data);
-			ADC.MemoryManager.Free(data3);
-			ADC.MemoryManager.Free(data2);
-
-			ADC.MemoryManager.Dump();
-
-			data = ADC.MemoryManager.Allocate(400);
-			data2 = ADC.MemoryManager.Allocate(200);
-			data3 = ADC.MemoryManager.Allocate(100);
-			
-			ADC.MemoryManager.Dump();
 			
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
@@ -189,32 +141,6 @@ namespace SharpOS {
 #endif
 			
 			while (stayInLoop);
-		}
-
-		const string KERNEL_TEST1 = "KERNEL_TEST1";		
-		[SharpOS.AOT.Attributes.Label(KERNEL_TEST1)]
-		static unsafe void TestThread()
-		{
-			int i = 0;
-			while (stayInLoop)
-			{
-				if (i < 100)
-					TextMode.Write("a");
-				i++;
-			}
-		}
-
-		const string KERNEL_TEST2 = "KERNEL_TEST2";
-		[SharpOS.AOT.Attributes.Label(KERNEL_TEST2)]
-		static unsafe void TestThread2()
-		{
-			int i = 0;
-			while (stayInLoop)
-			{
-				if (i < 100)
-					TextMode.Write("b");
-				i++;
-			}
 		}
 
 		static unsafe void StageMessage(string message)
