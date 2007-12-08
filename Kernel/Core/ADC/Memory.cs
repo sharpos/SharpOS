@@ -18,25 +18,25 @@ namespace SharpOS.ADC
 		[AOTAttr.ADCStub]
 		public static unsafe void MemSet32(uint value, uint dst, uint count)
 		{
-			Kernel.Error("Unimplemented - Memory.MemSet32");
+			Diagnostics.Error("Unimplemented - Memory.MemSet32");
 		}
 
 		[AOTAttr.ADCStub]
 		public static unsafe void MemCopy(uint src, uint dst, uint count)
 		{
-			Kernel.Error("Unimplemented - Memory.MemCopy");
+			Diagnostics.Error("Unimplemented - Memory.MemCopy");
 		}
 
 		[AOTAttr.ADCStub]
 		public static unsafe void MemCopy32(uint src, uint dst, uint count)
 		{
-			Kernel.Error("Unimplemented - Memory.MemCopy32");
+			Diagnostics.Error("Unimplemented - Memory.MemCopy32");
 		}
 
 		[AOTAttr.ADCStub]
 		public unsafe static void Call(uint address, uint value)
 		{
-			Kernel.Error("Unimplemented - Memory.Call");
+			Diagnostics.Error("Unimplemented - Memory.Call");
 		}
 	}
 }

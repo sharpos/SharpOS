@@ -3,6 +3,7 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
+//  Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -56,7 +57,7 @@ namespace SharpOS.Foundation {
 		public byte GetChar (int index, bool boundsCheck)
 		{
 			if (boundsCheck) {
-				Kernel.Assert (index >= 0 && index < Length,
+				Diagnostics.Assert (index >= 0 && index < Length,
 					"CString8.get_Indexer(): index out of bounds");
 			}
 			
@@ -66,7 +67,7 @@ namespace SharpOS.Foundation {
 		public void SetChar (int index, byte value, bool boundsCheck)
 		{
 			if (boundsCheck) {
-				Kernel.Assert (index >= 0 && index < Length,
+				Diagnostics.Assert (index >= 0 && index < Length,
 					"CString8.get_Indexer(): index out of bounds");
 			}
 			
@@ -88,13 +89,13 @@ namespace SharpOS.Foundation {
 
 		int IndexOf (int from, byte *substr, int substrLen, int offset, int count)
 		{
-			Kernel.Assert (from >= 0 && from < Length,
+			Diagnostics.Assert (from >= 0 && from < Length,
 				"CString8.IndexOf(): argument `from' is out of range");
-			Kernel.Assert (substr != null,
+			Diagnostics.Assert (substr != null,
 				"CString8.IndexOf(): argument `substr' is null");
-			Kernel.Assert (offset >= 0 && offset < substrLen,
+			Diagnostics.Assert (offset >= 0 && offset < substrLen,
 				"CString8.IndexOf(): argument `offset' is out of range");
-			Kernel.Assert (count >= 0 && from + count < Length && from + count < substrLen,
+			Diagnostics.Assert (count >= 0 && from + count < Length && from + count < substrLen,
 				"CString8.IndexOf(): argument `count' is out of range");
 				
 			if (count == 0)
@@ -114,19 +115,19 @@ namespace SharpOS.Foundation {
 
 		public int IndexOf (int from, string substr, int offset, int count)
 		{
-			Kernel.Assert (from >= 0 && from < Length,
+			Diagnostics.Assert (from >= 0 && from < Length,
 				"CString8.IndexOf(): argument `from' is out of range");
-			Kernel.Assert (substr != null,
+			Diagnostics.Assert (substr != null,
 				"CString8.IndexOf(): argument `substr' is null");
-			Kernel.Assert (offset >= 0 && offset < substr.Length,
+			Diagnostics.Assert (offset >= 0 && offset < substr.Length,
 				"CString8.IndexOf(): argument `offset' is out of range");
-			Kernel.Assert (count >= 0 && from + count < Length && from + count < substr.Length,
+			Diagnostics.Assert (count >= 0 && from + count < Length && from + count < substr.Length,
 				"CString8.IndexOf(): argument `count' is out of range");
 				
 			if (count == 0)
 				count = Length - substr.Length - offset;
 			
-			for (int x = from; x < from + count; ++x) {
+			for (int x = from; x < from + count; x++) {
 				
 				if (Compare (x, substr, offset, count) == 0)
 					return x;
@@ -354,5 +355,148 @@ namespace SharpOS.Foundation {
 		}
 
 		#endregion
-	}
+
+        /// <summary>
+        /// Generates a new CString8 instance that is identical to this one,
+        /// minus any leading or trailing whitespace
+        /// </summary>
+        /// <returns>A pointer to a new CString8 instance</returns>
+        public CString8* Trim()
+        {
+            byte* firstNonWhiteSpace = null;
+            byte* lastNonWhiteSpace = null;
+
+            byte* caret = this.Pointer;
+            for (; (*caret) != '\0'; caret++)
+            {
+                if (firstNonWhiteSpace == null)
+                {
+                    if (!ASCII.IsWhiteSpace(*caret))
+                        firstNonWhiteSpace = caret;
+                    continue;
+                }
+                else
+                {
+                    if (ASCII.IsWhiteSpace(*caret)
+                        && !ASCII.IsWhiteSpace(*(caret - 1)))
+                        lastNonWhiteSpace = caret - 1;
+
+                    if (lastNonWhiteSpace != null
+                        && !ASCII.IsWhiteSpace(*caret))
+                        lastNonWhiteSpace = null;
+                }
+            }
+            if (lastNonWhiteSpace == null)
+                lastNonWhiteSpace = caret - 1;
+
+            if (firstNonWhiteSpace == null)
+            {   //whole string needs to be filtered out...
+                //So we generate an empty string and return it
+                CString8* result = (CString8*)SharpOS.ADC.MemoryManager.Allocate(1);
+                *((byte*)result) = (byte)'\0';
+                return result;
+            }
+            else
+            {   //we get to get part (which could be all) of the string...
+                long length = (lastNonWhiteSpace - firstNonWhiteSpace) + 1;
+                byte* result = (byte*)SharpOS.ADC.MemoryManager.Allocate((uint)length + 1);
+                for (caret = firstNonWhiteSpace; caret <= lastNonWhiteSpace; caret++)
+                {
+                    result[caret - firstNonWhiteSpace] = *caret;
+                }
+                result[caret - firstNonWhiteSpace] = (byte)'\0';
+
+                return (CString8*)result;
+            }
+        }
+
+        public CString8* Substring(int index)
+        {
+            int l = this.Length;
+            Diagnostics.Assert(index >= 0,
+                "CString8.Substring(int): Parameter 'index' is outside of the valid range");
+            Diagnostics.Assert(index < l,
+                "CString8.Substring(int): Parameter 'index' is outside of the valid range");
+
+            int count = l - index;
+
+            return Substring_INTERNAL(index, count);
+        }
+
+        public CString8* Substring(int index, int count)
+        {
+            int l = this.Length;
+
+            Diagnostics.Assert(index >= 0,
+                "CString8.Substring(int,int): Parameter 'index' is outside of the valid range");
+            Diagnostics.Assert(index < l,
+                "CString8.Substring(int,int): Parameter 'index' is outside of the valid range");
+            Diagnostics.Assert(count >= 0,
+                "CString8.Substring(int,int): Parameter 'count' is outside of the valid range");
+            Diagnostics.Assert((count + index) <= l,
+                "CString8.Substring(int,int): Parameter 'count' is outside of the valid range");
+
+            return Substring_INTERNAL(index, count);
+        }
+
+        private CString8* Substring_INTERNAL(int index, int count)
+        {
+            if (count == 0)
+                return CString8.CreateEmpty();
+
+            //TextMode.Write("Substring(int): [index,count]="); TextMode.Write(index, false); TextMode.Write(","); TextMode.Write((int)count, false); TextMode.WriteLine();
+
+            byte* rslt = (byte*)SharpOS.ADC.MemoryManager.Allocate((uint)count + 1);
+            byte* thisPtr = this.Pointer;
+            Diagnostics.Assert(rslt != thisPtr, "CString8.Substring_INTERNAL(): Insane memory allocation detected!");
+            
+            for (int i = index; i < (index + count); i++)
+            {
+                rslt[i - index] = thisPtr[i];
+            }
+            rslt[count] = (byte)'\0';
+
+            return (CString8*)rslt;
+        }
+
+
+
+        public static CString8* CreateEmpty()
+        {
+            byte* rslt = (byte*)SharpOS.ADC.MemoryManager.Allocate(1);
+            rslt[0] = (byte)'\0';
+            return (CString8*)rslt;
+        }
+
+        public static CString8* Copy(string str)
+        {
+            uint l = (uint)str.Length;
+
+            byte* result = (byte*)ADC.MemoryManager.Allocate(l + 1);
+
+            for (int i = 0; i < l; i++)
+                result[i] = (byte)str[i];
+            result[l] = (byte)'\0';
+
+            return (CString8*)result;
+        }
+
+        public static CString8* Copy(byte* original)
+        {
+            return Copy((CString8*)original);
+        }
+
+        public static CString8* Copy(CString8* original)
+        {
+            uint l = (uint)original->Length;
+            byte* originalPtr = original->Pointer;
+            byte* result = (byte*)ADC.MemoryManager.Allocate(l + 1);
+
+            for (int i = 0; i < l; i++)
+                result[i] = originalPtr[i];
+            result[l] = (byte)'\0';
+
+            return (CString8*)result;
+        }
+    }
 }

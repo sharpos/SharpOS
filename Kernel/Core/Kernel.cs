@@ -5,6 +5,7 @@
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
 //	William Lahti <xfurious@gmail.com>
+//  Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -24,7 +25,6 @@ namespace SharpOS {
 		static bool stayInLoop = true;
 		static KernelStage kernelStage = KernelStage.Init;
 		static Multiboot.Info *multibootInfo = null;
-		static byte *intermediateStringBuffer = StaticAlloc (MaxMessageLength);
 		
 		#endregion
 		#region Constants
@@ -38,11 +38,6 @@ namespace SharpOS {
 		/// Defines the maximum length of key map names
 		/// </summary>
 		public const int MaxKeyMapNameLength = 40;
-		
-		/// <summary>
-		/// Defines the maximum allowed length of diagnostic messages
-		/// </summary>
-		public const int MaxMessageLength = 250;
 				
 		/// <summary>
 		/// Defines the amount of nested TextMode.SaveAttributes() are possible.
@@ -108,18 +103,18 @@ namespace SharpOS {
 			StageMessage("Commandline setup...");
 			CommandLine.Setup(multibootInfo);
 
+            StageMessage("PageAllocator setup...");
+            PageAllocator.Setup((byte*)kernelStart, kernelEnd - kernelStart,
+                multibootInfo->MemUpper + 1000);
+
+            StageMessage("MemoryManager setup...");
+            ADC.MemoryManager.Setup();
+
 			StageMessage("Keymap setup...");
 			KeyMap.Setup();
 			
 			StageMessage("Keyboard setup...");
 			Keyboard.Setup();
-
-			StageMessage("PageAllocator setup...");
-			PageAllocator.Setup ((byte*)kernelStart, kernelEnd - kernelStart,
-				multibootInfo->MemUpper + 1000);
-
-			StageMessage("MemoryManager setup...");
-			ADC.MemoryManager.Setup();
 
 			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
@@ -138,8 +133,7 @@ namespace SharpOS {
 			// Testcases
 			
 			ByteString.Test1 ();
-#endif
-			
+#endif		
 			while (stayInLoop);
 		}
 
@@ -201,170 +195,6 @@ namespace SharpOS {
 			BootControl.Reboot ();
 		}
 
-		#endregion
-		#region Diagnostics
-
-		public static void SetErrorTextAttributes ()
-		{
-			TextMode.SetAttributes (TextColor.Red, TextColor.Black);
-		}
-
-		public static void SetWarningTextAttributes ()
-		{
-			TextMode.SetAttributes (TextColor.Brown, TextColor.Black);
-		}
-		
-		/// <summary>
-		/// Induce a kernel panic. Prints the meessage, stage, and error code
-		/// then halts the computer.
-		/// <summary>
-		public static void Panic (string msg, KernelStage stage, KernelError code)
-		{
-			PString8 *buf = PString8.Wrap (intermediateStringBuffer, Kernel.MaxMessageLength);
-
-			
-			TextMode.SetAttributes (TextColor.Red, TextColor.Black);
-
-			buf->Concat ("Panic! -- ");
-			buf->Concat (msg);
-			buf->ConcatLine ();
-			
-			buf->Concat ("  Stage: ");
-			buf->Concat ((int)stage, false);
-			buf->ConcatLine ();
-			
-			buf->Concat ("  Error: ");
-			buf->Concat ((int)code, false);
-			buf->ConcatLine ();
-
-			TextMode.SaveAttributes ();
-			SetErrorTextAttributes ();
-			TextMode.Write (buf);
-			TextMode.RestoreAttributes ();
-			
-			Halt ();
-		}
-		
-		public static void Panic (string msg)
-		{
-			Panic (msg, KernelStage.Unknown, KernelError.Unknown);
-		}
-		
-		public static void Assert (bool cond, string msg)
-		{
-			if (!cond)
-			{
-				TextMode.Write ("Assertion Failed: ");
-				TextMode.WriteLine (msg);
-
-				Halt();
-			}
-		}
-		
-		public static void AssertFalse (bool cond, string msg)
-		{
-			Assert (!cond, msg);
-		}
-
-		public static void AssertZero (uint err, string msg)
-		{
-			if (err != 0) {
-				TextMode.Write ("Error: ");
-				TextMode.Write ((int)err);
-
-				Assert (false, msg);
-			}
-		}
-		
-		public static void AssertNonZero (uint err, string msg)
-		{
-			AssertZero (err == 0 ? 1U : 0U, msg);
-		}
-		
-		public static void Warning (string msg)
-		{
-			TextMode.SaveAttributes();
-			PString8* buf = PString8.Wrap(intermediateStringBuffer, Kernel.MaxMessageLength);
-
-			SetWarningTextAttributes();
-
-			buf->Concat("Warning: ");
-			buf->Concat(msg);
-			TextMode.WriteLine(buf);
-			
-			TextMode.RestoreAttributes();
-		}
-		
-		public static void Message (string msg)
-		{
-			TextMode.WriteLine (msg);
-		}
-		
-		public static void Error (string msg)
-		{
-			TextMode.SaveAttributes ();
-			SetErrorTextAttributes ();
-			TextMode.WriteLine (msg);
-			TextMode.RestoreAttributes ();
-		}
-
-		public static void Error (PString8 *msg)
-		{
-			TextMode.SaveAttributes ();
-			SetErrorTextAttributes ();
-			TextMode.WriteLine (msg);
-			TextMode.RestoreAttributes ();
-		}
-
-		#endregion
-		#region Stubs
-		
-		/// <summary>
-		/// Used to statically allocate and initialize a CString8* string.
-		/// </summary>
-		[SharpOS.AOT.Attributes.String]
-		public unsafe static byte *CString (string value)
-		{
-			return null;
-		}
-
-		/// <summary>
-		/// Statically allocates a range of bytes.
-		/// </summary>
-		[SharpOS.AOT.Attributes.Alloc]
-		public unsafe static byte* StaticAlloc (uint value)
-		{
-			return null;
-		}
-
-		/// <summary>
-		/// Statically allocates a range of bytes and gives it
-		/// the specified label.
-		/// </summary>
-		[SharpOS.AOT.Attributes.LabelledAlloc]
-		public unsafe static byte* LabelledAlloc (string label, uint value)
-		{
-			return null;
-		}
-
-		/// <summary>
-		/// Gets the function pointer of the given label. This
-		/// is a synonym for GetLabelAddress().
-		/// </summary>
-		[SharpOS.AOT.Attributes.LabelAddress]
-		public unsafe static uint GetFunctionPointer (string label)
-		{
-			return 0;
-		}
-		
-		/// <summary>
-		/// Gets the pointer associated with the given label.
-		/// </summary>
-		[SharpOS.AOT.Attributes.LabelAddress]
-		public unsafe static uint GetLabelAddress (string label)
-		{
-			return 0;
-		}
 		#endregion
 	}
 }

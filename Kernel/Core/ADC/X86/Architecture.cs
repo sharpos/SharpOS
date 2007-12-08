@@ -35,6 +35,7 @@ namespace SharpOS.ADC.X86 {
 			IDT.Setup ();	// Interrupt Descriptor table
 			RTC.Setup ();	// Real Time Clock
 			PIT.Setup ();	// Periodic Interrupt Timer
+            Serial.Setup(); // Setup serial I/O
 		}
 		
 		/**

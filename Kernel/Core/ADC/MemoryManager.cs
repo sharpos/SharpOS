@@ -92,6 +92,8 @@ namespace SharpOS.ADC
 			uint retPtr = (uint)currentNode + (uint)sizeof(Header);
 			allocated += (ulong)currentNode->Size;
 
+            Diagnostics.Assert(retPtr != 0, "ADC.MemoryManager.Allocate(): Allocation failed!");
+
 			return (void*)retPtr;
 		}
 

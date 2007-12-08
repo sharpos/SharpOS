@@ -17,8 +17,8 @@ namespace SharpOS.ADC.X86
 	public static unsafe class Scheduler
 	{
 		// Sigh.. we really need to get vtables & memory management working...
-		private static IDT.ISRData*	ThreadMemory		= (IDT.ISRData*)Kernel.StaticAlloc((uint)(/*sizeof(IDT.ISRData)*/(19 * 4) * Kernel.MaxThreads));
-		private static bool*		ThreadMemoryUsed	= (bool*)Kernel.StaticAlloc(1 * Kernel.MaxThreads);
+		private static IDT.ISRData*	ThreadMemory		= (IDT.ISRData*)Stubs.StaticAlloc((uint)(/*sizeof(IDT.ISRData)*/(19 * 4) * Kernel.MaxThreads));
+		private static bool*		ThreadMemoryUsed	= (bool*)Stubs.StaticAlloc(1 * Kernel.MaxThreads);
 
 		public static unsafe void Setup()
 		{

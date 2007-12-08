@@ -72,8 +72,8 @@ namespace SharpOS
 			int argumentIndex;
 			int argumentLen;
 
-			Kernel.Assert (option != null, "CommandLine.GetArgument(): argument `option' is null");
-			Kernel.Assert (buf != null, "CommandLine.GetArgument(): argument `buf' is null");
+			Diagnostics.Assert (option != null, "CommandLine.GetArgument(): argument `option' is null");
+			Diagnostics.Assert (buf != null, "CommandLine.GetArgument(): argument `buf' is null");
 
 			if (commandLine == null)
 				return false;
@@ -106,7 +106,7 @@ namespace SharpOS
 			int optionIndex;
 			int argumentIndex;
 			
-			Kernel.Assert (option != null, "CommandLine.GetArgument(): argument `option' is null");
+			Diagnostics.Assert (option != null, "CommandLine.GetArgument(): argument `option' is null");
 			
 			if (commandLine == null)
 				return -1;
@@ -134,7 +134,7 @@ namespace SharpOS
 		{
 			int x = argumentIndex;
 
-			Kernel.Assert (argumentIndex < 0 || argumentIndex >= commandLine->Length,
+			Diagnostics.Assert (argumentIndex < 0 || argumentIndex >= commandLine->Length,
 				"CommandLine.GetArgumentLength(): argument `argumentIndex' is out of range");
 			
 			while (x < commandLine->Length && commandLine->GetChar (x) != ' ')

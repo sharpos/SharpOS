@@ -36,7 +36,7 @@ namespace SharpOS.ADC.X86
 		/*
 		// sigh.. one can only dream
 		public delegate void somefunction(uint value);
-		unsafe static somefunction[] timerEvents = (somefunction[])Kernel.StaticAlloc<somefunction>(Kernel.MaxEventHandlers);		
+		unsafe static somefunction[] timerEvents = (somefunction[])Stubs.StaticAlloc<somefunction>(Kernel.MaxEventHandlers);		
 		public event somefunction function
 		{
 			add 
@@ -63,7 +63,7 @@ namespace SharpOS.ADC.X86
 		{
 			SetTimerFrequency(HZ);
 
-			IDT.RegisterIRQ(IDT.Interrupt.SystemTimer, Kernel.GetFunctionPointer(TIMER_HANDLER));
+			IDT.RegisterIRQ(IDT.Interrupt.SystemTimer, Stubs.GetFunctionPointer(TIMER_HANDLER));
 		}
 		#endregion
 

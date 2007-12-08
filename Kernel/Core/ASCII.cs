@@ -3,6 +3,7 @@
 //
 // Authors:
 //	(??)
+//  Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -65,5 +66,24 @@ namespace SharpOS {
 			else
 				return false;
 		}
+
+        public static bool IsWhiteSpace(byte ch)
+        {
+            switch(ch)
+            {
+                case (byte)' ':
+                    return true;
+                    break;
+                case (byte)'\n':
+                    return true;
+                    break;
+                case (byte)'\r':
+                    return true;
+                    break;
+                default:
+                    return false;
+            }
+            return false;
+        }
 	}
 }

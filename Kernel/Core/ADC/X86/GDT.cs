@@ -33,8 +33,8 @@ namespace SharpOS.ADC.X86 {
 		public const ushort CodeSelector = 8;
 		public const ushort DataSelector = 16;
 
-		private static DTPointer* gdtPointer = (DTPointer*) Kernel.LabelledAlloc ("GDTPointer", DTPointer.SizeOf);
-		private static Entry* gdt = (Entry*) Kernel.StaticAlloc (Entry.SizeOf * GDTEntries);
+		private static DTPointer* gdtPointer = (DTPointer*) Stubs.LabelledAlloc ("GDTPointer", DTPointer.SizeOf);
+		private static Entry* gdt = (Entry*) Stubs.StaticAlloc (Entry.SizeOf * GDTEntries);
 
 		[StructLayout (LayoutKind.Sequential)]
 		public struct Entry {

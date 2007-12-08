@@ -22,9 +22,9 @@ namespace SharpOS
 	{
 		#region Global fields
 		
-		static PString8 *userKeyMap = PString8.Wrap (Kernel.StaticAlloc (24), 24);
-		static byte *getBuiltinKeyMapBuffer = Kernel.StaticAlloc (Kernel.MaxKeyMapNameLength);
-		static byte *stringConvBuffer = Kernel.StaticAlloc (Kernel.MaxKeyMapNameLength);
+		static PString8 *userKeyMap = PString8.Wrap (Stubs.StaticAlloc (24), 24);
+		static byte *getBuiltinKeyMapBuffer = Stubs.StaticAlloc (Kernel.MaxKeyMapNameLength);
+		static byte *stringConvBuffer = Stubs.StaticAlloc (Kernel.MaxKeyMapNameLength);
 		static void *keymapArchive;
 		static int keymapEntries;
 		static void *keymapAddr;
@@ -45,7 +45,6 @@ namespace SharpOS
 			// the installed keymap.
 
 
-
 			if (!CommandLine.GetArgument ("-keymap", userKeyMap)) {
 				// pick a default
 				TextMode.WriteLine ("No keymap selected, choosing default (US)");
@@ -54,10 +53,10 @@ namespace SharpOS
 				userKeyMap->Concat ("US");
 			}
 
-			keymapArchive = (void*)Kernel.GetLabelAddress
+			keymapArchive = (void*)Stubs.GetLabelAddress
 				("SharpOS.Kernel/Resources/BuiltinKeyMaps.ska");
 
-			Kernel.Assert (keymapArchive != null, "KeyMap.Setup(): keymap archive is null");
+			Diagnostics.Assert (keymapArchive != null, "KeyMap.Setup(): keymap archive is null");
 
 			keymapEntries = *(int*)keymapArchive;
 			keymapAddr = GetBuiltinKeyMap (userKeyMap);	
@@ -70,7 +69,7 @@ namespace SharpOS
 #endif
 
 			if (keymapAddr == null) {
-				Kernel.Warning ("Failed to install an initial keymap");
+				Diagnostics.Warning ("Failed to install an initial keymap");
 				return;
 			}
 			
@@ -96,9 +95,9 @@ namespace SharpOS
 			byte* ret_table;
 			byte *buf		= getBuiltinKeyMapBuffer;
 
-			Kernel.Assert(nameLen > 0,
+			Diagnostics.Assert(nameLen > 0,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too small");
-			Kernel.Assert (nameLen <= Kernel.MaxKeyMapNameLength,
+			Diagnostics.Assert (nameLen <= Kernel.MaxKeyMapNameLength,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too large");
 			
 			for (int x = 0; x < keymapEntries; ++x) 
@@ -128,6 +127,7 @@ namespace SharpOS
 				table += 2; // keymask/statebit
 
 				// default table
+
 				tSize = *(int*)table;
 #if VERBOSE_KeyMap_INIT
 				TextMode.Write("Default-table size:");
@@ -138,6 +138,7 @@ namespace SharpOS
 				table += tSize;
 
 				// shifted table
+
 				tSize = *(int*)table;
 #if VERBOSE_KeyMap_INIT
 				TextMode.Write("Shifted-table size:");
@@ -342,7 +343,7 @@ namespace SharpOS
 		/// </summary>
 		public static byte *GetDefaultTable (int *ret_len)
 		{
-			Kernel.Assert (keymapAddr != null, "No keymap is installed!");
+			Diagnostics.Assert (keymapAddr != null, "No keymap is installed!");
 			
 			return GetDefaultTable (keymapAddr, ret_len);
 		}
@@ -352,7 +353,7 @@ namespace SharpOS
 		/// </summary>
 		public static byte *GetShiftedTable (int *ret_len)
 		{
-			Kernel.Assert (keymapAddr != null, "No keymap is installed!");
+			Diagnostics.Assert (keymapAddr != null, "No keymap is installed!");
 			
 			return GetShiftedTable (keymapAddr, ret_len);
 		}
@@ -385,7 +386,7 @@ namespace SharpOS
 		/// </summary>
 		public static byte GetKeyMask ()
 		{
-			Kernel.Assert (keymapAddr != null, "No keymap is installed!");
+			Diagnostics.Assert (keymapAddr != null, "No keymap is installed!");
 			
 			return GetKeyMask (keymapAddr);
 		}
@@ -395,7 +396,7 @@ namespace SharpOS
 		/// </summary>
 		public static byte GetStateBit ()
 		{
-			Kernel.Assert (keymapAddr != null, "No keymap is installed!");
+			Diagnostics.Assert (keymapAddr != null, "No keymap is installed!");
 			
 			return GetStateBit (keymapAddr);
 		}

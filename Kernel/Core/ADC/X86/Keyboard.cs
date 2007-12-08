@@ -27,8 +27,8 @@ namespace SharpOS.ADC.X86
 	{
 		#region Global fields
 		
-		unsafe static uint *keyUpEvent = (uint*)Kernel.StaticAlloc (sizeof (uint) * Kernel.MaxEventHandlers);
-		unsafe static uint *keyDownEvent = (uint*)Kernel.StaticAlloc (sizeof (uint) * Kernel.MaxEventHandlers);
+		unsafe static uint *keyUpEvent = (uint*)Stubs.StaticAlloc (sizeof (uint) * Kernel.MaxEventHandlers);
+		unsafe static uint *keyDownEvent = (uint*)Stubs.StaticAlloc (sizeof (uint) * Kernel.MaxEventHandlers);
 		
 		static bool leftShift;
 		static bool rightShift;
@@ -118,7 +118,7 @@ namespace SharpOS.ADC.X86
 		
 		public static void Setup ()
 		{
-			IDT.RegisterIRQ (IDT.Interrupt.Keyboard, Kernel.GetFunctionPointer (KEYBOARD_HANDLER));
+			IDT.RegisterIRQ (IDT.Interrupt.Keyboard, Stubs.GetFunctionPointer (KEYBOARD_HANDLER));
 		}
 
 		#endregion
@@ -148,7 +148,7 @@ namespace SharpOS.ADC.X86
 				else if (message == KeyboardMessages.Acknowledge)
 					return;
 				else {
-					Kernel.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
+					Diagnostics.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
 					return;
 				}
 				
@@ -396,11 +396,11 @@ namespace SharpOS.ADC.X86
 		{
 			if (!keymapInitialized)
 			{
-				Kernel.Assert(false, "Keymap not initialized!");
+				Diagnostics.Assert(false, "Keymap not initialized!");
 				return (byte)'?';
 			}
-			Kernel.Assert (shiftedMap != null, "No shifted map is available!");
-			Kernel.Assert (defaultMap != null, "No default map is available!");
+			Diagnostics.Assert (shiftedMap != null, "No shifted map is available!");
+			Diagnostics.Assert (defaultMap != null, "No default map is available!");
 
 			if (shifted)
 				return shiftedMap [(byte) scancode];

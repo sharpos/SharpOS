@@ -156,7 +156,7 @@ namespace SharpOS.Memory
 				}
 			}
 			else
-				Kernel.Warning("Paging not set in commandline!");
+				Diagnostics.Warning("Paging not set in commandline!");
 
 			// NOTE: 0x0000 page is reserved
 			currentPage = 1;
@@ -178,13 +178,13 @@ namespace SharpOS.Memory
 
 			switch (error)
 			{
-				case Errors.NoAttributesForGranularity: Kernel.Error("NoAttributesForGranularity"); return;
-				case Errors.NotImplemented: Kernel.Error("NotImplemented"); return;
-				case Errors.Unknown: Kernel.Error("Unknown"); return;
-				case Errors.UnsupportedGranularity: Kernel.Error("UnsupportedGranularity"); return;
-				case Errors.UnusablePageControlBuffer: Kernel.Error("UnusablePageControlBuffer"); return;
-				case Errors.Success: Kernel.Error("Success"); return;
-				default: Kernel.Error("Garbage"); return;
+				case Errors.NoAttributesForGranularity: Diagnostics.Error("NoAttributesForGranularity"); return;
+				case Errors.NotImplemented: Diagnostics.Error("NotImplemented"); return;
+				case Errors.Unknown: Diagnostics.Error("Unknown"); return;
+				case Errors.UnsupportedGranularity: Diagnostics.Error("UnsupportedGranularity"); return;
+				case Errors.UnusablePageControlBuffer: Diagnostics.Error("UnusablePageControlBuffer"); return;
+				case Errors.Success: Diagnostics.Error("Success"); return;
+				default: Diagnostics.Error("Garbage"); return;
 			}
 		}
 

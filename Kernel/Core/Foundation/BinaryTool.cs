@@ -22,6 +22,8 @@ using SharpOS.AOT.IR;
 using SharpOS.Foundation;
 using AOTAttr = SharpOS.AOT.Attributes;
 
+//#define VERBOSE_BinaryTool
+
 namespace SharpOS.Foundation
 {
 	public unsafe class BinaryTool

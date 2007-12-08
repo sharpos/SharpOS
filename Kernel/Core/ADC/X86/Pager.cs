@@ -302,19 +302,19 @@ namespace SharpOS.ADC.X86 {
 			
 			// validity checks
 
-			Kernel.Assert (ADC.Pager.GetPointerGranularity (page) == granularity,
+			Diagnostics.Assert (ADC.Pager.GetPointerGranularity (page) == granularity,
 				"X86.Pager::MapPage(): bad alignment on virtual page pointer");
 
-			Kernel.Assert (ADC.Pager.GetPointerGranularity (phys_page) == granularity,
+			Diagnostics.Assert (ADC.Pager.GetPointerGranularity (phys_page) == granularity,
 				"X86.Pager::MapPage(): bad alignment on physical page pointer");
 				
-			Kernel.Assert (page != PageTables, 
+			Diagnostics.Assert (page != PageTables, 
 				"X86.Pager::MapPage(): tried to change mapping of the page table!");
 				
-			Kernel.Assert (page != PageDirectory,
+			Diagnostics.Assert (page != PageDirectory,
 				"X86.Pager::MapPage(): tried to change mapping of the page directory!");
 			
-			Kernel.Assert (!PageAllocator.IsPageReserved (page),
+			Diagnostics.Assert (!PageAllocator.IsPageReserved (page),
 				"X86.Pager::MapPage(): tried to change mapping on a reserved page.");
 
 			// perform mapping
@@ -355,10 +355,10 @@ namespace SharpOS.ADC.X86 {
 			if (granularity < 0 || granularity > 1)
 				return (uint)PageAllocator.Errors.UnsupportedGranularity;
 
-			Kernel.Assert(nativeAttr != 0xFFFFFFFF, 
+			Diagnostics.Assert(nativeAttr != 0xFFFFFFFF, 
 				"X86.Pager::SetPageAttributes(): bad page map attributes");
 
-			Kernel.Assert(ADC.Pager.GetPointerGranularity(page) == granularity,
+			Diagnostics.Assert(ADC.Pager.GetPointerGranularity(page) == granularity,
 				"X86.Pager::SetPageAttributes(): bad alignment on page pointer");
 			
 			PagePtrToTables (page, &pde, &pte);
@@ -386,7 +386,7 @@ namespace SharpOS.ADC.X86 {
 				return (uint)PageAttributes.None;
 			}
 			
-			Kernel.Assert (ADC.Pager.GetPointerGranularity(page) == granularity,
+			Diagnostics.Assert (ADC.Pager.GetPointerGranularity(page) == granularity,
 				"X86.Pager.GetPageAttributes(): bad page pointer alignment!");
 			
 			PagePtrToTables(page, &pde, &pte);

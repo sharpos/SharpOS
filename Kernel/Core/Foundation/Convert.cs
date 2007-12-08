@@ -3,13 +3,14 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
+//  Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
 //
 
 using System;
-using SharpOS.Memory;
+using SharpOS.Foundation;
 
 namespace SharpOS.Foundation {
 	public unsafe class Convert {
@@ -23,6 +24,17 @@ namespace SharpOS.Foundation {
 
 			return 0;
 		}
+
+        public unsafe static CString8* ToString(int value, bool hex)
+        {
+            byte* buffer = (byte*)ADC.MemoryManager.Allocate(64);
+            
+            int l = ToString(value, hex, buffer, 64, 0);
+            CString8* result = ((CString8*)buffer)->Substring(0, l);
+
+            ADC.MemoryManager.Free((void*)buffer);
+            return result;
+        }
 
 		public unsafe static int ToString (int value, bool hex, byte* buffer,
 						    int bufferLen, int offset)
@@ -48,7 +60,7 @@ namespace SharpOS.Foundation {
 			}
 			while (temp != 0);
 
-			Kernel.Assert (offset + count < bufferLen, "Convert.ToString: buffer too small.");
+			Diagnostics.Assert (offset + count < bufferLen, "Convert.ToString: buffer too small.");
 
 			length = count;
 

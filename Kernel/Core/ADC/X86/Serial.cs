@@ -8,6 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+using SharpOS.Foundation;
 namespace SharpOS.ADC.X86
 {
     public class Serial
@@ -29,12 +30,34 @@ namespace SharpOS.ADC.X86
         }
 
 
-        public static void PutChar(byte ch)
+        public static void WriteChar(byte ch)
         {
             while (!CanTransmit())
                 continue;
 
             IO.Out8(IO.Port.UART_Transmit_Receive_Buffer, ch);
+        }
+
+        public unsafe static void Write(byte* str)
+        {
+            int strLength = ByteString.Length(str);
+            for (int x = 0; x < strLength; x++ )
+            {
+                while (!CanTransmit())
+                    continue;
+                IO.Out8(IO.Port.UART_Transmit_Receive_Buffer, str[x]);
+            }
+        }
+
+        public static void Write(string str)
+        {
+            int strLength = str.Length;
+            for (int x = 0; x < strLength; x++ )
+            {
+                while (!CanTransmit())
+                    continue;
+                IO.Out8(IO.Port.UART_Transmit_Receive_Buffer, (byte)str[x]);
+            }
         }
     }
 }

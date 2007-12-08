@@ -18,11 +18,11 @@ namespace SharpOS.ADC
 		[AOTAttr.ADCStub]
 		public static unsafe void Setup()
 		{
-			Kernel.Error("Unimplemented - Setup");
+			Diagnostics.Error("Unimplemented - Setup");
 		}
 
 		private static int				position				= -1;
-		private static void**			ThreadScheduled			= (void**)Kernel.StaticAlloc((uint)(4 * Kernel.MaxThreads));
+		private static void**			ThreadScheduled			= (void**)Stubs.StaticAlloc((uint)(4 * Kernel.MaxThreads));
 
 		public static void DumpThreads()
 		{
@@ -85,7 +85,7 @@ namespace SharpOS.ADC
 		[AOTAttr.ADCStub]
 		public static unsafe void* CreateThread(uint address)
 		{
-			Kernel.Error("Unimplemented - CreateThread");
+			Diagnostics.Error("Unimplemented - CreateThread");
 			return null;
 		}
 	}

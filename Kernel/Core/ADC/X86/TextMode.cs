@@ -10,6 +10,8 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+//#define DISABLE_SetAttributes
+
 using System;
 using System.Runtime.InteropServices;
 using SharpOS;
@@ -54,7 +56,7 @@ namespace SharpOS.ADC.X86
 
 		static uint			fill			= 0;
 		static byte			attributes		= (byte)((byte)foreground | ((byte)background << 4));
-		static byte *		savedAttributes = Kernel.StaticAlloc (Kernel.MaxTextAttributeSlots);
+		static byte *		savedAttributes = Stubs.StaticAlloc (Kernel.MaxTextAttributeSlots);
 
 		#endregion
 		#region Properties
@@ -431,6 +433,7 @@ namespace SharpOS.ADC.X86
 		#region Attributes
 		public static void SetAttributes (TextColor _foreground, TextColor _background)
 		{
+#if !DISABLE_SetAttributes
 			foreground = _foreground;
 			background = _background;
 
@@ -452,21 +455,25 @@ namespace SharpOS.ADC.X86
 					((uint)0x20 << 16) |
 					((uint)0x20 << 24);
 			}
+#endif
 		}
 
 		public static bool SaveAttributes ()
 		{
+#if !DISABLE_SetAttributes
 			for (int x = 0; x < Kernel.MaxTextAttributeSlots; ++x) {
 				if (savedAttributes [x] == 0xFF) {
 					savedAttributes [x] = attributes;
 					return true;
 				}
 			}
-			return false;
+#endif
+            return false;
 		}
 		
 		public static bool RestoreAttributes ()
 		{
+#if !DISABLE_SetAttributes
 			for (int x = Kernel.MaxTextAttributeSlots - 1; x >= 0; --x) {
 				if (savedAttributes [x] != 0xFF) {
 					byte attr = savedAttributes[x];
@@ -475,7 +482,8 @@ namespace SharpOS.ADC.X86
 					return true;
 				}
 			}
-			return false;
+#endif
+            return false;
 		}
 		#endregion
 

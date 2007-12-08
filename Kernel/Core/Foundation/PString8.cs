@@ -62,7 +62,7 @@ namespace SharpOS.Foundation {
 			if (len == 0)
 				len = strLen - offset;
 
-			Kernel.Assert (offset + len >= strLen, "PString8.Concat(): offset + len >= strLen");
+			Diagnostics.Assert (offset + len >= strLen, "PString8.Concat(): offset + len >= strLen");
 
 			for (int x = 0; x < strLen; ++x)
 				Concat (str [offset + x]);
@@ -99,7 +99,7 @@ namespace SharpOS.Foundation {
 		public byte GetChar (int index, bool boundsCheck)
 		{
 			if (boundsCheck) {
-				Kernel.Assert (index >= 0 && index < Length,
+				Diagnostics.Assert (index >= 0 && index < Length,
 					"PString8.get_Indexer(): index out of bounds");
 			}
 
@@ -109,7 +109,7 @@ namespace SharpOS.Foundation {
 		public void SetChar (int index, byte value, bool boundsCheck)
 		{
 			if (boundsCheck) {
-				Kernel.Assert (index >= 0 && index < Length,
+				Diagnostics.Assert (index >= 0 && index < Length,
 					"PString8.set_Indexer(): index out of bounds");
 
 			}

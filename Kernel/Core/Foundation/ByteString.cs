@@ -28,11 +28,11 @@ namespace SharpOS.Foundation {
 
 		public static bool GetBytes (string src, byte *dst, int size)
 		{
-			Kernel.Assert (src != null, "ByteString.GetBytes (): argument `src' is null");
-			Kernel.Assert (dst != null, "ByteString.GetBytes (): argument `dst' is null");
-			Kernel.Assert (size > 0 && size < ByteString.Length (dst),
+			Diagnostics.Assert (src != null, "ByteString.GetBytes (): argument `src' is null");
+			Diagnostics.Assert (dst != null, "ByteString.GetBytes (): argument `dst' is null");
+			Diagnostics.Assert (size > 0 && size < ByteString.Length (dst),
 				"ByteString.GetBytes (): argument `size' is out of range");
-			Kernel.Assert (size >= src.Length, "ByteString.GetBytes (): buffer is too small");
+			Diagnostics.Assert (size >= src.Length, "ByteString.GetBytes (): buffer is too small");
 			
 			if (src.Length > size)
 				return false;
@@ -59,9 +59,9 @@ namespace SharpOS.Foundation {
 			if (c <= 0)
 				c = Length (src);
 			
-			Kernel.Assert (*(buffer+size) == 0, "Concat: warning, buffer may not have been allocated by ByteString");
+			Diagnostics.Assert (*(buffer+size) == 0, "Concat: warning, buffer may not have been allocated by ByteString");
 			
-			Kernel.Assert (start + c < (size+1), "Concat: buffer is too small");
+			Diagnostics.Assert (start + c < (size+1), "Concat: buffer is too small");
 			
 			Copy (buffer, size, src, start, c);
 			*(buffer+start+c) = 0;
@@ -72,7 +72,7 @@ namespace SharpOS.Foundation {
 		
 		public static void Copy (byte *buffer, int size, byte *src, int index, int count)
 		{
-			Kernel.Assert (index + count < size+1, "Copy: buffer is too small");
+			Diagnostics.Assert (index + count < size+1, "Copy: buffer is too small");
 			
 			byte *ptr = buffer + index;
 			byte *sptr = src;
@@ -90,15 +90,15 @@ namespace SharpOS.Foundation {
 		public static int Compare (byte *a, int aFrom, byte *b, int bFrom, int count)
 		{
 			int c = count;
-			int al = Length (a), bl = Length (b);
+			int aLength = ByteString.Length (a), bLength = ByteString.Length (b);
 			
-			if (count == 0 && al != bl)
-				return al - bl;
-			else if (count != 0 && (aFrom + count > al || bFrom + count > bl))
-				return al - bl;
+			if (count == 0 && aLength != bLength)
+				return aLength - bLength;
+			else if (count != 0 && (aFrom + count > aLength || bFrom + count > bLength))
+				return aLength - bLength;
 			
 			if (c == 0)
-				c = al;
+				c = aLength;
 
 			for (int x = 0; x < c; ++x) {
 			
@@ -114,16 +114,16 @@ namespace SharpOS.Foundation {
 		public static int Compare (byte *a, int aFrom, string b, int bFrom, int count)
 		{
 			int c = count;
-			int al = Length (a);
+			int aLength = ByteString.Length (a);
 			
-			if (count == 0 && al != b.Length) {
-				return al - b.Length;
-			} else if (count != 0 && (count > al || count > b.Length)) {
-				return al - b.Length;
+			if (count == 0 && aLength != b.Length) {
+				return aLength - b.Length;
+			} else if (count != 0 && (aFrom + count > aLength || bFrom + count > b.Length)) {
+				return aLength - b.Length;
 			}
 			
 			if (c == 0)
-				c = al;
+				c = aLength;
 
 			for (int x = 0; x < c; ++x) {
 			
@@ -131,8 +131,8 @@ namespace SharpOS.Foundation {
 					break;
 				}
 	
-				if (a [aFrom + x] != (byte) b [bFrom + x]) {
-					return (int)a [aFrom + x] - b [bFrom + x];
+				if (a [aFrom + x] != ((byte) (b[bFrom + x]))) {
+                    return ((int)a[aFrom + x] - ((int)(byte)b[bFrom + x]));
 				}
 			}
 
@@ -169,17 +169,52 @@ namespace SharpOS.Foundation {
 		
 		public static void __Test1 ()
 		{
-			byte *ptr1 = (byte*)Kernel.CString ("US"), ptr2 = (byte*)Kernel.CString ("SK");
+			byte *ptr1 = (byte*)Stubs.CString ("US"), ptr2 = (byte*)Stubs.CString ("SK");
 
-			if (ByteString.Compare (ptr1, ptr2, 2) == 0)
-				TextMode.WriteLine ("ByteString.Compare(): test fail: 'US' != 'SK'");
+            //Test constant CString buffers
+			if (ByteString.Compare (ptr1, ptr2) == 0)
+				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' != 'SK'");
 			else
 				TextMode.WriteLine ("ByteString.Compare(): test pass: 'US' != 'SK'");
 
-			if (ByteString.Compare (ptr1, ptr1, 2) == 0)
+			if (ByteString.Compare (ptr1, ptr1) == 0)
 				TextMode.WriteLine ("ByteString.Compare(): test pass: 'US' == 'US'");
 			else
-				TextMode.WriteLine ("ByteString.Compare(): test fail: 'US' == 'US'");
+				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' == 'US'");
+
+            //Test constant CString buffer with constant String type
+            if (ByteString.Compare(ptr1, "SK") == 0)
+                TextMode.WriteLine("ByteString.Compare(): test FAIL: 'US' != const 'SK'");
+            else
+                TextMode.WriteLine("ByteString.Compare(): test pass: 'US' != const 'SK'");
+
+            if (ByteString.Compare(ptr1, "US") == 0)
+                TextMode.WriteLine("ByteString.Compare(): test pass: 'US' == const 'US'");
+            else
+                TextMode.WriteLine("ByteString.Compare(): test FAIL: 'US' == const 'US'");
+
+            //Test that constant String is working properly
+            const string str1 = "US";
+            const string str2 = "SK";
+            if ((byte)str1[0] == (byte)'U')
+                TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[0]==(byte)'U'");
+            else
+                TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[0]==(byte)'U'");
+            
+            if ((byte)str1[1] == (byte)'S')
+                TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[1]==(byte)'S'");
+            else
+                TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)'S'");
+            
+            if (str1.Length == 2)
+                TextMode.WriteLine("ByteString : test pass: \"US\".Length==2");
+            else
+                TextMode.WriteLine("ByteString : test FAIL: \"US\".Length==2");
+
+            if ((byte)str1[1] == (byte)str2[0])
+                TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[1]==(byte)\"SK\"[0]");
+            else
+                TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)\"SK\"[0]");
 		}
 
 		#endregion
