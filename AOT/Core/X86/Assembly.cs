@@ -1908,7 +1908,7 @@ namespace SharpOS.AOT.X86 {
 
 				utf7Strings.Add (value, label);
 
-				this.AddSymbol (new COFF.Label (label));
+				this.AddSymbol (new COFF.Static (label));
 
 				data.LABEL (label);
 
@@ -1924,7 +1924,7 @@ namespace SharpOS.AOT.X86 {
 
 				strings.Add (value, label);
 
-				this.AddSymbol (new COFF.Label (label));
+				this.AddSymbol (new COFF.Static (label));
 
 				data.LABEL (label);
 

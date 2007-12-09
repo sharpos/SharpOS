@@ -3,7 +3,7 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
-//  Bruce Markham <illuminus86@gmail.com>
+//	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -102,8 +102,8 @@ namespace SharpOS.Foundation {
 				count = Length - substrLen - offset;
 			
 			for (int x = from; x < from + count; ++x) {
-				
-				if (Compare (x, substr, offset, count) == 0)
+
+				if (Compare (x, substr, offset, substrLen) == 0)
 					return x;
 			}
 
@@ -128,8 +128,8 @@ namespace SharpOS.Foundation {
 				count = Length - substr.Length - offset;
 			
 			for (int x = from; x < from + count; x++) {
-				
-				if (Compare (x, substr, offset, count) == 0)
+
+				if (Compare (x, substr, offset, substr.Length) == 0)
 					return x;
 			}
 
