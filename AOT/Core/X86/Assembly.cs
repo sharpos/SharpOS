@@ -308,6 +308,15 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
+		/// Address of the specified label.
+		/// </summary>
+		/// <param name="label">The label.</param>
+		public void ADDRESSOF (string label)
+		{
+			this.instructions.Add (new AddressOf (label));
+		}
+
+		/// <summary>
 		/// DATAs the specified name.
 		/// </summary>
 		/// <param name="name">The name.</param>
@@ -445,7 +454,7 @@ namespace SharpOS.AOT.X86 {
 		/// <summary>
 		/// LABELs the specified label.
 		/// </summary>
-		/// <param name="label">The label.</param>
+		/// <param name="value">The value.</param>
 		public void COMMENT (string value)
 		{
 			this.instructions.Add (new CommentInstruction (value));
@@ -1349,6 +1358,11 @@ namespace SharpOS.AOT.X86 {
 						}
 
 						if (pass == 1) {
+							if (instruction is AddressOf) {
+								AddressOf addressOf = instruction as AddressOf;
+								addressOf.Value = (uint) (org + this.GetLabelAddress (addressOf.AddressOfLabel));
+							}
+
 							if (instruction.Reference.Length > 0) {
 								((UInt32 []) instruction.Value) [0] = this.GetLabelAddress (instruction.Reference);
 
@@ -1941,6 +1955,8 @@ namespace SharpOS.AOT.X86 {
 
 				// Trailing zero
 				data.DATA ((ushort) 0);
+
+				data.ADDRESSOF (KERNEL_MAIN);
 			}
 
 			return label;

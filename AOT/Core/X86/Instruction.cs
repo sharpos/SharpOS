@@ -122,7 +122,7 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
-		private string label = string.Empty;
+		protected string label = string.Empty;
 
 		/// <summary>
 		/// Gets the label.
