@@ -324,14 +324,14 @@ namespace SharpOS.AOT.IR {
 			return this.stack.Pop ();
 		}
 
-		private Argument GetArgument (int value)
+		private Argument GetArgument (int value, bool sequence)
 		{
-			return this.Method.GetArgument (value);
+			return this.Method.GetArgument (value, sequence);
 		}
 
-		private Argument SetArgument (int value)
+		private Argument SetArgument (int value, bool sequence)
 		{
-			return this.Method.GetArgument (value);
+			return this.Method.GetArgument (value, sequence);
 		}
 
 		private Local GetLocal (int value)
@@ -1737,7 +1737,7 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction LdargHandler (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdargHandler ((cilInstruction.Operand as ParameterDefinition).Sequence, cilInstruction);
+			return LdargHandler ((cilInstruction.Operand as ParameterDefinition).Sequence - 1, cilInstruction, true);
 		}
 		#endregion
 
@@ -1757,9 +1757,9 @@ namespace SharpOS.AOT.IR {
 			Argument value;
 
 			if (cilInstruction.Operand is ParameterDefinition)
-				value = this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence);
+				value = this.GetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence - 1, true);
 			else
-				value = this.GetArgument ((int) cilInstruction.Operand);
+				value = this.GetArgument ((int) cilInstruction.Operand, false);
 
 			Register assignee = this.SetRegister ();
 
@@ -1770,27 +1770,27 @@ namespace SharpOS.AOT.IR {
 		#region Ldarg X
 		private SharpOS.AOT.IR.Instructions.Instruction Ldarg_0 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdargHandler (1, cilInstruction);
+			return LdargHandler (0, cilInstruction, false);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldarg_1 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdargHandler (2, cilInstruction);
+			return LdargHandler (1, cilInstruction, false);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldarg_2 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdargHandler (3, cilInstruction);
+			return LdargHandler (2, cilInstruction, false);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldarg_3 (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdargHandler (4, cilInstruction);
+			return LdargHandler (3, cilInstruction, false);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction LdargHandler (int i, Mono.Cecil.Cil.Instruction cilInstruction)
+		private SharpOS.AOT.IR.Instructions.Instruction LdargHandler (int i, Mono.Cecil.Cil.Instruction cilInstruction, bool sequence)
 		{
-			Argument value = this.GetArgument (i);
+			Argument value = this.GetArgument (i, sequence);
 			
 			Register assignee = this.SetRegister ();
 
@@ -1814,7 +1814,7 @@ namespace SharpOS.AOT.IR {
 		{
 			Register value = this.GetRegister ();
 
-			Argument assignee = this.SetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence);
+			Argument assignee = this.SetArgument ((cilInstruction.Operand as ParameterDefinition).Sequence - 1, true);
 
 			return new Starg (assignee, value);
 		}

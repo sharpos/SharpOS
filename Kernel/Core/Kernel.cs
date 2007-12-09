@@ -91,24 +91,22 @@ namespace SharpOS {
 
 			StageMessage("Multiboot setup...");
 			Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo(magic, pointer, kernelStart, kernelEnd);
-			if (multibootInfo == null)
-			{
+			if (multibootInfo == null) {
 				StageError("Error: multiboot loader required!");
 				return;
-			} else
-			{
+			} else {
 				//Multiboot.WriteMultibootInfo(multibootInfo, kernelStart, kernelEnd);
 			}
 
 			StageMessage("Commandline setup...");
 			CommandLine.Setup(multibootInfo);
 
-            StageMessage("PageAllocator setup...");
-            PageAllocator.Setup((byte*)kernelStart, kernelEnd - kernelStart,
-                multibootInfo->MemUpper + 1000);
+			StageMessage("PageAllocator setup...");
+			PageAllocator.Setup((byte*)kernelStart, kernelEnd - kernelStart,
+				multibootInfo->MemUpper + 1000);
 
-            StageMessage("MemoryManager setup...");
-            ADC.MemoryManager.Setup();
+			StageMessage("MemoryManager setup...");
+			ADC.MemoryManager.Setup();
 
 			StageMessage("Keymap setup...");
 			KeyMap.Setup();
@@ -131,8 +129,7 @@ namespace SharpOS {
 			
 #if KERNEL_TESTS
 			// Testcases
-			
-			ByteString.Test1 ();
+			ByteString.__RunTests ();
 #endif		
 			while (stayInLoop);
 		}

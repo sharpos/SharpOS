@@ -1889,6 +1889,7 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		Dictionary <string, string> strings = new Dictionary <string, string> ();
+		Dictionary<string, string> utf7Strings = new Dictionary<string, string> ();
 
 		/// <summary>
 		/// Adds the string.
@@ -1897,21 +1898,38 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		internal string AddString (string value)
 		{
-			if (strings.ContainsKey (value))
-				return strings [value];
-
-			string label = this.GetFreeResourceLabel;
-
-			strings.Add (value, label);
-
-			data.LABEL (label);
+			string label;
 
 			if (this.UTF7StringEncoding) {
+				if (utf7Strings.ContainsKey (value))
+					return utf7Strings [value];
+
+				label = this.GetFreeResourceLabel;
+
+				utf7Strings.Add (value, label);
+
+				this.AddSymbol (new COFF.Label (label));
+
+				data.LABEL (label);
+
 				data.DATA (value);
 
 				data.DATA ((byte) 0);
 
 			} else {
+				if (strings.ContainsKey (value))
+					return strings [value];
+
+				label = this.GetFreeResourceLabel;
+
+				strings.Add (value, label);
+
+				this.AddSymbol (new COFF.Label (label));
+
+				data.LABEL (label);
+
+				// TODO Add System.String Type Handle
+
 				// Capacity
 				data.DATA ((uint) value.Length + 1);
 

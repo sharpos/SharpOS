@@ -107,9 +107,10 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="i">The i.</param>
 		/// <returns></returns>
-		public Argument GetArgument (int i)
+		public Argument GetArgument (int i, bool sequence)
 		{
-			i--;
+			if (this.methodDefinition.HasThis && sequence)
+				i++;
 
 			if (i < 0)
 				throw new EngineException (string.Format ("Argument Index may not be negative. ({0})", this.MethodFullName));

@@ -132,7 +132,7 @@ namespace SharpOS.Foundation {
 				}
 	
 				if (a [aFrom + x] != ((byte) (b[bFrom + x]))) {
-                    return ((int)a[aFrom + x] - ((int)(byte)b[bFrom + x]));
+					return ((int)a[aFrom + x] - ((int)(byte)b[bFrom + x]));
 				}
 			}
 
@@ -164,35 +164,35 @@ namespace SharpOS.Foundation {
 
 		public static void __RunTests ()
 		{
-            TextMode.SetAttributes(TextColor.Blue, TextColor.White);
-            TextMode.WriteLine();
-            TextMode.WriteLine("ByteString and CString8 Tests:");
-            TextMode.WriteLine("------------------------------");
+			TextMode.SetAttributes(TextColor.Blue, TextColor.White);
+			TextMode.WriteLine();
+			TextMode.WriteLine("ByteString and CString8 Tests:");
+			TextMode.WriteLine("------------------------------");
 
-            CString8* str1 = CString8.Copy("This is a test string!");
-            TextMode.Write("str1: "); TextMode.WriteLine(str1);
+			CString8* str1 = CString8.Copy("This is a test string!");
+			TextMode.Write("str1: "); TextMode.WriteLine(str1);
 
-            __Test1();
+			__Test1();
 
-            int indexOfSpace = str1->IndexOf(Stubs.CString(" "));
-            Diagnostics.Assert(indexOfSpace == 4, "indexOfSpace does not equal 4!");
-            TextMode.Write("IndexOfSpace: "); TextMode.Write(indexOfSpace); TextMode.WriteLine();
-            CString8* str2 = str1->Substring(indexOfSpace + 1);
-            TextMode.Write("str2: "); TextMode.WriteLine(str2);
+			int indexOfSpace = str1->IndexOf(Stubs.CString(" "));
+			Diagnostics.Assert(indexOfSpace == 4, "indexOfSpace does not equal 4!");
+			TextMode.Write("IndexOfSpace: "); TextMode.Write(indexOfSpace); TextMode.WriteLine();
+			CString8* str2 = str1->Substring(indexOfSpace + 1);
+			TextMode.Write("str2: "); TextMode.WriteLine(str2);
 
-            CString8* str3 = str1->Substring(0, indexOfSpace + 1);
-            TextMode.Write("str3: "); TextMode.WriteLine(str3);
+			CString8* str3 = str1->Substring(0, indexOfSpace + 1);
+			TextMode.Write("str3: "); TextMode.WriteLine(str3);
 
-            ADC.MemoryManager.Free((void*)str1);
-            ADC.MemoryManager.Free((void*)str2);
-            ADC.MemoryManager.Free((void*)str3);
+			ADC.MemoryManager.Free((void*)str1);
+			ADC.MemoryManager.Free((void*)str2);
+			ADC.MemoryManager.Free((void*)str3);
 		}
 		
 		public static void __Test1 ()
 		{
 			byte *ptr1 = (byte*)Stubs.CString ("US"), ptr2 = (byte*)Stubs.CString ("SK");
 
-            //Test constant CString buffers
+			//Test constant CString buffers
 			if (ByteString.Compare (ptr1, ptr2) == 0)
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' != 'SK'");
 			else
@@ -203,39 +203,39 @@ namespace SharpOS.Foundation {
 			else
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' == 'US'");
 
-            //Test constant CString buffer with constant String type
-            if (ByteString.Compare(ptr1, "SK") == 0)
-                TextMode.WriteLine("ByteString.Compare(): test FAIL: 'US' != const 'SK'");
-            else
-                TextMode.WriteLine("ByteString.Compare(): test pass: 'US' != const 'SK'");
+			//Test constant CString buffer with constant String type
+			if (ByteString.Compare(ptr1, "SK") == 0)
+				TextMode.WriteLine("ByteString.Compare(): test FAIL: 'US' != const 'SK'");
+			else
+				TextMode.WriteLine("ByteString.Compare(): test pass: 'US' != const 'SK'");
 
-            if (ByteString.Compare(ptr1, "US") == 0)
-                TextMode.WriteLine("ByteString.Compare(): test pass: 'US' == const 'US'");
-            else
-                TextMode.WriteLine("ByteString.Compare(): test FAIL: 'US' == const 'US'");
+			if (ByteString.Compare(ptr1, "US") == 0)
+				TextMode.WriteLine("ByteString.Compare(): test pass: 'US' == const 'US'");
+			else
+				TextMode.WriteLine("ByteString.Compare(): test FAIL: 'US' == const 'US'");
 
-            //Test that constant String is working properly
-            const string str1 = "US";
-            const string str2 = "SK";
-            if ((byte)str1[0] == (byte)'U')
-                TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[0]==(byte)'U'");
-            else
-                TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[0]==(byte)'U'");
-            
-            if ((byte)str1[1] == (byte)'S')
-                TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[1]==(byte)'S'");
-            else
-                TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)'S'");
-            
-            if (str1.Length == 2)
-                TextMode.WriteLine("ByteString : test pass: \"US\".Length==2");
-            else
-                TextMode.WriteLine("ByteString : test FAIL: \"US\".Length==2");
+			//Test that constant String is working properly
+			const string str1 = "US";
+			const string str2 = "SK";
+			if ((byte)str1[0] == (byte)'U')
+				TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[0]==(byte)'U'");
+			else
+				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[0]==(byte)'U'");
 
-            if ((byte)str1[1] == (byte)str2[0])
-                TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[1]==(byte)\"SK\"[0]");
-            else
-                TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)\"SK\"[0]");
+			if ((byte)str1[1] == (byte)'S')
+				TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[1]==(byte)'S'");
+			else
+				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)'S'");
+
+			if (str1.Length == 2)
+				TextMode.WriteLine("ByteString : test pass: \"US\".Length==2");
+			else
+				TextMode.WriteLine("ByteString : test FAIL: \"US\".Length==2");
+
+			if ((byte)str1[1] == (byte)str2[0])
+				TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[1]==(byte)\"SK\"[0]");
+			else
+				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)\"SK\"[0]");
 		}
 
 		#endregion
