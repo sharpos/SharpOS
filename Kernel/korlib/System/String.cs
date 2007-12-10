@@ -8,12 +8,10 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using System;
 using SharpOS.AOT.Attributes;
 
 namespace Internal.System {
-	public class String {
-		private int capacity;
+	public class String: Internal.System.Object {
 		private int length;
 		private char firstChar;
 

@@ -21,6 +21,7 @@
 			</references>
 			<sources>
 				<include name="System/*.cs" />
+				<include name="Runtime/*.cs" />
 			</sources>
 		</csc>
 		

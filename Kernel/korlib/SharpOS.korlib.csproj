@@ -65,12 +65,16 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="System\*.cs" />
+    <Compile Include="Runtime\*.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AOT\Core\SharpOS.AOT.Core.csproj">
       <Project>{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}</Project>
       <Name>SharpOS.AOT.Core</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Runtime" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

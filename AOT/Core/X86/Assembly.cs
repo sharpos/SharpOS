@@ -70,6 +70,12 @@ namespace SharpOS.AOT.X86 {
 		internal const string HELPER_LSAR = "LSAR";
 		internal const string HELPER_LMUL = "LMUL";
 
+		#region RUNTIME
+		const string VTABLE_LABEL = "{0} VTable";
+		const string VTABLE_CLASS = "SharpOS.Korlib.Runtime.VTable";
+		const string SYSTEM_STRING = "Internal.System.String";
+		#endregion
+
 		Engine engine;
 		Assembly data;
 		Assembly bss;
@@ -480,6 +486,23 @@ namespace SharpOS.AOT.X86 {
 			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + Assembly.FormatLabelName (label), null, null, target, new UInt32[] { 0 }, new string[] { "o32", "B8+r", "id" }));
 		}
 
+		private int GetBaseTypeSize (TypeDefinition type)
+		{
+			int result = 0;
+
+			if (type != null) {
+				result = this.GetBaseTypeSize (type.BaseType as TypeDefinition);
+
+				foreach (FieldReference field in type.Fields) {
+					if ((field as FieldDefinition).IsStatic)
+						continue;
+
+					result += this.engine.GetFieldSize (field.FieldType.FullName);
+				}
+			}
+
+			return result;
+		}
 
 		/// <summary>
 		/// Gets the field offset.
@@ -495,6 +518,8 @@ namespace SharpOS.AOT.X86 {
 
 			foreach (Class _class in this.engine) {
 				if (_class.ClassDefinition.FullName.Equals (objectName)) {
+					result = this.GetBaseTypeSize (_class.ClassDefinition.BaseType as TypeDefinition);
+
 					foreach (FieldReference field in _class.ClassDefinition.Fields) {
 						if ((field as FieldDefinition).IsStatic)
 							continue;
@@ -1083,6 +1108,17 @@ namespace SharpOS.AOT.X86 {
 
 				if (_class.ClassDefinition.IsValueType)
 					continue;
+
+				// Writing the Runtime VTable instances
+				string label = string.Format (VTABLE_LABEL, _class.ClassDefinition.FullName);
+				this.AddSymbol (new COFF.Label (label));
+				this.LABEL (label);
+
+				// VTable
+				this.ADDRESSOF (string.Format (VTABLE_LABEL, VTABLE_CLASS));
+
+				// Synchronisation
+				this.DATA ((uint) 0);
 
 				foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
 					string fullname = field.ToString ();
@@ -1942,10 +1978,11 @@ namespace SharpOS.AOT.X86 {
 
 				data.LABEL (label);
 
-				// TODO Add System.String Type Handle
+				// VTable
+				data.ADDRESSOF (string.Format (VTABLE_LABEL, SYSTEM_STRING));
 
-				// Capacity
-				data.DATA ((uint) value.Length + 1);
+				// Synchronisation;
+				data.DATA ((uint) 0);
 
 				// Length
 				data.DATA ((uint) value.Length);
@@ -1955,8 +1992,6 @@ namespace SharpOS.AOT.X86 {
 
 				// Trailing zero
 				data.DATA ((ushort) 0);
-
-				data.ADDRESSOF (KERNEL_MAIN);
 			}
 
 			return label;

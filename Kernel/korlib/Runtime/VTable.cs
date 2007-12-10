@@ -8,15 +8,8 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using SharpOS.Korlib.Runtime;
+namespace SharpOS.Korlib.Runtime {
+	internal class VTable: Internal.System.Object {
 
-namespace Internal.System {
-	public class Object {
-		internal VTable VTable;
-		internal uint Synchronisation;
-
-		public Object ()
-		{
-		}
 	}
 }

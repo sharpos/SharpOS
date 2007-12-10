@@ -595,7 +595,8 @@ namespace SharpOS.AOT.IR {
 				foreach (Method _method in _class) {
 					methods++;
 
-					ilInstructions += _method.MethodDefinition.Body.Instructions.Count;
+					if (_method.MethodDefinition.Body != null)
+						ilInstructions += _method.MethodDefinition.Body.Instructions.Count;
 				}
 			}
 
