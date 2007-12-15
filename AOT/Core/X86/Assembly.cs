@@ -62,7 +62,9 @@ namespace SharpOS.AOT.X86 {
 #endif 		
 
 		const uint BASE_ADDRESS = 0x00100000;
-		const uint ALIGNMENT = 16;
+		internal const uint ALIGNMENT = 16;
+		internal const byte OBJECT_ALIGNMENT_SHIFT = 3;
+		internal const uint OBJECT_ALIGNMENT = 1 << OBJECT_ALIGNMENT_SHIFT;
 		const uint STACK_SIZE = 64 * 1024;
 
 		internal const string HELPER_LSHL = "LSHL";
@@ -1108,6 +1110,8 @@ namespace SharpOS.AOT.X86 {
 
 				if (_class.ClassDefinition.IsValueType)
 					continue;
+
+				this.ALIGN (OBJECT_ALIGNMENT);
 
 				// Writing the Runtime VTable instances
 				string label = string.Format (VTABLE_LABEL, _class.ClassDefinition.FullName);

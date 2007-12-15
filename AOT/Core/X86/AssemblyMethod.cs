@@ -44,6 +44,8 @@ namespace SharpOS.AOT.X86 {
 		{
 			string fullname = method.MethodFullName;
 
+			assembly.ALIGN (Assembly.ALIGNMENT);
+
 			foreach (CustomAttribute attribute in method.MethodDefinition.CustomAttributes) {
 				if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ())) {
 					assembly.LABEL (attribute.ConstructorParameters [0].ToString ());
