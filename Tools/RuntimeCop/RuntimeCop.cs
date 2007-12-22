@@ -41,7 +41,7 @@ public class RuntimeCop {
 		Console.WriteLine ("Finished scanning.\n");
 		
 		foreach (MethodDefinition def in internalStubs)
-			Console.WriteLine (def);
+			Console.WriteLine (def.DeclaringType.FullName + "\t\t\t" + def);
 
 		return 0;
 	}
@@ -56,7 +56,10 @@ public class RuntimeCop {
 	{
 		foreach (TypeDefinition nestedType in type.NestedTypes)
 			ScanType (nestedType);
-		
+
+		foreach (MethodDefinition method in type.Constructors)
+			ScanMethod (method);
+
 		foreach (MethodDefinition method in type.Methods)
 			ScanMethod (method);
 	}
@@ -69,7 +72,6 @@ public class RuntimeCop {
 	
 	public static int Main (string [] args)
 	{
-		
 		RuntimeCop cop;
 
 		try {
