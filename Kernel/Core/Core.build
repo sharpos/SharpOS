@@ -34,10 +34,7 @@
 				<include name="${path::combine(temp-dir, 'BuiltinKeyMaps.ska')}" asis="true" />
 			</resources>
 			<sources>
-				<include name="*.cs" />
-				<include name="ADC/*.cs" />
-				<include name="ADC/X86/*.cs" />
-				<include name="Foundation/*.cs" />
+				<include name="**/*.cs" />
 			</sources>
 		</csc>
 		

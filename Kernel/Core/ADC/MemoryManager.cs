@@ -4,6 +4,7 @@
 // Authors:
 //	Sander van Rossen <sander.vanrossen@gmail.com>
 //	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
+//  Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -13,7 +14,6 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using SharpOS.Memory;
 
 namespace SharpOS.ADC
 {
@@ -29,6 +29,7 @@ namespace SharpOS.ADC
 		private struct Header
 		{
 			public Header* Next;
+            public Header* Previous;
 			public uint Size;
 			public bool Free;
 		}
@@ -41,7 +42,8 @@ namespace SharpOS.ADC
 			memoryEnd = UInt32.MaxValue;
 
 			firstNode = (Header*)memoryStart;
-			firstNode->Next = null;
+            firstNode->Previous = null;
+            firstNode->Next = null;
 			firstNode->Size = memoryEnd - memoryStart - (uint)sizeof(Header);
 			firstNode->Free = true;
 		}
@@ -61,29 +63,31 @@ namespace SharpOS.ADC
 				currentNode = currentNode->Next;
 			}
 
-			if (currentNode == null)
-				return null;
+            Diagnostics.Assert(currentNode != null, "MemoryManager.Allocate(uint): Unable to allocate memory; no sufficiently sized nodes available");
+            if (currentNode == null)
+                return null;
 
 			uint memoryLeft = currentNode->Size - allocate_size;
 
 			currentNode->Free = false;
-			currentNode->Size = allocate_size;
 
-			if (memoryLeft > 0)
-			{
+			if (memoryLeft > (uint)sizeof(Header))
+			{//If there is enough room to squeeze in a new node after this one, then do it
+                currentNode->Size = allocate_size;
 				uint nextPtr = (uint)currentNode + currentNode->Size + (uint)sizeof(Header);
 
 				Header* nextNode = (Header*)nextPtr;
 				nextNode->Free = true;
-				nextNode->Size = memoryLeft;
+				nextNode->Size = memoryLeft - (uint)sizeof(Header);
+                nextNode->Previous = currentNode;
 				nextNode->Next = null;
 
 				if (currentNode->Next != null)
-				{
-					// There are more nodes in list so injection is required
+                {// There are more nodes in list so injection is required					
 					Header* tmpNext = currentNode->Next;
 
 					nextNode->Next = tmpNext;
+                    tmpNext->Previous = nextNode;
 				}
 
 				currentNode->Next = (Header*)nextPtr;
@@ -92,7 +96,7 @@ namespace SharpOS.ADC
 			uint retPtr = (uint)currentNode + (uint)sizeof(Header);
 			allocated += (ulong)currentNode->Size;
 
-            Diagnostics.Assert(retPtr != 0, "ADC.MemoryManager.Allocate(): Allocation failed!");
+            Diagnostics.Assert(retPtr != 0, "MemoryManager.Allocate(uint): Allocation failed");
 
 			return (void*)retPtr;
 		}
@@ -104,6 +108,28 @@ namespace SharpOS.ADC
 			Header* freeHeader = (Header*)memoryHeaderPointer;
 
 			freeHeader->Free = true;
+
+            Header* currentNode = freeHeader;
+            //Scan forward for the last consecutive free node
+            while (currentNode->Next != null && currentNode->Next->Free)
+                currentNode = currentNode->Next;
+            //Now scan backwards and consolidate free nodes
+            while (currentNode->Previous != null && currentNode->Previous->Free)
+            {
+                Header* previous = currentNode->Previous;
+                previous->Size = currentNode->Size + (uint)sizeof(Header);
+                if (currentNode->Next != null)
+                {
+                    previous->Next = currentNode->Next;
+                    currentNode->Next->Previous = previous;
+                }
+                else
+                {
+                    previous->Next = null;
+                }
+
+                currentNode = currentNode->Previous;
+            }
 		}
 
 

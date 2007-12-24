@@ -34,7 +34,7 @@ namespace SharpOS.ADC
 		}
 
 		[AOTAttr.ADCStub]
-		public unsafe static void Call(uint address, uint value)
+        public unsafe static void Call(void* functionPointer, void* pointeredParameter)
 		{
 			Diagnostics.Error("Unimplemented - Memory.Call");
 		}

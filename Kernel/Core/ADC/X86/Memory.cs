@@ -103,6 +103,15 @@ namespace SharpOS.ADC.X86
 			Asm.CALL(&_address);
 		}
 
+        public unsafe static void Call(void* functionPointer, void* pointeredParameter)
+        {
+            uint _functionPointer = (uint)functionPointer;
+            uint _pointeredParameter = (uint)pointeredParameter;
+            
+            Asm.PUSH(&_pointeredParameter);
+            Asm.CALL(&_functionPointer);
+        }
+
 /*		// sigh.. one can only dream...
 		public delegate void call_function(uint value);
 		public unsafe static void Call(call_function function, uint value)

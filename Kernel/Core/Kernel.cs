@@ -130,8 +130,14 @@ namespace SharpOS {
 #if KERNEL_TESTS
 			// Testcases
 			ByteString.__RunTests ();
+            StringBuilder.__RunTests();
 #endif		
-			while (stayInLoop);
+            
+            StageMessage("Shell setup...");
+            SharpOS.Shell.Prompter.Setup();
+            SharpOS.Shell.Prompter.Start();
+
+            while (stayInLoop) ;
 		}
 
 		static unsafe void StageMessage(string message)

@@ -4,14 +4,19 @@
 // Authors:
 //	Sander van Rossen <sander.vanrossen@gmail.com>
 //	William Lahti <xfurious@gmail.com>
+//  Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
 //
 
+#define FORBID_ARROW_KEYS
+
 using System;
 using SharpOS;
 using SharpOS.ADC;
+using SharpOS.Foundation;
+using SharpOS.Shell;
 
 namespace SharpOS 
 {
@@ -39,8 +44,12 @@ namespace SharpOS
 		private static bool initialized = false;
 		private static bool overwrite	= false;
 
+        private static StringBuilder* textBuffer;
+
 		public static void Setup ()
 		{
+            textBuffer = StringBuilder.CREATE((uint)80);
+
 			Keyboard.RegisterKeyUpEvent (Stubs.GetFunctionPointer(CONSOLE_KEY_UP_HANDLER));
 			Keyboard.RegisterKeyDownEvent (Stubs.GetFunctionPointer(CONSOLE_KEY_DOWN_HANDLER));
 			Architecture.RegisterTimerEvent(Stubs.GetFunctionPointer(CONSOLE_TIMER_HANDLER));
@@ -130,6 +139,7 @@ namespace SharpOS
 				}
 				TextMode.MoveTo(x, y);
 				TextMode.WriteChar((byte)' ');
+                textBuffer->RemoveAt(textBuffer->Length - 1, 1);
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
 				return;
@@ -137,6 +147,7 @@ namespace SharpOS
 			//case Keys.LeftArrow:
 			else if (key == Keys.LeftArrow)
 			{
+#if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
 				TextMode.GetScreenSize(&width, &height);
@@ -144,11 +155,15 @@ namespace SharpOS
 				x = x - 1; if (x < 0) x = 0;
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
+#else
+                //TODO: Beep?
+#endif
 				return;
 			}
 			//case Keys.RightArrow:
 			else if (key == Keys.RightArrow)
 			{
+#if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
 				TextMode.GetScreenSize(&width, &height);
@@ -156,11 +171,15 @@ namespace SharpOS
 				x = x + 1; if (x >= width) x = width - 1;
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
+#else
+                //TODO: Beep?
+#endif
 				return;
 			}
 			//case Keys.UpArrow:
 			else if (key == Keys.UpArrow)
 			{
+#if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
 				TextMode.GetScreenSize(&width, &height);
@@ -168,11 +187,15 @@ namespace SharpOS
 				y = y - 1; if (y < 0) y = 0;
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
+#else
+                //TODO: Beep?
+#endif
 				return;
 			}
 			//case Keys.DownArrow:
 			else if (key == Keys.DownArrow)
 			{
+#if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
 				TextMode.GetScreenSize(&width, &height);
@@ -180,6 +203,9 @@ namespace SharpOS
 				y = y + 1; if (y >= height) y = height - 1;
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
+#else
+                //TODO: Beep?
+#endif
 				return;
 			}
 			//case Keys.Enter:
@@ -188,6 +214,7 @@ namespace SharpOS
 				TextMode.WriteLine();
 				TextMode.ClearToEndOfLine();
 				TextMode.RefreshCursor();
+                DispatchBuffer();
 				return;
 			}
 			//}
@@ -199,6 +226,7 @@ namespace SharpOS
 				TextMode.WriteChar((byte)'?');
 				TextMode.Write((int)scancode);
 				TextMode.RefreshCursor();
+                textBuffer->AppendChar((byte)255);
 				return;
 			}
 
@@ -208,8 +236,18 @@ namespace SharpOS
 				TextMode.SetReadPos(write);
 
 			TextMode.WriteChar(character);
+            textBuffer->AppendChar(character);
 			TextMode.RefreshCursor ();
 		}
+
+        private static void DispatchBuffer()
+        {
+            CString8* bufferCopy = CString8.Copy(textBuffer->buffer);
+            Diagnostics.Assert(bufferCopy != null, "Prompter::DispatchBuffer(): INSANITY CHECK: CString8.Copy(byte*) returned NULL");
+            Prompter.QueueLine(bufferCopy);
+            CString8.DISPOSE(bufferCopy);
+            textBuffer->Clear();
+        }
 
 		[SharpOS.AOT.Attributes.Label(CONSOLE_TIMER_HANDLER)]
 		public static unsafe void Timer (uint ticks)
@@ -226,6 +264,8 @@ namespace SharpOS
 				TextMode.RestoreAttributes();
 				TextMode.MoveTo(x, y);
 			}
+
+            Shell.Prompter.Pulse();
 		}
 	}
 }

@@ -432,9 +432,9 @@ namespace SharpOS.Foundation {
             Diagnostics.Assert(index < l,
                 "CString8.Substring(int,int): Parameter 'index' is outside of the valid range");
             Diagnostics.Assert(count >= 0,
-                "CString8.Substring(int,int): Parameter 'count' is outside of the valid range");
+                "CString8.Substring(int,int): Parameter 'count' should not be less than zero");
             Diagnostics.Assert((count + index) <= l,
-                "CString8.Substring(int,int): Parameter 'count' is outside of the valid range");
+                "CString8.Substring(int,int): Parameter 'count' extends pass the end of the string");
 
             return Substring_INTERNAL(index, count);
         }
@@ -497,6 +497,11 @@ namespace SharpOS.Foundation {
             result[l] = (byte)'\0';
 
             return (CString8*)result;
+        }
+
+        public static void DISPOSE(CString8* cstr)
+        {
+            ADC.MemoryManager.Free((void*)cstr);
         }
     }
 }
