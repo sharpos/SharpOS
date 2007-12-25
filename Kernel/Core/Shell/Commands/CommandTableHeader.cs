@@ -12,12 +12,15 @@ using System.Collections.Generic;
 using System.Text;
 using SharpOS.Foundation;
 using System.Runtime.InteropServices;
+using SharpOS.ADC;
 
 namespace SharpOS.Shell.Commands
 {
     [StructLayout(LayoutKind.Sequential)]
     public unsafe struct CommandTableHeader
     {
+        public const string inform_USE_HELP_COMMANDS = "Use 'help commands' to get a list of commands.";
+
         public int count;
         public CommandTableEntry* firstEntry;
 
@@ -148,7 +151,119 @@ namespace SharpOS.Shell.Commands
             }
         }
 
-        public static CommandTableHeader* GenerateDefault()
+        internal CommandExecutionAttemptResult HandleLine(CString8* input, bool verboseFailure, bool useHelp)
+        {
+            Diagnostics.Assert(input != null, "Prompter::HandleLine(CString8*): Parameter 'input' is null");
+#if Prompter_DebuggingVerbosity
+            Diagnostics.Message("Prompter::HandleLine(CString8*): Function started");
+#endif
+
+            if (input->Length == 0)
+            {
+#if Prompter_DebuggingVerbosity
+                Diagnostics.Message("Prompter::HandleLine(CString8*): Raw input is blank");
+#endif
+                if (verboseFailure)
+                    HandleEmptyCommandEntry();
+
+#if Prompter_DebuggingVerbosity
+                Diagnostics.Message("Prompter::HandleLine(CString8*): RET");
+#endif
+                return CommandExecutionAttemptResult.BlankEntry;
+            }
+            CString8* trimmedInput = input->Trim();
+            if (trimmedInput->Length == 0)
+            {
+#if Prompter_DebuggingVerbosity
+                Diagnostics.Message("Prompter::HandleLine(CString8*): Trimmed input is blank");
+#endif
+                CString8.DISPOSE(trimmedInput);
+
+                if(verboseFailure)
+                    HandleEmptyCommandEntry();
+
+#if Prompter_DebuggingVerbosity
+                Diagnostics.Message("Prompter::HandleLine(CString8*): RET");
+#endif
+                return CommandExecutionAttemptResult.BlankEntry;
+            }
+
+            int firstSpace = trimmedInput->IndexOf(" ");
+            CString8* commandName;
+            CString8* parameters;
+            if (firstSpace < 0)
+            {
+                commandName = trimmedInput;
+                parameters = CString8.CreateEmpty();
+            }
+            else
+            {
+                commandName = trimmedInput->Substring(0, firstSpace);
+                parameters = trimmedInput->Substring(firstSpace + 1);
+            }
+
+            CommandTableEntry* command = this.FindCommand(commandName);
+            if (command == null)
+            {
+#if Prompter_DebuggingVerbosity
+                Diagnostics.Message("Prompter::HandleLine(CString8*): Command not found");
+#endif
+                if(verboseFailure)
+                    HandleUnrecognizedCommandEntry(commandName);
+
+#if Prompter_DebuggingVerbosity
+                Diagnostics.Message("Prompter::HandleLine(CString8*): Freeing contextual stuff");
+#endif
+                //Free up what we used
+                if (commandName != trimmedInput)
+                    CString8.DISPOSE(commandName);
+                CString8.DISPOSE(trimmedInput);
+                CString8.DISPOSE(parameters);
+#if Prompter_DebuggingVerbosity
+                Diagnostics.Message("Prompter::HandleLine(CString8*): RET");
+#endif
+                return CommandExecutionAttemptResult.NotFound;
+            }
+            CommandExecutionContext* commandExecutionContext = CommandExecutionContext.CREATE();
+            commandExecutionContext->parameters = parameters;
+
+#if Prompter_DebuggingVerbosity
+            Diagnostics.Message("Prompter::HandleLine(CString8*): Getting ready to call command");
+#endif
+            if (!useHelp)
+                ADC.Memory.Call(command->func_Execute, (void*)commandExecutionContext);
+            else
+                ADC.Memory.Call(command->func_GetHelp, (void*)commandExecutionContext);
+#if Prompter_DebuggingVerbosity
+            Diagnostics.Message("Prompter::HandleLine(CString8*): Done calling command");
+#endif
+
+            //Free up what we used
+#if Prompter_DebuggingVerbosity
+            Diagnostics.Message("Prompter::HandleLine(CString8*): Freeing contextual stuff");
+#endif
+            if (commandName != trimmedInput)
+                CString8.DISPOSE(commandName);
+            CString8.DISPOSE(trimmedInput);
+            CString8.DISPOSE(parameters);
+            CommandExecutionContext.DISPOSE(commandExecutionContext);
+#if Prompter_DebuggingVerbosity
+            Diagnostics.Message("Prompter::HandleLine(CString8*): RET");
+#endif
+            return CommandExecutionAttemptResult.Success;
+        }
+
+        private static void HandleUnrecognizedCommandEntry(CString8* commandName)
+        {
+            TextMode.Write("Unrecognized command: \""); TextMode.Write(commandName); TextMode.WriteLine("\"");
+        }
+
+        private static void HandleEmptyCommandEntry()
+        {
+            TextMode.WriteLine(inform_USE_HELP_COMMANDS);
+        }
+
+        public static CommandTableHeader* GenerateDefaultRoot()
         {
             CommandTableHeader* header = (CommandTableHeader*)SharpOS.ADC.MemoryManager.Allocate((uint)sizeof(CommandTableHeader));
 

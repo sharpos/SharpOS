@@ -33,10 +33,38 @@ namespace SharpOS.Shell.Commands.BuiltIn
         [Label(lblGetHelp)]
         public static void GetHelp(CommandExecutionContext* context)
         {
-            TextMode.WriteLine("Syntax: ");
-            TextMode.WriteLine("     commands");
-            TextMode.WriteLine("");
-            TextMode.WriteLine("Displays a list of all commands, and a short description of each.");
+            if (context->parameters == null ||
+                context->parameters->Length == 0)
+            {
+                ADC.Memory.Call((void*)Stubs.GetFunctionPointer(lblExecute), (void*)context);
+            }
+            else
+            {
+                CommandExecutionAttemptResult result;
+                result = Prompter.CommandTable->HandleLine(context->parameters, false, true);
+                if (result == CommandExecutionAttemptResult.NotFound)
+                {
+                    int indexOfSpace = context->parameters->IndexOf(" ");
+                    CString8* tempStr;
+                    if (indexOfSpace >= 0)
+                        tempStr = context->parameters->Substring(0, indexOfSpace);
+                    else
+                        tempStr = CString8.Copy(context->parameters);
+
+                    TextMode.Write("No command '");
+                    TextMode.Write(tempStr);
+                    TextMode.WriteLine("' is available to retrieve help for.");
+                    TextMode.WriteLine(CommandTableHeader.inform_USE_HELP_COMMANDS);
+
+                    CString8.DISPOSE(tempStr);
+                    return;
+                }
+                if (result == CommandExecutionAttemptResult.BlankEntry)
+                {
+                    ADC.Memory.Call((void*)Stubs.GetFunctionPointer(help.lblGetHelp), (void*)context);
+                }
+
+            }
         }
 
         public static CommandTableEntry* CREATE()

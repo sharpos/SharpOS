@@ -27,52 +27,29 @@ namespace SharpOS.Shell.Commands.BuiltIn
         [Label(lblExecute)]
         public static void Execute(CommandExecutionContext* context)
         {
-            if(context->parameters != null)
-                if (context->parameters->Length == 0)
-                {
-                    CommandExecutionContext* tempHelpContext = CommandExecutionContext.CREATE();
-                    ADC.Memory.Call((void*)Stubs.GetFunctionPointer(lblGetHelp), tempHelpContext);
-                    CommandExecutionContext.DISPOSE(tempHelpContext);
-                    return;
-                }
+            CommandExecutionAttemptResult result = Prompter.CommandTable->HandleLine(context->parameters, false, true);
 
-            int indexOfSpace = context->parameters->IndexOf(" ");
-            CString8* commandName;
-            if (indexOfSpace >= 0)
+            if (result == CommandExecutionAttemptResult.NotFound)
             {
-                commandName = context->parameters->Substring(0, indexOfSpace);
-            }
-            else
-            {
-                commandName = CString8.Copy(context->parameters);
-            }
-
-            CommandTableEntry* command = Prompter.CommandTable->FindCommand(commandName);
-            if (command == null)
-            {
+                int indexOfSpace = context->parameters->IndexOf(" ");
+                CString8* tempStr;
+                if (indexOfSpace >= 0)
+                    tempStr = context->parameters->Substring(0, indexOfSpace);
+                else
+                    tempStr = CString8.Copy(context->parameters);
+                
                 TextMode.Write("No command '");
-                TextMode.Write(commandName);
+                TextMode.Write(tempStr);
                 TextMode.WriteLine("' is available to retrieve help for.");
+                TextMode.WriteLine(CommandTableHeader.inform_USE_HELP_COMMANDS);
+
+                CString8.DISPOSE(tempStr);
                 return;
             }
-
-            CommandExecutionContext* helpContext = CommandExecutionContext.CREATE();
-            if(indexOfSpace>=0)
+            if (result == CommandExecutionAttemptResult.BlankEntry)
             {
-                CString8* tempParams = context->parameters->Substring(indexOfSpace);
-                helpContext->parameters = tempParams->Trim();
-                CString8.DISPOSE(tempParams);
+                ADC.Memory.Call((void*)Stubs.GetFunctionPointer(lblGetHelp),(void*)context);
             }
-            else
-            {
-                helpContext->parameters = CString8.CreateEmpty();
-            }
-
-            ADC.Memory.Call(command->func_GetHelp, (void*)helpContext);
-
-            CString8.DISPOSE(helpContext->parameters);
-            CommandExecutionContext.DISPOSE(helpContext);
-            CString8.DISPOSE(commandName);
         }
 
         [Label(lblGetHelp)]
@@ -81,7 +58,8 @@ namespace SharpOS.Shell.Commands.BuiltIn
             TextMode.WriteLine("Syntax: ");
             TextMode.WriteLine("     help <command>");
             TextMode.WriteLine("");
-            TextMode.WriteLine("Prints help information about the given command");
+            TextMode.WriteLine("Prints help information about the given command.");
+            TextMode.WriteLine(CommandTableHeader.inform_USE_HELP_COMMANDS);
         }
 
         public static CommandTableEntry* CREATE()

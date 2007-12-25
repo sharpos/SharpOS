@@ -31,7 +31,7 @@ namespace SharpOS.Shell
             if (initialized)
                 return;
 
-            CommandTable = CommandTableHeader.GenerateDefault();
+            CommandTable = CommandTableHeader.GenerateDefaultRoot();
             lineBuffer = StringBuilder.CREATE(80 * 5);
 
             initialized = true;
@@ -50,7 +50,20 @@ namespace SharpOS.Shell
 
         public static void WritePrompt()
         {
-            TextMode.Write("#OS> ");
+            bool changingColor = TextMode.SaveAttributes();
+            if(changingColor)
+                TextMode.SetAttributes(TextColor.Green,TextMode.Background);
+            TextMode.Write("#");
+            if(changingColor)
+                TextMode.SetAttributes(TextColor.Blue, TextMode.Background);
+            TextMode.Write("OS");
+            if (changingColor)
+                TextMode.SetAttributes(TextColor.White, TextMode.Background);
+            TextMode.Write(">");
+            if (changingColor)
+                TextMode.RestoreAttributes();
+            TextMode.Write(" ");
+
         }
 
         public static void Pulse()
@@ -68,110 +81,10 @@ namespace SharpOS.Shell
 
         private static void HandleLine(CString8* input)
         {
-            Diagnostics.Assert(input!=null,"Prompter::HandleLine(CString8*): Parameter 'input' is null");
-#if Prompter_DebuggingVerbosity
-            Diagnostics.Message("Prompter::HandleLine(CString8*): Function started");
-#endif
+            CommandExecutionAttemptResult executionResult;
+            executionResult = CommandTable->HandleLine(input, true,false);
 
-            if (input->Length == 0)
-            {
-#if Prompter_DebuggingVerbosity
-                Diagnostics.Message("Prompter::HandleLine(CString8*): Raw input is blank");
-#endif
-                HandleEmptyCommandEntry();
-#if Prompter_DebuggingVerbosity
-                Diagnostics.Message("Prompter::HandleLine(CString8*): RET");
-#endif
-                return;
-            }
-            CString8* trimmedInput = input->Trim();
-            if (trimmedInput->Length == 0)
-            {
-#if Prompter_DebuggingVerbosity
-                Diagnostics.Message("Prompter::HandleLine(CString8*): Trimmed input is blank");
-#endif
-                CString8.DISPOSE(trimmedInput);
-                HandleEmptyCommandEntry();
-#if Prompter_DebuggingVerbosity
-                Diagnostics.Message("Prompter::HandleLine(CString8*): RET");
-#endif
-                return;
-            }
-            
-            int firstSpace = trimmedInput->IndexOf(" ");
-            CString8* commandName;
-            CString8* parameters;
-            if (firstSpace < 0)
-            {
-                commandName = trimmedInput;
-                parameters = CString8.CreateEmpty();
-            }
-            else
-            {
-                commandName = trimmedInput->Substring(0, firstSpace);
-                parameters = trimmedInput->Substring(firstSpace + 1);
-            }
-
-            CommandTableEntry* command = CommandTable->FindCommand(commandName);
-            if (command == null)
-            {
-#if Prompter_DebuggingVerbosity
-                Diagnostics.Message("Prompter::HandleLine(CString8*): Command not found");
-#endif
-                HandleUnrecognizedCommandEntry(commandName);
-
-#if Prompter_DebuggingVerbosity
-                Diagnostics.Message("Prompter::HandleLine(CString8*): Freeing contextual stuff");
-#endif
-                //Free up what we used
-                if (commandName != trimmedInput)
-                    CString8.DISPOSE(commandName);
-                CString8.DISPOSE(trimmedInput);
-                CString8.DISPOSE(parameters);
-#if Prompter_DebuggingVerbosity
-                Diagnostics.Message("Prompter::HandleLine(CString8*): RET");
-#endif
-                return;
-            }
-            CommandExecutionContext* commandExecutionContext = CommandExecutionContext.CREATE();
-            commandExecutionContext->parameters = parameters;
-
-#if Prompter_DebuggingVerbosity
-            Diagnostics.Message("Prompter::HandleLine(CString8*): Getting ready to call command");
-#endif
-            ADC.Memory.Call(command->func_Execute, (void*)commandExecutionContext);
-#if Prompter_DebuggingVerbosity
-            Diagnostics.Message("Prompter::HandleLine(CString8*): Done calling command");
-#endif
-
-            TextMode.WriteLine();
-            WritePrompt();
-
-            //Free up what we used
-#if Prompter_DebuggingVerbosity
-            Diagnostics.Message("Prompter::HandleLine(CString8*): Freeing contextual stuff");
-#endif
-            if (commandName != trimmedInput)
-                CString8.DISPOSE(commandName);
-            CString8.DISPOSE(trimmedInput);
-            CString8.DISPOSE(parameters);
-            CommandExecutionContext.DISPOSE(commandExecutionContext);
-#if Prompter_DebuggingVerbosity
-            Diagnostics.Message("Prompter::HandleLine(CString8*): RET");
-#endif
-        }
-
-        private static void HandleUnrecognizedCommandEntry(CString8* commandName)
-        {
-            TextMode.Write("Unrecognized command: \""); TextMode.Write(commandName); TextMode.WriteLine("\"");
-            TextMode.WriteLine();
-            WritePrompt();
-        }
-
-        private static void HandleEmptyCommandEntry()
-        {
-            TextMode.WriteLine("Blank command entries don't do anything...");
-            TextMode.WriteLine();
+            ADC.TextMode.WriteLine();
             WritePrompt();
         }
 
