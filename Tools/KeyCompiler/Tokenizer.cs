@@ -157,7 +157,7 @@ namespace SharpOS.Tools {
 		public DPrimitiveDecider PrimitiveDecider;
 		public string Text;
 		public bool IgnoreWhitespace = false;
-		public char [] WhitespaceChars = new char[] { ' ', '\t', '\n' };
+		public char [] WhitespaceChars = new char[] { ' ', '\t', '\n', '\r' };
 		public string [] SpecialTokens = new string[0];
 		
 		public bool StringMode = false;
