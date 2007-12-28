@@ -275,6 +275,7 @@ namespace SharpOS.Shell.Commands
             header->AddEntry(BuiltIn.commands.CREATE());
             header->AddEntry(BuiltIn.help.CREATE());
             header->AddEntry(BuiltIn.version.CREATE());
+            header->AddEntry(BuiltIn.stage.CREATE());
             header->AddEntry( BuiltIn.cpuid.CREATE( ) );
             header->AddEntry( BuiltIn.memdump.CREATE( ) );
             header->AddEntry( BuiltIn.reboot.CREATE( ) );
