@@ -22,6 +22,7 @@
 		<mkdir dir="${prefix}" />
 		<nant buildfile="../../Tools/KeyCompiler/KeyCompiler.build" />
 		<exec program="${compiler}" commandline="US.skm -o:${prefix}/US.bin" />
+		<exec program="${compiler}" commandline="UK.skm -o:${prefix}/UK.bin" />
 	</target>
 
 	<target name="clean">
