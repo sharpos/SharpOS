@@ -253,27 +253,26 @@ namespace SharpOS.Shell.Commands {
 			TextMode.WriteLine (inform_USE_HELP_COMMANDS);
 		}
 
-		public static CommandTableHeader* GenerateDefaultRoot ()
-		{
-			CommandTableHeader* header = (CommandTableHeader*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableHeader));
-			
-			header->firstEntry = null;
+                public static CommandTableHeader* GenerateDefaultRoot() {
+                        CommandTableHeader* header = (CommandTableHeader*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableHeader));
 
-			//header->AddEntry (BuiltIn.victim.CREATE ());
-			header->AddEntry (BuiltIn.cls.CREATE ());
-			header->AddEntry (BuiltIn.commands.CREATE ());
-			header->AddEntry (BuiltIn.help.CREATE ());
-			header->AddEntry (BuiltIn.version.CREATE ());
-			header->AddEntry (BuiltIn.stage.CREATE ());
-			header->AddEntry (BuiltIn.cpuid.CREATE ());
-			header->AddEntry (BuiltIn.keymap.CREATE ());
-			header->AddEntry (BuiltIn.memdump.CREATE ());
-			header->AddEntry (BuiltIn.reboot.CREATE ());
-			header->AddEntry (BuiltIn.panic.CREATE ());
-			header->AddEntry (BuiltIn.halt.CREATE ());
-			header->AddEntry (BuiltIn.egg.CREATE ());
+                        header->firstEntry = null;
 
-			return header;
-		}
+                        //header->AddEntry (BuiltIn.victim.CREATE ());
+                        header->AddEntry (BuiltIn.Help.CREATE ());
+                        header->AddEntry (BuiltIn.Cls.CREATE ());
+                        header->AddEntry (BuiltIn.Commands.CREATE ());
+                        header->AddEntry (BuiltIn.CpuId.CREATE ());
+                        header->AddEntry (BuiltIn.Egg.CREATE ());
+                        header->AddEntry (BuiltIn.Halt.CREATE ());
+                        header->AddEntry (BuiltIn.Keymap.CREATE ());
+                        header->AddEntry (BuiltIn.MemDump.CREATE ());
+                        header->AddEntry (BuiltIn.Panic.CREATE ());
+                        header->AddEntry (BuiltIn.Reboot.CREATE ());
+                        header->AddEntry (BuiltIn.Stage.CREATE ());
+                        header->AddEntry (BuiltIn.Version.CREATE ());
+
+                        return header;
+                }
 	}
 }

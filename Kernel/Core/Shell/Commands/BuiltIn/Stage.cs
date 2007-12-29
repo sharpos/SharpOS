@@ -17,67 +17,64 @@ using SharpOS.Foundation;
 using SharpOS.ADC;
 
 namespace SharpOS.Shell.Commands.BuiltIn {
-	public unsafe static class stage {
-		public const string name = "stage";
-		public const string shortDescription = "Prints the current kernel stage";
-		public const string lblExecute = "COMMANDS.stage.Execute";
-		public const string lblGetHelp = "COMMANDS.stage.GetHelp";
+        public unsafe static class Stage {
+                public const string name = "stage";
+                public const string shortDescription = "Prints the current kernel stage";
+                public const string lblExecute = "COMMANDS.stage.Execute";
+                public const string lblGetHelp = "COMMANDS.stage.GetHelp";
 
-		[Label (lblExecute)]
-		public static void Execute (CommandExecutionContext* context)
-		{
-			TextMode.Write ("Current kernel stage: ");
+                [Label (lblExecute)]
+                public static void Execute(CommandExecutionContext* context) {
+                        TextMode.Write ("Current kernel stage: ");
 
-			switch (Kernel.GetKernelStage ()) {
-				case KernelStage.Init:
-					TextMode.WriteLine ("(0) init");
-					break;
-				case KernelStage.RuntimeInit:
-					TextMode.WriteLine ("(1) runtime-init");
-					break;
-				case KernelStage.UserInit:
-					TextMode.WriteLine ("(2) user-init");
-					break;
-				case KernelStage.Active:
-					TextMode.WriteLine ("(3) active");
-					break;
-				case KernelStage.SingleUser:
-					TextMode.WriteLine ("(4) single-user");
-					break;
-				case KernelStage.Stopping:
-					TextMode.WriteLine ("(5) stopping");
-					break;
-				case KernelStage.Stop:
-					TextMode.WriteLine ("(6) stop");
-					break;
-				case KernelStage.Halt:
-					TextMode.WriteLine ("(7) halt");
-					break;
-				case KernelStage.Unknown:
-					TextMode.WriteLine ("(?) unknown");
-					break;
-			}
-		}
+                        switch (Kernel.GetKernelStage ()) {
+                                case KernelStage.Init:
+                                        TextMode.WriteLine ("(0) init");
+                                        break;
+                                case KernelStage.RuntimeInit:
+                                        TextMode.WriteLine ("(1) runtime-init");
+                                        break;
+                                case KernelStage.UserInit:
+                                        TextMode.WriteLine ("(2) user-init");
+                                        break;
+                                case KernelStage.Active:
+                                        TextMode.WriteLine ("(3) active");
+                                        break;
+                                case KernelStage.SingleUser:
+                                        TextMode.WriteLine ("(4) single-user");
+                                        break;
+                                case KernelStage.Stopping:
+                                        TextMode.WriteLine ("(5) stopping");
+                                        break;
+                                case KernelStage.Stop:
+                                        TextMode.WriteLine ("(6) stop");
+                                        break;
+                                case KernelStage.Halt:
+                                        TextMode.WriteLine ("(7) halt");
+                                        break;
+                                case KernelStage.Unknown:
+                                        TextMode.WriteLine ("(?) unknown");
+                                        break;
+                        }
+                }
 
-		[Label (lblGetHelp)]
-		public static void GetHelp (CommandExecutionContext* context)
-		{
-			TextMode.WriteLine ("Syntax: ");
-			TextMode.WriteLine ("     stage");
-			TextMode.WriteLine ("");
-			TextMode.WriteLine ("Prints the current kernel stage.");
-		}
+                [Label (lblGetHelp)]
+                public static void GetHelp(CommandExecutionContext* context) {
+                        TextMode.WriteLine ("Syntax: ");
+                        TextMode.WriteLine ("     stage");
+                        TextMode.WriteLine ("");
+                        TextMode.WriteLine ("Prints the current kernel stage.");
+                }
 
-		public static CommandTableEntry* CREATE ()
-		{
-			CommandTableEntry* entry = (CommandTableEntry*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
+                public static CommandTableEntry* CREATE() {
+                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
 
-			entry->name = (CString8*) SharpOS.Stubs.CString (name);
-			entry->shortDescription = (CString8*) SharpOS.Stubs.CString (shortDescription);
-			entry->func_Execute = (void*) SharpOS.Stubs.GetLabelAddress (lblExecute);
-			entry->func_GetHelp = (void*) SharpOS.Stubs.GetLabelAddress (lblGetHelp);
+                        entry->name = (CString8*) SharpOS.Stubs.CString (name);
+                        entry->shortDescription = (CString8*) SharpOS.Stubs.CString (shortDescription);
+                        entry->func_Execute = (void*) SharpOS.Stubs.GetLabelAddress (lblExecute);
+                        entry->func_GetHelp = (void*) SharpOS.Stubs.GetLabelAddress (lblGetHelp);
 
-			return entry;
-		}
-	}
+                        return entry;
+                }
+        }
 }
