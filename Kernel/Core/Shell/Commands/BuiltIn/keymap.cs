@@ -29,13 +29,11 @@ namespace SharpOS.Shell.Commands.BuiltIn
         {
 
             if( context->parameters->Length == 0 )
-                TextMode.WriteLine( "Current keymap command is not supported yet." );
-            if( context->parameters->Compare( "--list" ) == 0 )
-                TextMode.WriteLine( "--list command is not supported yet." );
+                KeyMap.WriteCurrentKeymap( );
+            else if( context->parameters->Compare( "--list" ) == 0 )
+                KeyMap.WriteKeymaps( );
             else
                 KeyMap.SetKeyMap( context->parameters );
-
-            return;
         }
 
         [Label( lblGetHelp )]
