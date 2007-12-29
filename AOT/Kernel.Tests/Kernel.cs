@@ -1,5 +1,5 @@
 // 
-// (C) 2006-2007 The SharpOS Project Team (http://sharpos.sourceforge.net)
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
@@ -21,7 +21,7 @@ namespace SharpOS {
 		{
 			Screen.SetAttributes (Screen.ColorTypes.Yellow, Screen.ColorTypes.Black);
 
-			Screen.WriteLine ("SharpOS Unit Tests (http://sharpos.sourceforge.net)");
+			Screen.WriteLine ("SharpOS Unit Tests (http://www.sharpos.org)");
 			Screen.WriteNL ();
 
 			RunTests ();

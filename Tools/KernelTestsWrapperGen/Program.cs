@@ -1,5 +1,5 @@
 // 
-// (C) 2006-2007 The SharpOS Project Team (http://sharpos.sourceforge.net)
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
@@ -101,7 +101,7 @@ namespace KernelTestsWrapperGen {
 		{
 			TextWriter tr = new StreamWriter (File.Open (name, FileMode.Create));
 			tr.WriteLine ("//");
-			tr.WriteLine ("// (C) 2006-2007 The SharpOS Project Team (http://sharpos.sourceforge.net)");
+			tr.WriteLine ("// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)");
 			tr.WriteLine ("//");
 			tr.WriteLine ("// Authors:");
 			tr.WriteLine ("//	Mircea-Cristian Racasan <darx_kies@gmx.net>");
