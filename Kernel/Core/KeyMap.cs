@@ -50,7 +50,7 @@ namespace SharpOS
 				TextMode.WriteLine ("No keymap selected, choosing default (US)");
 
 				userKeyMap->Clear ();
-				userKeyMap->Concat ("US");
+				userKeyMap->Concat ("UK");
 			}
 
 			keymapArchive = (void*)Stubs.GetLabelAddress
@@ -154,6 +154,51 @@ namespace SharpOS
 
 			return null;
 		}
+
+        public static void WriteKeymaps( )
+        {
+            byte* table = (byte*) keymapArchive + 4;
+            byte* ret_table;
+            byte* buf = getBuiltinKeyMapBuffer;
+
+            for( int x = 0; x < keymapEntries; ++x )
+            {
+                int nSize = 0;
+                int tSize = 0;
+                int error = 0;
+                int strSize = 0;
+
+                strSize = BinaryTool.ReadPrefixedString( table, buf,
+                    Kernel.MaxKeyMapNameLength, &error );
+
+                table += strSize;
+                nSize = ByteString.Length( buf );
+
+                ret_table = table;
+
+                table += 2; // keymask/statebit
+
+                // default table
+
+                tSize = *(int*) table;
+                table += 4;
+                table += tSize;
+
+                // shifted table
+
+                tSize = *(int*) table;
+                table += 4;
+                table += tSize;
+
+                // Write it out.
+                TextMode.WriteLine( buf );
+            }
+        }
+
+        public static void WriteCurrentKeymap( )
+        {
+            TextMode.WriteLine( "WriteCurrentKeymap Not Implemented." );
+        }
 
 		#endregion
 		#region GetKeyMap() family
@@ -402,6 +447,7 @@ namespace SharpOS
 		}
 
 		#endregion
-	}
+
+    }
 }
 
