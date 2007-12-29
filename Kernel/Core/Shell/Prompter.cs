@@ -136,7 +136,8 @@ namespace SharpOS.Shell
         {
             Diagnostics.Assert(commandTable != null, "Prompter::DisplayCommandList(CommandTableHeader*): Parameter 'commandTable' is null");
 
-            if (commandTable->firstEntry == null)
+            //HACK: Was originally: if (commandTable->firstEntry == null)
+            if (commandTable->firstEntry == null || commandTable->firstEntry->nextEntry == null)
             {
                 ADC.TextMode.WriteLine("No commands to display; the commands list is empty.");
                 return;
@@ -155,7 +156,8 @@ namespace SharpOS.Shell
                 TextMode.WriteLine(colBLabel);
 
                 CommandTableEntry* currentEntry;
-                for (currentEntry = commandTable->firstEntry;
+                //HACK: Was originally: for (currentEntry = commandTable->firstEntry;
+                for (currentEntry = commandTable->firstEntry->nextEntry;
                     currentEntry != null;
                     currentEntry = currentEntry->nextEntry)
                 {
