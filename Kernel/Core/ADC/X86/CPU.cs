@@ -32,21 +32,25 @@ namespace SharpOS.ADC.X86 {
 
 			ADC.TextMode.SaveAttributes();
 
+            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
 			ADC.TextMode.Write ("CPU Family: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) ((eax >> 8) & 0x0F));
 			ADC.TextMode.WriteLine ();
 
+            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
 			ADC.TextMode.Write ("CPU Model: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) ((eax >> 4) & 0x0F));
 			ADC.TextMode.WriteLine ();
 
+            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
 			ADC.TextMode.Write ("CPU Stepping: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) (eax & 0x0F));
 			ADC.TextMode.WriteLine ();
 
+            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
 			ADC.TextMode.Write ("CPU Flags: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 
