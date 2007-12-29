@@ -32,6 +32,21 @@ namespace SharpOS.AOT.IR {
 	/// Represents a method in the AOT's intermediate representation. 
 	/// </summary>
 	public class Method : IEnumerable<Block> {
+		private bool entryPoint = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this method should be called when booting.
+		/// </summary>
+		/// <value><c>true</c> if [entry point]; otherwise, <c>false</c>.</value>
+		public bool EntryPoint {
+			get {
+				return this.entryPoint;
+			}
+			set {
+				this.entryPoint = value;
+			}
+		}
+
 		private int stackSize = 0;
 
 		/// <summary>

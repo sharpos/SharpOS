@@ -2312,5 +2312,25 @@ namespace SharpOS.AOT.X86 {
 
 			assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));
 		}
+
+		private void Box (IR.Instructions.Box instruction)
+		{
+			throw new NotImplementedEngineException ();
+		}
+
+		private void Unbox (IR.Instructions.Unbox instruction)
+		{
+			throw new NotImplementedEngineException ();
+		}
+
+		private void UnboxAny (IR.Instructions.UnboxAny instruction)
+		{
+			if (instruction.Type.IsValueType) {
+
+			} else {
+				// TODO check the value if it is a reference or generic
+				throw new NotImplementedEngineException ();
+			}
+		}
 	}
 }

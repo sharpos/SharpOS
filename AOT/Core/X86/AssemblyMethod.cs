@@ -51,12 +51,13 @@ namespace SharpOS.AOT.X86 {
 					assembly.LABEL (attribute.ConstructorParameters [0].ToString ());
 
 					this.assembly.AddSymbol (new COFF.Label (attribute.ConstructorParameters [0].ToString ()));
-
-				} else if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.KernelMainAttribute).ToString ())) {
-					assembly.LABEL (Assembly.KERNEL_MAIN);
-
-					this.assembly.AddSymbol (new COFF.Label (Assembly.KERNEL_MAIN));
 				}
+			}
+
+			if (this.method.EntryPoint) {
+				assembly.LABEL (Assembly.KERNEL_MAIN);
+
+				this.assembly.AddSymbol (new COFF.Label (Assembly.KERNEL_MAIN));
 			}
 
 			this.assembly.AddSymbol (new COFF.Function (fullname));
@@ -89,7 +90,7 @@ namespace SharpOS.AOT.X86 {
 
 					else if (instruction is IR.Instructions.Initialize)
 						this.Initialize (instruction as IR.Instructions.Initialize);
-					
+
 					else if (instruction is IR.Instructions.Ldc)
 						this.Ldc (instruction as IR.Instructions.Ldc);
 
@@ -185,7 +186,7 @@ namespace SharpOS.AOT.X86 {
 
 					else if (instruction is IR.Instructions.And)
 						this.And (instruction as IR.Instructions.And);
-					
+
 					else if (instruction is IR.Instructions.Or)
 						this.Or (instruction as IR.Instructions.Or);
 
@@ -215,6 +216,15 @@ namespace SharpOS.AOT.X86 {
 
 					else if (instruction is IR.Instructions.Switch)
 						this.Switch (instruction as IR.Instructions.Switch);
+
+					else if (instruction is IR.Instructions.Box)
+						this.Box (instruction as IR.Instructions.Box);
+
+					else if (instruction is IR.Instructions.Unbox)
+						this.Unbox (instruction as IR.Instructions.Unbox);
+
+					else if (instruction is IR.Instructions.UnboxAny)
+						this.UnboxAny (instruction as IR.Instructions.UnboxAny);
 
 					else
 						throw new EngineException ("'" + instruction + "' is not supported.");

@@ -30,7 +30,7 @@
 	<target name="aot" depends="build">
 		<echo message="AOT compiling the SharpOS Kernel" />
 		<exec program="${path::combine(prefix, 'sharpos-aot.exe')}" 
-			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')} ${path::combine(prefix, 'korlib.dll')}" />
+			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')}" />
 			
 		<echo message="Update the disk image..." />
 		<delete file="${path::combine(common-dir,'SharpOS.img')}" failonerror="false" />

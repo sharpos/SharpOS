@@ -87,8 +87,9 @@
   -->
   <PropertyGroup>
     <PreBuildEvent>$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US.skm -o:"$(SolutionDir)\build\KeyMaps\US.bin"
+$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US.skm -o:"$(SolutionDir)\build\KeyMaps\UK.bin"
 $(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ -ar -o:"$(TargetDir)\Temp\BuiltinKeymaps.ska" "@$(ProjectDir)\Config\BuiltinKeymaps.cfg"</PreBuildEvent>
-    <PostBuildEvent>$(TargetDir)\SharpOS-AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll $(TargetDir)\SharpOS.korlib.dll
+    <PostBuildEvent>$(TargetDir)\SharpOS-AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll
 copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
 $(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>
   </PropertyGroup>

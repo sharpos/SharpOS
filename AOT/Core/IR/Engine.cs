@@ -607,7 +607,10 @@ namespace SharpOS.AOT.IR {
 
 			Message (1, "Processing IR methods...");
 			SetStatus (Status.IRProcessing);
-			
+
+			Method markedEntryPoint = null;
+			Method mainEntryPoint = null;
+
 			foreach (Class _class in this.classes) {
 				List <string> defNames = new List <string> ();
 				
@@ -615,6 +618,27 @@ namespace SharpOS.AOT.IR {
 				this.currentType = _class.ClassDefinition;
 				
 				foreach (Method _method in _class) {
+					foreach (CustomAttribute attribute in _method.MethodDefinition.CustomAttributes) {
+						if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.KernelMainAttribute).ToString ()))
+							continue;
+
+						if (markedEntryPoint != null)
+							throw new EngineException ("More than one Marked Entry Point found.");
+
+						markedEntryPoint = _method;
+					}
+
+					if (_method.MethodDefinition.Name.Equals ("Main")
+							&& _method.MethodDefinition.Parameters.Count == 0
+							&& (_method.MethodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Int32)
+								|| _method.MethodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Void))) {
+
+						if (mainEntryPoint != null)
+							throw new EngineException ("More than one Main Entry Point found.");
+
+						mainEntryPoint = _method;
+					}
+					
 					if (defNames.Contains (_method.MethodDefinition.ToString ()))
 						throw new EngineException ("Already compiled this method: " + 
 							_method.MethodDefinition.ToString ());
@@ -639,6 +663,15 @@ namespace SharpOS.AOT.IR {
 				this.currentModule = null;
 				this.currentType = null;
 			}
+
+			if (markedEntryPoint != null)
+				markedEntryPoint.EntryPoint = true;
+
+			else if (mainEntryPoint != null)
+				mainEntryPoint.EntryPoint = true;
+
+			else
+				throw new EngineException ("No entry point defined.");
 
 			Message (1, "Encoding output for `{0}' to `{1}'...", options.CPU,
 					options.OutputFilename);
@@ -894,6 +927,11 @@ namespace SharpOS.AOT.IR {
 			else if (type.Equals ("string"))
 				return Operands.InternalType.O;
 			else if (type.Equals ("System.String"))
+				return Operands.InternalType.O;
+
+			else if (type.Equals ("object"))
+				return Operands.InternalType.O;
+			else if (type.Equals ("System.Object"))
 				return Operands.InternalType.O;
 
 			else if (this.Assembly != null && this.Assembly.IsRegister (type))

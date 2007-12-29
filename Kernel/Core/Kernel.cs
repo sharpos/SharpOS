@@ -52,7 +52,6 @@ namespace SharpOS {
 		#endregion
 		#region Entry point
 
-		
 		/// <summary>
 		/// The kernel entry point. This function is called after static
 		/// constructors and initialization are done.
@@ -85,7 +84,7 @@ namespace SharpOS {
 			// Write the banner
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes (TextColor.BrightWhite, TextColor.Black);
-			TextMode.WriteLine ("SharpOS v0.0.0.75 (http://sharpos.sourceforge.net/)");
+			TextMode.WriteLine ("SharpOS v0.0.1 (http://www.sharpos.org/)");
 			TextMode.WriteLine ();
 			TextMode.RestoreAttributes();
 

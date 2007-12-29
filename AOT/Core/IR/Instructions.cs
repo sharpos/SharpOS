@@ -1349,12 +1349,74 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public class Initialize : Instruction {
-		public Initialize (Local result, TypeReference typeReference)
-			: base ("Initialize", null, new Operand [] { result })
+		public Initialize (Local source, TypeReference typeReference)
+			: base ("Initialize", null, new Operand [] { source })
 		{
 			this.typeReference = typeReference;
 		}
 
 		TypeReference typeReference;
+	}
+
+	public class Box : Instruction {
+		public Box (TypeReference typeReference, Register result, Register value)
+			: base ("Box", result, new Operand [] { value })
+		{
+			this.typeReference = typeReference;
+
+			result.InternalType = InternalType.O;
+		}
+
+		TypeReference typeReference;
+
+		public TypeReference Type {
+			get {
+				return this.typeReference;
+			}
+		}
+	}
+
+	public class Unbox : Instruction {
+		public Unbox (TypeReference typeReference, Register result, Register instance)
+			: base ("Unbox", result, new Operand [] { instance })
+		{
+			this.typeReference = typeReference;
+
+			result.InternalType = InternalType.I;
+		}
+
+		TypeReference typeReference;
+
+		public TypeReference Type {
+			get {
+				return this.typeReference;
+			}
+		}
+	}
+
+	public class UnboxAny : Instruction {
+		public UnboxAny (TypeReference typeReference, Register result, Register instance)
+			: base ("UnboxAny", result, new Operand [] { instance })
+		{
+			this.typeReference = typeReference;
+		}
+
+		TypeReference typeReference;
+
+		public TypeReference Type {
+			get {
+				return this.typeReference;
+			}
+		}
+
+		public override void Process (Method method)
+		{
+			if (this.typeReference.IsValueType) {
+				this.def.InternalType = InternalType.ValueType;
+				(this.def as Identifier).Type = this.typeReference;
+
+			} else
+				throw new NotImplementedEngineException ();
+		}
 	}
 }
