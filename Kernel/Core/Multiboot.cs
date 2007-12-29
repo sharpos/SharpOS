@@ -9,10 +9,10 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using SharpOS.ADC;
+using SharpOS.Kernel.ADC;
 using System.Runtime.InteropServices;
 
-namespace SharpOS {
+namespace SharpOS.Kernel {
 	public unsafe class Multiboot {
 		public enum Magic : uint {
 			Header = 0x1BADB002,
@@ -106,7 +106,7 @@ namespace SharpOS {
 
         public unsafe static Multiboot.Info* LoadMultibootInfo(uint magic, uint pointer, uint kernelStart, uint kernelEnd)
         {
-            if (magic != (uint)SharpOS.Multiboot.Magic.BootLoader)
+            if (magic != (uint)SharpOS.Kernel.Multiboot.Magic.BootLoader)
             {
                 TextMode.SetAttributes(TextColor.Red, TextColor.Black);
                 TextMode.WriteLine("LoadMultibootInfo() - invalid magic number");

@@ -11,7 +11,7 @@
 using System;
 using AOTAttr = SharpOS.AOT.Attributes;
 
-namespace SharpOS.ADC
+namespace SharpOS.Kernel.ADC
 {
 	public static unsafe class Scheduler
 	{
@@ -22,12 +22,12 @@ namespace SharpOS.ADC
 		}
 
 		private static int				position				= -1;
-		private static void**			ThreadScheduled			= (void**)Stubs.StaticAlloc((uint)(4 * Kernel.MaxThreads));
+		private static void**			ThreadScheduled			= (void**)Stubs.StaticAlloc((uint)(4 * EntryModule.MaxThreads));
 
 		public static void DumpThreads()
 		{
 			Architecture.DisableInterrupts();
-			for (int i = 0; i < Kernel.MaxThreads; i++)
+			for (int i = 0; i < EntryModule.MaxThreads; i++)
 			{
 				if (ThreadScheduled[i] == null)
 					continue;
@@ -43,7 +43,7 @@ namespace SharpOS.ADC
 		public static bool ScheduleThread(void* newThread)
 		{
 			Architecture.DisableInterrupts();
-			for (int i = 0; i < Kernel.MaxThreads; i++)
+			for (int i = 0; i < EntryModule.MaxThreads; i++)
 			{
 				if (ThreadScheduled[i] != null)
 					continue;
@@ -70,7 +70,7 @@ namespace SharpOS.ADC
 				}
 				
 				position++;
-				if (position >= Kernel.MaxThreads || 
+				if (position >= EntryModule.MaxThreads || 
 					ThreadScheduled[position] == null)
 					position = 0;
 

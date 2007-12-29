@@ -13,10 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SharpOS.AOT.Attributes;
-using SharpOS.Foundation;
-using SharpOS.ADC;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Shell.Commands.BuiltIn {
+namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
         public unsafe static class Stage {
                 public const string name = "stage";
                 public const string shortDescription = "Prints the current kernel stage";
@@ -27,7 +27,7 @@ namespace SharpOS.Shell.Commands.BuiltIn {
                 public static void Execute(CommandExecutionContext* context) {
                         TextMode.Write ("Current kernel stage: ");
 
-                        switch (Kernel.GetKernelStage ()) {
+                        switch (EntryModule.GetKernelStage ()) {
                                 case KernelStage.Init:
                                         TextMode.WriteLine ("(0) init");
                                         break;
@@ -67,12 +67,12 @@ namespace SharpOS.Shell.Commands.BuiltIn {
                 }
 
                 public static CommandTableEntry* CREATE() {
-                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
+                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
 
-                        entry->name = (CString8*) SharpOS.Stubs.CString (name);
-                        entry->shortDescription = (CString8*) SharpOS.Stubs.CString (shortDescription);
-                        entry->func_Execute = (void*) SharpOS.Stubs.GetLabelAddress (lblExecute);
-                        entry->func_GetHelp = (void*) SharpOS.Stubs.GetLabelAddress (lblGetHelp);
+                        entry->name = (CString8*) SharpOS.Kernel.Stubs.CString (name);
+                        entry->shortDescription = (CString8*) SharpOS.Kernel.Stubs.CString (shortDescription);
+                        entry->func_Execute = (void*) SharpOS.Kernel.Stubs.GetLabelAddress (lblExecute);
+                        entry->func_GetHelp = (void*) SharpOS.Kernel.Stubs.GetLabelAddress (lblGetHelp);
 
                         return entry;
                 }

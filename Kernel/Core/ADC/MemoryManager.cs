@@ -15,7 +15,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 
-namespace SharpOS.ADC
+namespace SharpOS.Kernel.ADC
 {
 	// temp. memory manager, this will be used to test paging
 	public static unsafe class MemoryManager

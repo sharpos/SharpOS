@@ -9,11 +9,11 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using SharpOS;
-using SharpOS.Memory;
-using SharpOS.ADC;
+using SharpOS.Kernel;
+using SharpOS.Kernel.Memory;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Foundation {
+namespace SharpOS.Kernel.Foundation {
 
 	/// <summary>
 	/// Represents a C-style (null-terminated) string.
@@ -392,14 +392,14 @@ namespace SharpOS.Foundation {
             if (firstNonWhiteSpace == null)
             {   //whole string needs to be filtered out...
                 //So we generate an empty string and return it
-                CString8* result = (CString8*)SharpOS.ADC.MemoryManager.Allocate(1);
+                CString8* result = (CString8*)SharpOS.Kernel.ADC.MemoryManager.Allocate(1);
                 *((byte*)result) = (byte)'\0';
                 return result;
             }
             else
             {   //we get to get part (which could be all) of the string...
                 long length = (lastNonWhiteSpace - firstNonWhiteSpace) + 1;
-                byte* result = (byte*)SharpOS.ADC.MemoryManager.Allocate((uint)length + 1);
+                byte* result = (byte*)SharpOS.Kernel.ADC.MemoryManager.Allocate((uint)length + 1);
                 for (caret = firstNonWhiteSpace; caret <= lastNonWhiteSpace; caret++)
                 {
                     result[caret - firstNonWhiteSpace] = *caret;
@@ -446,7 +446,7 @@ namespace SharpOS.Foundation {
 
             //TextMode.Write("Substring(int): [index,count]="); TextMode.Write(index, false); TextMode.Write(","); TextMode.Write((int)count, false); TextMode.WriteLine();
 
-            byte* rslt = (byte*)SharpOS.ADC.MemoryManager.Allocate((uint)count + 1);
+            byte* rslt = (byte*)SharpOS.Kernel.ADC.MemoryManager.Allocate((uint)count + 1);
             byte* thisPtr = this.Pointer;
             Diagnostics.Assert(rslt != thisPtr, "CString8.Substring_INTERNAL(): Insane memory allocation detected!");
             
@@ -463,7 +463,7 @@ namespace SharpOS.Foundation {
 
         public static CString8* CreateEmpty()
         {
-            byte* rslt = (byte*)SharpOS.ADC.MemoryManager.Allocate(1);
+            byte* rslt = (byte*)SharpOS.Kernel.ADC.MemoryManager.Allocate(1);
             rslt[0] = (byte)'\0';
             return (CString8*)rslt;
         }

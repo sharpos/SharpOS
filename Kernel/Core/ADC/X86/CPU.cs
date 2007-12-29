@@ -10,12 +10,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using ADC = SharpOS.ADC;
+using ADC = SharpOS.Kernel.ADC;
 
-namespace SharpOS.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86 {
 	public unsafe class CPU {
 		public unsafe static void WriteProcessorInfo ()
 		{

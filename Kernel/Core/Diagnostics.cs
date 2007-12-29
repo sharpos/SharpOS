@@ -14,10 +14,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SharpOS.Foundation;
-using SharpOS.ADC;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS
+namespace SharpOS.Kernel
 {
     public unsafe static class Diagnostics
     {
@@ -80,7 +80,7 @@ namespace SharpOS
 
             TextMode.RestoreAttributes();
 
-            Kernel.Halt( );
+            EntryModule.Halt( );
         }
 
         public static void Panic(string msg)

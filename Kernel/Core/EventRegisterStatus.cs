@@ -10,7 +10,7 @@
 
 using SharpOS.AOT;
 
-namespace SharpOS.ADC {
+namespace SharpOS.Kernel.ADC {
 
 	public enum EventRegisterStatus {
 		Success,

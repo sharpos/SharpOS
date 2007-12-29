@@ -11,7 +11,7 @@
 using System;
 using AOTAttr = SharpOS.AOT.Attributes;
 
-namespace SharpOS.ADC
+namespace SharpOS.Kernel.ADC
 {
 	public static class Memory
 	{

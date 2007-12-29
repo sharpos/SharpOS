@@ -13,12 +13,12 @@
 #define FORBID_ARROW_KEYS
 
 using System;
-using SharpOS;
-using SharpOS.ADC;
-using SharpOS.Foundation;
-using SharpOS.Shell;
+using SharpOS.Kernel;
+using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.Shell;
 
-namespace SharpOS 
+namespace SharpOS.Kernel 
 {
 	/// <summary>
 	/// Provides basic console services
@@ -261,7 +261,7 @@ namespace SharpOS
 		[SharpOS.AOT.Attributes.Label(CONSOLE_TIMER_HANDLER)]
 		public static unsafe void Timer (uint ticks)
 		{
-			if (ticks % SharpOS.ADC.Timer.GetFrequency () == 0)
+			if (ticks % SharpOS.Kernel.ADC.Timer.GetFrequency () == 0)
 			{
 				int x, y;
 

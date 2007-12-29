@@ -12,23 +12,23 @@
 //#define VERBOSE_KeyMap_INIT
 
 using System;
-using SharpOS;
-using SharpOS.ADC;
-using SharpOS.Foundation;
+using SharpOS.Kernel;
+using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.Foundation;
 
-namespace SharpOS
+namespace SharpOS.Kernel
 {
 	public unsafe class KeyMap
 	{
 		#region Global fields
 
-		static PString8 *userKeyMap = PString8.Wrap (Stubs.StaticAlloc (Kernel.MaxKeyMapNameLength),
-			Kernel.MaxKeyMapNameLength);
-		static byte *getBuiltinKeyMapBuffer = Stubs.StaticAlloc (Kernel.MaxKeyMapNameLength);
-		static byte *stringConvBuffer = Stubs.StaticAlloc (Kernel.MaxKeyMapNameLength);
+		static PString8 *userKeyMap = PString8.Wrap (Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength),
+			EntryModule.MaxKeyMapNameLength);
+		static byte *getBuiltinKeyMapBuffer = Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength);
+		static byte *stringConvBuffer = Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength);
 		static void *keymapArchive;
-		static PString8 *keymapName = PString8.Wrap (Stubs.StaticAlloc (Kernel.MaxKeyMapNameLength),
-			Kernel.MaxKeyMapNameLength);
+		static PString8 *keymapName = PString8.Wrap (Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength),
+			EntryModule.MaxKeyMapNameLength);
 		static int keymapEntries;
 		static void *keymapAddr;
 
@@ -102,7 +102,7 @@ namespace SharpOS
 
 			Diagnostics.Assert(nameLen > 0,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too small");
-			Diagnostics.Assert (nameLen <= Kernel.MaxKeyMapNameLength,
+			Diagnostics.Assert (nameLen <= EntryModule.MaxKeyMapNameLength,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too large");
 
 			for (int x = 0; x < keymapEntries; ++x)
@@ -113,7 +113,7 @@ namespace SharpOS
 				int strSize = 0;
 
 				strSize = BinaryTool.ReadPrefixedString (table, buf,
-					Kernel.MaxKeyMapNameLength, &error);
+					EntryModule.MaxKeyMapNameLength, &error);
 
 				table += strSize;
 				nSize = ByteString.Length (buf);
@@ -174,7 +174,7 @@ namespace SharpOS
                 int strSize = 0;
 
                 strSize = BinaryTool.ReadPrefixedString( table, buf,
-                    Kernel.MaxKeyMapNameLength, &error );
+                    EntryModule.MaxKeyMapNameLength, &error );
 
                 table += strSize;
                 nSize = ByteString.Length( buf );
@@ -252,7 +252,7 @@ namespace SharpOS
 		/// <returns></returns>
 		public static void *GetBuiltinKeyMap (string name)
 		{
-			ByteString.GetBytes (name, stringConvBuffer, Kernel.MaxKeyMapNameLength);
+			ByteString.GetBytes (name, stringConvBuffer, EntryModule.MaxKeyMapNameLength);
 
 			return GetBuiltinKeyMap (stringConvBuffer, name.Length);
 		}
@@ -272,7 +272,7 @@ namespace SharpOS
 		public static void *GetBuiltinKeyMap (int id)
 		{
 			byte *table = (byte*)keymapArchive + 4;
-			byte *buf = stackalloc byte [Kernel.MaxKeyMapNameLength];
+			byte *buf = stackalloc byte [EntryModule.MaxKeyMapNameLength];
 			int error = 0;
 
 			for (int x = 0; x < keymapEntries; ++x) {
@@ -283,7 +283,7 @@ namespace SharpOS
 				// name-size (x), name string (x), keymask and statebit (2)
 
 				table += 2 + BinaryTool.ReadPrefixedString (table, buf,
-					Kernel.MaxKeyMapNameLength, &error);
+					EntryModule.MaxKeyMapNameLength, &error);
 
 				// table size (4), default table (x)
 

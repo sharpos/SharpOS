@@ -10,11 +10,11 @@
 
 using System;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
-namespace SharpOS {
+namespace SharpOS.Kernel {
 	public unsafe class Screen {
 		public enum ColorTypes : byte {
 			Black,

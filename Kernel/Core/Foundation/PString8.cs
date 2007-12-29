@@ -8,11 +8,11 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using SharpOS;
-using SharpOS.Memory;
-using SharpOS.ADC;
+using SharpOS.Kernel;
+using SharpOS.Kernel.Memory;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Foundation {
+namespace SharpOS.Kernel.Foundation {
 
 	/// <summary>
 	/// Represents a length-prefixed C-style string (null-terminated). This type

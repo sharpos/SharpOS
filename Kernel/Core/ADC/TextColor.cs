@@ -11,12 +11,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using SharpOS.ADC.X86;
+using SharpOS.Kernel.ADC.X86;
 
-namespace SharpOS.ADC {
+namespace SharpOS.Kernel.ADC {
 	public enum TextColor : byte 
 	{
 		Black,

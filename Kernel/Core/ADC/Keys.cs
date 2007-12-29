@@ -8,7 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-namespace SharpOS.ADC
+namespace SharpOS.Kernel.ADC
 {
 	public enum Keys : uint
 	{

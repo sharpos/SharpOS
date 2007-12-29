@@ -11,12 +11,12 @@
 //#define Prompter_DebuggingVerbosity
 
 using System;
-using SharpOS.Shell.Commands;
+using SharpOS.Kernel.Shell.Commands;
 using SharpOS.AOT.Attributes;
-using SharpOS.ADC;
-using SharpOS.Foundation;
+using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.Foundation;
 
-namespace SharpOS.Shell {
+namespace SharpOS.Kernel.Shell {
 	public unsafe static class Prompter {
 		private static bool initialized = false;
 		private static bool running = false;

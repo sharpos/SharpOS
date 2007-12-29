@@ -12,7 +12,7 @@ using System;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
-namespace SharpOS.ADC.X86
+namespace SharpOS.Kernel.ADC.X86
 {
 	public static class Memory
 	{

@@ -8,8 +8,8 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using SharpOS.Foundation;
-namespace SharpOS.ADC.X86
+using SharpOS.Kernel.Foundation;
+namespace SharpOS.Kernel.ADC.X86
 {
     public class Serial
     {

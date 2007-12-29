@@ -9,12 +9,12 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT;
-using SharpOS.Memory;
+using SharpOS.Kernel.Memory;
 using AOTAttr = SharpOS.AOT.Attributes;
 
-namespace SharpOS.ADC {
+namespace SharpOS.Kernel.ADC {
 
 	/// <summary>
 	/// Provides the architecture-specific implementation of

@@ -11,7 +11,7 @@
 
 using System;
 
-namespace SharpOS {
+namespace SharpOS.Kernel {
 
 	public class ASCII {
 		public static byte ToLower (byte ch)

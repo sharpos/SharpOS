@@ -14,12 +14,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using ADC = SharpOS.ADC;
+using ADC = SharpOS.Kernel.ADC;
 
-namespace SharpOS.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86 {
 	/// <summary>
 	/// The Global Descriptor Table (GDT) is a data structure used by Intel x86-family 
 	/// processors starting with the 80286 in order to define the characteristics of the

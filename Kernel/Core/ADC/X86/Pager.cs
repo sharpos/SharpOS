@@ -11,12 +11,12 @@
 //
 
 using System;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
-using SharpOS.Memory;
-using ADC = SharpOS.ADC;
+using SharpOS.Kernel.Memory;
+using ADC = SharpOS.Kernel.ADC;
 
-namespace SharpOS.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86 {
 	/// <summary>
 	/// Hardware specific paging layer
 	/// </summary>

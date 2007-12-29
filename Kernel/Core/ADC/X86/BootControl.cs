@@ -12,7 +12,7 @@
 using SharpOS.AOT;
 using SharpOS.AOT.X86;
 
-namespace SharpOS.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86 {
 	/// <summary>
 	/// Contains all system power functionality 
 	/// </summary>

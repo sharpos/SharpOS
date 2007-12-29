@@ -15,7 +15,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS
+namespace SharpOS.Kernel
 {
     internal static class Stubs
     {

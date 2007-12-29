@@ -12,10 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SharpOS.AOT.Attributes;
-using SharpOS.Foundation;
-using SharpOS.ADC;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Shell.Commands.BuiltIn {
+namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
         public unsafe static class Cls {
                 public const string name = "cls";
                 public const string shortDescription = "Clears the screen";
@@ -36,12 +36,12 @@ namespace SharpOS.Shell.Commands.BuiltIn {
                 }
 
                 public static CommandTableEntry* CREATE() {
-                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
+                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
 
-                        entry->name = (CString8*) SharpOS.Stubs.CString (name);
-                        entry->shortDescription = (CString8*) SharpOS.Stubs.CString (shortDescription);
-                        entry->func_Execute = (void*) SharpOS.Stubs.GetLabelAddress (lblExecute);
-                        entry->func_GetHelp = (void*) SharpOS.Stubs.GetLabelAddress (lblGetHelp);
+                        entry->name = (CString8*) SharpOS.Kernel.Stubs.CString (name);
+                        entry->shortDescription = (CString8*) SharpOS.Kernel.Stubs.CString (shortDescription);
+                        entry->func_Execute = (void*) SharpOS.Kernel.Stubs.GetLabelAddress (lblExecute);
+                        entry->func_GetHelp = (void*) SharpOS.Kernel.Stubs.GetLabelAddress (lblGetHelp);
                         entry->nextEntry = null;
 
                         return entry;

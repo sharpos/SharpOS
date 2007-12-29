@@ -12,23 +12,23 @@ using System;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
-namespace SharpOS.ADC.X86
+namespace SharpOS.Kernel.ADC.X86
 {
 	public static unsafe class Scheduler
 	{
 		// Sigh.. we really need to get vtables & memory management working...
-		private static IDT.ISRData*	ThreadMemory		= (IDT.ISRData*)Stubs.StaticAlloc((uint)(/*sizeof(IDT.ISRData)*/(19 * 4) * Kernel.MaxThreads));
-		private static bool*		ThreadMemoryUsed	= (bool*)Stubs.StaticAlloc(1 * Kernel.MaxThreads);
+		private static IDT.ISRData*	ThreadMemory		= (IDT.ISRData*)Stubs.StaticAlloc((uint)(/*sizeof(IDT.ISRData)*/(19 * 4) * EntryModule.MaxThreads));
+		private static bool*		ThreadMemoryUsed	= (bool*)Stubs.StaticAlloc(1 * EntryModule.MaxThreads);
 
 		public static unsafe void Setup()
 		{
-			for (int i = 0; i < Kernel.MaxThreads; i++)
+			for (int i = 0; i < EntryModule.MaxThreads; i++)
 				ThreadMemoryUsed[i] = false;
 		}
 
 		public static unsafe void* CreateThread(uint function_address)
 		{
-			for (int i = 0; i < Kernel.MaxThreads; i++)
+			for (int i = 0; i < EntryModule.MaxThreads; i++)
 			{
 				if (ThreadMemoryUsed[i] == false)
 				{

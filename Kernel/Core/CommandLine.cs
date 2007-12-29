@@ -10,11 +10,11 @@
 //
 
 using System;
-using SharpOS;
-using SharpOS.ADC;
-using SharpOS.Foundation;
+using SharpOS.Kernel;
+using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.Foundation;
 
-namespace SharpOS
+namespace SharpOS.Kernel
 {
 	public unsafe class CommandLine
 	{

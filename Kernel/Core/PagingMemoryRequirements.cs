@@ -8,11 +8,11 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT;
-using SharpOS.Memory;
+using SharpOS.Kernel.Memory;
 
-namespace SharpOS.ADC {
+namespace SharpOS.Kernel.ADC {
 	public unsafe struct PagingMemoryRequirements {
 		public PagingMemoryRequirements (uint atomicPages, void *start)
 		{

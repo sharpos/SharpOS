@@ -12,10 +12,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SharpOS.AOT.Attributes;
-using SharpOS.Foundation;
-using SharpOS.ADC;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Shell.Commands.BuiltIn {
+namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
         public unsafe static class CpuId {
                 public const string name = "cpuid";
                 public const string shortDescription = "Displays info about the CPU and its capabilities";
@@ -26,8 +26,8 @@ namespace SharpOS.Shell.Commands.BuiltIn {
                 public static void Execute(CommandExecutionContext* context) {
                         // ARCHDEPENDS: X86
 
-                        SharpOS.ADC.X86.CPU.WriteBrandName ();
-                        SharpOS.ADC.X86.CPU.WriteProcessorInfo ();
+                        SharpOS.Kernel.ADC.X86.CPU.WriteBrandName ();
+                        SharpOS.Kernel.ADC.X86.CPU.WriteProcessorInfo ();
                 }
 
                 [Label (lblGetHelp)]
@@ -39,12 +39,12 @@ namespace SharpOS.Shell.Commands.BuiltIn {
                 }
 
                 public static CommandTableEntry* CREATE() {
-                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
+                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
 
-                        entry->name = (CString8*) SharpOS.Stubs.CString (name);
-                        entry->shortDescription = (CString8*) SharpOS.Stubs.CString (shortDescription);
-                        entry->func_Execute = (void*) SharpOS.Stubs.GetLabelAddress (lblExecute);
-                        entry->func_GetHelp = (void*) SharpOS.Stubs.GetLabelAddress (lblGetHelp);
+                        entry->name = (CString8*) SharpOS.Kernel.Stubs.CString (name);
+                        entry->shortDescription = (CString8*) SharpOS.Kernel.Stubs.CString (shortDescription);
+                        entry->func_Execute = (void*) SharpOS.Kernel.Stubs.GetLabelAddress (lblExecute);
+                        entry->func_GetHelp = (void*) SharpOS.Kernel.Stubs.GetLabelAddress (lblGetHelp);
                         entry->nextEntry = null;
 
                         return entry;

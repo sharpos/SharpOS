@@ -9,13 +9,13 @@
  *
  */
 
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using ADC = SharpOS.ADC;
+using ADC = SharpOS.Kernel.ADC;
 
-namespace SharpOS.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86 {
 	public unsafe class Architecture {
 		/**
 			<summary>

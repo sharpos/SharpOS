@@ -10,9 +10,9 @@
 //
 
 using System;
-using SharpOS.Foundation;
+using SharpOS.Kernel.Foundation;
 
-namespace SharpOS.Foundation {
+namespace SharpOS.Kernel.Foundation {
 	public unsafe class Convert {
 		public unsafe static int ToByteString (string str, byte* buffer, int bufferLen, int offset)
 		{

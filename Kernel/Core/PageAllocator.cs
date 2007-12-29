@@ -10,10 +10,10 @@
 //
 
 using SharpOS.AOT;
-using SharpOS.ADC;
+using SharpOS.Kernel.ADC;
 using System.Runtime.InteropServices;
 
-namespace SharpOS.Memory
+namespace SharpOS.Kernel.Memory
 {
 
 	/// <summary>

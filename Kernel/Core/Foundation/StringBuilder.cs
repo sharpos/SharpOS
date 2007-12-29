@@ -11,10 +11,10 @@
 
 using System;
 
-using SharpOS.Memory;
-using SharpOS.ADC;
+using SharpOS.Kernel.Memory;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Foundation {
+namespace SharpOS.Kernel.Foundation {
 	public unsafe struct StringBuilder {
         internal CString8* buffer;
         private uint capacity;

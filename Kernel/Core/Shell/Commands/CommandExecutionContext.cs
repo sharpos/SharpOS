@@ -11,10 +11,10 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using SharpOS.Foundation;
+using SharpOS.Kernel.Foundation;
 using System.Runtime.InteropServices;
 
-namespace SharpOS.Shell.Commands {
+namespace SharpOS.Kernel.Shell.Commands {
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct CommandExecutionContext {
 		public CString8* parameters;

@@ -13,13 +13,13 @@
 //
 
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using SharpOS.ADC.X86;
-using SharpOS.Foundation;
+using SharpOS.Kernel.ADC.X86;
+using SharpOS.Kernel.Foundation;
 
-namespace SharpOS.ADC {
+namespace SharpOS.Kernel.ADC {
 	public unsafe class TextMode
 	{
 		#region ADC Interface

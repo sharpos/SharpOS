@@ -12,7 +12,7 @@
 using SharpOS.AOT;
 using AOTAttr = SharpOS.AOT.Attributes;
 
-namespace SharpOS.ADC {
+namespace SharpOS.Kernel.ADC {
 
 	public unsafe class Timer {
 		[AOTAttr.ADCStub]

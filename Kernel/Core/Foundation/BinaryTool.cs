@@ -15,16 +15,16 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using SharpOS;
-using SharpOS.ADC;
+using SharpOS.Kernel;
+using SharpOS.Kernel.ADC;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using SharpOS.Foundation;
+using SharpOS.Kernel.Foundation;
 using AOTAttr = SharpOS.AOT.Attributes;
 
 //#define VERBOSE_BinaryTool
 
-namespace SharpOS.Foundation
+namespace SharpOS.Kernel.Foundation
 {
 	public unsafe class BinaryTool
 	{

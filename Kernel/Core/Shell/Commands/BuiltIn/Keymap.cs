@@ -13,10 +13,10 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using SharpOS.AOT.Attributes;
-using SharpOS.Foundation;
-using SharpOS.ADC;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Shell.Commands.BuiltIn {
+namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
         public unsafe static class Keymap {
                 public const string name = "keymap";
                 public const string shortDescription = "Lists keymaps and changes the active one";
@@ -25,14 +25,14 @@ namespace SharpOS.Shell.Commands.BuiltIn {
 
                 [Label (lblExecute)]
                 public static void Execute(CommandExecutionContext* context) {
-                        byte* rawbuf = stackalloc byte[Kernel.MaxKeyMapNameLength];
+                        byte* rawbuf = stackalloc byte[EntryModule.MaxKeyMapNameLength];
 
                         if (context->parameters->Compare ("--list") == 0) {
                                 ListKeyMaps ();
                         } else if (context->parameters->Compare (0, "--set ", 0, 6) == 0 &&
                                context->parameters->Length > 6) {
                                 PString8* buf = PString8.Wrap (rawbuf,
-                                    Kernel.MaxKeyMapNameLength);
+                                    EntryModule.MaxKeyMapNameLength);
                                 buf->Clear ();
                                 TextMode.Write (context->parameters->Length);
                                 TextMode.WriteLine ();
@@ -52,7 +52,7 @@ namespace SharpOS.Shell.Commands.BuiltIn {
 
                 public static void ListKeyMaps() {
                         int count = KeyMap.GetBuiltinKeyMapsCount ();
-                        byte* str = stackalloc byte[Kernel.MaxKeyMapNameLength];
+                        byte* str = stackalloc byte[EntryModule.MaxKeyMapNameLength];
                         int error = 0;
                         byte* keymap = null;
                         int len = 0;
@@ -63,7 +63,7 @@ namespace SharpOS.Shell.Commands.BuiltIn {
                         for (int x = 0; x < count; ++x) {
                                 keymap = (byte*) KeyMap.GetBuiltinKeyMap (x);
                                 len = BinaryTool.ReadPrefixedString (keymap, str,
-                                        Kernel.MaxKeyMapNameLength, &error);
+                                        EntryModule.MaxKeyMapNameLength, &error);
 
                                 TextMode.Write (" ");
                                 TextMode.WriteLine (str);
@@ -80,12 +80,12 @@ namespace SharpOS.Shell.Commands.BuiltIn {
                 }
 
                 public static CommandTableEntry* CREATE() {
-                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
+                        CommandTableEntry* entry = (CommandTableEntry*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableEntry));
 
-                        entry->name = (CString8*) SharpOS.Stubs.CString (name);
-                        entry->shortDescription = (CString8*) SharpOS.Stubs.CString (shortDescription);
-                        entry->func_Execute = (void*) SharpOS.Stubs.GetLabelAddress (lblExecute);
-                        entry->func_GetHelp = (void*) SharpOS.Stubs.GetLabelAddress (lblGetHelp);
+                        entry->name = (CString8*) SharpOS.Kernel.Stubs.CString (name);
+                        entry->shortDescription = (CString8*) SharpOS.Kernel.Stubs.CString (shortDescription);
+                        entry->func_Execute = (void*) SharpOS.Kernel.Stubs.GetLabelAddress (lblExecute);
+                        entry->func_GetHelp = (void*) SharpOS.Kernel.Stubs.GetLabelAddress (lblGetHelp);
 
                         return entry;
                 }

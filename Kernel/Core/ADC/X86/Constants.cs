@@ -11,7 +11,7 @@
 
 using SharpOS.AOT;
 
-namespace SharpOS.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86 {
 	[System.Flags]
 	internal enum CR0: uint {
 		PE = (1U<<0),		// protected mode

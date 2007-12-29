@@ -14,13 +14,13 @@
 
 using System;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using SharpOS.ADC.X86;
-using ADC = SharpOS.ADC;
+using SharpOS.Kernel.ADC.X86;
+using ADC = SharpOS.Kernel.ADC;
 
-namespace SharpOS.ADC.X86 
+namespace SharpOS.Kernel.ADC.X86 
 {
 	/// <summary>
 	/// Handles setting up and working with CGA/EGA/MDA text modes.
@@ -56,7 +56,7 @@ namespace SharpOS.ADC.X86
 
 		static uint			fill			= 0;
 		static byte			attributes		= (byte)((byte)foreground | ((byte)background << 4));
-		static byte *		savedAttributes = Stubs.StaticAlloc (Kernel.MaxTextAttributeSlots);
+		static byte *		savedAttributes = Stubs.StaticAlloc (EntryModule.MaxTextAttributeSlots);
 
 		#endregion
 		#region Properties
@@ -205,7 +205,7 @@ namespace SharpOS.ADC.X86
 			readY = 0;
 			writeY = 0;
 		
-			for (int x = 0; x < Kernel.MaxTextAttributeSlots; x++)
+			for (int x = 0; x < EntryModule.MaxTextAttributeSlots; x++)
 				savedAttributes[x] = 0xFF;
 		}
 		
@@ -461,7 +461,7 @@ namespace SharpOS.ADC.X86
 		public static bool SaveAttributes ()
 		{
 #if !DISABLE_SetAttributes
-			for (int x = 0; x < Kernel.MaxTextAttributeSlots; ++x) {
+			for (int x = 0; x < EntryModule.MaxTextAttributeSlots; ++x) {
 				if (savedAttributes [x] == 0xFF) {
 					savedAttributes [x] = attributes;
 					return true;
@@ -474,7 +474,7 @@ namespace SharpOS.ADC.X86
 		public static bool RestoreAttributes ()
 		{
 #if !DISABLE_SetAttributes
-			for (int x = Kernel.MaxTextAttributeSlots - 1; x >= 0; --x) {
+			for (int x = EntryModule.MaxTextAttributeSlots - 1; x >= 0; --x) {
 				if (savedAttributes [x] != 0xFF) {
 					byte attr = savedAttributes[x];
 					savedAttributes [x] = 0xFF;

@@ -13,12 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 using AOTAttr = SharpOS.AOT.Attributes;
 
-namespace SharpOS.ADC 
+namespace SharpOS.Kernel.ADC 
 {
 	public unsafe class Keyboard
 	{

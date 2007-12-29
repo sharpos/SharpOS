@@ -9,9 +9,9 @@
 //
 
 using SharpOS.AOT;
-using SharpOS.ADC;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Memory {
+namespace SharpOS.Kernel.Memory {
 	[System.Flags]
 	public enum PageAttributes: uint {
 		None = 0,

@@ -12,11 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
-namespace SharpOS.ADC.X86
+namespace SharpOS.Kernel.ADC.X86
 {
 	/// <summary>
 	/// Real Time Clock

@@ -11,11 +11,11 @@
 
 using System.Collections.Generic;
 using System.Text;
-using SharpOS.Foundation;
+using SharpOS.Kernel.Foundation;
 using System.Runtime.InteropServices;
-using SharpOS.ADC;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Shell.Commands {
+namespace SharpOS.Kernel.Shell.Commands {
 	[StructLayout (LayoutKind.Sequential)]
 	public unsafe struct CommandTableHeader {
 		public const string inform_USE_HELP_COMMANDS = "Use 'help commands' to get a list of commands.";
@@ -137,7 +137,7 @@ namespace SharpOS.Shell.Commands {
 				CommandTableEntry* nEntry = curEntry->nextEntry;
 
 				curEntry->DISPOSE ();
-				SharpOS.ADC.MemoryManager.Free (curEntry);
+				SharpOS.Kernel.ADC.MemoryManager.Free (curEntry);
 
 				curEntry = nEntry;
 			}
@@ -252,7 +252,7 @@ namespace SharpOS.Shell.Commands {
 		}
 
                 public static CommandTableHeader* GenerateDefaultRoot() {
-                        CommandTableHeader* header = (CommandTableHeader*) SharpOS.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableHeader));
+                        CommandTableHeader* header = (CommandTableHeader*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableHeader));
 
                         header->firstEntry = null;
 

@@ -12,14 +12,14 @@
 //
 
 using System;
-using SharpOS;
-using SharpOS.ADC;
-using SharpOS.Foundation;
-using SharpOS.Memory;
+using SharpOS.Kernel;
+using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.Memory;
 
-namespace SharpOS {
+namespace SharpOS.Kernel {
 
-	public unsafe class Kernel {
+	public unsafe class EntryModule {
 		#region Global fields
 		
 		static bool stayInLoop = true;
@@ -117,7 +117,7 @@ namespace SharpOS {
 			Scheduler.Setup();
 			
 			StageMessage("Console setup...");
-			SharpOS.Console.Setup();
+			SharpOS.Kernel.Console.Setup();
 			
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
@@ -133,8 +133,8 @@ namespace SharpOS {
 #endif		
             
 			StageMessage("Shell setup...");
-			SharpOS.Shell.Prompter.Setup();
-			SharpOS.Shell.Prompter.Start();
+			SharpOS.Kernel.Shell.Prompter.Setup();
+			SharpOS.Kernel.Shell.Prompter.Start();
 
 			while (stayInLoop) ;
 		}

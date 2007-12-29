@@ -9,8 +9,8 @@
  *
  */
 
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT;
 using SharpOS.AOT.Attributes;
 
-[assembly: ADCLayer("X86", "SharpOS.ADC.X86")]
+[assembly: ADCLayer("X86", "SharpOS.Kernel.ADC.X86")]

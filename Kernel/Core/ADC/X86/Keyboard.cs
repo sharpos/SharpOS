@@ -13,12 +13,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using ADC = SharpOS.ADC;
+using ADC = SharpOS.Kernel.ADC;
 
-namespace SharpOS.ADC.X86 
+namespace SharpOS.Kernel.ADC.X86 
 {
 	// TODO: Create 'key' enum
 	// TODO: Handle the more strange scancodes
@@ -27,8 +27,8 @@ namespace SharpOS.ADC.X86
 	{
 		#region Global fields
 		
-		unsafe static uint *keyUpEvent = (uint*)Stubs.StaticAlloc (sizeof (uint) * Kernel.MaxEventHandlers);
-		unsafe static uint *keyDownEvent = (uint*)Stubs.StaticAlloc (sizeof (uint) * Kernel.MaxEventHandlers);
+		unsafe static uint *keyUpEvent = (uint*)Stubs.StaticAlloc (sizeof (uint) * EntryModule.MaxEventHandlers);
+		unsafe static uint *keyDownEvent = (uint*)Stubs.StaticAlloc (sizeof (uint) * EntryModule.MaxEventHandlers);
 		
 		static bool leftShift;
 		static bool rightShift;
@@ -255,14 +255,14 @@ namespace SharpOS.ADC.X86
 			}
 
 			if (pressed) {
-				for (int x = 0; x < Kernel.MaxEventHandlers; ++x) {
+				for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
 					if (keyDownEvent [x] == 0)
 						continue;
 					
 					Memory.Call (keyDownEvent [x], scancode);
 				}
 			} else {
-				for (int x = 0; x < Kernel.MaxEventHandlers; ++x) {
+				for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
 					if (keyUpEvent [x] == 0)
 						continue;
 
@@ -287,11 +287,11 @@ namespace SharpOS.ADC.X86
 		
 		public unsafe static EventRegisterStatus RegisterKeyUpEvent (uint address)
 		{
-			for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
+			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x)
 				if (keyUpEvent [x] == address)
 					return EventRegisterStatus.AlreadySubscribed;
 			
-			for (int x = 0; x < Kernel.MaxEventHandlers; ++x) {
+			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
 				if (keyUpEvent [x] == 0) {
 					keyUpEvent [x] = address;
 					
@@ -304,11 +304,11 @@ namespace SharpOS.ADC.X86
 
 		public unsafe static EventRegisterStatus RegisterKeyDownEvent (uint address)
 		{
-			for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
+			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x)
 				if (keyDownEvent [x] == address)
 					return EventRegisterStatus.AlreadySubscribed;
 			
-			for (int x = 0; x < Kernel.MaxEventHandlers; ++x) {
+			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
 				if (keyDownEvent [x] == 0) {
 					keyDownEvent [x] = address;
 					

@@ -8,7 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.Tests.CS {

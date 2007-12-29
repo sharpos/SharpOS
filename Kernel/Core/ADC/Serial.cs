@@ -10,9 +10,9 @@
 
 using System;
 using AOTAttr = SharpOS.AOT.Attributes;
-using SharpOS.Foundation;
+using SharpOS.Kernel.Foundation;
 
-namespace SharpOS.ADC
+namespace SharpOS.Kernel.ADC
 {
     public class Serial
     {

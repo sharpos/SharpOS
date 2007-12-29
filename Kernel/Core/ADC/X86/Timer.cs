@@ -11,7 +11,7 @@
 using SharpOS.AOT;
 using AOTAttr = SharpOS.AOT.Attributes;
 
-namespace SharpOS.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86 {
 
 	public unsafe class Timer {
 		public static EventRegisterStatus RegisterTimerEvent (uint func)

@@ -14,12 +14,12 @@
 
 using System;
 using System.Runtime.InteropServices;
-using SharpOS;
+using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
-using ADC = SharpOS.ADC;
+using ADC = SharpOS.Kernel.ADC;
 
-namespace SharpOS.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86 {
 	/// <summary>
 	/// The Interrupt Descriptor Table (IDT) is a data structure used by the x86 architecture 
 	/// to implement an interrupt vector table. The IDT is used by the processor to determine 
@@ -272,14 +272,14 @@ namespace SharpOS.ADC.X86 {
 
 			// Align to correct page
 			void* align = ADC.Pager.PageAlign((void*)cr2, 0);
-			void* alloc = SharpOS.Memory.PageAllocator.Alloc();
+			void* alloc = SharpOS.Kernel.Memory.PageAllocator.Alloc();
 
 			if (alloc == null)
 			{
 				Diagnostics.Panic("Out of memory exception");
 			}
 			
-			ADC.Pager.MapPage(align, alloc, 0, SharpOS.Memory.PageAttributes.Present | SharpOS.Memory.PageAttributes.ReadWrite);
+			ADC.Pager.MapPage(align, alloc, 0, SharpOS.Kernel.Memory.PageAttributes.Present | SharpOS.Kernel.Memory.PageAttributes.ReadWrite);
 		}
 		#endregion
 
