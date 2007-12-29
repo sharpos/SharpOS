@@ -270,7 +270,6 @@ namespace SharpOS.Shell.Commands
             //FIXME: For some reason, the first command on the list doesn't register properly
             //(NOTE: So don't put anything important there yet...)
             header->AddEntry( BuiltIn.victim.CREATE( ) );
-            header->AddEntry(BuiltIn.halt.CREATE());
             header->AddEntry(BuiltIn.cls.CREATE());
             header->AddEntry(BuiltIn.commands.CREATE());
             header->AddEntry(BuiltIn.help.CREATE());
@@ -280,6 +279,8 @@ namespace SharpOS.Shell.Commands
             header->AddEntry( BuiltIn.keymap.CREATE( ) );
             header->AddEntry( BuiltIn.memdump.CREATE( ) );
             header->AddEntry( BuiltIn.reboot.CREATE( ) );
+            header->AddEntry( BuiltIn.panic.CREATE( ) );
+            header->AddEntry( BuiltIn.halt.CREATE( ) );
             header->AddEntry( BuiltIn.egg.CREATE( ) );
 
             return header;
