@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2007 The SharpOS Project Team (http://sharpos.sourceforge.net)
 //
 // Authors:
@@ -16,7 +16,7 @@ namespace SharpOS.Foundation {
 
 	/// <summary>
 	/// Represents a length-prefixed C-style string (null-terminated). This type
-	/// can be used as a string buffer, 
+	/// can be used as a string buffer,
 	/// </summary>
 	public unsafe struct PString8 {
 
@@ -35,7 +35,7 @@ namespace SharpOS.Foundation {
 		public static PString8 *Wrap (void *buffer, int bufferSize)
 		{
 			PString8 *wrapped;
-			
+
 			if (bufferSize < sizeof (PString8))
 				return null;
 
@@ -64,12 +64,12 @@ namespace SharpOS.Foundation {
 
 			Diagnostics.Assert (offset + len >= strLen, "PString8.Concat(): offset + len >= strLen");
 
-			for (int x = 0; x < strLen; ++x)
-				Concat (str [offset + x]);
+			for (int x = offset; x < strLen && (x - offset) < len; ++x)
+				Concat (str [x]);
 
 			return len;
 		}
-		
+
 		#endregion
 		#region Properties
 
@@ -90,7 +90,7 @@ namespace SharpOS.Foundation {
 				return capacity;
 			}
 		}
-		
+
 		/// <summary>
 		/// If <paramref name="boundsCheck" /> is true, makes sure
 		/// <paramref name="index" /> is in bounds, then gets the
@@ -105,7 +105,7 @@ namespace SharpOS.Foundation {
 
 			return Pointer [index];
 		}
-		
+
 		public void SetChar (int index, byte value, bool boundsCheck)
 		{
 			if (boundsCheck) {
@@ -121,19 +121,19 @@ namespace SharpOS.Foundation {
 		{
 			return GetChar (index, true);
 		}
-		
+
 		public void SetChar (int index, byte value)
 		{
 			SetChar (index, value, true);
 		}
-		
+
 		/// <summary>
 		/// Gets the null-terminated byte* pointer.
 		/// </summary>
 		public byte *Pointer {
 			get {
 				byte *ptr;
-				
+
 				// HACK
 
 				fixed (byte *tp = &firstChar)
@@ -142,7 +142,7 @@ namespace SharpOS.Foundation {
 				return ptr;
 			}
 		}
-		
+
 		#endregion
 		#region Clear() family
 
@@ -151,18 +151,18 @@ namespace SharpOS.Foundation {
 			firstChar = 0;
 			this.length = 0;
 		}
-		
+
 		#endregion
 		#region Concat() family
-	
+
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public void ConcatLine ()
 		{
 			Concat ('\n');
 		}
-	
+
 		/// <summary>
 		/// Concatenates from <paramref name="str" /> the
 		/// characters at indices <paramref name="offset" /> to
@@ -202,6 +202,16 @@ namespace SharpOS.Foundation {
 			return len;
 		}
 
+		public int Concat (byte *str, int len)
+		{
+			return Concat (str, len, 0, len);
+		}
+
+		public int Concat (byte *str)
+		{
+			return Concat (str, ByteString.Length (str), 0, ByteString.Length (str));
+		}
+
 		/// <summary>
 		/// Concatenates <paramref name="str" />.
 		/// </summary>
@@ -225,7 +235,7 @@ namespace SharpOS.Foundation {
 		{
 			return Concat (str, 0, 0);
 		}
-		
+
 		/// <summary>
 		/// Concatenates <paramref name="character" />
 		/// </summary>
@@ -248,10 +258,10 @@ namespace SharpOS.Foundation {
 		{
 			return Concat (number, false);
 		}
-		
+
 		#endregion
 		#region Compare() family
-		
+
 		/// <summary>
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
@@ -260,7 +270,7 @@ namespace SharpOS.Foundation {
 		{
 			return ByteString.Compare (Pointer, str, count);
 		}
-		
+
 		/// <summary>
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
@@ -295,7 +305,7 @@ namespace SharpOS.Foundation {
 		{
 			return Compare (str, 0);
 		}
-		
+
 		/// <summary>
 		/// Compares the string against <paramref name="str" />.
 		/// </summary>
@@ -303,7 +313,7 @@ namespace SharpOS.Foundation {
 		{
 			return Compare (str, 0);
 		}
-		
+
 		/// <summary>
 		/// Compares the string against <paramref name="str" />.
 		/// </summary>
