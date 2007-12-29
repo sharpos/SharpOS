@@ -184,6 +184,7 @@ namespace SharpOS.ADC.X86 {
 		{
 			// Brand Name
 			ADC.TextMode.SaveAttributes();
+            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
 			ADC.TextMode.Write ("CPU Brand: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 
