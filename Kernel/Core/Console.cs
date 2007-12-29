@@ -122,6 +122,13 @@ namespace SharpOS
 			//case Keys.Backspace:
 			else if (key == Keys.Backspace)
 			{
+                if (Console.textBuffer != null
+                    && textBuffer->Length <= 0)
+                {
+                    //Beep??
+                    return;
+                }
+
 				int x, y, width, height;
 
 				TextMode.GetScreenSize(&width, &height);
@@ -139,7 +146,9 @@ namespace SharpOS
 				}
 				TextMode.MoveTo(x, y);
 				TextMode.WriteChar((byte)' ');
+                
                 textBuffer->RemoveAt(textBuffer->Length - 1, 1);
+
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
 				return;

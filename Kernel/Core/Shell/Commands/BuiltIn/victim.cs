@@ -10,7 +10,7 @@ namespace SharpOS.Shell.Commands.BuiltIn
     public unsafe static class victim
     {
         private const string name = "victim";
-        private const string shortDescription = "This is a placeholder for a bug.";
+        private const string shortDescription = "This is a placeholder for a bug";
         private const string lblExecute = "COMMANDS.victim.Execute";
         private const string lblGetHelp = "COMMANDS.victim.GetHelp";
 

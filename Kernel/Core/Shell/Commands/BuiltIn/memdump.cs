@@ -12,7 +12,7 @@ namespace SharpOS.Shell.Commands.BuiltIn
     public unsafe static class memdump
     {
         public const string name = "memdump";
-        public const string shortDescription = "Displays memory usage.";
+        public const string shortDescription = "Displays memory usage";
         public const string lblExecute = "COMMANDS.memdump.Execute";
         public const string lblGetHelp = "COMMANDS.memdump.GetHelp";
 

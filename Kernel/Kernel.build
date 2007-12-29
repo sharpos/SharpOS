@@ -32,9 +32,9 @@
 		<exec program="${path::combine(prefix, 'sharpos-aot.exe')}" 
 			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')} ${path::combine(prefix, 'korlib.dll')}" />
 			
-		<echo message="Update the disk image." />
+		<echo message="Update the disk image..." />
+		<delete file="${path::combine(common-dir,'SharpOS.img')}" failonerror="false" />
 		<copy file="${path::combine(disk-images-dir, 'TemplateDisk.img')}" tofile="${path::combine(common-dir, 'SharpOS.img')}" />
-		
 		<exec program="${path::combine(prefix, 'disk-image-updater.exe')}"
 			commandline="-i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>

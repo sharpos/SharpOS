@@ -10,7 +10,7 @@ namespace SharpOS.Shell.Commands.BuiltIn
     public unsafe static class cpuid
     {
         public const string name = "cpuid";
-        public const string shortDescription = "Displays info about the cpu.";
+        public const string shortDescription = "Displays info about the CPU and its capabilities";
         public const string lblExecute = "COMMANDS.cpu.Execute";
         public const string lblGetHelp = "COMMANDS.cpu.GetHelp";
 

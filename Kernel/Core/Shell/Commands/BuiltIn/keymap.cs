@@ -20,7 +20,7 @@ namespace SharpOS.Shell.Commands.BuiltIn
     public unsafe static class keymap
     {
         public const string name = "keymap";
-        public const string shortDescription = "Controls keymaps.";
+        public const string shortDescription = "Lists keymaps and changes the active one";
         public const string lblExecute = "COMMANDS.keymap.Execute";
         public const string lblGetHelp = "COMMANDS.keymap.GetHelp";
 

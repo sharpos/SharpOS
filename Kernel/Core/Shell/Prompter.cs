@@ -55,7 +55,7 @@ namespace SharpOS.Shell
                 TextMode.SetAttributes(TextColor.Green,TextMode.Background);
             TextMode.Write("#");
             if(changingColor)
-                TextMode.SetAttributes(TextColor.Blue, TextMode.Background);
+                TextMode.SetAttributes(TextColor.Cyan, TextMode.Background);
             TextMode.Write("OS");
             if (changingColor)
                 TextMode.SetAttributes(TextColor.White, TextMode.Background);
@@ -63,7 +63,7 @@ namespace SharpOS.Shell
             if (changingColor)
                 TextMode.RestoreAttributes();
             TextMode.Write(" ");
-
+            TextMode.RefreshCursor();
         }
 
         public static void Pulse()

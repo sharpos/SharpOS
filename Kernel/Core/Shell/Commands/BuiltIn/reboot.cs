@@ -12,7 +12,7 @@ namespace SharpOS.Shell.Commands.BuiltIn
     public unsafe static class reboot
     {
         public const string name = "reboot";
-        public const string shortDescription = "Restarts the machine.";
+        public const string shortDescription = "Restarts the machine";
         public const string lblExecute = "COMMANDS.reboot.Execute";
         public const string lblGetHelp = "COMMANDS.reboot.GetHelp";
 

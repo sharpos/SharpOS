@@ -10,7 +10,7 @@ namespace SharpOS.Shell.Commands.BuiltIn
     public unsafe static class egg
     {
         public const string name = "egg";
-        public const string shortDescription = "The mandatory easter egg.";
+        public const string shortDescription = "The mandatory easter egg";
         public const string lblExecute = "COMMANDS.egg.Execute";
         public const string lblGetHelp = "COMMANDS.egg.GetHelp";
 
@@ -41,7 +41,7 @@ namespace SharpOS.Shell.Commands.BuiltIn
             TextMode.WriteLine( "Syntax: " );
             TextMode.WriteLine( "     egg" );
             TextMode.WriteLine( "" );
-            TextMode.WriteLine( "And we a proud of it." );
+            TextMode.WriteLine( "And we a proud of it!" );
         }
 
         public static CommandTableEntry* CREATE( )
