@@ -16,162 +16,159 @@ using SharpOS.AOT.Attributes;
 using SharpOS.ADC;
 using SharpOS.Foundation;
 
-namespace SharpOS.Shell
-{
-    public unsafe static class Prompter
-    {
-        private static bool initialized = false;
-        private static bool running = false;
-        private static StringBuilder* lineBuffer;
-        private const string LineSeperator = "\n";
+namespace SharpOS.Shell {
+	public unsafe static class Prompter {
+		private static bool initialized = false;
+		private static bool running = false;
+		private static StringBuilder* lineBuffer;
+		private const string LineSeperator = "\n";
 
-        public static CommandTableHeader* CommandTable;
-        public static void Setup()
-        {
-            if (initialized)
-                return;
+		public static CommandTableHeader* CommandTable;
+		public static void Setup ()
+		{
+			if (initialized)
+				return;
 
-            CommandTable = CommandTableHeader.GenerateDefaultRoot();
-            lineBuffer = StringBuilder.CREATE(80 * 5);
+			CommandTable = CommandTableHeader.GenerateDefaultRoot ();
+			lineBuffer = StringBuilder.CREATE (80 * 5);
 
-            initialized = true;
-        }
+			initialized = true;
+		}
 
-        public static void Start()
-        {
-            if (initialized == false)
-                Setup();
+		public static void Start ()
+		{
+			if (initialized == false)
+				Setup ();
 
-            TextMode.WriteLine();
-            WritePrompt();
-            
-            running = true;
-        }
+			TextMode.WriteLine ();
+			WritePrompt ();
 
-        public static void WritePrompt()
-        {
-            bool changingColor = TextMode.SaveAttributes();
-            if(changingColor)
-                TextMode.SetAttributes(TextColor.Green,TextMode.Background);
-            TextMode.Write("#");
-            if(changingColor)
-                TextMode.SetAttributes(TextColor.Cyan, TextMode.Background);
-            TextMode.Write("OS");
-            if (changingColor)
-                TextMode.SetAttributes(TextColor.White, TextMode.Background);
-            TextMode.Write(">");
-            if (changingColor)
-                TextMode.RestoreAttributes();
-            TextMode.Write(" ");
-            TextMode.RefreshCursor();
-        }
+			running = true;
+		}
 
-        public static void Pulse()
-        {
-            if (running == false)
-                return;
+		public static void WritePrompt ()
+		{
+			bool changingColor = TextMode.SaveAttributes ();
+			if (changingColor)
+				TextMode.SetAttributes (TextColor.LightGreen, TextMode.Background);
+			TextMode.Write ("#");
+			if (changingColor)
+				TextMode.SetAttributes (TextColor.LightCyan, TextMode.Background);
+			TextMode.Write ("OS");
+			if (changingColor)
+				TextMode.SetAttributes (TextColor.White, TextMode.Background);
+			TextMode.Write (">");
+			if (changingColor)
+				TextMode.RestoreAttributes ();
+			TextMode.Write (" ");
+			TextMode.RefreshCursor ();
+		}
 
-            CString8* line = DequeueLine();
-            if (line != null)
+		public static void Pulse ()
+		{
+			if (running == false)
+				return;
+
+			CString8* line = DequeueLine ();
+			if (line != null) {
+				HandleLine (line);
+				CString8.DISPOSE (line);
+			}
+		}
+
+		private static void HandleLine (CString8* input)
+		{
+			CommandExecutionAttemptResult executionResult;
+			executionResult = CommandTable->HandleLine (input, true, false);
+
+			ADC.TextMode.WriteLine ();
+			WritePrompt ();
+		}
+
+		public static void QueueLine (CString8* input)
+		{
+			if (initialized == false)
+				Setup ();
+
+			Diagnostics.Assert (input != null, "Prompter::QueueLine(CString8*): Parameter 'input' is null");
+
+			if (lineBuffer->Length > 0)
+				lineBuffer->Append (LineSeperator);
+			if (input->Length == 0) {
+				lineBuffer->Append (" ");
+			} else
+				lineBuffer->Append (input);
+		}
+
+		private static CString8* DequeueLine ()
+		{
+			Diagnostics.Assert (initialized, "Prompter::DequeueLine(): Prompter is not initialized");
+
+			if (lineBuffer->Length == 0)
+				return null;
+
+			int indexOfSeperator = lineBuffer->buffer->IndexOf (LineSeperator);
+
+			if (indexOfSeperator >= 0) {
+				CString8* result = lineBuffer->buffer->Substring (0, indexOfSeperator);
+				lineBuffer->RemoveAt (0, indexOfSeperator + LineSeperator.Length);
+				return result;
+			} else // (lineBuffer->Length > 0) but no seperator is present
             {
-                HandleLine(line);
-                CString8.DISPOSE(line);
-            }
-        }
+				CString8* result = lineBuffer->buffer->Substring (0);
+				lineBuffer->Clear ();
+				return result;
+			}
+		}
 
-        private static void HandleLine(CString8* input)
-        {
-            CommandExecutionAttemptResult executionResult;
-            executionResult = CommandTable->HandleLine(input, true,false);
+		public static void DisplayCommandList ()
+		{
+			DisplayCommandList (CommandTable);
+		}
 
-            ADC.TextMode.WriteLine();
-            WritePrompt();
-        }
+		internal static void DisplayCommandList (CommandTableHeader* commandTable)
+		{
+			Diagnostics.Assert (commandTable != null, "Prompter::DisplayCommandList(CommandTableHeader*): Parameter 'commandTable' is null");
 
-        public static void QueueLine(CString8* input)
-        {
-            if (initialized == false)
-                Setup();
-            
-            Diagnostics.Assert(input != null, "Prompter::QueueLine(CString8*): Parameter 'input' is null");
+			if (commandTable->firstEntry == null) {
+				ADC.TextMode.WriteLine ("No commands to display; the commands list is empty.");
+				return;
 
-            if (lineBuffer->Length > 0)
-                lineBuffer->Append(LineSeperator);
-            if (input->Length == 0)
-            {
-                lineBuffer->Append(" ");
-            }
-            else
-                lineBuffer->Append(input);
-        }
+			} else {
+				const int firstColWidth = 22;
 
-        private static CString8* DequeueLine()
-        {
-            Diagnostics.Assert(initialized, "Prompter::DequeueLine(): Prompter is not initialized");
+				string colALabel = "  NAME";
+				string colBLabel = "DESCRIPTION";
+				
+				TextMode.Write (colALabel);
 
-            if (lineBuffer->Length == 0)
-                return null;
+				for (int spaces = firstColWidth - colALabel.Length;
+						spaces > 0;
+						spaces--)
+					ADC.TextMode.Write (" ");
+				
+				TextMode.WriteLine (colBLabel);
 
-            int indexOfSeperator = lineBuffer->buffer->IndexOf(LineSeperator);
+				CommandTableEntry* currentEntry;
+				//HACK: Was originally: for (currentEntry = commandTable->firstEntry;
+				for (currentEntry = commandTable->firstEntry;
+						currentEntry != null;
+						currentEntry = currentEntry->nextEntry) {
+					ADC.TextMode.Write ("[");
+					ADC.TextMode.Write (currentEntry->name);
+					ADC.TextMode.Write ("]");
+					
+					int spaces = firstColWidth - (currentEntry->name->Length) - 2;
+					
+					if (spaces < 0)
+						spaces = 0;
 
-            if (indexOfSeperator >= 0)
-            {
-                CString8* result = lineBuffer->buffer->Substring(0, indexOfSeperator);
-                lineBuffer->RemoveAt(0, indexOfSeperator + LineSeperator.Length);
-                return result;
-            }
-            else // (lineBuffer->Length > 0) but no seperator is present
-            {
-                CString8* result = lineBuffer->buffer->Substring(0);
-                lineBuffer->Clear();
-                return result;
-            }
-        }
+					for (; spaces > 0; spaces--)
+						ADC.TextMode.Write (" ");
 
-        public static void DisplayCommandList()
-        {
-            DisplayCommandList(CommandTable);
-        }
-        internal static void DisplayCommandList(CommandTableHeader* commandTable)
-        {
-            Diagnostics.Assert(commandTable != null, "Prompter::DisplayCommandList(CommandTableHeader*): Parameter 'commandTable' is null");
-
-            //HACK: Was originally: if (commandTable->firstEntry == null)
-            if (commandTable->firstEntry == null || commandTable->firstEntry->nextEntry == null)
-            {
-                ADC.TextMode.WriteLine("No commands to display; the commands list is empty.");
-                return;
-            }
-            else
-            {
-                const int firstColWidth = 22;
-                
-                string colALabel = "  NAME";
-                string colBLabel = "DESCRIPTION";
-                TextMode.Write(colALabel);
-                for (int spaces = firstColWidth - colALabel.Length;
-                    spaces > 0;
-                    spaces--)
-                    ADC.TextMode.Write(" ");
-                TextMode.WriteLine(colBLabel);
-
-                CommandTableEntry* currentEntry;
-                //HACK: Was originally: for (currentEntry = commandTable->firstEntry;
-                for (currentEntry = commandTable->firstEntry->nextEntry;
-                    currentEntry != null;
-                    currentEntry = currentEntry->nextEntry)
-                {
-                    ADC.TextMode.Write("[");
-                    ADC.TextMode.Write(currentEntry->name);
-                    ADC.TextMode.Write("]");
-                    int spaces = firstColWidth - (currentEntry->name->Length) - 2;
-                    if (spaces < 0)
-                        spaces = 0;
-                    for (; spaces > 0; spaces--)
-                        ADC.TextMode.Write(" ");
-                    ADC.TextMode.WriteLine(currentEntry->shortDescription);
-                }
-            }
-        }
-    }
+					ADC.TextMode.WriteLine (currentEntry->shortDescription);
+				}
+			}
+		}
+	}
 }

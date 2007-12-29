@@ -14,21 +14,19 @@ using System.Text;
 using SharpOS.Foundation;
 using System.Runtime.InteropServices;
 
-namespace SharpOS.Shell.Commands
-{
-    [StructLayout(LayoutKind.Sequential)]
-    public unsafe struct CommandTableEntry
-    {
-        public CString8* name;
-        public CString8* shortDescription;
- 
-        public void* func_Execute;
-        public void* func_GetHelp;
+namespace SharpOS.Shell.Commands {
+	[StructLayout (LayoutKind.Sequential)]
+	public unsafe struct CommandTableEntry {
+		public CString8* name;
+		public CString8* shortDescription;
 
-        public CommandTableEntry* nextEntry;
+		public void* func_Execute;
+		public void* func_GetHelp;
 
-        public void DISPOSE()
-        {
-        }
-    }
+		public CommandTableEntry* nextEntry;
+
+		public void DISPOSE ()
+		{
+		}
+	}
 }
