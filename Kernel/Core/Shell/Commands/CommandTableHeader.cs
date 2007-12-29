@@ -93,8 +93,6 @@ namespace SharpOS.Shell.Commands {
 			if (entry == null)
 				Diagnostics.Message ("CommandTableHeader::AddEntry(CommandTableEntry*): Parameter 'entry' is null");
 
-			TextMode.WriteLine (entry->name);
-
 			if (firstEntry == null) {
 				firstEntry = entry;
 
