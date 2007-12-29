@@ -34,7 +34,7 @@ namespace SharpOS
 
         public static void SetErrorTextAttributes()
         {
-            TextMode.SetAttributes(TextColor.Red, TextColor.Black);
+            TextMode.SetAttributes( TextColor.BrightWhite, TextColor.Red );
         }
 
         public static void SetWarningTextAttributes()
@@ -50,14 +50,7 @@ namespace SharpOS
         {
             PString8* buf = PString8.Wrap(intermediateStringBuffer, MaxMessageLength);
 
-
-            TextMode.SetAttributes(TextColor.Red, TextColor.Black);
-
-            buf->Concat("Panic! -- ");
-            buf->Concat(msg);
-            buf->ConcatLine();
-
-            buf->Concat("  Stage: ");
+            buf->Concat("Stage: ");
             buf->Concat((int)stage, false);
             buf->ConcatLine();
 
@@ -66,11 +59,29 @@ namespace SharpOS
             buf->ConcatLine();
 
             TextMode.SaveAttributes();
-            SetErrorTextAttributes();
-            TextMode.Write(buf);
+            SetErrorTextAttributes( );
+            TextMode.ClearScreen( );
+            TextMode.WriteLine( "SharpOS" );
+            TextMode.WriteLine( "Kernel Panic. Your system was halted to ensure your security." );
+            TextMode.Write( "  Stage: " ); TextMode.Write( (int) stage, false ); TextMode.WriteLine( );
+            TextMode.Write( "  Error: " ); TextMode.Write( (int) code, false ); TextMode.WriteLine( );
+
+            TextMode.WriteLine( );
+            TextMode.WriteLine("              ,  ");
+            TextMode.WriteLine("      |\\   /\\/ \\/|   ,_");
+            TextMode.WriteLine("      ; \\/`     '; , \\_',");
+            TextMode.WriteLine("       \\        / ");
+            TextMode.WriteLine("        '.    .'    /`.");
+            TextMode.WriteLine("    jgs   `~~` , /\\ `\"`");
+            TextMode.WriteLine("              .  `\"");
+
+            TextMode.WriteLine( );
+            TextMode.WriteLine( "The SharpOS Project would appreciate your feedback on this bug." );
+
             TextMode.RestoreAttributes();
 
-            Kernel.Halt();
+            Kernel.Halt( );
+            ADC.BootControl.Freeze( );
         }
 
         public static void Panic(string msg)
@@ -83,9 +94,7 @@ namespace SharpOS
             if (!cond)
             {
                 TextMode.Write("Assertion Failed: ");
-                TextMode.WriteLine(msg);
-
-                Kernel.Halt();
+                Panic( msg );
             }
         }
 
