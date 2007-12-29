@@ -18,6 +18,8 @@ namespace SharpOS.Shell.Commands.BuiltIn
         public static void Execute( CommandExecutionContext* context )
         {
             // ARCHDEPENDS: X86
+
+            SharpOS.ADC.X86.CPU.WriteBrandName( );
             SharpOS.ADC.X86.CPU.WriteProcessorInfo( );
         }
 
