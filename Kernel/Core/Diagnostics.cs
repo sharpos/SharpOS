@@ -81,7 +81,6 @@ namespace SharpOS
             TextMode.RestoreAttributes();
 
             Kernel.Halt( );
-            ADC.BootControl.Freeze( );
         }
 
         public static void Panic(string msg)
