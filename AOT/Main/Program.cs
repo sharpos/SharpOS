@@ -169,13 +169,21 @@ namespace SharpOS.AOT {
 
 			opts.BinaryFilename = opts.OutputFilename;
 
-#if !BYPASS_CATCH
-			try {
-#endif
+                        bool debuggerAttached = false;
+
+                        // Prevent a Mono error if one occurs.
+                        try {
+                                debuggerAttached = System.Diagnostics.Debugger.IsAttached;
+                        } catch {
+                        }
+
+                        if (debuggerAttached) {
+                                engine = new Engine (opts.GetEngineOptions ());
+                                engine.Run ();
+                        }
+                        else try {
 				engine = new Engine (opts.GetEngineOptions ());
 				engine.Run ();
-				
-#if !BYPASS_CATCH				
 			} catch (Exception e) {
 				AssemblyDefinition assembly;
 				ModuleDefinition module;
@@ -187,7 +195,7 @@ namespace SharpOS.AOT {
 				engine.GetStatusInformation (out assembly, out module, out type, out method);
 
 				if (e is EngineException) {
-					Console.Error.WriteLine ("Error: {0}", e.Message);
+					Console.Error.WriteLine ("Error: {0}", e.ToString());
 				} else {
 					Console.Error.WriteLine ("Caught exception: " + e);
 				}
@@ -226,7 +234,6 @@ namespace SharpOS.AOT {
 				
 				return 1;
 			}
-#endif
 
 			return 0;
 		}
