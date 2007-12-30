@@ -40,6 +40,12 @@ namespace SharpOS.Kernel.Shell {
 			if (initialized == false)
 				Setup ();
 
+                        TextMode.WriteLine ("SharpOS  Copyright (C) 2007  The SharpOS Team");
+                        TextMode.WriteLine ();
+                        TextMode.WriteLine ("This program comes with ABSOLUTELY NO WARRANTY; for details type 'show w'.");
+                        TextMode.WriteLine ("This is free software, and you are welcome to redistribute it");
+                        TextMode.WriteLine ("under certain conditions; type 'show c' for details.");
+
 			TextMode.WriteLine ();
 			WritePrompt ();
 
