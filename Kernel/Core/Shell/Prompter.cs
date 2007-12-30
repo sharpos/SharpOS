@@ -40,11 +40,36 @@ namespace SharpOS.Kernel.Shell {
 			if (initialized == false)
 				Setup ();
 
+			TextMode.ClearScreen ();
+
+			TextMode.SetAttributes (TextColor.Black, TextColor.White);
                         TextMode.WriteLine ("SharpOS  Copyright (C) 2007  The SharpOS Team");
-                        TextMode.WriteLine ();
+			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
+			TextMode.WriteLine ();
                         TextMode.WriteLine ("This program comes with ABSOLUTELY NO WARRANTY; for details type 'show w'.");
                         TextMode.WriteLine ("This is free software, and you are welcome to redistribute it");
                         TextMode.WriteLine ("under certain conditions; type 'show c' for details.");
+			TextMode.WriteLine ();
+			TextMode.WriteLine ();
+
+			TextMode.SetAttributes (TextColor.White, TextColor.Black);
+			TextMode.Write ("Welcome to ");
+			bool changingColor = TextMode.SaveAttributes ();
+			if (changingColor)
+				TextMode.SetAttributes (TextColor.LightGreen, TextMode.Background);
+			TextMode.Write ("Sharp");
+			if (changingColor)
+				TextMode.SetAttributes (TextColor.LightCyan, TextMode.Background);
+			TextMode.Write ("OS");
+			if (changingColor)
+				TextMode.SetAttributes (TextColor.White, TextMode.Background);
+			TextMode.Write ("!");
+			if (changingColor)
+				TextMode.RestoreAttributes ();
+			TextMode.WriteLine ();
+
+			
+			TextMode.WriteLine (CommandTableHeader.inform_USE_HELP_COMMANDS);
 
 			TextMode.WriteLine ();
 			WritePrompt ();
@@ -54,19 +79,15 @@ namespace SharpOS.Kernel.Shell {
 
 		public static void WritePrompt ()
 		{
-			bool changingColor = TextMode.SaveAttributes ();
-			if (changingColor)
-				TextMode.SetAttributes (TextColor.LightGreen, TextMode.Background);
+			TextMode.SetAttributes (TextColor.LightGreen, TextMode.Background);
 			TextMode.Write ("#");
-			if (changingColor)
-				TextMode.SetAttributes (TextColor.LightCyan, TextMode.Background);
+			TextMode.SetAttributes (TextColor.LightCyan, TextMode.Background);
 			TextMode.Write ("OS");
-			if (changingColor)
-				TextMode.SetAttributes (TextColor.White, TextMode.Background);
-			TextMode.Write (">");
-			if (changingColor)
-				TextMode.RestoreAttributes ();
-			TextMode.Write (" ");
+			TextMode.SetAttributes (TextColor.White, TextMode.Background);
+			TextMode.Write ("> ");
+
+			TextMode.SetAttributes (TextColor.Yellow, TextMode.Background);
+
 			TextMode.RefreshCursor ();
 		}
 
@@ -141,10 +162,12 @@ namespace SharpOS.Kernel.Shell {
 				return;
 
 			} else {
+				TextColor origForecolor = TextMode.Foreground;
 				const int firstColWidth = 22;
 
+				TextMode.SetAttributes (TextColor.White, TextMode.Background);
 				string colALabel = "  NAME";
-				string colBLabel = "DESCRIPTION";
+				string colBLabel = "  DESCRIPTION";
 				
 				TextMode.Write (colALabel);
 
@@ -156,12 +179,15 @@ namespace SharpOS.Kernel.Shell {
 				TextMode.WriteLine (colBLabel);
 
 				CommandTableEntry* currentEntry;
-				//HACK: Was originally: for (currentEntry = commandTable->firstEntry;
+
 				for (currentEntry = commandTable->firstEntry;
 						currentEntry != null;
 						currentEntry = currentEntry->nextEntry) {
+					ADC.TextMode.SetAttributes (TextColor.BrightWhite, TextMode.Background);
 					ADC.TextMode.Write ("[");
+					ADC.TextMode.SetAttributes (TextColor.Yellow, TextMode.Background);
 					ADC.TextMode.Write (currentEntry->name);
+					ADC.TextMode.SetAttributes (TextColor.BrightWhite, TextMode.Background);
 					ADC.TextMode.Write ("]");
 					
 					int spaces = firstColWidth - (currentEntry->name->Length) - 2;
@@ -172,8 +198,10 @@ namespace SharpOS.Kernel.Shell {
 					for (; spaces > 0; spaces--)
 						ADC.TextMode.Write (" ");
 
+					ADC.TextMode.SetAttributes (TextColor.Yellow, TextMode.Background);
 					ADC.TextMode.WriteLine (currentEntry->shortDescription);
 				}
+				ADC.TextMode.SetAttributes (origForecolor, TextMode.Background);
 			}
 		}
 	}
