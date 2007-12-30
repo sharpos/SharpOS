@@ -33,9 +33,13 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
                 }
 
                 public static void ShowWarranty() {
+                        TextMode.WriteLine ("The SharpOS Team can accept no liability what-so-ever arising from the usage of this software and/or the source code for this software.");
                 }
 
                 public static void ShowCopyright() {
+                        TextMode.WriteLine ("SharpOS Copyright (C) 2007 The SharpOS Team");
+                        TextMode.WriteLine ("This software and it's source code is protected by international Copyright Law.");
+                        TextMode.WriteLine ("By using this software you are agreeing to the terms laid out in the GNU General Public License Version 3 with the Classpath Linking Exception.");
                 }
 
                 public static void ShowDevelopers() {
