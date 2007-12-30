@@ -38,10 +38,19 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
                                 TextMode.WriteLine ();
                                 buf->Concat (context->parameters, 6, context->parameters->Length - 6);
 
-                                TextMode.Write ("Setting key map to `");
-                                TextMode.Write (buf);
-                                TextMode.Write ("'");
-                                KeyMap.SetKeyMap (buf);
+				if (KeyMap.GetBuiltinKeyMap (buf) == null) {
+					TextMode.SaveAttributes ();
+					TextMode.Foreground = TextColor.Red;
+					TextMode.Write ("Unknown keymap `");
+					TextMode.Write (buf);
+					TextMode.Write ("'");
+					TextMode.RestoreAttributes ();
+				} else {
+					TextMode.Write ("Setting key map to `");
+					TextMode.Write (buf);
+					TextMode.Write ("'");
+					KeyMap.SetKeyMap (buf);
+				}
                         } else if (context->parameters->Length == 0) {
                                 TextMode.Write ("Current key map: ");
                                 TextMode.WriteLine (KeyMap.GetCurrentKeyMapName ());

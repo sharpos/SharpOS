@@ -323,5 +323,18 @@ namespace SharpOS.Kernel.Foundation {
 		}
 
 		#endregion
+
+		#region Testcases
+
+		internal static void __RunTests ()
+		{
+			__Test1();
+		}
+
+		public static void __Test1 ()
+		{
+		}
+
+		#endregion
 	}
 }

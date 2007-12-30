@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -25,7 +25,7 @@ namespace SharpOS.Kernel.ADC {
 		#region ADC Interface
 
 		/// <summary>
-		/// Performs architecture-specific setup. 
+		/// Performs architecture-specific setup.
 		/// </summary>
 		[SharpOS.AOT.Attributes.ADCStub]
 		public unsafe static void Setup ()
@@ -50,7 +50,7 @@ namespace SharpOS.Kernel.ADC {
 		public unsafe static void MoveTo (int _x, int _y)
 		{
 		}
-		
+
 		/// <summary>
 		/// Change the hardware cursor size.
 		/// </summary>
@@ -98,12 +98,12 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return 0;
 		}
-		 
+
 		[SharpOS.AOT.Attributes.ADCStub]
 		public unsafe static void GetScreenSize (int *ret_w, int *ret_h)
 		{
 		}
-		
+
 		/// <summary>
 		/// Clear the screen.
 		/// </summary>
@@ -160,7 +160,7 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return false;
 		}
-		
+
 		/// <summary>
 		/// Saves the current set of screen attributes
 		/// </summary>
@@ -171,20 +171,20 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		public static TextColor Foreground {
-		
+
 			[SharpOS.AOT.Attributes.ADCStub]
 			get { return TextColor.Black; }
 			[SharpOS.AOT.Attributes.ADCStub]
 			set { }
 		}
-		
+
 		public static TextColor Background {
 			[SharpOS.AOT.Attributes.ADCStub]
 			get { return TextColor.Black; }
 			[SharpOS.AOT.Attributes.ADCStub]
 			set { }
 		}
-		
+
 		#endregion
 		#region Internal
 
@@ -192,15 +192,23 @@ namespace SharpOS.Kernel.ADC {
 		/// Common Write() implementation. Serves Write(CString8*), Write(PString8*), and
 		/// Write(byte*).
 		/// <summary>
-		unsafe static void Write (byte *str, int len)
+		public unsafe static void Write (byte *str, int len)
 		{
 			for (int i = 0; i < len; i++)
 				WriteChar (str [i]);
 		}
 
+		public unsafe static void Write (byte *str, int strLen, int offset, int len)
+		{
+			Diagnostics.Assert (len > strLen, "TextMode.Write(): len > strLen");
+
+			for (int i = offset; i < strLen && (i - offset < len); ++i)
+				WriteChar (str [i]);
+		}
+
 		#endregion
 		#region Cursors
-		
+
 		/// <summary>
 		/// Makes sure the cursor displayed on the screen is
 		/// in sync with the internal cursor (used to position
@@ -213,10 +221,10 @@ namespace SharpOS.Kernel.ADC {
 			GetCursor (&x, &y);
 			SetCursor (x, y);
 		}
-		
+
 		#endregion
 		#region Write() family
-		
+
 		/// <summary>
 		/// Writes a 16-bit string to the screen.
 		/// </summary>
@@ -240,12 +248,12 @@ namespace SharpOS.Kernel.ADC {
 		{
 			Write (str->Pointer, str->Length);
 		}
-		
+
 		public unsafe static void Write (byte *str)
 		{
 			Write (str, ByteString.Length (str));
 		}
-		
+
 		/// <summary>
 		/// Writes an Int32 to the screen in decimal format.
 		/// </summary>
@@ -262,7 +270,7 @@ namespace SharpOS.Kernel.ADC {
 		{
 			byte* buffer = stackalloc byte [32];
 			int length;
-			
+
 			length = Convert.ToString (value, hex, buffer, 32, 0);
 
 			for (int x = 0; x < length; ++x)
@@ -287,7 +295,7 @@ namespace SharpOS.Kernel.ADC {
 
 		#endregion
 		#region WriteLine() family
-	
+
 		/// <summary>
 		/// Writes a newline to the screen.
 		/// </summary>
@@ -304,7 +312,7 @@ namespace SharpOS.Kernel.ADC {
 			Write (message);
 			WriteLine ();
 		}
-		
+
 		/// <summary>
 		/// Writes a CString8* to the screen, followed by a newline.
 		/// </summary>
@@ -313,7 +321,7 @@ namespace SharpOS.Kernel.ADC {
 			Write (message);
 			WriteLine ();
 		}
-		
+
 		/// <summary>
 		/// Writes a CString8* to the screen, followed by a newline.
 		/// </summary>
@@ -322,7 +330,7 @@ namespace SharpOS.Kernel.ADC {
 			Write (message);
 			WriteLine ();
 		}
-		
+
 		/// <summary>
 		/// Writes a CString8* to the screen, followed by a newline.
 		/// </summary>
@@ -364,7 +372,7 @@ namespace SharpOS.Kernel.ADC {
 			Write (value, hex);
 			WriteLine ();
 		}
-		
+
 		/// <summary>
 		/// Writes the string <paramref name="message" /> to the screen,
 		/// then the Int32 <paramref name="value" />, followed by a newline.
@@ -406,7 +414,7 @@ namespace SharpOS.Kernel.ADC {
 
 		#endregion
 		#region WriteLine() convenient overloads
-		
+
 		public static void WriteLine (string message, int value, bool hex, string message2)
 		{
 			Write (message);
@@ -420,10 +428,10 @@ namespace SharpOS.Kernel.ADC {
 			Write (value);
 			Write (message2);
 		}
-		
+
 		#endregion
 		#region WriteSubstring() family
-		
+
 		/// <summary>
 		/// Writes <paramref name="len" /> characters of the string
 		/// <paramref name="message" /> to the screen, starting with
@@ -470,8 +478,8 @@ namespace SharpOS.Kernel.ADC {
 
 		#endregion
 		#region Obsolete
-		// TODO: remove all references to these and axe them!		
-		
+		// TODO: remove all references to these and axe them!
+
 		/// <summary>
 		/// Writes a number to the screen in decimal format.
 		/// </summary>
@@ -500,7 +508,7 @@ namespace SharpOS.Kernel.ADC {
 		{
 			WriteNumber (value, hex);
 		}
-		
+
 		#endregion
 	}
 }

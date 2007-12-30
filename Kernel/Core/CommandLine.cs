@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -37,7 +37,7 @@ namespace SharpOS.Kernel
 		public unsafe static int IndexOfOption (string option)
 		{
 			int index = 0;
-			
+
 			if (commandLine == null)
 				return -1;
 
@@ -61,7 +61,7 @@ namespace SharpOS.Kernel
 
 			return -1;
 		}
-		
+
 		public unsafe static bool ContainsOption (string option)
 		{
 			return IndexOfOption (option) != -1;
@@ -77,14 +77,14 @@ namespace SharpOS.Kernel
 
 			if (commandLine == null)
 				return false;
-			
+
 			argumentIndex = IndexOfArgument (option);
 
 			if (argumentIndex < 0)
 				return false;
-			
+
 			argumentLen = GetArgumentLength (argumentIndex);
-			
+
 			buf->Concat (commandLine, argumentIndex, argumentLen);
 
 			return true;
@@ -93,7 +93,7 @@ namespace SharpOS.Kernel
 		/// <summary>
 		/// Returns the index in the command line string containing the
 		/// first character of the argument to <paramref name="option" />.
-		/// 
+		///
 		/// </summary>
 		/// <returns>
 		/// If the option was not found, this function returns -2.
@@ -105,25 +105,25 @@ namespace SharpOS.Kernel
 		{
 			int optionIndex;
 			int argumentIndex;
-			
+
 			Diagnostics.Assert (option != null, "CommandLine.GetArgument(): argument `option' is null");
-			
+
 			if (commandLine == null)
 				return -1;
-			
+
 			optionIndex = IndexOfOption (option);
 			argumentIndex = optionIndex + 1;
-			
+
 			if (optionIndex == -1)
 				return -2;
-			
+
 			if (optionIndex + 1 >= commandLine->Length)
 				return -1;
 
 			while (argumentIndex < commandLine->Length) {
 				if (commandLine->GetChar (argumentIndex) != ' ')
 					return argumentIndex;
-				
+
 				++argumentIndex;
 			}
 
@@ -136,7 +136,7 @@ namespace SharpOS.Kernel
 
 			Diagnostics.Assert (argumentIndex < 0 || argumentIndex >= commandLine->Length,
 				"CommandLine.GetArgumentLength(): argument `argumentIndex' is out of range");
-			
+
 			while (x < commandLine->Length && commandLine->GetChar (x) != ' ')
 				++x;
 

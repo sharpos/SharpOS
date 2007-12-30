@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -21,24 +21,24 @@ namespace SharpOS.Kernel {
 
 	public unsafe class EntryModule {
 		#region Global fields
-		
+
 		static bool stayInLoop = true;
 		static KernelStage kernelStage = KernelStage.Init;
 		static Multiboot.Info *multibootInfo = null;
-		
+
 		#endregion
 		#region Constants
-		
+
 		/// <summary>
 		/// Defines the maximum event handler slots for each event.
 		/// </summary>
 		public const int MaxEventHandlers = 4;
-		
+
 		/// <summary>
 		/// Defines the maximum length of key map names
 		/// </summary>
 		public const int MaxKeyMapNameLength = 40;
-				
+
 		/// <summary>
 		/// Defines the amount of nested TextMode.SaveAttributes() are possible.
 		/// </summary>
@@ -48,7 +48,7 @@ namespace SharpOS.Kernel {
 		/// Defines the amount of threads that are possible.
 		/// </summary>
 		public const uint MaxThreads = 10;
-		
+
 		#endregion
 		#region Entry point
 
@@ -80,7 +80,7 @@ namespace SharpOS.Kernel {
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.ClearScreen ();
 			TextMode.SetCursor (0, 0);
-			
+
 			// Write the banner
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes (TextColor.BrightWhite, TextColor.Black);
@@ -109,29 +109,31 @@ namespace SharpOS.Kernel {
 
 			StageMessage("Keymap setup...");
 			KeyMap.Setup();
-			
+
 			StageMessage("Keyboard setup...");
 			Keyboard.Setup();
 
 			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
-			
+
 			StageMessage("Console setup...");
 			SharpOS.Kernel.Console.Setup();
-			
+
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
 			TextMode.WriteLine("");
 			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
 			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes();
-			
+
 #if KERNEL_TESTS
 			// Testcases
 			ByteString.__RunTests ();
 			StringBuilder.__RunTests();
-#endif		
-            
+			CString8.__RunTests ();
+			PString8.__RunTests ();
+#endif
+
 			StageMessage("Shell setup...");
 			SharpOS.Kernel.Shell.Prompter.Setup();
 			SharpOS.Kernel.Shell.Prompter.Start();
@@ -157,7 +159,7 @@ namespace SharpOS.Kernel {
 
 		#endregion
 		#region Kernel properties
-		
+
 		/// <summary>
 		/// Sets the operational stage reported by the kernel.
 		/// </summary>
@@ -165,7 +167,7 @@ namespace SharpOS.Kernel {
 		{
 			kernelStage = stage;
 		}
-		
+
 		/// <summary>
 		/// Gets the current operational stage of the kernel.
 		/// </summary>
@@ -176,7 +178,7 @@ namespace SharpOS.Kernel {
 
 		#endregion
 		#region OS boot control
-		
+
 		/// <summary>
 		/// Performs shutdown process, then calls ADC halt
 		/// function.
@@ -186,7 +188,7 @@ namespace SharpOS.Kernel {
 			SetKernelStage (KernelStage.Halt);
 			BootControl.Freeze ();
 		}
-		
+
 		/// <summary>
 		/// Performs shutdown process, then calls ADC reboot
 		/// function.

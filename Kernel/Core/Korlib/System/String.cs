@@ -9,6 +9,7 @@
 //
 
 using SharpOS.AOT.Attributes;
+using SharpOS.Kernel.ADC;
 
 namespace Internal.System {
 	public class String: Internal.System.Object {
@@ -35,6 +36,23 @@ namespace Internal.System {
 			fixed (char* p = &this.firstChar) {
 				return p [index];
 			}
+		}
+
+		public static void __RunTests ()
+		{
+			__Test1 ();
+		}
+
+		public static void __Test1 ()
+		{
+			string str = "Hello";
+			string str2 = "US";
+			string str3 = "Longer String Than Most";
+
+			if (str.Length == 5)
+				TextMode.WriteLine ("System.String.Length: test passed");
+			else
+				TextMode.WriteLine ("System.String.Length: test FAILED");
 		}
 	}
 }
