@@ -1,8 +1,0 @@
-2007-08-04  William Lahti <xfurious@gmail.com>
-	* CS/MixedIntegerCast.cs: conversions between unsigned/signed integers
-	* CS/SignedIntegerCast.cs: conversions between signed integers
-	* CS/UnsignedIntegerCast.cs: conversions between unsigned integers
-	* CS/PointerCast.cs: conversions between pointer types
-	* CS/MixedIntegerPointerCast.cs: dereferencing to integer types
-	* CS/StaticConstructor.cs: tests the AOT's static constructor support
-	* CS/ByteString.cs: tests the AOT 'String' stub.

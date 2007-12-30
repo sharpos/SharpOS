@@ -4,17 +4,17 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{5E0259D4-4102-11DC-8314-0800200C9A66}</ProjectGuid>
+    <ProjectGuid>{14D3B428-413F-11DC-8314-0800200C9A66}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpOS.Kernel.Tests</RootNamespace>
-    <AssemblyName>SharpOS.Kernel.Tests</AssemblyName>
+    <RootNamespace>SharpOS.Kernel.Tests.CS</RootNamespace>
+    <AssemblyName>SharpOS.Kernel.Tests.CS</AssemblyName>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -23,7 +23,7 @@
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\..\build\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
@@ -31,7 +31,7 @@
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Test|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\..\build\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DebugType>full</DebugType>
@@ -42,7 +42,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Test|AnyCPU' ">
-    <OutputPath>..\..\build\</OutputPath>
+    <OutputPath>..\..\..\build\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <Optimize>true</Optimize>
     <DebugType>pdbonly</DebugType>
@@ -68,21 +68,9 @@
   <ItemGroup>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Core\SharpOS.AOT.Core.csproj">
+    <ProjectReference Include="..\..\..\AOT\Core\SharpOS.AOT.Core.csproj">
       <Project>{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}</Project>
       <Name>SharpOS.AOT.Core</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Main\SharpOS.AOT.csproj">
-      <Project>{5AADA544-40FE-11DC-8314-0800200C9A66}</Project>
-      <Name>SharpOS.AOT</Name>
-    </ProjectReference>
-    <ProjectReference Include="CS\SharpOS.Kernel.Tests.CS.csproj">
-      <Project>{14D3B428-413F-11DC-8314-0800200C9A66}</Project>
-      <Name>SharpOS.Kernel.Tests.CS</Name>
-    </ProjectReference>
-    <ProjectReference Include="IL\SharpOS.Kernel.Tests.IL.csproj">
-      <Project>{5E470596-4138-11DC-8314-0800200C9A66}</Project>
-      <Name>SharpOS.Kernel.Tests.IL</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -94,9 +82,21 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>$(TargetDir)\KernelTestsWrapperGen.exe</PreBuildEvent>
-    <PostBuildEvent>$(TargetDir)\SharpOS-AOT.exe -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.Tests.dll $(TargetDir)\SharpOS.Kernel.Tests.IL.dll $(TargetDir)\SharpOS.Kernel.Tests.CS.dll $(TargetDir)\SharpOS.korlib.dll
-copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
-$(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>
+    <PreBuildEvent>
+    </PreBuildEvent>
   </PropertyGroup>
+  <Target Name="PrintIntermediateAssemblyName" DependsOnTargets="Compile">
+    <Message Text="Intermediate assembly name: @(IntermediateAssembly)" />
+    <Message Text="Int assm full path:&#xD;&#xA;		$(MSBuildProjectDirectory)/@(IntermediateAssembly)" />
+    <Message Text="---------CoreBuildDependsOn--------------" />
+    <Message Text="$(CoreBuildDependsOn)" />
+    <Message Text="-----------------------------------------" />
+  </Target>
+  <Target Name="MyComputedData" DependsOnTargets="GetNativeManifest">
+    <Message Text="-----------------------------------------" />
+    <Message Text="@(ComputedApplicationManifest)" />
+    <Message Text="$(_DeploymentApplicationManifestIdentity)" />
+    <Message Text="%(_ApplicationManifestFinal.FullPath)" />
+    <Message Text="-----------------------------------------" />
+  </Target>
 </Project>

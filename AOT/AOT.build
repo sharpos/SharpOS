@@ -16,13 +16,11 @@
 
 	<target name="test" depends="build">
 		<nant buildfile="./Core.Tests/Core.Tests.build" />
-		<nant buildfile="./Kernel.Tests/Kernel.Tests.build" />
 	</target>
 
 	<target name="clean">
 		<nant buildfile="./Core/Core.build" target="clean" />
 		<nant buildfile="./Main/Main.build" target="clean" />
 		<nant buildfile="./Core.Tests/Core.Tests.build" target="clean" />
-		<nant buildfile="./Kernel.Tests/Kernel.Tests.build" target="clean" />
 	</target>
 </project>

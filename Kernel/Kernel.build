@@ -24,6 +24,7 @@
 
 	<target name="test">
 		<nant buildfile="./Core/Core.build" target="test" />
+		<nant buildfile="./Tests/Tests.build"/>
 	</target>
 
 	<target name="aot" depends="build">
@@ -52,5 +53,6 @@
 	
 	<target name="clean">
 		<nant buildfile="./Core/Core.build" target="clean" />
+		<nant buildfile="./Tests/Tests.build" target="clean" />
 	</target>
 </project>

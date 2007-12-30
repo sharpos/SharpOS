@@ -82,9 +82,9 @@ namespace KernelTestsWrapperGen {
 					if (unitTests) {
 						tr.WriteLine ("\t[Test]");
 						tr.WriteLine ("\tpublic void " + entry.DeclaringType.FullName.Replace (".", "_") + "_" + entry.Name + " ()");
-						tr.WriteLine ("\t\t{");
-						tr.WriteLine ("\t\t\tAssert.IsTrue (" + entryFullName + " () == 1, \"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
-						tr.WriteLine ("\t\t}");
+						tr.WriteLine ("\t{");
+						tr.WriteLine ("\t\tAssert.IsTrue (" + entryFullName + " () == 1, \"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
+						tr.WriteLine ("\t}");
 
 					} else {
 						tr.WriteLine ("\t\t\tif (" + entryFullName + " () != 1) {");
@@ -123,8 +123,7 @@ namespace KernelTestsWrapperGen {
 			string kernelTestsPath = Path.Combine (Path.Combine (Path.Combine (path, ".."), "Kernel"), "Core");
 			
 			string wrapperCS = Path.Combine (kernelTestsPath, WRAPPER_CS);
-			string nunitCS = NUNIT_CS; // Path.Combine (Path.Combine (kernelTestsPath, "NUnit"), NUNIT_CS);
-
+			string nunitCS = Path.Combine (Path.Combine (Path.Combine (Path.Combine (Path.Combine (path, ".."), "Kernel"), "Tests"), "NUnit"), NUNIT_CS);
 
 			FileInfo ilDLLFileInfo = new FileInfo (ilDLL);
 			FileInfo csDLLFileInfo = new FileInfo (csDLL);
@@ -244,7 +243,7 @@ namespace KernelTestsWrapperGen {
 			if (ilDllFileInfo == null)
 				result = true;
 
-			string ilPath = Path.Combine (Path.Combine (Path.Combine (Path.Combine (buildPath, ".."), "AOT"), "Kernel.Tests"), "IL");
+			string ilPath = Path.Combine (Path.Combine (Path.Combine (Path.Combine (buildPath, ".."), "Kernel"), "Tests"), "IL");
 
 			DirectoryInfo directoryInfo = new DirectoryInfo (ilPath);
 
