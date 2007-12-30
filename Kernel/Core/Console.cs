@@ -86,7 +86,8 @@ namespace SharpOS.Kernel
 				return;
 
 			// actually not correct because capslock does not behave like shift on all characters...
-			bool	upperCase	= (Keyboard.LeftShift() || Keyboard.RightShift()) ^ Keyboard.CapsLock();
+			
+                        bool shifted = (Keyboard.LeftShift () || Keyboard.RightShift ());
 
 			TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
 
@@ -227,6 +228,15 @@ namespace SharpOS.Kernel
 				return;
 			}
 			//}
+
+                        // Code to fix keymap issue with caps.
+                        bool upperCase = shifted;
+                        if(
+                                (scancode >= 0x10 && scancode <= 0x26) ||
+                                (scancode == 0x1e || scancode == 0x1f) ||
+                                (scancode >= 0x2c && scancode <= 0x2f) ||
+                                (scancode >= 0x30 && scancode <= 0x32))
+                        upperCase ^= Keyboard.CapsLock ();
 
 			byte character = Keyboard.Translate(scancode, upperCase);
 			if (character == 0)
