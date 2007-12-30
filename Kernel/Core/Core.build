@@ -16,19 +16,42 @@
 		<!-- nothing yet -->		
 	</target>
 
-	<target name="build">
+	<target name="keymaps">
 		<!-- create the keymap archive -->
 		<echo message="Preparing keymap archive to build into the kernel" />
 		
 		<mkdir dir="${path::combine(prefix, 'Temp')}" failonerror="false" />
 		<exec program="${path::combine(prefix, 'key-compiler.exe')}" 
 			commandline="-ar -o:${path::combine(temp-dir, 'BuiltinKeyMaps.ska')} @Config/BuiltinKeyMaps.cfg" />
+
+	</target>
+	
+	<target name="build" depends="keymaps">
 		
 		<echo message="Building the SharpOS kernel" />
 
 		<csc target="library" output="${path::combine(prefix, 'SharpOS.Kernel.dll')}" debug="${debug}" unsafe="true">
 			<references>
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
+			</references>
+			<resources>
+				<include name="${path::combine(temp-dir, 'BuiltinKeyMaps.ska')}" asis="true" />
+			</resources>
+			<sources>
+				<include name="**/*.cs" />
+			</sources>
+		</csc>
+		
+	</target>
+	
+	<target name="test" depends="keymaps">
+		<echo message="Building the SharpOS kernel and tests" />
+
+		<csc target="library" output="${path::combine(prefix, 'SharpOS.Kernel.dll')}" debug="${debug}" unsafe="true" define="KERNEL_TESTS">
+			<references>
+				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
+				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
+				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}" />
 			</references>
 			<resources>
 				<include name="${path::combine(temp-dir, 'BuiltinKeyMaps.ska')}" asis="true" />

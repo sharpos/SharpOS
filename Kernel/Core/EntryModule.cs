@@ -132,7 +132,8 @@ namespace SharpOS.Kernel {
 			StringBuilder.__RunTests();
 			CString8.__RunTests ();
 			PString8.__RunTests ();
-#endif
+			SharpOS.Kernel.Tests.Wrapper.Run ();
+#endif		
 
 			StageMessage("Shell setup...");
 			SharpOS.Kernel.Shell.Prompter.Setup();

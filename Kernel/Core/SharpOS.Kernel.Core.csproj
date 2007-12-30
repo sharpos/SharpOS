@@ -15,7 +15,7 @@
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
     <OutputPath>..\..\build\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
+    <DefineConstants>TRACE;DEBUG;KERNEL_TESTS</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
@@ -68,6 +68,14 @@
       <Project>{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}</Project>
       <Name>SharpOS.AOT.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\AOT\Kernel.Tests\CS\SharpOS.Kernel.Tests.CS.csproj">
+      <Project>{14D3B428-413F-11DC-8314-0800200C9A66}</Project>
+      <Name>SharpOS.Kernel.Tests.CS</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\AOT\Kernel.Tests\IL\SharpOS.Kernel.Tests.IL.csproj">
+      <Project>{5E470596-4138-11DC-8314-0800200C9A66}</Project>
+      <Name>SharpOS.Kernel.Tests.IL</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="**\*.cs" Exclude="*.svn" />
@@ -86,10 +94,14 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US.skm -o:"$(SolutionDir)\build\KeyMaps\US.bin"
-$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US.skm -o:"$(SolutionDir)\build\KeyMaps\UK.bin"
+    <PreBuildEvent>$(TargetDir)\KernelTestsWrapperGen.exe
+$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\DE.skm -o:"$(SolutionDir)\build\KeyMaps\DE.bin"
+$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US.skm -o:"$(SolutionDir)\build\KeyMaps\US.bin"
+$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\UK.skm -o:"$(SolutionDir)\build\KeyMaps\UK.bin"
+$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US-Dvorak-ANSI.skm -o:"$(SolutionDir)\build\KeyMaps\US-Dvorak-ANSI.bin"
+$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US-Dvorak-Classic.skm -o:"$(SolutionDir)\build\KeyMaps\US-Dvorak-Classic.bin"
 $(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ -ar -o:"$(TargetDir)\Temp\BuiltinKeymaps.ska" "@$(ProjectDir)\Config\BuiltinKeymaps.cfg"</PreBuildEvent>
-    <PostBuildEvent>$(TargetDir)\SharpOS-AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll
+    <PostBuildEvent>$(TargetDir)\SharpOS-AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll $(TargetDir)\SharpOS.Kernel.Tests.CS.dll $(TargetDir)\SharpOS.Kernel.Tests.IL.dll
 copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
 $(TargetDir)\DiskImageUpdater.exe -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>
   </PropertyGroup>

@@ -38,7 +38,7 @@ namespace KernelTestsWrapperGen {
 	{
 		private const string IL_DLL = "SharpOS.Kernel.Tests.IL.dll";
 		private const string CS_DLL = "SharpOS.Kernel.Tests.CS.dll";
-		private const string WRAPPER_CS = "Wrapper.cs";
+		private const string WRAPPER_CS = "KernelTestsWrapper.cs";
 		private const string NUNIT_CS = "SharpOS.Kernel.Tests.NUnit.cs";
 
 		static int Main (string [] args)
@@ -88,7 +88,7 @@ namespace KernelTestsWrapperGen {
 
 					} else {
 						tr.WriteLine ("\t\t\tif (" + entryFullName + " () != 1) {");
-						tr.WriteLine ("\t\t\t\tScreen.WriteLine (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
+						tr.WriteLine ("\t\t\t\tTextMode.WriteLine (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
 						tr.WriteLine ("\t\t\t\tfailures++;");
 						tr.WriteLine ("\t\t\t}");
 						tr.WriteLine ("");
@@ -107,7 +107,7 @@ namespace KernelTestsWrapperGen {
 			tr.WriteLine ("//	Mircea-Cristian Racasan <darx_kies@gmx.net>");
 			tr.WriteLine ("//");
 			tr.WriteLine ("// Licensed under the terms of the GNU GPL v3,");
-            tr.WriteLine ("//  with Classpath Linking Exception for Libraries");
+			tr.WriteLine ("//  with Classpath Linking Exception for Libraries");
 			tr.WriteLine ("//");
 
 			tr.WriteLine ("");
@@ -120,10 +120,10 @@ namespace KernelTestsWrapperGen {
 			string ilDLL = Path.Combine (path, IL_DLL);
 			string csDLL = Path.Combine (path, CS_DLL);
 
-			string kernelTestsPath = Path.Combine (Path.Combine (Path.Combine (path, ".."), "AOT"), "Kernel.Tests");
+			string kernelTestsPath = Path.Combine (Path.Combine (Path.Combine (path, ".."), "Kernel"), "Core");
 			
 			string wrapperCS = Path.Combine (kernelTestsPath, WRAPPER_CS);
-			string nunitCS = Path.Combine (Path.Combine (kernelTestsPath, "NUnit"), NUNIT_CS);
+			string nunitCS = NUNIT_CS; // Path.Combine (Path.Combine (kernelTestsPath, "NUnit"), NUNIT_CS);
 
 
 			FileInfo ilDLLFileInfo = new FileInfo (ilDLL);
@@ -143,20 +143,25 @@ namespace KernelTestsWrapperGen {
 					|| wrapperCSFileInfo.LastWriteTime < ilDLLFileInfo.LastWriteTime) {
 				TextWriter tr = OpenFile (wrapperCS);
 
-				tr.WriteLine ("namespace SharpOS {");
-				tr.WriteLine ("\tpublic unsafe partial class KRNL {");
-				tr.WriteLine ("\t\tprotected static void RunTests ()");
+				tr.WriteLine ("using SharpOS.Kernel.ADC;");
+				tr.WriteLine ();
+
+				tr.WriteLine ("namespace SharpOS.Kernel.Tests {");
+				tr.WriteLine ("\tpublic unsafe class Wrapper {");
+				tr.WriteLine ("\t\tpublic static void Run ()");
 				tr.WriteLine ("\t\t{");
+				tr.WriteLine ("#if KERNEL_TESTS");
 				tr.WriteLine ("\t\t\tint failures = 0;");
 
 				ProcessAssembly (false, path, tr, ilDLL, filter);
 				ProcessAssembly (false, path, tr, csDLL, filter);
 
-				tr.WriteLine ("if (failures > 0)");
-				tr.WriteLine ("\t\t\t\tScreen.WriteLine (\"Not all tests passed!\");");
+				tr.WriteLine ("\t\t\tif (failures > 0)");
+				tr.WriteLine ("\t\t\t\tTextMode.WriteLine (\"Not all tests passed!\");");
 				tr.WriteLine ("\t\t\telse");
-				tr.WriteLine ("\t\t\t\tScreen.WriteLine (\"All test cases have completed successfully!\");");
+				tr.WriteLine ("\t\t\t\tTextMode.WriteLine (\"All test cases have completed successfully!\");");
 
+				tr.WriteLine ("#endif");
 				tr.WriteLine ("\t\t}");
 				tr.WriteLine ("\t}");
 				tr.WriteLine ("}");

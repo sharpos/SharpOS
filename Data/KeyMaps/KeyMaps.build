@@ -25,6 +25,7 @@
 		<exec program="${compiler}" commandline="UK.skm -o:${prefix}/UK.bin" />
 		<exec program="${compiler}" commandline="US-Dvorak-ANSI.skm -o:${prefix}/US-Dvorak-ANSI.bin" />
 		<exec program="${compiler}" commandline="US-Dvorak-Classic.skm -o:${prefix}/US-Dvorak-Classic.bin" />
+		<exec program="${compiler}" commandline="DE.skm -o:${prefix}/DE.bin" />
 	</target>
 
 	<target name="clean">

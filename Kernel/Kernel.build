@@ -19,12 +19,11 @@
 	
 	<target name="build">
 		<echo message="Building the SharpOS kernel" />
-		<nant buildfile="./korlib/korlib.build" />
 		<nant buildfile="./Core/Core.build" />
 	</target>
 
 	<target name="test">
-		<!-- nothing yet -->
+		<nant buildfile="./Core/Core.build" target="test" />
 	</target>
 
 	<target name="aot" depends="build">
@@ -38,9 +37,20 @@
 		<exec program="${path::combine(prefix, 'disk-image-updater.exe')}"
 			commandline="-i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>
+
+	<target name="aot-test" depends="test">
+		<echo message="AOT compiling the SharpOS Kernel" />
+		<exec program="${path::combine(prefix, 'sharpos-aot.exe')}" 
+			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}"/>
+			
+		<echo message="Update the disk image..." />
+		<delete file="${path::combine(common-dir,'SharpOS.img')}" failonerror="false" />
+		<copy file="${path::combine(disk-images-dir, 'TemplateDisk.img')}" tofile="${path::combine(common-dir, 'SharpOS.img')}" overwrite="true" />
+		<exec program="${path::combine(prefix, 'disk-image-updater.exe')}"
+			commandline="-i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
+	</target>
 	
 	<target name="clean">
 		<nant buildfile="./Core/Core.build" target="clean" />
-		<nant buildfile="./korlib/korlib.build" target="clean" />
 	</target>
 </project>

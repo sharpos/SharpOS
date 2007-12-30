@@ -3,7 +3,7 @@
 //
 // Authors:
 //	Jonathan Dickinson <jonathand.za@gmail.com>
-//  William Lahti <xfurious@gmail.com>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
