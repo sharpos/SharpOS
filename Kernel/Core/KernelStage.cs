@@ -19,7 +19,8 @@ namespace SharpOS.Kernel
 		Stopping,
 		Stop,
 		Halt,
-		
+		Diagnostics,
+
 		Unknown = 0xFFFFFFFF
 	}
 }

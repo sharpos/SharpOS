@@ -138,6 +138,8 @@ namespace SharpOS.Kernel {
 			SharpOS.Kernel.Shell.Prompter.Setup();
 			SharpOS.Kernel.Shell.Prompter.Start();
 
+			SetKernelStage (KernelStage.Diagnostics);
+
 			while (stayInLoop) ;
 		}
 

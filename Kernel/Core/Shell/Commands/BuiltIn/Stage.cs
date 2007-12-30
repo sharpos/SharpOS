@@ -52,6 +52,9 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
                                 case KernelStage.Halt:
                                         TextMode.WriteLine ("(7) halt");
                                         break;
+                                case KernelStage.Diagnostics:
+                                        TextMode.WriteLine ("(8) diagnostics");
+                                        break;
                                 case KernelStage.Unknown:
                                         TextMode.WriteLine ("(?) unknown");
                                         break;
