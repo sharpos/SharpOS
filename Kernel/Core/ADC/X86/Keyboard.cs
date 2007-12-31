@@ -18,18 +18,16 @@ using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 using ADC = SharpOS.Kernel.ADC;
 
-namespace SharpOS.Kernel.ADC.X86 
-{
+namespace SharpOS.Kernel.ADC.X86 {
 	// TODO: Create 'key' enum
 	// TODO: Handle the more strange scancodes
-	
-	public unsafe class Keyboard
-	{
+
+	public unsafe class Keyboard {
 		#region Global fields
-		
-		unsafe static uint *keyUpEvent = (uint*)Stubs.StaticAlloc (sizeof (uint) * EntryModule.MaxEventHandlers);
-		unsafe static uint *keyDownEvent = (uint*)Stubs.StaticAlloc (sizeof (uint) * EntryModule.MaxEventHandlers);
-		
+
+		unsafe static uint* keyUpEvent = (uint*) Stubs.StaticAlloc (sizeof (uint) * EntryModule.MaxEventHandlers);
+		unsafe static uint* keyDownEvent = (uint*) Stubs.StaticAlloc (sizeof (uint) * EntryModule.MaxEventHandlers);
+
 		static bool leftShift;
 		static bool rightShift;
 
@@ -46,7 +44,7 @@ namespace SharpOS.Kernel.ADC.X86
 		static bool scrollLockReleased = true;
 		static bool capsLockReleased = true;
 		static bool numLockReleased = true;
-	
+
 		unsafe static byte* defaultMap = null;
 		unsafe static byte* shiftedMap = null;
 
@@ -58,23 +56,22 @@ namespace SharpOS.Kernel.ADC.X86
 		#region Constants
 
 		const string KEYBOARD_HANDLER = "KEYBOARD_HANDLER";
-		
+
 		#endregion
 		#region Enumerations
 
-		enum KeyboardCommands
-		{
-			Set_Keyboard_LEDs			= 0xed,
-			Echo					= 0xee,	// (Diagnostics)
-			Select_Scancode_Set			= 0xf0,
+		enum KeyboardCommands {
+			Set_Keyboard_LEDs = 0xed,
+			Echo = 0xee,	// (Diagnostics)
+			Select_Scancode_Set = 0xf0,
 			/*
 			 0: return current set number: 1:'C', 2:'A', 3:'?'
 			 1: set scancode set no 1
 			 2: set scancode set no 2 -> standard
 			 3: set scancode set no 3
 			*/
-			Identify_Keyboard			= 0xf2,
-			Typematic_Rate				= 0xf3,
+			Identify_Keyboard = 0xf2,
+			Typematic_Rate = 0xf3,
 			/*
 			 Send a second byte with:
 
@@ -95,28 +92,27 @@ namespace SharpOS.Kernel.ADC.X86
 
 			 bit 7: Always 0
 			 */
-			Enable_Keyboard				= 0xf4,	// It clears its buffer and starts scanning.
-			Disable_Scanning			= 0xf5,	// Reset keyboard
-			Enable_Scanning				= 0xf6,	// Reset keyboard
-			Resend_Last_Transmission		= 0xfe,
-			Internal_Diagnostics			= 0xff,
+			Enable_Keyboard = 0xf4,	// It clears its buffer and starts scanning.
+			Disable_Scanning = 0xf5,	// Reset keyboard
+			Enable_Scanning = 0xf6,	// Reset keyboard
+			Resend_Last_Transmission = 0xfe,
+			Internal_Diagnostics = 0xff,
 		}
 
-		enum KeyboardMessages
-		{
-			Too_Many_Keys			= 0x00,	// Too many keys are being pressed at once
-                        Unknown                         = 0x3a, // This is causing our CAPS issue.
-			Basic_Assurance_Test		= 0xaa,
-			Echo_Command_Result		= 0xee,
-			Acknowledge			= 0xfa,	// Sent by every command, except eeh and feh
-			BAT_Failed			= 0xfc,
-			Request_Resend			= 0xfe,	// Resend your data please
-			Keyboard_Error			= 0xff
+		enum KeyboardMessages {
+			Too_Many_Keys = 0x00,	// Too many keys are being pressed at once
+			Unknown = 0x3a, // This is causing our CAPS issue.
+			Basic_Assurance_Test = 0xaa,
+			Echo_Command_Result = 0xee,
+			Acknowledge = 0xfa,	// Sent by every command, except eeh and feh
+			BAT_Failed = 0xfc,
+			Request_Resend = 0xfe,	// Resend your data please
+			Keyboard_Error = 0xff
 		}
 
 		#endregion
 		#region Setup ()
-		
+
 		public static void Setup ()
 		{
 			IDT.RegisterIRQ (IDT.Interrupt.Keyboard, Stubs.GetFunctionPointer (KEYBOARD_HANDLER));
@@ -124,37 +120,37 @@ namespace SharpOS.Kernel.ADC.X86
 
 		#endregion
 		#region Internal
-		
+
 		static void WaitUntilReady ()
 		{
-			while ((IO.In8 (IO.Port.KB_controller_commands) & 0x02) != 0);
+			while ((IO.In8 (IO.Port.KB_controller_commands) & 0x02) != 0)
+				;
 		}
 
 		static void SendCommand (KeyboardCommands command)
 		{
 			KeyboardMessages message = KeyboardMessages.Acknowledge;
 
-			do
-			{
-				IO.Out8 (IO.Port.KB_data_port, (byte)command);
-			
+			do {
+				IO.Out8 (IO.Port.KB_data_port, (byte) command);
+
 				// Wait for acknowledge and receieve it
 
-				WaitUntilReady();
+				WaitUntilReady ();
 
-				message = (KeyboardMessages)IO.In8 (IO.Port.KB_data_port);
+				message = (KeyboardMessages) IO.In8 (IO.Port.KB_data_port);
 
-                                if (message == KeyboardMessages.Request_Resend)
-                                        continue;
-                                else if (message == KeyboardMessages.Acknowledge)
-                                        return;
-                                else if (message == KeyboardMessages.Unknown) // This was the cause of the caps issue.
-                                        return;
-                                else {
-                                        Diagnostics.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
-                                        return;
-                                }
-				
+				if (message == KeyboardMessages.Request_Resend)
+					continue;
+				else if (message == KeyboardMessages.Acknowledge)
+					return;
+				else if (message == KeyboardMessages.Unknown) // This was the cause of the caps issue.
+					return;
+				else {
+					Diagnostics.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
+					return;
+				}
+
 			} while (message != KeyboardMessages.Acknowledge);
 		}
 
@@ -164,9 +160,9 @@ namespace SharpOS.Kernel.ADC.X86
 
 			SendCommand (KeyboardCommands.Set_Keyboard_LEDs);
 
-			WaitUntilReady();
+			WaitUntilReady ();
 
-			IO.Out8(IO.Port.KB_data_port, value);
+			IO.Out8 (IO.Port.KB_data_port, value);
 		}
 
 		[SharpOS.AOT.Attributes.Label (KEYBOARD_HANDLER)]
@@ -190,69 +186,66 @@ namespace SharpOS.Kernel.ADC.X86
 			}
 
 			*/
-			
+
 			if (input == 0xe0) {
-				input		= IO.In8 (IO.Port.KB_data_port);
-				scancode	= (uint)((input & 0x7F) >> 8) | 0xe0;
-				pressed		= (input & 0x80) == 0;
-				
+				input = IO.In8 (IO.Port.KB_data_port);
+				scancode = (uint) ((input & 0x7F) >> 8) | 0xe0;
+				pressed = (input & 0x80) == 0;
+
 			} else if (input == 0xe1) {
-				input		= IO.In8 (IO.Port.KB_data_port);
-				scancode	= (uint)(input & 0x7F);
-				pressed		= (input & 0x80) == 0;
+				input = IO.In8 (IO.Port.KB_data_port);
+				scancode = (uint) (input & 0x7F);
+				pressed = (input & 0x80) == 0;
 				return;
-				
+
 			} else {
-				scancode	= (uint)(input & 0x7F);
-				pressed		= (input & 0x80) == 0;
+				scancode = (uint) (input & 0x7F);
+				pressed = (input & 0x80) == 0;
 			}
-			
-			if (scancode == (uint)Keys.CapsLock) {					// CapsLock
-				if (pressed)
-				{
+
+			if (scancode == (uint) Keys.CapsLock) {					// CapsLock
+				if (pressed) {
 					if (capsLockReleased)
 						capsLock = !capsLock;
 					capsLockReleased = false;
-					SetLEDs();
+					SetLEDs ();
 				} else
 					capsLockReleased = true;
 				return;
-			} else if (scancode == (uint)Keys.NumLock) {			// NumLock
-				if (pressed)
-				{
+			} else if (scancode == (uint) Keys.NumLock) {			// NumLock
+				if (pressed) {
 					if (numLockReleased)
 						numLock = !numLock;
 					numLockReleased = false;
-					SetLEDs();
+					SetLEDs ();
 				} else
 					numLockReleased = true;
 				return;
-			} else if (scancode == (uint)Keys.ScrollLock) {			// ScrollLock
-				if (pressed)
-				{
+			} else if (scancode == (uint) Keys.ScrollLock) {			// ScrollLock
+				if (pressed) {
 					if (scrollLockReleased)
 						scrollLock = !scrollLock;
 					scrollLockReleased = false;
-					SetLEDs();
+					SetLEDs ();
 				} else
 					scrollLockReleased = true;
 				return;
-			} else if (scancode == (uint)Keys.LeftControl) {		 // left control
+			} else if (scancode == (uint) Keys.LeftControl) {		 // left control
 				leftControl = pressed;
 				return;
-			} else if (scancode == (uint)Keys.LeftShift) {	 // left shift
+			} else if (scancode == (uint) Keys.LeftShift) {	 // left shift
 				leftShift = pressed;
 				return;
-			} else if (scancode == (uint)Keys.LeftAlt) {	 // left alt
+			} else if (scancode == (uint) Keys.LeftAlt) {	 // left alt
 				leftAlt = pressed;
 				return;
-			} else if (scancode == (uint)Keys.RightAlt) { // right alt
+			} else if (scancode == (uint) Keys.RightAlt) { // right alt
 				rightAlt = pressed;
 				return;
-			} else if (scancode == (uint)Keys.RightControl) { // right control
+			} else if (scancode == (uint) Keys.RightControl) { // right control
 				rightControl = pressed;
 				return;
-			} else if (scancode == (uint)Keys.RightShift) { // right shift
+			} else if (scancode == (uint) Keys.RightShift) { // right shift
 				rightShift = pressed;
 				return;
 			}
@@ -261,7 +254,7 @@ namespace SharpOS.Kernel.ADC.X86
 				for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
 					if (keyDownEvent [x] == 0)
 						continue;
-					
+
 					Memory.Call (keyDownEvent [x], scancode);
 				}
 			} else {
@@ -269,16 +262,16 @@ namespace SharpOS.Kernel.ADC.X86
 					if (keyUpEvent [x] == 0)
 						continue;
 
-					Memory.Call(keyUpEvent[x], scancode);
+					Memory.Call (keyUpEvent [x], scancode);
 				}
-				
+
 			}
 		}
 
 		#endregion
 		#region ADC implementation
-		
-		public unsafe static void SetKeyMap (byte *defMap, int defLen, byte *shiftMap,
+
+		public unsafe static void SetKeyMap (byte* defMap, int defLen, byte* shiftMap,
 					      int shiftLen)
 		{
 			defaultMap = defMap;
@@ -287,21 +280,21 @@ namespace SharpOS.Kernel.ADC.X86
 			shiftedMapLen = shiftLen;
 			keymapInitialized = true;
 		}
-		
+
 		public unsafe static EventRegisterStatus RegisterKeyUpEvent (uint address)
 		{
 			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x)
 				if (keyUpEvent [x] == address)
 					return EventRegisterStatus.AlreadySubscribed;
-			
+
 			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
 				if (keyUpEvent [x] == 0) {
 					keyUpEvent [x] = address;
-					
+
 					return EventRegisterStatus.Success;
 				}
 			}
-			
+
 			return EventRegisterStatus.CapacityExceeded;
 		}
 
@@ -310,15 +303,15 @@ namespace SharpOS.Kernel.ADC.X86
 			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x)
 				if (keyDownEvent [x] == address)
 					return EventRegisterStatus.AlreadySubscribed;
-			
+
 			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
 				if (keyDownEvent [x] == 0) {
 					keyDownEvent [x] = address;
-					
+
 					return EventRegisterStatus.Success;
 				}
 			}
-			
+
 			return EventRegisterStatus.CapacityExceeded;
 		}
 
@@ -327,13 +320,13 @@ namespace SharpOS.Kernel.ADC.X86
 			byte leds = 0;
 
 			if (scrollLock)
-				leds |= (byte)1;
-				
+				leds |= (byte) 1;
+
 			if (numLock)
-				leds |= (byte)2;
-				
+				leds |= (byte) 2;
+
 			if (capsLock)
-				leds |= (byte)4;
+				leds |= (byte) 4;
 
 			SendCommand (KeyboardCommands.Set_Keyboard_LEDs, leds);
 		}
@@ -342,7 +335,7 @@ namespace SharpOS.Kernel.ADC.X86
 		{
 			return leftShift;
 		}
-		
+
 		public static bool RightShift ()
 		{
 			return rightShift;
@@ -352,7 +345,7 @@ namespace SharpOS.Kernel.ADC.X86
 		{
 			return leftAlt;
 		}
-		
+
 		public static bool RightAlt ()
 		{
 			return rightAlt;
@@ -362,7 +355,7 @@ namespace SharpOS.Kernel.ADC.X86
 		{
 			return leftControl;
 		}
-		
+
 		public static bool RightControl ()
 		{
 			return rightControl;
@@ -372,35 +365,34 @@ namespace SharpOS.Kernel.ADC.X86
 		{
 			return scrollLock;
 		}
-		
+
 		public static bool CapsLock ()
 		{
 			return capsLock;
 		}
-		
+
 		public static bool NumLock ()
 		{
 			return numLock;
 		}
-	
-		public unsafe static byte *GetCurrentDefaultTable (int *ret_len)
+
+		public unsafe static byte* GetCurrentDefaultTable (int* ret_len)
 		{
 			*ret_len = defaultMapLen;
 			return shiftedMap;
 		}
-		
-		public unsafe static byte *GetCurrentShiftedTable (int *ret_len)
+
+		public unsafe static byte* GetCurrentShiftedTable (int* ret_len)
 		{
 			*ret_len = shiftedMapLen;
 			return shiftedMap;
 		}
-		
+
 		public unsafe static byte Translate (uint scancode, bool shifted)
 		{
-			if (!keymapInitialized)
-			{
-				Diagnostics.Assert(false, "Keymap not initialized!");
-				return (byte)'?';
+			if (!keymapInitialized) {
+				Diagnostics.Assert (false, "Keymap not initialized!");
+				return (byte) '?';
 			}
 			Diagnostics.Assert (shiftedMap != null, "No shifted map is available!");
 			Diagnostics.Assert (defaultMap != null, "No default map is available!");

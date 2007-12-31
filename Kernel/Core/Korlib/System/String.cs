@@ -12,19 +12,23 @@ using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
 
 namespace Internal.System {
-	public class String: Internal.System.Object {
+	public class String : Internal.System.Object {
 		private int length;
 		private char firstChar;
 
-		public int Length {
-			get {
+		public int Length
+		{
+			get
+			{
 				return this.length;
 			}
 		}
 
-		public char this [int index] {
+		public char this [int index]
+		{
 			[Label ("System.String.get_Chars(System.Int32)")]
-			get {
+			get
+			{
 				return GetChar (index);
 			}
 		}

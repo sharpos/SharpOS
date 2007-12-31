@@ -89,7 +89,8 @@ namespace SharpOS.AOT.X86 {
 		/// Initializes a new instance of the <see cref="TWordMemory"/> class.
 		/// </summary>
 		/// <param name="memory">The memory.</param>
-		public TWordMemory (Memory memory): base (memory)
+		public TWordMemory (Memory memory)
+			: base (memory)
 		{
 		}
 	}

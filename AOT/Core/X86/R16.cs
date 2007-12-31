@@ -51,32 +51,32 @@ namespace SharpOS.AOT.X86 {
 				return value as R16Type;
 
 			switch (Register.GetName (value)) {
-				case "AX":
-					return R16.AX;
+			case "AX":
+				return R16.AX;
 
-				case "BX":
-					return R16.BX;
+			case "BX":
+				return R16.BX;
 
-				case "CX":
-					return R16.CX;
+			case "CX":
+				return R16.CX;
 
-				case "DX":
-					return R16.DX;
+			case "DX":
+				return R16.DX;
 
-				case "SP":
-					return R16.SP;
+			case "SP":
+				return R16.SP;
 
-				case "BP":
-					return R16.BP;
+			case "BP":
+				return R16.BP;
 
-				case "SI":
-					return R16.SI;
+			case "SI":
+				return R16.SI;
 
-				case "DI":
-					return R16.DI;
+			case "DI":
+				return R16.DI;
 
-				default:
-					throw new EngineException ("Unknown R16 Register '" + value.ToString () + "'");
+			default:
+				throw new EngineException ("Unknown R16 Register '" + value.ToString () + "'");
 			}
 		}
 	}

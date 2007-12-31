@@ -89,7 +89,8 @@ namespace SharpOS.AOT.X86 {
 		/// Initializes a new instance of the <see cref="QWordMemory"/> class.
 		/// </summary>
 		/// <param name="memory">The memory.</param>
-		public QWordMemory (Memory memory): base (memory)
+		public QWordMemory (Memory memory)
+			: base (memory)
 		{
 		}
 	}

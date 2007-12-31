@@ -33,8 +33,10 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Gets or sets a value indicating whether this <see cref="Instruction"/> is gets ignored.
 		/// </summary>
 		/// <value><c>true</c> if ignore; otherwise, <c>false</c>.</value>
-		public bool Ignore {
-			get {
+		public bool Ignore
+		{
+			get
+			{
 				return ignore;
 			}
 			set
@@ -45,22 +47,28 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private bool isSpecialCase = false;
 
-		public bool IsSpecialCase {
-			get {
+		public bool IsSpecialCase
+		{
+			get
+			{
 				return isSpecialCase;
 			}
-			set {
+			set
+			{
 				isSpecialCase = value;
 			}
 		}
 
 		private Block block = null;
 
-		public Block Block {
-			get {
+		public Block Block
+		{
+			get
+			{
 				return this.block;
 			}
-			set {
+			set
+			{
 				this.block = value;
 			}
 		}
@@ -71,11 +79,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Gets or sets the index.
 		/// </summary>
 		/// <value>The index.</value>
-		public int Index {
-			get {
+		public int Index
+		{
+			get
+			{
 				return this.index;
 			}
-			set {
+			set
+			{
 				this.index = value;
 			}
 		}
@@ -86,11 +97,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Gets or sets the start offset.
 		/// </summary>
 		/// <value>The start offset.</value>
-		public virtual long StartOffset {
-			get {
+		public virtual long StartOffset
+		{
+			get
+			{
 				return startOffset;
 			}
-			set {
+			set
+			{
 				startOffset = value;
 			}
 		}
@@ -101,11 +115,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Gets or sets the end offset.
 		/// </summary>
 		/// <value>The end offset.</value>
-		public virtual long EndOffset {
-			get {
+		public virtual long EndOffset
+		{
+			get
+			{
 				return endOffset;
 			}
-			set {
+			set
+			{
 				endOffset = value;
 			}
 		}
@@ -116,11 +133,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Gets or sets the branches.
 		/// </summary>
 		/// <value>The branches.</value>
-		public List<SharpOS.AOT.IR.Instructions.Instruction> Branches {
-			get {
+		public List<SharpOS.AOT.IR.Instructions.Instruction> Branches
+		{
+			get
+			{
 				return branches;
 			}
-			set {
+			set
+			{
 				branches = value;
 			}
 		}
@@ -132,11 +152,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// It is used only for debugging purposes.
 		/// </summary>
 		/// <value><c>true</c> if removed; otherwise, <c>false</c>.</value>
-		public bool Removed {
-			get {
+		public bool Removed
+		{
+			get
+			{
 				return removed;
 			}
-			set {
+			set
+			{
 				removed = value;
 			}
 		}
@@ -151,8 +174,10 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <summary>
 		/// List of operands that are in use by this instruction
 		/// </summary>
-		public Operand [] Use {
-			get {
+		public Operand [] Use
+		{
+			get
+			{
 				return this.use;
 			}
 		}
@@ -162,11 +187,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <summary>
 		/// Operand that is defined by this instruction
 		/// </summary>
-		public Operand Def {
-			set {
+		public Operand Def
+		{
+			set
+			{
 				this.def = value;
 			}
-			get {
+			get
+			{
 				return this.def;
 			}
 		}
@@ -208,8 +236,10 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Gets the index of the formated.
 		/// </summary>
 		/// <value>The index of the formated.</value>
-		public string FormatedIndex {
-			get {
+		public string FormatedIndex
+		{
+			get
+			{
 				if (this.index == -1)
 					return string.Empty;
 
@@ -268,7 +298,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			if (first.InternalType == InternalType.I) {
 				if (second.InternalType == InternalType.I4)
 					return InternalType.I;
-				
+
 				if (second.InternalType == InternalType.I)
 					return InternalType.I;
 
@@ -279,7 +309,7 @@ namespace SharpOS.AOT.IR.Instructions {
 
 			if (first.InternalType == InternalType.F
 					&& second.InternalType == InternalType.F
-					&& !unsignedDiv 
+					&& !unsignedDiv
 					&& !overflow)
 				return InternalType.F;
 
@@ -310,45 +340,45 @@ namespace SharpOS.AOT.IR.Instructions {
 			InternalType result = InternalType.NotSet;
 
 			switch (type) {
-				case InternalType.I:
-					result = InternalType.I;
-					break;
+			case InternalType.I:
+				result = InternalType.I;
+				break;
 
-				case InternalType.U:
-					result = InternalType.I;
-					break;
+			case InternalType.U:
+				result = InternalType.I;
+				break;
 
-				case InternalType.I1:
-				case InternalType.U1:
-				case InternalType.I2:
-				case InternalType.U2:
-				case InternalType.I4:
-				case InternalType.U4:
-					result = InternalType.I4;
-					break;
+			case InternalType.I1:
+			case InternalType.U1:
+			case InternalType.I2:
+			case InternalType.U2:
+			case InternalType.I4:
+			case InternalType.U4:
+				result = InternalType.I4;
+				break;
 
-				case InternalType.I8:
-				case InternalType.U8:
-					result = InternalType.I8;
-					break;
+			case InternalType.I8:
+			case InternalType.U8:
+				result = InternalType.I8;
+				break;
 
-				case InternalType.R4:
-				case InternalType.R8:
-				case InternalType.F:
-					result = InternalType.F;
-					break;
+			case InternalType.R4:
+			case InternalType.R8:
+			case InternalType.F:
+				result = InternalType.F;
+				break;
 
-				case InternalType.ValueType:
-					result = InternalType.ValueType;
-					break;
+			case InternalType.ValueType:
+				result = InternalType.ValueType;
+				break;
 
-				case InternalType.O:
-					result = InternalType.O;
-					break;
-				
-				case InternalType.M:
-					result = InternalType.M;
-					break;
+			case InternalType.O:
+				result = InternalType.O;
+				break;
+
+			case InternalType.M:
+				result = InternalType.M;
+				break;
 			}
 
 			return result;
@@ -401,8 +431,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
-		public Type AddType {
-			get {
+		public Type AddType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -428,8 +460,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
-		public Type SubType {
-			get {
+		public Type SubType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -455,8 +489,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
-		public Type MulType {
-			get {
+		public Type MulType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -481,8 +517,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
-		public Type DivType {
-			get {
+		public Type DivType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -507,8 +545,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
-		public Type RemType {
-			get {
+		public Type RemType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -525,11 +565,11 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			result.InternalType = value.InternalType;
 		}
-		
+
 		public override void Process (Method method)
 		{
 			Register register = this.use [0] as Register;
-			
+
 			if (register.InternalType == InternalType.I4
 					|| register.InternalType == InternalType.I8
 					|| register.InternalType == InternalType.F
@@ -564,8 +604,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
-		public Type ShrType {
-			get {
+		public Type ShrType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -597,9 +639,11 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 
 		private RelationalType type;
-		
-		public RelationalType RelationalType {
-			get {
+
+		public RelationalType RelationalType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -619,8 +663,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
-		public Type SimpleBranchType {
-			get {
+		public Type SimpleBranchType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -635,8 +681,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private RelationalType type;
 
-		public RelationalType RelationalType {
-			get {
+		public RelationalType RelationalType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -696,8 +744,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
-		public Type ConvertType {
-			get {
+		public Type ConvertType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -711,65 +761,65 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			switch (type) {
 
-				case Type.Conv_I1:
-				case Type.Conv_Ovf_I1:
-				case Type.Conv_Ovf_I1_Un:
-					return InternalType.I4; //I1;
+			case Type.Conv_I1:
+			case Type.Conv_Ovf_I1:
+			case Type.Conv_Ovf_I1_Un:
+				return InternalType.I4; //I1;
 
-				case Type.Conv_U1:
-				case Type.Conv_Ovf_U1:
-				case Type.Conv_Ovf_U1_Un:
-					return InternalType.I4; //U1;
+			case Type.Conv_U1:
+			case Type.Conv_Ovf_U1:
+			case Type.Conv_Ovf_U1_Un:
+				return InternalType.I4; //U1;
 
-				case Type.Conv_I2:
-				case Type.Conv_Ovf_I2:
-				case Type.Conv_Ovf_I2_Un:
-					return InternalType.I4; //I2;
+			case Type.Conv_I2:
+			case Type.Conv_Ovf_I2:
+			case Type.Conv_Ovf_I2_Un:
+				return InternalType.I4; //I2;
 
-				case Type.Conv_U2:
-				case Type.Conv_Ovf_U2:
-				case Type.Conv_Ovf_U2_Un:
-					return InternalType.I4; //U2;
+			case Type.Conv_U2:
+			case Type.Conv_Ovf_U2:
+			case Type.Conv_Ovf_U2_Un:
+				return InternalType.I4; //U2;
 
-				case Type.Conv_I:
-				case Type.Conv_Ovf_I:
-				case Type.Conv_Ovf_I_Un:
-					return InternalType.I;
+			case Type.Conv_I:
+			case Type.Conv_Ovf_I:
+			case Type.Conv_Ovf_I_Un:
+				return InternalType.I;
 
-				case Type.Conv_I4:
-				case Type.Conv_Ovf_I4:
-				case Type.Conv_Ovf_I4_Un:
-					return InternalType.I4;
+			case Type.Conv_I4:
+			case Type.Conv_Ovf_I4:
+			case Type.Conv_Ovf_I4_Un:
+				return InternalType.I4;
 
-				case Type.Conv_U:
-				case Type.Conv_Ovf_U:
-				case Type.Conv_Ovf_U_Un:
-					return InternalType.I; //U4;
+			case Type.Conv_U:
+			case Type.Conv_Ovf_U:
+			case Type.Conv_Ovf_U_Un:
+				return InternalType.I; //U4;
 
-				case Type.Conv_U4:
-				case Type.Conv_Ovf_U4:
-				case Type.Conv_Ovf_U4_Un:
-					return InternalType.I4; //U4;
+			case Type.Conv_U4:
+			case Type.Conv_Ovf_U4:
+			case Type.Conv_Ovf_U4_Un:
+				return InternalType.I4; //U4;
 
-				case Type.Conv_I8:
-				case Type.Conv_Ovf_I8:
-				case Type.Conv_Ovf_I8_Un:
-					return InternalType.I8;
+			case Type.Conv_I8:
+			case Type.Conv_Ovf_I8:
+			case Type.Conv_Ovf_I8_Un:
+				return InternalType.I8;
 
-				case Type.Conv_U8:
-				case Type.Conv_Ovf_U8:
-				case Type.Conv_Ovf_U8_Un:
-					return InternalType.I8; //U8;
+			case Type.Conv_U8:
+			case Type.Conv_Ovf_U8:
+			case Type.Conv_Ovf_U8_Un:
+				return InternalType.I8; //U8;
 
-				case Type.Conv_R4:
-				case Type.Conv_R_Un:
-					return InternalType.F; //4;
+			case Type.Conv_R4:
+			case Type.Conv_R_Un:
+				return InternalType.F; //4;
 
-				case Type.Conv_R8:
-					return InternalType.F; //8;
+			case Type.Conv_R8:
+				return InternalType.F; //8;
 
-				default:
-					throw new NotImplementedEngineException ("'" + type + "' not supported.");
+			default:
+				throw new NotImplementedEngineException ("'" + type + "' not supported.");
 			}
 		}
 	}
@@ -822,13 +872,15 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Block [] blocks;
 
-		public Block [] Blocks {
-			get {
+		public Block [] Blocks
+		{
+			get
+			{
 				return this.blocks;
 			}
 		}
 	}
-	
+
 	public class Pop : Instruction {
 		public Pop (Register value)
 			: base ("Pop", null, new Operand [] { value })
@@ -872,7 +924,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			this.def.InternalType = this.GetBitwiseResultType (this.use [0], this.use [1]);
 		}
 	}
-	
+
 	public class Or : Instruction {
 		public Or (Register result, Register first, Register second)
 			: base ("Or", result, new Operand [] { first, second })
@@ -896,7 +948,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			this.def.InternalType = this.GetBitwiseResultType (this.use [0], this.use [1]);
 		}
 	}
-	
+
 	public class Ldlen : Instruction {
 		public Ldlen (Register result, Register value)
 			: base ("Ldlen", result, new Operand [] { value })
@@ -938,7 +990,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			: base ("Ldloc", result, new Operand [] { value })
 		{
 		}
-		
+
 		public override void Process (Method method)
 		{
 			base.LdProcess (method);
@@ -969,7 +1021,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			: base ("Ldarg", result, new Operand [] { value })
 		{
 		}
-		
+
 		public override void Process (Method method)
 		{
 			base.LdProcess (method);
@@ -993,8 +1045,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		InternalType type;
 
-		public InternalType InternalType {
-			get {
+		public InternalType InternalType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -1009,8 +1063,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		InternalType type;
 
-		public InternalType InternalType {
-			get {
+		public InternalType InternalType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -1026,8 +1082,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		InternalType type;
 
-		public InternalType InternalType {
-			get {
+		public InternalType InternalType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -1042,8 +1100,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		InternalType type;
 
-		public InternalType InternalType {
-			get {
+		public InternalType InternalType
+		{
+			get
+			{
 				return this.type;
 			}
 		}
@@ -1070,8 +1130,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private TypeReference typeReference;
 
-		public TypeReference Type {
-			get {
+		public TypeReference Type
+		{
+			get
+			{
 				return this.typeReference;
 			}
 		}
@@ -1116,7 +1178,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			: base ("Ldfld", result, new Operand [] { value })
 		{
 		}
-		
+
 		public override void Process (Method method)
 		{
 			base.LdfldProcess (method);
@@ -1125,7 +1187,7 @@ namespace SharpOS.AOT.IR.Instructions {
 
 	public class Ldflda : Instruction {
 		public Ldflda (Register result, Field value)
-			: base ("Ldflda", result, new Operand [] { value})
+			: base ("Ldflda", result, new Operand [] { value })
 		{
 		}
 
@@ -1142,7 +1204,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			: base ("Ldsfld", result, new Operand [] { value })
 		{
 		}
-		
+
 		public override void Process (Method method)
 		{
 			base.LdfldProcess (method);
@@ -1168,7 +1230,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			: base ("Stfld", null, new Operand [] { field, value })
 		{
 		}
-		
+
 		public override void Process (Method method)
 		{
 			base.StfldProcess (method);
@@ -1200,14 +1262,17 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public abstract class CallInstruction : Instruction {
-		public CallInstruction (string name, Operand def, Operand [] use): base (name, def, use)
+		public CallInstruction (string name, Operand def, Operand [] use)
+			: base (name, def, use)
 		{
 		}
 
 		protected MethodReference methodReference;
 
-		public MethodReference Method {
-			get {
+		public MethodReference Method
+		{
+			get
+			{
 				return this.methodReference;
 			}
 		}
@@ -1215,8 +1280,10 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <summary>
 		/// It returns the unique name of this call. (e.g. "void namespace.class.method UInt32 UInt16")
 		/// </summary>
-		public string AssemblyLabel {
-			get {
+		public string AssemblyLabel
+		{
+			get
+			{
 				return IR.Method.GetLabel (this.Method);
 			}
 		}
@@ -1260,7 +1327,7 @@ namespace SharpOS.AOT.IR.Instructions {
 				this.def.InternalType = InternalType.O;
 		}
 	}
-	
+
 	public class Ldobj : Instruction {
 		public Ldobj (Register result, TypeReference typeReference, Register instance)
 			: base ("Ldobj", result, new Operand [] { instance })
@@ -1269,11 +1336,13 @@ namespace SharpOS.AOT.IR.Instructions {
 			result.Type = typeReference;
 			this.typeReference = typeReference;
 		}
-		
+
 		TypeReference typeReference;
 
-		public TypeReference Type {
-			get {
+		public TypeReference Type
+		{
+			get
+			{
 				return this.typeReference;
 			}
 		}
@@ -1288,8 +1357,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		TypeReference typeReference;
 
-		public TypeReference Type {
-			get {
+		public TypeReference Type
+		{
+			get
+			{
 				return this.typeReference;
 			}
 		}
@@ -1304,8 +1375,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		TypeReference typeReference;
 
-		public TypeReference Type {
-			get {
+		public TypeReference Type
+		{
+			get
+			{
 				return this.typeReference;
 			}
 		}
@@ -1333,7 +1406,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			for (int i = 0; i < this.use.Length; i++) {
 				if (type != this.use [i].InternalType)
 					throw new EngineException (string.Format ("The PHI operands have not the same type. ({0})", method.MethodFullName));
-				
+
 				if (index != (this.use [i] as Register).Index)
 					throw new EngineException (string.Format ("The PHI operands have not the same index. ({0})", method.MethodFullName));
 			}
@@ -1369,8 +1442,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		TypeReference typeReference;
 
-		public TypeReference Type {
-			get {
+		public TypeReference Type
+		{
+			get
+			{
 				return this.typeReference;
 			}
 		}
@@ -1387,8 +1462,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		TypeReference typeReference;
 
-		public TypeReference Type {
-			get {
+		public TypeReference Type
+		{
+			get
+			{
 				return this.typeReference;
 			}
 		}
@@ -1403,8 +1480,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		TypeReference typeReference;
 
-		public TypeReference Type {
-			get {
+		public TypeReference Type
+		{
+			get
+			{
 				return this.typeReference;
 			}
 		}

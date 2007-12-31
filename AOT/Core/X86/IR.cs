@@ -50,34 +50,34 @@ namespace SharpOS.AOT.X86 {
 
 			if (assignee != null) {
 				switch (assignee.InternalType) {
-					case InternalType.I:
-					case InternalType.M:
-					case InternalType.O:
-					case InternalType.I4:
-						if (assignee.IsRegisterSet)
-							this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-						else
-							this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+				case InternalType.I:
+				case InternalType.M:
+				case InternalType.O:
+				case InternalType.I4:
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-						break;
-					
-					case InternalType.I8:
-						Memory assigneeMemory = this.GetAddress (assignee);
-						DWordMemory high = new DWordMemory (assigneeMemory);
-						high.DisplacementDelta = 4;
-						DWordMemory low = new DWordMemory (assigneeMemory);
+					break;
 
-						this.assembly.MOV (high, R32.EDX);
-						this.assembly.MOV (low, R32.EAX);
+				case InternalType.I8:
+					Memory assigneeMemory = this.GetAddress (assignee);
+					DWordMemory high = new DWordMemory (assigneeMemory);
+					high.DisplacementDelta = 4;
+					DWordMemory low = new DWordMemory (assigneeMemory);
 
-						break;
+					this.assembly.MOV (high, R32.EDX);
+					this.assembly.MOV (low, R32.EAX);
 
-					case InternalType.ValueType:
-						// It is already handled above
-						break;
+					break;
 
-					default:
-						throw new NotImplementedEngineException ();
+				case InternalType.ValueType:
+					// It is already handled above
+					break;
+
+				default:
+					throw new NotImplementedEngineException ();
 				}
 			}
 		}
@@ -558,58 +558,58 @@ namespace SharpOS.AOT.X86 {
 				IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
 				switch (value.InternalType) {
-					case InternalType.I:
-					case InternalType.M:
-					case InternalType.O:
-					case InternalType.I4:
-						if (value.IsRegisterSet)
-							this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-						else
-							this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+				case InternalType.I:
+				case InternalType.M:
+				case InternalType.O:
+				case InternalType.I4:
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-						break;
+					break;
 
-					case InternalType.I8:
-						Memory assigneeMemory = this.GetAddress (value);
-						DWordMemory high = new DWordMemory (assigneeMemory);
-						high.DisplacementDelta = 4;
-						DWordMemory low = new DWordMemory (assigneeMemory);
+				case InternalType.I8:
+					Memory assigneeMemory = this.GetAddress (value);
+					DWordMemory high = new DWordMemory (assigneeMemory);
+					high.DisplacementDelta = 4;
+					DWordMemory low = new DWordMemory (assigneeMemory);
 
-						this.assembly.MOV (high, R32.EDX);
-						this.assembly.MOV (low, R32.EAX);
+					this.assembly.MOV (high, R32.EDX);
+					this.assembly.MOV (low, R32.EAX);
 
-						break;
+					break;
 
-					case InternalType.ValueType:
-						TypeDefinition returnType = instruction.Block.Method.MethodDefinition.ReturnType.ReturnType as TypeDefinition;
+				case InternalType.ValueType:
+					TypeDefinition returnType = instruction.Block.Method.MethodDefinition.ReturnType.ReturnType as TypeDefinition;
 
-						int size = this.method.Engine.GetTypeSize (returnType.FullName, 4) / 4;
+					int size = this.method.Engine.GetTypeSize (returnType.FullName, 4) / 4;
 
-						this.assembly.PUSH (R32.ECX);
-						this.assembly.PUSH (R32.ESI);
-						this.assembly.PUSH (R32.EDI);
+					this.assembly.PUSH (R32.ECX);
+					this.assembly.PUSH (R32.ESI);
+					this.assembly.PUSH (R32.EDI);
 
-						if (value.IsRegisterSet)
-							this.assembly.MOV (R32.ESI, Assembly.GetRegister (value.Register));
-						else
-							this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (value)));
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.ESI, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (value)));
 
-						this.assembly.MOV (R32.EDI, new DWordMemory (null, R32.EBP, null, 0, 8));
+					this.assembly.MOV (R32.EDI, new DWordMemory (null, R32.EBP, null, 0, 8));
 
-						this.assembly.MOV (R32.ECX, (uint) size);
+					this.assembly.MOV (R32.ECX, (uint) size);
 
-						this.assembly.CLD ();
-						this.assembly.REP ();
-						this.assembly.MOVSD ();
+					this.assembly.CLD ();
+					this.assembly.REP ();
+					this.assembly.MOVSD ();
 
-						this.assembly.POP (R32.EDI);
-						this.assembly.POP (R32.ESI);
-						this.assembly.POP (R32.ECX);
+					this.assembly.POP (R32.EDI);
+					this.assembly.POP (R32.ESI);
+					this.assembly.POP (R32.ECX);
 
-						break;
+					break;
 
-					default:
-						throw new NotImplementedEngineException ("'" + instruction + "' is not supported.");
+				default:
+					throw new NotImplementedEngineException ("'" + instruction + "' is not supported.");
 				}
 			}
 
@@ -660,32 +660,32 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I4:
-					uint intConstant = (uint) (instruction.Use [0] as IntConstant).Value;
+			case InternalType.I4:
+				uint intConstant = (uint) (instruction.Use [0] as IntConstant).Value;
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), intConstant);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), intConstant);
 
-					else 
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), intConstant);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), intConstant);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					ulong longConstant = (ulong) (instruction.Use [0] as LongConstant).Value;
-					uint hiValue = (uint) (longConstant >> 32);
-					uint loValue = (uint) (longConstant & 0xFFFFFFFF);
+			case InternalType.I8:
+				ulong longConstant = (ulong) (instruction.Use [0] as LongConstant).Value;
+				uint hiValue = (uint) (longConstant >> 32);
+				uint loValue = (uint) (longConstant & 0xFFFFFFFF);
 
-					Memory address = this.GetAddress (assignee);
-					address.DisplacementDelta = 4;
+				Memory address = this.GetAddress (assignee);
+				address.DisplacementDelta = 4;
 
-					this.assembly.MOV (new DWordMemory (address), hiValue);
-					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), loValue);
+				this.assembly.MOV (new DWordMemory (address), hiValue);
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), loValue);
 
-					break;
-				
-				default:
-					throw new NotImplementedEngineException ();
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -701,317 +701,317 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (register)));
 
 			switch (instruction.InternalType) {
-				case InternalType.I1:
-					this.assembly.MOVSX (R32.EAX, new ByteMemory (null, R32.EAX, null, 0));
+			case InternalType.I1:
+				this.assembly.MOVSX (R32.EAX, new ByteMemory (null, R32.EAX, null, 0));
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.U1:
-					this.assembly.MOVZX (R32.EAX, new ByteMemory (null, R32.EAX, null, 0));
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.I2:
-					this.assembly.MOVSX (R32.EAX, new WordMemory (null, R32.EAX, null, 0));
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.U2:
-					this.assembly.MOVZX (R32.EAX, new WordMemory (null, R32.EAX, null, 0));
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.O:
-				case InternalType.I:
-				case InternalType.I4:
-				case InternalType.U4:
-					this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
-					
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-					
-					break;
-
-				case InternalType.I8:
-				case InternalType.U8:
-					Memory address = this.GetAddress (assignee);
-					address.DisplacementDelta = 4;
-
-					this.assembly.MOV (R32.EDX, R32.EAX);
-					this.assembly.ADD (R32.EDX, 4);
-
-					this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
+				else
 					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EDX, null, 0));
-					this.assembly.MOV (new DWordMemory (address), R32.EAX);
+				break;
 
-					break;
+			case InternalType.U1:
+				this.assembly.MOVZX (R32.EAX, new ByteMemory (null, R32.EAX, null, 0));
 
-				case InternalType.R4:
-				case InternalType.R8:
-				case InternalType.F:
-				case InternalType.ValueType:
-				case InternalType.M:
-				case InternalType.U:
-				case InternalType.TypedReference:
-				default:
-					throw new NotImplementedEngineException ();
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.I2:
+				this.assembly.MOVSX (R32.EAX, new WordMemory (null, R32.EAX, null, 0));
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.U2:
+				this.assembly.MOVZX (R32.EAX, new WordMemory (null, R32.EAX, null, 0));
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.O:
+			case InternalType.I:
+			case InternalType.I4:
+			case InternalType.U4:
+				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.I8:
+			case InternalType.U8:
+				Memory address = this.GetAddress (assignee);
+				address.DisplacementDelta = 4;
+
+				this.assembly.MOV (R32.EDX, R32.EAX);
+				this.assembly.ADD (R32.EDX, 4);
+
+				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EDX, null, 0));
+				this.assembly.MOV (new DWordMemory (address), R32.EAX);
+
+				break;
+
+			case InternalType.R4:
+			case InternalType.R8:
+			case InternalType.F:
+			case InternalType.ValueType:
+			case InternalType.M:
+			case InternalType.U:
+			case InternalType.TypedReference:
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
 		private void Load (IR.Operands.Register assignee, InternalType sourceType, Memory memory)
 		{
 			switch (sourceType) {
-				case InternalType.I1:
-					this.assembly.MOVSX (R32.EAX, new ByteMemory (memory));
+			case InternalType.I1:
+				this.assembly.MOVSX (R32.EAX, new ByteMemory (memory));
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-					
-					break;
-
-				case InternalType.U1:
-					this.assembly.MOVZX (R32.EAX, new ByteMemory (memory));
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.I2:
-					this.assembly.MOVSX (R32.EAX, new WordMemory (memory));
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.U2:
-					this.assembly.MOVZX (R32.EAX, new WordMemory (memory));
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.I4:
-				case InternalType.U4:
-				case InternalType.I:
-				case InternalType.U:
-				case InternalType.O:
-				case InternalType.M:
-					this.assembly.MOV (R32.EAX, new DWordMemory (memory));
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.I8:
-				case InternalType.U8:
-					DWordMemory source = new DWordMemory (memory);
-					source.DisplacementDelta = 4;
-
-					Memory destination = this.GetAddress (assignee);
-					destination.DisplacementDelta = 4;
-
-					this.assembly.MOV (R32.EAX, new DWordMemory (memory));
+				else
 					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					this.assembly.MOV (R32.EAX, new DWordMemory (source));
-					this.assembly.MOV (new DWordMemory (destination), R32.EAX);
-					break;
+				break;
 
-				case InternalType.ValueType:
-					this.assembly.PUSH (R32.ECX);
-					this.assembly.PUSH (R32.ESI);
-					this.assembly.PUSH (R32.EDI);
+			case InternalType.U1:
+				this.assembly.MOVZX (R32.EAX, new ByteMemory (memory));
 
-					this.assembly.LEA (R32.ESI, new DWordMemory (memory));
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (R32.EDI, Assembly.GetRegister (assignee.Register));
-					else
-						this.assembly.LEA (R32.EDI, new DWordMemory (this.GetAddress (assignee)));
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					string typeName = assignee.Type.ToString ();
+				break;
 
-					uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
+			case InternalType.I2:
+				this.assembly.MOVSX (R32.EAX, new WordMemory (memory));
 
-					this.assembly.MOV (R32.ECX, size);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 
-					this.assembly.CLD ();
-					this.assembly.REP ();
-					this.assembly.MOVSD ();
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					this.assembly.POP (R32.EDI);
-					this.assembly.POP (R32.ESI);
-					this.assembly.POP (R32.ECX);
-					break;
+				break;
 
-				case InternalType.R4:
-				case InternalType.R8:
-				case InternalType.F:
-				case InternalType.TypedReference:
-				default:
-					throw new NotImplementedEngineException ();
+			case InternalType.U2:
+				this.assembly.MOVZX (R32.EAX, new WordMemory (memory));
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.I4:
+			case InternalType.U4:
+			case InternalType.I:
+			case InternalType.U:
+			case InternalType.O:
+			case InternalType.M:
+				this.assembly.MOV (R32.EAX, new DWordMemory (memory));
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.I8:
+			case InternalType.U8:
+				DWordMemory source = new DWordMemory (memory);
+				source.DisplacementDelta = 4;
+
+				Memory destination = this.GetAddress (assignee);
+				destination.DisplacementDelta = 4;
+
+				this.assembly.MOV (R32.EAX, new DWordMemory (memory));
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				this.assembly.MOV (R32.EAX, new DWordMemory (source));
+				this.assembly.MOV (new DWordMemory (destination), R32.EAX);
+				break;
+
+			case InternalType.ValueType:
+				this.assembly.PUSH (R32.ECX);
+				this.assembly.PUSH (R32.ESI);
+				this.assembly.PUSH (R32.EDI);
+
+				this.assembly.LEA (R32.ESI, new DWordMemory (memory));
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (R32.EDI, Assembly.GetRegister (assignee.Register));
+				else
+					this.assembly.LEA (R32.EDI, new DWordMemory (this.GetAddress (assignee)));
+
+				string typeName = assignee.Type.ToString ();
+
+				uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
+
+				this.assembly.MOV (R32.ECX, size);
+
+				this.assembly.CLD ();
+				this.assembly.REP ();
+				this.assembly.MOVSD ();
+
+				this.assembly.POP (R32.EDI);
+				this.assembly.POP (R32.ESI);
+				this.assembly.POP (R32.ECX);
+				break;
+
+			case InternalType.R4:
+			case InternalType.R8:
+			case InternalType.F:
+			case InternalType.TypedReference:
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
 		private void Save (string typeName, InternalType destinationType, Memory memory, IR.Operands.Register value)
 		{
 			switch (destinationType) {
-				case InternalType.I1:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+			case InternalType.I1:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
-
-					this.assembly.MOV (new ByteMemory (memory), R8.AL);
-
-					break;
-
-				case InternalType.U1:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
-
-					this.assembly.MOV (new ByteMemory (memory), R8.AL);
-
-					break;
-
-				case InternalType.I2:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
-
-					this.assembly.MOV (new WordMemory (memory), R16.AX);
-
-					break;
-
-				case InternalType.U2:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
-
-					this.assembly.MOV (new WordMemory (memory), R16.AX);
-
-					break;
-
-				case InternalType.I4:
-				case InternalType.U4:
-				case InternalType.I:
-				case InternalType.U:
-				case InternalType.O:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
-
-					this.assembly.MOV (new DWordMemory (memory), R32.EAX);
-
-					break;
-
-				case InternalType.I8:
-				case InternalType.U8:
-					Memory source = this.GetAddress (value);
-					source.DisplacementDelta = 4;
-
-					DWordMemory destination = new DWordMemory (memory);
-					destination.DisplacementDelta = 4;
-
+				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
-					this.assembly.MOV (new DWordMemory (memory), R32.EAX);
 
-					this.assembly.MOV (R32.EAX, new DWordMemory (source));
-					this.assembly.MOV (new DWordMemory (destination), R32.EAX);
-					break;
+				this.assembly.MOV (new ByteMemory (memory), R8.AL);
 
-				case InternalType.ValueType:
-					this.assembly.PUSH (R32.ECX);
-					this.assembly.PUSH (R32.ESI);
-					this.assembly.PUSH (R32.EDI);
+				break;
 
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.ESI, Assembly.GetRegister (value.Register));
-					else
-						this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (value)));
+			case InternalType.U1:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 
-					this.assembly.LEA (R32.EDI, new DWordMemory (memory));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-					//string typeName = value.Type.ToString ();
+				this.assembly.MOV (new ByteMemory (memory), R8.AL);
 
-					uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
+				break;
 
-					this.assembly.MOV (R32.ECX, size);
+			case InternalType.I2:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 
-					this.assembly.CLD ();
-					this.assembly.REP ();
-					this.assembly.MOVSD ();
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-					this.assembly.POP (R32.EDI);
-					this.assembly.POP (R32.ESI);
-					this.assembly.POP (R32.ECX);
-					break;
+				this.assembly.MOV (new WordMemory (memory), R16.AX);
 
-				case InternalType.R4:
-				case InternalType.R8:
-				case InternalType.F:
-				case InternalType.M:
-				case InternalType.TypedReference:
-				default:
-					throw new NotImplementedEngineException ();
+				break;
+
+			case InternalType.U2:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+				this.assembly.MOV (new WordMemory (memory), R16.AX);
+
+				break;
+
+			case InternalType.I4:
+			case InternalType.U4:
+			case InternalType.I:
+			case InternalType.U:
+			case InternalType.O:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+				this.assembly.MOV (new DWordMemory (memory), R32.EAX);
+
+				break;
+
+			case InternalType.I8:
+			case InternalType.U8:
+				Memory source = this.GetAddress (value);
+				source.DisplacementDelta = 4;
+
+				DWordMemory destination = new DWordMemory (memory);
+				destination.DisplacementDelta = 4;
+
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+				this.assembly.MOV (new DWordMemory (memory), R32.EAX);
+
+				this.assembly.MOV (R32.EAX, new DWordMemory (source));
+				this.assembly.MOV (new DWordMemory (destination), R32.EAX);
+				break;
+
+			case InternalType.ValueType:
+				this.assembly.PUSH (R32.ECX);
+				this.assembly.PUSH (R32.ESI);
+				this.assembly.PUSH (R32.EDI);
+
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.ESI, Assembly.GetRegister (value.Register));
+				else
+					this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (value)));
+
+				this.assembly.LEA (R32.EDI, new DWordMemory (memory));
+
+				//string typeName = value.Type.ToString ();
+
+				uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
+
+				this.assembly.MOV (R32.ECX, size);
+
+				this.assembly.CLD ();
+				this.assembly.REP ();
+				this.assembly.MOVSD ();
+
+				this.assembly.POP (R32.EDI);
+				this.assembly.POP (R32.ESI);
+				this.assembly.POP (R32.ECX);
+				break;
+
+			case InternalType.R4:
+			case InternalType.R8:
+			case InternalType.F:
+			case InternalType.M:
+			case InternalType.TypedReference:
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1019,7 +1019,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.Local local = instruction.Use [0] as IR.Operands.Local;
-			
+
 			Load (assignee, local.InternalType, this.GetAddress (local));
 		}
 
@@ -1042,7 +1042,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.Argument argument = instruction.Use [0] as IR.Operands.Argument;
-			
+
 			Load (assignee, argument.InternalType, this.GetAddress (argument));
 		}
 
@@ -1168,61 +1168,61 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (address)));
 
 			switch (instruction.InternalType) {
-				case InternalType.I1:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EDX, Assembly.GetRegister (value.Register));
+			case InternalType.I1:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EDX, Assembly.GetRegister (value.Register));
 
-					else
-						this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (value)));
+				else
+					this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (value)));
 
-					this.assembly.MOV (new ByteMemory (null, R32.EAX, null, 0), R8.DL);
+				this.assembly.MOV (new ByteMemory (null, R32.EAX, null, 0), R8.DL);
 
-					break;
+				break;
 
-				case InternalType.I2:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EDX, Assembly.GetRegister (value.Register));
+			case InternalType.I2:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EDX, Assembly.GetRegister (value.Register));
 
-					else
-						this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (value)));
+				else
+					this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (value)));
 
-					this.assembly.MOV (new WordMemory (null, R32.EAX, null, 0), R16.DX);
+				this.assembly.MOV (new WordMemory (null, R32.EAX, null, 0), R16.DX);
 
-					break;
+				break;
 
-				case InternalType.I:
-				case InternalType.M:
-				case InternalType.O:
-				case InternalType.I4:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EDX, Assembly.GetRegister (value.Register));
+			case InternalType.I:
+			case InternalType.M:
+			case InternalType.O:
+			case InternalType.I4:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EDX, Assembly.GetRegister (value.Register));
 
-					else
-						this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (value)));
+				else
+					this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (value)));
 
-					this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0), R32.EDX);
+				this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0), R32.EDX);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					Memory source = this.GetAddress (value);
-					source.DisplacementDelta = 4;
+			case InternalType.I8:
+				Memory source = this.GetAddress (value);
+				source.DisplacementDelta = 4;
 
-					this.assembly.MOV (R32.EDX, R32.EAX);
-					this.assembly.ADD (R32.EDX, 4);
+				this.assembly.MOV (R32.EDX, R32.EAX);
+				this.assembly.ADD (R32.EDX, 4);
 
-					this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
-					this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0), R32.ECX);
+				this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
+				this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0), R32.ECX);
 
-					this.assembly.MOV (R32.ECX, new DWordMemory (source));
-					this.assembly.MOV (new DWordMemory (null, R32.EDX, null, 0), R32.ECX);
+				this.assembly.MOV (R32.ECX, new DWordMemory (source));
+				this.assembly.MOV (new DWordMemory (null, R32.EDX, null, 0), R32.ECX);
 
-					break;
+				break;
 
-				case InternalType.R4:
-				case InternalType.R8:
-				default:
-					throw new NotImplementedEngineException ();
+			case InternalType.R4:
+			case InternalType.R8:
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1248,102 +1248,102 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
 			switch (value.InternalType) {
-				case InternalType.M:
-				case InternalType.I:
-				case InternalType.I4:
-					switch (instruction.ConvertType) {
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I1:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U1:
-							if (value.IsRegisterSet)
-								this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-							else
-								this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+			case InternalType.M:
+			case InternalType.I:
+			case InternalType.I4:
+				switch (instruction.ConvertType) {
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I1:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U1:
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-							this.assembly.AND (R32.EAX, (uint) 0xFF);
+					this.assembly.AND (R32.EAX, (uint) 0xFF);
 
-							if (assignee.IsRegisterSet)
-								this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-							else
-								this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-							break;
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+					break;
 
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I2:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U2:
-							if (value.IsRegisterSet)
-								this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-							else
-								this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I2:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U2:
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-							this.assembly.AND (R32.EAX, (uint) 0xFFFF);
+					this.assembly.AND (R32.EAX, (uint) 0xFFFF);
 
-							if (assignee.IsRegisterSet)
-								this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-							else
-								this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-							break;
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+					break;
 
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I4:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U4:
-							if (value.IsRegisterSet)
-								this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-							else
-								this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I4:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U4:
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-							if (assignee.IsRegisterSet)
-								this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-							else
-								this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-							
-							break;
-
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I8:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U8:
-							if (value.IsRegisterSet)
-								this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-							else
-								this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
-
-							Memory memory = this.GetAddress (assignee);
-							DWordMemory low = new DWordMemory (memory);
-							this.assembly.MOV (low, R32.EAX);
-
-							DWordMemory high = new DWordMemory (memory);
-							high.DisplacementDelta = 4;
-							this.assembly.XOR (R32.EAX, R32.EAX);
-							this.assembly.MOV (high, R32.EAX);
-
-							break;
-
-						default:
-							throw new NotImplementedEngineException ();
-					}
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
 					break;
 
-				case InternalType.I8:
-					switch (instruction.ConvertType) {
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I4:
-						case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U4:
-							this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I8:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U8:
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-							if (assignee.IsRegisterSet)
-								this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-							else
-								this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+					Memory memory = this.GetAddress (assignee);
+					DWordMemory low = new DWordMemory (memory);
+					this.assembly.MOV (low, R32.EAX);
 
-							break;
-						default:
-							throw new NotImplementedEngineException ();
-					}
+					DWordMemory high = new DWordMemory (memory);
+					high.DisplacementDelta = 4;
+					this.assembly.XOR (R32.EAX, R32.EAX);
+					this.assembly.MOV (high, R32.EAX);
 
 					break;
 
 				default:
 					throw new NotImplementedEngineException ();
+				}
+
+				break;
+
+			case InternalType.I8:
+				switch (instruction.ConvertType) {
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I4:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U4:
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+					break;
+				default:
+					throw new NotImplementedEngineException ();
+				}
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1361,48 +1361,48 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (first.InternalType) {
-				case InternalType.I:
-				case InternalType.M:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
-
-					if (second.IsRegisterSet)
-						this.assembly.MOV (R32.EDX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (second)));
-
-					this.assembly.CMP (R32.EAX, R32.EDX);
-
-					this.RelationalTypeCMP (instruction.RelationalType, okLabel);
-
-					break;
-				
-				case InternalType.I8:
-					DWordMemory firstAddress = new DWordMemory (this.GetAddress (first));
-					firstAddress.DisplacementDelta = 4;
-
-					DWordMemory secondAddress = new DWordMemory (this.GetAddress (second));
-					secondAddress.DisplacementDelta = 4;
-
-					this.assembly.MOV (R32.EAX, firstAddress);
-					this.assembly.MOV (R32.EDX, secondAddress);
-					this.assembly.CMP (R32.EAX, R32.EDX);
-
-					RelationalTypeCMP (instruction.RelationalType, okLabel, errorLabel);
-
+			case InternalType.I:
+			case InternalType.M:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+
+				if (second.IsRegisterSet)
+					this.assembly.MOV (R32.EDX, Assembly.GetRegister (second.Register));
+				else
 					this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (second)));
-					this.assembly.CMP (R32.EAX, R32.EDX);
 
-					RelationalTypeCMP (instruction.RelationalType, okLabel);
+				this.assembly.CMP (R32.EAX, R32.EDX);
 
-					break;
+				this.RelationalTypeCMP (instruction.RelationalType, okLabel);
 
-				default:
-					throw new NotImplementedEngineException ();
+				break;
+
+			case InternalType.I8:
+				DWordMemory firstAddress = new DWordMemory (this.GetAddress (first));
+				firstAddress.DisplacementDelta = 4;
+
+				DWordMemory secondAddress = new DWordMemory (this.GetAddress (second));
+				secondAddress.DisplacementDelta = 4;
+
+				this.assembly.MOV (R32.EAX, firstAddress);
+				this.assembly.MOV (R32.EDX, secondAddress);
+				this.assembly.CMP (R32.EAX, R32.EDX);
+
+				RelationalTypeCMP (instruction.RelationalType, okLabel, errorLabel);
+
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+				this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (second)));
+				this.assembly.CMP (R32.EAX, R32.EDX);
+
+				RelationalTypeCMP (instruction.RelationalType, okLabel);
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1440,48 +1440,48 @@ namespace SharpOS.AOT.X86 {
 			string endLabel = assembly.GetCMPLabel;
 
 			switch (first.InternalType) {
-				case InternalType.O:
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
-
-					if (second.IsRegisterSet)
-						this.assembly.MOV (R32.EDX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (second)));
-
-					this.assembly.CMP (R32.EAX, R32.EDX);
-
-					RelationalTypeCMP (instruction.RelationalType, okLabel);
-
-					break;
-
-				case InternalType.I8:
-					DWordMemory firstAddress = new DWordMemory (this.GetAddress (first));
-					firstAddress.DisplacementDelta = 4;
-
-					DWordMemory secondAddress = new DWordMemory (this.GetAddress (second));
-					secondAddress.DisplacementDelta = 4;
-
-					this.assembly.MOV (R32.EAX, firstAddress);
-					this.assembly.MOV (R32.EDX, secondAddress);
-					this.assembly.CMP (R32.EAX, R32.EDX);
-
-					RelationalTypeCMP (instruction.RelationalType, okLabel, errorLabel);
-
+			case InternalType.O:
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+
+				if (second.IsRegisterSet)
+					this.assembly.MOV (R32.EDX, Assembly.GetRegister (second.Register));
+				else
 					this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (second)));
-					this.assembly.CMP (R32.EAX, R32.EDX);
 
-					RelationalTypeCMP (instruction.RelationalType, okLabel);
+				this.assembly.CMP (R32.EAX, R32.EDX);
 
-					break;
+				RelationalTypeCMP (instruction.RelationalType, okLabel);
 
-				default:
-					throw new NotImplementedEngineException ();
+				break;
+
+			case InternalType.I8:
+				DWordMemory firstAddress = new DWordMemory (this.GetAddress (first));
+				firstAddress.DisplacementDelta = 4;
+
+				DWordMemory secondAddress = new DWordMemory (this.GetAddress (second));
+				secondAddress.DisplacementDelta = 4;
+
+				this.assembly.MOV (R32.EAX, firstAddress);
+				this.assembly.MOV (R32.EDX, secondAddress);
+				this.assembly.CMP (R32.EAX, R32.EDX);
+
+				RelationalTypeCMP (instruction.RelationalType, okLabel, errorLabel);
+
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+				this.assembly.MOV (R32.EDX, new DWordMemory (this.GetAddress (second)));
+				this.assembly.CMP (R32.EAX, R32.EDX);
+
+				RelationalTypeCMP (instruction.RelationalType, okLabel);
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 
 			assembly.LABEL (errorLabel);
@@ -1499,47 +1499,47 @@ namespace SharpOS.AOT.X86 {
 			else
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.ECX);
 		}
-		
+
 		private void Dup (IR.Instructions.Dup instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.O:
-				case InternalType.M:
-				case InternalType.I4:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+			case InternalType.I:
+			case InternalType.O:
+			case InternalType.M:
+			case InternalType.I4:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					Memory sourceMemory = this.GetAddress (value);
-					DWordMemory source = new DWordMemory (sourceMemory);
-					source.DisplacementDelta = 4;
+			case InternalType.I8:
+				Memory sourceMemory = this.GetAddress (value);
+				DWordMemory source = new DWordMemory (sourceMemory);
+				source.DisplacementDelta = 4;
 
-					Memory destinationMemory = this.GetAddress (assignee);
-					DWordMemory destination = new DWordMemory (destinationMemory);
-					destination.DisplacementDelta = 4;
+				Memory destinationMemory = this.GetAddress (assignee);
+				DWordMemory destination = new DWordMemory (destinationMemory);
+				destination.DisplacementDelta = 4;
 
-					this.assembly.MOV (R32.EAX, source);
-					this.assembly.MOV (destination, R32.EAX);
+				this.assembly.MOV (R32.EAX, source);
+				this.assembly.MOV (destination, R32.EAX);
 
-					this.assembly.MOV (R32.EAX, new DWordMemory (sourceMemory));
-					this.assembly.MOV (new DWordMemory (destinationMemory), R32.EAX);
-					break;
+				this.assembly.MOV (R32.EAX, new DWordMemory (sourceMemory));
+				this.assembly.MOV (new DWordMemory (destinationMemory), R32.EAX);
+				break;
 
-				default:
-					throw new NotImplementedEngineException ();
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1550,51 +1550,51 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+
+				if (instruction.AddType == IR.Instructions.Add.Type.Add) {
+					if (second.IsRegisterSet)
+						this.assembly.ADD (R32.EAX, Assembly.GetRegister (second.Register));
 					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
-
-					if (instruction.AddType == IR.Instructions.Add.Type.Add) {
-						if (second.IsRegisterSet)
-							this.assembly.ADD (R32.EAX, Assembly.GetRegister (second.Register));
-						else
-							this.assembly.ADD (R32.EAX, new DWordMemory (this.GetAddress (second)));
-					} else
-						throw new NotImplementedEngineException ();
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-				
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (first);
-					this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
-					firstMemory.DisplacementDelta = 4;
-					this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
-
-					if (instruction.AddType == IR.Instructions.Add.Type.Add) {
-						Memory secondMemory = this.GetAddress (second);
-						this.assembly.ADD (R32.EAX, new DWordMemory (secondMemory));
-						secondMemory.DisplacementDelta = 4;
-						this.assembly.ADC (R32.EDX, new DWordMemory (secondMemory));
-					} else
-						throw new NotImplementedEngineException ();
-
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
-
-					break;
-
-				default:
+						this.assembly.ADD (R32.EAX, new DWordMemory (this.GetAddress (second)));
+				} else
 					throw new NotImplementedEngineException ();
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (first);
+				this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
+				firstMemory.DisplacementDelta = 4;
+				this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
+
+				if (instruction.AddType == IR.Instructions.Add.Type.Add) {
+					Memory secondMemory = this.GetAddress (second);
+					this.assembly.ADD (R32.EAX, new DWordMemory (secondMemory));
+					secondMemory.DisplacementDelta = 4;
+					this.assembly.ADC (R32.EDX, new DWordMemory (secondMemory));
+				} else
+					throw new NotImplementedEngineException ();
+
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1605,51 +1605,51 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+
+				if (instruction.SubType == IR.Instructions.Sub.Type.Sub) {
+					if (second.IsRegisterSet)
+						this.assembly.SUB (R32.EAX, Assembly.GetRegister (second.Register));
 					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
-
-					if (instruction.SubType == IR.Instructions.Sub.Type.Sub) {
-						if (second.IsRegisterSet)
-							this.assembly.SUB (R32.EAX, Assembly.GetRegister (second.Register));
-						else
-							this.assembly.SUB (R32.EAX, new DWordMemory (this.GetAddress (second)));
-					} else
-						throw new NotImplementedEngineException ();
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (first);
-					this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
-					firstMemory.DisplacementDelta = 4;
-					this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
-
-					if (instruction.SubType == IR.Instructions.Sub.Type.Sub) {
-						Memory secondMemory = this.GetAddress (second);
-						this.assembly.SUB (R32.EAX, new DWordMemory (secondMemory));
-						secondMemory.DisplacementDelta = 4;
-						this.assembly.SBB (R32.EDX, new DWordMemory (secondMemory));
-					} else
-						throw new NotImplementedEngineException ();
-
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
-
-					break;
-
-				default:
+						this.assembly.SUB (R32.EAX, new DWordMemory (this.GetAddress (second)));
+				} else
 					throw new NotImplementedEngineException ();
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (first);
+				this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
+				firstMemory.DisplacementDelta = 4;
+				this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
+
+				if (instruction.SubType == IR.Instructions.Sub.Type.Sub) {
+					Memory secondMemory = this.GetAddress (second);
+					this.assembly.SUB (R32.EAX, new DWordMemory (secondMemory));
+					secondMemory.DisplacementDelta = 4;
+					this.assembly.SBB (R32.EDX, new DWordMemory (secondMemory));
+				} else
+					throw new NotImplementedEngineException ();
+
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1660,58 +1660,58 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+
+				if (instruction.MulType == IR.Instructions.Mul.Type.Mul) {
+					if (second.IsRegisterSet)
+						this.assembly.IMUL (R32.EAX, Assembly.GetRegister (second.Register));
 					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
-
-					if (instruction.MulType == IR.Instructions.Mul.Type.Mul) {
-						if (second.IsRegisterSet)
-							this.assembly.IMUL (R32.EAX, Assembly.GetRegister (second.Register));
-						else
-							this.assembly.IMUL (R32.EAX, new DWordMemory (this.GetAddress (second)));
-					} else
-						throw new NotImplementedEngineException ();
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-				
-				case InternalType.I8:
-					if (instruction.MulType == IR.Instructions.Mul.Type.Mul) {
-						Memory firstMemory = this.GetAddress (first);
-						DWordMemory firstHigh = new DWordMemory (firstMemory);
-						firstHigh.DisplacementDelta = 4;
-						DWordMemory firstLow = new DWordMemory (firstMemory);
-
-						Memory secondMemory = this.GetAddress (second);
-						DWordMemory secondHigh = new DWordMemory (secondMemory);
-						secondHigh.DisplacementDelta = 4;
-						DWordMemory secondLow = new DWordMemory (secondMemory);
-
-						this.assembly.PUSH (secondHigh);
-						this.assembly.PUSH (secondLow);
-						this.assembly.PUSH (firstHigh);
-						this.assembly.PUSH (firstLow);
-						this.assembly.CALL (Assembly.HELPER_LMUL);
-						this.assembly.ADD (R32.ESP, 16);
-
-						Memory assigneeMemory = this.GetAddress (assignee);
-						this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-						assigneeMemory.DisplacementDelta = 4;
-						this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
-					} else
-						throw new NotImplementedEngineException ();
-
-					break;
-
-				default:
+						this.assembly.IMUL (R32.EAX, new DWordMemory (this.GetAddress (second)));
+				} else
 					throw new NotImplementedEngineException ();
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.I8:
+				if (instruction.MulType == IR.Instructions.Mul.Type.Mul) {
+					Memory firstMemory = this.GetAddress (first);
+					DWordMemory firstHigh = new DWordMemory (firstMemory);
+					firstHigh.DisplacementDelta = 4;
+					DWordMemory firstLow = new DWordMemory (firstMemory);
+
+					Memory secondMemory = this.GetAddress (second);
+					DWordMemory secondHigh = new DWordMemory (secondMemory);
+					secondHigh.DisplacementDelta = 4;
+					DWordMemory secondLow = new DWordMemory (secondMemory);
+
+					this.assembly.PUSH (secondHigh);
+					this.assembly.PUSH (secondLow);
+					this.assembly.PUSH (firstHigh);
+					this.assembly.PUSH (firstLow);
+					this.assembly.CALL (Assembly.HELPER_LMUL);
+					this.assembly.ADD (R32.ESP, 16);
+
+					Memory assigneeMemory = this.GetAddress (assignee);
+					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+					assigneeMemory.DisplacementDelta = 4;
+					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+				} else
+					throw new NotImplementedEngineException ();
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1722,39 +1722,39 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
 
 
-					if (second.IsRegisterSet)
-						this.assembly.MOV (R32.ECX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (second)));
+				if (second.IsRegisterSet)
+					this.assembly.MOV (R32.ECX, Assembly.GetRegister (second.Register));
+				else
+					this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (second)));
 
-					if (instruction.DivType == IR.Instructions.Div.Type.Div) {
-						this.assembly.CDQ ();
-						this.assembly.IDIV (R32.ECX);
+				if (instruction.DivType == IR.Instructions.Div.Type.Div) {
+					this.assembly.CDQ ();
+					this.assembly.IDIV (R32.ECX);
 
-					} else if (instruction.DivType == IR.Instructions.Div.Type.DivUnsigned) {
-						this.assembly.XOR (R32.EDX, R32.EDX);
-						this.assembly.DIV (R32.ECX);
+				} else if (instruction.DivType == IR.Instructions.Div.Type.DivUnsigned) {
+					this.assembly.XOR (R32.EDX, R32.EDX);
+					this.assembly.DIV (R32.ECX);
 
-					} else
-						throw new NotImplementedEngineException ();
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				default:
+				} else
 					throw new NotImplementedEngineException ();
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1765,39 +1765,39 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
 
 
-					if (second.IsRegisterSet)
-						this.assembly.MOV (R32.ECX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (second)));
+				if (second.IsRegisterSet)
+					this.assembly.MOV (R32.ECX, Assembly.GetRegister (second.Register));
+				else
+					this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (second)));
 
-					if (instruction.RemType == IR.Instructions.Rem.Type.Remainder) {
-						this.assembly.CDQ ();
-						this.assembly.IDIV (R32.ECX);
+				if (instruction.RemType == IR.Instructions.Rem.Type.Remainder) {
+					this.assembly.CDQ ();
+					this.assembly.IDIV (R32.ECX);
 
-					} else if (instruction.RemType == IR.Instructions.Rem.Type.RemainderUnsigned) {
-						this.assembly.XOR (R32.EDX, R32.EDX);
-						this.assembly.DIV (R32.ECX);
+				} else if (instruction.RemType == IR.Instructions.Rem.Type.RemainderUnsigned) {
+					this.assembly.XOR (R32.EDX, R32.EDX);
+					this.assembly.DIV (R32.ECX);
 
-					} else
-						throw new NotImplementedEngineException ();
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EDX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EDX);
-
-					break;
-
-				default:
+				} else
 					throw new NotImplementedEngineException ();
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EDX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EDX);
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1807,41 +1807,41 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-					this.assembly.NEG (R32.EAX);
+				this.assembly.NEG (R32.EAX);
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (value);
-					this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
-					firstMemory.DisplacementDelta = 4;
-					this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (value);
+				this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
+				firstMemory.DisplacementDelta = 4;
+				this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
 
-					this.assembly.NOT (R32.EDX);
-					this.assembly.NEG (R32.EAX);
-					this.assembly.SBB (R32.EDX, 0xFFFFFFFF);
+				this.assembly.NOT (R32.EDX);
+				this.assembly.NEG (R32.EAX);
+				this.assembly.SBB (R32.EDX, 0xFFFFFFFF);
 
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
 
-					break;
+				break;
 
-				default:
-					throw new NotImplementedEngineException ();
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1852,53 +1852,53 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
 
-					if (second.IsRegisterSet)
-						this.assembly.MOV (R32.ECX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (second)));
+				if (second.IsRegisterSet)
+					this.assembly.MOV (R32.ECX, Assembly.GetRegister (second.Register));
+				else
+					this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (second)));
 
-					this.assembly.AND (R32.ECX, (uint) 0xFF);
-					this.assembly.SHL__CL (R32.EAX);
+				this.assembly.AND (R32.ECX, (uint) 0xFF);
+				this.assembly.SHL__CL (R32.EAX);
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (first);
-					DWordMemory high = new DWordMemory (firstMemory);
-					high.DisplacementDelta = 4;
-					DWordMemory low = new DWordMemory (firstMemory);
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (first);
+				DWordMemory high = new DWordMemory (firstMemory);
+				high.DisplacementDelta = 4;
+				DWordMemory low = new DWordMemory (firstMemory);
 
-					if (second.IsRegisterSet)
-						this.assembly.PUSH (Assembly.GetRegister (second.Register));
-					else
-						this.assembly.PUSH (new DWordMemory (this.GetAddress (second)));
+				if (second.IsRegisterSet)
+					this.assembly.PUSH (Assembly.GetRegister (second.Register));
+				else
+					this.assembly.PUSH (new DWordMemory (this.GetAddress (second)));
 
-					this.assembly.PUSH (high);
-					this.assembly.PUSH (low);
-					this.assembly.CALL (Assembly.HELPER_LSHL);
-					this.assembly.ADD (R32.ESP, 12);
+				this.assembly.PUSH (high);
+				this.assembly.PUSH (low);
+				this.assembly.CALL (Assembly.HELPER_LSHL);
+				this.assembly.ADD (R32.ESP, 12);
 
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
 
-					break;
+				break;
 
-				default:
-					throw new NotImplementedEngineException ();
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1909,70 +1909,70 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
 
-					if (second.IsRegisterSet)
-						this.assembly.MOV (R32.ECX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (second)));
+				if (second.IsRegisterSet)
+					this.assembly.MOV (R32.ECX, Assembly.GetRegister (second.Register));
+				else
+					this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (second)));
 
-					this.assembly.AND (R32.ECX, (uint) 0xFF);
+				this.assembly.AND (R32.ECX, (uint) 0xFF);
 
-					if (instruction.ShrType == IR.Instructions.Shr.Type.SHR)
-						this.assembly.SAR__CL (R32.EAX);
+				if (instruction.ShrType == IR.Instructions.Shr.Type.SHR)
+					this.assembly.SAR__CL (R32.EAX);
 
-					else if (instruction.ShrType == IR.Instructions.Shr.Type.SHRUnsigned)
-						this.assembly.SHR__CL (R32.EAX);
+				else if (instruction.ShrType == IR.Instructions.Shr.Type.SHRUnsigned)
+					this.assembly.SHR__CL (R32.EAX);
 
-					else
-						throw new NotImplementedEngineException ();
-
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
-
-					break;
-
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (first);
-					DWordMemory high = new DWordMemory (firstMemory);
-					high.DisplacementDelta = 4;
-					DWordMemory low = new DWordMemory (firstMemory);
-
-					if (second.IsRegisterSet)
-						this.assembly.PUSH (Assembly.GetRegister (second.Register));
-					else
-						this.assembly.PUSH (new DWordMemory (this.GetAddress (second)));
-
-					this.assembly.PUSH (high);
-					this.assembly.PUSH (low);
-
-					if (instruction.ShrType == IR.Instructions.Shr.Type.SHR)
-						this.assembly.CALL (Assembly.HELPER_LSAR);
-
-					else if (instruction.ShrType == IR.Instructions.Shr.Type.SHRUnsigned)
-						this.assembly.CALL (Assembly.HELPER_LSHR);
-
-					else
-						throw new NotImplementedEngineException ();
-					
-					this.assembly.ADD (R32.ESP, 12);
-
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
-
-					break;
-
-				default:
+				else
 					throw new NotImplementedEngineException ();
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				break;
+
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (first);
+				DWordMemory high = new DWordMemory (firstMemory);
+				high.DisplacementDelta = 4;
+				DWordMemory low = new DWordMemory (firstMemory);
+
+				if (second.IsRegisterSet)
+					this.assembly.PUSH (Assembly.GetRegister (second.Register));
+				else
+					this.assembly.PUSH (new DWordMemory (this.GetAddress (second)));
+
+				this.assembly.PUSH (high);
+				this.assembly.PUSH (low);
+
+				if (instruction.ShrType == IR.Instructions.Shr.Type.SHR)
+					this.assembly.CALL (Assembly.HELPER_LSAR);
+
+				else if (instruction.ShrType == IR.Instructions.Shr.Type.SHRUnsigned)
+					this.assembly.CALL (Assembly.HELPER_LSHR);
+
+				else
+					throw new NotImplementedEngineException ();
+
+				this.assembly.ADD (R32.ESP, 12);
+
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+
+				break;
+
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -1983,45 +1983,45 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
 
-					if (second.IsRegisterSet)
-						this.assembly.AND (R32.EAX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.AND (R32.EAX, new DWordMemory (this.GetAddress (second)));
+				if (second.IsRegisterSet)
+					this.assembly.AND (R32.EAX, Assembly.GetRegister (second.Register));
+				else
+					this.assembly.AND (R32.EAX, new DWordMemory (this.GetAddress (second)));
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (first);
-					this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
-					firstMemory.DisplacementDelta = 4;
-					this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (first);
+				this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
+				firstMemory.DisplacementDelta = 4;
+				this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
 
-					Memory secondMemory = this.GetAddress (second);
-					this.assembly.AND (R32.EAX, new DWordMemory (secondMemory));
-					secondMemory.DisplacementDelta = 4;
-					this.assembly.AND (R32.EDX, new DWordMemory (secondMemory));
+				Memory secondMemory = this.GetAddress (second);
+				this.assembly.AND (R32.EAX, new DWordMemory (secondMemory));
+				secondMemory.DisplacementDelta = 4;
+				this.assembly.AND (R32.EDX, new DWordMemory (secondMemory));
 
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
 
-					break;
+				break;
 
-				default:
-					throw new NotImplementedEngineException ();
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -2032,45 +2032,45 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
 
-					if (second.IsRegisterSet)
-						this.assembly.OR (R32.EAX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.OR (R32.EAX, new DWordMemory (this.GetAddress (second)));
+				if (second.IsRegisterSet)
+					this.assembly.OR (R32.EAX, Assembly.GetRegister (second.Register));
+				else
+					this.assembly.OR (R32.EAX, new DWordMemory (this.GetAddress (second)));
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (first);
-					this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
-					firstMemory.DisplacementDelta = 4;
-					this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (first);
+				this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
+				firstMemory.DisplacementDelta = 4;
+				this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
 
-					Memory secondMemory = this.GetAddress (second);
-					this.assembly.OR (R32.EAX, new DWordMemory (secondMemory));
-					secondMemory.DisplacementDelta = 4;
-					this.assembly.OR (R32.EDX, new DWordMemory (secondMemory));
+				Memory secondMemory = this.GetAddress (second);
+				this.assembly.OR (R32.EAX, new DWordMemory (secondMemory));
+				secondMemory.DisplacementDelta = 4;
+				this.assembly.OR (R32.EDX, new DWordMemory (secondMemory));
 
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
 
-					break;
+				break;
 
-				default:
-					throw new NotImplementedEngineException ();
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -2081,45 +2081,45 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register second = instruction.Use [1] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (first.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (first.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
 
-					if (second.IsRegisterSet)
-						this.assembly.XOR (R32.EAX, Assembly.GetRegister (second.Register));
-					else
-						this.assembly.XOR (R32.EAX, new DWordMemory (this.GetAddress (second)));
+				if (second.IsRegisterSet)
+					this.assembly.XOR (R32.EAX, Assembly.GetRegister (second.Register));
+				else
+					this.assembly.XOR (R32.EAX, new DWordMemory (this.GetAddress (second)));
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (first);
-					this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
-					firstMemory.DisplacementDelta = 4;
-					this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (first);
+				this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
+				firstMemory.DisplacementDelta = 4;
+				this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
 
-					Memory secondMemory = this.GetAddress (second);
-					this.assembly.XOR (R32.EAX, new DWordMemory (secondMemory));
-					secondMemory.DisplacementDelta = 4;
-					this.assembly.XOR (R32.EDX, new DWordMemory (secondMemory));
+				Memory secondMemory = this.GetAddress (second);
+				this.assembly.XOR (R32.EAX, new DWordMemory (secondMemory));
+				secondMemory.DisplacementDelta = 4;
+				this.assembly.XOR (R32.EDX, new DWordMemory (secondMemory));
 
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
 
-					break;
+				break;
 
-				default:
-					throw new NotImplementedEngineException ();
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -2129,40 +2129,40 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
 			switch (assignee.InternalType) {
-				case InternalType.I:
-				case InternalType.I4:
-					if (value.IsRegisterSet)
-						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
-					else
-						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+			case InternalType.I:
+			case InternalType.I4:
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-					this.assembly.NOT (R32.EAX);
+				this.assembly.NOT (R32.EAX);
 
-					if (assignee.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-					break;
+				break;
 
-				case InternalType.I8:
-					Memory firstMemory = this.GetAddress (value);
-					this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
-					firstMemory.DisplacementDelta = 4;
-					this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
+			case InternalType.I8:
+				Memory firstMemory = this.GetAddress (value);
+				this.assembly.MOV (R32.EAX, new DWordMemory (firstMemory));
+				firstMemory.DisplacementDelta = 4;
+				this.assembly.MOV (R32.EDX, new DWordMemory (firstMemory));
 
-					this.assembly.NOT (R32.EAX);
-					this.assembly.NOT (R32.EDX);
+				this.assembly.NOT (R32.EAX);
+				this.assembly.NOT (R32.EDX);
 
-					Memory assigneeMemory = this.GetAddress (assignee);
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
-					assigneeMemory.DisplacementDelta = 4;
-					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
+				Memory assigneeMemory = this.GetAddress (assignee);
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
+				assigneeMemory.DisplacementDelta = 4;
+				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
 
-					break;
+				break;
 
-				default:
-					throw new NotImplementedEngineException ();
+			default:
+				throw new NotImplementedEngineException ();
 			}
 		}
 
@@ -2177,7 +2177,7 @@ namespace SharpOS.AOT.X86 {
 				throw new NotImplementedEngineException ();
 
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
-			
+
 			this.Initialize (assignee);
 
 			this.PushCallParameters (instruction);

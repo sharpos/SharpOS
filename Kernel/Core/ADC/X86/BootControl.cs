@@ -28,15 +28,15 @@ namespace SharpOS.Kernel.ADC.X86 {
 		/// <summary>
 		/// Powers down the system.
 		/// </summary>
-		public static void PowerOff()
+		public static void PowerOff ()
 		{
 			// TODO: turn off system here..
 
 			// Disable interrupts
-			Asm.CLI();
+			Asm.CLI ();
 
 			// Halt the system
-			Asm.HLT();
+			Asm.HLT ();
 		}
 
 		/// <summary>
@@ -44,52 +44,51 @@ namespace SharpOS.Kernel.ADC.X86 {
 		/// Usually used after a crash to display information after which the user 
 		/// can turn of the machine.
 		/// </summary>
-		public static void Freeze()
+		public static void Freeze ()
 		{
 			// Disable interrupts
-			Asm.CLI();
+			Asm.CLI ();
 
 			// Halt the system
-			Asm.HLT();
+			Asm.HLT ();
 		}
 
 		/// <summary>
 		/// Puts the system into sleep mode.
 		/// </summary>
-		public static void Sleep()
+		public static void Sleep ()
 		{
 			// TODO: eventually implement this..
 
 			// Disable interrupts
-			Asm.CLI();
+			Asm.CLI ();
 
 			// Halt the system
-			Asm.HLT();
+			Asm.HLT ();
 		}
 
 		/// <summary>
 		/// Reboot the system.
 		/// We can reset the system, oddly enough, through the keyboard IO port
 		/// </summary>
-		public static void Reboot()
+		public static void Reboot ()
 		{
 			// Disable interrupts
-			Asm.CLI();
-					
+			Asm.CLI ();
+
 			// Clear all keyboard buffers (output and command buffers)
 			byte temp;
-			do
-			{
-				temp = IO.In8(IO.Port.KB_controller_commands);
+			do {
+				temp = IO.In8 (IO.Port.KB_controller_commands);
 				if ((temp & 0x01) != 0)
-					IO.In8(IO.Port.KB_data_port); // Empty keyboard buffer
+					IO.In8 (IO.Port.KB_data_port); // Empty keyboard buffer
 			} while ((temp & 0x02) != 0);
 
 			// Reset the system
-			IO.Out8(IO.Port.KB_controller_commands, 0xFE);
+			IO.Out8 (IO.Port.KB_controller_commands, 0xFE);
 
 			// Halt the system (in case reset didn't work)
-			Asm.HLT();
+			Asm.HLT ();
 		}
 	}
 }

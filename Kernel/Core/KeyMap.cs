@@ -16,21 +16,19 @@ using SharpOS.Kernel;
 using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 
-namespace SharpOS.Kernel
-{
-	public unsafe class KeyMap
-	{
+namespace SharpOS.Kernel {
+	public unsafe class KeyMap {
 		#region Global fields
 
-		static PString8 *userKeyMap = PString8.Wrap (Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength),
+		static PString8* userKeyMap = PString8.Wrap (Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength),
 			EntryModule.MaxKeyMapNameLength);
-		static byte *getBuiltinKeyMapBuffer = Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength);
-		static byte *stringConvBuffer = Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength);
-		static void *keymapArchive;
-		static PString8 *keymapName = PString8.Wrap (Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength),
+		static byte* getBuiltinKeyMapBuffer = Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength);
+		static byte* stringConvBuffer = Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength);
+		static void* keymapArchive;
+		static PString8* keymapName = PString8.Wrap (Stubs.StaticAlloc (EntryModule.MaxKeyMapNameLength),
 			EntryModule.MaxKeyMapNameLength);
 		static int keymapEntries;
-		static void *keymapAddr;
+		static void* keymapAddr;
 
 		#endregion
 		#region Setup
@@ -56,14 +54,14 @@ namespace SharpOS.Kernel
 				userKeyMap->Concat ("US");
 			}
 
-			keymapArchive = (void*)Stubs.GetLabelAddress
+			keymapArchive = (void*) Stubs.GetLabelAddress
 				("SharpOS.Kernel/Resources/BuiltinKeyMaps.ska");
 
 			Diagnostics.Assert (keymapArchive != null, "KeyMap.Setup(): keymap archive is null");
 
 			keymapName->Clear ();
 			keymapName->Concat (userKeyMap);
-			keymapEntries = *(int*)keymapArchive;
+			keymapEntries = *(int*) keymapArchive;
 			keymapAddr = GetBuiltinKeyMap (userKeyMap);
 
 #if VERBOSE_KeyMap_INIT
@@ -84,7 +82,7 @@ namespace SharpOS.Kernel
 		#endregion
 		#region Internal
 
-		static void *GetBuiltinKeyMap (byte *name, int nameLen)
+		static void* GetBuiltinKeyMap (byte* name, int nameLen)
 		{
 #if VERBOSE_KeyMap_INIT
 			TextMode.Write ("Key Map Name: ");
@@ -96,17 +94,16 @@ namespace SharpOS.Kernel
 			TextMode.WriteLine ();
 #endif
 
-			byte* table		= (byte*)keymapArchive + 4;
+			byte* table = (byte*) keymapArchive + 4;
 			byte* ret_table;
-			byte *buf		= getBuiltinKeyMapBuffer;
+			byte* buf = getBuiltinKeyMapBuffer;
 
-			Diagnostics.Assert(nameLen > 0,
+			Diagnostics.Assert (nameLen > 0,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too small");
 			Diagnostics.Assert (nameLen <= EntryModule.MaxKeyMapNameLength,
 				"KeyMap.GetBuiltinKeyMap(): key map name is too large");
 
-			for (int x = 0; x < keymapEntries; ++x)
-			{
+			for (int x = 0; x < keymapEntries; ++x) {
 				int nSize = 0;
 				int tSize = 0;
 				int error = 0;
@@ -133,7 +130,7 @@ namespace SharpOS.Kernel
 
 				// default table
 
-				tSize = *(int*)table;
+				tSize = *(int*) table;
 #if VERBOSE_KeyMap_INIT
 				TextMode.Write("Default-table size:");
 				TextMode.Write(tSize);
@@ -144,7 +141,7 @@ namespace SharpOS.Kernel
 
 				// shifted table
 
-				tSize = *(int*)table;
+				tSize = *(int*) table;
 #if VERBOSE_KeyMap_INIT
 				TextMode.Write("Shifted-table size:");
 				TextMode.Write(tSize);
@@ -153,52 +150,51 @@ namespace SharpOS.Kernel
 				table += 4;
 				table += tSize;
 
-				if (nSize == nameLen && ByteString.Compare(name, buf, nameLen) == 0)
+				if (nSize == nameLen && ByteString.Compare (name, buf, nameLen) == 0)
 					return ret_table;
 			}
 
 			return null;
 		}
 
-        public static void WriteKeymaps( )
-        {
-            byte* table = (byte*) keymapArchive + 4;
-            byte* ret_table;
-            byte* buf = getBuiltinKeyMapBuffer;
+		public static void WriteKeymaps ()
+		{
+			byte* table = (byte*) keymapArchive + 4;
+			byte* ret_table;
+			byte* buf = getBuiltinKeyMapBuffer;
 
-            for( int x = 0; x < keymapEntries; ++x )
-            {
-                int nSize = 0;
-                int tSize = 0;
-                int error = 0;
-                int strSize = 0;
+			for (int x = 0; x < keymapEntries; ++x) {
+				int nSize = 0;
+				int tSize = 0;
+				int error = 0;
+				int strSize = 0;
 
-                strSize = BinaryTool.ReadPrefixedString( table, buf,
-                    EntryModule.MaxKeyMapNameLength, &error );
+				strSize = BinaryTool.ReadPrefixedString (table, buf,
+				    EntryModule.MaxKeyMapNameLength, &error);
 
-                table += strSize;
-                nSize = ByteString.Length( buf );
+				table += strSize;
+				nSize = ByteString.Length (buf);
 
-                ret_table = table;
+				ret_table = table;
 
-                table += 2; // keymask/statebit
+				table += 2; // keymask/statebit
 
-                // default table
+				// default table
 
-                tSize = *(int*) table;
-                table += 4;
-                table += tSize;
+				tSize = *(int*) table;
+				table += 4;
+				table += tSize;
 
-                // shifted table
+				// shifted table
 
-                tSize = *(int*) table;
-                table += 4;
-                table += tSize;
+				tSize = *(int*) table;
+				table += 4;
+				table += tSize;
 
-                // Write it out.
-                TextMode.WriteLine( buf );
-            }
-        }
+				// Write it out.
+				TextMode.WriteLine (buf);
+			}
+		}
 
 		#endregion
 		#region GetKeyMap() family
@@ -211,7 +207,7 @@ namespace SharpOS.Kernel
 		/// <param name="name">The name.</param>
 		/// <param name="nameLen">The name len.</param>
 		/// <returns></returns>
-		public static void *GetBuiltinKeyMap (byte *name)
+		public static void* GetBuiltinKeyMap (byte* name)
 		{
 			return GetBuiltinKeyMap (name, ByteString.Length (name));
 		}
@@ -224,7 +220,7 @@ namespace SharpOS.Kernel
 		/// <param name="name">The name.</param>
 		/// <param name="nameLen">The name len.</param>
 		/// <returns></returns>
-		public static void *GetBuiltinKeyMap (CString8 *name)
+		public static void* GetBuiltinKeyMap (CString8* name)
 		{
 			return GetBuiltinKeyMap (name->Pointer, name->Length);
 		}
@@ -237,7 +233,7 @@ namespace SharpOS.Kernel
 		/// <param name="name">The name.</param>
 		/// <param name="nameLen">The name len.</param>
 		/// <returns></returns>
-		public static void *GetBuiltinKeyMap (PString8 *name)
+		public static void* GetBuiltinKeyMap (PString8* name)
 		{
 			return GetBuiltinKeyMap (name->Pointer, name->Length);
 		}
@@ -250,7 +246,7 @@ namespace SharpOS.Kernel
 		/// <param name="name">The name.</param>
 		/// <param name="nameLen">The name len.</param>
 		/// <returns></returns>
-		public static void *GetBuiltinKeyMap (string name)
+		public static void* GetBuiltinKeyMap (string name)
 		{
 			ByteString.GetBytes (name, stringConvBuffer, EntryModule.MaxKeyMapNameLength);
 
@@ -269,10 +265,10 @@ namespace SharpOS.Kernel
 		/// Gets the address of a builtin key map, by it's numeric ID. Good
 		/// for iterating through the list of builtin key maps.
 		/// </summary>
-		public static void *GetBuiltinKeyMap (int id)
+		public static void* GetBuiltinKeyMap (int id)
 		{
-			byte *table = (byte*)keymapArchive + 4;
-			byte *buf = stackalloc byte [EntryModule.MaxKeyMapNameLength];
+			byte* table = (byte*) keymapArchive + 4;
+			byte* buf = stackalloc byte [EntryModule.MaxKeyMapNameLength];
 			int error = 0;
 
 			for (int x = 0; x < keymapEntries; ++x) {
@@ -287,17 +283,17 @@ namespace SharpOS.Kernel
 
 				// table size (4), default table (x)
 
-				table += 4 + *(int*)table;
+				table += 4 + *(int*) table;
 
 				// table size (4), shifted table (x)
 
-				table += 4 + *(int*)table;
+				table += 4 + *(int*) table;
 			}
 
 			return null;
 		}
 
-		public static PString8 *GetCurrentKeyMapName ()
+		public static PString8* GetCurrentKeyMapName ()
 		{
 			return keymapName;
 		}
@@ -305,7 +301,7 @@ namespace SharpOS.Kernel
 		/// <summary>
 		/// Gets the keymap currently in use.
 		/// </summary>
-		public static void *GetCurrentKeyMap ()
+		public static void* GetCurrentKeyMap ()
 		{
 			return keymapAddr;
 		}
@@ -313,7 +309,7 @@ namespace SharpOS.Kernel
 		#endregion
 		#region SetKeyMap() family
 
-		public static void SetKeyMapName (byte *str, int len)
+		public static void SetKeyMapName (byte* str, int len)
 		{
 			keymapName->Clear ();
 			keymapName->Concat (str, len);
@@ -324,10 +320,10 @@ namespace SharpOS.Kernel
 		/// keymap, so that all further keyboard scancodes are
 		/// converted using the new mapping.
 		/// </summary>
-		public static void SetDirectKeyMap (void *keymap)
+		public static void SetDirectKeyMap (void* keymap)
 		{
-			byte* keymapAddress = (byte*)keymap;
-			byte *defmap = null, shiftmap = null;
+			byte* keymapAddress = (byte*) keymap;
+			byte* defmap = null, shiftmap = null;
 			int defmapLen = 0, shiftmapLen = 0;
 
 			//TODO: what to do with these bits?
@@ -343,7 +339,7 @@ namespace SharpOS.Kernel
 			Keyboard.SetKeyMap (defmap, defmapLen, shiftmap, shiftmapLen);
 		}
 
-		public static void SetKeyMap (byte *name)
+		public static void SetKeyMap (byte* name)
 		{
 			keymapName->Clear ();
 			keymapName->Concat (name);
@@ -355,7 +351,7 @@ namespace SharpOS.Kernel
 		/// Sets the current keymap to a built-in one specified by
 		/// <paramref name="name" />.
 		/// </summary>
-		public static void SetKeyMap (byte *name, int len)
+		public static void SetKeyMap (byte* name, int len)
 		{
 			keymapName->Clear ();
 			keymapName->Concat (name, len);
@@ -367,7 +363,7 @@ namespace SharpOS.Kernel
 		/// Sets the current keymap to a built-in one specified by
 		/// <paramref name="name" />.
 		/// </summary>
-		public static void SetKeyMap (CString8 *name)
+		public static void SetKeyMap (CString8* name)
 		{
 			SetKeyMap (name->Pointer);
 		}
@@ -376,7 +372,7 @@ namespace SharpOS.Kernel
 		/// Sets the current keymap to a built-in one specified by
 		/// <paramref name="name" />.
 		/// </summary>
-		public static void SetKeyMap (PString8 *name)
+		public static void SetKeyMap (PString8* name)
 		{
 			SetKeyMap (name->Pointer, name->Length);
 		}
@@ -387,23 +383,23 @@ namespace SharpOS.Kernel
 		/// <summary>
 		/// Gets the `default' table of the given keymap.
 		/// </summary>
-		public static byte *GetDefaultTable (void *keymap, int *ret_len)
+		public static byte* GetDefaultTable (void* keymap, int* ret_len)
 		{
-			*ret_len = *(int*)keymap;
+			*ret_len = *(int*) keymap;
 
-			return (byte*)keymap + 4;
+			return (byte*) keymap + 4;
 		}
 
 		/// <summary>
 		/// Gets the `shifted' table of the given keymap.
 		/// </summary>
-		public static byte *GetShiftedTable (void *keymap, int *ret_len)
+		public static byte* GetShiftedTable (void* keymap, int* ret_len)
 		{
 			int dLen = 0;
-			byte *ptr = GetDefaultTable (keymap, &dLen);
+			byte* ptr = GetDefaultTable (keymap, &dLen);
 
 			ptr += dLen;
-			*ret_len = *(int*)ptr;
+			*ret_len = *(int*) ptr;
 
 			return ptr + 4;
 		}
@@ -411,7 +407,7 @@ namespace SharpOS.Kernel
 		/// <summary>
 		/// Gets the `default' table of the installed keymap.
 		/// </summary>
-		public static byte *GetDefaultTable (int *ret_len)
+		public static byte* GetDefaultTable (int* ret_len)
 		{
 			Diagnostics.Assert (keymapAddr != null, "No keymap is installed!");
 
@@ -421,7 +417,7 @@ namespace SharpOS.Kernel
 		/// <summary>
 		/// Gets the `shifted' table of the installed keymap.
 		/// </summary>
-		public static byte *GetShiftedTable (int *ret_len)
+		public static byte* GetShiftedTable (int* ret_len)
 		{
 			Diagnostics.Assert (keymapAddr != null, "No keymap is installed!");
 
@@ -434,21 +430,21 @@ namespace SharpOS.Kernel
 		/// <summary>
 		/// Gets the keymask specified in the given keymap.
 		/// </summary>
-		public static byte GetKeyMask (void *keymap)
+		public static byte GetKeyMask (void* keymap)
 		{
-			int nlen = *(int*)keymap;
+			int nlen = *(int*) keymap;
 
-			return *((byte*)keymap + 4 + nlen);
+			return *((byte*) keymap + 4 + nlen);
 		}
 
 		/// <summary>
 		/// Gets the state bit specified in the given keymap.
 		/// </summary>
-		public static byte GetStateBit (void *keymap)
+		public static byte GetStateBit (void* keymap)
 		{
-			int nlen = *(int*)keymap;
+			int nlen = *(int*) keymap;
 
-			return *((byte*)keymap + 5 + nlen);
+			return *((byte*) keymap + 5 + nlen);
 		}
 
 		/// <summary>
@@ -473,6 +469,6 @@ namespace SharpOS.Kernel
 
 		#endregion
 
-    }
+	}
 }
 

@@ -25,33 +25,31 @@ namespace SharpOS.Kernel.ADC.X86 {
 	/// to implement an interrupt vector table. The IDT is used by the processor to determine 
 	/// the correct response to interrupts and exceptions.
 	/// </summary>
-	public unsafe class IDT
-	{
+	public unsafe class IDT {
 		#region Interrupt list
-		public enum Interrupt
-		{
+		public enum Interrupt {
 			// CPU Exceptions
 
-			DivideError				= 0x00,	// AAM/DIV/IDIV divide by zero, DIV/IDIV result too large
-			Debug					= 0x01,	//
-			NonMaskableInterrupt	= 0x02,	// non-maskable interrupt
-			BreakPoint				= 0x03,	// INT 3, debugger breakpoint
-			Overflow				= 0x04,	// INTO instruction detected overflow 
-			BoundaryRangeExceeded	= 0x05,	// BOUND instruction detected overrange 
-			UndefinedOpcode			= 0x06,	// invalid instruction opcode 
-			DeviceNotAvailable		= 0x07,	// no coprocessor (ESC, WAIT instructions)
-			DoubleFault				= 0x08,	// exceptions during exception handler invocation
+			DivideError = 0x00,	// AAM/DIV/IDIV divide by zero, DIV/IDIV result too large
+			Debug = 0x01,	//
+			NonMaskableInterrupt = 0x02,	// non-maskable interrupt
+			BreakPoint = 0x03,	// INT 3, debugger breakpoint
+			Overflow = 0x04,	// INTO instruction detected overflow 
+			BoundaryRangeExceeded = 0x05,	// BOUND instruction detected overrange 
+			UndefinedOpcode = 0x06,	// invalid instruction opcode 
+			DeviceNotAvailable = 0x07,	// no coprocessor (ESC, WAIT instructions)
+			DoubleFault = 0x08,	// exceptions during exception handler invocation
 			//Reserved				= 0x09,	
-			InvalidTSS				= 0x0A,	// implicit TSS accesses
-			NotPresent				= 0x0B,	// Segment register loads, explicit/implicit segment register accesses
-			StackSegment			= 0x0C,	// SS loads, explicit/implicit SS accesses
-			GeneralProtection		= 0x0D,	//
-			PageFault				= 0x0E,	//
+			InvalidTSS = 0x0A,	// implicit TSS accesses
+			NotPresent = 0x0B,	// Segment register loads, explicit/implicit segment register accesses
+			StackSegment = 0x0C,	// SS loads, explicit/implicit SS accesses
+			GeneralProtection = 0x0D,	//
+			PageFault = 0x0E,	//
 			//Reserved				= 0x0F,	
-			MathFault				= 0x10,	// coprocessor error (ESC, WAIT instructions)
-			AlignmentChecking		= 0x11,	// Misaligned accesses / Lock accross cache line or page boundary (486+ only)
-			MachineCheck			= 0x12,	// Internal error, bus error, or bus error detected by external agent (Pentium+ only)
-			ExtendedMathFault		= 0x13,	//
+			MathFault = 0x10,	// coprocessor error (ESC, WAIT instructions)
+			AlignmentChecking = 0x11,	// Misaligned accesses / Lock accross cache line or page boundary (486+ only)
+			MachineCheck = 0x12,	// Internal error, bus error, or bus error detected by external agent (Pentium+ only)
+			ExtendedMathFault = 0x13,	//
 			//Reserved				= 0x14,	
 			//Reserved				= 0x15,	
 			//Reserved				= 0x16,	
@@ -65,47 +63,47 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//Reserved				= 0x1E,	
 			//Reserved				= 0x1F,	
 
-			LastException			= 0x1F,
+			LastException = 0x1F,
 
 			// Hardware Interrupts
-			
-			IRQ0					= 0x20,
-			IRQ1					= 0x21,
-			IRQ2					= 0x22,
-			IRQ3					= 0x23,
-			IRQ4					= 0x24,
-			IRQ5					= 0x25,
-			IRQ6					= 0x26,
-			IRQ7					= 0x27,
-			IRQ8					= 0x28,
-			IRQ9					= 0x29,
-			IRQ10					= 0x2A,
-			IRQ11					= 0x2B,
-			IRQ12					= 0x2C,
-			IRQ13					= 0x2D,
-			IRQ14					= 0x2E,
-			IRQ15					= 0x2F,
 
-			SystemTimer				= Interrupt.IRQ0,
-			Keyboard				= Interrupt.IRQ1,
-			COM2Default				= Interrupt.IRQ3,
-			COM4User				= Interrupt.IRQ3,
-			COM1Default				= Interrupt.IRQ4,
-			COM3User				= Interrupt.IRQ4,
-			ParallelPort2			= Interrupt.IRQ5,
-			FloppyDiskController	= Interrupt.IRQ6,
-			ParallelPort1			= Interrupt.IRQ7,
-			SoundCard				= Interrupt.IRQ7,
-			RealTimeClock			= Interrupt.IRQ8,
-			PS2Mouse				= Interrupt.IRQ12,
-			ISA						= Interrupt.IRQ13,
-			CoProcessor386			= Interrupt.IRQ13,
-			PrimaryIDE				= Interrupt.IRQ14,
-			SecondaryIDE			= Interrupt.IRQ15,
+			IRQ0 = 0x20,
+			IRQ1 = 0x21,
+			IRQ2 = 0x22,
+			IRQ3 = 0x23,
+			IRQ4 = 0x24,
+			IRQ5 = 0x25,
+			IRQ6 = 0x26,
+			IRQ7 = 0x27,
+			IRQ8 = 0x28,
+			IRQ9 = 0x29,
+			IRQ10 = 0x2A,
+			IRQ11 = 0x2B,
+			IRQ12 = 0x2C,
+			IRQ13 = 0x2D,
+			IRQ14 = 0x2E,
+			IRQ15 = 0x2F,
 
-			LastHardwareIRQ			= Interrupt.IRQ15,
+			SystemTimer = Interrupt.IRQ0,
+			Keyboard = Interrupt.IRQ1,
+			COM2Default = Interrupt.IRQ3,
+			COM4User = Interrupt.IRQ3,
+			COM1Default = Interrupt.IRQ4,
+			COM3User = Interrupt.IRQ4,
+			ParallelPort2 = Interrupt.IRQ5,
+			FloppyDiskController = Interrupt.IRQ6,
+			ParallelPort1 = Interrupt.IRQ7,
+			SoundCard = Interrupt.IRQ7,
+			RealTimeClock = Interrupt.IRQ8,
+			PS2Mouse = Interrupt.IRQ12,
+			ISA = Interrupt.IRQ13,
+			CoProcessor386 = Interrupt.IRQ13,
+			PrimaryIDE = Interrupt.IRQ14,
+			SecondaryIDE = Interrupt.IRQ15,
 
-			SysCall					= 0x30, // This is the only interrupt with a ring 3 gate descriptor. 
+			LastHardwareIRQ = Interrupt.IRQ15,
+
+			SysCall = 0x30, // This is the only interrupt with a ring 3 gate descriptor. 
 		}
 		#endregion
 
@@ -119,25 +117,25 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		#region Tables
 		private const ushort Entries = 256;
-		private static DTPointer*		idtPointer	= (DTPointer*) Stubs.LabelledAlloc (IDT_POINTER, DTPointer.SizeOf);
-		private static IDTDescriptor*	idtTable	= (IDTDescriptor*) Stubs.StaticAlloc(Entries * IDTDescriptor.SizeOf);
-		private static uint*			ISRTable	= (uint*) Stubs.LabelledAlloc (IDT_TABLE, Entries * 4);
+		private static DTPointer* idtPointer = (DTPointer*) Stubs.LabelledAlloc (IDT_POINTER, DTPointer.SizeOf);
+		private static IDTDescriptor* idtTable = (IDTDescriptor*) Stubs.StaticAlloc (Entries * IDTDescriptor.SizeOf);
+		private static uint* ISRTable = (uint*) Stubs.LabelledAlloc (IDT_TABLE, Entries * 4);
 		#endregion
-		
+
 		#region ISROptions
 		[Flags]
 		public enum ISROptions : byte {
-			Call_Gate			= 4,
-			Task_Gate			= 5,
-			Interrupt_Gate		= 6,
-			Trap_Gate			= 7,
-			OperandSize_16Bit	= 0,
-			OperandSize_32Bit	= 8,
-			Privilege_Ring_0	= 0,
-			Privilege_Ring_1	= 32,
-			Privilege_Ring_2	= 64,
-			Privilege_Ring_3	= 96,
-			Present				= 128
+			Call_Gate = 4,
+			Task_Gate = 5,
+			Interrupt_Gate = 6,
+			Trap_Gate = 7,
+			OperandSize_16Bit = 0,
+			OperandSize_32Bit = 8,
+			Privilege_Ring_0 = 0,
+			Privilege_Ring_1 = 32,
+			Privilege_Ring_2 = 64,
+			Privilege_Ring_3 = 96,
+			Present = 128
 		}
 		#endregion
 
@@ -146,38 +144,37 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public struct IDTDescriptor {
 			public const uint SizeOf = 8;
 
-			private ushort		OffsetLow;
-			public ushort		Selector;
-			private byte		Unused;
-			public ISROptions	Options;
-			private ushort		OffsetHigh;
+			private ushort OffsetLow;
+			public ushort Selector;
+			private byte Unused;
+			public ISROptions Options;
+			private ushort OffsetHigh;
 
-			public uint		Offset
+			public uint Offset
 			{
 				get
 				{
-					return (uint)(((uint)this.OffsetLow) | (((uint)this.OffsetHigh) << 16));	
+					return (uint) (((uint) this.OffsetLow) | (((uint) this.OffsetHigh) << 16));
 				}
 				set
 				{
-					this.OffsetLow	= (ushort)((value	   ) & 0xFFFF);
-					this.OffsetHigh = (ushort)((value >> 16) & 0xFFFF);
+					this.OffsetLow = (ushort) ((value) & 0xFFFF);
+					this.OffsetHigh = (ushort) ((value >> 16) & 0xFFFF);
 				}
 			}
 
 			public void Setup (ushort selector, uint offset, ISROptions options)
 			{
-				this.Selector	= selector;
-				this.Offset		= offset;
-				this.Options	= options;
+				this.Selector = selector;
+				this.Offset = offset;
+				this.Options = options;
 			}
 		}
 		#endregion
 
 		#region ISRData struct
 		[StructLayout (LayoutKind.Sequential)]
-		public struct ISRData
-		{
+		public struct ISRData {
 			public uint SS;
 			public uint FS;
 			public uint GS;
@@ -216,7 +213,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			for (int i = 0; i < Entries; i++)
 				ISRTable [i] = Stubs.GetFunctionPointer (ISR_DEFAULT_HANDLER);
 
-			ISRTable[(int)Interrupt.PageFault] = Stubs.GetFunctionPointer(ISR_PAGE_FAULT);
+			ISRTable [(int) Interrupt.PageFault] = Stubs.GetFunctionPointer (ISR_PAGE_FAULT);
 
 			SetupISR ();
 
@@ -227,11 +224,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 
 		#region RegisterIRQ
-		public static void RegisterIRQ(Interrupt irq, uint address)
+		public static void RegisterIRQ (Interrupt irq, uint address)
 		{
-			byte index = (byte)irq;
-			ISRTable[index] = address;
-			PIC.EnableIRQ(index);
+			byte index = (byte) irq;
+			ISRTable [index] = address;
+			PIC.EnableIRQ (index);
 		}
 		#endregion
 
@@ -239,25 +236,25 @@ namespace SharpOS.Kernel.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (IRQ_CLEAN_UP)]
 		private static unsafe void IRQCleanUp (ISRData data)
 		{
-			PIC.SendEndOfInterrupt((byte)data.IrqIndex);
+			PIC.SendEndOfInterrupt ((byte) data.IrqIndex);
 		}
 		#endregion
 
 		#region ISRPageFault
-		[SharpOS.AOT.Attributes.Label(ISR_PAGE_FAULT)]
-		private static unsafe void ISRPageFault(ISRData data)
+		[SharpOS.AOT.Attributes.Label (ISR_PAGE_FAULT)]
+		private static unsafe void ISRPageFault (ISRData data)
 		{
 			uint cr2 = 0;
 
-			Asm.PUSH(R32.EAX);
-			
-			Asm.MOV(R32.EAX, CR.CR2);
-			Asm.MOV(&cr2, R32.EAX);
+			Asm.PUSH (R32.EAX);
 
-			Asm.POP(R32.EAX);
+			Asm.MOV (R32.EAX, CR.CR2);
+			Asm.MOV (&cr2, R32.EAX);
+
+			Asm.POP (R32.EAX);
 
 			// FIXME: If I dont call Write function the variables in align and map get offset or something
-			ADC.TextMode.Write("");
+			ADC.TextMode.Write ("");
 
 			//ADC.TextMode.Write("");
 			//ADC.TextMode.WriteLine("Page fault invoked!.\n");
@@ -271,15 +268,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 			*/
 
 			// Align to correct page
-			void* align = ADC.Pager.PageAlign((void*)cr2, 0);
-			void* alloc = SharpOS.Kernel.Memory.PageAllocator.Alloc();
+			void* align = ADC.Pager.PageAlign ((void*) cr2, 0);
+			void* alloc = SharpOS.Kernel.Memory.PageAllocator.Alloc ();
 
-			if (alloc == null)
-			{
-				Diagnostics.Panic("Out of memory exception");
+			if (alloc == null) {
+				Diagnostics.Panic ("Out of memory exception");
 			}
-			
-			ADC.Pager.MapPage(align, alloc, 0, SharpOS.Kernel.Memory.PageAttributes.Present | SharpOS.Kernel.Memory.PageAttributes.ReadWrite);
+
+			ADC.Pager.MapPage (align, alloc, 0, SharpOS.Kernel.Memory.PageAttributes.Present | SharpOS.Kernel.Memory.PageAttributes.ReadWrite);
 		}
 		#endregion
 
@@ -288,38 +284,73 @@ namespace SharpOS.Kernel.ADC.X86 {
 		private static unsafe void ISRDefaultHandler (ISRData data)
 		{
 			uint cr2 = 0;
-			Asm.MOV(R32.EAX, CR.CR2);
-			Asm.MOV(&cr2, R32.EAX);
+			Asm.MOV (R32.EAX, CR.CR2);
+			Asm.MOV (&cr2, R32.EAX);
 
 			Diagnostics.SetErrorTextAttributes ();
 			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked!.\n");
 			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.IrqIndex);
-			switch ((Interrupt)data.IrqIndex)
-			{
-				case Interrupt.DivideError:			ADC.TextMode.WriteLine ("          Divide Error"); break;
-				case Interrupt.Debug:					ADC.TextMode.WriteLine ("          Debug"); break;
-				case Interrupt.NonMaskableInterrupt:	ADC.TextMode.WriteLine ("          NonMaskable Interrupt"); break;
-				case Interrupt.BreakPoint:			ADC.TextMode.WriteLine ("          Break Point"); break;
-				case Interrupt.Overflow:				ADC.TextMode.WriteLine ("          Overflow"); break;
-				case Interrupt.BoundaryRangeExceeded: ADC.TextMode.WriteLine ("          Boundary Range Exceeded"); break;
-				case Interrupt.UndefinedOpcode:		ADC.TextMode.WriteLine ("          Undefined Opcode"); break;
-				case Interrupt.DeviceNotAvailable:	ADC.TextMode.WriteLine ("          Device Not Available"); break;
-				case Interrupt.DoubleFault:			ADC.TextMode.WriteLine ("          Double Fault"); break;
-				case Interrupt.InvalidTSS:			ADC.TextMode.WriteLine ("          Invalid TSS"); break;
-				case Interrupt.NotPresent:			ADC.TextMode.WriteLine ("          Not Present"); break;
-				case Interrupt.StackSegment:			ADC.TextMode.WriteLine ("          Stack Segment"); break;
-				case Interrupt.GeneralProtection:		ADC.TextMode.WriteLine ("          General Protection"); break;
-				case Interrupt.PageFault:				ADC.TextMode.WriteLine ("          Page Fault"); break;
-				case Interrupt.MathFault:				ADC.TextMode.WriteLine ("          Math Fault"); break;
-				case Interrupt.AlignmentChecking:		ADC.TextMode.WriteLine ("          Alignment Checking"); break;
-				case Interrupt.MachineCheck:			ADC.TextMode.WriteLine ("          Machine Check"); break;
-				case Interrupt.ExtendedMathFault:		ADC.TextMode.WriteLine ("          Extended Math Fault"); break;
+			switch ((Interrupt) data.IrqIndex) {
+			case Interrupt.DivideError:
+				ADC.TextMode.WriteLine ("          Divide Error");
+				break;
+			case Interrupt.Debug:
+				ADC.TextMode.WriteLine ("          Debug");
+				break;
+			case Interrupt.NonMaskableInterrupt:
+				ADC.TextMode.WriteLine ("          NonMaskable Interrupt");
+				break;
+			case Interrupt.BreakPoint:
+				ADC.TextMode.WriteLine ("          Break Point");
+				break;
+			case Interrupt.Overflow:
+				ADC.TextMode.WriteLine ("          Overflow");
+				break;
+			case Interrupt.BoundaryRangeExceeded:
+				ADC.TextMode.WriteLine ("          Boundary Range Exceeded");
+				break;
+			case Interrupt.UndefinedOpcode:
+				ADC.TextMode.WriteLine ("          Undefined Opcode");
+				break;
+			case Interrupt.DeviceNotAvailable:
+				ADC.TextMode.WriteLine ("          Device Not Available");
+				break;
+			case Interrupt.DoubleFault:
+				ADC.TextMode.WriteLine ("          Double Fault");
+				break;
+			case Interrupt.InvalidTSS:
+				ADC.TextMode.WriteLine ("          Invalid TSS");
+				break;
+			case Interrupt.NotPresent:
+				ADC.TextMode.WriteLine ("          Not Present");
+				break;
+			case Interrupt.StackSegment:
+				ADC.TextMode.WriteLine ("          Stack Segment");
+				break;
+			case Interrupt.GeneralProtection:
+				ADC.TextMode.WriteLine ("          General Protection");
+				break;
+			case Interrupt.PageFault:
+				ADC.TextMode.WriteLine ("          Page Fault");
+				break;
+			case Interrupt.MathFault:
+				ADC.TextMode.WriteLine ("          Math Fault");
+				break;
+			case Interrupt.AlignmentChecking:
+				ADC.TextMode.WriteLine ("          Alignment Checking");
+				break;
+			case Interrupt.MachineCheck:
+				ADC.TextMode.WriteLine ("          Machine Check");
+				break;
+			case Interrupt.ExtendedMathFault:
+				ADC.TextMode.WriteLine ("          Extended Math Fault");
+				break;
 			}
 			ADC.TextMode.WriteLine ();
-            ADC.TextMode.WriteLine ("Register dump:");
+			ADC.TextMode.WriteLine ("Register dump:");
 
-			ADC.TextMode.Write("  CR2=0x", (int)cr2);
-			ADC.TextMode.WriteLine();
+			ADC.TextMode.Write ("  CR2=0x", (int) cr2);
+			ADC.TextMode.WriteLine ();
 
 			ADC.TextMode.Write ("  EIP=0x", (int) data.EIP);
 			ADC.TextMode.WriteLine ();
@@ -353,11 +384,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region SetupISR
 		private static unsafe void SetupISR ()
 		{
-			ISROptions type = (	ISROptions.Present |
+			ISROptions type = (ISROptions.Present |
 								ISROptions.Privilege_Ring_0 |
 								ISROptions.OperandSize_32Bit |
 								ISROptions.Interrupt_Gate);
-			
+
 			idtTable [0].Setup (GDT.CodeSelector, Stubs.GetFunctionPointer ("ISR_0"), type);
 			idtTable [1].Setup (GDT.CodeSelector, Stubs.GetFunctionPointer ("ISR_1"), type);
 			idtTable [2].Setup (GDT.CodeSelector, Stubs.GetFunctionPointer ("ISR_2"), type);
@@ -662,7 +693,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_8");
-			Asm.PUSH ((uint)8);
+			Asm.PUSH ((uint) 8);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_9");
@@ -1904,7 +1935,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.PUSH (Seg.GS);
 			Asm.PUSH (Seg.FS);
 			Asm.PUSH (Seg.SS);
-			
+
 			// Not necessary yet but perhaps in the future
 			Asm.MOV (R16.AX, GDT.DataSelector);
 			Asm.MOV (Seg.DS, R16.AX);
@@ -1919,7 +1950,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.CALL (R32.EAX);
 
 			Asm.CALL (IRQ_CLEAN_UP);
-			
+
 			Asm.POP (Seg.SS);
 			Asm.POP (Seg.FS);
 			Asm.POP (Seg.GS);
@@ -1927,7 +1958,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.POP (Seg.DS);
 			Asm.POPAD ();
 			Asm.ADD (R32.ESP, 0x08);
-			Asm.STI();
+			Asm.STI ();
 			Asm.IRETD ();
 		}
 		#endregion

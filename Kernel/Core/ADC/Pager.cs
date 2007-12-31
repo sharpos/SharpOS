@@ -23,7 +23,7 @@ namespace SharpOS.Kernel.ADC {
 	public unsafe class Pager {
 
 		#region ADC Interface
-		
+
 		/// <summary>
 		/// Initializes paging, placing paging control data at <paramref name="pagemap" />.
 		/// </summary>
@@ -34,35 +34,35 @@ namespace SharpOS.Kernel.ADC {
 		/// <see cref="M:GetMemoryRequirements" />.
 		/// </returns>
 		[AOTAttr.ADCStub]
-		public static PageAllocator.Errors Setup (uint totalMem, byte *pagemap, uint pagemapLen, PageAllocator.Errors* error)
+		public static PageAllocator.Errors Setup (uint totalMem, byte* pagemap, uint pagemapLen, PageAllocator.Errors* error)
 		{
-			Diagnostics.Warning("Pager.Setup - not implemented!");
+			Diagnostics.Warning ("Pager.Setup - not implemented!");
 			return PageAllocator.Errors.NotImplemented;
 		}
-		
+
 		/// <summary>
 		/// Returns the native size of a page at the <paramref name="granularity" /> 
 		/// granularity where 0 is the `atomic' granularity used by the memory
 		/// manager to represent the smallest allocatable block.
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static uint GetGranularitySize (uint granularity, PageAllocator.Errors *ret_err)
+		public static uint GetGranularitySize (uint granularity, PageAllocator.Errors* ret_err)
 		{
-			Diagnostics.Warning("Pager.GetGranularitySize - not implemented!");
+			Diagnostics.Warning ("Pager.GetGranularitySize - not implemented!");
 			*ret_err = PageAllocator.Errors.NotImplemented;
 			return 0;
 		}
-		
+
 		/// <summary>
 		/// Gets the largest page granularity provided by the ADC layer.
 		/// </summary>
 		[AOTAttr.ADCStub]
 		public static uint GetBigGranularity ()
 		{
-			Diagnostics.Warning("Pager.GetBigGranularity - not implemented!");
+			Diagnostics.Warning ("Pager.GetBigGranularity - not implemented!");
 			return 0;
 		}
-		
+
 		/// <summary>
 		/// Used by the memory manager to determine what memory must be 
 		/// reserved for paging control data.
@@ -75,60 +75,60 @@ namespace SharpOS.Kernel.ADC {
 		/// paging structures, Start must be a null pointer.
 		/// </returns>
 		[AOTAttr.ADCStub]
-		public static void GetMemoryRequirements (uint totalMem, PagingMemoryRequirements *req)
+		public static void GetMemoryRequirements (uint totalMem, PagingMemoryRequirements* req)
 		{
-			Diagnostics.Warning("Pager.GetMemoryRequirements - not implemented!");
+			Diagnostics.Warning ("Pager.GetMemoryRequirements - not implemented!");
 		}
-		
+
 		/// <summary>
 		/// Causes paging to be enabled and active after this call.
 		/// </summary>
 		[AOTAttr.ADCStub]
 		public static PageAllocator.Errors Enable (PageAllocator.Errors* error)
 		{
-            Diagnostics.Warning("Pager.Enable - not implemented!");
+			Diagnostics.Warning ("Pager.Enable - not implemented!");
 			return PageAllocator.Errors.NotImplemented;
 		}
-		
+
 		/// <summary>
 		/// Changes the mapping of the virtual page <paramref name="page" /> to the
 		/// physical page <paramref name="phys_page" /> at the specified 
 		/// <paramref name="granularity" />. 
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static PageAllocator.Errors MapPage (void *page, void *phys_page, uint granularity,
+		public static PageAllocator.Errors MapPage (void* page, void* phys_page, uint granularity,
 					     PageAttributes attr)
 		{
-            Diagnostics.Warning("Pager.MapPage - not implemented!");
+			Diagnostics.Warning ("Pager.MapPage - not implemented!");
 			return PageAllocator.Errors.NotImplemented;
 		}
-		
+
 		[AOTAttr.ADCStub]
 		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
 		// public static PageAllocator.Errors SetPageAttributes (void *page, uint granularity, PageAttributes attr)
-		public static uint SetPageAttributes (void *page, uint granularity,
+		public static uint SetPageAttributes (void* page, uint granularity,
 						       PageAttributes attr)
 		{
-            Diagnostics.Warning("Pager.SetPageAttributes - not implemented!");
-			return (uint)PageAllocator.Errors.NotImplemented;
+			Diagnostics.Warning ("Pager.SetPageAttributes - not implemented!");
+			return (uint) PageAllocator.Errors.NotImplemented;
 		}
 
 		[AOTAttr.ADCStub]
 		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
 		// public static PageAttributes GetPageAttributes (void *page, uint granularity,PageAllocator.Errors *ret_err)
-		public static uint GetPageAttributes (void *page, uint granularity,
-								     PageAllocator.Errors *ret_err)
+		public static uint GetPageAttributes (void* page, uint granularity,
+								     PageAllocator.Errors* ret_err)
 		{
 			*ret_err = PageAllocator.Errors.NotImplemented;
-            Diagnostics.Warning("Pager.GetPageAttributes - not implemented!");
+			Diagnostics.Warning ("Pager.GetPageAttributes - not implemented!");
 			return 0;
 		}
 
 		#endregion
 		#region AOT Stubs
-		
+
 		[AOTAttr.String]
-		static byte *_ (string s)
+		static byte* _ (string s)
 		{
 			return null;
 		}
@@ -142,26 +142,26 @@ namespace SharpOS.Kernel.ADC {
 		/// <returns>
 		/// The granularity level or -1 if the pointer is not page-aligned.
 		/// </returns>
-		public static uint GetPointerGranularity (void *page)
+		public static uint GetPointerGranularity (void* page)
 		{
 			ulong pagei = (ulong) page;
 			uint levels = GetBigGranularity () + 1;
-			
+
 			for (uint x = 0; x < levels; ++x) {
 				PageAllocator.Errors err = PageAllocator.Errors.Success;
-				
+
 				uint size = GetGranularitySize (x, &err);
 
 				if (err != PageAllocator.Errors.Success) {
 					TextMode.Write ("Error: ");
-					TextMode.Write ((int)err);
-                    Diagnostics.Assert(false, "Failed to get pager granularity!");
+					TextMode.Write ((int) err);
+					Diagnostics.Assert (false, "Failed to get pager granularity!");
 				}
-				
-				if ((pagei & (ulong)(size - 1)) == 0)
+
+				if ((pagei & (ulong) (size - 1)) == 0)
 					return x;
 			}
-			
+
 			return 0xFFFFFFFF;
 		}
 
@@ -175,23 +175,25 @@ namespace SharpOS.Kernel.ADC {
 		/// granularity.
 		/// </returns>
 		/// </summary>
-		public static void *PageAlign (void *ptr, uint granularity)
+		public static void* PageAlign (void* ptr, uint granularity)
 		{
-            Diagnostics.Assert(granularity >= 0 && granularity <= GetBigGranularity(),
-				"Specified invalid granularity level");
+			Diagnostics.Assert (granularity >= 0 && granularity <= GetBigGranularity (),
+					    "Specified invalid granularity level");
 
 			PageAllocator.Errors err = PageAllocator.Errors.Success;
 			uint size = GetGranularitySize (granularity, &err);
-			ulong ptri = (ulong)ptr;
-            Diagnostics.AssertZero((uint)err, "Failed to get granularity size");
-			
-			return (void*) (ptri - (ptri & (size-1)));
+			ulong ptri = (ulong) ptr;
+			Diagnostics.AssertZero ((uint) err, "Failed to get granularity size");
+
+			return (void*) (ptri - (ptri & (size - 1)));
 		}
 
-		public static uint AtomicPageSize {
-			get {
+		public static uint AtomicPageSize
+		{
+			get
+			{
 				PageAllocator.Errors err = PageAllocator.Errors.Success;
-				
+
 				uint s = GetGranularitySize (0, &err);
 
 				Diagnostics.Assert (err == PageAllocator.Errors.Success,
@@ -200,7 +202,7 @@ namespace SharpOS.Kernel.ADC {
 				return s;
 			}
 		}
-		
+
 		#endregion
 	}
 }

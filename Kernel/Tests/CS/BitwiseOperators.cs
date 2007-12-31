@@ -24,7 +24,7 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			return a ^ b;
 		}
-		
+
 		public static uint Not (uint a)
 		{
 			return ~a;
@@ -81,14 +81,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 0;
 		}
 
-		public static uint CMPUnsignedShiftLeft()
+		public static uint CMPUnsignedShiftLeft ()
 		{
 			if (ShiftLeft (1, 31) == 2147483648U)
 				return 1;
 
 			return 0;
 		}
-		
+
 		public static uint CMPSimpleShiftRight ()
 		{
 			if (ShiftRight (2, 1) == 1)

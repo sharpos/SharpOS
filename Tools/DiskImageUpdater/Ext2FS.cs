@@ -175,7 +175,7 @@ namespace Ext2 {
 			return (inode.Mode & INode.EXT2_S_IFDIR) != 0;
 		}
 
-		private DirectoryFileFormat [] GetDirectoryEntries (INode inode) 
+		private DirectoryFileFormat [] GetDirectoryEntries (INode inode)
 		{
 			List<DirectoryFileFormat> result = new List<DirectoryFileFormat> ();
 
@@ -225,7 +225,7 @@ namespace Ext2 {
 
 		private INode GetINodeByName (string name)
 		{
-			string [] list = name.Split (new char [] {'/'});
+			string [] list = name.Split (new char [] { '/' });
 
 			if (list.Length < 2)
 				return this.root;
@@ -257,7 +257,7 @@ namespace Ext2 {
 			uint count = 0;
 			if (blocks <= 12)
 				return 0;
-			
+
 			blocks -= 12;
 
 			this.ComputeIndirectOfBlocksCount (ref blocks, ref count, 0);
@@ -315,7 +315,7 @@ namespace Ext2 {
 
 						this.fileSystem.GroupDescriptors [descriptor].FreeBlocksCount--;
 						this.fileSystem.SuperBlock.FreeBlocksCount--;
-						
+
 						uint blockIndex = (uint) ((i * 8) + j) + 1;
 
 						blocks.Add (blockIndex);
@@ -452,7 +452,7 @@ namespace Ext2 {
 
 				///////////////////////////////////////////////////////////////////////
 				this.ReadGroupDescriptor ();
-				
+
 				this.root = this.ReadINode (INode.EXT2_ROOT_INO);
 
 				///////////////////////////////////////////////////////////////////////

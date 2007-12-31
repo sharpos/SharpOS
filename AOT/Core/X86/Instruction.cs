@@ -31,7 +31,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="register">The register.</param>
 		/// <param name="value">The value.</param>
 		/// <param name="encoding">The encoding.</param>
-		public Instruction (bool indent, string label, string reference, string name, string parameters, Memory rmMemory, Register rmRegister, Register register, object value, string[] encoding)
+		public Instruction (bool indent, string label, string reference, string name, string parameters, Memory rmMemory, Register rmRegister, Register register, object value, string [] encoding)
 		{
 			this.label = Assembly.FormatLabelName (label);
 			this.reference = reference;
@@ -47,14 +47,16 @@ namespace SharpOS.AOT.X86 {
 
 		private Register register = null;
 		private Register rmRegister = null;
-		private string[] encoding = null;
+		private string [] encoding = null;
 
 		/// <summary>
 		/// Gets the encoding.
 		/// </summary>
 		/// <value>The encoding.</value>
-		public string[] Encoding {
-			get {
+		public string [] Encoding
+		{
+			get
+			{
 				return this.encoding;
 			}
 		}
@@ -74,8 +76,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the RM memory.
 		/// </summary>
 		/// <value>The RM memory.</value>
-		public Memory RMMemory {
-			get {
+		public Memory RMMemory
+		{
+			get
+			{
 				return this.rmMemory;
 			}
 		}
@@ -86,11 +90,14 @@ namespace SharpOS.AOT.X86 {
 		/// Gets or sets the value.
 		/// </summary>
 		/// <value>The value.</value>
-		public object Value {
-			get {
+		public object Value
+		{
+			get
+			{
 				return value;
 			}
-			set {
+			set
+			{
 				this.value = value;
 			}
 		}
@@ -101,11 +108,14 @@ namespace SharpOS.AOT.X86 {
 		/// Gets or sets the offset in the binary file.
 		/// </summary>
 		/// <value>The offset.</value>
-		public uint Offset {
-			get {
+		public uint Offset
+		{
+			get
+			{
 				return offset;
 			}
-			set {
+			set
+			{
 				offset = value;
 			}
 		}
@@ -116,8 +126,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the reference.
 		/// </summary>
 		/// <value>The reference.</value>
-		public string Reference {
-			get {
+		public string Reference
+		{
+			get
+			{
 				return reference;
 			}
 		}
@@ -128,8 +140,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the label.
 		/// </summary>
 		/// <value>The label.</value>
-		public string Label {
-			get {
+		public string Label
+		{
+			get
+			{
 				return label;
 			}
 		}
@@ -140,8 +154,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the name.
 		/// </summary>
 		/// <value>The name.</value>
-		public string Name {
-			get {
+		public string Name
+		{
+			get
+			{
 				return name;
 			}
 		}
@@ -150,16 +166,18 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the short name only if it is not a label name.
 		/// </summary>
 		/// <value>The name of the short.</value>
-		public virtual string ShortName {
-			get {
+		public virtual string ShortName
+		{
+			get
+			{
 				string result = name;
 
 				if (result.Length > 0
 						&& result [result.Length - 1] != ':'
 						&& result.IndexOf ("_") != -1) {
-					string[] values = result.Split ('_');
+					string [] values = result.Split ('_');
 
-					result = values[0];
+					result = values [0];
 				}
 
 				return result;
@@ -172,8 +190,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the parameters.
 		/// </summary>
 		/// <value>The parameters.</value>
-		public virtual string Parameters {
-			get {
+		public virtual string Parameters
+		{
+			get
+			{
 				return parameters;
 			}
 		}
@@ -184,8 +204,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets a value indicating whether this <see cref="Instruction"/> is indent.
 		/// </summary>
 		/// <value><c>true</c> if indent; otherwise, <c>false</c>.</value>
-		public bool Indent {
-			get {
+		public bool Indent
+		{
+			get
+			{
 				return indent;
 			}
 		}
@@ -196,11 +218,14 @@ namespace SharpOS.AOT.X86 {
 		/// Gets or sets the index.
 		/// </summary>
 		/// <value>The index.</value>
-		public int Index {
-			get {
+		public int Index
+		{
+			get
+			{
 				return index;
 			}
-			set {
+			set
+			{
 				index = value;
 			}
 		}
@@ -210,8 +235,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets a value indicating whether this <see cref="Instruction"/> is relative.
 		/// </summary>
 		/// <value><c>true</c> if relative; otherwise, <c>false</c>.</value>
-		public bool Relative {
-			get {
+		public bool Relative
+		{
+			get
+			{
 				bool relative = false;
 
 				foreach (string encodingValue in this.encoding) {
@@ -233,7 +260,7 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		public override string ToString ()
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			StringBuilder stringBuilder = new StringBuilder ();
 
 			int indentSize = 20;
 
@@ -252,7 +279,7 @@ namespace SharpOS.AOT.X86 {
 					&& this.RMMemory.Reference.Length > 0) {
 				stringBuilder.Append (this.Parameters.Replace ("[0x0]", "[" + this.RMMemory.Reference + "]"));
 
-				stringBuilder.Append ("\t;" + string.Format("0x{0:x}", this.RMMemory.Displacement));
+				stringBuilder.Append ("\t;" + string.Format ("0x{0:x}", this.RMMemory.Displacement));
 
 			} else
 				stringBuilder.Append (this.Parameters);

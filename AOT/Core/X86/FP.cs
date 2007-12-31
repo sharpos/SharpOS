@@ -50,32 +50,32 @@ namespace SharpOS.AOT.X86 {
 				return value as FPType;
 
 			switch (Register.GetName (value)) {
-				case "ST0":
-					return FP.ST0;
+			case "ST0":
+				return FP.ST0;
 
-				case "ST1":
-					return FP.ST1;
+			case "ST1":
+				return FP.ST1;
 
-				case "ST2":
-					return FP.ST2;
+			case "ST2":
+				return FP.ST2;
 
-				case "ST3":
-					return FP.ST3;
+			case "ST3":
+				return FP.ST3;
 
-				case "ST4":
-					return FP.ST4;
+			case "ST4":
+				return FP.ST4;
 
-				case "ST5":
-					return FP.ST5;
+			case "ST5":
+				return FP.ST5;
 
-				case "ST6":
-					return FP.ST6;
+			case "ST6":
+				return FP.ST6;
 
-				case "ST7":
-					return FP.ST7;
+			case "ST7":
+				return FP.ST7;
 
-				default:
-					throw new EngineException ("Unknown FP Register '" + value.ToString () + "'");
+			default:
+				throw new EngineException ("Unknown FP Register '" + value.ToString () + "'");
 			}
 		}
 	}

@@ -14,22 +14,20 @@ using SharpOS.Kernel;
 using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 
-namespace SharpOS.Kernel
-{
-	public unsafe class CommandLine
-	{
-		public static void Setup (Multiboot.Info *mbInfo)
+namespace SharpOS.Kernel {
+	public unsafe class CommandLine {
+		public static void Setup (Multiboot.Info* mbInfo)
 		{
-			if ((mbInfo->Flags & (1<<2)) != 0) {
+			if ((mbInfo->Flags & (1 << 2)) != 0) {
 				commandLine = (CString8*) mbInfo->CmdLine;
 				length = commandLine->Length;
 			}
 		}
 
-		static CString8 *commandLine = null;
+		static CString8* commandLine = null;
 		static int length = 0;
 
-		public unsafe static CString8 *GetString ()
+		public unsafe static CString8* GetString ()
 		{
 			return commandLine;
 		}
@@ -67,7 +65,7 @@ namespace SharpOS.Kernel
 			return IndexOfOption (option) != -1;
 		}
 
-		public static bool GetArgument (string option, PString8 *buf)
+		public static bool GetArgument (string option, PString8* buf)
 		{
 			int argumentIndex;
 			int argumentLen;

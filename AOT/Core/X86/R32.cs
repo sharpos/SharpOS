@@ -80,34 +80,34 @@ namespace SharpOS.AOT.X86 {
 
 			if (value is R32Type)
 				return value as R32Type;
-			
+
 			switch (Register.GetName (value)) {
-				case "EAX":
-					return R32.EAX;
+			case "EAX":
+				return R32.EAX;
 
-				case "EBX":
-					return R32.EBX;
+			case "EBX":
+				return R32.EBX;
 
-				case "ECX":
-					return R32.ECX;
+			case "ECX":
+				return R32.ECX;
 
-				case "EDX":
-					return R32.EDX;
+			case "EDX":
+				return R32.EDX;
 
-				case "ESP":
-					return R32.ESP;
+			case "ESP":
+				return R32.ESP;
 
-				case "EBP":
-					return R32.EBP;
+			case "EBP":
+				return R32.EBP;
 
-				case "ESI":
-					return R32.ESI;
+			case "ESI":
+				return R32.ESI;
 
-				case "EDI":
-					return R32.EDI;
+			case "EDI":
+				return R32.EDI;
 
-				default:
-					throw new EngineException ("Unknown R32 Register '" + value.ToString () + "'");
+			default:
+				throw new EngineException ("Unknown R32 Register '" + value.ToString () + "'");
 			}
 		}
 	}

@@ -14,20 +14,22 @@ namespace Ext2 {
 	public class GroupDescriptor {
 		public Block block;
 		public uint index;
-		
+
 		public GroupDescriptor (Block block, uint index)
 		{
 			this.block = block;
 			this.index = index;
 		}
-		
-		public Block Block {
-			get {
+
+		public Block Block
+		{
+			get
+			{
 				return this.block;
 			}
 		}
-		
-		
+
+
 		private static readonly uint BlockBitmapOffset = 0;
 		private static readonly uint INodeBitmapOffset = 4;
 		private static readonly uint INodeTableOffset = 8;
@@ -37,75 +39,99 @@ namespace Ext2 {
 		private static readonly uint PadOffset = 18;
 		private static readonly uint ReservedOffset = 20;
 		public static readonly uint GroupDescriptorSize = 32;
-		
-		public uint BlockBitmap {
-			get {
+
+		public uint BlockBitmap
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + BlockBitmapOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + BlockBitmapOffset, value);
 			}
 		}
-		
-		public uint INodeBitmap {
-			get {
+
+		public uint INodeBitmap
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + INodeBitmapOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + INodeBitmapOffset, value);
 			}
 		}
-		
-		public uint INodeTable {
-			get {
+
+		public uint INodeTable
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + INodeTableOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + INodeTableOffset, value);
 			}
 		}
-		
-		public ushort FreeBlocksCount {
-			get {
+
+		public ushort FreeBlocksCount
+		{
+			get
+			{
 				return this.block.GetUShort (this.index + FreeBlocksCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (this.index + FreeBlocksCountOffset, value);
 			}
 		}
-		
-		public ushort FreeINodesCount {
-			get {
+
+		public ushort FreeINodesCount
+		{
+			get
+			{
 				return this.block.GetUShort (this.index + FreeINodesCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (this.index + FreeINodesCountOffset, value);
 			}
 		}
-		
-		public ushort UsedDirsCount {
-			get {
+
+		public ushort UsedDirsCount
+		{
+			get
+			{
 				return this.block.GetUShort (this.index + UsedDirsCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (this.index + UsedDirsCountOffset, value);
 			}
 		}
-		
-		public ushort Pad {
-			get {
+
+		public ushort Pad
+		{
+			get
+			{
 				return this.block.GetUShort (this.index + PadOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (this.index + PadOffset, value);
 			}
 		}
-		
-		public byte [] Reserved {
-			get {
+
+		public byte [] Reserved
+		{
+			get
+			{
 				return this.block.GetByteArray (12, this.index + ReservedOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetByteArray (12, this.index + ReservedOffset, value);
 			}
 		}

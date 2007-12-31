@@ -47,96 +47,120 @@ namespace Ext2 {
 
 		private uint inodeSize;
 
-		public uint INodeSize{
-			get {
+		public uint INodeSize
+		{
+			get
+			{
 				return inodeSize;
 			}
 		}
 
 		private uint blockSize;
 
-		public uint BlockSize {
-			get {
+		public uint BlockSize
+		{
+			get
+			{
 				return blockSize;
 			}
 		}
 
 		private uint fragmentSize;
 
-		public uint FragmentSize {
-			get {
+		public uint FragmentSize
+		{
+			get
+			{
 				return fragmentSize;
 			}
 		}
 
 		private uint groupsCount;
 
-		public uint GroupsCount {
-			get {
+		public uint GroupsCount
+		{
+			get
+			{
 				return groupsCount;
 			}
 		}
 
 		private uint groupDescriptorsPerBlock;
 
-		public uint GroupDescriptorsPerBlock {
-			get {
+		public uint GroupDescriptorsPerBlock
+		{
+			get
+			{
 				return groupDescriptorsPerBlock;
 			}
 		}
 
 		private uint inodesPerBlock;
 
-		public uint INodesPerBlock {
-			get {
+		public uint INodesPerBlock
+		{
+			get
+			{
 				return inodesPerBlock;
 			}
 		}
 
 		private uint inodeTableBlocksCount;
 
-		public uint INodeTableBlocksCount {
-			get {
+		public uint INodeTableBlocksCount
+		{
+			get
+			{
 				return inodeTableBlocksCount;
 			}
 		}
 
 		private uint fragmentsPerBlock;
 
-		public uint FragmentsPerBlock {
-			get {
+		public uint FragmentsPerBlock
+		{
+			get
+			{
 				return fragmentsPerBlock;
 			}
 		}
 
 		private uint indirectCount;
 
-		public uint IndirectCount {
-			get {
+		public uint IndirectCount
+		{
+			get
+			{
 				return indirectCount;
 			}
 		}
 
 		private uint blockBitmapBlocksCount;
 
-		public uint BlockBitmapBlocksCount {
-			get {
+		public uint BlockBitmapBlocksCount
+		{
+			get
+			{
 				return blockBitmapBlocksCount;
 			}
 		}
 
 		private SuperBlock superBlock;
 
-		public SuperBlock SuperBlock {
-			get {
+		public SuperBlock SuperBlock
+		{
+			get
+			{
 				return this.superBlock;
 			}
 		}
 
 		private GroupDescriptor [] groupDescriptors;
 
-		public GroupDescriptor [] GroupDescriptors {
-			get {
+		public GroupDescriptor [] GroupDescriptors
+		{
+			get
+			{
 				return groupDescriptors;
 			}
 		}

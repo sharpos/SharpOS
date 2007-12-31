@@ -10,7 +10,7 @@
 
 namespace SharpOS.Kernel.Tests.CS {
 	public class BooleanOrderOfOperations {
-	
+
 		public static uint CMPConstants ()
 		{
 			if ((true && false || true) != true)
@@ -24,7 +24,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			if ((true && false || true && true) != true)
 				return 0;
-				
+
 			return 1;
 		}
 
@@ -35,14 +35,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			a = true;
 			b = false;
 			c = true;
-			
+
 			if ((a && b || c) != true)
 				return 0;
 
 			a = true;
 			b = false;
 			c = false;
-			
+
 			if ((a || b && c) != true)
 				return 0;
 
@@ -57,10 +57,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			b = false;
 			c = true;
 			d = true;
-			
+
 			if ((a && b || c && d) != true)
 				return 0;
-				
+
 			return 1;
 		}
 
@@ -70,30 +70,30 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			a = true;
 			b = false;
-			
+
 			if ((a && b || true) != true)
 				return 0;
 
 			a = true;
 			c = false;
-			
+
 			if ((a || false && c) != true)
 				return 0;
 
 			a = true;
 			b = false;
 			c = true;
-			
+
 			if ((a && b || c && false) != false)
 				return 0;
 
 			b = false;
 			c = true;
 			d = true;
-			
+
 			if ((true && b || c && d) != true)
 				return 0;
-				
+
 			return 1;
 		}
 	}

@@ -19,7 +19,7 @@ namespace SharpOS.AOT.IR {
 	/// AOT compilation.
 	/// </summary>
 	public class EngineOptions {
-		public string[] Assemblies = null;
+		public string [] Assemblies = null;
 		public string OutputFilename = "SharpOS.Kernel.bin";
 		public string CPU = "X86";
 		public string DumpFile = null;
@@ -29,17 +29,21 @@ namespace SharpOS.AOT.IR {
 		public bool ConsoleDump = false;
 		public string AsmFile = null;
 		public string DumpFilter = string.Empty;
-		public Dictionary <string, byte[]> Resources =
-			new Dictionary<string,byte []> ();
-		
-		public bool Dump {
-			get {
+		public Dictionary<string, byte []> Resources =
+			new Dictionary<string, byte []> ();
+
+		public bool Dump
+		{
+			get
+			{
 				return DumpFile != null;
 			}
 		}
 
-		public bool AsmDump {
-			get {
+		public bool AsmDump
+		{
+			get
+			{
 				return AsmFile != null;
 			}
 		}

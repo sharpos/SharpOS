@@ -28,7 +28,7 @@ namespace SharpOS.AOT.Attributes {
 			CPU = cpu;
 			Namespace = ns;
 		}
-		
+
 		public string CPU;
 		public string Namespace;
 	}

@@ -17,8 +17,7 @@ using SharpOS.AOT.IR;
 using SharpOS.Kernel.ADC.X86;
 
 namespace SharpOS.Kernel.ADC {
-	public enum TextColor : byte 
-	{
+	public enum TextColor : byte {
 		Black,
 		Blue,
 		Green,

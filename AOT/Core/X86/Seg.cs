@@ -46,26 +46,26 @@ namespace SharpOS.AOT.X86 {
 				return value as SegType;
 
 			switch (Register.GetName (value)) {
-				case "DS":
-					return Seg.DS;
+			case "DS":
+				return Seg.DS;
 
-				case "ES":
-					return Seg.ES;
+			case "ES":
+				return Seg.ES;
 
-				case "CS":
-					return Seg.CS;
+			case "CS":
+				return Seg.CS;
 
-				case "SS":
-					return Seg.SS;
+			case "SS":
+				return Seg.SS;
 
-				case "FS":
-					return Seg.FS;
+			case "FS":
+				return Seg.FS;
 
-				case "GS":
-					return Seg.GS;
+			case "GS":
+				return Seg.GS;
 
-				default:
-					throw new EngineException ("Unknown Seg Register '" + value.ToString () + "'");
+			default:
+				throw new EngineException ("Unknown Seg Register '" + value.ToString () + "'");
 			}
 		}
 	}

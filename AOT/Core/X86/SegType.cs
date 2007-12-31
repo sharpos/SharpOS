@@ -36,8 +36,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the value.
 		/// </summary>
 		/// <value>The value.</value>
-		public byte Value {
-			get {
+		public byte Value
+		{
+			get
+			{
 				return value;
 			}
 		}

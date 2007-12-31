@@ -34,13 +34,19 @@ namespace SharpOS.AOT.IR {
 		/// Gets the available registers count.
 		/// </summary>
 		/// <value>The available registers count.</value>
-		int AvailableRegistersCount { get; }
+		int AvailableRegistersCount
+		{
+			get;
+		}
 
 		/// <summary>
 		/// Gets the size of the int.
 		/// </summary>
 		/// <value>The size of the int.</value>
-		int IntSize { get; }
+		int IntSize
+		{
+			get;
+		}
 
 		/// <summary>
 		/// Spills the specified type.

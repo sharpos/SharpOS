@@ -15,124 +15,124 @@ namespace SharpOS.Kernel.Tests.CS {
 		/// </summary>
 		public static uint CMPVoidP2ByteP ()
 		{
-			void *vp = (void*)100;
-			byte *bp = null;
+			void* vp = (void*) 100;
+			byte* bp = null;
 
-			bp = (byte*)vp;
+			bp = (byte*) vp;
 
-			if (bp == (byte*)100)
+			if (bp == (byte*) 100)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// void* -> short*
 		/// </summary>
 		public static uint CMPVoidP2ShortP ()
 		{
-			void *vp = (void*)10000;
-			short *sp = null;
+			void* vp = (void*) 10000;
+			short* sp = null;
 
-			sp = (short*)vp;
+			sp = (short*) vp;
 
-			if (sp == (short*)10000)
+			if (sp == (short*) 10000)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// void* -> int*
 		/// </summary>
 		public static uint CMPVoidP2IntP ()
 		{
-			void *vp = (void*)0x10000;
-			int *ip = null;
+			void* vp = (void*) 0x10000;
+			int* ip = null;
 
-			ip = (int*)vp;
+			ip = (int*) vp;
 
-			if (ip == (int*)0x10000)
+			if (ip == (int*) 0x10000)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// void* -> long*
 		/// </summary>
 		public static uint CMPVoidP2LongP ()
 		{
-			void *vp = (void*)0x10000;
-			long *lp = null;
+			void* vp = (void*) 0x10000;
+			long* lp = null;
 
-			lp = (long*)vp;
+			lp = (long*) vp;
 
-			if (lp == (long*)0x10000)
+			if (lp == (long*) 0x10000)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// byte* -> void*
 		/// </summary>
 		public static uint CMPByteP2VoidP ()
 		{
-			byte *bp = (byte*)0x10000;
-			void *vp = null;
+			byte* bp = (byte*) 0x10000;
+			void* vp = null;
 
-			vp = (void*)bp;
+			vp = (void*) bp;
 
-			if (vp == (void*)0x10000)
+			if (vp == (void*) 0x10000)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// short* -> void*
 		/// </summary>
 		public static uint CMPShortP2VoidP ()
 		{
-			short *sp = (short*)0x10000;
-			void *vp = null;
+			short* sp = (short*) 0x10000;
+			void* vp = null;
 
-			vp = (void*)sp;
+			vp = (void*) sp;
 
-			if (vp == (void*)0x10000)
+			if (vp == (void*) 0x10000)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// int* -> void*
 		/// </summary>
 		public static uint CMPIntP2VoidP ()
 		{
-			int *ip = (int*)0x10000;
-			void *vp = null;
+			int* ip = (int*) 0x10000;
+			void* vp = null;
 
-			vp = (void*)ip;
+			vp = (void*) ip;
 
-			if (vp == (void*)0x10000)
+			if (vp == (void*) 0x10000)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// long* -> void*
 		/// </summary>
 		public static uint CMPLongP2VoidP ()
 		{
-			long *lp = (long*)0x10000;
-			void *vp = null;
+			long* lp = (long*) 0x10000;
+			void* vp = null;
 
-			vp = (void*)lp;
+			vp = (void*) lp;
 
-			if (vp == (void*)0x10000)
+			if (vp == (void*) 0x10000)
 				return 1;
 			else
 				return 0;

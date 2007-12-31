@@ -17,142 +17,142 @@ using System.Text;
 using SharpOS.Kernel.Foundation;
 using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Kernel
-{
-    public unsafe static class Diagnostics
-    {
-        static byte* intermediateStringBuffer = Stubs.StaticAlloc(MaxMessageLength);
+namespace SharpOS.Kernel {
+	public unsafe static class Diagnostics {
+		static byte* intermediateStringBuffer = Stubs.StaticAlloc (MaxMessageLength);
 
-        /// <summary>
-        /// Defines the maximum allowed length of diagnostic messages
-        /// </summary>
-        public const int MaxMessageLength = 60;
+		/// <summary>
+		/// Defines the maximum allowed length of diagnostic messages
+		/// </summary>
+		public const int MaxMessageLength = 60;
 
 
 
-        #region Diagnostics
+		#region Diagnostics
 
-        public static void SetErrorTextAttributes()
-        {
-            TextMode.SetAttributes( TextColor.BrightWhite, TextColor.Red );
-        }
+		public static void SetErrorTextAttributes ()
+		{
+			TextMode.SetAttributes (TextColor.BrightWhite, TextColor.Red);
+		}
 
-        public static void SetWarningTextAttributes()
-        {
-            TextMode.SetAttributes(TextColor.Brown, TextColor.Black);
-        }
+		public static void SetWarningTextAttributes ()
+		{
+			TextMode.SetAttributes (TextColor.Brown, TextColor.Black);
+		}
 
-        /// <summary>
-        /// Induce a kernel panic. Prints the meessage, stage, and error code
-        /// then halts the computer.
-        /// <summary>
-        public unsafe static void Panic(string msg, KernelStage stage, KernelError code)
-        {
-            PString8* buf = PString8.Wrap(intermediateStringBuffer, MaxMessageLength);
+		/// <summary>
+		/// Induce a kernel panic. Prints the meessage, stage, and error code
+		/// then halts the computer.
+		/// <summary>
+		public unsafe static void Panic (string msg, KernelStage stage, KernelError code)
+		{
+			PString8* buf = PString8.Wrap (intermediateStringBuffer, MaxMessageLength);
 
-            buf->Concat("Stage: ");
-            buf->Concat((int)stage, false);
-            buf->ConcatLine();
+			buf->Concat ("Stage: ");
+			buf->Concat ((int) stage, false);
+			buf->ConcatLine ();
 
-            buf->Concat("  Error: ");
-            buf->Concat((int)code, false);
-            buf->ConcatLine();
+			buf->Concat ("  Error: ");
+			buf->Concat ((int) code, false);
+			buf->ConcatLine ();
 
-            TextMode.SaveAttributes();
-            SetErrorTextAttributes( );
-            TextMode.ClearScreen( );
-            TextMode.WriteLine( "SharpOS" );
-            TextMode.WriteLine( "Kernel Panic. Your system was halted to ensure your security." );
-            TextMode.Write( "  Stage: " ); TextMode.Write( (int) stage, false ); TextMode.WriteLine( );
-            TextMode.Write( "  Error: " ); TextMode.Write( (int) code, false ); TextMode.WriteLine( );
+			TextMode.SaveAttributes ();
+			SetErrorTextAttributes ();
+			TextMode.ClearScreen ();
+			TextMode.WriteLine ("SharpOS");
+			TextMode.WriteLine ("Kernel Panic. Your system was halted to ensure your security.");
+			TextMode.Write ("  Stage: ");
+			TextMode.Write ((int) stage, false);
+			TextMode.WriteLine ();
+			TextMode.Write ("  Error: ");
+			TextMode.Write ((int) code, false);
+			TextMode.WriteLine ();
 
-            TextMode.WriteLine( );
-            TextMode.WriteLine("              ,  ");
-            TextMode.WriteLine("      |\\   /\\/ \\/|   ,_");
-            TextMode.WriteLine("      ; \\/`     '; , \\_',");
-            TextMode.WriteLine("       \\        / ");
-            TextMode.WriteLine("        '.    .'    /`.");
-            TextMode.WriteLine("    jgs   `~~` , /\\ `\"`");
-            TextMode.WriteLine("              .  `\"");
+			TextMode.WriteLine ();
+			TextMode.WriteLine ("              ,  ");
+			TextMode.WriteLine ("      |\\   /\\/ \\/|   ,_");
+			TextMode.WriteLine ("      ; \\/`     '; , \\_',");
+			TextMode.WriteLine ("       \\        / ");
+			TextMode.WriteLine ("        '.    .'    /`.");
+			TextMode.WriteLine ("    jgs   `~~` , /\\ `\"`");
+			TextMode.WriteLine ("              .  `\"");
 
-            TextMode.WriteLine( );
-            TextMode.WriteLine( "The SharpOS Project would appreciate your feedback on this bug." );
+			TextMode.WriteLine ();
+			TextMode.WriteLine ("The SharpOS Project would appreciate your feedback on this bug.");
 
-            TextMode.RestoreAttributes();
+			TextMode.RestoreAttributes ();
 
-            EntryModule.Halt( );
-        }
+			EntryModule.Halt ();
+		}
 
-        public static void Panic(string msg)
-        {
-            Panic(msg, KernelStage.Unknown, KernelError.Unknown);
-        }
+		public static void Panic (string msg)
+		{
+			Panic (msg, KernelStage.Unknown, KernelError.Unknown);
+		}
 
-        public static void Assert(bool cond, string msg)
-        {
-            if (!cond)
-            {
-                TextMode.Write("Assertion Failed: ");
-                Panic( msg );
-            }
-        }
+		public static void Assert (bool cond, string msg)
+		{
+			if (!cond) {
+				TextMode.Write ("Assertion Failed: ");
+				Panic (msg);
+			}
+		}
 
-        public static void AssertFalse(bool cond, string msg)
-        {
-            Assert(!cond, msg);
-        }
+		public static void AssertFalse (bool cond, string msg)
+		{
+			Assert (!cond, msg);
+		}
 
-        public static void AssertZero(uint err, string msg)
-        {
-            if (err != 0)
-            {
-                TextMode.Write("Error: ");
-                TextMode.Write((int)err);
+		public static void AssertZero (uint err, string msg)
+		{
+			if (err != 0) {
+				TextMode.Write ("Error: ");
+				TextMode.Write ((int) err);
 
-                Assert(false, msg);
-            }
-        }
+				Assert (false, msg);
+			}
+		}
 
-        public static void AssertNonZero(uint err, string msg)
-        {
-            AssertZero(err == 0 ? 1U : 0U, msg);
-        }
+		public static void AssertNonZero (uint err, string msg)
+		{
+			AssertZero (err == 0 ? 1U : 0U, msg);
+		}
 
-        public unsafe static void Warning(string msg)
-        {
-            TextMode.SaveAttributes();
-            PString8* buf = PString8.Wrap(intermediateStringBuffer, MaxMessageLength);
+		public unsafe static void Warning (string msg)
+		{
+			TextMode.SaveAttributes ();
+			PString8* buf = PString8.Wrap (intermediateStringBuffer, MaxMessageLength);
 
-            SetWarningTextAttributes();
+			SetWarningTextAttributes ();
 
-            buf->Concat("Warning: ");
-            buf->Concat(msg);
-            TextMode.WriteLine(buf);
+			buf->Concat ("Warning: ");
+			buf->Concat (msg);
+			TextMode.WriteLine (buf);
 
-            TextMode.RestoreAttributes();
-        }
+			TextMode.RestoreAttributes ();
+		}
 
-        public static void Message(string msg)
-        {
-            TextMode.WriteLine(msg);
-        }
+		public static void Message (string msg)
+		{
+			TextMode.WriteLine (msg);
+		}
 
-        public static void Error(string msg)
-        {
-            TextMode.SaveAttributes();
-            SetErrorTextAttributes();
-            TextMode.WriteLine(msg);
-            TextMode.RestoreAttributes();
-        }
+		public static void Error (string msg)
+		{
+			TextMode.SaveAttributes ();
+			SetErrorTextAttributes ();
+			TextMode.WriteLine (msg);
+			TextMode.RestoreAttributes ();
+		}
 
-        public unsafe static void Error(PString8* msg)
-        {
-            TextMode.SaveAttributes();
-            SetErrorTextAttributes();
-            TextMode.WriteLine(msg);
-            TextMode.RestoreAttributes();
-        }
+		public unsafe static void Error (PString8* msg)
+		{
+			TextMode.SaveAttributes ();
+			SetErrorTextAttributes ();
+			TextMode.WriteLine (msg);
+			TextMode.RestoreAttributes ();
+		}
 
-        #endregion
-    }
+		#endregion
+	}
 }

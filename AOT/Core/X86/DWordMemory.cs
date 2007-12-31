@@ -89,7 +89,8 @@ namespace SharpOS.AOT.X86 {
 		/// Initializes a new instance of the <see cref="DWordMemory"/> class.
 		/// </summary>
 		/// <param name="memory">The memory.</param>
-		public DWordMemory (Memory memory): base (memory)
+		public DWordMemory (Memory memory)
+			: base (memory)
 		{
 		}
 	}

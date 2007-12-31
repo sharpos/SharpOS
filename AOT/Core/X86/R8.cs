@@ -50,32 +50,32 @@ namespace SharpOS.AOT.X86 {
 				return value as R8Type;
 
 			switch (Register.GetName (value)) {
-				case "AL":
-					return R8.AL;
+			case "AL":
+				return R8.AL;
 
-				case "AH":
-					return R8.AH;
+			case "AH":
+				return R8.AH;
 
-				case "BL":
-					return R8.BL;
+			case "BL":
+				return R8.BL;
 
-				case "BH":
-					return R8.BH;
+			case "BH":
+				return R8.BH;
 
-				case "CL":
-					return R8.CL;
+			case "CL":
+				return R8.CL;
 
-				case "CH":
-					return R8.CH;
+			case "CH":
+				return R8.CH;
 
-				case "DL":
-					return R8.DL;
+			case "DL":
+				return R8.DL;
 
-				case "DH":
-					return R8.DH;
+			case "DH":
+				return R8.DH;
 
-				default:
-					throw new EngineException ("Unknown R8 Register '" + value.ToString () + "'");
+			default:
+				throw new EngineException ("Unknown R8 Register '" + value.ToString () + "'");
 			}
 		}
 	}

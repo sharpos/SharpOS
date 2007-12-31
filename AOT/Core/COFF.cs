@@ -58,11 +58,14 @@ namespace SharpOS.AOT.COFF {
 		/// Gets or sets the index.
 		/// </summary>
 		/// <value>The index.</value>
-		public int Index {
-			get {
+		public int Index
+		{
+			get
+			{
 				return index;
 			}
-			set {
+			set
+			{
 				index = value;
 			}
 		}
@@ -80,8 +83,10 @@ namespace SharpOS.AOT.COFF {
 		/// Gets the name.
 		/// </summary>
 		/// <value>The name.</value>
-		public string Name {
-			get {
+		public string Name
+		{
+			get
+			{
 				return name;
 			}
 		}

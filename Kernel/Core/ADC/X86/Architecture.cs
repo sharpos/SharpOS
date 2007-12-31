@@ -1,13 +1,12 @@
-/*
- * SharpOS.ADC.X86/ADC.cs
- * N:SharpOS.ADC
- *
- * (C) 2007 William Lahti. This software is licensed under the terms of the
- * GNU General Public License.
- *
- * Author: William Lahti <xfurious@gmail.com>
- *
- */
+// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	William Lahti <xfurious@gmail.com>
+//
+// Licensed under the terms of the GNU GPL v3,
+//  with Classpath Linking Exception for Libraries
+//
 
 using SharpOS.Kernel;
 using SharpOS.AOT;
@@ -35,9 +34,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			IDT.Setup ();	// Interrupt Descriptor table
 			RTC.Setup ();	// Real Time Clock
 			PIT.Setup ();	// Periodic Interrupt Timer
-            Serial.Setup(); // Setup serial I/O
+			Serial.Setup (); // Setup serial I/O
 		}
-		
+
 		/**
 			<summary>
 				Gets the ADC platform identifier.
@@ -47,27 +46,27 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			return "x86";
 		}
-		
+
 		public static string GetAuthor ()
 		{
 			return "The SharpOS Team";
 		}
-		
+
 		public static string GetLayerName ()
 		{
 			return "SharpOS.ADC.X86";
 		}
-		
+
 		public static int GetProcessorCount ()
 		{
 			return 0;
 		}
-		
-		public static Processor *GetProcessors ()
+
+		public static Processor* GetProcessors ()
 		{
 			return null; // TODO
 		}
-		
+
 		public static EventRegisterStatus RegisterTimerEvent (uint func)
 		{
 			return PIT.RegisterTimerEvent (func);
@@ -79,9 +78,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 		/// <remarks>
 		/// This function should be made "inline" by the AOT
 		/// </remarks>
-		public static void DisableInterrupts()
+		public static void DisableInterrupts ()
 		{
-			Asm.CLI();
+			Asm.CLI ();
 		}
 
 		/// <summary>
@@ -90,9 +89,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 		/// <remarks>
 		/// This function should be made "inline" by the AOT
 		/// </remarks>
-		public static void EnableInterrupts()
+		public static void EnableInterrupts ()
 		{
-			Asm.STI();
+			Asm.STI ();
 		}
 	}
 }

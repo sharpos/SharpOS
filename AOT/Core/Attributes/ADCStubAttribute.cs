@@ -21,5 +21,5 @@ namespace SharpOS.AOT.Attributes {
 	[AttributeUsage (AttributeTargets.Method)]
 	public sealed class ADCStubAttribute : Attribute {
 	}
-	
+
 }

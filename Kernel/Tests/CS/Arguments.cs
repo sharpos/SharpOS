@@ -13,14 +13,14 @@ namespace SharpOS.Kernel.Tests.CS {
 		public static void Arguments1 (uint a, uint b, ref uint c)
 		{
 			c = a + b;
-			
+
 			return;
 		}
 
 		public static void Arguments2 (uint a, uint b, out uint c)
 		{
 			c = a + b;
-			
+
 			return;
 		}
 
@@ -29,10 +29,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			uint c = 0;
 
 			Arguments1 (1, 2, ref c);
-			
+
 			if (c == 3)
 				return 1;
-				
+
 			return 0;
 		}
 
@@ -41,10 +41,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			uint c;
 
 			Arguments2 (1, 2, out c);
-			
+
 			if (c == 3)
 				return 1;
-				
+
 			return 0;
 		}
 	}

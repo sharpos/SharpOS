@@ -13,8 +13,7 @@ using SharpOS.AOT;
 using SharpOS.Kernel.ADC;
 using System.Runtime.InteropServices;
 
-namespace SharpOS.Kernel.Memory
-{
+namespace SharpOS.Kernel.Memory {
 
 	/// <summary>
 	/// The PageAllocator class handles physical memory page allocation and provides
@@ -22,8 +21,7 @@ namespace SharpOS.Kernel.Memory
 	/// portable, making use of the SharpOS.ADC.Pager class to implement platform-
 	/// specific paging mechanisms.
 	/// </summary>
-	public unsafe class PageAllocator
-	{
+	public unsafe class PageAllocator {
 
 		#region Global state
 
@@ -51,9 +49,8 @@ namespace SharpOS.Kernel.Memory
 		/// Reserverd pages is used to reserve pages for system applications
 		/// like kernel, stack and memory mananger
 		/// </summary>
-		[StructLayout(LayoutKind.Sequential)]
-		private struct ReservedPages
-		{
+		[StructLayout (LayoutKind.Sequential)]
+		private struct ReservedPages {
 			/// <summary>
 			/// Address of the reserved block
 			/// </summary>
@@ -64,8 +61,7 @@ namespace SharpOS.Kernel.Memory
 			public uint Size;
 		}
 
-		public enum Errors : uint
-		{
+		public enum Errors : uint {
 			Success = 0,
 			Unknown = 1,
 			NotImplemented = 2,
@@ -100,91 +96,100 @@ namespace SharpOS.Kernel.Memory
 		/// You should ensure that no memory allocations have happened between
 		/// calling this function and reserving memory.
 		/// </summary>
-		public static void Setup(byte* kernelOffset, uint _kernelSize, uint totalMem)
+		public static void Setup (byte* kernelOffset, uint _kernelSize, uint totalMem)
 		{
-			PagingMemoryRequirements* pagingMemory = stackalloc PagingMemoryRequirements[1];
+			PagingMemoryRequirements* pagingMemory = stackalloc PagingMemoryRequirements [1];
 			byte* start = null;
 
 			// Determine the pages used by the kernel and the total pages in the system
-			kernelStartPage = (byte*)PtrToPage(kernelOffset);
+			kernelStartPage = (byte*) PtrToPage (kernelOffset);
 			kernelSize = (_kernelSize / Pager.AtomicPageSize) + 1;
 			totalPages = totalMem / (Pager.AtomicPageSize / 1024);
 
-			start = (byte*)((uint)kernelStartPage + (kernelSize * Pager.AtomicPageSize));
+			start = (byte*) ((uint) kernelStartPage + (kernelSize * Pager.AtomicPageSize));
 
 			// Allocate the free page stack
-			fpStack = (uint*)start;
+			fpStack = (uint*) start;
 			fpStackPointer = 0;
 			fpStackSize = (totalPages * 4) / Pager.AtomicPageSize;
 
 			start += fpStackSize * Pager.AtomicPageSize;
 
 			// Allocate the reserved page stack
-			rpStack = (ReservedPages*)start;
+			rpStack = (ReservedPages*) start;
 			rpStackPointer = 0;
 			rpStackSize = 1;
 			reservedPagesLeft = false;
 
 			// Allocate paging information
-			pagingMemory->Start = (byte*)PtrToPage(start + (rpStackSize * 1024) + (Pager.AtomicPageSize - 1));
+			pagingMemory->Start = (byte*) PtrToPage (start + (rpStackSize * 1024) + (Pager.AtomicPageSize - 1));
 
-			pagingData = (byte*)pagingMemory->Start;
+			pagingData = (byte*) pagingMemory->Start;
 			// FIXME: 
 			// Reserve 4 mega bytes of memory for Virtual memory manager
-			pagingDataSize = (4 * 1024 * 1024) / 4096; 
+			pagingDataSize = (4 * 1024 * 1024) / 4096;
 
 			// Reserve the memory ranges we're using.
-			ReservePageRange(kernelStartPage, kernelSize, "kernel");
-			ReservePageRange(fpStack, fpStackSize, "fpstack");
-			ReservePageRange(rpStack, rpStackSize, "rpstack");
-			ReservePageRange(pagingData, pagingDataSize, "paging");
+			ReservePageRange (kernelStartPage, kernelSize, "kernel");
+			ReservePageRange (fpStack, fpStackSize, "fpstack");
+			ReservePageRange (rpStack, rpStackSize, "rpstack");
+			ReservePageRange (pagingData, pagingDataSize, "paging");
 
 
 
 			bool paging = true;//CommandLine.ContainsOption ("-paging");
-			if (paging)
-			{
+			if (paging) {
 				// FIXME: the value we get back from Pager.Setup is not the same value that 
 				//		  we 'return' from inside the method itself!!!!
 				Errors error = Errors.Unknown;
-				Pager.Setup(totalMem, pagingData, pagingDataSize, &error);
+				Pager.Setup (totalMem, pagingData, pagingDataSize, &error);
 
-				if (error != Errors.Success)
-				{
-					PrintError(error);
+				if (error != Errors.Success) {
+					PrintError (error);
 					return;
 				}
-			}
-			else
-				Diagnostics.Warning("Paging not set in commandline!");
+			} else
+				Diagnostics.Warning ("Paging not set in commandline!");
 
 			// NOTE: 0x0000 page is reserved
 			currentPage = 1;
 
-			if (paging)
-			{
+			if (paging) {
 				Errors error = Errors.Unknown;
-				Pager.Enable(&error);
+				Pager.Enable (&error);
 				if (error != Errors.Success)
-					PrintError(error);
+					PrintError (error);
 			}
 		}
 
-		private static void PrintError(Errors error)
+		private static void PrintError (Errors error)
 		{
-			ADC.TextMode.Write("(");
-			ADC.TextMode.Write((int)error);
-			ADC.TextMode.Write(") ");
+			ADC.TextMode.Write ("(");
+			ADC.TextMode.Write ((int) error);
+			ADC.TextMode.Write (") ");
 
-			switch (error)
-			{
-				case Errors.NoAttributesForGranularity: Diagnostics.Error("NoAttributesForGranularity"); return;
-				case Errors.NotImplemented: Diagnostics.Error("NotImplemented"); return;
-				case Errors.Unknown: Diagnostics.Error("Unknown"); return;
-				case Errors.UnsupportedGranularity: Diagnostics.Error("UnsupportedGranularity"); return;
-				case Errors.UnusablePageControlBuffer: Diagnostics.Error("UnusablePageControlBuffer"); return;
-				case Errors.Success: Diagnostics.Error("Success"); return;
-				default: Diagnostics.Error("Garbage"); return;
+			switch (error) {
+			case Errors.NoAttributesForGranularity:
+				Diagnostics.Error ("NoAttributesForGranularity");
+				return;
+			case Errors.NotImplemented:
+				Diagnostics.Error ("NotImplemented");
+				return;
+			case Errors.Unknown:
+				Diagnostics.Error ("Unknown");
+				return;
+			case Errors.UnsupportedGranularity:
+				Diagnostics.Error ("UnsupportedGranularity");
+				return;
+			case Errors.UnusablePageControlBuffer:
+				Diagnostics.Error ("UnusablePageControlBuffer");
+				return;
+			case Errors.Success:
+				Diagnostics.Error ("Success");
+				return;
+			default:
+				Diagnostics.Error ("Garbage");
+				return;
 			}
 		}
 
@@ -197,13 +202,12 @@ namespace SharpOS.Kernel.Memory
 		/// starts from the current stack pointer and goes
 		/// backward.
 		/// </summary>
-		public static bool IsPageFree(void* page)
+		public static bool IsPageFree (void* page)
 		{
 			uint fsp = fpStackPointer;
 
-			while (true)
-			{
-				if (fpStack[fsp] == (uint)page)
+			while (true) {
+				if (fpStack [fsp] == (uint) page)
 					return false;
 
 				if (fsp == 0)
@@ -218,11 +222,11 @@ namespace SharpOS.Kernel.Memory
 		/// <summary>
 		/// Returns true if the given page is reserved (that is, not available for allocation).
 		/// </summary>
-		public static bool IsPageReserved(void* page)
+		public static bool IsPageReserved (void* page)
 		{
 			uint sp = 0;
 			ReservedPages* ptr = rpStack;
-			uint pageAddr = (uint)page;
+			uint pageAddr = (uint) page;
 
 			while (sp < rpStackPointer) {
 				if (pageAddr >= ptr [sp].Address && pageAddr < (ptr [sp].Address + (ptr [sp].Size * Pager.AtomicPageSize)))
@@ -240,51 +244,47 @@ namespace SharpOS.Kernel.Memory
 		/// <summary>
 		/// Allocates a page of memory. This function returns null when out of memory.
 		/// </summary>
-		public static void* Alloc()
+		public static void* Alloc ()
 		{
 			void* page = null;
 
-			return PopFreePage();
+			return PopFreePage ();
 		}
 
 		/// <summary>
 		/// Allocates a contiguous range of pages. This function returns null on failure.
 		/// </summary>
-		public static void* RangeAlloc(uint count)
+		public static void* RangeAlloc (uint count)
 		{
 			uint fsp = fpStackPointer;
 
 			// iterate through free pages
 
-			while (true)
-			{
+			while (true) {
 				uint fsp2 = fpStackPointer;
-				uint* stackLoc = stackalloc uint[(int)count];
+				uint* stackLoc = stackalloc uint [(int) count];
 				uint found = 0;
-				uint start = fpStack[fsp];
+				uint start = fpStack [fsp];
 
 				// skip invalidated stack entries
 
 				if (start == 0x1U)
 					goto next;
 
-				stackLoc[0] = fsp;
+				stackLoc [0] = fsp;
 
 				// check if this page starts a big enough contiguous range,
 				// and put the stack locations of the free pages into stackLoc
 
-				while (true)
-				{
+				while (true) {
 					if (fsp2 == fsp && fsp2 > 1)
 						--fsp2;
 
-					for (int x = 1; x < count; ++x)
-					{
-						if (fpStack[fsp2] != 0x1 &&
-								fpStack[fsp2] == (uint)((byte*)start + x * Pager.AtomicPageSize))
-						{
+					for (int x = 1; x < count; ++x) {
+						if (fpStack [fsp2] != 0x1 &&
+								fpStack [fsp2] == (uint) ((byte*) start + x * Pager.AtomicPageSize)) {
 
-							stackLoc[x] = fsp2;
+							stackLoc [x] = fsp2;
 							++found;
 
 							break;
@@ -300,13 +300,12 @@ namespace SharpOS.Kernel.Memory
 					--fsp2;
 				}
 
-				if (found == count - 1)
-				{
+				if (found == count - 1) {
 					// found our memory, invalidate the free page stack entries 
 					// related to this allocation.
 
 					for (int x = 0; x < count; ++x)
-						fpStack[stackLoc[x]] = 0x1U;
+						fpStack [stackLoc [x]] = 0x1U;
 
 					/*
 					// use stackLoc to remove the gaps in the free page stack created by this allocation.
@@ -393,7 +392,7 @@ namespace SharpOS.Kernel.Memory
 						}
 					}*/
 
-					return (void*)start;
+					return (void*) start;
 				}
 
 			next:
@@ -422,9 +421,9 @@ namespace SharpOS.Kernel.Memory
 		/// range using this function, Dealloc(void *page, uint count)
 		/// does the work for you.
 		/// </remarks>
-		public static void Dealloc(void* page)
+		public static void Dealloc (void* page)
 		{
-			PushFreePage(page);
+			PushFreePage (page);
 		}
 
 		/// <summary>
@@ -439,24 +438,23 @@ namespace SharpOS.Kernel.Memory
 		/// The amount of pages to deallocate. This value must be equal to the 'count'
 		/// parameter passed to RangeAlloc().
 		/// </param>
-		public static void Dealloc(void* pages, uint count)
+		public static void Dealloc (void* pages, uint count)
 		{
-			byte* ptr = (byte*)pages;
+			byte* ptr = (byte*) pages;
 
 			// TODO: error handling
 
-			for (int x = 0; x < count; ++x)
-			{
-				PushFreePage(ptr);
+			for (int x = 0; x < count; ++x) {
+				PushFreePage (ptr);
 				ptr += Pager.AtomicPageSize;
 			}
 		}
 
 		#endregion
 		#region ReservePage () family
-		private static ReservedPages* GetReservedPage()
+		private static ReservedPages* GetReservedPage ()
 		{
-			return &rpStack[rpStackPointer++];
+			return &rpStack [rpStackPointer++];
 		}
 
 		/// <summary>
@@ -466,21 +464,21 @@ namespace SharpOS.Kernel.Memory
 		/// <param name="page">
 		/// A pointer which is aligned along the platform's native page boundaries.
 		/// </param>
-		public static bool ReservePage(void* page)
+		public static bool ReservePage (void* page)
 		{
 			reservedPagesLeft = true;
 			if (page == null)
 				return false;
 
 			// we should be doing this.. but it's so slow..
-			if (IsPageReserved(page))	// ugh...
+			if (IsPageReserved (page))	// ugh...
 				return true;
 
 			//if (!IsPageFree(page, &fsp))
 			//	return false;
 
-			ReservedPages* pages = GetReservedPage();
-			pages->Address = (uint)page;
+			ReservedPages* pages = GetReservedPage ();
+			pages->Address = (uint) page;
 			pages->Size = 1;
 
 			return true;
@@ -496,12 +494,12 @@ namespace SharpOS.Kernel.Memory
 		/// <param name="pages">
 		/// The amount of pages to reserve.
 		/// </param>
-		public static bool ReservePageRange(void* firstPage, uint pages, string name)
+		public static bool ReservePageRange (void* firstPage, uint pages, string name)
 		{
 			reservedPagesLeft = true;
 
-			ReservedPages* reservePages = GetReservedPage();
-			reservePages->Address = (uint)firstPage;
+			ReservedPages* reservePages = GetReservedPage ();
+			reservePages->Address = (uint) firstPage;
 			reservePages->Size = pages;
 
 			return true;
@@ -539,25 +537,25 @@ namespace SharpOS.Kernel.Memory
 		/// if the platform does not support super-page mapping or one of the flags
 		/// supplied in <paramref name="attr"/>, or an error occurred.
 		/// </returns>
-		public static PageAllocator.Errors MapPage(void* page, void* physPage,
+		public static PageAllocator.Errors MapPage (void* page, void* physPage,
 						uint granularity, PageAttributes attr)
 		{
-			return Pager.MapPage(page, physPage, granularity, attr);
+			return Pager.MapPage (page, physPage, granularity, attr);
 		}
 
 		#endregion
 		#region Get/SetAttributes() family
 
-		public static Errors SetPageAttributes(void* page, uint granularity, PageAttributes attr)
+		public static Errors SetPageAttributes (void* page, uint granularity, PageAttributes attr)
 		{
 			// FIXME: This is a hack since AOT does not support return of enums
-			return (Errors)Pager.SetPageAttributes(page, granularity, attr);
+			return (Errors) Pager.SetPageAttributes (page, granularity, attr);
 		}
 
-		public static PageAttributes GetPageAttributes(void* page, uint granularity,
+		public static PageAttributes GetPageAttributes (void* page, uint granularity,
 								   PageAllocator.Errors* ret_err)
 		{
-			return (PageAttributes)Pager.GetPageAttributes(page, granularity, ret_err);
+			return (PageAttributes) Pager.GetPageAttributes (page, granularity, ret_err);
 		}
 
 		#endregion
@@ -566,76 +564,70 @@ namespace SharpOS.Kernel.Memory
 		/// <summary>
 		/// Gets the page address of a given pointer.
 		/// </summary>
-		private static void* PtrToPage(void* ptr)
+		private static void* PtrToPage (void* ptr)
 		{
-			uint up = (uint)ptr;
+			uint up = (uint) ptr;
 			uint pageSize = Pager.AtomicPageSize - 1;
 
-			return (void*)(up - (up & pageSize));
+			return (void*) (up - (up & pageSize));
 		}
 
-		private static void PushFreePage(void* page)
+		private static void PushFreePage (void* page)
 		{
-			fpStack[fpStackPointer++] = (uint)page;
+			fpStack [fpStackPointer++] = (uint) page;
 		}
 
-		private static void* PopFreePage()
+		private static void* PopFreePage ()
 		{
-			if (fpStackPointer == 0 && currentPage < (totalPages - 1))
-			{
-				while (currentPage < (totalPages - 1))
-				{
-					uint* page = (uint*)(currentPage * Pager.AtomicPageSize);
+			if (fpStackPointer == 0 && currentPage < (totalPages - 1)) {
+				while (currentPage < (totalPages - 1)) {
+					uint* page = (uint*) (currentPage * Pager.AtomicPageSize);
 					currentPage++;
 
-					if (IsPageReserved(page))
-					{
+					if (IsPageReserved (page)) {
 						continue;
 					}
 
-					return (void*)page;
+					return (void*) page;
 				}
-			}
-			else if (fpStackPointer == 0)
+			} else if (fpStackPointer == 0)
 				return null;
 
-			return (void*)fpStack[--fpStackPointer];
+			return (void*) fpStack [--fpStackPointer];
 		}
 
 		#endregion
 		#region Debug
 
-		public static void DumpStack(uint* stack, uint stackptr, int count)
+		public static void DumpStack (uint* stack, uint stackptr, int count)
 		{
-			for (int i = (int)stackptr - 1; i >= 0 && i >= stackptr - count; i--)
-			{
-				ADC.TextMode.Write(i);
-				ADC.TextMode.Write(":");
-				ADC.TextMode.Write((int)stack[i]);
-				ADC.TextMode.WriteLine();
+			for (int i = (int) stackptr - 1; i >= 0 && i >= stackptr - count; i--) {
+				ADC.TextMode.Write (i);
+				ADC.TextMode.Write (":");
+				ADC.TextMode.Write ((int) stack [i]);
+				ADC.TextMode.WriteLine ();
 			}
 		}
 
-		private static void DumpReservedStack(ReservedPages* pageStack, uint stackPtr, int count)
+		private static void DumpReservedStack (ReservedPages* pageStack, uint stackPtr, int count)
 		{
-			for (int i = (int)stackPtr - 1; i >= 0 && i >= stackPtr - count; i--)
-			{
-				ADC.TextMode.Write(i);
-				ADC.TextMode.Write(": Address: ");
-				ADC.TextMode.Write((int)pageStack->Address);
-				ADC.TextMode.Write(", Size: ");
-				ADC.TextMode.Write((int)pageStack->Size);
+			for (int i = (int) stackPtr - 1; i >= 0 && i >= stackPtr - count; i--) {
+				ADC.TextMode.Write (i);
+				ADC.TextMode.Write (": Address: ");
+				ADC.TextMode.Write ((int) pageStack->Address);
+				ADC.TextMode.Write (", Size: ");
+				ADC.TextMode.Write ((int) pageStack->Size);
 				pageStack++;
-				ADC.TextMode.WriteLine();
+				ADC.TextMode.WriteLine ();
 			}
 		}
 
-		public static void Dump(int count)
+		public static void Dump (int count)
 		{
-			ADC.TextMode.WriteLine("Free");
-			DumpStack(fpStack, fpStackPointer, count);
-			ADC.TextMode.WriteLine("Reserved");
-			DumpReservedStack(rpStack, rpStackPointer, count);
+			ADC.TextMode.WriteLine ("Free");
+			DumpStack (fpStack, fpStackPointer, count);
+			ADC.TextMode.WriteLine ("Reserved");
+			DumpReservedStack (rpStack, rpStackPointer, count);
 		}
 
 		#endregion

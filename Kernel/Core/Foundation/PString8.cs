@@ -32,14 +32,14 @@ namespace SharpOS.Kernel.Foundation {
 		/// the size of the PString8 structure. <paramref name="bufferSize" />
 		/// should be the entire size of the allocation.
 		/// </summary>
-		public static PString8 *Wrap (void *buffer, int bufferSize)
+		public static PString8* Wrap (void* buffer, int bufferSize)
 		{
-			PString8 *wrapped;
+			PString8* wrapped;
 
 			if (bufferSize < sizeof (PString8))
 				return null;
 
-			wrapped = (PString8*)buffer;
+			wrapped = (PString8*) buffer;
 			wrapped->capacity = bufferSize - sizeof (PString8) + 1;
 			wrapped->length = 0;
 			wrapped->firstChar = 0;
@@ -57,7 +57,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// causes slightly faster performance for string types that store the length
 		/// of the string (as opposed to null termination).
 		/// </summary>
-		int Concat (byte *str, int strLen, int offset, int len)
+		int Concat (byte* str, int strLen, int offset, int len)
 		{
 			if (len == 0)
 				len = strLen - offset;
@@ -76,8 +76,10 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Gets the length of the string.
 		/// </summary>
-		public int Length {
-			get {
+		public int Length
+		{
+			get
+			{
 				return length;
 			}
 		}
@@ -85,8 +87,10 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Gets the capacity of the string.
 		/// </summary>
-		public int Capacity {
-			get {
+		public int Capacity
+		{
+			get
+			{
 				return capacity;
 			}
 		}
@@ -130,13 +134,15 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Gets the null-terminated byte* pointer.
 		/// </summary>
-		public byte *Pointer {
-			get {
-				byte *ptr;
+		public byte* Pointer
+		{
+			get
+			{
+				byte* ptr;
 
 				// HACK
 
-				fixed (byte *tp = &firstChar)
+				fixed (byte* tp = &firstChar)
 					ptr = tp;
 
 				return ptr;
@@ -168,7 +174,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// characters at indices <paramref name="offset" /> to
 		/// <paramref name="offset" /> + <paramref name="len" />.
 		/// </summary>
-		public int Concat (PString8 *str, int offset, int len)
+		public int Concat (PString8* str, int offset, int len)
 		{
 			return Concat (str->Pointer, str->Length, offset, len);
 		}
@@ -178,7 +184,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// characters at indices <paramref name="offset" /> to
 		/// <paramref name="offset" /> + <paramref name="len" />.
 		/// </summary>
-		public int Concat (CString8 *str, int offset, int len)
+		public int Concat (CString8* str, int offset, int len)
 		{
 			return Concat (str->Pointer, str->Length, offset, len);
 		}
@@ -197,17 +203,17 @@ namespace SharpOS.Kernel.Foundation {
 				return -1;
 
 			for (int x = 0; x < str.Length; ++x)
-				Concat((byte)str[x]);
+				Concat ((byte) str [x]);
 
 			return len;
 		}
 
-		public int Concat (byte *str, int len)
+		public int Concat (byte* str, int len)
 		{
 			return Concat (str, len, 0, len);
 		}
 
-		public int Concat (byte *str)
+		public int Concat (byte* str)
 		{
 			return Concat (str, ByteString.Length (str), 0, ByteString.Length (str));
 		}
@@ -215,7 +221,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Concatenates <paramref name="str" />.
 		/// </summary>
-		public int Concat (PString8 *str)
+		public int Concat (PString8* str)
 		{
 			return Concat (str, 0, 0);
 		}
@@ -223,7 +229,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Concatenates <paramref name="str" />.
 		/// </summary>
-		public int Concat (CString8 *str)
+		public int Concat (CString8* str)
 		{
 			return Concat (str, 0, 0);
 		}
@@ -266,7 +272,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (byte *str, int count)
+		public int Compare (byte* str, int count)
 		{
 			return ByteString.Compare (Pointer, str, count);
 		}
@@ -275,7 +281,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (PString8 *str, int count)
+		public int Compare (PString8* str, int count)
 		{
 			return ByteString.Compare (Pointer, str->Pointer, count);
 		}
@@ -284,7 +290,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (CString8 *str, int count)
+		public int Compare (CString8* str, int count)
 		{
 			return ByteString.Compare (Pointer, str->Pointer, count);
 		}
@@ -301,7 +307,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Compares the string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (CString8 *str)
+		public int Compare (CString8* str)
 		{
 			return Compare (str, 0);
 		}
@@ -309,7 +315,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Compares the string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (PString8 *str)
+		public int Compare (PString8* str)
 		{
 			return Compare (str, 0);
 		}
@@ -328,7 +334,7 @@ namespace SharpOS.Kernel.Foundation {
 
 		internal static void __RunTests ()
 		{
-			__Test1();
+			__Test1 ();
 		}
 
 		public static void __Test1 ()

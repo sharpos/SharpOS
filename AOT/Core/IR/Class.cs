@@ -41,8 +41,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the class definition.
 		/// </summary>
 		/// <value>The class definition.</value>
-		public TypeDefinition ClassDefinition {
-			get {
+		public TypeDefinition ClassDefinition
+		{
+			get
+			{
 				return this.classDefinition;
 			}
 		}
@@ -66,7 +68,7 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		IEnumerator<Method> IEnumerable<Method>.GetEnumerator ()
 		{
-			foreach (Method method in this.methods) 
+			foreach (Method method in this.methods)
 				yield return method;
 		}
 

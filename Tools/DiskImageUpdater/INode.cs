@@ -14,19 +14,21 @@ namespace Ext2 {
 	public class INode {
 		public Block block;
 		public uint index;
-		
+
 		public INode (Block block, uint index)
 		{
 			this.block = block;
 			this.index = index;
 		}
-		
-		public Block Block {
-			get {
+
+		public Block Block
+		{
+			get
+			{
 				return this.block;
 			}
 		}
-		
+
 		public const ushort EXT2_BAD_INO = 0x01;
 		public const ushort EXT2_ROOT_INO = 0x02;
 		public const ushort EXT2_ACL_IDX_INO = 0x03;
@@ -56,7 +58,7 @@ namespace Ext2 {
 		public const ushort EXT2_S_IROTH = 0x0004;
 		public const ushort EXT2_S_IWOTH = 0x0002;
 		public const ushort EXT2_S_IXOTH = 0x0001;
-		
+
 		private static readonly uint ModeOffset = 0;
 		private static readonly uint UserIDOffset = 2;
 		private static readonly uint SizeOffset = 4;
@@ -76,165 +78,219 @@ namespace Ext2 {
 		private static readonly uint LastFileFragmentOffset = 112;
 		private static readonly uint SecondOSDependentValueOffset = 116;
 		public static readonly uint INodeSize = 128;
-		
-		public ushort Mode {
-			get {
+
+		public ushort Mode
+		{
+			get
+			{
 				return this.block.GetUShort (this.index + ModeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (this.index + ModeOffset, value);
 			}
 		}
-		
-		public ushort UserID {
-			get {
+
+		public ushort UserID
+		{
+			get
+			{
 				return this.block.GetUShort (this.index + UserIDOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (this.index + UserIDOffset, value);
 			}
 		}
-		
-		public uint Size {
-			get {
+
+		public uint Size
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + SizeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + SizeOffset, value);
 			}
 		}
-		
-		public uint AccessTime {
-			get {
+
+		public uint AccessTime
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + AccessTimeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + AccessTimeOffset, value);
 			}
 		}
-		
-		public uint CreatedTime {
-			get {
+
+		public uint CreatedTime
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + CreatedTimeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + CreatedTimeOffset, value);
 			}
 		}
-		
-		public uint ModifiedTime {
-			get {
+
+		public uint ModifiedTime
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + ModifiedTimeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + ModifiedTimeOffset, value);
 			}
 		}
-		
-		public uint DeletedTime {
-			get {
+
+		public uint DeletedTime
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + DeletedTimeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + DeletedTimeOffset, value);
 			}
 		}
-		
-		public ushort GroupID {
-			get {
+
+		public ushort GroupID
+		{
+			get
+			{
 				return this.block.GetUShort (this.index + GroupIDOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (this.index + GroupIDOffset, value);
 			}
 		}
-		
-		public ushort LinksCount {
-			get {
+
+		public ushort LinksCount
+		{
+			get
+			{
 				return this.block.GetUShort (this.index + LinksCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (this.index + LinksCountOffset, value);
 			}
 		}
-		
-		public uint Blocks {
-			get {
+
+		public uint Blocks
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + BlocksOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + BlocksOffset, value);
 			}
 		}
-		
-		public uint Flags {
-			get {
+
+		public uint Flags
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + FlagsOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + FlagsOffset, value);
 			}
 		}
-		
-		public uint FirstOSDependentValue {
-			get {
+
+		public uint FirstOSDependentValue
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + FirstOSDependentValueOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + FirstOSDependentValueOffset, value);
 			}
 		}
-		
-		public uint [] BlockData {
-			get {
+
+		public uint [] BlockData
+		{
+			get
+			{
 				return this.block.GetUIntArray (15, this.index + BlockDataOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUIntArray (15, this.index + BlockDataOffset, value);
 			}
 		}
-		
-		public uint Generation {
-			get {
+
+		public uint Generation
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + GenerationOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + GenerationOffset, value);
 			}
 		}
-		
-		public uint FileACL {
-			get {
+
+		public uint FileACL
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + FileACLOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + FileACLOffset, value);
 			}
 		}
-		
-		public uint DirectoryACL {
-			get {
+
+		public uint DirectoryACL
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + DirectoryACLOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + DirectoryACLOffset, value);
 			}
 		}
-		
-		public uint LastFileFragment {
-			get {
+
+		public uint LastFileFragment
+		{
+			get
+			{
 				return this.block.GetUInt (this.index + LastFileFragmentOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (this.index + LastFileFragmentOffset, value);
 			}
 		}
-		
-		public byte [] SecondOSDependentValue {
-			get {
+
+		public byte [] SecondOSDependentValue
+		{
+			get
+			{
 				return this.block.GetByteArray (12, this.index + SecondOSDependentValueOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetByteArray (12, this.index + SecondOSDependentValueOffset, value);
 			}
 		}

@@ -24,7 +24,7 @@ namespace SharpOS.Kernel {
 
 		static bool stayInLoop = true;
 		static KernelStage kernelStage = KernelStage.Init;
-		static Multiboot.Info *multibootInfo = null;
+		static Multiboot.Info* multibootInfo = null;
 
 		#endregion
 		#region Constants
@@ -72,76 +72,77 @@ namespace SharpOS.Kernel {
 		public unsafe static void BootEntry (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
 		{
 			// Initialize architecture-specific portion of the kernel
-			Architecture.Setup();
+			Architecture.Setup ();
 
 			// Set up text mode display
-			TextMode.Setup();
+			TextMode.Setup ();
 
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.ClearScreen ();
 			TextMode.SetCursor (0, 0);
 
 			// Write the banner
-			TextMode.SaveAttributes();
+			TextMode.SaveAttributes ();
 			TextMode.SetAttributes (TextColor.BrightWhite, TextColor.Black);
 			TextMode.WriteLine ("SharpOS v0.0.1 (http://www.sharpos.org/)");
 			TextMode.WriteLine ();
-			TextMode.RestoreAttributes();
+			TextMode.RestoreAttributes ();
 
-			StageMessage("Multiboot setup...");
-			Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo(magic, pointer, kernelStart, kernelEnd);
+			StageMessage ("Multiboot setup...");
+			Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo (magic, pointer, kernelStart, kernelEnd);
 			if (multibootInfo == null) {
-				StageError("Error: multiboot loader required!");
+				StageError ("Error: multiboot loader required!");
 				return;
 			} else {
 				//Multiboot.WriteMultibootInfo(multibootInfo, kernelStart, kernelEnd);
 			}
 
-			StageMessage("Commandline setup...");
-			CommandLine.Setup(multibootInfo);
+			StageMessage ("Commandline setup...");
+			CommandLine.Setup (multibootInfo);
 
-			StageMessage("PageAllocator setup...");
-			PageAllocator.Setup((byte*)kernelStart, kernelEnd - kernelStart,
+			StageMessage ("PageAllocator setup...");
+			PageAllocator.Setup ((byte*) kernelStart, kernelEnd - kernelStart,
 				multibootInfo->MemUpper + 1000);
 
-			StageMessage("MemoryManager setup...");
-			ADC.MemoryManager.Setup();
+			StageMessage ("MemoryManager setup...");
+			ADC.MemoryManager.Setup ();
 
-			StageMessage("Keymap setup...");
-			KeyMap.Setup();
+			StageMessage ("Keymap setup...");
+			KeyMap.Setup ();
 
-			StageMessage("Keyboard setup...");
-			Keyboard.Setup();
+			StageMessage ("Keyboard setup...");
+			Keyboard.Setup ();
 
-			StageMessage("Scheduler setup...");
-			Scheduler.Setup();
+			StageMessage ("Scheduler setup...");
+			Scheduler.Setup ();
 
-			StageMessage("Console setup...");
-			SharpOS.Kernel.Console.Setup();
+			StageMessage ("Console setup...");
+			SharpOS.Kernel.Console.Setup ();
 
-			TextMode.SaveAttributes();
-			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
-			TextMode.WriteLine("");
-			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
-			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
-			TextMode.RestoreAttributes();
+			TextMode.SaveAttributes ();
+			TextMode.SetAttributes (TextColor.LightGreen, TextColor.Black);
+			TextMode.WriteLine ("");
+			TextMode.WriteLine ("Pinky: What are we gonna do tonight, Brain?");
+			TextMode.WriteLine ("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
+			TextMode.RestoreAttributes ();
 
 #if KERNEL_TESTS
 			// Testcases
 			ByteString.__RunTests ();
-			StringBuilder.__RunTests();
+			StringBuilder.__RunTests ();
 			CString8.__RunTests ();
 			PString8.__RunTests ();
 			SharpOS.Kernel.Tests.Wrapper.Run ();
-#endif		
+#endif
 
-			StageMessage("Shell setup...");
-			SharpOS.Kernel.Shell.Prompter.Setup();
-			SharpOS.Kernel.Shell.Prompter.Start();
+			StageMessage ("Shell setup...");
+			SharpOS.Kernel.Shell.Prompter.Setup ();
+			SharpOS.Kernel.Shell.Prompter.Start ();
 
 			SetKernelStage (KernelStage.Diagnostics);
 
-			while (stayInLoop) ;
+			while (stayInLoop)
+				;
 		}
 
 		public static void DisplayBanner ()
@@ -153,20 +154,20 @@ namespace SharpOS.Kernel {
 			TextMode.RestoreAttributes ();
 		}
 
-		static unsafe void StageMessage(string message)
+		static unsafe void StageMessage (string message)
 		{
-			TextMode.SaveAttributes();
-			TextMode.SetAttributes(TextColor.Green, TextColor.Black);
-			TextMode.WriteLine(message);
-			TextMode.RestoreAttributes();
+			TextMode.SaveAttributes ();
+			TextMode.SetAttributes (TextColor.Green, TextColor.Black);
+			TextMode.WriteLine (message);
+			TextMode.RestoreAttributes ();
 		}
 
-		static unsafe void StageError(string message)
+		static unsafe void StageError (string message)
 		{
-			TextMode.SaveAttributes();
-			TextMode.SetAttributes(TextColor.Red, TextColor.Black);
-			TextMode.WriteLine(message);
-			TextMode.RestoreAttributes();
+			TextMode.SaveAttributes ();
+			TextMode.SetAttributes (TextColor.Red, TextColor.Black);
+			TextMode.WriteLine (message);
+			TextMode.RestoreAttributes ();
 		}
 
 		#endregion

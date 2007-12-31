@@ -18,10 +18,8 @@ using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 using AOTAttr = SharpOS.AOT.Attributes;
 
-namespace SharpOS.Kernel.ADC 
-{
-	public unsafe class Keyboard
-	{
+namespace SharpOS.Kernel.ADC {
+	public unsafe class Keyboard {
 		[AOTAttr.ADCStub]
 		public static void Setup ()
 		{
@@ -32,7 +30,7 @@ namespace SharpOS.Kernel.ADC
 		{
 			return EventRegisterStatus.NotSupported;
 		}
-		
+
 		[AOTAttr.ADCStub]
 		public static EventRegisterStatus RegisterKeyDownEvent (uint address)
 		{
@@ -44,7 +42,7 @@ namespace SharpOS.Kernel.ADC
 		{
 			return false;
 		}
-		
+
 		[AOTAttr.ADCStub]
 		public static bool RightShift ()
 		{
@@ -56,7 +54,7 @@ namespace SharpOS.Kernel.ADC
 		{
 			return false;
 		}
-		
+
 		[AOTAttr.ADCStub]
 		public static bool RightAlt ()
 		{
@@ -68,7 +66,7 @@ namespace SharpOS.Kernel.ADC
 		{
 			return false;
 		}
-		
+
 		[AOTAttr.ADCStub]
 		public static bool RightControl ()
 		{
@@ -80,13 +78,13 @@ namespace SharpOS.Kernel.ADC
 		{
 			return false;
 		}
-		
+
 		[AOTAttr.ADCStub]
 		public static bool CapsLock ()
 		{
 			return false;
 		}
-		
+
 		[AOTAttr.ADCStub]
 		public static bool NumLock ()
 		{
@@ -94,24 +92,24 @@ namespace SharpOS.Kernel.ADC
 		}
 
 		[AOTAttr.ADCStub]
-		public static byte *GetCurrentDefaultTable (int *ret_len)
+		public static byte* GetCurrentDefaultTable (int* ret_len)
 		{
 			return null;
 		}
-		
+
 		[AOTAttr.ADCStub]
-		public static byte *GetCurrentShiftedTable (int *ret_len)
+		public static byte* GetCurrentShiftedTable (int* ret_len)
 		{
 			return null;
 		}
-	
+
 		[AOTAttr.ADCStub]
-		public unsafe static void SetKeyMap (byte *defMap, int defLen, byte *shiftMap,
+		public unsafe static void SetKeyMap (byte* defMap, int defLen, byte* shiftMap,
 					      int shiftLen)
 		{
-			Diagnostics.Assert(true, "Keyboard.SetKeyMap not implemented!");
+			Diagnostics.Assert (true, "Keyboard.SetKeyMap not implemented!");
 		}
-		
+
 
 		[AOTAttr.ADCStub]
 		public static byte Translate (uint scancode, bool shifted)

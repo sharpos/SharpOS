@@ -92,7 +92,8 @@ namespace SharpOS.AOT.X86 {
 		/// Initializes a new instance of the <see cref="ByteMemory"/> class.
 		/// </summary>
 		/// <param name="memory">The memory.</param>
-		public ByteMemory (Memory memory): base (memory)
+		public ByteMemory (Memory memory)
+			: base (memory)
 		{
 		}
 	}

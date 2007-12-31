@@ -34,7 +34,7 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			if (Add (1, 2) == 3)
 				return 1;
-				
+
 			return 0;
 		}
 

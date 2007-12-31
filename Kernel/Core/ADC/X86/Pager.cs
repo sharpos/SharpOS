@@ -26,76 +26,76 @@ namespace SharpOS.Kernel.ADC.X86 {
 	/// - Initialisation should be done in 'Architecture'
 	/// </todo>
 	public unsafe class Pager {
-	
+
 		#region Global State
 
-		private static uint *PageDirectory;	// page directory
-		private static uint *PageTables;	// page tables
+		private static uint* PageDirectory;	// page directory
+		private static uint* PageTables;	// page tables
 
 		#endregion
 		#region Enumerations
-		
+
 		[System.Flags]
-		private enum PageAttr: uint {
-			Present = (1<<0),
-			ReadWrite = (1<<1),
-			User = (1<<2),
-			Accessed = (1<<5),
-			Dirty = (1<<6),
-			
-			A1 = (1<<9),
-			A2 = (1<<10),
-			A3 = (1<<11),
-			
+		private enum PageAttr : uint {
+			Present = (1 << 0),
+			ReadWrite = (1 << 1),
+			User = (1 << 2),
+			Accessed = (1 << 5),
+			Dirty = (1 << 6),
+
+			A1 = (1 << 9),
+			A2 = (1 << 10),
+			A3 = (1 << 11),
+
 			FrameMask = 0xFFFFF000,
 			AttributeMask = 0x00000FFF
 		}
 
 		#endregion
 		#region Implementation Details
-		
+
 		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
 		//private static PageAttr GetNativePMA (PageAttributes attr)
-		private static uint GetNativePMA(PageAttributes attr)
+		private static uint GetNativePMA (PageAttributes attr)
 		{
 			if ((uint) attr == 0xFFFFFFFF)
-				return (uint)attr;
-			
+				return (uint) attr;
+
 			PageAttr attrMask = 0;
-			
+
 			if ((attr & PageAttributes.ReadWrite) != 0)
 				attrMask |= PageAttr.ReadWrite;
-				
+
 			if ((attr & PageAttributes.User) != 0)
 				attrMask |= PageAttr.User;
-				
+
 			if ((attr & PageAttributes.Present) != 0)
 				attrMask |= PageAttr.Present;
-		
-			return (uint)attrMask;
+
+			return (uint) attrMask;
 		}
 
 		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
 		//private static PageAttributes GetAbstractPMA (PageAttr attr)
-		private static uint GetAbstractPMA(PageAttr attr)
+		private static uint GetAbstractPMA (PageAttr attr)
 		{
 			if ((uint) attr == 0xFFFFFFFF)
-				return (uint)attr;
-				
+				return (uint) attr;
+
 			PageAttributes ret = PageAttributes.None;
-			
+
 			if ((attr & PageAttr.ReadWrite) != 0)
 				ret |= PageAttributes.ReadWrite;
-				
+
 			if ((attr & PageAttr.User) != 0)
 				ret |= PageAttributes.User;
-				
+
 			if ((attr & PageAttr.Present) != 0)
 				ret |= PageAttributes.Present;
 
-			return (uint)ret;
+			return (uint) ret;
 		}
-		
+
 		/*
 		private static uint ReadCR0()
 		{
@@ -140,42 +140,42 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		private static void SetDirectory (uint page)
 		{
-			Asm.CLI();
+			Asm.CLI ();
 
-			Asm.PUSH(R32.EAX);
-			Asm.PUSH(R32.ECX);
+			Asm.PUSH (R32.EAX);
+			Asm.PUSH (R32.ECX);
 
-			Asm.MOV(R32.EAX, &page);
-			
-			Asm.MOV(R32.ECX, CR.CR0);
-			Asm.OR(R32.ECX, (uint)CR0.PG);
-			
-			Asm.MOV(CR.CR3, R32.EAX);
-			Asm.MOV(CR.CR0, R32.ECX);
+			Asm.MOV (R32.EAX, &page);
 
-			Asm.POP(R32.ECX);
-			Asm.POP(R32.EAX);
+			Asm.MOV (R32.ECX, CR.CR0);
+			Asm.OR (R32.ECX, (uint) CR0.PG);
 
-			Asm.STI();
+			Asm.MOV (CR.CR3, R32.EAX);
+			Asm.MOV (CR.CR0, R32.ECX);
+
+			Asm.POP (R32.ECX);
+			Asm.POP (R32.EAX);
+
+			Asm.STI ();
 		}
-		
-		private static void PagePtrToTables (void *page, uint *ret_pde, uint *ret_pte)
+
+		private static void PagePtrToTables (void* page, uint* ret_pde, uint* ret_pte)
 		{
-			*ret_pde = (uint)page / 4194304;
-			*ret_pte = ((uint)page / 4096) - (*ret_pde * 1024);
+			*ret_pde = (uint) page / 4194304;
+			*ret_pte = ((uint) page / 4096) - (*ret_pde * 1024);
 		}
-		
+
 		private static uint ComputeControlReq (uint totalMem)
 		{
 			PageAllocator.Errors err;
-			
+
 			return (totalMem / (GetGranularitySize (0, &err) / 1024) / 1024 + 1);
 		}
 
 		#endregion
 		#region ADC Stub Implementations
-		
-		public static uint GetGranularitySize (uint granularity, PageAllocator.Errors *ret_err)
+
+		public static uint GetGranularitySize (uint granularity, PageAllocator.Errors* ret_err)
 		{
 			if (granularity < 0 || granularity > 1) {
 				*ret_err = PageAllocator.Errors.UnsupportedGranularity;
@@ -183,7 +183,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			}
 
 			*ret_err = PageAllocator.Errors.Success;
-			
+
 			switch (granularity) {
 			case 0:
 				return 4096;
@@ -200,106 +200,102 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return 1;
 		}
 
-		public static void GetMemoryRequirements (uint totalMem, PagingMemoryRequirements *req)
+		public static void GetMemoryRequirements (uint totalMem, PagingMemoryRequirements* req)
 		{
 			req->AtomicPages = ComputeControlReq (totalMem);
 			// this can't be right??
 			//req->Start = null;	
 			req->Error = PageAllocator.Errors.Success;
 		}
-		
-		public static PageAllocator.Errors Setup (uint totalMem, byte *pagemap, uint pagemapLen, PageAllocator.Errors* error)
+
+		public static PageAllocator.Errors Setup (uint totalMem, byte* pagemap, uint pagemapLen, PageAllocator.Errors* error)
 		{
 			if (pagemap == null ||
-				pagemapLen < ComputeControlReq(totalMem))
-			{
+				pagemapLen < ComputeControlReq (totalMem)) {
 				*error = PageAllocator.Errors.UnusablePageControlBuffer;
 				return *error;
 			}
 
 			uint totalBytes = totalMem * 1024;	// more intuitive to think in bytes than in kibibytes
 
-			PageDirectory = (uint*)pagemap;
-			PageTables = (uint*)(((byte*)PageDirectory) + 4096);
-			
-			uint	addr			= 0;
-			uint*	table			= (uint*)PageTables;
+			PageDirectory = (uint*) pagemap;
+			PageTables = (uint*) (((byte*) PageDirectory) + 4096);
+
+			uint addr = 0;
+			uint* table = (uint*) PageTables;
 
 			// Page directory needs to span all 4 GBs
 			// FIXME: What about PAE support might diffrent implementation
 			uint totalPages = UInt32.MaxValue / 4096; // Each page spans of memory 4MB
 			uint totalTables = 1024; // 1024 * 4MB = 4GB
 
-			Memory.MemSet32(0, (uint)PageDirectory, 1024);
-			
+			Memory.MemSet32 (0, (uint) PageDirectory, 1024);
+
 			for (int x = 0; x < totalTables; ++x) {
 				bool needsDirectoryPresent = false;
 
 				for (int i = 0; i < 1024; ++i) {
-					uint val = (addr & (uint)PageAttr.FrameMask) |
-						(uint)(PageAttr.ReadWrite);
+					uint val = (addr & (uint) PageAttr.FrameMask) |
+						(uint) (PageAttr.ReadWrite);
 
-					if (addr <= totalBytes)
-					{
-						val |= (uint)PageAttr.Present;
+					if (addr <= totalBytes) {
+						val |= (uint) PageAttr.Present;
 						needsDirectoryPresent = true;
 					}
 
-					table[i] = val;
+					table [i] = val;
 					addr += 4096;
 				}
 
 				// top-level page directory (level-1)
-				uint pageAddress = (uint)table & (uint)PageAttr.FrameMask;
+				uint pageAddress = (uint) table & (uint) PageAttr.FrameMask;
 
 				// Make direcory read/write enabled
-				pageAddress |= (uint)PageAttr.ReadWrite;
+				pageAddress |= (uint) PageAttr.ReadWrite;
 
-				if (needsDirectoryPresent)
-				{
+				if (needsDirectoryPresent) {
 					// Make directory present if its point to a physical memory already
-					pageAddress |= (uint)PageAttr.Present;
+					pageAddress |= (uint) PageAttr.Present;
 				}
 
-				PageDirectory[x] = pageAddress;
-				
+				PageDirectory [x] = pageAddress;
+
 				table += 1024;	// 1024 x sizeof(int) = 4k
 			}
-		
+
 			// Reserve memory below 0x100000 (1MB) for the BIOS/video memory
 			uint ceil = 0x100000;
-			byte* page = (byte*)null;
-			PageAllocator.ReservePageRange(page, (ceil / ADC.Pager.AtomicPageSize), "Reserve memory below 0x100000 (1MB) for the BIOS/video memory");
+			byte* page = (byte*) null;
+			PageAllocator.ReservePageRange (page, (ceil / ADC.Pager.AtomicPageSize), "Reserve memory below 0x100000 (1MB) for the BIOS/video memory");
 
 			*error = PageAllocator.Errors.Success;
 			return *error;
 		}
-		
+
 		public static PageAllocator.Errors Enable (PageAllocator.Errors* error)
 		{
-			if (PageDirectory == null)
-			{
+			if (PageDirectory == null) {
 				*error = PageAllocator.Errors.UnusablePageControlBuffer;
 				return *error;
 			}
 
-			SetDirectory ((uint)PageDirectory);
+			SetDirectory ((uint) PageDirectory);
 
 			*error = PageAllocator.Errors.Success;
 			return *error;
 		}
-		
+
 		/**
 			<summary>
 				Changes the mapping of an individual page.
 			</summary>
 		*/
-		public static PageAllocator.Errors MapPage (void *page, void *phys_page, uint granularity,
+		public static PageAllocator.Errors MapPage (void* page, void* phys_page, uint granularity,
 							PageAttributes attr)
 		{
 			uint nativeAttr = 0, pde = 0, pte = 0;
-			uint *table = null;
-			
+			uint* table = null;
+
 			// validity checks
 
 			Diagnostics.Assert (ADC.Pager.GetPointerGranularity (page) == granularity,
@@ -307,97 +303,96 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			Diagnostics.Assert (ADC.Pager.GetPointerGranularity (phys_page) == granularity,
 				"X86.Pager::MapPage(): bad alignment on physical page pointer");
-				
-			Diagnostics.Assert (page != PageTables, 
+
+			Diagnostics.Assert (page != PageTables,
 				"X86.Pager::MapPage(): tried to change mapping of the page table!");
-				
+
 			Diagnostics.Assert (page != PageDirectory,
 				"X86.Pager::MapPage(): tried to change mapping of the page directory!");
-			
+
 			Diagnostics.Assert (!PageAllocator.IsPageReserved (page),
 				"X86.Pager::MapPage(): tried to change mapping on a reserved page.");
 
 			// perform mapping
-			
+
 			nativeAttr = GetNativePMA (attr);
-			
+
 			PagePtrToTables (page, &pde, &pte);
 
 			// Make sure the directory is present and read write
-			PageDirectory[pde] |= (uint)PageAttr.Present;
-			PageDirectory[pde] |= (uint)PageAttr.ReadWrite;
+			PageDirectory [pde] |= (uint) PageAttr.Present;
+			PageDirectory [pde] |= (uint) PageAttr.ReadWrite;
 
-			if (granularity == 0)
-			{
-				uint tablePointer = PageDirectory[pde] & (uint)PageAttr.FrameMask;
-				table = (uint*)tablePointer;
+			if (granularity == 0) {
+				uint tablePointer = PageDirectory [pde] & (uint) PageAttr.FrameMask;
+				table = (uint*) tablePointer;
 			}
-			
+
 			if (nativeAttr == 0xFFFFFFFF)
-				nativeAttr = table[pte] & (uint)PageAttr.AttributeMask;
+				nativeAttr = table [pte] & (uint) PageAttr.AttributeMask;
 
 			// set our table entry to it's new target
-			
-			table[pte] = (uint)phys_page | nativeAttr;
-			
+
+			table [pte] = (uint) phys_page | nativeAttr;
+
 			return PageAllocator.Errors.Success;
 		}
 
 		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
 		// public static PageAllocator.Errors SetPageAttributes (void *page, uint granularity, PageAttributes attr)
-		public static uint SetPageAttributes (void *page, uint granularity,
+		public static uint SetPageAttributes (void* page, uint granularity,
 								      PageAttributes attr)
 		{
 			uint pde = 0, pte = 0;
-			uint *table = null;
-			uint nativeAttr = (uint)GetNativePMA (attr);
+			uint* table = null;
+			uint nativeAttr = (uint) GetNativePMA (attr);
 
 			if (granularity < 0 || granularity > 1)
-				return (uint)PageAllocator.Errors.UnsupportedGranularity;
+				return (uint) PageAllocator.Errors.UnsupportedGranularity;
 
-			Diagnostics.Assert(nativeAttr != 0xFFFFFFFF, 
+			Diagnostics.Assert (nativeAttr != 0xFFFFFFFF,
 				"X86.Pager::SetPageAttributes(): bad page map attributes");
 
-			Diagnostics.Assert(ADC.Pager.GetPointerGranularity(page) == granularity,
+			Diagnostics.Assert (ADC.Pager.GetPointerGranularity (page) == granularity,
 				"X86.Pager::SetPageAttributes(): bad alignment on page pointer");
-			
+
 			PagePtrToTables (page, &pde, &pte);
 
 			table = PageDirectory;
 
 			if (granularity == 0)
-				table = (uint*)(PageDirectory [pde] & (uint)PageAttr.FrameMask);
-			
-			table[pte] = (table [pte] & (uint)PageAttr.FrameMask) | nativeAttr;
-			
-			return (uint)PageAllocator.Errors.Success;
+				table = (uint*) (PageDirectory [pde] & (uint) PageAttr.FrameMask);
+
+			table [pte] = (table [pte] & (uint) PageAttr.FrameMask) | nativeAttr;
+
+			return (uint) PageAllocator.Errors.Success;
 		}
 
 		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
 		// public static PageAttributes GetPageAttributes (void *page, uint granularity, PageAllocator.Errors *ret_err)
-		public static uint GetPageAttributes (void *page, uint granularity,
-								      PageAllocator.Errors *ret_err)
+		public static uint GetPageAttributes (void* page, uint granularity,
+								      PageAllocator.Errors* ret_err)
 		{
 			uint pde = 0, pte = 0;
-			uint *table = null;
+			uint* table = null;
 
 			if (granularity < 0 || granularity > 1) {
 				*ret_err = PageAllocator.Errors.UnsupportedGranularity;
-				return (uint)PageAttributes.None;
+				return (uint) PageAttributes.None;
 			}
-			
-			Diagnostics.Assert (ADC.Pager.GetPointerGranularity(page) == granularity,
+
+			Diagnostics.Assert (ADC.Pager.GetPointerGranularity (page) == granularity,
 				"X86.Pager.GetPageAttributes(): bad page pointer alignment!");
-			
-			PagePtrToTables(page, &pde, &pte);
+
+			PagePtrToTables (page, &pde, &pte);
 			table = PageDirectory;
-			
+
 			if (granularity == 0)
-				table = (uint*)(table[pde] & (uint)PageAttr.FrameMask);
+				table = (uint*) (table [pde] & (uint) PageAttr.FrameMask);
 
 			*ret_err = PageAllocator.Errors.Success;
-			return GetAbstractPMA ((PageAttr)(table[pde] &
-					(uint)PageAttr.AttributeMask));
+			return GetAbstractPMA ((PageAttr) (table [pde] &
+					(uint) PageAttr.AttributeMask));
 		}
 
 		#endregion

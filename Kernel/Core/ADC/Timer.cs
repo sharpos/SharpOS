@@ -1,4 +1,3 @@
-// created on 7/17/2007 at 4:10 PM
 //
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
@@ -20,7 +19,7 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return EventRegisterStatus.NotSupported;
 		}
-		
+
 		[AOTAttr.ADCStub]
 		public static ushort GetFrequency ()
 		{

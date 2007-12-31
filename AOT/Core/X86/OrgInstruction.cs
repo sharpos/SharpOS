@@ -23,7 +23,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		/// <param name="value">The value.</param>
 		public OrgInstruction (UInt32 value)
-			: base (true, string.Empty, string.Empty, "ORG", value.ToString(), null, null, null, value, null)
+			: base (true, string.Empty, string.Empty, "ORG", value.ToString (), null, null, null, value, null)
 		{
 		}
 	}

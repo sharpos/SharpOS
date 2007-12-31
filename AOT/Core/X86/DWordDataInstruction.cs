@@ -27,8 +27,10 @@ namespace SharpOS.AOT.X86 {
 		{
 		}
 
-		public override string Parameters {
-			get {
+		public override string Parameters
+		{
+			get
+			{
 				if (this.value.GetType () == typeof (UInt32))
 					return "DD " + string.Format ("0x{0:X8}", this.value);
 

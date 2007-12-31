@@ -74,7 +74,7 @@ namespace SharpOS.AOT.X86 {
 
 			foreach (Block block in method) {
 
-				assembly.LABEL (fullname + " " + block.Index.ToString());
+				assembly.LABEL (fullname + " " + block.Index.ToString ());
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
 					assembly.COMMENT (instruction.ToString ());
@@ -230,7 +230,7 @@ namespace SharpOS.AOT.X86 {
 						throw new EngineException ("'" + instruction + "' is not supported.");
 				}
 			}
-			
+
 			assembly.LABEL (fullname + " exit");
 
 			assembly.LEA (R32.ESP, new DWordMemory (null, R32.EBP, null, 0, -12));
@@ -238,7 +238,7 @@ namespace SharpOS.AOT.X86 {
 			assembly.POP (R32.ESI);
 			assembly.POP (R32.EBX);
 			assembly.POP (R32.EBP);
-			assembly.RET();
+			assembly.RET ();
 
 			return true;
 		}
@@ -253,132 +253,132 @@ namespace SharpOS.AOT.X86 {
 		{
 			switch (type) {
 
-				case RelationalType.Equal:
-					assembly.JNE (errorLabel);
+			case RelationalType.Equal:
+				assembly.JNE (errorLabel);
 
-					break;
+				break;
 
-				case RelationalType.NotEqualOrUnordered:
-					assembly.JNE (okLabel);
+			case RelationalType.NotEqualOrUnordered:
+				assembly.JNE (okLabel);
 
-					break;
+				break;
 
-				case RelationalType.LessThan:
-					assembly.JG (errorLabel);
+			case RelationalType.LessThan:
+				assembly.JG (errorLabel);
 
-					assembly.JL (okLabel);
+				assembly.JL (okLabel);
 
-					break;
+				break;
 
-				case RelationalType.LessThanUnsignedOrUnordered:
-					assembly.JA (errorLabel);
+			case RelationalType.LessThanUnsignedOrUnordered:
+				assembly.JA (errorLabel);
 
-					assembly.JB (okLabel);
+				assembly.JB (okLabel);
 
-					break;
+				break;
 
-				case RelationalType.LessThanOrEqual:
-					assembly.JG (errorLabel);
+			case RelationalType.LessThanOrEqual:
+				assembly.JG (errorLabel);
 
-					assembly.JL (okLabel);
+				assembly.JL (okLabel);
 
-					break;
+				break;
 
-				case RelationalType.LessThanOrEqualUnsignedOrUnordered:
-					assembly.JA (errorLabel);
+			case RelationalType.LessThanOrEqualUnsignedOrUnordered:
+				assembly.JA (errorLabel);
 
-					assembly.JB (okLabel);
+				assembly.JB (okLabel);
 
-					break;
+				break;
 
-				case RelationalType.GreaterThan:
-					assembly.JL (errorLabel);
+			case RelationalType.GreaterThan:
+				assembly.JL (errorLabel);
 
-					assembly.JG (okLabel);
+				assembly.JG (okLabel);
 
-					break;
+				break;
 
-				case RelationalType.GreaterThanUnsignedOrUnordered:
-					assembly.JB (errorLabel);
+			case RelationalType.GreaterThanUnsignedOrUnordered:
+				assembly.JB (errorLabel);
 
-					assembly.JA (okLabel);
+				assembly.JA (okLabel);
 
-					break;
+				break;
 
-				case RelationalType.GreaterThanOrEqual:
-					assembly.JL (errorLabel);
+			case RelationalType.GreaterThanOrEqual:
+				assembly.JL (errorLabel);
 
-					assembly.JG (okLabel);
+				assembly.JG (okLabel);
 
-					break;
+				break;
 
-				case RelationalType.GreaterThanOrEqualUnsignedOrUnordered:
-					assembly.JB (errorLabel);
+			case RelationalType.GreaterThanOrEqualUnsignedOrUnordered:
+				assembly.JB (errorLabel);
 
-					assembly.JA (okLabel);
+				assembly.JA (okLabel);
 
-					break;
+				break;
 
-				default:
-					throw new NotImplementedEngineException ("'" + type + "' is not supported.");
+			default:
+				throw new NotImplementedEngineException ("'" + type + "' is not supported.");
 			}
 		}
 
 		public void RelationalTypeCMP (RelationalType type, string label)
 		{
 			switch (type) {
-				case RelationalType.Equal:
-					assembly.JE (label);
+			case RelationalType.Equal:
+				assembly.JE (label);
 
-					break;
+				break;
 
-				case RelationalType.NotEqualOrUnordered:
-					assembly.JNE (label);
+			case RelationalType.NotEqualOrUnordered:
+				assembly.JNE (label);
 
-					break;
+				break;
 
-				case RelationalType.LessThan:
-					assembly.JL (label);
+			case RelationalType.LessThan:
+				assembly.JL (label);
 
-					break;
+				break;
 
-				case RelationalType.LessThanOrEqual:
-					assembly.JLE (label);
+			case RelationalType.LessThanOrEqual:
+				assembly.JLE (label);
 
-					break;
+				break;
 
-				case RelationalType.GreaterThan:
-					assembly.JG (label);
+			case RelationalType.GreaterThan:
+				assembly.JG (label);
 
-					break;
+				break;
 
-				case RelationalType.GreaterThanOrEqual:
-					assembly.JGE (label);
+			case RelationalType.GreaterThanOrEqual:
+				assembly.JGE (label);
 
-					break;
+				break;
 
-				case RelationalType.LessThanUnsignedOrUnordered:
-					assembly.JB (label);
+			case RelationalType.LessThanUnsignedOrUnordered:
+				assembly.JB (label);
 
-					break;
+				break;
 
-				case RelationalType.LessThanOrEqualUnsignedOrUnordered:
-					assembly.JBE (label);
+			case RelationalType.LessThanOrEqualUnsignedOrUnordered:
+				assembly.JBE (label);
 
-					break;
+				break;
 
-				case RelationalType.GreaterThanUnsignedOrUnordered:
-					assembly.JA (label);
+			case RelationalType.GreaterThanUnsignedOrUnordered:
+				assembly.JA (label);
 
-					break;
+				break;
 
-				case RelationalType.GreaterThanOrEqualUnsignedOrUnordered:
-					assembly.JAE (label);
+			case RelationalType.GreaterThanOrEqualUnsignedOrUnordered:
+				assembly.JAE (label);
 
-					break;
+				break;
 
-				default:
-					throw new NotImplementedEngineException ("'" + type + "' is not supported.");
+			default:
+				throw new NotImplementedEngineException ("'" + type + "' is not supported.");
 			}
 		}
 
@@ -399,59 +399,59 @@ namespace SharpOS.AOT.X86 {
 				IR.Operands.Register identifier = operand as IR.Operands.Register;
 
 				switch (identifier.InternalType) {
-					case InternalType.I:
-					case InternalType.O:
-					case InternalType.M:
-					case InternalType.I4:
-						if (identifier.IsRegisterSet)
-							this.assembly.PUSH (Assembly.GetRegister (identifier.Register));
+				case InternalType.I:
+				case InternalType.O:
+				case InternalType.M:
+				case InternalType.I4:
+					if (identifier.IsRegisterSet)
+						this.assembly.PUSH (Assembly.GetRegister (identifier.Register));
 
-						else
-							this.assembly.PUSH (new DWordMemory (this.GetAddress (identifier)));
+					else
+						this.assembly.PUSH (new DWordMemory (this.GetAddress (identifier)));
 
-						break;
+					break;
 
-					case InternalType.I8:
-						Memory memory = this.GetAddress (identifier);
-						DWordMemory high = new DWordMemory (memory);
-						high.DisplacementDelta = 4;
-						assembly.PUSH (high);
+				case InternalType.I8:
+					Memory memory = this.GetAddress (identifier);
+					DWordMemory high = new DWordMemory (memory);
+					high.DisplacementDelta = 4;
+					assembly.PUSH (high);
 
-						DWordMemory low = new DWordMemory (memory);
-						assembly.PUSH (new DWordMemory (low));
-						break;
+					DWordMemory low = new DWordMemory (memory);
+					assembly.PUSH (new DWordMemory (low));
+					break;
 
-					case InternalType.ValueType:
-						int size = this.method.Engine.GetTypeSize (identifier.Type.ToString ());
+				case InternalType.ValueType:
+					int size = this.method.Engine.GetTypeSize (identifier.Type.ToString ());
 
-						uint pushSize = (uint) size;
+					uint pushSize = (uint) size;
 
-						if (pushSize % 4 != 0)
-							pushSize = ((pushSize / 4) + 1) * 4;
+					if (pushSize % 4 != 0)
+						pushSize = ((pushSize / 4) + 1) * 4;
 
-						this.assembly.SUB (R32.ESP, pushSize);
+					this.assembly.SUB (R32.ESP, pushSize);
 
-						this.assembly.PUSH (R32.ESI);
-						this.assembly.PUSH (R32.EDI);
-						this.assembly.PUSH (R32.ECX);
+					this.assembly.PUSH (R32.ESI);
+					this.assembly.PUSH (R32.EDI);
+					this.assembly.PUSH (R32.ECX);
 
-						this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (identifier)));
+					this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (identifier)));
 
-						// The 3 push above changed the ESP so we need a LEA = ESP + 12
-						this.assembly.LEA (R32.EDI, new Memory (null, R32.ESP, null, 0, 12));
-						this.assembly.MOV (R32.ECX, (uint) size);
+					// The 3 push above changed the ESP so we need a LEA = ESP + 12
+					this.assembly.LEA (R32.EDI, new Memory (null, R32.ESP, null, 0, 12));
+					this.assembly.MOV (R32.ECX, (uint) size);
 
-						this.assembly.CLD ();
-						this.assembly.REP ();
-						this.assembly.MOVSB ();
+					this.assembly.CLD ();
+					this.assembly.REP ();
+					this.assembly.MOVSB ();
 
-						this.assembly.POP (R32.ECX);
-						this.assembly.POP (R32.EDI);
-						this.assembly.POP (R32.ESI);
-						break;
+					this.assembly.POP (R32.ECX);
+					this.assembly.POP (R32.EDI);
+					this.assembly.POP (R32.ESI);
+					break;
 
-					default:
-						throw new NotImplementedEngineException ("'" + operand + "' is not supported.");
+				default:
+					throw new NotImplementedEngineException ("'" + operand + "' is not supported.");
 				}
 
 			} else
@@ -545,7 +545,7 @@ namespace SharpOS.AOT.X86 {
 				return new Memory (null, register, null, 0, this.assembly.GetFieldOffset (field.Type));
 			}
 
-			return new Memory(field.Type.ToString ());
+			return new Memory (field.Type.ToString ());
 		}
 
 		private Memory GetAddress (IR.Operands.Identifier identifier)
@@ -583,7 +583,7 @@ namespace SharpOS.AOT.X86 {
 				result++;
 
 			foreach (ParameterDefinition parameter in this.method.MethodDefinition.Parameters) {
-				InternalType InternalType = this.method.Engine.GetInternalType (parameter.ParameterType.ToString());
+				InternalType InternalType = this.method.Engine.GetInternalType (parameter.ParameterType.ToString ());
 
 				if (i++ == index)
 					break;

@@ -55,7 +55,7 @@ namespace SharpOS.AOT.IR {
 			Success,
 			Failure
 		}
-		
+
 		/// <summary>
 		/// Represents the version of the AOT compiler engine.
 		/// </summary>
@@ -65,15 +65,15 @@ namespace SharpOS.AOT.IR {
 		EngineOptions options = null;
 		IAssembly asm = null;
 		DumpProcessor dump = null;
-		
-		List<ADCLayer> adcLayers = new List<ADCLayer>();
-		List<string> adcInterfaces = new List<string>();
+
+		List<ADCLayer> adcLayers = new List<ADCLayer> ();
+		List<string> adcInterfaces = new List<string> ();
 		ADCLayer adcLayer = null;
-		
-		List<AssemblyDefinition> assemblies = new List<AssemblyDefinition>();
+
+		List<AssemblyDefinition> assemblies = new List<AssemblyDefinition> ();
 		List<Class> classes = new List<Class> ();
-		Dictionary<string,byte[]> resources = null;
-		
+		Dictionary<string, byte []> resources = null;
+
 		Status status;
 		string currentAssemblyFile;
 		AssemblyDefinition currentAssembly;
@@ -81,60 +81,70 @@ namespace SharpOS.AOT.IR {
 		TypeDefinition currentType;
 		MethodDefinition currentMethod;
 
-		public Status CurrentStatus {
-			get {
+		public Status CurrentStatus
+		{
+			get
+			{
 				return this.status;
 			}
 		}
-		
-		public Dictionary<string,byte[]> Resources {
-			get {
+
+		public Dictionary<string, byte []> Resources
+		{
+			get
+			{
 				return this.resources;
 			}
 		}
-		
+
 		/// <summary>
 		/// Provides storage for information about the architecture-dependent 
 		/// code layers found during initial processing of the assemblies to
 		/// be AOTed.
 		/// </summary>
 		public class ADCLayer {
-			public ADCLayer(string cpu, string ns)
+			public ADCLayer (string cpu, string ns)
 			{
 				CPU = cpu;
 				Namespace = ns;
 			}
-			
+
 			public string CPU, Namespace;
 		}
-		
+
 		/// <summary>
 		/// Gets the architecture-dependent IAssembly backend which encodes
 		/// the compiler's intermediate representation into architecture-native
 		/// binary code.
 		/// </summary>
-		public IAssembly Assembly {
-			get {
+		public IAssembly Assembly
+		{
+			get
+			{
 				return this.asm;
 			}
 		}
-		
+
 		/// <summary>
 		/// Provides access to the <see cref="EngineOptions" />
 		/// object used to configure this compiler engine instance.
 		/// </summary>
-		public EngineOptions Options {
-			get {
+		public EngineOptions Options
+		{
+			get
+			{
 				return this.options;
 			}
 		}
-		
+
 		/// <summary>
 		/// Provides access to the dump processing object, which
 		/// is used for advanced debugging output.
 		/// </summary>
-		public DumpProcessor Dump {
-			get {
+		public DumpProcessor Dump
+		{
+			get
+			{
 				return this.dump;
 			}
 		}
@@ -143,18 +153,22 @@ namespace SharpOS.AOT.IR {
 		/// Provides access to the ADC layer selected for use
 		/// for this compiler invocation.
 		/// </summary>
-		public ADCLayer ADC {
-			get {
+		public ADCLayer ADC
+		{
+			get
+			{
 				return this.adcLayer;
 			}
 		}
 
-		public string ProcessingAssemblyFile {
-			get {
+		public string ProcessingAssemblyFile
+		{
+			get
+			{
 				return this.currentAssemblyFile;
 			}
 		}
-		
+
 		/// <summary>
 		/// Changes the Status property of the Engine.
 		/// </summary>
@@ -171,7 +185,7 @@ namespace SharpOS.AOT.IR {
 			type = this.currentType;
 			method = this.currentMethod;
 		}
-		
+
 		public void ClearStatusInformation ()
 		{
 			this.currentAssembly = null;
@@ -179,8 +193,8 @@ namespace SharpOS.AOT.IR {
 			this.currentType = null;
 			this.currentMethod = null;
 		}
-		
-		public void SetStatusInformation (AssemblyDefinition assembly, ModuleDefinition module, 
+
+		public void SetStatusInformation (AssemblyDefinition assembly, ModuleDefinition module,
 						  TypeDefinition type, MethodDefinition method)
 		{
 			this.currentAssembly = assembly;
@@ -188,7 +202,7 @@ namespace SharpOS.AOT.IR {
 			this.currentType = type;
 			this.currentMethod = method;
 		}
-		
+
 		/// <summary>
 		/// Retrieve a type definition for the specified type.
 		/// </summary>
@@ -196,10 +210,10 @@ namespace SharpOS.AOT.IR {
 		{
 			if (ns == null)
 				throw new ArgumentNullException ("ns");
-			
+
 			if (name == null)
 				throw new ArgumentNullException ("name");
-			
+
 			foreach (AssemblyDefinition def in assemblies) {
 				foreach (ModuleDefinition mod in def.Modules) {
 					foreach (TypeDefinition type in mod.Types) {
@@ -208,10 +222,10 @@ namespace SharpOS.AOT.IR {
 					}
 				}
 			}
-			
+
 			return null;
 		}
-		
+
 		/// <summary>
 		/// Prints a console message if <paramref name="lvl" /> is less
 		/// than or equal to the Verbosity option.
@@ -221,7 +235,7 @@ namespace SharpOS.AOT.IR {
 			if (options.Verbosity >= lvl)
 				Console.WriteLine (msg, prms);
 		}
-		
+
 		/// <summary>
 		/// Modifies the method reference <paramref name="call" /> to
 		/// refer to the equivalent ADC layer method.
@@ -233,9 +247,9 @@ namespace SharpOS.AOT.IR {
 			string nsseg = null;
 			TypeDefinition adcStubType;
 			MethodDefinition adcStub;
-			TypeReference ntype; 
+			TypeReference ntype;
 			bool matched = false;
-			
+
 			foreach (string iface in adcInterfaces) {
 				if (call.DeclaringType.Namespace.StartsWith (iface + ".")) {
 					rootns = iface;
@@ -258,7 +272,7 @@ namespace SharpOS.AOT.IR {
 			foreach (MethodDefinition def in adcStubType.Methods) {
 				if (def.ReturnType.ReturnType.FullName == call.ReturnType.ReturnType.FullName &&
 				    def.Parameters.Count == call.Parameters.Count) {
-				    	bool badParams = false;
+					bool badParams = false;
 					for (int x = 0; x < call.Parameters.Count; ++x) {
 						if (call.Parameters [x].ParameterType.FullName !=
 						    def.Parameters [x].ParameterType.FullName) {
@@ -281,21 +295,21 @@ namespace SharpOS.AOT.IR {
 					call, adcStubType));
 
 			Message (3, "Replacing ADC method: `{0}'",
-				call.ToString());
+				call.ToString ());
 			Message (4, " -- scope: `{0}', ns-segment = `{1}', class = '{2}'",
 				call.DeclaringType.Scope, nsseg, call.DeclaringType.Name);
-			
-			
+
+
 			Mono.Cecil.MethodReference nn = new Mono.Cecil.MethodReference (
 				call.Name, ntype, call.ReturnType.ReturnType, call.HasThis,
 				call.ExplicitThis, call.CallingConvention);
-			
+
 			foreach (ParameterDefinition def in call.Parameters)
 				nn.Parameters.Add (def);
-			
+
 			return nn;
 		}
-		
+
 		/// <summary>
 		/// Finds the MethodDefinition that matches the method reference
 		/// <paramref name="call" />. This method searches through the list
@@ -351,7 +365,7 @@ namespace SharpOS.AOT.IR {
 
 			return null;
 		}
-		
+
 		/// <summary>
 		/// Creates the correct IAssembly object corresponding to 
 		/// the CPU architecture chosen by the 'CPU' option of 
@@ -365,31 +379,31 @@ namespace SharpOS.AOT.IR {
 			IAssembly asm = null;
 
 			switch (options.CPU) {
-				case "X86":
-					asm = new SharpOS.AOT.X86.Assembly ();
-					break;
+			case "X86":
+				asm = new SharpOS.AOT.X86.Assembly ();
+				break;
 
-				default:
-					throw new EngineException (string.Format (
-						"Error: processor type `{0}' not supported",
-						options.CPU));
-					break;
+			default:
+				throw new EngineException (string.Format (
+					"Error: processor type `{0}' not supported",
+					options.CPU));
+				break;
 			}
 
 			Message (1, "AOT compiling for processor `{0}'", options.CPU);
 			Run (asm);
 		}
-		
+
 		public void LoadResources (AssemblyDefinition def)
 		{
 			// TODO: does this cover multi-module assemblies?
-			
+
 			Message (2, "Adding resources from {0}", def.Name.Name);
-			
+
 			foreach (EmbeddedResource res in def.MainModule.Resources) {
 				Message (2, "- Added resource {0}/Resources/{1}",
 					def.Name.Name, res.Name);
-				
+
 				resources [def.Name.Name + "/Resources/" + res.Name] =
 					res.Data;
 			}
@@ -421,12 +435,12 @@ namespace SharpOS.AOT.IR {
 		public void Run (IAssembly asm)
 		{
 			byte dumpType = 0;
-			
+
 			if (asm == null)
 				throw new ArgumentNullException ("asm");
 
 			// Decide the dump type and start the processor
-			
+
 			if (this.options.ConsoleDump)
 				dumpType |= (byte) DumpType.Console;
 
@@ -441,12 +455,12 @@ namespace SharpOS.AOT.IR {
 
 			this.asm = asm;
 			this.resources = this.options.Resources;
-			
+
 			foreach (string assemblyFile in options.Assemblies) {
 				bool skip = false;
 
 				Message (1, "Loading assembly `{0}'", assemblyFile);
-				
+
 				SetStatus (Status.AssemblyLoading);
 				this.currentAssemblyFile = assemblyFile;
 
@@ -455,7 +469,7 @@ namespace SharpOS.AOT.IR {
 				this.currentAssembly = library;
 
 				LoadResources (library);
-				
+
 				// Check for ADCLayerAttribute
 
 				Message (2, "Aggregating ADC layers...");
@@ -464,14 +478,14 @@ namespace SharpOS.AOT.IR {
 				foreach (CustomAttribute ca in library.CustomAttributes) {
 
 					if (ca.Constructor.DeclaringType.FullName ==
-					    typeof(AOTAttr.ADCLayerAttribute).FullName) {
+					    typeof (AOTAttr.ADCLayerAttribute).FullName) {
 						if (ca.ConstructorParameters.Count != 2)
-					    		throw new EngineException (string.Format (
-					    			"[ADCLayer] in assembly `{0}': must have 2 parameters",
-					    			library.Name));
+							throw new EngineException (string.Format (
+								"[ADCLayer] in assembly `{0}': must have 2 parameters",
+								library.Name));
 
-						string adcCPU = ca.ConstructorParameters[0] as string;
-						string adcNamespace = ca.ConstructorParameters[1] as string;
+						string adcCPU = ca.ConstructorParameters [0] as string;
+						string adcNamespace = ca.ConstructorParameters [1] as string;
 
 						if (adcCPU == null || adcNamespace == null)
 							throw new EngineException (string.Format (
@@ -498,16 +512,16 @@ namespace SharpOS.AOT.IR {
 							 adcNamespace);
 
 						adcLayers.Add (newLayer);
-					} else if (ca.Constructor.DeclaringType.FullName == 
-						   typeof(AOTAttr.ADCInterfaceAttribute).FullName) {
-					
-						if (ca.ConstructorParameters.Count != 1)
-					    		throw new EngineException (string.Format (
-					    			"[ADCLayer] in assembly `{0}': must have 1 parameters",
-					    			library.Name));
+					} else if (ca.Constructor.DeclaringType.FullName ==
+						   typeof (AOTAttr.ADCInterfaceAttribute).FullName) {
 
-					    	string iface = ca.ConstructorParameters[0] as string;
-						adcInterfaces.Add(iface);
+						if (ca.ConstructorParameters.Count != 1)
+							throw new EngineException (string.Format (
+								"[ADCLayer] in assembly `{0}': must have 1 parameters",
+								library.Name));
+
+						string iface = ca.ConstructorParameters [0] as string;
+						adcInterfaces.Add (iface);
 
 						Message (2, "Assembly `{0}' contains an ADC interface in namespace `{1}'",
 							library.Name,
@@ -612,11 +626,11 @@ namespace SharpOS.AOT.IR {
 			Method mainEntryPoint = null;
 
 			foreach (Class _class in this.classes) {
-				List <string> defNames = new List <string> ();
-				
+				List<string> defNames = new List<string> ();
+
 				this.currentModule = _class.ClassDefinition.Module;
 				this.currentType = _class.ClassDefinition;
-				
+
 				foreach (Method _method in _class) {
 					foreach (CustomAttribute attribute in _method.MethodDefinition.CustomAttributes) {
 						if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.KernelMainAttribute).ToString ()))
@@ -638,19 +652,19 @@ namespace SharpOS.AOT.IR {
 
 						mainEntryPoint = _method;
 					}
-					
+
 					if (defNames.Contains (_method.MethodDefinition.ToString ()))
-						throw new EngineException ("Already compiled this method: " + 
+						throw new EngineException ("Already compiled this method: " +
 							_method.MethodDefinition.ToString ());
 					defNames.Add (_method.MethodDefinition.ToString ());
 					this.currentMethod = _method.MethodDefinition;
-					
+
 					if (this.options.DumpFilter.Length > 0
 							&& _method.ToString ().IndexOf (this.options.DumpFilter) == -1) {
 
 						// If a filter is defined then turn off the verbosity
 						Dump.Enabled = false;
-						
+
 						_method.Process ();
 
 						Dump.Enabled = true;
@@ -681,7 +695,7 @@ namespace SharpOS.AOT.IR {
 
 			Dump.PopElement ();
 			SetStatus (Status.Success);
-			
+
 			return;
 		}
 
@@ -759,85 +773,85 @@ namespace SharpOS.AOT.IR {
 				throw new EngineException (string.Format ("'{0}' is not supported.", type.GetType ().ToString ()));
 
 			switch (sizeType) {
-				case InternalType.I1:
-				case InternalType.U1:
-					result = 1;
-					break;
+			case InternalType.I1:
+			case InternalType.U1:
+				result = 1;
+				break;
 
-				case InternalType.I2:
-				case InternalType.U2:
-					result = 2;
-					break;
+			case InternalType.I2:
+			case InternalType.U2:
+				result = 2;
+				break;
 
-				case InternalType.I4:
-				case InternalType.U4:
-					result = 4;
-					break;
+			case InternalType.I4:
+			case InternalType.U4:
+				result = 4;
+				break;
 
-				case InternalType.I:
-				case InternalType.U:
-				case InternalType.O:
-				case InternalType.M:
-					result = this.asm.IntSize;
-					break;
+			case InternalType.I:
+			case InternalType.U:
+			case InternalType.O:
+			case InternalType.M:
+				result = this.asm.IntSize;
+				break;
 
-				case InternalType.I8:
-				case InternalType.U8:
-					result = 8;
-					break;
+			case InternalType.I8:
+			case InternalType.U8:
+				result = 8;
+				break;
 
-				case InternalType.R4:
-					result = 4;
-					break;
+			case InternalType.R4:
+				result = 4;
+				break;
 
-				case InternalType.R8:
-					result = 8;
-					break;
+			case InternalType.R8:
+				result = 8;
+				break;
 
-				case InternalType.ValueType:
-					foreach (Class _class in this.classes) {
-						if (_class.ClassDefinition.FullName.Equals (type)) {
-							if (_class.ClassDefinition.IsEnum) {
+			case InternalType.ValueType:
+				foreach (Class _class in this.classes) {
+					if (_class.ClassDefinition.FullName.Equals (type)) {
+						if (_class.ClassDefinition.IsEnum) {
+							foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
+								if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
+									result = this.GetTypeSize (field.FieldType.FullName);
+									break;
+								}
+							}
+
+							break;
+
+						} else if (_class.ClassDefinition.IsValueType) {
+							if ((_class.ClassDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
 								foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-									if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
-										result = this.GetTypeSize (field.FieldType.FullName);
-										break;
-									}
+									if ((field as FieldDefinition).IsStatic)
+										continue;
+
+									int value = (int) (field.Offset + this.GetTypeSize (field.FieldType.FullName));
+
+									if (value > result)
+										result = value;
 								}
 
 								break;
 
-							} else if (_class.ClassDefinition.IsValueType) {
-								if ((_class.ClassDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
-									foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-										if ((field as FieldDefinition).IsStatic)
-											continue;
+							} else {
+								foreach (FieldReference field in _class.ClassDefinition.Fields) {
+									if ((field as FieldDefinition).IsStatic)
+										continue;
 
-										int value = (int) (field.Offset + this.GetTypeSize (field.FieldType.FullName));
-
-										if (value > result)
-											result = value;
-									}
-
-									break;
-
-								} else {
-									foreach (FieldReference field in _class.ClassDefinition.Fields) {
-										if ((field as FieldDefinition).IsStatic)
-											continue;
-
-										result += this.GetFieldSize (field.FieldType.FullName);
-									}
-
-									break;
+									result += this.GetFieldSize (field.FieldType.FullName);
 								}
 
-							} else
 								break;
-						}
+							}
+
+						} else
+							break;
 					}
+				}
 
-					break;
+				break;
 			}
 
 			if (result == 0)
@@ -872,7 +886,7 @@ namespace SharpOS.AOT.IR {
 				return Operands.InternalType.NotSet;
 			else if (type.Equals ("System.Void"))
 				return Operands.InternalType.NotSet;
-			
+
 			else if (type.Equals ("System.Boolean"))
 				return Operands.InternalType.U1;
 			else if (type.Equals ("bool"))
@@ -961,7 +975,7 @@ namespace SharpOS.AOT.IR {
 
 						} else if (_class.ClassDefinition.IsValueType)
 							return Operands.InternalType.ValueType;
-						
+
 						else if (_class.ClassDefinition.IsClass)
 							return Operands.InternalType.O;
 					}
@@ -969,7 +983,7 @@ namespace SharpOS.AOT.IR {
 			}
 
 			Console.Error.WriteLine ("WARNING: '" + type + "' not supported.");
-			
+
 			return InternalType.NotSet;
 		}
 	}

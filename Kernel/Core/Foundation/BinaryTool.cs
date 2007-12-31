@@ -24,35 +24,33 @@ using AOTAttr = SharpOS.AOT.Attributes;
 
 //#define VERBOSE_BinaryTool
 
-namespace SharpOS.Kernel.Foundation
-{
-	public unsafe class BinaryTool
-	{
-		public static int Read7BitInt (void *ptr, int *ret_len)
+namespace SharpOS.Kernel.Foundation {
+	public unsafe class BinaryTool {
+		public static int Read7BitInt (void* ptr, int* ret_len)
 		{
 			// Originally from Mono: mcs/class/corlib/System.IO/BinaryReader.cs
 			// Copyright (C) 2004 Novell
-			
+
 			int ret = 0;
 			int shift = 0;
-			byte *bp = (byte*)ptr;
+			byte* bp = (byte*) ptr;
 			byte b;
-			
+
 			do {
 				b = *bp;
 				++bp;
 
 				if (ret_len != null)
 					(*ret_len)++;
-				
-				ret = ret | (((int)(b & 0x7f)) << shift);
+
+				ret = ret | (((int) (b & 0x7f)) << shift);
 				shift += 7;
 			} while ((b & 0x80) == 0x80);
 
 #if VERBOSE_BinaryTool
 			TextMode.WriteLine ("read7bit: ", ret);
 #endif
-			
+
 			return ret;
 		}
 
@@ -68,12 +66,12 @@ namespace SharpOS.Kernel.Foundation
 		/// even if it is too small. The returned value is not reduced if the buffer is too
 		/// small (IE, it represents the entire string, not the shortened version).
 		/// </summary>
-		public static int ReadPrefixedString (void *ptr, byte *buffer, int bufferLen, int *error)
+		public static int ReadPrefixedString (void* ptr, byte* buffer, int bufferLen, int* error)
 		{
 			int ilen = 0;
 			int size = 0;
 			int x = 0;
-			byte *bp = (byte*)ptr;
+			byte* bp = (byte*) ptr;
 
 			*error = 0;
 			size = Read7BitInt (ptr, &ilen);
@@ -95,9 +93,9 @@ namespace SharpOS.Kernel.Foundation
 			TextMode.WriteLine ("&buffer: 0x", (int)buffer);
 			TextMode.WriteLine ("&ilen: 0x", (int)&ilen);
 #endif
-			buffer [bufferLen-1] = 0;
-			
-			for (x = 0; x < size && x < bufferLen-1; ++x) {
+			buffer [bufferLen - 1] = 0;
+
+			for (x = 0; x < size && x < bufferLen - 1; ++x) {
 #if VERBOSE_BinaryTool
 				TextMode.Write ("copying ");
 				TextMode.WriteChar (bp [x]);
@@ -105,14 +103,14 @@ namespace SharpOS.Kernel.Foundation
 #endif
 				buffer [x] = bp [x];
 			}
-			
+
 			buffer [x] = 0;
 
 			/*
 			if (x != size-1)
 				*error = 1;	// the buffer was too small
 			*/
-			
+
 #if VERBOSE_BinaryTool
 			TextMode.Write ("size: ");
 			TextMode.Write (size, false);
@@ -126,7 +124,7 @@ namespace SharpOS.Kernel.Foundation
 			return ilen + size;
 		}
 
-		public static int ReadPrefixedString (void *ptr, byte *buffer, int bufferLen)
+		public static int ReadPrefixedString (void* ptr, byte* buffer, int bufferLen)
 		{
 			int error = 0;
 

@@ -20,8 +20,9 @@ namespace SharpOS.AOT.IR {
 	/// not thrown when an internal AOT error occurs.
 	/// </summary>
 	public class EngineException : Exception {
-		public EngineException(string message):
-			base(message)
+		public EngineException (string message)
+			:
+			base (message)
 		{
 		}
 	}

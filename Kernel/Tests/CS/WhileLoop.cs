@@ -16,11 +16,11 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			c = 10;
 			x = 0;
-			
+
 			while (x < c) {
 				if (x >= c)
 					return 0;
-				
+
 				++x;
 			}
 

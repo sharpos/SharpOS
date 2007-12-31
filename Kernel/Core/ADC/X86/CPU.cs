@@ -30,27 +30,27 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (&edx, R32.EDX);
 			Asm.MOV (&ecx, R32.ECX);
 
-			ADC.TextMode.SaveAttributes();
+			ADC.TextMode.SaveAttributes ();
 
-            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
+			ADC.TextMode.SetAttributes (TextColor.LightMagenta, TextColor.Black);
 			ADC.TextMode.Write ("CPU Family: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) ((eax >> 8) & 0x0F));
 			ADC.TextMode.WriteLine ();
 
-            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
+			ADC.TextMode.SetAttributes (TextColor.LightMagenta, TextColor.Black);
 			ADC.TextMode.Write ("CPU Model: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) ((eax >> 4) & 0x0F));
 			ADC.TextMode.WriteLine ();
 
-            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
+			ADC.TextMode.SetAttributes (TextColor.LightMagenta, TextColor.Black);
 			ADC.TextMode.Write ("CPU Stepping: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 			ADC.TextMode.WriteByte ((byte) (eax & 0x0F));
 			ADC.TextMode.WriteLine ();
 
-            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
+			ADC.TextMode.SetAttributes (TextColor.LightMagenta, TextColor.Black);
 			ADC.TextMode.Write ("CPU Flags: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 
@@ -136,7 +136,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		public unsafe static void WriteNoCPUID ()
 		{
-			ADC.TextMode.SaveAttributes();
+			ADC.TextMode.SaveAttributes ();
 			ADC.TextMode.SetAttributes (TextColor.LightRed, TextColor.Black);
 			ADC.TextMode.WriteLine ("No CPUID!");
 			ADC.TextMode.RestoreAttributes ();
@@ -153,14 +153,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (&edx, R32.EDX);
 			Asm.MOV (&ecx, R32.ECX);
 
-			ADC.TextMode.SaveAttributes();
+			ADC.TextMode.SaveAttributes ();
 			ADC.TextMode.Write ("CPU Vendor: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
-			ADC.TextMode.WriteSubstring ((byte*)&ebx, 0, 4);
-			ADC.TextMode.WriteSubstring ((byte*)&edx, 0, 4);
-			ADC.TextMode.WriteSubstring ((byte*)&ecx, 0, 4);
-			ADC.TextMode.WriteLine();
-			ADC.TextMode.RestoreAttributes();
+			ADC.TextMode.WriteSubstring ((byte*) &ebx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*) &edx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*) &ecx, 0, 4);
+			ADC.TextMode.WriteLine ();
+			ADC.TextMode.RestoreAttributes ();
 		}
 
 		public unsafe static void WriteBrandName (uint value)
@@ -174,25 +174,25 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (&edx, R32.EDX);
 			Asm.MOV (&ecx, R32.ECX);
 
-			ADC.TextMode.WriteSubstring ((byte*)&eax, 0, 4);
-			ADC.TextMode.WriteSubstring ((byte*)&ebx, 0, 4);
-			ADC.TextMode.WriteSubstring ((byte*)&ecx, 0, 4);
-			ADC.TextMode.WriteSubstring ((byte*)&edx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*) &eax, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*) &ebx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*) &ecx, 0, 4);
+			ADC.TextMode.WriteSubstring ((byte*) &edx, 0, 4);
 		}
 
 		public unsafe static void WriteBrandName ()
 		{
 			// Brand Name
-			ADC.TextMode.SaveAttributes();
-            ADC.TextMode.SetAttributes( TextColor.LightMagenta, TextColor.Black );
+			ADC.TextMode.SaveAttributes ();
+			ADC.TextMode.SetAttributes (TextColor.LightMagenta, TextColor.Black);
 			ADC.TextMode.Write ("CPU Brand: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 
 			for (uint i = 0x80000002; i <= 0x80000004; i++)
 				WriteBrandName (i);
 
-			ADC.TextMode.WriteLine();
-			ADC.TextMode.RestoreAttributes();
+			ADC.TextMode.WriteLine ();
+			ADC.TextMode.RestoreAttributes ();
 		}
 
 		public unsafe static byte HasNoCPUID ()

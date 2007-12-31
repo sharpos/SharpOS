@@ -8,11 +8,10 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-namespace SharpOS.Kernel
-{
-	public enum KernelError: uint {
+namespace SharpOS.Kernel {
+	public enum KernelError : uint {
 		Unknown = 0,
-		
+
 		Success,
 		MultibootError,
 

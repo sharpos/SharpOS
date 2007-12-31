@@ -48,29 +48,29 @@ namespace SharpOS.AOT.X86 {
 				return value as DRType;
 
 			switch (Register.GetName (value)) {
-				case "DR0":
-					return DR.DR0;
+			case "DR0":
+				return DR.DR0;
 
-				case "DR1":
-					return DR.DR1;
+			case "DR1":
+				return DR.DR1;
 
-				case "DR2":
-					return DR.DR2;
+			case "DR2":
+				return DR.DR2;
 
-				case "DR3":
-					return DR.DR3;
+			case "DR3":
+				return DR.DR3;
 
-				case "DR4":
-					return DR.DR4;
+			case "DR4":
+				return DR.DR4;
 
-				case "DR6":
-					return DR.DR6;
+			case "DR6":
+				return DR.DR6;
 
-				case "DR7":
-					return DR.DR7;
+			case "DR7":
+				return DR.DR7;
 
-				default:
-					throw new EngineException ("Unknown DR Register '" + value.ToString () + "'");
+			default:
+				throw new EngineException ("Unknown DR Register '" + value.ToString () + "'");
 			}
 		}
 	}

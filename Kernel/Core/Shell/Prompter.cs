@@ -47,8 +47,8 @@ namespace SharpOS.Kernel.Shell {
 
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
 			TextMode.WriteLine ("This program comes with ABSOLUTELY NO WARRANTY; for details type 'show w'.");
-                        TextMode.WriteLine ("This is free software, and you are welcome to redistribute it");
-                        TextMode.WriteLine ("under certain conditions; type 'show c' for details.");
+			TextMode.WriteLine ("This is free software, and you are welcome to redistribute it");
+			TextMode.WriteLine ("under certain conditions; type 'show c' for details.");
 			TextMode.WriteLine ();
 			TextMode.WriteLine ();
 
@@ -68,7 +68,7 @@ namespace SharpOS.Kernel.Shell {
 				TextMode.RestoreAttributes ();
 			TextMode.WriteLine ();
 
-			
+
 			TextMode.WriteLine (CommandTableHeader.inform_USE_HELP_COMMANDS);
 
 			TextMode.WriteLine ();
@@ -168,14 +168,14 @@ namespace SharpOS.Kernel.Shell {
 				TextMode.SetAttributes (TextColor.White, TextMode.Background);
 				string colALabel = "  NAME";
 				string colBLabel = "  DESCRIPTION";
-				
+
 				TextMode.Write (colALabel);
 
 				for (int spaces = firstColWidth - colALabel.Length;
 						spaces > 0;
 						spaces--)
 					ADC.TextMode.Write (" ");
-				
+
 				TextMode.WriteLine (colBLabel);
 
 				CommandTableEntry* currentEntry;
@@ -189,9 +189,9 @@ namespace SharpOS.Kernel.Shell {
 					ADC.TextMode.Write (currentEntry->name);
 					ADC.TextMode.SetAttributes (TextColor.BrightWhite, TextMode.Background);
 					ADC.TextMode.Write ("]");
-					
+
 					int spaces = firstColWidth - (currentEntry->name->Length) - 2;
-					
+
 					if (spaces < 0)
 						spaces = 0;
 

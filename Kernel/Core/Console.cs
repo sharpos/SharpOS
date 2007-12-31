@@ -18,8 +18,7 @@ using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 using SharpOS.Kernel.Shell;
 
-namespace SharpOS.Kernel 
-{
+namespace SharpOS.Kernel {
 	/// <summary>
 	/// Provides basic console services
 	/// </summary>
@@ -35,39 +34,38 @@ namespace SharpOS.Kernel
 	///		what if a keyboard manifacturer has programmable keys/modes etc.?
 	///		capslock is also not exactly the same as shift, because shift+1 is not the same as capslock+1
 	/// </todo>
-	public unsafe class Console
-	{
-		public const string CONSOLE_KEY_UP_HANDLER		= "CONSOLE_KEY_UP_HANDLER";
-		public const string CONSOLE_KEY_DOWN_HANDLER	= "CONSOLE_KEY_DOWN_HANDLER";
-		public const string	CONSOLE_TIMER_HANDLER		= "CONSOLE_TIMER_HANDLER";
+	public unsafe class Console {
+		public const string CONSOLE_KEY_UP_HANDLER = "CONSOLE_KEY_UP_HANDLER";
+		public const string CONSOLE_KEY_DOWN_HANDLER = "CONSOLE_KEY_DOWN_HANDLER";
+		public const string CONSOLE_TIMER_HANDLER = "CONSOLE_TIMER_HANDLER";
 
 		private static bool initialized = false;
-		private static bool overwrite	= false;
+		private static bool overwrite = false;
 
-        private static StringBuilder* textBuffer;
+		private static StringBuilder* textBuffer;
 
 		public static void Setup ()
 		{
-            textBuffer = StringBuilder.CREATE((uint)80);
+			textBuffer = StringBuilder.CREATE ((uint) 80);
 
-			Keyboard.RegisterKeyUpEvent (Stubs.GetFunctionPointer(CONSOLE_KEY_UP_HANDLER));
-			Keyboard.RegisterKeyDownEvent (Stubs.GetFunctionPointer(CONSOLE_KEY_DOWN_HANDLER));
-			Architecture.RegisterTimerEvent(Stubs.GetFunctionPointer(CONSOLE_TIMER_HANDLER));
-			
+			Keyboard.RegisterKeyUpEvent (Stubs.GetFunctionPointer (CONSOLE_KEY_UP_HANDLER));
+			Keyboard.RegisterKeyDownEvent (Stubs.GetFunctionPointer (CONSOLE_KEY_DOWN_HANDLER));
+			Architecture.RegisterTimerEvent (Stubs.GetFunctionPointer (CONSOLE_TIMER_HANDLER));
+
 			initialized = true;
 			TextMode.RefreshCursor ();
-			SetOverwrite(overwrite);
+			SetOverwrite (overwrite);
 
 		}
-		
+
 		public static unsafe void SetOverwrite (bool _overwrite)
 		{
 			overwrite = _overwrite;
-			
+
 			if (overwrite)
-				TextMode.SetCursorSize(0, 15);
+				TextMode.SetCursorSize (0, 15);
 			else
-				TextMode.SetCursorSize(13, 15);
+				TextMode.SetCursorSize (13, 15);
 		}
 
 		[SharpOS.AOT.Attributes.Label (CONSOLE_KEY_UP_HANDLER)]
@@ -86,77 +84,68 @@ namespace SharpOS.Kernel
 				return;
 
 			// actually not correct because capslock does not behave like shift on all characters...
-			
-                        bool shifted = (Keyboard.LeftShift () || Keyboard.RightShift ());
 
-			TextMode.SetAttributes(TextColor.Yellow, TextColor.Black);
+			bool shifted = (Keyboard.LeftShift () || Keyboard.RightShift ());
 
-			
-			ADC.Keys key = (ADC.Keys)scancode;
+			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
+
+
+			ADC.Keys key = (ADC.Keys) scancode;
 			// switch statement doesn't for all cases somehow..
 			//switch (key)
 			//{
 			//case Keys.Insert:
-			if (key == Keys.Insert)
-			{
+			if (key == Keys.Insert) {
 				overwrite = !overwrite;
-				SetOverwrite(overwrite);
+				SetOverwrite (overwrite);
 				return;
 			}
-			//case Keys.Delete:
-			else if (key == Keys.Delete)
-			{
+				//case Keys.Delete:
+			else if (key == Keys.Delete) {
 				return;
 			}
-			//case Keys.PageUp:
-			else if (key == Keys.PageUp)
-			{
-				TextMode.ScrollPage(-1);
+				//case Keys.PageUp:
+			else if (key == Keys.PageUp) {
+				TextMode.ScrollPage (-1);
 				return;
 			}
-			//case Keys.PageDown:
-			else if (key == Keys.PageDown)
-			{
-				TextMode.ScrollPage(+1);
+				//case Keys.PageDown:
+			else if (key == Keys.PageDown) {
+				TextMode.ScrollPage (+1);
 				return;
 			}
-			//case Keys.Backspace:
-			else if (key == Keys.Backspace)
-			{
-                if (Console.textBuffer != null
-                    && textBuffer->Length <= 0)
-                {
-                    //Beep??
-                    return;
-                }
+				//case Keys.Backspace:
+			else if (key == Keys.Backspace) {
+				if (Console.textBuffer != null
+				    && textBuffer->Length <= 0) {
+					//Beep??
+					return;
+				}
 
 				int x, y, width, height;
 
-				TextMode.GetScreenSize(&width, &height);
-				TextMode.GetCursor(&x, &y);
+				TextMode.GetScreenSize (&width, &height);
+				TextMode.GetCursor (&x, &y);
 				x--;
-				if (x < 0)
-				{
+				if (x < 0) {
 					x = width - 1;
 					y--;
-					if (y < 0)
-					{
+					if (y < 0) {
 						y = 0;
 						return;
 					}
 				}
-				TextMode.MoveTo(x, y);
-				TextMode.WriteChar((byte)' ');
-                
-                textBuffer->RemoveAt(textBuffer->Length - 1, 1);
+				TextMode.MoveTo (x, y);
+				TextMode.WriteChar ((byte) ' ');
 
-				TextMode.MoveTo(x, y);
-				TextMode.RefreshCursor();
+				textBuffer->RemoveAt (textBuffer->Length - 1, 1);
+
+				TextMode.MoveTo (x, y);
+				TextMode.RefreshCursor ();
 				return;
 			}
-			//case Keys.LeftArrow:
-			else if (key == Keys.LeftArrow)
-			{
+				//case Keys.LeftArrow:
+			else if (key == Keys.LeftArrow) {
 #if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
@@ -166,13 +155,12 @@ namespace SharpOS.Kernel
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
 #else
-                //TODO: Beep?
+				//TODO: Beep?
 #endif
 				return;
 			}
-			//case Keys.RightArrow:
-			else if (key == Keys.RightArrow)
-			{
+				//case Keys.RightArrow:
+			else if (key == Keys.RightArrow) {
 #if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
@@ -182,13 +170,12 @@ namespace SharpOS.Kernel
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
 #else
-                //TODO: Beep?
+				//TODO: Beep?
 #endif
 				return;
 			}
-			//case Keys.UpArrow:
-			else if (key == Keys.UpArrow)
-			{
+				//case Keys.UpArrow:
+			else if (key == Keys.UpArrow) {
 #if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
@@ -198,13 +185,12 @@ namespace SharpOS.Kernel
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
 #else
-                //TODO: Beep?
+				//TODO: Beep?
 #endif
 				return;
 			}
-			//case Keys.DownArrow:
-			else if (key == Keys.DownArrow)
-			{
+				//case Keys.DownArrow:
+			else if (key == Keys.DownArrow) {
 #if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
@@ -214,77 +200,74 @@ namespace SharpOS.Kernel
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
 #else
-                //TODO: Beep?
+				//TODO: Beep?
 #endif
 				return;
 			}
-			//case Keys.Enter:
-			else if (key == Keys.Enter)
-			{
-				TextMode.WriteLine();
-				TextMode.ClearToEndOfLine();
-				TextMode.RefreshCursor();
-                DispatchBuffer();
+				//case Keys.Enter:
+			else if (key == Keys.Enter) {
+				TextMode.WriteLine ();
+				TextMode.ClearToEndOfLine ();
+				TextMode.RefreshCursor ();
+				DispatchBuffer ();
 				return;
 			}
 			//}
 
-                        // Code to fix keymap issue with caps.
-                        bool upperCase = shifted;
-                        if(
-                                (scancode >= 0x10 && scancode <= 0x26) ||
-                                (scancode == 0x1e || scancode == 0x1f) ||
-                                (scancode >= 0x2c && scancode <= 0x2f) ||
-                                (scancode >= 0x30 && scancode <= 0x32))
-                        upperCase ^= Keyboard.CapsLock ();
+			// Code to fix keymap issue with caps.
+			bool upperCase = shifted;
+			if (
+				(scancode >= 0x10 && scancode <= 0x26) ||
+				(scancode == 0x1e || scancode == 0x1f) ||
+				(scancode >= 0x2c && scancode <= 0x2f) ||
+				(scancode >= 0x30 && scancode <= 0x32))
+				upperCase ^= Keyboard.CapsLock ();
 
-			byte character = Keyboard.Translate(scancode, upperCase);
-			if (character == 0)
-			{
+			byte character = Keyboard.Translate (scancode, upperCase);
+			if (character == 0) {
 				// just so that you can actually see that keyboard input works (& we simply don't know what character you just pressed)...
-				TextMode.WriteChar((byte)'?');
-				TextMode.Write((int)scancode);
-				TextMode.RefreshCursor();
-                textBuffer->AppendChar((byte)255);
+				TextMode.WriteChar ((byte) '?');
+				TextMode.Write ((int) scancode);
+				TextMode.RefreshCursor ();
+				textBuffer->AppendChar ((byte) 255);
 				return;
 			}
 
-			int read = TextMode.GetReadPosition();
-			int write = TextMode.GetWritePosition();
+			int read = TextMode.GetReadPosition ();
+			int write = TextMode.GetWritePosition ();
 			if (read != write)
-				TextMode.SetReadPos(write);
+				TextMode.SetReadPos (write);
 
-			TextMode.WriteChar(character);
-            textBuffer->AppendChar(character);
+			TextMode.WriteChar (character);
+			textBuffer->AppendChar (character);
 			TextMode.RefreshCursor ();
 		}
 
-        private static void DispatchBuffer()
-        {
-            CString8* bufferCopy = CString8.Copy(textBuffer->buffer);
-            Diagnostics.Assert(bufferCopy != null, "Prompter::DispatchBuffer(): INSANITY CHECK: CString8.Copy(byte*) returned NULL");
-            Prompter.QueueLine(bufferCopy);
-            CString8.DISPOSE(bufferCopy);
-            textBuffer->Clear();
-        }
+		private static void DispatchBuffer ()
+		{
+			CString8* bufferCopy = CString8.Copy (textBuffer->buffer);
+			Diagnostics.Assert (bufferCopy != null, "Prompter::DispatchBuffer(): INSANITY CHECK: CString8.Copy(byte*) returned NULL");
+			Prompter.QueueLine (bufferCopy);
+			CString8.DISPOSE (bufferCopy);
+			textBuffer->Clear ();
+		}
 
-		[SharpOS.AOT.Attributes.Label(CONSOLE_TIMER_HANDLER)]
+		[SharpOS.AOT.Attributes.Label (CONSOLE_TIMER_HANDLER)]
 		public static unsafe void Timer (uint ticks)
 		{
-			if (ticks % SharpOS.Kernel.ADC.Timer.GetFrequency () == 0)
-			{
+			if (ticks % SharpOS.Kernel.ADC.Timer.GetFrequency () == 0) {
 				int x, y;
 
-				TextMode.GetCursor(&x, &y);
-				TextMode.SaveAttributes();
+				TextMode.GetCursor (&x, &y);
+				TextMode.SaveAttributes ();
 				TextMode.MoveTo (0, 24);
 				TextMode.SetAttributes (TextColor.Yellow, TextColor.Red);
-				TextMode.WriteLine("Timer ticks: ", (int)ticks);
-				TextMode.RestoreAttributes();
-				TextMode.MoveTo(x, y);
+				TextMode.WriteLine ("Timer ticks: ", (int) ticks);
+				TextMode.RestoreAttributes ();
+				TextMode.MoveTo (x, y);
 			}
 
-            Shell.Prompter.Pulse();
+			Shell.Prompter.Pulse ();
 		}
 	}
 }

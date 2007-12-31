@@ -36,8 +36,10 @@ namespace SharpOS.AOT.X86 {
 		{
 		}
 
-		public override string Parameters {
-			get {
+		public override string Parameters
+		{
+			get
+			{
 				if (this.value.GetType () == typeof (byte))
 					return "DB " + string.Format ("0x{0:X2}", this.value);
 

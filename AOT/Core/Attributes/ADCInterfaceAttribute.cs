@@ -24,7 +24,7 @@ namespace SharpOS.AOT.Attributes {
 		{
 			Namespace = ns;
 		}
-		
+
 		public string Namespace;
-	}	
+	}
 }

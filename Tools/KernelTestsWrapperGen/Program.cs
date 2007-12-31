@@ -19,8 +19,7 @@ using Mono.Cecil.Metadata;
 using Mono.GetOptions;
 
 namespace KernelTestsWrapperGen {
-	public class WrapperOptions : Options
-	{
+	public class WrapperOptions : Options {
 		public WrapperOptions (string [] args)
 			: base (args)
 		{
@@ -29,13 +28,12 @@ namespace KernelTestsWrapperGen {
 
 		[Option ("Specify the ilasm.exe with full path to compile SharpOS.Kernel.Test.Il.dll if needed.", 'c', "ilasm")]
 		public string ILAsm = "";
-		
+
 		[Option ("Specify the string that has to be contained in the name of a CMP method in order ", 'f', "filter")]
 		public string Filter = "";
 	}
 
-	class Program 
-	{
+	class Program {
 		private const string IL_DLL = "SharpOS.Kernel.Tests.IL.dll";
 		private const string CS_DLL = "SharpOS.Kernel.Tests.CS.dll";
 		private const string WRAPPER_CS = "KernelTestsWrapper.cs";
@@ -48,8 +46,8 @@ namespace KernelTestsWrapperGen {
 			string path = System.IO.Path.GetDirectoryName (System.Reflection.Assembly.GetExecutingAssembly ().Location);
 
 			if (opts.ILAsm.Trim ().Length > 0)
-				return CompileIL (opts.ILAsm.Trim(), path);
-			
+				return CompileIL (opts.ILAsm.Trim (), path);
+
 			return ScriptMain (path, opts.Filter.Trim ());
 		}
 
@@ -121,7 +119,7 @@ namespace KernelTestsWrapperGen {
 			string csDLL = Path.Combine (path, CS_DLL);
 
 			string kernelTestsPath = Path.Combine (Path.Combine (Path.Combine (path, ".."), "Kernel"), "Core");
-			
+
 			string wrapperCS = Path.Combine (kernelTestsPath, WRAPPER_CS);
 			string nunitCS = Path.Combine (Path.Combine (Path.Combine (Path.Combine (Path.Combine (path, ".."), "Kernel"), "Tests"), "NUnit"), NUNIT_CS);
 
@@ -165,7 +163,7 @@ namespace KernelTestsWrapperGen {
 				tr.WriteLine ("\t}");
 				tr.WriteLine ("}");
 				tr.Close ();
-				
+
 				Console.WriteLine (string.Format ("'{0}' generated.", wrapperCS));
 
 			} else
@@ -219,7 +217,7 @@ namespace KernelTestsWrapperGen {
 			startInfo.UseShellExecute = false;
 
 			Process process = Process.Start (startInfo);
-			
+
 			string output = process.StandardOutput.ReadToEnd ();
 			string error = process.StandardError.ReadToEnd ();
 
@@ -252,7 +250,7 @@ namespace KernelTestsWrapperGen {
 			StringBuilder stringBuilder = new StringBuilder ();
 
 			foreach (FileInfo file in fileList) {
-				if (!result 
+				if (!result
 						&& file.LastWriteTime > ilDllFileInfo.LastWriteTime)
 					result = true;
 

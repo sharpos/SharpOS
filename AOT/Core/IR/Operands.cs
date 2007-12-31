@@ -19,10 +19,10 @@ namespace SharpOS.AOT.IR.Operands {
 		NotSet,
 		I1,
 		U1,
-		
+
 		I2,
 		U2,
-		
+
 		I4,
 		U4,
 		I,
@@ -30,7 +30,7 @@ namespace SharpOS.AOT.IR.Operands {
 
 		I8,
 		U8,
-		
+
 		R4,
 		R8,
 		F,
@@ -61,11 +61,14 @@ namespace SharpOS.AOT.IR.Operands {
 
 		protected InternalType internalType = InternalType.NotSet;
 
-		public virtual InternalType InternalType {
-			get {
+		public virtual InternalType InternalType
+		{
+			get
+			{
 				return this.internalType;
 			}
-			set {
+			set
+			{
 				this.internalType = value;
 			}
 		}
@@ -108,8 +111,10 @@ namespace SharpOS.AOT.IR.Operands {
 			this.InternalType = InternalType.I;
 		}
 
-		public int Value {
-			get {
+		public int Value
+		{
+			get
+			{
 				return 0;
 			}
 		}
@@ -129,12 +134,14 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private int value;
 
-		public int Value {
-			get {
+		public int Value
+		{
+			get
+			{
 				return this.value;
 			}
 		}
-		
+
 		public override string ToString ()
 		{
 			return this.value.ToString ();
@@ -150,8 +157,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private long value;
 
-		public long Value {
-			get {
+		public long Value
+		{
+			get
+			{
 				return this.value;
 			}
 		}
@@ -171,8 +180,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private float value;
 
-		public float Value {
-			get {
+		public float Value
+		{
+			get
+			{
 				return this.value;
 			}
 		}
@@ -191,9 +202,11 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 
 		private double value;
-		
-		public double Value {
-			get {
+
+		public double Value
+		{
+			get
+			{
 				return this.value;
 			}
 		}
@@ -213,8 +226,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private string value;
 
-		public string Value {
-			get {
+		public string Value
+		{
+			get
+			{
 				return this.value;
 			}
 		}
@@ -259,11 +274,14 @@ namespace SharpOS.AOT.IR.Operands {
 		/// Gets or sets the index.
 		/// </summary>
 		/// <value>The index.</value>
-		public int Index {
-			get {
+		public int Index
+		{
+			get
+			{
 				return this.index;
 			}
-			set {
+			set
+			{
 				this.index = value;
 			}
 		}
@@ -274,11 +292,14 @@ namespace SharpOS.AOT.IR.Operands {
 		/// Gets or sets the SSA version.
 		/// </summary>
 		/// <value>The version.</value>
-		public int Version {
-			get {
+		public int Version
+		{
+			get
+			{
 				return version;
 			}
-			set {
+			set
+			{
 				version = value;
 			}
 		}
@@ -289,11 +310,14 @@ namespace SharpOS.AOT.IR.Operands {
 		/// If set, the Register Allocation doesn't allocate a register for this identifier.
 		/// </summary>
 		/// <value>Allow this identifier to get a register.</value>
-		public bool ForceSpill {
-			get {
+		public bool ForceSpill
+		{
+			get
+			{
 				return forceSpill;
 			}
-			set {
+			set
+			{
 				forceSpill = value;
 			}
 		}
@@ -304,11 +328,14 @@ namespace SharpOS.AOT.IR.Operands {
 		/// Gets or sets the register.
 		/// </summary>
 		/// <value>The register.</value>
-		public virtual int Register {
-			get {
+		public virtual int Register
+		{
+			get
+			{
 				return register;
 			}
-			set {
+			set
+			{
 				register = value;
 			}
 		}
@@ -319,8 +346,10 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <value>
 		/// 	<c>true</c> if this instance is register set; otherwise, <c>false</c>.
 		/// </value>
-		public virtual bool IsRegisterSet {
-			get {
+		public virtual bool IsRegisterSet
+		{
+			get
+			{
 				return register != int.MinValue;
 			}
 		}
@@ -331,17 +360,22 @@ namespace SharpOS.AOT.IR.Operands {
 		/// Gets or sets the stack.
 		/// </summary>
 		/// <value>The stack.</value>
-		public virtual int Stack {
-			get {
+		public virtual int Stack
+		{
+			get
+			{
 				return stack;
 			}
-			set {
+			set
+			{
 				stack = value;
 			}
 		}
 
-		public string ID {
-			get {
+		public string ID
+		{
+			get
+			{
 				string result = this.typeName;
 
 				result += this.index.ToString ();
@@ -366,11 +400,14 @@ namespace SharpOS.AOT.IR.Operands {
 
 		protected MemberReference type = null;
 
-		public MemberReference Type {
-			get {
+		public MemberReference Type
+		{
+			get
+			{
 				return type;
 			}
-			set {
+			set
+			{
 				type = value;
 			}
 		}
@@ -387,22 +424,28 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private Register phi = null;
 
-		public Register PHI {
-			get {
+		public Register PHI
+		{
+			get
+			{
 				return phi;
 			}
-			set {
+			set
+			{
 				phi = value;
 			}
 		}
 
 		Instructions.Instruction parent = null;
 
-		public Instructions.Instruction Parent {
-			get {
+		public Instructions.Instruction Parent
+		{
+			get
+			{
 				return this.parent;
 			}
-			set {
+			set
+			{
 				this.parent = value;
 			}
 		}
@@ -456,18 +499,22 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private FieldReference type = null;
 
-		public FieldReference Type {
-			get {
+		public FieldReference Type
+		{
+			get
+			{
 				return this.type;
 			}
 		}
 
-		public string ShortFieldTypeName {
-			get {
+		public string ShortFieldTypeName
+		{
+			get
+			{
 				return this.type.FieldType.Name;
 			}
 		}
-					
+
 		public override string ToString ()
 		{
 			string result = "";
@@ -482,11 +529,14 @@ namespace SharpOS.AOT.IR.Operands {
 
 		Operand instance = null;
 
-		public Operand Instance {
-			get {
+		public Operand Instance
+		{
+			get
+			{
 				return instance;
 			}
-			set {
+			set
+			{
 				instance = value;
 			}
 		}

@@ -16,7 +16,7 @@ namespace SharpOS.Kernel.Foundation {
 
 	public unsafe class ByteString {
 
-		public static int Length (byte *str)
+		public static int Length (byte* str)
 		{
 			int len = 0;
 
@@ -26,7 +26,7 @@ namespace SharpOS.Kernel.Foundation {
 			return len;
 		}
 
-		public static bool GetBytes (string src, byte *dst, int size)
+		public static bool GetBytes (string src, byte* dst, int size)
 		{
 			Diagnostics.Assert (src != null, "ByteString.GetBytes (): argument `src' is null");
 			Diagnostics.Assert (dst != null, "ByteString.GetBytes (): argument `dst' is null");
@@ -38,7 +38,7 @@ namespace SharpOS.Kernel.Foundation {
 				return false;
 
 			for (int x = 0; x < size; ++x)
-				dst [x] = (byte)src[x];
+				dst [x] = (byte) src [x];
 
 			return true;
 		}
@@ -51,7 +51,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// to the end of the string in buffer
 		/// <paramref name="buffer" />.
 		/// </summary>
-		public static void Concat (byte *buffer, int size, byte *src, int count)
+		public static void Concat (byte* buffer, int size, byte* src, int count)
 		{
 			int c = count;
 			int start = Length (buffer);
@@ -59,25 +59,25 @@ namespace SharpOS.Kernel.Foundation {
 			if (c <= 0)
 				c = Length (src);
 
-			Diagnostics.Assert (*(buffer+size) == 0, "Concat: warning, buffer may not have been allocated by ByteString");
+			Diagnostics.Assert (*(buffer + size) == 0, "Concat: warning, buffer may not have been allocated by ByteString");
 
-			Diagnostics.Assert (start + c < (size+1), "Concat: buffer is too small");
+			Diagnostics.Assert (start + c < (size + 1), "Concat: buffer is too small");
 
 			Copy (buffer, size, src, start, c);
-			*(buffer+start+c) = 0;
+			*(buffer + start + c) = 0;
 		}
 
 		#endregion
 		#region Copy() family
 
-		public static void Copy (byte *buffer, int size, byte *src, int index, int count)
+		public static void Copy (byte* buffer, int size, byte* src, int index, int count)
 		{
-			Diagnostics.Assert (index + count < size+1, "Copy: buffer is too small");
+			Diagnostics.Assert (index + count < size + 1, "Copy: buffer is too small");
 
-			byte *ptr = buffer + index;
-			byte *sptr = src;
+			byte* ptr = buffer + index;
+			byte* sptr = src;
 
-			for (int x = index; x < index+count; ++x) {
+			for (int x = index; x < index + count; ++x) {
 				*ptr = *sptr;
 				++ptr;
 				++sptr;
@@ -87,7 +87,7 @@ namespace SharpOS.Kernel.Foundation {
 		#endregion
 		#region Compare() family
 
-		public static int Compare (byte *a, int aFrom, byte *b, int bFrom, int count)
+		public static int Compare (byte* a, int aFrom, byte* b, int bFrom, int count)
 		{
 			int c = count;
 			int aLength = ByteString.Length (a), bLength = ByteString.Length (b);
@@ -99,7 +99,7 @@ namespace SharpOS.Kernel.Foundation {
 
 			if (c == 0)
 				c = aLength;
-			
+
 			for (int x = 0; x < c; ++x) {
 
 				if (x >= c)
@@ -111,7 +111,7 @@ namespace SharpOS.Kernel.Foundation {
 			return 0;
 		}
 
-		public static int Compare (byte *a, int aFrom, string b, int bFrom, int count)
+		public static int Compare (byte* a, int aFrom, string b, int bFrom, int count)
 		{
 			int c = count;
 			int aLength = ByteString.Length (a);
@@ -131,30 +131,30 @@ namespace SharpOS.Kernel.Foundation {
 					break;
 				}
 
-				if (a [aFrom + x] != ((byte) (b[bFrom + x]))) {
-					return ((int)a[aFrom + x] - ((int)(byte)b[bFrom + x]));
+				if (a [aFrom + x] != ((byte) (b [bFrom + x]))) {
+					return ((int) a [aFrom + x] - ((int) (byte) b [bFrom + x]));
 				}
 			}
 
 			return 0;
 		}
 
-		public static int Compare (byte *a, byte *b, int count)
+		public static int Compare (byte* a, byte* b, int count)
 		{
 			return Compare (a, 0, b, 0, count);
 		}
 
-		public static int Compare (byte *a, byte *b)
+		public static int Compare (byte* a, byte* b)
 		{
 			return Compare (a, 0, b, 0, 0);
 		}
 
-		public static int Compare (byte *a, string b, int count)
+		public static int Compare (byte* a, string b, int count)
 		{
 			return Compare (a, 0, b, 0, count);
 		}
 
-		public static int Compare (byte *a, string b)
+		public static int Compare (byte* a, string b)
 		{
 			return Compare (a, 0, b, 0, 0);
 		}
@@ -164,13 +164,13 @@ namespace SharpOS.Kernel.Foundation {
 
 		internal static void __RunTests ()
 		{
-			__Test1();
+			__Test1 ();
 		}
 
 		public static void __Test1 ()
 		{
-			byte *ptr1 = (byte*)Stubs.CString ("US"), ptr2 = (byte*)Stubs.CString ("SK");
-			byte *longer = (byte*)Stubs.CString ("The US");
+			byte* ptr1 = (byte*) Stubs.CString ("US"), ptr2 = (byte*) Stubs.CString ("SK");
+			byte* longer = (byte*) Stubs.CString ("The US");
 
 			//Test constant CString buffers
 			if (ByteString.Compare (ptr1, ptr2) == 0)
@@ -199,17 +199,17 @@ namespace SharpOS.Kernel.Foundation {
 			//Test that constant String is working properly
 			const string str1 = "US";
 			const string str2 = "SK";
-			if ((byte)str1[0] != (byte)'U')
-				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[0]==(byte)'U'");
+			if ((byte) str1 [0] != (byte) 'U')
+				TextMode.WriteLine ("ByteString : test FAIL: (byte)\"US\"[0]==(byte)'U'");
 
-			if ((byte)str1[1] != (byte)'S')
-				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)'S'");
+			if ((byte) str1 [1] != (byte) 'S')
+				TextMode.WriteLine ("ByteString : test FAIL: (byte)\"US\"[1]==(byte)'S'");
 
 			if (str1.Length != 2)
-				TextMode.WriteLine("ByteString : test FAIL: \"US\".Length==2");
+				TextMode.WriteLine ("ByteString : test FAIL: \"US\".Length==2");
 
-			if ((byte)str1[1] != (byte)str2[0])
-				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)\"SK\"[0]");
+			if ((byte) str1 [1] != (byte) str2 [0])
+				TextMode.WriteLine ("ByteString : test FAIL: (byte)\"US\"[1]==(byte)\"SK\"[0]");
 		}
 
 		#endregion

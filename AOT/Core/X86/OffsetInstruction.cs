@@ -16,14 +16,14 @@ using Mono.Cecil;
 using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
-namespace SharpOS.AOT.X86  {
+namespace SharpOS.AOT.X86 {
 	internal class OffsetInstruction : Instruction {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="OffsetInstruction"/> class.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		public OffsetInstruction (UInt32 value)
-			: base (true, string.Empty, string.Empty, "TIMES", value.ToString() + "-($-$$) DB 0", null, null, null, value, null)
+			: base (true, string.Empty, string.Empty, "TIMES", value.ToString () + "-($-$$) DB 0", null, null, null, value, null)
 		{
 		}
 	}

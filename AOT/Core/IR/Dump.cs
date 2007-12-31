@@ -19,32 +19,43 @@ using Mono.Cecil;
 using SharpOS.AOT.IR.Instructions;
 
 namespace SharpOS.AOT.IR {
-	public enum DumpType: byte {
+	public enum DumpType : byte {
 		Console = 1,
 		File = 2,
 		Buffer = 4,
 		XML = 8
 	}
-	
+
 	public enum DumpSection {
-		Root, Dominance, DefineUse, SSATransform, Optimizations,
-		LiveRanges, RegisterAllocation, MethodBlocks,
-		
-		Encoding, MethodEncode, DataEncode
+		Root,
+		Dominance,
+		DefineUse,
+		SSATransform,
+		Optimizations,
+		LiveRanges,
+		RegisterAllocation,
+		MethodBlocks,
+
+		Encoding,
+		MethodEncode,
+		DataEncode
 	}
-	
-	public class DumpProcessor: IDisposable {
+
+	public class DumpProcessor : IDisposable {
 		private bool enabled = true;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this <see cref="DumpProcessor"/> will write its content.
 		/// </summary>
 		/// <value><c>true</c> if enabled; otherwise, <c>false</c>.</value>
-		public bool Enabled {
-			get {
+		public bool Enabled
+		{
+			get
+			{
 				return enabled;
 			}
-			set {
+			set
+			{
 				enabled = value;
 			}
 		}
@@ -58,19 +69,20 @@ namespace SharpOS.AOT.IR {
 		{
 			this.type = type;
 			this.file = file;
-			
+
 			if (file != null) {
 				this.type |= (byte) DumpType.File;
 				this.streamWriter = new StreamWriter (file);
 				this.streamWriter.AutoFlush = true;
 			}
 		}
-		
+
 		/// <summary>
 		/// Creates a new dump processor that will store it's 
 		/// output in the given <see cref="StringBuilder" />.
 		/// </summary>
-		public DumpProcessor (byte type):
+		public DumpProcessor (byte type)
+			:
 			this (type, null)
 		{
 		}
@@ -83,13 +95,13 @@ namespace SharpOS.AOT.IR {
 		{
 			Dispose (false);
 		}
-		
+
 		private byte type;
 		private Stack<DumpElement> elements = new Stack<DumpElement> ();
 		private string file = null;
 		private StreamWriter streamWriter = null;
 		private StringBuilder buffer = new StringBuilder ();
-		
+
 		/// <summary>
 		/// This class is used to track the previous ElementStack
 		/// and sections sent to this dump processor.
@@ -128,7 +140,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void Dispose ()
 		{
-		
+
 		}
 
 		/// <summary>
@@ -153,8 +165,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the prefix.
 		/// </summary>
 		/// <value>The prefix.</value>
-		private string Prefix {
-			get {
+		private string Prefix
+		{
+			get
+			{
 				string result = "";
 
 				for (int i = 1; i < this.elements.Count; i++)
@@ -189,7 +203,7 @@ namespace SharpOS.AOT.IR {
 			else {
 				if (!inline || property)
 					value += string.Format ("{0}{1}: ", this.Prefix, name);
-				
+
 				else if (newLine)
 					value += this.Prefix;
 
@@ -231,7 +245,7 @@ namespace SharpOS.AOT.IR {
 
 				if (this.enabled && (this.type & (byte) DumpType.Console) != 0)
 					Console.Write (value);
-				
+
 				this.elements.Pop ();
 			}
 		}
@@ -305,31 +319,31 @@ namespace SharpOS.AOT.IR {
 		{
 			this.PushElement ("item");
 		}
-/*
-		/// <summary>
-		/// Elements the specified item.
-		/// </summary>
-		/// <param name="item">The item.</param>
-		public void Element (Method.DefUseItem item)
-		{
-			this.PushElement ("item");
+		/*
+				/// <summary>
+				/// Elements the specified item.
+				/// </summary>
+				/// <param name="item">The item.</param>
+				public void Element (Method.DefUseItem item)
+				{
+					this.PushElement ("item");
 
-			this.PushElement ("definition", true, false, true);
+					this.PushElement ("definition", true, false, true);
 
-			this.Element (item.Definition);
+					this.Element (item.Definition);
 
-			this.PopElement ();
+					this.PopElement ();
 
-			this.PushElement ("uses");
+					this.PushElement ("uses");
 
-			foreach (Instruction ins in item)
-				this.Element (ins);
+					foreach (Instruction ins in item)
+						this.Element (ins);
 
-			this.PopElement ();
+					this.PopElement ();
 
-			this.PopElement ();
-		}
-*/
+					this.PopElement ();
+				}
+		*/
 		/// <summary>
 		/// Elements the specified assembly definition.
 		/// </summary>
@@ -357,19 +371,19 @@ namespace SharpOS.AOT.IR {
 		/// Elements the specified method definition.
 		/// </summary>
 		/// <param name="methodDefinition">The method definition.</param>
-		public void Element(MethodDefinition methodDefinition)
+		public void Element (MethodDefinition methodDefinition)
 		{
 			this.PushElement ("method");
 
 			this.AddElement ("name", methodDefinition.ToString ());
 		}
-		
+
 		/// <summary>
 		/// 
 		/// </summary>
 		/// <param name="name"></param>
 		/// <param name="reason"></param>
-		public void IgnoreMember(string name, string reason)
+		public void IgnoreMember (string name, string reason)
 		{
 			this.PushElement ("ignore-member");
 
@@ -436,7 +450,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="dominators">The dominators.</param>
 		/// <param name="dominates">The dominates.</param>
 		/// <param name="frontiers">The frontiers.</param>
-		private void BlockDominance(Block b, int idominator, List<int> dominators, List<int> dominates, 
+		private void BlockDominance (Block b, int idominator, List<int> dominators, List<int> dominates,
 						List<int> frontiers)
 		{
 			this.PushElement ("block");
@@ -454,58 +468,58 @@ namespace SharpOS.AOT.IR {
 		/// Sections the specified sect.
 		/// </summary>
 		/// <param name="sect">The sect.</param>
-		public void Section(DumpSection sect)
+		public void Section (DumpSection sect)
 		{
 			string tag = null;
 			string text = null;
 			string close_text = null;
 			bool addPrefix = true;
-			
+
 			switch (sect) {
-				case DumpSection.Root:
-					this.PushElement ("aot-dump");
-					this.AddElement ("appversion", "SharpOS.AOT/" + Engine.EngineVersion);
-					break;
-				case DumpSection.Dominance:
-					this.PushElement ("dominance");
-					break;
-				case DumpSection.DefineUse:
-					this.PushElement ("define-use");
-					break;
-				case DumpSection.SSATransform:
-					this.PushElement ("ssa-transform");
-					break;
+			case DumpSection.Root:
+				this.PushElement ("aot-dump");
+				this.AddElement ("appversion", "SharpOS.AOT/" + Engine.EngineVersion);
+				break;
+			case DumpSection.Dominance:
+				this.PushElement ("dominance");
+				break;
+			case DumpSection.DefineUse:
+				this.PushElement ("define-use");
+				break;
+			case DumpSection.SSATransform:
+				this.PushElement ("ssa-transform");
+				break;
 
-				case DumpSection.RegisterAllocation:
-					this.PushElement ("register-allocation");
-					break;
+			case DumpSection.RegisterAllocation:
+				this.PushElement ("register-allocation");
+				break;
 
-				case DumpSection.Optimizations:
-					this.PushElement ("optimizations");
-					break;
+			case DumpSection.Optimizations:
+				this.PushElement ("optimizations");
+				break;
 
-				case DumpSection.LiveRanges:
-					this.PushElement ("live-ranges");
-					break;
+			case DumpSection.LiveRanges:
+				this.PushElement ("live-ranges");
+				break;
 
-				case DumpSection.MethodBlocks:
-					this.PushElement ("blocks");
-					break;
+			case DumpSection.MethodBlocks:
+				this.PushElement ("blocks");
+				break;
 
-				case DumpSection.Encoding:
-					this.PushElement ("encoding");
-					break;
+			case DumpSection.Encoding:
+				this.PushElement ("encoding");
+				break;
 
-				case DumpSection.MethodEncode:
-					this.PushElement ("method-encode");
-					break;
+			case DumpSection.MethodEncode:
+				this.PushElement ("method-encode");
+				break;
 
-				case DumpSection.DataEncode:
-					this.PushElement ("data-encode");
-					break;
+			case DumpSection.DataEncode:
+				this.PushElement ("data-encode");
+				break;
 
-				default:
-					throw new EngineException("dump: unknown section " + sect);
+			default:
+				throw new EngineException ("dump: unknown section " + sect);
 			}
 		}
 
@@ -522,7 +536,7 @@ namespace SharpOS.AOT.IR {
 
 			this.PushElement ("block");
 
-			this.AddElement ("id", "#" + block.Index.ToString());
+			this.AddElement ("id", "#" + block.Index.ToString ());
 			this.AddElement ("ins", insStr);
 			this.AddElement ("outs", outsStr);
 		}
@@ -645,7 +659,7 @@ namespace SharpOS.AOT.IR {
 		public void Element (SharpOS.AOT.IR.Method.LiveRange liveRange)
 		{
 			string register = null;
-			
+
 			if (liveRange.Identifier.Register != int.MinValue)
 				register = "R" + liveRange.Identifier.Register;
 
@@ -677,7 +691,7 @@ namespace SharpOS.AOT.IR {
 
 			this.PopElement ();
 		}
-		
+
 		///////////////////////////////////////
 
 		/// <summary>
@@ -686,20 +700,20 @@ namespace SharpOS.AOT.IR {
 		/// <param name="ints">The ints.</param>
 		/// <param name="Prefix">The prefix.</param>
 		/// <returns></returns>
-		private static string CombineInts (int[] ints, string Prefix)
+		private static string CombineInts (int [] ints, string Prefix)
 		{
 			string str = "";
-			
+
 			for (int x = 0; x < ints.Length; ++x) {
 				if (x != 0)
 					str += ", ";
-				
+
 				if (Prefix == null)
-					str += ints[x];
+					str += ints [x];
 				else
-					str += Prefix + ints[x];
+					str += Prefix + ints [x];
 			}
-			
+
 			return str;
 		}
 
@@ -712,17 +726,17 @@ namespace SharpOS.AOT.IR {
 		private static string CombineInts (List<int> ints, string Prefix)
 		{
 			string str = "";
-			
+
 			for (int x = 0; x < ints.Count; ++x) {
 				if (x != 0)
 					str += ", ";
-				
+
 				if (Prefix == null)
-					str += ints[x];
+					str += ints [x];
 				else
-					str += Prefix + ints[x];
+					str += Prefix + ints [x];
 			}
-			
+
 			return str;
 		}
 	}

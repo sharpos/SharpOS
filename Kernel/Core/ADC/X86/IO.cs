@@ -17,18 +17,15 @@ using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
-namespace SharpOS.Kernel.ADC.X86
-{
-	public class IO
-	{
+namespace SharpOS.Kernel.ADC.X86 {
+	public class IO {
 		#region Ports
-		public enum Port : ushort
-		{
+		public enum Port : ushort {
 			//0000-001F - First Direct Memory Access (DMA) Controller
 
 			#region 0020-0021 - Programmable Interrupt (PIC) Controller
-			Master_PIC_CommandPort					= 0x0020,
-			Master_PIC_DataPort						= 0x0021,
+			Master_PIC_CommandPort = 0x0020,
+			Master_PIC_DataPort = 0x0021,
 			#endregion
 
 			//0022-002B - Intel 82355, part of chipset for 386sx
@@ -37,9 +34,9 @@ namespace SharpOS.Kernel.ADC.X86
 			//0026-0027 - Power Management
 
 			#region 0040-005F - First Programmable Interrupt Timer (PIT) Controller
-			PIT_counter_0_counter_divisor		= 0x0040, // read/write
-			PIT_counter_1_RAM_refresh_counter	= 0x0041, // read/write
-			PIT_counter_2_cassette_and_speaker	= 0x0042, // read/write
+			PIT_counter_0_counter_divisor = 0x0040, // read/write
+			PIT_counter_1_RAM_refresh_counter = 0x0041, // read/write
+			PIT_counter_2_cassette_and_speaker = 0x0042, // read/write
 			#region 0x0043 PIT_mode_control_port
 			/// <summary>
 			/// 0043 r/w PIT mode port, control word register for counters 0-2
@@ -61,10 +58,10 @@ namespace SharpOS.Kernel.ADC.X86
 			///						= 1 BCD counter</item>
 			/// </list>
 			/// </summary>
-			PIT_mode_control_port				= 0x0043, // read/write
+			PIT_mode_control_port = 0x0043, // read/write
 			#endregion
-			PIT_counter_3						= 0x0044, // read/write
-			PIT_counter_3_control_port			= 0x0047, // read/write
+			PIT_counter_3 = 0x0044, // read/write
+			PIT_counter_3_control_port = 0x0047, // read/write
 			#endregion
 
 			#region 0060-006F - Keyboard Controller
@@ -132,7 +129,7 @@ namespace SharpOS.Kernel.ADC.X86
 			///		Note: must issue command D4h to port 64h first to access
 			///		mouse functions
 			/// </summary>
-			KB_data_port						= 0x0060,
+			KB_data_port = 0x0060,
 			#endregion
 
 			//0060 r KeyBoard or KB controller data output buffer (via PPI on XT)
@@ -141,7 +138,7 @@ namespace SharpOS.Kernel.ADC.X86
 			//0061 w PPI Programmable Peripheral Interface 8255 (XT only)
 			//0062 r/w PPI (XT only)
 			//0063 r/w PPI (XT only) command mode register (read dipswitches)
-			
+
 			#region 0x0064 KB_controller_read_status (read)
 			///<summary>
 			///KB controller read status (ISA, EISA)
@@ -185,7 +182,7 @@ namespace SharpOS.Kernel.ADC.X86
 			///		<item>bit 2 system flag status: 0=power up or reset 1=soft</item>
 			/// </list>
 			///</summary>
-			KB_controller_read_status			= 0x0064,
+			KB_controller_read_status = 0x0064,
 			#endregion
 
 			#region 0x0064 KB_controller_commands (write)
@@ -253,20 +250,20 @@ namespace SharpOS.Kernel.ADC.X86
 			///						55 in the output buffer.</item>
 			/// </list>
 			/// </summary>
-			KB_controller_commands				= 0x0064,
+			KB_controller_commands = 0x0064,
 			#endregion
 
 			#endregion
 
 			#region 0070-007F - CMOS RAM / Real Time Clock
-			RTC_CommandPort						= 0x0070,
-			RTC_DataPort						= 0x0071,
+			RTC_CommandPort = 0x0070,
+			RTC_DataPort = 0x0071,
 			#endregion
 
 			//0080-008F - DMA page registers
 			#region 00A0-00AF - Second Programmable Interrupt Controller (PIC) Controller
-			Slave_PIC_CommandPort				= 0x00A0,
-			Slave_PIC_DataPort					= 0x00A1,
+			Slave_PIC_CommandPort = 0x00A0,
+			Slave_PIC_DataPort = 0x00A1,
 			#endregion
 			//00C0-00DF - Second Direct Memory Access (DMA) Controller
 			//00F0-00FF - coprocessor (8087..80387)
@@ -308,7 +305,7 @@ namespace SharpOS.Kernel.ADC.X86
 			///03B4 w MDA CRT index register (EGA/VGA)
 			///		selects which register (0-11h) is to be accessed through 3B5
 			///</summary>
-			MDA_CRT_index_register				= 0x03B4,
+			MDA_CRT_index_register = 0x03B4,
 
 			///<summary>
 			///03B5 r/w MDA CRT data register (EGA/VGA)
@@ -334,7 +331,7 @@ namespace SharpOS.Kernel.ADC.X86
 			///		<item>11 light pen low</item>
 			/// </list>
 			///</summary>
-			MDA_CRT_data_register				= 0x03B5,
+			MDA_CRT_data_register = 0x03B5,
 
 			//03B6 same as 03B4
 			//03B7 same as 03B5
@@ -352,10 +349,10 @@ namespace SharpOS.Kernel.ADC.X86
 			///		<item>bit 0 high resolution mode</item>
 			/// </list>
 			///</summary>
-			MDA_mode_control_register			= 0x03B8,
-			
+			MDA_mode_control_register = 0x03B8,
+
 			//03B9 reserved for color select register on color adapter
-			
+
 			///<summary>
 			///03BA r CRT status register EGA/VGA: input status 1 register
 			/// <list>
@@ -369,8 +366,8 @@ namespace SharpOS.Kernel.ADC.X86
 			///		<item>bit 0 horizontal drive</item>
 			/// </list>
 			///</summary>
-			MDA_CRT_status_register				= 0x03B8,
-			
+			MDA_CRT_status_register = 0x03B8,
+
 			//03BA w EGA/VGA feature control register
 			//03BB reserved for light pen strobe reset
 			#endregion
@@ -381,8 +378,8 @@ namespace SharpOS.Kernel.ADC.X86
 			//03C1	r		VGA other attribute register
 			//03C2	r		EGA VGA input status 0 register
 			//		w		VGA miscellaneous output register
-			EGA_input_status_0_register			= 0x03C2,
-			VGA_input_status_0_register			= 0x03C2,
+			EGA_input_status_0_register = 0x03C2,
+			VGA_input_status_0_register = 0x03C2,
 			//03C3	r/w		VGA video subsystem enable (see also port 46E8h)
 			//				for IBM, motherboard VGA only
 			//03C4	w		EGA TS index register
@@ -398,14 +395,14 @@ namespace SharpOS.Kernel.ADC.X86
 			//		r		VGA feature control register
 			//03CC	w		EGA graphics 1 position register
 			//		r		VGA miscellaneous output register
-			EGA_graphics_1_position_register	= 0x03CC,
-			VGA_miscellaneous_output_register	= 0x03CC,
+			EGA_graphics_1_position_register = 0x03CC,
+			VGA_miscellaneous_output_register = 0x03CC,
 			//03CE	w		EGA GDC index register
 			//		r/w		VGA graphics address register
 			//03CF	w		EGA GDC data register
 			//		r/w		VGA other graphics register
 			#endregion
-			
+
 			#region 03D0-03DF - CGA (Color Graphics Adapter)
 			//03D0 same as 03D4
 			//03D1 same as 03D5
@@ -413,11 +410,11 @@ namespace SharpOS.Kernel.ADC.X86
 			//03D3 same as 03D5
 			//03D4 w CRT (6845) index register (EGA/VGA)
 			//	selects which register (0-11h) is to be accessed through 3B5
-			CGA_CRT_index_register				= 0x03D4,
+			CGA_CRT_index_register = 0x03D4,
 			//03D5 w CRT (6845) data register (EGA/VGA)
 			//	selected by port 3B4. registers C-F may be read
 			//	(for registers see at 3B5)
-			CGA_CRT_data_register				= 0x03D5,
+			CGA_CRT_data_register = 0x03D5,
 			//03D6 same as 03D4
 			//03D7 same as 03D5
 			//03D8 r/w CGA mode control register (except PCjr)
@@ -430,7 +427,7 @@ namespace SharpOS.Kernel.ADC.X86
 			//				= 1 320*200 graphics mode
 			//		bit 0	= 0 40*25 text mode
 			//				= 1 80*25 text mode
-			CGA_CRT_mode_control_register		= 0x03D8,
+			CGA_CRT_mode_control_register = 0x03D8,
 			//03D9 r/w CGA palette register
 			//		bit 7-6 not used
 			//		bit 5	= 0 active color set: red, green brown
@@ -444,7 +441,7 @@ namespace SharpOS.Kernel.ADC.X86
 			//				320*200, green foreground in 640*200
 			//		bit 0	blue border in 40*25, blue background in 320*200,
 			//		blue foreground in 640*200
-			CGA_CRT_palette_register			= 0x03D9,
+			CGA_CRT_palette_register = 0x03D9,
 			//03DA r CGA status register EGA/VGA: input status 1 register
 			//		bit 7-4 not used
 			//		bit 3	= 1 in vertical retrace
@@ -452,47 +449,47 @@ namespace SharpOS.Kernel.ADC.X86
 			//		bit 1	= 1 positive edge from light pen has set trigger
 			//		bit 0	= 0 do not use memory
 			//				= 1 memory access without interfering with display
-			CGA_CRT_status_register				= 0x03DA,
+			CGA_CRT_status_register = 0x03DA,
 			//03DA w EGA/VGA feature control register
-			CGA_feature_control_register		= 0x03DA,
+			CGA_feature_control_register = 0x03DA,
 			//03DB w clear light pen latch
 			//03DC r/w preset light pen latch
 			//03DF CRT/CPU page register (PCjr only)
 			#endregion
 
-            #region 03E8-03EF - serial port, same as 02E8, 02F8 and 03F8
-            /// <summary>
-            /// Port 0x03F8
-            /// </summary>
-            UART_Transmit_Receive_Buffer = 0x03F8,
-            /// <summary>
-            /// Port 0x03F9
-            /// </summary>
-            UART_Interrupt_Enable_Register = 0x03F9,
-            /// <summary>
-            /// Port 0x03FA
-            /// </summary>
-            UART_Interrupt_Identification_Register = 0x03FA,
-            /// <summary>
-            /// Port 0x03FB
-            /// </summary>
-            UART_Line_Control_Register = 0x03FB,
-            /// <summary>
-            /// Port 0x03FC
-            /// </summary>
-            UART_Modem_Control_Register = 0x03FC,
-            /// <summary>
-            /// Port 0x03FD
-            /// </summary>
-            UART_Line_Status_Register = 0x03FD,
-            /// <summary>
-            /// Port 0x03FE
-            /// </summary>
-            UART_Modem_Status_Register = 0x03FE
-            #endregion
+			#region 03E8-03EF - serial port, same as 02E8, 02F8 and 03F8
+			/// <summary>
+			/// Port 0x03F8
+			/// </summary>
+			UART_Transmit_Receive_Buffer = 0x03F8,
+			/// <summary>
+			/// Port 0x03F9
+			/// </summary>
+			UART_Interrupt_Enable_Register = 0x03F9,
+			/// <summary>
+			/// Port 0x03FA
+			/// </summary>
+			UART_Interrupt_Identification_Register = 0x03FA,
+			/// <summary>
+			/// Port 0x03FB
+			/// </summary>
+			UART_Line_Control_Register = 0x03FB,
+			/// <summary>
+			/// Port 0x03FC
+			/// </summary>
+			UART_Modem_Control_Register = 0x03FC,
+			/// <summary>
+			/// Port 0x03FD
+			/// </summary>
+			UART_Line_Status_Register = 0x03FD,
+			/// <summary>
+			/// Port 0x03FE
+			/// </summary>
+			UART_Modem_Status_Register = 0x03FE
+			#endregion
 
-            //03F0-03F7 - First Floppy Disk Controller
-            //03F8-03FF - serial port (8250,8251,16450,16550)
+			//03F0-03F7 - First Floppy Disk Controller
+			//03F8-03FF - serial port (8250,8251,16450,16550)
 		};
 		#endregion
 
@@ -501,75 +498,75 @@ namespace SharpOS.Kernel.ADC.X86
 		{
 			byte value = 0;
 
-			Asm.XOR(R32.EAX, R32.EAX);
-			Asm.MOV(R16.DX, (ushort*)&port);
-			Asm.IN_AL__DX();
-			Asm.MOV(&value, R8.AL);
+			Asm.XOR (R32.EAX, R32.EAX);
+			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.IN_AL__DX ();
+			Asm.MOV (&value, R8.AL);
 
 			return value;
 		}
 		#endregion
-		
+
 		#region In16
 		public unsafe static ushort In16 (Port port)
 		{
 			ushort value = 0;
 
-			Asm.XOR(R32.EAX, R32.EAX);
-			Asm.MOV(R16.DX, (ushort*)&port);
-			Asm.IN_AX__DX();
-			Asm.MOV(&value, R16.AX);
+			Asm.XOR (R32.EAX, R32.EAX);
+			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.IN_AX__DX ();
+			Asm.MOV (&value, R16.AX);
 
 			return value;
 		}
 		#endregion
-		
+
 		#region In32
 		public unsafe static uint In32 (Port port)
 		{
 			uint value = 0;
 
-			Asm.XOR(R32.EAX, R32.EAX);
-			Asm.MOV(R16.DX, (ushort*)&port);
-			Asm.IN_EAX__DX();
-			Asm.MOV(&value, R32.EAX);
+			Asm.XOR (R32.EAX, R32.EAX);
+			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.IN_EAX__DX ();
+			Asm.MOV (&value, R32.EAX);
 
 			return value;
 		}
 		#endregion
-		
+
 		#region Out8
 		public unsafe static void Out8 (Port port, byte value)
 		{
-			Asm.MOV(R16.DX, (ushort*)&port);
-			Asm.MOV(R8.AL, &value);
-			Asm.OUT_DX__AL();
+			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.MOV (R8.AL, &value);
+			Asm.OUT_DX__AL ();
 		}
 		#endregion
-		
+
 		#region Out16
 		public unsafe static void Out16 (Port port, ushort value)
 		{
-			Asm.MOV(R16.DX, (ushort*)&port);
-			Asm.MOV(R16.AX, &value);
-			Asm.OUT_DX__AX();
+			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.MOV (R16.AX, &value);
+			Asm.OUT_DX__AX ();
 		}
 		#endregion
-		
+
 		#region Out32
 		public unsafe static void Out32 (Port port, uint value)
 		{
-			Asm.MOV(R16.DX, (ushort*)&port);
-			Asm.MOV(R32.EAX, &value);
-			Asm.OUT_DX__EAX();
+			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.MOV (R32.EAX, &value);
+			Asm.OUT_DX__EAX ();
 		}
 		#endregion
 
 		#region Delay
 		public unsafe static void Delay ()
 		{
-			Asm.IN_AL(0x80);
-			Asm.OUT__AL(0x80);
+			Asm.IN_AL (0x80);
+			Asm.OUT__AL (0x80);
 		}
 		#endregion
 	}

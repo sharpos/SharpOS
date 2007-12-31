@@ -8,9 +8,8 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-namespace SharpOS.Kernel
-{
-	public enum KernelStage: uint {
+namespace SharpOS.Kernel {
+	public enum KernelStage : uint {
 		Init = 0,
 		RuntimeInit,
 		UserInit,

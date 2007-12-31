@@ -24,7 +24,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		private void Check32Values ()
 		{
-			if ( (index == R32.ESP && scale > 0) || (index == R32.ESP && scale == 0 && _base == R32.ESP))
+			if ((index == R32.ESP && scale > 0) || (index == R32.ESP && scale == 0 && _base == R32.ESP))
 				throw new EngineException ("ESP can't be used as index.");
 
 			if (scale > 3)
@@ -45,7 +45,7 @@ namespace SharpOS.AOT.X86 {
 
 				if (index != null && index != R16.SI && index != R16.DI)
 					throw new EngineException ("16bit Register '" + index.Name + "' is not allowed.");
-					
+
 			} else if (index != null)
 				throw new EngineException ("16bit Index Register is defined and the Base Register is missing.");
 
@@ -176,11 +176,14 @@ namespace SharpOS.AOT.X86 {
 		/// Gets or sets the displacement.
 		/// </summary>
 		/// <value>The displacement.</value>
-		internal Int32 Displacement {
-			get {
+		internal Int32 Displacement
+		{
+			get
+			{
 				return this.displacement;
 			}
-			set {
+			set
+			{
 				this.displacementSet = true;
 				this.displacement = value;
 			}
@@ -192,15 +195,18 @@ namespace SharpOS.AOT.X86 {
 		/// Gets or sets the displacement delta.
 		/// </summary>
 		/// <value>The displacement delta.</value>
-		internal Int32 DisplacementDelta {
-			get {
+		internal Int32 DisplacementDelta
+		{
+			get
+			{
 				return this.displacementDelta;
 			}
-			set {
+			set
+			{
 				if (this.reference.Length == 0) {
 					this.displacementSet = true;
 					this.displacement += value;
-				}  else
+				} else
 					this.displacementDelta = value;
 			}
 		}
@@ -215,8 +221,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the reference.
 		/// </summary>
 		/// <value>The reference.</value>
-		public string Reference {
-			get {
+		public string Reference
+		{
+			get
+			{
 				return reference;
 			}
 		}
@@ -227,8 +235,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the segment.
 		/// </summary>
 		/// <value>The segment.</value>
-		public SegType Segment {
-			get {
+		public SegType Segment
+		{
+			get
+			{
 				return segment;
 			}
 		}
@@ -253,7 +263,7 @@ namespace SharpOS.AOT.X86 {
 				bool displacementSet = this.displacementSet;
 				byte scale = this.scale;
 
-				if ( (this._base == null && this.index != null && this.scale == 0)
+				if ((this._base == null && this.index != null && this.scale == 0)
 						|| this.index == R32.ESP) {
 					_base = (R32Type) this.index;
 					index = (R32Type) this._base;
@@ -281,7 +291,7 @@ namespace SharpOS.AOT.X86 {
 
 						binaryWriter.Write (value);
 
-						binaryWriter.Write ( (UInt32) displacement);
+						binaryWriter.Write ((UInt32) displacement);
 
 						return true;
 
@@ -392,10 +402,10 @@ namespace SharpOS.AOT.X86 {
 
 				if (displacementSet != false) {
 					if (displacement >= -0x80 && displacement <= 0x7f) {
-						binaryWriter.Write ( (byte) displacement);
+						binaryWriter.Write ((byte) displacement);
 
 					} else {
-						binaryWriter.Write ( (UInt16) displacement);
+						binaryWriter.Write ((UInt16) displacement);
 					}
 				}
 			}
@@ -411,7 +421,7 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		public override string ToString ()
 		{
-			StringBuilder stringBuilder = new StringBuilder();
+			StringBuilder stringBuilder = new StringBuilder ();
 
 			if (this._base != null)
 				stringBuilder.Append (this._base.Name);
@@ -443,7 +453,7 @@ namespace SharpOS.AOT.X86 {
 			if (this.segment != null)
 				stringBuilder.Insert (0, this.segment.Name + ":");
 
-			return "[" + stringBuilder.ToString() + "]";
+			return "[" + stringBuilder.ToString () + "]";
 		}
 	}
 }

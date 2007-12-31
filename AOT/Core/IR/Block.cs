@@ -38,8 +38,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the method.
 		/// </summary>
 		/// <value>The method.</value>
-		public Method Method {
-			get {
+		public Method Method
+		{
+			get
+			{
 				return method;
 			}
 		}
@@ -50,11 +52,14 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets a value indicating whether this block has been added by the SSA.
 		/// </summary>
 		/// <value><c>true</c> if it has been added by the SSA; otherwise, <c>false</c>.</value>
-		public bool SSABlock {
-			get {
+		public bool SSABlock
+		{
+			get
+			{
 				return this.ssaBlock;
 			}
-			set {
+			set
+			{
 				this.ssaBlock = value;
 			}
 		}
@@ -65,11 +70,14 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets the CIL.
 		/// </summary>
 		/// <value>The CIL.</value>
-		public List<Mono.Cecil.Cil.Instruction> CIL {
-			get {
+		public List<Mono.Cecil.Cil.Instruction> CIL
+		{
+			get
+			{
 				return cil;
 			}
-			set {
+			set
+			{
 				cil = value;
 			}
 		}
@@ -80,8 +88,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets a value indicating whether this <see cref="Block"/> has been converted to IR.
 		/// </summary>
 		/// <value><c>true</c> if converted; otherwise, <c>false</c>.</value>
-		public bool Converted {
-			get {
+		public bool Converted
+		{
+			get
+			{
 				return converted;
 			}
 		}
@@ -92,8 +102,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the <see cref="SharpOS.AOT.IR.Instructions.Instruction"/> at the specified index.
 		/// </summary>
 		/// <value></value>
-		public SharpOS.AOT.IR.Instructions.Instruction this [int index] {
-			get {
+		public SharpOS.AOT.IR.Instructions.Instruction this [int index]
+		{
+			get
+			{
 				return this.instructions [index];
 			}
 		}
@@ -103,8 +115,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the instructions count.
 		/// </summary>
 		/// <value>The instructions count.</value>
-		public int InstructionsCount {
-			get {
+		public int InstructionsCount
+		{
+			get
+			{
 				return this.instructions.Count;
 			}
 		}
@@ -115,8 +129,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the ins.
 		/// </summary>
 		/// <value>The ins.</value>
-		public List<Block> Ins {
-			get {
+		public List<Block> Ins
+		{
+			get
+			{
 				return ins;
 			}
 		}
@@ -127,8 +143,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the outs.
 		/// </summary>
 		/// <value>The outs.</value>
-		public List<Block> Outs {
-			get {
+		public List<Block> Outs
+		{
+			get
+			{
 				return outs;
 			}
 		}
@@ -139,11 +157,14 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets the dominators.
 		/// </summary>
 		/// <value>The dominators.</value>
-		public List<Block> Dominators {
-			get {
+		public List<Block> Dominators
+		{
+			get
+			{
 				return dominators;
 			}
-			set {
+			set
+			{
 				dominators = value;
 			}
 		}
@@ -154,11 +175,14 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets the immediate dominator.
 		/// </summary>
 		/// <value>The immediate dominator.</value>
-		public Block ImmediateDominator {
-			get {
+		public Block ImmediateDominator
+		{
+			get
+			{
 				return immediateDominator;
 			}
-			set {
+			set
+			{
 				immediateDominator = value;
 			}
 		}
@@ -169,11 +193,14 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets the immediate dominator of.
 		/// </summary>
 		/// <value>The immediate dominator of.</value>
-		public List<Block> ImmediateDominatorOf {
-			get {
+		public List<Block> ImmediateDominatorOf
+		{
+			get
+			{
 				return immediateDominatorOf;
 			}
-			set {
+			set
+			{
 				immediateDominatorOf = value;
 			}
 		}
@@ -184,11 +211,14 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets the dominance frontiers.
 		/// </summary>
 		/// <value>The dominance frontiers.</value>
-		public List<Block> DominanceFrontiers {
-			get {
+		public List<Block> DominanceFrontiers
+		{
+			get
+			{
 				return dominanceFrontiers;
 			}
-			set {
+			set
+			{
 				dominanceFrontiers = value;
 			}
 		}
@@ -199,11 +229,14 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets the index.
 		/// </summary>
 		/// <value>The index.</value>
-		public int Index {
-			get {
+		public int Index
+		{
+			get
+			{
 				return index;
 			}
-			set {
+			set
+			{
 				index = value;
 			}
 		}
@@ -212,8 +245,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the start offset.
 		/// </summary>
 		/// <value>The start offset.</value>
-		public long StartOffset {
-			get {
+		public long StartOffset
+		{
+			get
+			{
 				if (this.cil.Count > 0)
 					return this.cil [0].Offset;
 
@@ -228,8 +263,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the end offset.
 		/// </summary>
 		/// <value>The end offset.</value>
-		public long EndOffset {
-			get {
+		public long EndOffset
+		{
+			get
+			{
 				if (this.cil.Count > 0)
 					return this.cil [this.cil.Count - 1].Offset;
 
@@ -264,7 +301,7 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		IEnumerator<SharpOS.AOT.IR.Instructions.Instruction> IEnumerable<SharpOS.AOT.IR.Instructions.Instruction>.GetEnumerator ()
 		{
-			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.instructions) 
+			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.instructions)
 				yield return instruction;
 		}
 
@@ -296,8 +333,10 @@ namespace SharpOS.AOT.IR {
 
 		Stack<Register> stack = new Stack<Register> ();
 
-		public Stack<Register> Stack {
-			get {
+		public Stack<Register> Stack
+		{
+			get
+			{
 				return stack;
 			}
 		}
@@ -360,7 +399,7 @@ namespace SharpOS.AOT.IR {
 
 					for (int i = 0; i < _in.stack.Count; i++) {
 						Register [] operands = new Register [this.ins.Count];
-						
+
 						Register result = this.SetRegister ();
 
 						PHI phi = new PHI (result, operands);
@@ -373,22 +412,22 @@ namespace SharpOS.AOT.IR {
 			if (!found && this.ins.Count > 0 && this.index > 0)
 				throw new EngineException ("The conversion from CIL in '" + this.method.MethodFullName + "' for block #'" + this.index + "' failed.");
 
-/*			
-			// Catch
-			if (this.method.MethodDefinition.Body.ExceptionHandlers.Count > 0 && this.cil.Count > 0) {
-				foreach (ExceptionHandler exceptionHandler in this.method.MethodDefinition.Body.ExceptionHandlers) {
-					if (exceptionHandler.CatchType != null
-							&& exceptionHandler.HandlerStart == this.cil[0]) {
-						this.AddInstruction (new Assign (this.SetRegister (this.stack.Count++), new ExceptionValue()));
-						break;
-					}
-				}
-			}
-*/
+			/*			
+						// Catch
+						if (this.method.MethodDefinition.Body.ExceptionHandlers.Count > 0 && this.cil.Count > 0) {
+							foreach (ExceptionHandler exceptionHandler in this.method.MethodDefinition.Body.ExceptionHandlers) {
+								if (exceptionHandler.CatchType != null
+										&& exceptionHandler.HandlerStart == this.cil[0]) {
+									this.AddInstruction (new Assign (this.SetRegister (this.stack.Count++), new ExceptionValue()));
+									break;
+								}
+							}
+						}
+			*/
 			foreach (Mono.Cecil.Cil.Instruction cilInstruction in this.cil) {
 				int oldState = this.stack.Count;
 
-				Instructions.Instruction instruction = Block.ilDispatcher [(int) cilInstruction.OpCode.Code](this, cilInstruction);
+				Instructions.Instruction instruction = Block.ilDispatcher [(int) cilInstruction.OpCode.Code] (this, cilInstruction);
 
 				if (instruction != null) {
 					this.AddInstruction (instruction);
@@ -476,12 +515,12 @@ namespace SharpOS.AOT.IR {
 		{
 			// Remove the jump that connects this block with the block parameter
 			if (this.outs.Count == 1)
-				this.cil.Remove (this.cil[this.cil.Count - 1]);
+				this.cil.Remove (this.cil [this.cil.Count - 1]);
 
 			this.outs = block.outs;
 
 			// Add the instructions of the block parameter
-			foreach (Mono.Cecil.Cil.Instruction instruction in block.cil) 
+			foreach (Mono.Cecil.Cil.Instruction instruction in block.cil)
 				this.cil.Add (instruction);
 
 			foreach (Block _out in block.outs) {
@@ -514,13 +553,13 @@ namespace SharpOS.AOT.IR {
 			instruction.Block = this;
 
 			for (int i = 0; i < this.instructions.Count; i++) {
-				for (int j = 0; j < this.instructions[i].Branches.Count; j++) {
-					if (this.instructions[i].Branches[j] == this.instructions[position]) 
-						this.instructions[i].Branches[j] = instruction;
+				for (int j = 0; j < this.instructions [i].Branches.Count; j++) {
+					if (this.instructions [i].Branches [j] == this.instructions [position])
+						this.instructions [i].Branches [j] = instruction;
 				}
 			}
 
-			this.instructions[position] = instruction;
+			this.instructions [position] = instruction;
 		}
 
 		/// <summary>
@@ -565,8 +604,8 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		public override string ToString ()
 		{
-			DumpProcessor p = new DumpProcessor((int) DumpType.Buffer);
-			
+			DumpProcessor p = new DumpProcessor ((int) DumpType.Buffer);
+
 			Dump (p);
 
 			return p.ToString ();
@@ -596,24 +635,24 @@ namespace SharpOS.AOT.IR {
 		public void Dump (DumpProcessor p)
 		{
 			//this.UpdateIndex();
-			
-			List<int> ins = new List<int>();
-			List<int> outs = new List<int>();
+
+			List<int> ins = new List<int> ();
+			List<int> outs = new List<int> ();
 
 			for (int i = 0; i < this.ins.Count; i++)
-				ins.Add(this.ins[i].Index);
+				ins.Add (this.ins [i].Index);
 
-			for (int i = 0; i < this.outs.Count; i++) 
-				outs.Add(this.outs[i].Index);
-			
-			p.Element(this, ins.ToArray(), outs.ToArray());
-			
+			for (int i = 0; i < this.outs.Count; i++)
+				outs.Add (this.outs [i].Index);
+
+			p.Element (this, ins.ToArray (), outs.ToArray ());
+
 			for (int i = 0; i < this.InstructionsCount; i++)
-				this[i].Dump (p);
-			
-			p.PopElement();	// block
+				this [i].Dump (p);
 
-			#if false // TODO: convert to XML dump?
+			p.PopElement ();	// block
+
+#if false // TODO: convert to XML dump?
 			
 			foreach (Instruction instruction in this.cil) {
 				string operand = string.Empty;
@@ -639,7 +678,7 @@ namespace SharpOS.AOT.IR {
 				Console.WriteLine ("{0}: {1} {2}", instruction.Offset, instruction.OpCode.Name, operand);
 			}
 
-			#endif
+#endif
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Nop (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -664,7 +703,7 @@ namespace SharpOS.AOT.IR {
 			return new Instructions.Convert (type, assignee, value);
 		}
 
- 		private SharpOS.AOT.IR.Instructions.Instruction Conv_I (Mono.Cecil.Cil.Instruction cilInstruction)
+		private SharpOS.AOT.IR.Instructions.Instruction Conv_I (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			return this.Convert (Instructions.Convert.Type.Conv_I);
 		}
@@ -1326,8 +1365,8 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldtoken (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			TokenConstant value = new TokenConstant (cilInstruction.Operand.ToString());
-			
+			TokenConstant value = new TokenConstant (cilInstruction.Operand.ToString ());
+
 			Register assignee = this.SetRegister ();
 
 			return new Ldtoken (assignee, value);
@@ -1495,7 +1534,7 @@ namespace SharpOS.AOT.IR {
 		{
 			return LdindHandler (InternalType.U4, cilInstruction);
 		}
-		
+
 		private SharpOS.AOT.IR.Instructions.Instruction Ldind_Ref (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			return LdindHandler (InternalType.O, cilInstruction);
@@ -1527,8 +1566,8 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldobj (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			TypeReference typeReference = cilInstruction.Operand as TypeReference; 
-				
+			TypeReference typeReference = cilInstruction.Operand as TypeReference;
+
 			Register instance = this.GetRegister ();
 
 			Register register = this.SetRegister ();
@@ -1565,7 +1604,7 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldloca_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdlocaHandler(cilInstruction);
+			return LdlocaHandler (cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction LdlocaHandler (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -1671,7 +1710,7 @@ namespace SharpOS.AOT.IR {
 		{
 			Register register = this.GetRegister ();
 			Register assignee = this.GetRegister ();
-			
+
 			return new Stind (sizeType, assignee, register);
 		}
 		#endregion
@@ -1749,7 +1788,7 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldarga_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return LdargaHandler(cilInstruction);
+			return LdargaHandler (cilInstruction);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction LdargaHandler (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -1791,7 +1830,7 @@ namespace SharpOS.AOT.IR {
 		private SharpOS.AOT.IR.Instructions.Instruction LdargHandler (int i, Mono.Cecil.Cil.Instruction cilInstruction, bool sequence)
 		{
 			Argument value = this.GetArgument (i, sequence);
-			
+
 			Register assignee = this.SetRegister ();
 
 			return new Ldarg (assignee, value);
@@ -1897,7 +1936,7 @@ namespace SharpOS.AOT.IR {
 			Register instance = this.GetRegister ();
 
 			Field field = new Field (fieldReference, instance);
-			
+
 			Register assignee = this.SetRegister ();
 
 			return new Ldflda (assignee, field);
@@ -1928,7 +1967,7 @@ namespace SharpOS.AOT.IR {
 		private SharpOS.AOT.IR.Instructions.Instruction Stfld (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
-			
+
 			Register value = this.GetRegister ();
 
 			Register instance = this.GetRegister ();
@@ -2096,7 +2135,7 @@ namespace SharpOS.AOT.IR {
 			return new UnboxAny (typeReference, result, value);
 		}
 		#endregion
-	
+
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_Any (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new NotImplementedEngineException ();
@@ -2121,7 +2160,7 @@ namespace SharpOS.AOT.IR {
 		{
 			throw new NotImplementedEngineException ();
 		}
-		
+
 		private SharpOS.AOT.IR.Instructions.Instruction Cpobj (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new NotImplementedEngineException ();
@@ -2437,225 +2476,882 @@ namespace SharpOS.AOT.IR {
 			new ILDispatcherDelegate(Block.Readonly),
 		};
 
-		private static Instructions.Instruction Nop(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Nop(cilInstruction); }
-		private static Instructions.Instruction Break(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Break(cilInstruction); }
-		private static Instructions.Instruction Ldarg_0(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldarg_0(cilInstruction); }
-		private static Instructions.Instruction Ldarg_1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldarg_1(cilInstruction); }
-		private static Instructions.Instruction Ldarg_2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldarg_2(cilInstruction); }
-		private static Instructions.Instruction Ldarg_3(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldarg_3(cilInstruction); }
-		private static Instructions.Instruction Ldloc_0(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldloc_0(cilInstruction); }
-		private static Instructions.Instruction Ldloc_1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldloc_1(cilInstruction); }
-		private static Instructions.Instruction Ldloc_2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldloc_2(cilInstruction); }
-		private static Instructions.Instruction Ldloc_3(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldloc_3(cilInstruction); }
-		private static Instructions.Instruction Stloc_0(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stloc_0(cilInstruction); }
-		private static Instructions.Instruction Stloc_1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stloc_1(cilInstruction); }
-		private static Instructions.Instruction Stloc_2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stloc_2(cilInstruction); }
-		private static Instructions.Instruction Stloc_3(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stloc_3(cilInstruction); }
-		private static Instructions.Instruction Ldarg_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldarg_S(cilInstruction); }
-		private static Instructions.Instruction Ldarga_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldarga_S(cilInstruction); }
-		private static Instructions.Instruction Starg_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Starg_S(cilInstruction); }
-		private static Instructions.Instruction Ldloc_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldloc_S(cilInstruction); }
-		private static Instructions.Instruction Ldloca_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldloca_S(cilInstruction); }
-		private static Instructions.Instruction Stloc_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stloc_S(cilInstruction); }
-		private static Instructions.Instruction Ldnull(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldnull(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_M1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_M1(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_0(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_0(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_1(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_2(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_3(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_3(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_4(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_5(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_5(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_6(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_6(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_7(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_7(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_8(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4_S(cilInstruction); }
-		private static Instructions.Instruction Ldc_I4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I4(cilInstruction); }
-		private static Instructions.Instruction Ldc_I8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_I8(cilInstruction); }
-		private static Instructions.Instruction Ldc_R4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_R4(cilInstruction); }
-		private static Instructions.Instruction Ldc_R8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldc_R8(cilInstruction); }
-		private static Instructions.Instruction Dup(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Dup(cilInstruction); }
-		private static Instructions.Instruction Pop(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Pop(cilInstruction); }
-		private static Instructions.Instruction Jmp(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Jmp(cilInstruction); }
-		private static Instructions.Instruction Call(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Call(cilInstruction); }
-		private static Instructions.Instruction Calli(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Calli(cilInstruction); }
-		private static Instructions.Instruction Ret(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ret(cilInstruction); }
-		private static Instructions.Instruction Br_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Br_S(cilInstruction); }
-		private static Instructions.Instruction Brfalse_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Brfalse_S(cilInstruction); }
-		private static Instructions.Instruction Brtrue_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Brtrue_S(cilInstruction); }
-		private static Instructions.Instruction Beq_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Beq_S(cilInstruction); }
-		private static Instructions.Instruction Bge_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bge_S(cilInstruction); }
-		private static Instructions.Instruction Bgt_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bgt_S(cilInstruction); }
-		private static Instructions.Instruction Ble_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ble_S(cilInstruction); }
-		private static Instructions.Instruction Blt_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Blt_S(cilInstruction); }
-		private static Instructions.Instruction Bne_Un_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bne_Un_S(cilInstruction); }
-		private static Instructions.Instruction Bge_Un_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bge_Un_S(cilInstruction); }
-		private static Instructions.Instruction Bgt_Un_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bgt_Un_S(cilInstruction); }
-		private static Instructions.Instruction Ble_Un_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ble_Un_S(cilInstruction); }
-		private static Instructions.Instruction Blt_Un_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Blt_Un_S(cilInstruction); }
-		private static Instructions.Instruction Br(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Br(cilInstruction); }
-		private static Instructions.Instruction Brfalse(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Brfalse(cilInstruction); }
-		private static Instructions.Instruction Brtrue(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Brtrue(cilInstruction); }
-		private static Instructions.Instruction Beq(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Beq(cilInstruction); }
-		private static Instructions.Instruction Bge(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bge(cilInstruction); }
-		private static Instructions.Instruction Bgt(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bgt(cilInstruction); }
-		private static Instructions.Instruction Ble(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ble(cilInstruction); }
-		private static Instructions.Instruction Blt(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Blt(cilInstruction); }
-		private static Instructions.Instruction Bne_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bne_Un(cilInstruction); }
-		private static Instructions.Instruction Bge_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bge_Un(cilInstruction); }
-		private static Instructions.Instruction Bgt_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Bgt_Un(cilInstruction); }
-		private static Instructions.Instruction Ble_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ble_Un(cilInstruction); }
-		private static Instructions.Instruction Blt_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Blt_Un(cilInstruction); }
-		private static Instructions.Instruction Switch(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Switch(cilInstruction); }
-		private static Instructions.Instruction Ldind_I1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_I1(cilInstruction); }
-		private static Instructions.Instruction Ldind_U1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_U1(cilInstruction); }
-		private static Instructions.Instruction Ldind_I2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_I2(cilInstruction); }
-		private static Instructions.Instruction Ldind_U2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_U2(cilInstruction); }
-		private static Instructions.Instruction Ldind_I4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_I4(cilInstruction); }
-		private static Instructions.Instruction Ldind_U4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_U4(cilInstruction); }
-		private static Instructions.Instruction Ldind_I8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_I8(cilInstruction); }
-		private static Instructions.Instruction Ldind_I(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_I(cilInstruction); }
-		private static Instructions.Instruction Ldind_R4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_R4(cilInstruction); }
-		private static Instructions.Instruction Ldind_R8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_R8(cilInstruction); }
-		private static Instructions.Instruction Ldind_Ref(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldind_Ref(cilInstruction); }
-		private static Instructions.Instruction Stind_Ref(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stind_Ref(cilInstruction); }
-		private static Instructions.Instruction Stind_I1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stind_I1(cilInstruction); }
-		private static Instructions.Instruction Stind_I2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stind_I2(cilInstruction); }
-		private static Instructions.Instruction Stind_I4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stind_I4(cilInstruction); }
-		private static Instructions.Instruction Stind_I8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stind_I8(cilInstruction); }
-		private static Instructions.Instruction Stind_R4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stind_R4(cilInstruction); }
-		private static Instructions.Instruction Stind_R8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stind_R8(cilInstruction); }
-		private static Instructions.Instruction Add(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Add(cilInstruction); }
-		private static Instructions.Instruction Sub(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Sub(cilInstruction); }
-		private static Instructions.Instruction Mul(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Mul(cilInstruction); }
-		private static Instructions.Instruction Div(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Div(cilInstruction); }
-		private static Instructions.Instruction Div_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Div_Un(cilInstruction); }
-		private static Instructions.Instruction Rem(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Rem(cilInstruction); }
-		private static Instructions.Instruction Rem_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Rem_Un(cilInstruction); }
-		private static Instructions.Instruction And(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.And(cilInstruction); }
-		private static Instructions.Instruction Or(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Or(cilInstruction); }
-		private static Instructions.Instruction Xor(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Xor(cilInstruction); }
-		private static Instructions.Instruction Shl(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Shl(cilInstruction); }
-		private static Instructions.Instruction Shr(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Shr(cilInstruction); }
-		private static Instructions.Instruction Shr_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Shr_Un(cilInstruction); }
-		private static Instructions.Instruction Neg(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Neg(cilInstruction); }
-		private static Instructions.Instruction Not(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Not(cilInstruction); }
-		private static Instructions.Instruction Conv_I1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_I1(cilInstruction); }
-		private static Instructions.Instruction Conv_I2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_I2(cilInstruction); }
-		private static Instructions.Instruction Conv_I4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_I4(cilInstruction); }
-		private static Instructions.Instruction Conv_I8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_I8(cilInstruction); }
-		private static Instructions.Instruction Conv_R4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_R4(cilInstruction); }
-		private static Instructions.Instruction Conv_R8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_R8(cilInstruction); }
-		private static Instructions.Instruction Conv_U4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_U4(cilInstruction); }
-		private static Instructions.Instruction Conv_U8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_U8(cilInstruction); }
-		private static Instructions.Instruction Callvirt(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Callvirt(cilInstruction); }
-		private static Instructions.Instruction Cpobj(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Cpobj(cilInstruction); }
-		private static Instructions.Instruction Ldobj(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldobj(cilInstruction); }
-		private static Instructions.Instruction Ldstr(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldstr(cilInstruction); }
-		private static Instructions.Instruction Newobj(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Newobj(cilInstruction); }
-		private static Instructions.Instruction Castclass(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Castclass(cilInstruction); }
-		private static Instructions.Instruction Isinst(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Isinst(cilInstruction); }
-		private static Instructions.Instruction Conv_R_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_R_Un(cilInstruction); }
-		private static Instructions.Instruction Unbox(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Unbox(cilInstruction); }
-		private static Instructions.Instruction Throw(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Throw(cilInstruction); }
-		private static Instructions.Instruction Ldfld(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldfld(cilInstruction); }
-		private static Instructions.Instruction Ldflda(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldflda(cilInstruction); }
-		private static Instructions.Instruction Stfld(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stfld(cilInstruction); }
-		private static Instructions.Instruction Ldsfld(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldsfld(cilInstruction); }
-		private static Instructions.Instruction Ldsflda(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldsflda(cilInstruction); }
-		private static Instructions.Instruction Stsfld(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stsfld(cilInstruction); }
-		private static Instructions.Instruction Stobj(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stobj(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I1_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I1_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I2_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I2_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I4_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I4_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I8_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I8_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U1_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U1_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U2_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U2_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U4_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U4_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U8_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U8_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I_Un(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U_Un(cilInstruction); }
-		private static Instructions.Instruction Box(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Box(cilInstruction); }
-		private static Instructions.Instruction Newarr(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Newarr(cilInstruction); }
-		private static Instructions.Instruction Ldlen(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldlen(cilInstruction); }
-		private static Instructions.Instruction Ldelema(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelema(cilInstruction); }
-		private static Instructions.Instruction Ldelem_I1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_I1(cilInstruction); }
-		private static Instructions.Instruction Ldelem_U1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_U1(cilInstruction); }
-		private static Instructions.Instruction Ldelem_I2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_I2(cilInstruction); }
-		private static Instructions.Instruction Ldelem_U2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_U2(cilInstruction); }
-		private static Instructions.Instruction Ldelem_I4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_I4(cilInstruction); }
-		private static Instructions.Instruction Ldelem_U4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_U4(cilInstruction); }
-		private static Instructions.Instruction Ldelem_I8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_I8(cilInstruction); }
-		private static Instructions.Instruction Ldelem_I(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_I(cilInstruction); }
-		private static Instructions.Instruction Ldelem_R4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_R4(cilInstruction); }
-		private static Instructions.Instruction Ldelem_R8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_R8(cilInstruction); }
-		private static Instructions.Instruction Ldelem_Ref(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_Ref(cilInstruction); }
-		private static Instructions.Instruction Stelem_I(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_I(cilInstruction); }
-		private static Instructions.Instruction Stelem_I1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_I1(cilInstruction); }
-		private static Instructions.Instruction Stelem_I2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_I2(cilInstruction); }
-		private static Instructions.Instruction Stelem_I4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_I4(cilInstruction); }
-		private static Instructions.Instruction Stelem_I8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_I8(cilInstruction); }
-		private static Instructions.Instruction Stelem_R4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_R4(cilInstruction); }
-		private static Instructions.Instruction Stelem_R8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_R8(cilInstruction); }
-		private static Instructions.Instruction Stelem_Ref(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_Ref(cilInstruction); }
-		private static Instructions.Instruction Ldelem_Any(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldelem_Any(cilInstruction); }
-		private static Instructions.Instruction Stelem_Any(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stelem_Any(cilInstruction); }
-		private static Instructions.Instruction Unbox_Any(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Unbox_Any(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I1(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U1(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I2(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U2(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I4(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U4(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U4(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I8(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U8(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U8(cilInstruction); }
-		private static Instructions.Instruction Refanyval(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Refanyval(cilInstruction); }
-		private static Instructions.Instruction Ckfinite(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ckfinite(cilInstruction); }
-		private static Instructions.Instruction Mkrefany(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Mkrefany(cilInstruction); }
-		private static Instructions.Instruction Ldtoken(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldtoken(cilInstruction); }
-		private static Instructions.Instruction Conv_U2(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_U2(cilInstruction); }
-		private static Instructions.Instruction Conv_U1(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_U1(cilInstruction); }
-		private static Instructions.Instruction Conv_I(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_I(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_I(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_I(cilInstruction); }
-		private static Instructions.Instruction Conv_Ovf_U(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_Ovf_U(cilInstruction); }
-		private static Instructions.Instruction Add_Ovf(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Add_Ovf(cilInstruction); }
-		private static Instructions.Instruction Add_Ovf_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Add_Ovf_Un(cilInstruction); }
-		private static Instructions.Instruction Mul_Ovf(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Mul_Ovf(cilInstruction); }
-		private static Instructions.Instruction Mul_Ovf_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Mul_Ovf_Un(cilInstruction); }
-		private static Instructions.Instruction Sub_Ovf(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Sub_Ovf(cilInstruction); }
-		private static Instructions.Instruction Sub_Ovf_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Sub_Ovf_Un(cilInstruction); }
-		private static Instructions.Instruction Endfinally(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Endfinally(cilInstruction); }
-		private static Instructions.Instruction Leave(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Leave(cilInstruction); }
-		private static Instructions.Instruction Leave_S(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Leave_S(cilInstruction); }
-		private static Instructions.Instruction Stind_I(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stind_I(cilInstruction); }
-		private static Instructions.Instruction Conv_U(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Conv_U(cilInstruction); }
-		private static Instructions.Instruction Arglist(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Arglist(cilInstruction); }
-		private static Instructions.Instruction Ceq(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ceq(cilInstruction); }
-		private static Instructions.Instruction Cgt(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Cgt(cilInstruction); }
-		private static Instructions.Instruction Cgt_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Cgt_Un(cilInstruction); }
-		private static Instructions.Instruction Clt(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Clt(cilInstruction); }
-		private static Instructions.Instruction Clt_Un(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Clt_Un(cilInstruction); }
-		private static Instructions.Instruction Ldftn(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldftn(cilInstruction); }
-		private static Instructions.Instruction Ldvirtftn(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldvirtftn(cilInstruction); }
-		private static Instructions.Instruction Ldarg(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldarg(cilInstruction); }
-		private static Instructions.Instruction Ldarga(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldarga(cilInstruction); }
-		private static Instructions.Instruction Starg(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Starg(cilInstruction); }
-		private static Instructions.Instruction Ldloc(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldloc(cilInstruction); }
-		private static Instructions.Instruction Ldloca(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Ldloca(cilInstruction); }
-		private static Instructions.Instruction Stloc(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Stloc(cilInstruction); }
-		private static Instructions.Instruction Localloc(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Localloc(cilInstruction); }
-		private static Instructions.Instruction Endfilter(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Endfilter(cilInstruction); }
-		private static Instructions.Instruction Unaligned(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Unaligned(cilInstruction); }
-		private static Instructions.Instruction Volatile(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Volatile(cilInstruction); }
-		private static Instructions.Instruction Tail(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Tail(cilInstruction); }
-		private static Instructions.Instruction Initobj(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Initobj(cilInstruction); }
-		private static Instructions.Instruction Constrained(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Constrained(cilInstruction); }
-		private static Instructions.Instruction Cpblk(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Cpblk(cilInstruction); }
-		private static Instructions.Instruction Initblk(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Initblk(cilInstruction); }
-		private static Instructions.Instruction No(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.No(cilInstruction); }
-		private static Instructions.Instruction Rethrow(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Rethrow(cilInstruction); }
-		private static Instructions.Instruction Sizeof(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Sizeof(cilInstruction); }
-		private static Instructions.Instruction Refanytype(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Refanytype(cilInstruction); }
-		private static Instructions.Instruction Readonly(Block block, Mono.Cecil.Cil.Instruction cilInstruction) { return block.Readonly(cilInstruction); }
+		private static Instructions.Instruction Nop (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Nop (cilInstruction);
+		}
+		private static Instructions.Instruction Break (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Break (cilInstruction);
+		}
+		private static Instructions.Instruction Ldarg_0 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldarg_0 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldarg_1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldarg_1 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldarg_2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldarg_2 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldarg_3 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldarg_3 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldloc_0 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldloc_0 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldloc_1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldloc_1 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldloc_2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldloc_2 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldloc_3 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldloc_3 (cilInstruction);
+		}
+		private static Instructions.Instruction Stloc_0 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stloc_0 (cilInstruction);
+		}
+		private static Instructions.Instruction Stloc_1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stloc_1 (cilInstruction);
+		}
+		private static Instructions.Instruction Stloc_2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stloc_2 (cilInstruction);
+		}
+		private static Instructions.Instruction Stloc_3 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stloc_3 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldarg_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldarg_S (cilInstruction);
+		}
+		private static Instructions.Instruction Ldarga_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldarga_S (cilInstruction);
+		}
+		private static Instructions.Instruction Starg_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Starg_S (cilInstruction);
+		}
+		private static Instructions.Instruction Ldloc_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldloc_S (cilInstruction);
+		}
+		private static Instructions.Instruction Ldloca_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldloca_S (cilInstruction);
+		}
+		private static Instructions.Instruction Stloc_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stloc_S (cilInstruction);
+		}
+		private static Instructions.Instruction Ldnull (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldnull (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_M1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_M1 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_0 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_0 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_1 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_2 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_3 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_3 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_5 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_5 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_6 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_6 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_7 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_7 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_8 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4_S (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_I8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_I8 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_R4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_R4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldc_R8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldc_R8 (cilInstruction);
+		}
+		private static Instructions.Instruction Dup (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Dup (cilInstruction);
+		}
+		private static Instructions.Instruction Pop (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Pop (cilInstruction);
+		}
+		private static Instructions.Instruction Jmp (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Jmp (cilInstruction);
+		}
+		private static Instructions.Instruction Call (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Call (cilInstruction);
+		}
+		private static Instructions.Instruction Calli (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Calli (cilInstruction);
+		}
+		private static Instructions.Instruction Ret (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ret (cilInstruction);
+		}
+		private static Instructions.Instruction Br_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Br_S (cilInstruction);
+		}
+		private static Instructions.Instruction Brfalse_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Brfalse_S (cilInstruction);
+		}
+		private static Instructions.Instruction Brtrue_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Brtrue_S (cilInstruction);
+		}
+		private static Instructions.Instruction Beq_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Beq_S (cilInstruction);
+		}
+		private static Instructions.Instruction Bge_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bge_S (cilInstruction);
+		}
+		private static Instructions.Instruction Bgt_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bgt_S (cilInstruction);
+		}
+		private static Instructions.Instruction Ble_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ble_S (cilInstruction);
+		}
+		private static Instructions.Instruction Blt_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Blt_S (cilInstruction);
+		}
+		private static Instructions.Instruction Bne_Un_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bne_Un_S (cilInstruction);
+		}
+		private static Instructions.Instruction Bge_Un_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bge_Un_S (cilInstruction);
+		}
+		private static Instructions.Instruction Bgt_Un_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bgt_Un_S (cilInstruction);
+		}
+		private static Instructions.Instruction Ble_Un_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ble_Un_S (cilInstruction);
+		}
+		private static Instructions.Instruction Blt_Un_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Blt_Un_S (cilInstruction);
+		}
+		private static Instructions.Instruction Br (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Br (cilInstruction);
+		}
+		private static Instructions.Instruction Brfalse (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Brfalse (cilInstruction);
+		}
+		private static Instructions.Instruction Brtrue (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Brtrue (cilInstruction);
+		}
+		private static Instructions.Instruction Beq (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Beq (cilInstruction);
+		}
+		private static Instructions.Instruction Bge (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bge (cilInstruction);
+		}
+		private static Instructions.Instruction Bgt (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bgt (cilInstruction);
+		}
+		private static Instructions.Instruction Ble (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ble (cilInstruction);
+		}
+		private static Instructions.Instruction Blt (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Blt (cilInstruction);
+		}
+		private static Instructions.Instruction Bne_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bne_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Bge_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bge_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Bgt_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Bgt_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Ble_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ble_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Blt_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Blt_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Switch (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Switch (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_I1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_I1 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_U1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_U1 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_I2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_I2 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_U2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_U2 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_I4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_I4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_U4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_U4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_I8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_I8 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_I (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_I (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_R4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_R4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_R8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_R8 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldind_Ref (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldind_Ref (cilInstruction);
+		}
+		private static Instructions.Instruction Stind_Ref (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stind_Ref (cilInstruction);
+		}
+		private static Instructions.Instruction Stind_I1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stind_I1 (cilInstruction);
+		}
+		private static Instructions.Instruction Stind_I2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stind_I2 (cilInstruction);
+		}
+		private static Instructions.Instruction Stind_I4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stind_I4 (cilInstruction);
+		}
+		private static Instructions.Instruction Stind_I8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stind_I8 (cilInstruction);
+		}
+		private static Instructions.Instruction Stind_R4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stind_R4 (cilInstruction);
+		}
+		private static Instructions.Instruction Stind_R8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stind_R8 (cilInstruction);
+		}
+		private static Instructions.Instruction Add (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Add (cilInstruction);
+		}
+		private static Instructions.Instruction Sub (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Sub (cilInstruction);
+		}
+		private static Instructions.Instruction Mul (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Mul (cilInstruction);
+		}
+		private static Instructions.Instruction Div (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Div (cilInstruction);
+		}
+		private static Instructions.Instruction Div_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Div_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Rem (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Rem (cilInstruction);
+		}
+		private static Instructions.Instruction Rem_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Rem_Un (cilInstruction);
+		}
+		private static Instructions.Instruction And (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.And (cilInstruction);
+		}
+		private static Instructions.Instruction Or (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Or (cilInstruction);
+		}
+		private static Instructions.Instruction Xor (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Xor (cilInstruction);
+		}
+		private static Instructions.Instruction Shl (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Shl (cilInstruction);
+		}
+		private static Instructions.Instruction Shr (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Shr (cilInstruction);
+		}
+		private static Instructions.Instruction Shr_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Shr_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Neg (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Neg (cilInstruction);
+		}
+		private static Instructions.Instruction Not (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Not (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_I1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_I1 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_I2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_I2 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_I4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_I4 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_I8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_I8 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_R4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_R4 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_R8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_R8 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_U4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_U4 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_U8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_U8 (cilInstruction);
+		}
+		private static Instructions.Instruction Callvirt (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Callvirt (cilInstruction);
+		}
+		private static Instructions.Instruction Cpobj (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Cpobj (cilInstruction);
+		}
+		private static Instructions.Instruction Ldobj (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldobj (cilInstruction);
+		}
+		private static Instructions.Instruction Ldstr (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldstr (cilInstruction);
+		}
+		private static Instructions.Instruction Newobj (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Newobj (cilInstruction);
+		}
+		private static Instructions.Instruction Castclass (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Castclass (cilInstruction);
+		}
+		private static Instructions.Instruction Isinst (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Isinst (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_R_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_R_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Unbox (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Unbox (cilInstruction);
+		}
+		private static Instructions.Instruction Throw (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Throw (cilInstruction);
+		}
+		private static Instructions.Instruction Ldfld (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldfld (cilInstruction);
+		}
+		private static Instructions.Instruction Ldflda (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldflda (cilInstruction);
+		}
+		private static Instructions.Instruction Stfld (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stfld (cilInstruction);
+		}
+		private static Instructions.Instruction Ldsfld (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldsfld (cilInstruction);
+		}
+		private static Instructions.Instruction Ldsflda (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldsflda (cilInstruction);
+		}
+		private static Instructions.Instruction Stsfld (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stsfld (cilInstruction);
+		}
+		private static Instructions.Instruction Stobj (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stobj (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I1_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I1_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I2_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I2_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I4_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I4_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I8_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I8_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U1_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U1_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U2_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U2_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U4_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U4_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U8_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U8_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Box (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Box (cilInstruction);
+		}
+		private static Instructions.Instruction Newarr (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Newarr (cilInstruction);
+		}
+		private static Instructions.Instruction Ldlen (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldlen (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelema (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelema (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_I1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_I1 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_U1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_U1 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_I2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_I2 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_U2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_U2 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_I4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_I4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_U4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_U4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_I8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_I8 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_I (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_I (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_R4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_R4 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_R8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_R8 (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_Ref (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_Ref (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_I (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_I (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_I1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_I1 (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_I2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_I2 (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_I4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_I4 (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_I8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_I8 (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_R4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_R4 (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_R8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_R8 (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_Ref (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_Ref (cilInstruction);
+		}
+		private static Instructions.Instruction Ldelem_Any (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldelem_Any (cilInstruction);
+		}
+		private static Instructions.Instruction Stelem_Any (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stelem_Any (cilInstruction);
+		}
+		private static Instructions.Instruction Unbox_Any (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Unbox_Any (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I1 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U1 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I2 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U2 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I4 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U4 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U4 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I8 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U8 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U8 (cilInstruction);
+		}
+		private static Instructions.Instruction Refanyval (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Refanyval (cilInstruction);
+		}
+		private static Instructions.Instruction Ckfinite (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ckfinite (cilInstruction);
+		}
+		private static Instructions.Instruction Mkrefany (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Mkrefany (cilInstruction);
+		}
+		private static Instructions.Instruction Ldtoken (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldtoken (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_U2 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_U2 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_U1 (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_U1 (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_I (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_I (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_I (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_I (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_Ovf_U (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_Ovf_U (cilInstruction);
+		}
+		private static Instructions.Instruction Add_Ovf (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Add_Ovf (cilInstruction);
+		}
+		private static Instructions.Instruction Add_Ovf_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Add_Ovf_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Mul_Ovf (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Mul_Ovf (cilInstruction);
+		}
+		private static Instructions.Instruction Mul_Ovf_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Mul_Ovf_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Sub_Ovf (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Sub_Ovf (cilInstruction);
+		}
+		private static Instructions.Instruction Sub_Ovf_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Sub_Ovf_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Endfinally (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Endfinally (cilInstruction);
+		}
+		private static Instructions.Instruction Leave (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Leave (cilInstruction);
+		}
+		private static Instructions.Instruction Leave_S (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Leave_S (cilInstruction);
+		}
+		private static Instructions.Instruction Stind_I (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stind_I (cilInstruction);
+		}
+		private static Instructions.Instruction Conv_U (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Conv_U (cilInstruction);
+		}
+		private static Instructions.Instruction Arglist (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Arglist (cilInstruction);
+		}
+		private static Instructions.Instruction Ceq (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ceq (cilInstruction);
+		}
+		private static Instructions.Instruction Cgt (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Cgt (cilInstruction);
+		}
+		private static Instructions.Instruction Cgt_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Cgt_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Clt (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Clt (cilInstruction);
+		}
+		private static Instructions.Instruction Clt_Un (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Clt_Un (cilInstruction);
+		}
+		private static Instructions.Instruction Ldftn (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldftn (cilInstruction);
+		}
+		private static Instructions.Instruction Ldvirtftn (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldvirtftn (cilInstruction);
+		}
+		private static Instructions.Instruction Ldarg (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldarg (cilInstruction);
+		}
+		private static Instructions.Instruction Ldarga (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldarga (cilInstruction);
+		}
+		private static Instructions.Instruction Starg (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Starg (cilInstruction);
+		}
+		private static Instructions.Instruction Ldloc (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldloc (cilInstruction);
+		}
+		private static Instructions.Instruction Ldloca (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Ldloca (cilInstruction);
+		}
+		private static Instructions.Instruction Stloc (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Stloc (cilInstruction);
+		}
+		private static Instructions.Instruction Localloc (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Localloc (cilInstruction);
+		}
+		private static Instructions.Instruction Endfilter (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Endfilter (cilInstruction);
+		}
+		private static Instructions.Instruction Unaligned (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Unaligned (cilInstruction);
+		}
+		private static Instructions.Instruction Volatile (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Volatile (cilInstruction);
+		}
+		private static Instructions.Instruction Tail (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Tail (cilInstruction);
+		}
+		private static Instructions.Instruction Initobj (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Initobj (cilInstruction);
+		}
+		private static Instructions.Instruction Constrained (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Constrained (cilInstruction);
+		}
+		private static Instructions.Instruction Cpblk (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Cpblk (cilInstruction);
+		}
+		private static Instructions.Instruction Initblk (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Initblk (cilInstruction);
+		}
+		private static Instructions.Instruction No (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.No (cilInstruction);
+		}
+		private static Instructions.Instruction Rethrow (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Rethrow (cilInstruction);
+		}
+		private static Instructions.Instruction Sizeof (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Sizeof (cilInstruction);
+		}
+		private static Instructions.Instruction Refanytype (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Refanytype (cilInstruction);
+		}
+		private static Instructions.Instruction Readonly (Block block, Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return block.Readonly (cilInstruction);
+		}
 		#endregion
 	}
 }

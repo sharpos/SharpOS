@@ -24,7 +24,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="length">The length.</param>
 		/// <param name="value">The value.</param>
 		public TimesInstruction (UInt32 length, Byte value)
-			: base (true, string.Empty, string.Empty, "TIMES", length.ToString() + " DB " + value.ToString(), null, null, null, value, null)
+			: base (true, string.Empty, string.Empty, "TIMES", length.ToString () + " DB " + value.ToString (), null, null, null, value, null)
 		{
 			this.length = length;
 		}
@@ -35,8 +35,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the length.
 		/// </summary>
 		/// <value>The length.</value>
-		public UInt32 Length {
-			get {
+		public UInt32 Length
+		{
+			get
+			{
 				return length;
 			}
 		}

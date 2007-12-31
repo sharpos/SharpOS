@@ -22,61 +22,62 @@ using GetOpts = Mono.GetOptions;
 using Mono.Cecil;
 
 namespace SharpOS.AOT {
-	public class Options: GetOpts.Options {
-		public Options(string[] args):
-			base(args)
-		{ 
+	public class Options : GetOpts.Options {
+		public Options (string [] args)
+			:
+			base (args)
+		{
 		}
-		
-		public string[] Assemblies = null;
+
+		public string [] Assemblies = null;
 		public bool TempOutput = false;
 		public string ImageFilename = null;
-		
-		[GetOpts.Option("The output file", 'o', "out")]
+
+		[GetOpts.Option ("The output file", 'o', "out")]
 		public string OutputFilename = null;
-		
-		[GetOpts.Option("The binary output (when -image is present)", "bin-out")]
+
+		[GetOpts.Option ("The binary output (when -image is present)", "bin-out")]
 		public string BinaryFilename = null;
-		
-		[GetOpts.Option("Choose the platform to compile", 'c', "cpu")]
+
+		[GetOpts.Option ("Choose the platform to compile", 'c', "cpu")]
 		public string CPU = "X86";
-		
-		[GetOpts.Option("Verbose mode", 'v', "verbose")]
+
+		[GetOpts.Option ("Verbose mode", 'v', "verbose")]
 		public bool Verbose = false;
-			
-		[GetOpts.Option("Verbosity (0 [silent] - 5)", 'm', "verbosity")]
+
+		[GetOpts.Option ("Verbosity (0 [silent] - 5)", 'm', "verbosity")]
 		public int Verbosity = 0;
-			
-		[GetOpts.Option("Specify a debug dump file ('-' for console)", 'd', "dump")]
+
+		[GetOpts.Option ("Specify a debug dump file ('-' for console)", 'd', "dump")]
 		public string DumpFile = null;
-			
-		[GetOpts.Option("Send dump to the console (as well as file)", "console-dump")]
+
+		[GetOpts.Option ("Send dump to the console (as well as file)", "console-dump")]
 		public bool ConsoleDump = false;
-			
-		[GetOpts.Option("Text-mode dump (default is XML)", "text-dump")]
+
+		[GetOpts.Option ("Text-mode dump (default is XML)", "text-dump")]
 		public bool TextDump = false;
-		
+
 		[GetOpts.Option ("Dump the Assembler Code", "asm-dump")]
 		public string AsmFile = null;
-			
-		[GetOpts.Option("Specify the dump verbosity (1 - 3)", "dump-level")]
+
+		[GetOpts.Option ("Specify the dump verbosity (1 - 3)", "dump-level")]
 		public int DumpVerbosity = 1;
 
 		[GetOpts.Option ("Dump method that contains the defined token", "dump-filter")]
 		public string DumpFilter = string.Empty;
-		
+
 		[GetOpts.Option (-1, "Specify a resource to add to the output file", 'R', "res")]
 		public string [] Resources = new string [0];
-	
-		public EngineOptions GetEngineOptions()
+
+		public EngineOptions GetEngineOptions ()
 		{
-			EngineOptions eo = new EngineOptions();
-			
+			EngineOptions eo = new EngineOptions ();
+
 			eo.Assemblies = Assemblies;
 			eo.OutputFilename = BinaryFilename;
 			eo.CPU = CPU;
 			eo.ConsoleDump = ConsoleDump;
-			
+
 			if (DumpFile == "-") {
 				eo.DumpFile = null;
 				eo.ConsoleDump = true;
@@ -87,12 +88,12 @@ namespace SharpOS.AOT {
 			eo.TextDump = TextDump;
 			eo.DumpVerbosity = DumpVerbosity;
 			eo.Verbosity = Verbosity;
-			
+
 			if (Verbosity == 0 && Verbose)
 				eo.Verbosity = 1;
 
 			eo.DumpFilter = DumpFilter;
-			
+
 			foreach (string res in Resources) {
 				byte [] contents;
 				byte [] buffer = new byte [1024];
@@ -100,11 +101,11 @@ namespace SharpOS.AOT {
 				int x = 0;
 				Stream fs = null;
 				string key, value;
-				
+
 				if (!res.Contains (":"))
 					throw new Exception ("Invalid resource: '" +
 						res + "': format is 'name:file'");
-				
+
 				key = res.Substring (0, res.IndexOf (':'));
 				value = res.Substring (key.Length);
 				fs = File.Open (value, FileMode.Open, FileAccess.Read);
@@ -116,14 +117,14 @@ namespace SharpOS.AOT {
 				}
 
 				fs.Close ();
-				
+
 				eo.Resources.Add (key, contents);
 			}
 
 			return eo;
 		}
 	}
-	
+
 	public class Compiler {
 		static int Main (string [] args)
 		{
@@ -169,71 +170,71 @@ namespace SharpOS.AOT {
 
 			opts.BinaryFilename = opts.OutputFilename;
 
-                        bool debuggerAttached = false;
+			bool debuggerAttached = false;
 
-                        // Prevent a Mono error if one occurs.
-                        try {
-                                debuggerAttached = System.Diagnostics.Debugger.IsAttached;
-                        } catch {
-                        }
+			// Prevent a Mono error if one occurs.
+			try {
+				debuggerAttached = System.Diagnostics.Debugger.IsAttached;
+			} catch {
+			}
 
-                        if (debuggerAttached) {
-                                engine = new Engine (opts.GetEngineOptions ());
-                                engine.Run ();
-                        }
-                        else try {
+			if (debuggerAttached) {
 				engine = new Engine (opts.GetEngineOptions ());
 				engine.Run ();
-			} catch (Exception e) {
-				AssemblyDefinition assembly;
-				ModuleDefinition module;
-				TypeDefinition type;
-				MethodDefinition method;
+			} else
+				try {
+					engine = new Engine (opts.GetEngineOptions ());
+					engine.Run ();
+				} catch (Exception e) {
+					AssemblyDefinition assembly;
+					ModuleDefinition module;
+					TypeDefinition type;
+					MethodDefinition method;
 
-				// Error handling
-				
-				engine.GetStatusInformation (out assembly, out module, out type, out method);
+					// Error handling
 
-				if (e is EngineException) {
-					Console.Error.WriteLine ("Error: {0}", e.ToString());
-				} else {
-					Console.Error.WriteLine ("Caught exception: " + e);
+					engine.GetStatusInformation (out assembly, out module, out type, out method);
+
+					if (e is EngineException) {
+						Console.Error.WriteLine ("Error: {0}", e.ToString ());
+					} else {
+						Console.Error.WriteLine ("Caught exception: " + e);
+					}
+
+					switch (engine.CurrentStatus) {
+					case Engine.Status.AssemblyLoading:
+						Console.Error.WriteLine ("While loading assembly `{0}'", engine.ProcessingAssemblyFile);
+						break;
+
+					case Engine.Status.IRProcessing:
+						Console.Error.WriteLine ();
+						Console.Error.WriteLine ("While performing IR processing");
+						break;
+
+					case Engine.Status.IRGeneration:
+						Console.Error.WriteLine ("While generating IR code for assembly `{0}'",
+									engine.ProcessingAssemblyFile);
+						break;
+
+					case Engine.Status.Encoding:
+						Console.Error.WriteLine ("While encoding the output assembly.");
+						break;
+					}
+
+					if (method != null) {
+						Console.Error.WriteLine ("Method:  {0}", (method == null ? "?" : method.ToString ()));
+						Console.Error.WriteLine ("  in module:  {0}", (module == null ? "?" : module.ToString ()));
+						Console.Error.WriteLine ("  of assembly:  {0}", (assembly == null ? "?" :
+							assembly.ToString ()));
+						Console.Error.WriteLine ("  loaded from:  {0}", (engine.ProcessingAssemblyFile == null ?
+							"?" : engine.ProcessingAssemblyFile));
+						Console.Error.WriteLine ();
+					} else {
+						Console.Error.WriteLine ("* Status information is not available.");
+					}
+
+					return 1;
 				}
-
-				switch (engine.CurrentStatus) {
-				case Engine.Status.AssemblyLoading:
-					Console.Error.WriteLine ("While loading assembly `{0}'", engine.ProcessingAssemblyFile);
-					break;
-					
-				case Engine.Status.IRProcessing:
-					Console.Error.WriteLine ();
-					Console.Error.WriteLine ("While performing IR processing");
-					break;
-
-				case Engine.Status.IRGeneration:
-					Console.Error.WriteLine ("While generating IR code for assembly `{0}'",
-								engine.ProcessingAssemblyFile);
-					break;
-
-				case Engine.Status.Encoding:
-					Console.Error.WriteLine ("While encoding the output assembly.");
-					break;
-				}
-
-				if (method != null) {				
-					Console.Error.WriteLine ("Method:  {0}", (method == null ? "?" : method.ToString ()));
-					Console.Error.WriteLine ("  in module:  {0}", (module == null ? "?" : module.ToString ()));
-					Console.Error.WriteLine ("  of assembly:  {0}", (assembly == null ? "?" :
-						assembly.ToString ()));
-					Console.Error.WriteLine ("  loaded from:  {0}", (engine.ProcessingAssemblyFile == null ?
-						"?" : engine.ProcessingAssemblyFile));
-					Console.Error.WriteLine ();
-				} else {
-					Console.Error.WriteLine ("* Status information is not available.");
-				}
-				
-				return 1;
-			}
 
 			return 0;
 		}

@@ -14,15 +14,15 @@ using SharpOS.Kernel.Memory;
 
 namespace SharpOS.Kernel.ADC {
 	public unsafe struct PagingMemoryRequirements {
-		public PagingMemoryRequirements (uint atomicPages, void *start)
+		public PagingMemoryRequirements (uint atomicPages, void* start)
 		{
 			AtomicPages = atomicPages;
 			Start = start;
 			Error = PageAllocator.Errors.Success;
 		}
-		
+
 		public uint AtomicPages;
-		public void *Start;
+		public void* Start;
 		public PageAllocator.Errors Error;
 	}
 }

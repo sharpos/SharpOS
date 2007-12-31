@@ -44,23 +44,23 @@ namespace SharpOS.AOT.X86 {
 				return value as TRType;
 
 			switch (Register.GetName (value)) {
-				case "TR3":
-					return TR.TR3;
+			case "TR3":
+				return TR.TR3;
 
-				case "TR4":
-					return TR.TR4;
+			case "TR4":
+				return TR.TR4;
 
-				case "TR5":
-					return TR.TR5;
+			case "TR5":
+				return TR.TR5;
 
-				case "TR6":
-					return TR.TR6;
+			case "TR6":
+				return TR.TR6;
 
-				case "TR7":
-					return TR.TR7;
+			case "TR7":
+				return TR.TR7;
 
-				default:
-					throw new EngineException ("Unknown TR Register '" + value.ToString () + "'");
+			default:
+				throw new EngineException ("Unknown TR Register '" + value.ToString () + "'");
 			}
 		}
 	}

@@ -35,7 +35,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			if (And (false, false) != false)
 				return 0;
-			
+
 			return 1;
 		}
 
@@ -49,7 +49,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			if (Or (false, false) != false)
 				return 0;
-			
+
 			return 1;
 		}
 

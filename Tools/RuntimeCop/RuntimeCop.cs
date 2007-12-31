@@ -1,9 +1,11 @@
-// (C) 2006-2007 The SharpOS Project. This software is licensed under the
-// terms of the GNU General Public License version 3.0 with the ClassPath
-// linking exception.
+//
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
-// 	William Lahti <xfurious@gmail.com>
+//	William Lahti <xfurious@gmail.com>
+//
+// Licensed under the terms of the GNU GPL v3,
+//  with Classpath Linking Exception for Libraries
 //
 
 using System;
@@ -14,21 +16,21 @@ using Mono.Cecil;
 using Mono.GetOptions;
 
 public class RuntimeCop {
-	public RuntimeCop(CopOptions options)
+	public RuntimeCop (CopOptions options)
 	{
 		this.options = options;
 
 		if (this.options.RemainingArguments.Length == 0) {
 			throw new ArgumentException ();
 		}
-		
+
 		this.corlib = this.options.RemainingArguments [0];
 	}
 
 	CopOptions options;
 	string corlib;
-	List <MethodDefinition> internalStubs = new List<MethodDefinition> ();
-	
+	List<MethodDefinition> internalStubs = new List<MethodDefinition> ();
+
 	public int Run ()
 	{
 		AssemblyDefinition library;
@@ -40,7 +42,7 @@ public class RuntimeCop {
 			ScanModule (module);
 
 		Console.WriteLine ("Finished scanning.\n");
-		
+
 		foreach (MethodDefinition def in internalStubs)
 			Console.WriteLine (def.DeclaringType.FullName + "\t\t\t" + def);
 
@@ -70,7 +72,7 @@ public class RuntimeCop {
 		if (method.IsInternalCall)
 			internalStubs.Add (method);
 	}
-	
+
 	public static int Main (string [] args)
 	{
 		RuntimeCop cop;
@@ -81,7 +83,7 @@ public class RuntimeCop {
 			Console.Error.WriteLine ("Bad arguments, see -help");
 			return 1;
 		}
-		
+
 		return cop.Run ();
 	}
 }

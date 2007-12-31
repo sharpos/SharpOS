@@ -17,7 +17,7 @@ namespace SharpOS.Kernel.ADC {
 		/// Powers down the system.
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static void PowerOff()
+		public static void PowerOff ()
 		{
 		}
 
@@ -27,7 +27,7 @@ namespace SharpOS.Kernel.ADC {
 		/// can turn of the machine.
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static void Freeze()
+		public static void Freeze ()
 		{
 		}
 
@@ -35,15 +35,15 @@ namespace SharpOS.Kernel.ADC {
 		/// Puts the system into sleep mode.
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static void Sleep()
+		public static void Sleep ()
 		{
 		}
-		
+
 		/// <summary>
 		/// Reboot the system.
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static void Reboot()
+		public static void Reboot ()
 		{
 		}
 	}

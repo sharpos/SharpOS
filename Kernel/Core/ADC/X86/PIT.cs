@@ -17,21 +17,19 @@ using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
-namespace SharpOS.Kernel.ADC.X86
-{
+namespace SharpOS.Kernel.ADC.X86 {
 	/// <summary>
 	/// Periodic Interrupt Timer (PIT)
 	/// </summary>
-	public unsafe class PIT
-	{
-		public const string 	TIMER_HANDLER		= "TIMER_HANDLER";
+	public unsafe class PIT {
+		public const string TIMER_HANDLER = "TIMER_HANDLER";
 
-		private const byte  	SquareWave   		= 0x36;
-		private const uint  	PITFrequency 		= 1193182;
-		public static ushort	HZ           		= 100;
+		private const byte SquareWave = 0x36;
+		private const uint PITFrequency = 1193182;
+		public static ushort HZ = 100;
 
-		private static uint 	ticks        		= 0;
-		public static uint		timerEvent			= 0;
+		private static uint ticks = 0;
+		public static uint timerEvent = 0;
 
 		/*
 		// sigh.. one can only dream
@@ -59,22 +57,22 @@ namespace SharpOS.Kernel.ADC.X86
 		*/
 
 		#region Setup
-		public static void Setup()
+		public static void Setup ()
 		{
-			SetTimerFrequency(HZ);
+			SetTimerFrequency (HZ);
 
-			IDT.RegisterIRQ(IDT.Interrupt.SystemTimer, Stubs.GetFunctionPointer(TIMER_HANDLER));
+			IDT.RegisterIRQ (IDT.Interrupt.SystemTimer, Stubs.GetFunctionPointer (TIMER_HANDLER));
 		}
 		#endregion
 
 		#region SetTimerFrequency
-		public static void SetTimerFrequency(ushort Hz)
+		public static void SetTimerFrequency (ushort Hz)
 		{
-			ushort TimerCount = (ushort)(PITFrequency / Hz);
-			IO.Out8(IO.Port.PIT_mode_control_port, SquareWave);
+			ushort TimerCount = (ushort) (PITFrequency / Hz);
+			IO.Out8 (IO.Port.PIT_mode_control_port, SquareWave);
 
-			IO.Out8(IO.Port.PIT_counter_0_counter_divisor, (byte)(TimerCount & 0xFF));
-			IO.Out8(IO.Port.PIT_counter_0_counter_divisor, (byte)((TimerCount >> 8) & 0xFF));
+			IO.Out8 (IO.Port.PIT_counter_0_counter_divisor, (byte) (TimerCount & 0xFF));
+			IO.Out8 (IO.Port.PIT_counter_0_counter_divisor, (byte) ((TimerCount >> 8) & 0xFF));
 		}
 		#endregion
 
@@ -85,23 +83,23 @@ namespace SharpOS.Kernel.ADC.X86
 				return EventRegisterStatus.CapacityExceeded;
 			if (timerEvent == address)
 				return EventRegisterStatus.AlreadySubscribed;
-			
+
 			timerEvent = address;
-			
+
 			return EventRegisterStatus.Success;
 		}
 		#endregion
 
 		#region TimerHandler
-		[SharpOS.AOT.Attributes.Label(TIMER_HANDLER)]
-		private static unsafe void TimerHandler(IDT.ISRData data)
+		[SharpOS.AOT.Attributes.Label (TIMER_HANDLER)]
+		private static unsafe void TimerHandler (IDT.ISRData data)
 		{
-			ticks++;			
+			ticks++;
 			if (timerEvent != 0)
-				Memory.Call(timerEvent, ticks);
+				Memory.Call (timerEvent, ticks);
 
 			// run scheduler here..
-			data = *((IDT.ISRData*)ADC.Scheduler.GetNextThread((void*)&data));
+			data = *((IDT.ISRData*) ADC.Scheduler.GetNextThread ((void*) &data));
 		}
 		#endregion
 	}

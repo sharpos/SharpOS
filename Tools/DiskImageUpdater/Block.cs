@@ -24,23 +24,30 @@ namespace Ext2 {
 		public byte [] buffer;
 		private bool dirty;
 
-		public bool Dirty {
-			get {
+		public bool Dirty
+		{
+			get
+			{
 				return this.dirty;
 			}
-			set {
+			set
+			{
 				this.dirty = value;
 			}
 		}
 
-		public uint Offset {
-			get {
+		public uint Offset
+		{
+			get
+			{
 				return this._offset;
 			}
 		}
 
-		public byte [] Buffer {
-			get {
+		public byte [] Buffer
+		{
+			get
+			{
 				return this.buffer;
 			}
 		}
@@ -90,7 +97,7 @@ namespace Ext2 {
 		{
 			this.SetUInt (offset, (uint) value);
 		}
-		
+
 		public byte GetByte (uint offset)
 		{
 			return this.buffer [offset];

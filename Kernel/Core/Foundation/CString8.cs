@@ -27,8 +27,10 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Gets the length of the string.
 		/// </summary>
-		public int Length {
-			get {
+		public int Length
+		{
+			get
+			{
 				return ByteString.Length (Pointer);
 			}
 		}
@@ -36,13 +38,15 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Gets the null-terminated byte pointer for the string.
 		/// </summary>
-		public byte *Pointer {
-			get {
-				byte *ptr;
+		public byte* Pointer
+		{
+			get
+			{
+				byte* ptr;
 
 				// HACK
 
-				fixed (byte *tp = &firstChar)
+				fixed (byte* tp = &firstChar)
 					ptr = tp;
 
 				return ptr;
@@ -87,7 +91,7 @@ namespace SharpOS.Kernel.Foundation {
 		#endregion
 		#region Internal
 
-		int IndexOf (int from, byte *substr, int substrLen, int offset, int count)
+		int IndexOf (int from, byte* substr, int substrLen, int offset, int count)
 		{
 			Diagnostics.Assert (from >= 0 && from < Length,
 				"CString8.IndexOf(): argument `from' is out of range");
@@ -120,7 +124,7 @@ namespace SharpOS.Kernel.Foundation {
 		{
 			//*
 
-			byte *cstr = stackalloc byte [substr.Length];
+			byte* cstr = stackalloc byte [substr.Length];
 
 			for (int x = 0; x < substr.Length; ++x)
 				cstr [x] = (byte) substr [x];
@@ -134,17 +138,17 @@ namespace SharpOS.Kernel.Foundation {
 			//*/
 		}
 
-		public int IndexOf (int from, CString8 *substr, int offset, int count)
+		public int IndexOf (int from, CString8* substr, int offset, int count)
 		{
 			return IndexOf (from, substr->Pointer, substr->Length, offset, count);
 		}
 
-		public int IndexOf (int from, PString8 *substr, int offset, int count)
+		public int IndexOf (int from, PString8* substr, int offset, int count)
 		{
 			return IndexOf (from, substr->Pointer, substr->Length, offset, count);
 		}
 
-		public int IndexOf (int from, byte *substr, int offset, int count)
+		public int IndexOf (int from, byte* substr, int offset, int count)
 		{
 			return IndexOf (from, substr, ByteString.Length (substr), offset, count);
 		}
@@ -154,17 +158,17 @@ namespace SharpOS.Kernel.Foundation {
 			return IndexOf (from, substr, 0, count);
 		}
 
-		public int IndexOf (int from, CString8 *substr, int count)
+		public int IndexOf (int from, CString8* substr, int count)
 		{
 			return IndexOf (from, substr, 0, count);
 		}
 
-		public int IndexOf (int from, PString8 *substr, int count)
+		public int IndexOf (int from, PString8* substr, int count)
 		{
 			return IndexOf (from, substr, 0, count);
 		}
 
-		public int IndexOf (int from, byte *substr, int count)
+		public int IndexOf (int from, byte* substr, int count)
 		{
 			return IndexOf (from, substr, 0, count);
 		}
@@ -174,17 +178,17 @@ namespace SharpOS.Kernel.Foundation {
 			return IndexOf (from, substr, 0, 0);
 		}
 
-		public int IndexOf (int from, CString8 *substr)
+		public int IndexOf (int from, CString8* substr)
 		{
 			return IndexOf (from, substr, 0, 0);
 		}
 
-		public int IndexOf (int from, PString8 *substr)
+		public int IndexOf (int from, PString8* substr)
 		{
 			return IndexOf (from, substr, 0, 0);
 		}
 
-		public int IndexOf (int from, byte *substr)
+		public int IndexOf (int from, byte* substr)
 		{
 			return IndexOf (from, substr, 0, 0);
 		}
@@ -194,17 +198,17 @@ namespace SharpOS.Kernel.Foundation {
 			return IndexOf (0, substr, 0, 0);
 		}
 
-		public int IndexOf (CString8 *substr)
+		public int IndexOf (CString8* substr)
 		{
 			return IndexOf (0, substr, 0, 0);
 		}
 
-		public int IndexOf (PString8 *substr)
+		public int IndexOf (PString8* substr)
 		{
 			return IndexOf (0, substr, 0, 0);
 		}
 
-		public int IndexOf (byte *substr)
+		public int IndexOf (byte* substr)
 		{
 			return IndexOf (0, substr, 0, 0);
 		}
@@ -216,7 +220,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (int from, CString8 *str, int offset, int count)
+		public int Compare (int from, CString8* str, int offset, int count)
 		{
 			return ByteString.Compare (Pointer, from, str->Pointer, offset, count);
 		}
@@ -225,7 +229,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (int from, PString8 *str, int offset, int count)
+		public int Compare (int from, PString8* str, int offset, int count)
 		{
 			return ByteString.Compare (Pointer, from, str->Pointer, offset, count);
 		}
@@ -243,7 +247,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (int from, byte *str, int offset, int count)
+		public int Compare (int from, byte* str, int offset, int count)
 		{
 			return ByteString.Compare (Pointer, from, str, offset, count);
 		}
@@ -252,7 +256,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (CString8 *str, int offset, int count)
+		public int Compare (CString8* str, int offset, int count)
 		{
 			return ByteString.Compare (Pointer, 0, str->Pointer, offset, count);
 		}
@@ -261,7 +265,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (PString8 *str, int offset, int count)
+		public int Compare (PString8* str, int offset, int count)
 		{
 			return ByteString.Compare (Pointer, 0, str->Pointer, offset, count);
 		}
@@ -279,7 +283,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (byte *str, int offset, int count)
+		public int Compare (byte* str, int offset, int count)
 		{
 			return ByteString.Compare (Pointer, 0, str, offset, count);
 		}
@@ -288,7 +292,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (CString8 *str, int count)
+		public int Compare (CString8* str, int count)
 		{
 			return ByteString.Compare (Pointer, 0, str->Pointer, 0, count);
 		}
@@ -297,7 +301,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (PString8 *str, int count)
+		public int Compare (PString8* str, int count)
 		{
 			return ByteString.Compare (Pointer, 0, str->Pointer, 0, count);
 		}
@@ -315,7 +319,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// Compares <paramref name="count" /> characters of the
 		/// string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (byte *str, int count)
+		public int Compare (byte* str, int count)
 		{
 			return ByteString.Compare (Pointer, 0, str, 0, count);
 		}
@@ -323,7 +327,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Compares the string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (CString8 *str)
+		public int Compare (CString8* str)
 		{
 			return Compare (str, 0);
 		}
@@ -331,7 +335,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Compares the string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (PString8 *str)
+		public int Compare (PString8* str)
 		{
 			return Compare (str, 0);
 		}
@@ -347,7 +351,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// <summary>
 		/// Compares the string against <paramref name="str" />.
 		/// </summary>
-		public int Compare (byte *str)
+		public int Compare (byte* str)
 		{
 			return Compare (str, 0);
 		}
@@ -367,16 +371,16 @@ namespace SharpOS.Kernel.Foundation {
 
 			for (; (*caret) != '\0'; caret++) {
 				if (firstNonWhiteSpace == null) {
-					if (!ASCII.IsWhiteSpace(*caret))
+					if (!ASCII.IsWhiteSpace (*caret))
 						firstNonWhiteSpace = caret;
 					continue;
 				} else {
-					if (ASCII.IsWhiteSpace(*caret) &&
-					!ASCII.IsWhiteSpace(*(caret - 1)))
-					lastNonWhiteSpace = caret - 1;
+					if (ASCII.IsWhiteSpace (*caret) &&
+					!ASCII.IsWhiteSpace (*(caret - 1)))
+						lastNonWhiteSpace = caret - 1;
 
 					if (lastNonWhiteSpace != null &&
-					!ASCII.IsWhiteSpace(*caret))
+					!ASCII.IsWhiteSpace (*caret))
 						lastNonWhiteSpace = null;
 				}
 			}
@@ -387,126 +391,125 @@ namespace SharpOS.Kernel.Foundation {
 			if (firstNonWhiteSpace == null) {
 				//whole string needs to be filtered out...
 				//So we generate an empty string and return it
-				CString8* result = (CString8*)SharpOS.Kernel.ADC.MemoryManager.Allocate(1);
-				*((byte*)result) = (byte)'\0';
+				CString8* result = (CString8*) SharpOS.Kernel.ADC.MemoryManager.Allocate (1);
+				*((byte*) result) = (byte) '\0';
 				return result;
 			} else {
 				// we get to get part (which could be all) of the string...
 				long length = (lastNonWhiteSpace - firstNonWhiteSpace) + 1;
-				byte* result = (byte*)SharpOS.Kernel.ADC.MemoryManager.Allocate((uint)length + 1);
+				byte* result = (byte*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) length + 1);
 
 				for (caret = firstNonWhiteSpace; caret <= lastNonWhiteSpace; caret++) {
-					result[caret - firstNonWhiteSpace] = *caret;
+					result [caret - firstNonWhiteSpace] = *caret;
 				}
 
-				result[caret - firstNonWhiteSpace] = (byte)'\0';
+				result [caret - firstNonWhiteSpace] = (byte) '\0';
 
-				return (CString8*)result;
+				return (CString8*) result;
 			}
 		}
 
-		public CString8* Substring(int index)
+		public CString8* Substring (int index)
 		{
 			int l = this.Length;
-			Diagnostics.Assert(index >= 0,
+			Diagnostics.Assert (index >= 0,
 				"CString8.Substring(int): Parameter 'index' is outside of the valid range");
-			Diagnostics.Assert(index < l,
+			Diagnostics.Assert (index < l,
 				"CString8.Substring(int): Parameter 'index' is outside of the valid range");
 
 			int count = l - index;
 
-			return Substring_INTERNAL(index, count);
+			return Substring_INTERNAL (index, count);
 		}
 
-		public CString8* Substring(int index, int count)
+		public CString8* Substring (int index, int count)
 		{
 			int l = this.Length;
 
-			Diagnostics.Assert(index >= 0,
+			Diagnostics.Assert (index >= 0,
 				"CString8.Substring(int,int): Parameter 'index' is outside of the valid range");
-			Diagnostics.Assert(index < l,
+			Diagnostics.Assert (index < l,
 				"CString8.Substring(int,int): Parameter 'index' is outside of the valid range");
-			Diagnostics.Assert(count >= 0,
+			Diagnostics.Assert (count >= 0,
 				"CString8.Substring(int,int): Parameter 'count' should not be less than zero");
-			Diagnostics.Assert((count + index) <= l,
+			Diagnostics.Assert ((count + index) <= l,
 				"CString8.Substring(int,int): Parameter 'count' extends pass the end of the string");
 
-			return Substring_INTERNAL(index, count);
+			return Substring_INTERNAL (index, count);
 		}
 
-		private CString8* Substring_INTERNAL(int index, int count)
+		private CString8* Substring_INTERNAL (int index, int count)
 		{
 			if (count == 0)
-				return CString8.CreateEmpty();
+				return CString8.CreateEmpty ();
 
-			byte* rslt = (byte*)SharpOS.Kernel.ADC.MemoryManager.Allocate((uint)count + 1);
+			byte* rslt = (byte*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) count + 1);
 			byte* thisPtr = this.Pointer;
-			Diagnostics.Assert(rslt != thisPtr, "CString8.Substring_INTERNAL(): Insane memory allocation detected!");
+			Diagnostics.Assert (rslt != thisPtr, "CString8.Substring_INTERNAL(): Insane memory allocation detected!");
 
-			for (int i = index; i < (index + count); i++)
-			{
-				rslt[i - index] = thisPtr[i];
+			for (int i = index; i < (index + count); i++) {
+				rslt [i - index] = thisPtr [i];
 			}
-			rslt[count] = (byte)'\0';
+			rslt [count] = (byte) '\0';
 
-			return (CString8*)rslt;
+			return (CString8*) rslt;
 		}
 
 
 
-		public static CString8* CreateEmpty()
+		public static CString8* CreateEmpty ()
 		{
-			byte* rslt = (byte*)SharpOS.Kernel.ADC.MemoryManager.Allocate(1);
-			rslt[0] = (byte)'\0';
-			return (CString8*)rslt;
+			byte* rslt = (byte*) SharpOS.Kernel.ADC.MemoryManager.Allocate (1);
+			rslt [0] = (byte) '\0';
+			return (CString8*) rslt;
 		}
 
-		public static CString8* Copy(string str)
+		public static CString8* Copy (string str)
 		{
-			uint l = (uint)str.Length;
+			uint l = (uint) str.Length;
 
-			byte* result = (byte*)ADC.MemoryManager.Allocate(l + 1);
+			byte* result = (byte*) ADC.MemoryManager.Allocate (l + 1);
 
 			for (int i = 0; i < l; i++)
-				result[i] = (byte)str[i];
-			result[l] = (byte)'\0';
+				result [i] = (byte) str [i];
+			result [l] = (byte) '\0';
 
-			return (CString8*)result;
+			return (CString8*) result;
 		}
 
-		public static CString8* Copy(byte* original)
+		public static CString8* Copy (byte* original)
 		{
-			return Copy((CString8*)original);
+			return Copy ((CString8*) original);
 		}
 
-		public static CString8* Copy(CString8* original)
+		public static CString8* Copy (CString8* original)
 		{
-			uint l = (uint)original->Length;
+			uint l = (uint) original->Length;
 			byte* originalPtr = original->Pointer;
-			byte* result = (byte*)ADC.MemoryManager.Allocate(l + 1);
+			byte* result = (byte*) ADC.MemoryManager.Allocate (l + 1);
 
 			for (int i = 0; i < l; i++)
-				result[i] = originalPtr[i];
-			result[l] = (byte)'\0';
+				result [i] = originalPtr [i];
+			result [l] = (byte) '\0';
 
-			return (CString8*)result;
+			return (CString8*) result;
 		}
 
-		public static void DISPOSE(CString8* cstr)
+		public static void DISPOSE (CString8* cstr)
 		{
-			ADC.MemoryManager.Free((void*)cstr);
+			ADC.MemoryManager.Free ((void*) cstr);
 		}
 
 		#region Testcases
 
 		internal static void __RunTests ()
 		{
-			__Test1();
+			__Test1 ();
 		}
 
 		public static void __Test1 ()
 		{
-			CString8 *buf = (CString8*) Stubs.CString ("--keymap arg");
+			CString8* buf = (CString8*) Stubs.CString ("--keymap arg");
 
 			if (buf->IndexOf ("--keymap") != 0)
 				TextMode.WriteLine ("CString8.IndexOf(): test FAIL: result should be 0");

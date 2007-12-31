@@ -30,8 +30,10 @@ namespace SharpOS.AOT.X86 {
 
 		private string addressOfLabel;
 
-		public string AddressOfLabel {
-			get {
+		public string AddressOfLabel
+		{
+			get
+			{
 				return this.addressOfLabel;
 			}
 		}

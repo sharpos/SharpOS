@@ -27,7 +27,7 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			if (PushArgument (123) == 123)
 				return 1;
-				
+
 			return 0;
 		}
 

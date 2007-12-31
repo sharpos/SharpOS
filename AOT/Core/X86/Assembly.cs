@@ -59,7 +59,7 @@ namespace SharpOS.AOT.X86 {
 		const string PE_POINTER_TO_RAW_DATA = "PointerToRawData";
 		const ushort PE_CODE_SECTION = 1;
 		const ushort PE_DATA_SECTION = 2;
-#endif 		
+#endif
 
 		const uint BASE_ADDRESS = 0x00100000;
 		internal const uint ALIGNMENT = 16;
@@ -109,8 +109,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets a value indicating whether this <see cref="Assembly"/> is bits32.
 		/// </summary>
 		/// <value><c>true</c> if bits32; otherwise, <c>false</c>.</value>
-		public bool Bits32 {
-			get {
+		public bool Bits32
+		{
+			get
+			{
 				return bits32;
 			}
 		}
@@ -121,8 +123,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the <see cref="SharpOS.AOT.X86.Instruction"/> at the specified index.
 		/// </summary>
 		/// <value></value>
-		public Instruction this [int index] {
-			get {
+		public Instruction this [int index]
+		{
+			get
+			{
 				return this.instructions [index];
 			}
 		}
@@ -176,12 +180,12 @@ namespace SharpOS.AOT.X86 {
 
 					else
 						this.DATA ((ushort) 0x00);
-					
+
 
 					// The storage class
 					if (this.symbols [i] is COFF.Function)
 						this.DATA ((byte) COFF.Symbol.StorageClassType.C_EXT);
-					
+
 					else if (this.symbols [i] is COFF.Static)
 						this.DATA ((byte) COFF.Symbol.StorageClassType.C_STAT);
 
@@ -268,16 +272,16 @@ namespace SharpOS.AOT.X86 {
 
 			else if (value.StartsWith ("SharpOS.AOT.X86.R16Type"))
 				return InternalType.U2;
-			
+
 			else if (value.StartsWith ("SharpOS.AOT.X86.SegType"))
 				return InternalType.U2;
 
 			else if (value.StartsWith ("SharpOS.AOT.X86.R32Type"))
 				return InternalType.U4;
-				
+
 			else if (value.StartsWith ("SharpOS.AOT.X86.CRType"))
 				return InternalType.U4;
-			
+
 			else
 				throw new EngineException ("'" + value + "' is not supported.");
 		}
@@ -475,7 +479,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="label">The label.</param>
 		public void MOV (R16Type target, string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + Assembly.FormatLabelName (label), null, null, target, new UInt32[] { 0 }, new string[] { "o16", "B8+r", "iw" }));
+			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + Assembly.FormatLabelName (label), null, null, target, new UInt32 [] { 0 }, new string [] { "o16", "B8+r", "iw" }));
 		}
 
 		/// <summary>
@@ -485,7 +489,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="label">The label.</param>
 		public void MOV (R32Type target, string label)
 		{
-			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + Assembly.FormatLabelName (label), null, null, target, new UInt32[] { 0 }, new string[] { "o32", "B8+r", "id" }));
+			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + Assembly.FormatLabelName (label), null, null, target, new UInt32 [] { 0 }, new string [] { "o32", "B8+r", "id" }));
 		}
 
 		private int GetBaseTypeSize (TypeDefinition type)
@@ -534,7 +538,7 @@ namespace SharpOS.AOT.X86 {
 
 							break;
 						}
-						
+
 						result += this.engine.GetFieldSize (field.FieldType.FullName);
 					}
 
@@ -577,11 +581,14 @@ namespace SharpOS.AOT.X86 {
 
 		private bool utf7StringEncoding;
 
-		internal bool UTF7StringEncoding {
-			get {
+		internal bool UTF7StringEncoding
+		{
+			get
+			{
 				return this.utf7StringEncoding;
 			}
-			set {
+			set
+			{
 				this.utf7StringEncoding = value;
 			}
 		}
@@ -603,7 +610,7 @@ namespace SharpOS.AOT.X86 {
 			index = this.GetLabelIndex (MULTIBOOT_BSS_END_ADDRESS);
 			this.instructions [index + 1].Value = this.multibootBSSEndAddress;
 
-#if PE			
+#if PE
 			index = this.GetLabelIndex (PE_ADRESS_OFFSET);
 			this.instructions [index + 1].Value = this.instructions [this.GetLabelIndex (PE_HEADER)].Offset;
 
@@ -716,7 +723,7 @@ namespace SharpOS.AOT.X86 {
 
 			// PE\0\0 (PE Signature)
 			this.DATA ((uint) 0x00004550);
-			
+
 			// Machine (Intel 386)
 			this.DATA ((ushort) 0x014C);
 
@@ -801,13 +808,13 @@ namespace SharpOS.AOT.X86 {
 			this.DATA ((uint) 0x00000000);
 
 			// SizeOfImage
-			this.DATA ((uint) 0x00000000); 
+			this.DATA ((uint) 0x00000000);
 
 			// SizeOfHeaders
-			this.DATA ((uint) 0x00000000); 
+			this.DATA ((uint) 0x00000000);
 
 			// CheckSum
-			this.DATA ((uint) 0x00000000); 
+			this.DATA ((uint) 0x00000000);
 
 			// Subsystem
 			this.DATA ((ushort) 0x0001);
@@ -953,7 +960,7 @@ namespace SharpOS.AOT.X86 {
 
 
 			////////////////////////////////////////////////////////////////////////////////////////
-			start = this.instructions [this.GetLabelIndex (END_BSS)].Offset -  start;
+			start = this.instructions [this.GetLabelIndex (END_BSS)].Offset - start;
 			index = this.GetLabelIndex (GetPESectionLabel (PE_BSS, PE_VIRTUAL_SIZE));
 			this.instructions [index + 1].Value = start;
 
@@ -1022,7 +1029,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			uint magic = 0x1BADB002;
 			uint flags = 0x00010003; //Extra info following and retrieve memory and video modes infos
-			uint checksum = (uint) ((int)( (-(magic + flags))));
+			uint checksum = (uint) ((int) ((-(magic + flags))));
 
 			this.ALIGN (4);
 
@@ -1044,10 +1051,10 @@ namespace SharpOS.AOT.X86 {
 			// BSS End Address
 			this.LABEL (MULTIBOOT_BSS_END_ADDRESS);
 			this.DATA ((uint) 0);
-			
+
 			// Entry Address (It will get patched later)
 			this.LABEL (MULTIBOOT_ENTRY_POINT);
-			this.DATA ((uint) 0); 
+			this.DATA ((uint) 0);
 		}
 
 		/// <summary>
@@ -1060,7 +1067,7 @@ namespace SharpOS.AOT.X86 {
 			this.AddSymbol (new COFF.Label (KERNEL_ENTRY_POINT));
 
 			this.LABEL (KERNEL_ENTRY_POINT);
-	
+
 			this.MOV (R32.ESP, END_STACK);
 
 			this.PUSH (0);
@@ -1078,12 +1085,12 @@ namespace SharpOS.AOT.X86 {
 
 			// The magic value
 			this.PUSH (R32.EAX);
-			
+
 			foreach (Class _class in engine) {
-				foreach (Method method in _class) {		
+				foreach (Method method in _class) {
 					if (method.MethodFullName.IndexOf (".cctor") == -1)
 						continue;
-						
+
 					this.CALL (method.MethodFullName);
 				}
 			}
@@ -1139,34 +1146,34 @@ namespace SharpOS.AOT.X86 {
 					this.LABEL (fullname);
 
 					switch (engine.GetInternalType (field.FieldType.FullName)) {
-						case InternalType.I1:
-						case InternalType.U1:
-							this.DATA ((byte) 0);
-							break;
+					case InternalType.I1:
+					case InternalType.U1:
+						this.DATA ((byte) 0);
+						break;
 
-						case InternalType.I2:
-						case InternalType.U2:
-							this.DATA ((ushort) 0);
-							break;
+					case InternalType.I2:
+					case InternalType.U2:
+						this.DATA ((ushort) 0);
+						break;
 
-						case InternalType.O:
-						case InternalType.I:
-						case InternalType.U:
-						case InternalType.I4:
-						case InternalType.U4:
-						case InternalType.R4:
-							this.DATA ((uint) 0);
-							break;
+					case InternalType.O:
+					case InternalType.I:
+					case InternalType.U:
+					case InternalType.I4:
+					case InternalType.U4:
+					case InternalType.R4:
+						this.DATA ((uint) 0);
+						break;
 
-						case InternalType.I8:
-						case InternalType.U8:
-						case InternalType.R8:
-							this.DATA ((uint) 0);
-							this.DATA ((uint) 0);
-							break;
+					case InternalType.I8:
+					case InternalType.U8:
+					case InternalType.R8:
+						this.DATA ((uint) 0);
+						this.DATA ((uint) 0);
+						break;
 
-						default:
-							throw new NotImplementedEngineException ("'" + field.FieldType + "' is not supported.");
+					default:
+						throw new NotImplementedEngineException ("'" + field.FieldType + "' is not supported.");
 					}
 				}
 			}
@@ -1202,21 +1209,21 @@ namespace SharpOS.AOT.X86 {
 
 		private void AddResources ()
 		{
-			foreach (KeyValuePair <string, byte[]> kvp in this.engine.Resources) {
+			foreach (KeyValuePair<string, byte []> kvp in this.engine.Resources) {
 				this.engine.Message (3, "Encoding resource `{0}'...",
 					kvp.Key);
-				
+
 				if (!kvp.Key.Contains ("/Resources/"))
 					throw new EngineException ("Bad label for resource: " +
 						kvp.Key);
-				
+
 				this.LABEL (kvp.Key);
 
 				for (int x = 0; x < kvp.Value.Length; ++x)
 					this.DATA (kvp.Value [x]);
 			}
 		}
-		
+
 		/// <summary>
 		/// Encodes the specified engine.
 		/// </summary>
@@ -1229,9 +1236,9 @@ namespace SharpOS.AOT.X86 {
 			this.data = new Assembly ();
 			this.bss = new Assembly ();
 			this.engine = engine;
-			
+
 			this.engine.Dump.Section (DumpSection.Encoding);
-			
+
 #if PE
 			this.AddPEHeader ();
 #else
@@ -1240,21 +1247,21 @@ namespace SharpOS.AOT.X86 {
 
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (START_CODE);
-			
+
 			this.AddEntryPoint ();
-			
+
 			this.engine.Dump.Section (DumpSection.MethodEncode);
-			
+
 			foreach (Class _class in engine) {
 				foreach (Method method in _class) {
 					this.engine.Dump.MethodEncode (method);
 
-					engine.SetStatusInformation (_class.ClassDefinition.Module.Assembly, 
+					engine.SetStatusInformation (_class.ClassDefinition.Module.Assembly,
 						_class.ClassDefinition.Module, _class.ClassDefinition,
 						method.MethodDefinition);
-					
+
 					new AssemblyMethod (this, method).GetAssemblyCode ();
-					
+
 					engine.ClearStatusInformation ();
 				}
 			}
@@ -1269,12 +1276,12 @@ namespace SharpOS.AOT.X86 {
 			this.AddData ();
 			this.AddSymbols ();
 			this.AddBSS ();
-			
+
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (THE_END);
 
 			this.Save (target);
-			
+
 			return true;
 		}
 
@@ -1308,7 +1315,7 @@ namespace SharpOS.AOT.X86 {
 			}
 
 			this.engine.Dump.PopElement ();
-			
+
 			return true;
 		}
 
@@ -1422,8 +1429,8 @@ namespace SharpOS.AOT.X86 {
 							// BSS End Address
 							if (instruction.Label.Equals (Assembly.FormatLabelName (END_BSS)))
 								this.multibootBSSEndAddress = (UInt32) (org + instruction.Offset);
-						} 
-						
+						}
+
 						if (pass == 1 && !bss)
 							instruction.Encode (this.bits32, binaryWriter);
 
@@ -1611,7 +1618,7 @@ namespace SharpOS.AOT.X86 {
 			string firstNotSigned = HELPER_LMUL + " FIRST NOT SIGNED";
 			string secondNotSigned = HELPER_LMUL + " SECOND NOT SIGNED";
 			string dontSignResult = HELPER_LMUL + " DONT SIGN RESULT";
-			
+
 			this.AddSymbol (new COFF.Label (HELPER_LMUL));
 
 			this.LABEL (HELPER_LMUL);
@@ -1879,26 +1886,26 @@ namespace SharpOS.AOT.X86 {
 		{
 			switch ((Registers) i) {
 
-				case Registers.EBX:
-					return R32.EBX;
+			case Registers.EBX:
+				return R32.EBX;
 
-				case Registers.ESI:
-					return R32.ESI;
+			case Registers.ESI:
+				return R32.ESI;
 
-				case Registers.EDI:
-					return R32.EDI;
+			case Registers.EDI:
+				return R32.EDI;
 
-				case Registers.EAX:
-					return R32.EAX;
+			case Registers.EAX:
+				return R32.EAX;
 
-				case Registers.EDX:
-					return R32.EDX;
+			case Registers.EDX:
+				return R32.EDX;
 
-				case Registers.ECX:
-					return R32.ECX;
+			case Registers.ECX:
+				return R32.ECX;
 
-				default:
-					throw new EngineException ("'" + i.ToString () + "' is no valid register.");
+			default:
+				throw new EngineException ("'" + i.ToString () + "' is no valid register.");
 			}
 		}
 
@@ -1906,8 +1913,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the available registers count.
 		/// </summary>
 		/// <value>The available registers count.</value>
-		public int AvailableRegistersCount {
-			get {
+		public int AvailableRegistersCount
+		{
+			get
+			{
 				return 3;
 			}
 		}
@@ -1916,8 +1925,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the size of the int.
 		/// </summary>
 		/// <value>The size of the int.</value>
-		public int IntSize {
-			get {
+		public int IntSize
+		{
+			get
+			{
 				return 4;
 			}
 		}
@@ -1942,7 +1953,7 @@ namespace SharpOS.AOT.X86 {
 			return false;
 		}
 
-		Dictionary <string, string> strings = new Dictionary <string, string> ();
+		Dictionary<string, string> strings = new Dictionary<string, string> ();
 		Dictionary<string, string> utf7Strings = new Dictionary<string, string> ();
 
 		/// <summary>
@@ -2030,8 +2041,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the get free resource label.
 		/// </summary>
 		/// <value>The get free resource label.</value>
-		internal string GetFreeResourceLabel {
-			get {
+		internal string GetFreeResourceLabel
+		{
+			get
+			{
 				return "Resource " + this.resourceCounter++;
 			}
 		}
@@ -2042,8 +2055,10 @@ namespace SharpOS.AOT.X86 {
 		/// Gets the get CMP label.
 		/// </summary>
 		/// <value>The get CMP label.</value>
-		internal string GetCMPLabel {
-			get {
+		internal string GetCMPLabel
+		{
+			get
+			{
 				return "CMP " + this.cmpCounter++;
 			}
 		}

@@ -32,7 +32,7 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="register">The register.</param>
 		/// <param name="value">The value.</param>
 		/// <param name="encoding">The encoding.</param>
-		public DataInstruction (bool indent, string label, string reference, string name, string parameters, Memory rmMemory, Register rmRegister, Register register, object value, string[] encoding)
+		public DataInstruction (bool indent, string label, string reference, string name, string parameters, Memory rmMemory, Register rmRegister, Register register, object value, string [] encoding)
 			: base (indent, label, reference, name, parameters, rmMemory, rmRegister, register, value, encoding)
 		{
 		}

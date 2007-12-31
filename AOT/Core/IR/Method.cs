@@ -38,11 +38,14 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets a value indicating whether this method should be called when booting.
 		/// </summary>
 		/// <value><c>true</c> if [entry point]; otherwise, <c>false</c>.</value>
-		public bool EntryPoint {
-			get {
+		public bool EntryPoint
+		{
+			get
+			{
 				return this.entryPoint;
 			}
-			set {
+			set
+			{
 				this.entryPoint = value;
 			}
 		}
@@ -53,23 +56,28 @@ namespace SharpOS.AOT.IR {
 		/// Gets or sets the size of the stack.
 		/// </summary>
 		/// <value>The size of the stack.</value>
-		public int StackSize {
-			get {
+		public int StackSize
+		{
+			get
+			{
 				return stackSize;
 			}
-			set {
+			set
+			{
 				stackSize = value;
 			}
 		}
 
 		private Engine engine = null;
-		
+
 		/// <summary>
 		/// Gets the engine.
 		/// </summary>
 		/// <value>The engine.</value>
-		public Engine Engine {
-			get {
+		public Engine Engine
+		{
+			get
+			{
 				return this.engine;
 			}
 		}
@@ -80,8 +88,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the method definition.
 		/// </summary>
 		/// <value>The method definition.</value>
-		public MethodDefinition MethodDefinition {
-			get {
+		public MethodDefinition MethodDefinition
+		{
+			get
+			{
 				return this.methodDefinition;
 			}
 		}
@@ -111,7 +121,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void DumpDefUse ()
 		{
-//			this.defuse.Dump (this.engine.Dump);
+			//			this.defuse.Dump (this.engine.Dump);
 		}
 
 		List<Argument> arguments = new List<Argument> ();
@@ -147,7 +157,7 @@ namespace SharpOS.AOT.IR {
 		{
 			if (i < 0)
 				throw new EngineException (string.Format ("Local Index may not be negative. ({0})", this.MethodFullName));
-				
+
 			if (i >= this.locals.Count)
 				throw new EngineException (string.Format ("Local Index out of range. ({0})", this.MethodFullName));
 
@@ -303,20 +313,22 @@ namespace SharpOS.AOT.IR {
 
 			} while (changed);
 
-			for (int i = 0; i < this.blocks.Count; i++) 
-				this.blocks[i].Index = i;
+			for (int i = 0; i < this.blocks.Count; i++)
+				this.blocks [i].Index = i;
 
 			return;
 		}
-		
+
 		List<int> registerVersions = new List<int> ();
 
 		/// <summary>
 		/// Holds the register versions used mainly by the SSA.
 		/// </summary>
 		/// <value>The register versions.</value>
-		public List<int> RegisterVersions {
-			get {
+		public List<int> RegisterVersions
+		{
+			get
+			{
 				return registerVersions;
 			}
 		}
@@ -331,7 +343,7 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.methodDefinition.Body.MaxStack; i++)
 				this.registerVersions.Add (0);
 
-			foreach (Block block in this.Preorder ()) 
+			foreach (Block block in this.Preorder ())
 				block.ConvertFromCIL ();
 
 			// Insert Initialize instructions to initialize the local variables
@@ -370,10 +382,10 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		private List<Block> Preorder ()
 		{
-			List<Block> list = new List<Block>();
-			List<Block> visited = new List<Block>();
+			List<Block> list = new List<Block> ();
+			List<Block> visited = new List<Block> ();
 
-			Preorder (visited, list, this.blocks[0]);
+			Preorder (visited, list, this.blocks [0]);
 
 			return list;
 		}
@@ -391,8 +403,8 @@ namespace SharpOS.AOT.IR {
 
 				list.Add (current);
 
-				for (int i = 0; i < current.Outs.Count; i++) 
-					Preorder (visited, list, current.Outs[i]);
+				for (int i = 0; i < current.Outs.Count; i++)
+					Preorder (visited, list, current.Outs [i]);
 			}
 
 			return;
@@ -404,10 +416,10 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		private List<Block> Postorder ()
 		{
-			List<Block> list = new List<Block>();
-			List<Block> visited = new List<Block>();
+			List<Block> list = new List<Block> ();
+			List<Block> visited = new List<Block> ();
 
-			Postorder (visited, list, this.blocks[0]);
+			Postorder (visited, list, this.blocks [0]);
 
 			return list;
 		}
@@ -423,8 +435,8 @@ namespace SharpOS.AOT.IR {
 			if (!visited.Contains (current)) {
 				visited.Add (current);
 
-				for (int i = 0; i < current.Outs.Count; i++) 
-					Postorder (visited, list, current.Outs[i]);
+				for (int i = 0; i < current.Outs.Count; i++)
+					Postorder (visited, list, current.Outs [i]);
 
 				list.Add (current);
 			}
@@ -436,16 +448,16 @@ namespace SharpOS.AOT.IR {
 		/// Reverses the postorder.
 		/// </summary>
 		/// <returns></returns>
-		private List<Block> ReversePostorder()
+		private List<Block> ReversePostorder ()
 		{
-			List<Block> list = new List<Block>();
-			List<Block> visited = new List<Block>();
-			List<Block> active = new List<Block>();
+			List<Block> list = new List<Block> ();
+			List<Block> visited = new List<Block> ();
+			List<Block> active = new List<Block> ();
 
-			visited.Add (this.blocks[0]);
-			list.Add (this.blocks[0]);
+			visited.Add (this.blocks [0]);
+			list.Add (this.blocks [0]);
 
-			ReversePostorder (visited, active, list, this.blocks[0]);
+			ReversePostorder (visited, active, list, this.blocks [0]);
 
 			return list;
 		}
@@ -462,7 +474,7 @@ namespace SharpOS.AOT.IR {
 			if (this.blocks.Count == list.Count)
 				return;
 
-			if (active.Contains (current)) 
+			if (active.Contains (current))
 				return;
 
 			active.Add (current);
@@ -489,11 +501,11 @@ namespace SharpOS.AOT.IR {
 		{
 			for (int i = 0; i < this.blocks.Count; i++) {
 				foreach (Block block in blocks) {
-					this.blocks[i].Dominators.Add (block);
+					this.blocks [i].Dominators.Add (block);
 				}
 			}
 
-			List<Block> list = Preorder();
+			List<Block> list = Preorder ();
 
 			bool changed = true;
 
@@ -501,10 +513,10 @@ namespace SharpOS.AOT.IR {
 				changed = false;
 
 				for (int i = 0; i < list.Count; i++) {
-					List<Block> predecessorDoms = new List<Block>();
-					List<Block> doms = new List<Block>();
+					List<Block> predecessorDoms = new List<Block> ();
+					List<Block> doms = new List<Block> ();
 
-					Block block = list[list.Count - 1 - i];
+					Block block = list [list.Count - 1 - i];
 
 					// Add the dominator blocks of the predecessors
 					foreach (Block predecessor in block.Ins) {
@@ -587,12 +599,12 @@ namespace SharpOS.AOT.IR {
 
 			if (engine.Options.Dump)
 				engine.Dump.Dominance (this.blocks);
-		
+
 			// Compute the Dominance Frontier
 			foreach (Block block in blocks) {
 				if (block.Ins.Count == 0)
 					continue;
-				
+
 				foreach (Block predecessor in block.Ins) {
 					Block runner = predecessor;
 
@@ -606,8 +618,8 @@ namespace SharpOS.AOT.IR {
 			}
 
 			if (engine.Options.Dump)
-				engine.Dump.Dominance(this.blocks);
-			
+				engine.Dump.Dominance (this.blocks);
+
 			return;
 		}
 
@@ -620,7 +632,7 @@ namespace SharpOS.AOT.IR {
 				Operand operand = instruction.Use [i];
 
 				Register register = operand as Register;
-				
+
 				if (register != null) {
 					if (register.Parent == null)
 						throw new EngineException (string.Format ("Instruction '{0}' can't be processed by the Internal Propagation. ({1})", instruction, this.MethodFullName));
@@ -652,14 +664,14 @@ namespace SharpOS.AOT.IR {
 						instruction.IsSpecialCase = true;
 
 						this.InternalPropagationLogic (instruction);
-					} 
+					}
 				}
 			}
 
 			return;
 		}
 
-	
+
 		/// <summary>
 		/// Copy Propagation
 		/// Constant Propagation
@@ -668,264 +680,264 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void Optimizations ()
 		{
-/*			List<string> keys = this.defuse.GetKeys ();
+			/*			List<string> keys = this.defuse.GetKeys ();
 
-			this.engine.Dump.Section (DumpSection.Optimizations);
+						this.engine.Dump.Section (DumpSection.Optimizations);
 
-			keys.Sort ();
+						keys.Sort ();
 
-			while (keys.Count > 0) {
-				string key = keys [0];
-				keys.RemoveAt (0);
+						while (keys.Count > 0) {
+							string key = keys [0];
+							keys.RemoveAt (0);
 
-				DefUseItem item = this.defuse [key];
+							DefUseItem item = this.defuse [key];
 
-				Instructions.Instruction definition = item.Definition;
+							Instructions.Instruction definition = item.Definition;
 
-				// If the PHI values are all the same then PHI is replaced with the first value. 
-				// (e.g. v2 = PHI(v1, v1) -> v2 = v1)
-				if (definition is PHI) {
-					Operand sample = definition.Value.Operands [0];
+							// If the PHI values are all the same then PHI is replaced with the first value. 
+							// (e.g. v2 = PHI(v1, v1) -> v2 = v1)
+							if (definition is PHI) {
+								Operand sample = definition.Value.Operands [0];
 
-					bool equal = true;
+								bool equal = true;
 
-					for (int i = 1; i < definition.Value.Operands.Length; i++) {
-						if (!sample.ID.Equals (definition.Value.Operands [i].ID)) {
-							equal = false;
-							break;
-						}
-					}
+								for (int i = 1; i < definition.Value.Operands.Length; i++) {
+									if (!sample.ID.Equals (definition.Value.Operands [i].ID)) {
+										equal = false;
+										break;
+									}
+								}
 
-					if (!equal)
-						continue;
+								if (!equal)
+									continue;
 
-					Assign assign = new Assign ((definition as Assign).Assignee, sample);
+								Assign assign = new Assign ((definition as Assign).Assignee, sample);
 
-					// Replace the PHI with a normal assignment
-					definition.Block.RemoveInstruction (definition);
-					definition.Block.InsertInstruction (0, assign);
+								// Replace the PHI with a normal assignment
+								definition.Block.RemoveInstruction (definition);
+								definition.Block.InsertInstruction (0, assign);
 
-					this.defuse.SetDefinition (key, assign, true);
-				}
+								this.defuse.SetDefinition (key, assign, true);
+							}
 
-				/// It looks for instructions like 'a = 100; b = a;' and replaces them with 'b = 100;'
-				else if (definition is Assign
-						&& (definition as Assign).Value is Constant
-						&& ((definition as Assign).Value as Constant).Value.GetType () != typeof (string)
-						&& ((definition as Assign).Assignee is Local
-							|| (definition as Assign).Assignee is Register)) {
-					bool remove = true;
+							/// It looks for instructions like 'a = 100; b = a;' and replaces them with 'b = 100;'
+							else if (definition is Assign
+									&& (definition as Assign).Value is Constant
+									&& ((definition as Assign).Value as Constant).Value.GetType () != typeof (string)
+									&& ((definition as Assign).Assignee is Local
+										|| (definition as Assign).Assignee is Register)) {
+								bool remove = true;
 
-					// "X = A" becomes "X = 100"
-					foreach (Instructions.Instruction used in item) {
-						List<Operand> usage = new List<Operand> ();
-						Operand definitionOperand = used.GetDefinitionAndUsage (usage);
+								// "X = A" becomes "X = 100"
+								foreach (Instructions.Instruction used in item) {
+									List<Operand> usage = new List<Operand> ();
+									Operand definitionOperand = used.GetDefinitionAndUsage (usage);
 
-						if (this.engine.Options.Dump) {
-							this.engine.Dump.Item ();
-							this.engine.Dump.Element (definition);
-							this.engine.Dump.PushElement ("before", true, false, false);
-							this.engine.Dump.Element (used);
-							this.engine.Dump.PopElement ();
-						}
+									if (this.engine.Options.Dump) {
+										this.engine.Dump.Item ();
+										this.engine.Dump.Element (definition);
+										this.engine.Dump.PushElement ("before", true, false, false);
+										this.engine.Dump.Element (used);
+										this.engine.Dump.PopElement ();
+									}
 
-						Operand.OperandReplaceVisitor visitor = delegate (object parent, Operand old) {
-							if (parent is Indirect
-									|| parent is Address)
-								return false;
+									Operand.OperandReplaceVisitor visitor = delegate (object parent, Operand old) {
+										if (parent is Indirect
+												|| parent is Address)
+											return false;
 
-							return true;
-						};
+										return true;
+									};
 
-						int replacements = used.ReplaceOperand (key, definition.Value, visitor);
+									int replacements = used.ReplaceOperand (key, definition.Value, visitor);
 
-						if (replacements == 0)
-							remove = false;
+									if (replacements == 0)
+										remove = false;
 
-						if (this.engine.Options.Dump) {
-							this.engine.Dump.PushElement ("after", true, false, false);
-							this.engine.Dump.Element (used);
-							this.engine.Dump.PopElement ();
-							this.engine.Dump.PopElement ();
-						}
+									if (this.engine.Options.Dump) {
+										this.engine.Dump.PushElement ("after", true, false, false);
+										this.engine.Dump.Element (used);
+										this.engine.Dump.PopElement ();
+										this.engine.Dump.PopElement ();
+									}
 
-						// Add X to the queue as "X = 100;"
-						if (definitionOperand != null) {
-							string id = definitionOperand.ID;
+									// Add X to the queue as "X = 100;"
+									if (definitionOperand != null) {
+										string id = definitionOperand.ID;
 							
-							if (!keys.Contains (id))
-								keys.Add (id);
-						}
-					}
+										if (!keys.Contains (id))
+											keys.Add (id);
+									}
+								}
 
-					if (remove) { 
-						// Remove the instruction from the block that it is containing it
-						definition.Block.RemoveInstruction (definition);
+								if (remove) { 
+									// Remove the instruction from the block that it is containing it
+									definition.Block.RemoveInstruction (definition);
 
-						// Remove the variable from the defuse list
-						defuse.Remove (key);
-					}
-				}
+									// Remove the variable from the defuse list
+									defuse.Remove (key);
+								}
+							}
 
-				// Copy Propagation
-				// It looks for instructions like 'a = b; c = a;' and replaces them with 'c = b;'
-				else if (!item.SkipCopyPropagation (this.engine)) {
-					Assign assign = definition as Assign;
+							// Copy Propagation
+							// It looks for instructions like 'a = b; c = a;' and replaces them with 'c = b;'
+							else if (!item.SkipCopyPropagation (this.engine)) {
+								Assign assign = definition as Assign;
 
-					// A = B
-					this.engine.Dump.Item();
-					this.engine.Dump.Element(definition);
+								// A = B
+								this.engine.Dump.Item();
+								this.engine.Dump.Element(definition);
 
-					//bool _break = false;
-					bool remove = true;
+								//bool _break = false;
+								bool remove = true;
 
-					// "X = A" becomes "X = B"
-					foreach (Instructions.Instruction used in item) {
-						List<Operand> usage = new List<Operand> ();
-						Operand definitionOperand = used.GetDefinitionAndUsage (usage);
+								// "X = A" becomes "X = B"
+								foreach (Instructions.Instruction used in item) {
+									List<Operand> usage = new List<Operand> ();
+									Operand definitionOperand = used.GetDefinitionAndUsage (usage);
 
-						if (this.engine.Options.Dump) {
-							this.engine.Dump.PushElement ("before", true, false, false);
-							this.engine.Dump.Element (used);
-							this.engine.Dump.PopElement ();
-						}
+									if (this.engine.Options.Dump) {
+										this.engine.Dump.PushElement ("before", true, false, false);
+										this.engine.Dump.Element (used);
+										this.engine.Dump.PopElement ();
+									}
 
-						int replacements = used.ReplaceOperand (key, definition.Value as Identifier, null);
+									int replacements = used.ReplaceOperand (key, definition.Value as Identifier, null);
 							
-						if (replacements == 0)
-							remove = false;
+									if (replacements == 0)
+										remove = false;
 
-						if (definitionOperand != null) {
-							string id = definitionOperand.ID;
+									if (definitionOperand != null) {
+										string id = definitionOperand.ID;
 
-							if (!keys.Contains (id))
-								keys.Add (id);
-						}
+										if (!keys.Contains (id))
+											keys.Add (id);
+									}
 
-						if (this.engine.Options.Dump) {
-							this.engine.Dump.PushElement ("after", true, false, false);
-							this.engine.Dump.Element (used);
-							this.engine.Dump.PopElement ();
-						}
+									if (this.engine.Options.Dump) {
+										this.engine.Dump.PushElement ("after", true, false, false);
+										this.engine.Dump.Element (used);
+										this.engine.Dump.PopElement ();
+									}
 
-					}
+								}
 
-					if (remove) {
-						// If A = B and B is still in the queue we remove A = B from the B usage list
-						// and add all the "usage" items from A to the B "usage" list.
-						if (this.defuse.GetKeys ().Contains (assign.Value.ID) == true) {
-							this.defuse.RemoveUsage (assign.Value.ID, assign);
+								if (remove) {
+									// If A = B and B is still in the queue we remove A = B from the B usage list
+									// and add all the "usage" items from A to the B "usage" list.
+									if (this.defuse.GetKeys ().Contains (assign.Value.ID) == true) {
+										this.defuse.RemoveUsage (assign.Value.ID, assign);
 
-							foreach (Instructions.Instruction usage in this.defuse [key])
-								this.defuse.AddUsage (assign.Value.ID, usage);
-						}
+										foreach (Instructions.Instruction usage in this.defuse [key])
+											this.defuse.AddUsage (assign.Value.ID, usage);
+									}
 
-						// Remove the instruction from the block that it is containing it
-						definition.Block.RemoveInstruction (definition);
+									// Remove the instruction from the block that it is containing it
+									definition.Block.RemoveInstruction (definition);
 
-						// Remove the variable from the defuse list
-						this.defuse.Remove (key);
-					}
+									// Remove the variable from the defuse list
+									this.defuse.Remove (key);
+								}
 					
-					this.engine.Dump.PopElement();	// item
-				} 
+								this.engine.Dump.PopElement();	// item
+							} 
 				
-				// Constant Folding
-				else if (definition is Assign
-					   && (definition as Assign).Value is Operands.Arithmetic) {
+							// Constant Folding
+							else if (definition is Assign
+								   && (definition as Assign).Value is Operands.Arithmetic) {
 
-					bool changed = false;
+								bool changed = false;
 
-					Assign assign = definition as Assign;
+								Assign assign = definition as Assign;
 
-					if (!(assign.Value is Operands.Arithmetic))
-						continue;
+								if (!(assign.Value is Operands.Arithmetic))
+									continue;
 
-					Arithmetic arithmetic = assign.Value as Operands.Arithmetic;
+								Arithmetic arithmetic = assign.Value as Operands.Arithmetic;
 
-					if (!(arithmetic.Operator is Binary))
-						continue;
+								if (!(arithmetic.Operator is Binary))
+									continue;
 
-					if (!(arithmetic.Operands [0] is Constant
-						&& arithmetic.Operands [1] is Constant))
-						continue;
+								if (!(arithmetic.Operands [0] is Constant
+									&& arithmetic.Operands [1] is Constant))
+									continue;
 
-					Binary binary = arithmetic.Operator as Binary;
-					Constant constant1 = arithmetic.Operands [0] as Constant;
-					Constant constant2 = arithmetic.Operands [1] as Constant;
+								Binary binary = arithmetic.Operator as Binary;
+								Constant constant1 = arithmetic.Operands [0] as Constant;
+								Constant constant2 = arithmetic.Operands [1] as Constant;
 
-					if (this.engine.Options.Dump) {
-						this.engine.Dump.Item ();
-						this.engine.Dump.PushElement ("before", true, false, false);
-						this.engine.Dump.Element (assign);
-						this.engine.Dump.PopElement ();
-					}
+								if (this.engine.Options.Dump) {
+									this.engine.Dump.Item ();
+									this.engine.Dump.PushElement ("before", true, false, false);
+									this.engine.Dump.Element (assign);
+									this.engine.Dump.PopElement ();
+								}
 
-					// TODO implement all the other operators
-					if (binary.Type == Operator.BinaryType.Mul) {
-						// TODO implement the other combinations
-						if (constant1.SizeType == InternalType.I4
-								&& constant2.SizeType == InternalType.I4) {
+								// TODO implement all the other operators
+								if (binary.Type == Operator.BinaryType.Mul) {
+									// TODO implement the other combinations
+									if (constant1.SizeType == InternalType.I4
+											&& constant2.SizeType == InternalType.I4) {
 
-							changed = true;
+										changed = true;
 
-							int value = System.Convert.ToInt32 (constant1.Value) * System.Convert.ToInt32 (constant2.Value);
+										int value = System.Convert.ToInt32 (constant1.Value) * System.Convert.ToInt32 (constant2.Value);
 
-							definition.Value = new Constant (value);
-							definition.Value.SizeType = InternalType.I4;
+										definition.Value = new Constant (value);
+										definition.Value.SizeType = InternalType.I4;
+									}
+								} else if (binary.Type == Operator.BinaryType.Sub) {
+									// TODO implement the other combinations
+									if (constant1.SizeType == InternalType.I4
+											&& constant2.SizeType == InternalType.I4) {
+
+										changed = true;
+
+										int value = System.Convert.ToInt32 (constant1.Value) - System.Convert.ToInt32 (constant2.Value);
+
+										definition.Value = new Constant (value);
+										definition.Value.SizeType = InternalType.I4;
+									}
+								}
+
+								if (this.engine.Options.Dump) {
+									this.engine.Dump.PushElement ("after", true, false, false);
+									this.engine.Dump.Element (assign);
+									this.engine.Dump.PopElement ();
+									this.engine.Dump.PopElement ();
+								}
+
+								if (changed)
+									keys.Add (key);
+							}
+
+							// Dead Code Elimination
+							else if (item.Count == 0) {
+								// Remove the instruction from the block that it is containing it
+								definition.Block.RemoveInstruction (definition);
+
+								// Remove the variable from the defuse list
+								defuse.Remove (key);
+
+								List<Operand> usage = new List<Operand> ();
+								definition.GetDefinitionAndUsage (usage);
+
+								// B & C used in "A = B + C"
+								foreach (Operand _entry in usage) {
+									string id = _entry.ID;
+
+									// Remove "A = B + C" from B & C
+									this.defuse.RemoveUsage (id, definition);
+
+									// Add to the queue B & C to check them it they are used anywhere else
+									if (!keys.Contains (id))
+										keys.Add (id);
+								}
+							}
 						}
-					} else if (binary.Type == Operator.BinaryType.Sub) {
-						// TODO implement the other combinations
-						if (constant1.SizeType == InternalType.I4
-								&& constant2.SizeType == InternalType.I4) {
 
-							changed = true;
-
-							int value = System.Convert.ToInt32 (constant1.Value) - System.Convert.ToInt32 (constant2.Value);
-
-							definition.Value = new Constant (value);
-							definition.Value.SizeType = InternalType.I4;
-						}
-					}
-
-					if (this.engine.Options.Dump) {
-						this.engine.Dump.PushElement ("after", true, false, false);
-						this.engine.Dump.Element (assign);
-						this.engine.Dump.PopElement ();
-						this.engine.Dump.PopElement ();
-					}
-
-					if (changed)
-						keys.Add (key);
-				}
-
-				// Dead Code Elimination
-				else if (item.Count == 0) {
-					// Remove the instruction from the block that it is containing it
-					definition.Block.RemoveInstruction (definition);
-
-					// Remove the variable from the defuse list
-					defuse.Remove (key);
-
-					List<Operand> usage = new List<Operand> ();
-					definition.GetDefinitionAndUsage (usage);
-
-					// B & C used in "A = B + C"
-					foreach (Operand _entry in usage) {
-						string id = _entry.ID;
-
-						// Remove "A = B + C" from B & C
-						this.defuse.RemoveUsage (id, definition);
-
-						// Add to the queue B & C to check them it they are used anywhere else
-						if (!keys.Contains (id))
-							keys.Add (id);
-					}
-				}
-			}
-
-			this.engine.Dump.PopElement ();	// section: const-propagation
-			*/
+						this.engine.Dump.PopElement ();	// section: const-propagation
+						*/
 			return;
 		}
 
@@ -933,8 +945,10 @@ namespace SharpOS.AOT.IR {
 		/// Gets the full name of the method.
 		/// </summary>
 		/// <value>The full name of the method.</value>
-		public string MethodFullName {
-			get {
+		public string MethodFullName
+		{
+			get
+			{
 				return Method.GetLabel (this.methodDefinition);
 			}
 		}
@@ -951,7 +965,7 @@ namespace SharpOS.AOT.IR {
 			StringBuilder result = new StringBuilder ();
 
 			string value = method.DeclaringType.FullName;
-				
+
 			if (value.StartsWith (INTERNAL))
 				value = value.Substring (INTERNAL.Length);
 
@@ -975,7 +989,7 @@ namespace SharpOS.AOT.IR {
 		/// <summary>
 		/// Transformation out of SSA
 		/// </summary>
-		private void TransformationOutOfSSA()
+		private void TransformationOutOfSSA ()
 		{
 			foreach (Block block in this.blocks)
 				block.TransformationOutOfSSA ();
@@ -1000,11 +1014,14 @@ namespace SharpOS.AOT.IR {
 			/// Gets or sets the ID.
 			/// </summary>
 			/// <value>The ID.</value>
-			public string ID {
-				get {
+			public string ID
+			{
+				get
+				{
 					return id;
 				}
-				set {
+				set
+				{
 					id = value;
 				}
 			}
@@ -1015,11 +1032,14 @@ namespace SharpOS.AOT.IR {
 			/// Gets or sets the start.
 			/// </summary>
 			/// <value>The start.</value>
-			public Instructions.Instruction Start {
-				get {
+			public Instructions.Instruction Start
+			{
+				get
+				{
 					return start;
 				}
-				set {
+				set
+				{
 					start = value;
 				}
 			}
@@ -1030,11 +1050,14 @@ namespace SharpOS.AOT.IR {
 			/// Gets or sets the end.
 			/// </summary>
 			/// <value>The end.</value>
-			public Instructions.Instruction End {
-				get {
+			public Instructions.Instruction End
+			{
+				get
+				{
 					return end;
 				}
-				set {
+				set
+				{
 					end = value;
 				}
 			}
@@ -1045,11 +1068,14 @@ namespace SharpOS.AOT.IR {
 			/// Gets or sets the identifier.
 			/// </summary>
 			/// <value>The identifier.</value>
-			public Identifier Identifier {
-				get {
+			public Identifier Identifier
+			{
+				get
+				{
 					return identifier;
 				}
-				set {
+				set
+				{
 					identifier = value;
 				}
 			}
@@ -1242,19 +1268,19 @@ namespace SharpOS.AOT.IR {
 
 			#region Dump
 			if (engine.Options.Dump) {
-				engine.Dump.Section(DumpSection.LiveRanges);
-				
+				engine.Dump.Section (DumpSection.LiveRanges);
+
 				foreach (LiveRange entry in this.liveRanges)
-					engine.Dump.Element(entry);
-					
-				engine.Dump.PopElement();
+					engine.Dump.Element (entry);
+
+				engine.Dump.PopElement ();
 			}
 			#endregion
 
 			// No identifier gets a register allocated only a position on the stack.
 			foreach (LiveRange entry in this.liveRanges)
 				(entry.Identifier as Identifier).ForceSpill = true;
- 		}
+		}
 
 		/// <summary>
 		/// Sets the next stack position.
@@ -1276,8 +1302,8 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void LinearScanRegisterAllocation ()
 		{
-			List<LiveRange> active = new List<LiveRange>();
-			List<int> registers = new List<int>();
+			List<LiveRange> active = new List<LiveRange> ();
+			List<int> registers = new List<int> ();
 
 			for (int i = 0; i < this.engine.Assembly.AvailableRegistersCount; i++)
 				registers.Add (i);
@@ -1369,11 +1395,11 @@ namespace SharpOS.AOT.IR {
 				active.Remove (spill);
 
 				active.Add (liveRange);
-				active.Sort (new LiveRange.SortByEnd());
+				active.Sort (new LiveRange.SortByEnd ());
 
 			} else
 				SetNextStackPosition (liveRange.Identifier as Identifier);
- 
+
 		}
 
 
@@ -1385,7 +1411,7 @@ namespace SharpOS.AOT.IR {
 		{
 			DumpBlocks (blocks, p);
 		}
-		
+
 		/// <summary>
 		/// Dumps a representation of the blocks that comprise this method
 		/// </summary>
@@ -1440,8 +1466,8 @@ namespace SharpOS.AOT.IR {
 		public void Process ()
 		{
 			if (this.engine.Options.Dump)
-				this.engine.Dump.Element(this.methodDefinition);
-			
+				this.engine.Dump.Element (this.methodDefinition);
+
 			if (this.methodDefinition.Body == null)
 				return;
 
@@ -1452,10 +1478,10 @@ namespace SharpOS.AOT.IR {
 			this.BlocksOptimization ();
 
 			this.ConvertFromCIL ();
-			
+
 			if (this.engine.Options.DumpVerbosity >= 3)
 				this.DumpBlocks ();
-			
+
 			/*this.Dominators ();
 
 			if (this.engine.Options.DumpVerbosity >= 3)
@@ -1477,8 +1503,8 @@ namespace SharpOS.AOT.IR {
 
 			if (this.engine.Options.DumpVerbosity >= 3)
 				this.DumpBlocks ();
-			
-			
+
+
 			this.ComputeLiveRanges ();
 
 			this.LinearScanRegisterAllocation ();
@@ -1487,8 +1513,8 @@ namespace SharpOS.AOT.IR {
 				this.DumpBlocks ();
 
 			if (this.engine.Options.Dump)
-				this.engine.Dump.PopElement();	// method
-				
+				this.engine.Dump.PopElement ();	// method
+
 			return;
 		}
 
@@ -1514,7 +1540,7 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
-			return ((IEnumerable<Block>) this).GetEnumerator();
+			return ((IEnumerable<Block>) this).GetEnumerator ();
 		}
 
 		/// <summary>

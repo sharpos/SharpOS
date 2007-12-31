@@ -31,12 +31,12 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return point.x + point.y;
 		}
-		
+
 		public static uint CMPConstructor ()
 		{
 			if (Constructor (100, 200) == 300)
 				return 1;
-				
+
 			return 0;
 		}
 
@@ -91,7 +91,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		private static int StructParameter (int result, Point point)
 		{
-			return point.GetSum () == result? 1: 0;
+			return point.GetSum () == result ? 1 : 0;
 		}
 
 		public static int CMPStructParameter ()
@@ -144,9 +144,9 @@ namespace SharpOS.Kernel.Tests.CS {
 			return Return (100, 200).GetSum () == 300 ? 1 : 0;
 		}
 
-		public unsafe static int CMPSizeof1()
+		public unsafe static int CMPSizeof1 ()
 		{
-			int size = sizeof(Point);
+			int size = sizeof (Point);
 
 			if (size != 8)
 				return 0;
@@ -154,21 +154,20 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 1;
 		}
 
-		unsafe struct Header
-		{
+		unsafe struct Header {
 			Header* Next;
 			Header* Prev;
 			byte test;
 		}
 
-		public unsafe static int CMPSizeof2()
+		public unsafe static int CMPSizeof2 ()
 		{
 			uint ptr = 0x1000000;
-			byte* testPtr = (byte*)ptr;
+			byte* testPtr = (byte*) ptr;
 
-			byte* test = testPtr + sizeof(Header);
+			byte* test = testPtr + sizeof (Header);
 
-			if ((ptr + 9) != (uint)test)
+			if ((ptr + 9) != (uint) test)
 				return 0;
 
 			return 1;

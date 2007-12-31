@@ -20,8 +20,7 @@ using SharpOS.Kernel.ADC.X86;
 using SharpOS.Kernel.Foundation;
 
 namespace SharpOS.Kernel.ADC {
-	public unsafe class TextMode
-	{
+	public unsafe class TextMode {
 		#region ADC Interface
 
 		/// <summary>
@@ -72,35 +71,35 @@ namespace SharpOS.Kernel.ADC {
 		/// Retrieve the position of the cursor and the size of the screen simultaneously.
 		/// </summary>
 		[SharpOS.AOT.Attributes.ADCStub]
-		public unsafe static void GetCursor (int *ret_x, int *ret_y)
+		public unsafe static void GetCursor (int* ret_x, int* ret_y)
 		{
 		}
 
 		[SharpOS.AOT.Attributes.ADCStub]
-		public static int GetReadPosition()
-		{
-			return 0;
-		}
-
-		[SharpOS.AOT.Attributes.ADCStub]
-		public static int GetWritePosition()
+		public static int GetReadPosition ()
 		{
 			return 0;
 		}
 
 		[SharpOS.AOT.Attributes.ADCStub]
-		public static void SetReadPos(int position)
-		{
-		}
-
-		[SharpOS.AOT.Attributes.ADCStub]
-		public static int GetBufferHeight()
+		public static int GetWritePosition ()
 		{
 			return 0;
 		}
 
 		[SharpOS.AOT.Attributes.ADCStub]
-		public unsafe static void GetScreenSize (int *ret_w, int *ret_h)
+		public static void SetReadPos (int position)
+		{
+		}
+
+		[SharpOS.AOT.Attributes.ADCStub]
+		public static int GetBufferHeight ()
+		{
+			return 0;
+		}
+
+		[SharpOS.AOT.Attributes.ADCStub]
+		public unsafe static void GetScreenSize (int* ret_w, int* ret_h)
 		{
 		}
 
@@ -116,7 +115,7 @@ namespace SharpOS.Kernel.ADC {
 		/// Clear to end of line
 		/// </summary>
 		[SharpOS.AOT.Attributes.ADCStub]
-		public unsafe static void ClearToEndOfLine()
+		public unsafe static void ClearToEndOfLine ()
 		{
 		}
 
@@ -170,19 +169,31 @@ namespace SharpOS.Kernel.ADC {
 			return false;
 		}
 
-		public static TextColor Foreground {
+		public static TextColor Foreground
+		{
 
 			[SharpOS.AOT.Attributes.ADCStub]
-			get { return TextColor.Black; }
+			get
+			{
+				return TextColor.Black;
+			}
 			[SharpOS.AOT.Attributes.ADCStub]
-			set { }
+			set
+			{
+			}
 		}
 
-		public static TextColor Background {
+		public static TextColor Background
+		{
 			[SharpOS.AOT.Attributes.ADCStub]
-			get { return TextColor.Black; }
+			get
+			{
+				return TextColor.Black;
+			}
 			[SharpOS.AOT.Attributes.ADCStub]
-			set { }
+			set
+			{
+			}
 		}
 
 		#endregion
@@ -192,13 +203,13 @@ namespace SharpOS.Kernel.ADC {
 		/// Common Write() implementation. Serves Write(CString8*), Write(PString8*), and
 		/// Write(byte*).
 		/// <summary>
-		public unsafe static void Write (byte *str, int len)
+		public unsafe static void Write (byte* str, int len)
 		{
 			for (int i = 0; i < len; i++)
 				WriteChar (str [i]);
 		}
 
-		public unsafe static void Write (byte *str, int strLen, int offset, int len)
+		public unsafe static void Write (byte* str, int strLen, int offset, int len)
 		{
 			Diagnostics.Assert (len > strLen, "TextMode.Write(): len > strLen");
 
@@ -233,23 +244,23 @@ namespace SharpOS.Kernel.ADC {
 			for (int i = 0; i < message.Length; i++)
 				WriteChar ((byte) message [i]);
 		}
-        public static void Write(string message, int value)
-        {
-            Write(message);
-            Write(value);
-        }
+		public static void Write (string message, int value)
+		{
+			Write (message);
+			Write (value);
+		}
 
-		public unsafe static void Write (CString8 *str)
+		public unsafe static void Write (CString8* str)
 		{
 			Write (str->Pointer, str->Length);
 		}
 
-		public unsafe static void Write (PString8 *str)
+		public unsafe static void Write (PString8* str)
 		{
 			Write (str->Pointer, str->Length);
 		}
 
-		public unsafe static void Write (byte *str)
+		public unsafe static void Write (byte* str)
 		{
 			Write (str, ByteString.Length (str));
 		}
@@ -281,15 +292,12 @@ namespace SharpOS.Kernel.ADC {
 		/// Writes an bool to the screen
 		/// </summary>
 		/// <param name="value">boolean value to write</param>
-		public static void Write(bool value)
+		public static void Write (bool value)
 		{
-			if (value)
-			{
-				Write("true");
-			}
-			else
-			{
-				Write("false");
+			if (value) {
+				Write ("true");
+			} else {
+				Write ("false");
 			}
 		}
 
@@ -316,7 +324,7 @@ namespace SharpOS.Kernel.ADC {
 		/// <summary>
 		/// Writes a CString8* to the screen, followed by a newline.
 		/// </summary>
-		public static void WriteLine (CString8 *message)
+		public static void WriteLine (CString8* message)
 		{
 			Write (message);
 			WriteLine ();
@@ -325,7 +333,7 @@ namespace SharpOS.Kernel.ADC {
 		/// <summary>
 		/// Writes a CString8* to the screen, followed by a newline.
 		/// </summary>
-		public static void WriteLine (PString8 *message)
+		public static void WriteLine (PString8* message)
 		{
 			Write (message);
 			WriteLine ();
@@ -334,7 +342,7 @@ namespace SharpOS.Kernel.ADC {
 		/// <summary>
 		/// Writes a CString8* to the screen, followed by a newline.
 		/// </summary>
-		public static void WriteLine (byte *message)
+		public static void WriteLine (byte* message)
 		{
 			Write (message);
 			WriteLine ();
@@ -355,7 +363,7 @@ namespace SharpOS.Kernel.ADC {
 		/// Writes the string <paramref name="message" /> to the screen,
 		/// then the Int32 <paramref name="value" />, followed by a newline.
 		/// </summary>
-		public unsafe static void WriteLine (CString8 *message, int value, bool hex)
+		public unsafe static void WriteLine (CString8* message, int value, bool hex)
 		{
 			Write (message);
 			Write (value, hex);
@@ -366,7 +374,7 @@ namespace SharpOS.Kernel.ADC {
 		/// Writes the string <paramref name="message" /> to the screen,
 		/// then the Int32 <paramref name="value" />, followed by a newline.
 		/// </summary>
-		public unsafe static void WriteLine (PString8 *message, int value, bool hex)
+		public unsafe static void WriteLine (PString8* message, int value, bool hex)
 		{
 			Write (message);
 			Write (value, hex);
@@ -377,7 +385,7 @@ namespace SharpOS.Kernel.ADC {
 		/// Writes the string <paramref name="message" /> to the screen,
 		/// then the Int32 <paramref name="value" />, followed by a newline.
 		/// </summary>
-		public unsafe static void WriteLine (byte *message, int value, bool hex)
+		public unsafe static void WriteLine (byte* message, int value, bool hex)
 		{
 			Write (message);
 			Write (value, hex);
@@ -391,21 +399,21 @@ namespace SharpOS.Kernel.ADC {
 			WriteLine ();
 		}
 
-		public static void WriteLine (CString8 *message, int value)
+		public static void WriteLine (CString8* message, int value)
 		{
 			Write (message);
 			Write (value);
 			WriteLine ();
 		}
 
-		public static void WriteLine (PString8 *message, int value)
+		public static void WriteLine (PString8* message, int value)
 		{
 			Write (message);
 			Write (value);
 			WriteLine ();
 		}
 
-		public static void WriteLine (byte *message, int value)
+		public static void WriteLine (byte* message, int value)
 		{
 			Write (message);
 			Write (value);
@@ -448,7 +456,7 @@ namespace SharpOS.Kernel.ADC {
 		/// <paramref name="message" /> to the screen, starting with
 		/// the character at index <paramref name="offset" />.
 		/// </summary>
-		public unsafe static void WriteSubstring (CString8 *message, int offset, int len)
+		public unsafe static void WriteSubstring (CString8* message, int offset, int len)
 		{
 			for (int i = offset; message->GetChar (i) != 0 && i < offset + len; ++i)
 				WriteChar (message->GetChar (i));
@@ -459,7 +467,7 @@ namespace SharpOS.Kernel.ADC {
 		/// <paramref name="message" /> to the screen, starting with
 		/// the character at index <paramref name="offset" />.
 		/// </summary>
-		public unsafe static void WriteSubstring (PString8 *message, int offset, int len)
+		public unsafe static void WriteSubstring (PString8* message, int offset, int len)
 		{
 			for (int i = offset; i < message->Length && i < offset + len; ++i)
 				WriteChar (message->GetChar (i));
@@ -470,9 +478,9 @@ namespace SharpOS.Kernel.ADC {
 		/// <paramref name="message" /> to the screen, starting with
 		/// the character at index <paramref name="offset" />.
 		/// </summary>
-		public unsafe static void WriteSubstring (byte *message, int offset, int len)
+		public unsafe static void WriteSubstring (byte* message, int offset, int len)
 		{
-			for (int i = offset; message [i] != 0 && i < (offset+len); ++i)
+			for (int i = offset; message [i] != 0 && i < (offset + len); ++i)
 				WriteChar (message [i]);
 		}
 
@@ -483,7 +491,7 @@ namespace SharpOS.Kernel.ADC {
 		/// <summary>
 		/// Writes a number to the screen in decimal format.
 		/// </summary>
-		[System.Obsolete("Use Write (int value)")]
+		[System.Obsolete ("Use Write (int value)")]
 		public unsafe static void WriteNumber (int value)
 		{
 			WriteNumber (value, false);
@@ -493,7 +501,7 @@ namespace SharpOS.Kernel.ADC {
 		/// Writes a number to the screen, either in decimal or
 		/// hexadecimal format.
 		/// </summary>
-		[System.Obsolete("Use Write (int value, bool hex)")]
+		[System.Obsolete ("Use Write (int value, bool hex)")]
 		public unsafe static void WriteNumber (int value, bool hex)
 		{
 			Write (value, hex);

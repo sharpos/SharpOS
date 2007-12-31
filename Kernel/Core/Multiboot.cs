@@ -18,7 +18,7 @@ namespace SharpOS.Kernel {
 			Header = 0x1BADB002,
 			BootLoader = 0x2BADB002
 		}
-		
+
 		[StructLayout (LayoutKind.Sequential)]
 		public unsafe struct Header {
 			public uint Magic;
@@ -32,8 +32,7 @@ namespace SharpOS.Kernel {
 		}
 
 		[StructLayout (LayoutKind.Sequential)]
-		public unsafe struct AOUTSymbolTable
-		{
+		public unsafe struct AOUTSymbolTable {
 			public uint TabSize;
 			public uint StrSize;
 			public uint Addr;
@@ -41,61 +40,57 @@ namespace SharpOS.Kernel {
 		}
 
 		[StructLayout (LayoutKind.Sequential)]
-		public unsafe struct ElfSectionHeaderTable
-		{
+		public unsafe struct ElfSectionHeaderTable {
 			public uint Num;
 			public uint Size;
 			public uint Addr;
 			public uint Shndx;
 		}
-		
+
 		/* The Multiboot information. */
 		[StructLayout (LayoutKind.Explicit)]
-		public unsafe struct Info
-		{
-			[FieldOffset(0)]
+		public unsafe struct Info {
+			[FieldOffset (0)]
 			public uint Flags;
-			[FieldOffset(4)]
+			[FieldOffset (4)]
 			public uint MemLower;
-			[FieldOffset(8)]
+			[FieldOffset (8)]
 			public uint MemUpper;
-			[FieldOffset(12)]
+			[FieldOffset (12)]
 			public uint BootDevice;
-			[FieldOffset(16)]
+			[FieldOffset (16)]
 			public uint CmdLine;
-			[FieldOffset(20)]
+			[FieldOffset (20)]
 			public uint ModsCount;
-			[FieldOffset(24)]
+			[FieldOffset (24)]
 			public uint ModsAddr;
-			
-			[FieldOffset(28)]
+
+			[FieldOffset (28)]
 			public AOUTSymbolTable AOUTSym;
-			[FieldOffset(28)]
+			[FieldOffset (28)]
 			public ElfSectionHeaderTable ElfSec;
-				
-			[FieldOffset(44)]
+
+			[FieldOffset (44)]
 			public uint MMapLen;
-			[FieldOffset(48)]
+			[FieldOffset (48)]
 			public uint MMapAddr;
 		}
 
 		[StructLayout (LayoutKind.Sequential)]
-		public unsafe struct Module
-		{
+		public unsafe struct Module {
 			public uint ModStart;
 			public uint ModEnd;
 			public uint String;
 			public uint Reserved;
 		}
-		
+
 		///
 		/// <remarks>
 		/// Be careful that the offset 0 is base_addr_low
 		/// but no size. 
 		/// </remarks>
 		[StructLayout (LayoutKind.Sequential)]
-		public struct MemoryMap
-		{
+		public struct MemoryMap {
 			public uint Size;
 			public uint BaseAddrLow;
 			public uint BaseAddrHigh;
@@ -104,20 +99,17 @@ namespace SharpOS.Kernel {
 			public uint Type;
 		}
 
-        public unsafe static Multiboot.Info* LoadMultibootInfo(uint magic, uint pointer, uint kernelStart, uint kernelEnd)
-        {
-            if (magic != (uint)SharpOS.Kernel.Multiboot.Magic.BootLoader)
-            {
-                TextMode.SetAttributes(TextColor.Red, TextColor.Black);
-                TextMode.WriteLine("LoadMultibootInfo() - invalid magic number");
+		public unsafe static Multiboot.Info* LoadMultibootInfo (uint magic, uint pointer, uint kernelStart, uint kernelEnd)
+		{
+			if (magic != (uint) SharpOS.Kernel.Multiboot.Magic.BootLoader) {
+				TextMode.SetAttributes (TextColor.Red, TextColor.Black);
+				TextMode.WriteLine ("LoadMultibootInfo() - invalid magic number");
 
-                return null;
-            }
-            else
-            {
-                return (Multiboot.Info*)pointer;
-            }
-        }
+				return null;
+			} else {
+				return (Multiboot.Info*) pointer;
+			}
+		}
 
 		public unsafe static void WriteMultibootInfoMMap (Multiboot.Info* info)
 		{

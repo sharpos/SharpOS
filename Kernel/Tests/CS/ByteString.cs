@@ -18,17 +18,17 @@ namespace SharpOS.Kernel.Tests.CS {
 		/// </summary>
 		public static uint CMP0 ()
 		{
-			byte *str = String ("XYZ");
+			byte* str = String ("XYZ");
 			uint result = 1;
-			
-			if (str[0] != 'X' || str[1] != 'Y' || str[2] != 'Z')
+
+			if (str [0] != 'X' || str [1] != 'Y' || str [2] != 'Z')
 				result = 0;
-			
+
 			return result;
 		}
 
 		[String]
-		public static byte *String (string str)
+		public static byte* String (string str)
 		{
 			return null;
 		}

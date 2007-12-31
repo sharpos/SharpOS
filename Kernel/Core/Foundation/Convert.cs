@@ -25,16 +25,16 @@ namespace SharpOS.Kernel.Foundation {
 			return 0;
 		}
 
-        public unsafe static CString8* ToString(int value, bool hex)
-        {
-            byte* buffer = (byte*)ADC.MemoryManager.Allocate(64);
-            
-            int l = ToString(value, hex, buffer, 64, 0);
-            CString8* result = ((CString8*)buffer)->Substring(0, l);
+		public unsafe static CString8* ToString (int value, bool hex)
+		{
+			byte* buffer = (byte*) ADC.MemoryManager.Allocate (64);
 
-            ADC.MemoryManager.Free((void*)buffer);
-            return result;
-        }
+			int l = ToString (value, hex, buffer, 64, 0);
+			CString8* result = ((CString8*)buffer)->Substring (0, l);
+
+			ADC.MemoryManager.Free ((void*) buffer);
+			return result;
+		}
 
 		public unsafe static int ToString (int value, bool hex, byte* buffer,
 						    int bufferLen, int offset)

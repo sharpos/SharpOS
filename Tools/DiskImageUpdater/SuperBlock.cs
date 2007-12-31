@@ -13,23 +13,25 @@ using System;
 namespace Ext2 {
 	public class SuperBlock {
 		public Block block;
-		
+
 		public SuperBlock (Block block)
 		{
 			this.block = block;
 		}
-		
-		public Block Block {
-			get {
+
+		public Block Block
+		{
+			get
+			{
 				return this.block;
 			}
 		}
-		
+
 		public const ushort EXT2_MAGIC = 0xEF53;
 		public const ushort EXT2_ERRORS_CONTINUE = 1;
 		public const ushort EXT2_ERRORS_RO = 2;
 		public const ushort EXT2_ERRORS_PANIC = 3;
-		
+
 		private static readonly uint INodesCountOffset = 0;
 		private static readonly uint BlocksCountOffset = 4;
 		private static readonly uint ReservedBlocksCountOffset = 8;
@@ -66,318 +68,423 @@ namespace Ext2 {
 		private static readonly uint LastMountedOffset = 136;
 		private static readonly uint AlgorithmsBitmapOffset = 200;
 		public static readonly uint SuperBlockSize = 204;
-		
-		public uint INodesCount {
-			get {
+
+		public uint INodesCount
+		{
+			get
+			{
 				return this.block.GetUInt (INodesCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (INodesCountOffset, value);
 			}
 		}
-		
-		public uint BlocksCount {
-			get {
+
+		public uint BlocksCount
+		{
+			get
+			{
 				return this.block.GetUInt (BlocksCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (BlocksCountOffset, value);
 			}
 		}
-		
-		public uint ReservedBlocksCount {
-			get {
+
+		public uint ReservedBlocksCount
+		{
+			get
+			{
 				return this.block.GetUInt (ReservedBlocksCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (ReservedBlocksCountOffset, value);
 			}
 		}
-		
-		public uint FreeBlocksCount {
-			get {
+
+		public uint FreeBlocksCount
+		{
+			get
+			{
 				return this.block.GetUInt (FreeBlocksCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (FreeBlocksCountOffset, value);
 			}
 		}
-		
-		public uint FreeINodesCount {
-			get {
+
+		public uint FreeINodesCount
+		{
+			get
+			{
 				return this.block.GetUInt (FreeINodesCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (FreeINodesCountOffset, value);
 			}
 		}
-		
-		public uint FirstDataDlock {
-			get {
+
+		public uint FirstDataDlock
+		{
+			get
+			{
 				return this.block.GetUInt (FirstDataDlockOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (FirstDataDlockOffset, value);
 			}
 		}
-		
-		public uint BlockSize {
-			get {
+
+		public uint BlockSize
+		{
+			get
+			{
 				return this.block.GetUInt (BlockSizeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (BlockSizeOffset, value);
 			}
 		}
-		
-		public int FragmentSize {
-			get {
+
+		public int FragmentSize
+		{
+			get
+			{
 				return this.block.GetInt (FragmentSizeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetInt (FragmentSizeOffset, value);
 			}
 		}
-		
-		public uint BlocksPerGroup {
-			get {
+
+		public uint BlocksPerGroup
+		{
+			get
+			{
 				return this.block.GetUInt (BlocksPerGroupOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (BlocksPerGroupOffset, value);
 			}
 		}
-		
-		public uint FragsPerGroup {
-			get {
+
+		public uint FragsPerGroup
+		{
+			get
+			{
 				return this.block.GetUInt (FragsPerGroupOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (FragsPerGroupOffset, value);
 			}
 		}
-		
-		public uint INodesPerGroup {
-			get {
+
+		public uint INodesPerGroup
+		{
+			get
+			{
 				return this.block.GetUInt (INodesPerGroupOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (INodesPerGroupOffset, value);
 			}
 		}
-		
-		public uint LastMountTime {
-			get {
+
+		public uint LastMountTime
+		{
+			get
+			{
 				return this.block.GetUInt (LastMountTimeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (LastMountTimeOffset, value);
 			}
 		}
-		
-		public uint LastWriteTime {
-			get {
+
+		public uint LastWriteTime
+		{
+			get
+			{
 				return this.block.GetUInt (LastWriteTimeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (LastWriteTimeOffset, value);
 			}
 		}
-		
-		public ushort MountCount {
-			get {
+
+		public ushort MountCount
+		{
+			get
+			{
 				return this.block.GetUShort (MountCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (MountCountOffset, value);
 			}
 		}
-		
-		public ushort MaxMountCount {
-			get {
+
+		public ushort MaxMountCount
+		{
+			get
+			{
 				return this.block.GetUShort (MaxMountCountOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (MaxMountCountOffset, value);
 			}
 		}
-		
-		public ushort Magic {
-			get {
+
+		public ushort Magic
+		{
+			get
+			{
 				return this.block.GetUShort (MagicOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (MagicOffset, value);
 			}
 		}
-		
-		public ushort State {
-			get {
+
+		public ushort State
+		{
+			get
+			{
 				return this.block.GetUShort (StateOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (StateOffset, value);
 			}
 		}
-		
-		public ushort Errors {
-			get {
+
+		public ushort Errors
+		{
+			get
+			{
 				return this.block.GetUShort (ErrorsOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (ErrorsOffset, value);
 			}
 		}
-		
-		public ushort MinorRevisionLevel {
-			get {
+
+		public ushort MinorRevisionLevel
+		{
+			get
+			{
 				return this.block.GetUShort (MinorRevisionLevelOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (MinorRevisionLevelOffset, value);
 			}
 		}
-		
-		public uint LastCheck {
-			get {
+
+		public uint LastCheck
+		{
+			get
+			{
 				return this.block.GetUInt (LastCheckOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (LastCheckOffset, value);
 			}
 		}
-		
-		public uint CheckInterval {
-			get {
+
+		public uint CheckInterval
+		{
+			get
+			{
 				return this.block.GetUInt (CheckIntervalOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (CheckIntervalOffset, value);
 			}
 		}
-		
-		public uint CreatorOS {
-			get {
+
+		public uint CreatorOS
+		{
+			get
+			{
 				return this.block.GetUInt (CreatorOSOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (CreatorOSOffset, value);
 			}
 		}
-		
-		public uint RevisionLevel {
-			get {
+
+		public uint RevisionLevel
+		{
+			get
+			{
 				return this.block.GetUInt (RevisionLevelOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (RevisionLevelOffset, value);
 			}
 		}
-		
-		public ushort DefaultReservedUserID {
-			get {
+
+		public ushort DefaultReservedUserID
+		{
+			get
+			{
 				return this.block.GetUShort (DefaultReservedUserIDOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (DefaultReservedUserIDOffset, value);
 			}
 		}
-		
-		public ushort DefaultReservedGroupID {
-			get {
+
+		public ushort DefaultReservedGroupID
+		{
+			get
+			{
 				return this.block.GetUShort (DefaultReservedGroupIDOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (DefaultReservedGroupIDOffset, value);
 			}
 		}
-		
-		public uint FirstINode {
-			get {
+
+		public uint FirstINode
+		{
+			get
+			{
 				return this.block.GetUInt (FirstINodeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (FirstINodeOffset, value);
 			}
 		}
-		
-		public ushort INodeSize {
-			get {
+
+		public ushort INodeSize
+		{
+			get
+			{
 				return this.block.GetUShort (INodeSizeOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (INodeSizeOffset, value);
 			}
 		}
-		
-		public ushort BlockGroupNR {
-			get {
+
+		public ushort BlockGroupNR
+		{
+			get
+			{
 				return this.block.GetUShort (BlockGroupNROffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUShort (BlockGroupNROffset, value);
 			}
 		}
-		
-		public uint FeaturesCompatible {
-			get {
+
+		public uint FeaturesCompatible
+		{
+			get
+			{
 				return this.block.GetUInt (FeaturesCompatibleOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (FeaturesCompatibleOffset, value);
 			}
 		}
-		
-		public uint FeaturesIncompatible {
-			get {
+
+		public uint FeaturesIncompatible
+		{
+			get
+			{
 				return this.block.GetUInt (FeaturesIncompatibleOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (FeaturesIncompatibleOffset, value);
 			}
 		}
-		
-		public uint FeaturesReadOnlyCompatible {
-			get {
+
+		public uint FeaturesReadOnlyCompatible
+		{
+			get
+			{
 				return this.block.GetUInt (FeaturesReadOnlyCompatibleOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (FeaturesReadOnlyCompatibleOffset, value);
 			}
 		}
-		
-		public byte [] UUID {
-			get {
+
+		public byte [] UUID
+		{
+			get
+			{
 				return this.block.GetByteArray (16, UUIDOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetByteArray (16, UUIDOffset, value);
 			}
 		}
-		
-		public byte [] VolumeName {
-			get {
+
+		public byte [] VolumeName
+		{
+			get
+			{
 				return this.block.GetByteArray (16, VolumeNameOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetByteArray (16, VolumeNameOffset, value);
 			}
 		}
-		
-		public byte [] LastMounted {
-			get {
+
+		public byte [] LastMounted
+		{
+			get
+			{
 				return this.block.GetByteArray (64, LastMountedOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetByteArray (64, LastMountedOffset, value);
 			}
 		}
-		
-		public uint AlgorithmsBitmap {
-			get {
+
+		public uint AlgorithmsBitmap
+		{
+			get
+			{
 				return this.block.GetUInt (AlgorithmsBitmapOffset);
 			}
-			set {
+			set
+			{
 				this.block.SetUInt (AlgorithmsBitmapOffset, value);
 			}
 		}

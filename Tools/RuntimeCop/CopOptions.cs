@@ -1,9 +1,11 @@
-// (C) 2006-2007 The SharpOS Project. This software is licensed under the
-// terms of the GNU General Public License version 3.0 with the ClassPath
-// linking exception.
+//
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
-// 	William Lahti <xfurious@gmail.com>
+//	William Lahti <xfurious@gmail.com>
+//
+// Licensed under the terms of the GNU GPL v3,
+//  with Classpath Linking Exception for Libraries
 //
 
 using System;
@@ -14,7 +16,8 @@ using Mono.Cecil;
 using Mono.GetOptions;
 
 public class CopOptions : Options {
-	public CopOptions (string [] args):
+	public CopOptions (string [] args)
+		:
 		base (args)
 	{
 	}

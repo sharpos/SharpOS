@@ -13,11 +13,11 @@ using SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.Memory {
 	[System.Flags]
-	public enum PageAttributes: uint {
+	public enum PageAttributes : uint {
 		None = 0,
-		
-		ReadWrite	= 1,
-		User		= 1<<1,
-		Present		= 1<<2,
+
+		ReadWrite = 1,
+		User = 1 << 1,
+		Present = 1 << 2,
 	}
 }

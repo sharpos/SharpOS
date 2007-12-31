@@ -18,14 +18,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			uint ivalue = 5;
 			byte bvalue = 0;
 
-			bvalue = (byte)ivalue;
+			bvalue = (byte) ivalue;
 
 			if (bvalue == 5)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// byte -> uint
 		/// </summary>
@@ -34,14 +34,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			byte bvalue = 200;
 			uint ivalue = 0;
 
-			ivalue = (uint)bvalue;
+			ivalue = (uint) bvalue;
 
 			if (ivalue == 200)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// byte -> ushort
 		/// </summary>
@@ -50,14 +50,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			byte bvalue = 200;
 			ushort svalue = 0;
 
-			svalue = (ushort)bvalue;
+			svalue = (ushort) bvalue;
 
 			if (svalue == 200)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// ushort -> byte
 		/// </summary>
@@ -66,14 +66,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			ushort svalue = 200;
 			byte bvalue = 0;
 
-			bvalue = (byte)svalue;
+			bvalue = (byte) svalue;
 
 			if (bvalue == 200)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// ushort -> uint
 		/// </summary>
@@ -82,14 +82,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			ushort svalue = 200;
 			uint ivalue = 0;
 
-			ivalue = (uint)svalue;
+			ivalue = (uint) svalue;
 
 			if (ivalue == 200)
 				return 1;
 			else
 				return 0;
 		}
-		
+
 		/// <summary>
 		/// uint -> ushort
 		/// </summary>
@@ -98,7 +98,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			uint ivalue = 200;
 			ushort svalue = 0;
 
-			svalue = (ushort)ivalue;
+			svalue = (ushort) ivalue;
 
 			if (svalue == 200)
 				return 1;

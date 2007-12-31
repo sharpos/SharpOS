@@ -18,7 +18,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			return PIT.RegisterTimerEvent (func);
 		}
-		
+
 		public static ushort GetFrequency ()
 		{
 			return PIT.HZ;

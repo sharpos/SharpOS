@@ -42,20 +42,20 @@ namespace SharpOS.AOT.X86 {
 				return value as CRType;
 
 			switch (Register.GetName (value)) {
-				case "CR0":
-					return CR.CR0;
+			case "CR0":
+				return CR.CR0;
 
-				case "CR2":
-					return CR.CR2;
+			case "CR2":
+				return CR.CR2;
 
-				case "CR3":
-					return CR.CR3;
+			case "CR3":
+				return CR.CR3;
 
-				case "CR4":
-					return CR.CR4;
+			case "CR4":
+				return CR.CR4;
 
-				default:
-					throw new EngineException ("Unknown CR Register '" + value.ToString () + "'");
+			default:
+				throw new EngineException ("Unknown CR Register '" + value.ToString () + "'");
 			}
 		}
 	}

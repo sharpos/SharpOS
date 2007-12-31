@@ -39,8 +39,10 @@ namespace SharpOS.AOT.X86 {
 		/// <summary>
 		/// The name of this register
 		/// </summary>
-		public string Name {
-			get {
+		public string Name
+		{
+			get
+			{
 				return name;
 			}
 		}
@@ -51,8 +53,10 @@ namespace SharpOS.AOT.X86 {
 		/// An implementation-specific value used to aid in the encoding of the reference to this register
 		/// to a stream or file.
 		/// </summary>
-		public byte Index {
-			get {
+		public byte Index
+		{
+			get
+			{
 				return index;
 			}
 		}
@@ -70,10 +74,10 @@ namespace SharpOS.AOT.X86 {
 		{
 			if (value is IR.Operands.Field)
 				return (value as IR.Operands.Field).Type.Name;
-			
+
 			if (value is System.String)
 				return value as System.String;
-		
+
 			throw new EngineException (string.Format ("Could not get the register name from '{0}'", value.ToString ()));
 		}
 	}
