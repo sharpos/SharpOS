@@ -101,7 +101,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		enum KeyboardMessages {
 			Too_Many_Keys = 0x00,	// Too many keys are being pressed at once
-			Unknown = 0x3a, // This is causing our CAPS issue.
+			Unknown1 = 0x3a, // This is causing our CAPS issue.
+                        Unknown2 = 0xba, // This is causing our CAPS issue in qemu.
 			Basic_Assurance_Test = 0xaa,
 			Echo_Command_Result = 0xee,
 			Acknowledge = 0xfa,	// Sent by every command, except eeh and feh
@@ -144,12 +145,18 @@ namespace SharpOS.Kernel.ADC.X86 {
 					continue;
 				else if (message == KeyboardMessages.Acknowledge)
 					return;
-				else if (message == KeyboardMessages.Unknown) // This was the cause of the caps issue.
+				else if (message == KeyboardMessages.Unknown1) // This was the cause of the caps issue.
 					return;
-				else {
-					Diagnostics.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
-					return;
-				}
+                                else if (message == KeyboardMessages.Unknown2) // This was the cause of the caps issue in qemu.
+                                {
+                                        capsLock = capsLock ^ capsLockReleased;
+                                        capsLockReleased = true;
+                                        return;
+                                } else {
+                                        TextMode.WriteByte ((byte) message);
+                                        //Diagnostics.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
+                                        return;
+                                }
 
 			} while (message != KeyboardMessages.Acknowledge);
 		}
