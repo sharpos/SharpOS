@@ -95,8 +95,5 @@
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.img')}" failonerror="false" />
 		<delete file="${path::combine(prefix, 'tests.dump')}" failonerror="false" />
-		
-		<delete file="Wrapper.cs" failonerror="false" />
-		<delete file="NUnit/SharpOS.Kernel.Tests.NUnit.cs" failonerror="false" />
 	</target>
 </project>
