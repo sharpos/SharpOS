@@ -50,7 +50,6 @@ namespace SharpOS.Kernel.Shell {
 			TextMode.WriteLine ("This is free software, and you are welcome to redistribute it");
 			TextMode.WriteLine ("under certain conditions; type 'show c' for details.");
 			TextMode.WriteLine ();
-			TextMode.WriteLine ();
 
 			TextMode.SetAttributes (TextColor.White, TextColor.Black);
 			TextMode.Write ("Welcome to ");

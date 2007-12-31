@@ -82,11 +82,7 @@ namespace SharpOS.Kernel {
 			TextMode.SetCursor (0, 0);
 
 			// Write the banner
-			TextMode.SaveAttributes ();
-			TextMode.SetAttributes (TextColor.BrightWhite, TextColor.Black);
-			TextMode.WriteLine ("SharpOS v0.0.1 (http://www.sharpos.org/)");
-			TextMode.WriteLine ();
-			TextMode.RestoreAttributes ();
+			DisplayBanner ();
 
 			StageMessage ("Multiboot setup...");
 			Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo (magic, pointer, kernelStart, kernelEnd);
@@ -141,8 +137,7 @@ namespace SharpOS.Kernel {
 
 			SetKernelStage (KernelStage.Diagnostics);
 
-			while (stayInLoop)
-				;
+			while (stayInLoop);
 		}
 
 		public static void DisplayBanner ()
