@@ -89,9 +89,7 @@ namespace SharpOS.Kernel {
 			if (multibootInfo == null) {
 				StageError ("Error: multiboot loader required!");
 				return;
-			} else {
-				//Multiboot.WriteMultibootInfo(multibootInfo, kernelStart, kernelEnd);
-			}
+			} 
 
 			StageMessage ("Commandline setup...");
 			CommandLine.Setup (multibootInfo);
