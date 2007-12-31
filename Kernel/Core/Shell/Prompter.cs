@@ -40,13 +40,13 @@ namespace SharpOS.Kernel.Shell {
 			if (initialized == false)
 				Setup ();
 
-			TextMode.ClearScreen ();
+			// Can we let it like this until after the release? 
+			// It hides too much, including the test results ;)
+			// TextMode.ClearScreen ();
+			// EntryModule.DisplayBanner ();			
 
-			TextMode.SetAttributes (TextColor.Black, TextColor.White);
-                        TextMode.WriteLine ("SharpOS  Copyright (C) 2007  The SharpOS Team");
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
-			TextMode.WriteLine ();
-                        TextMode.WriteLine ("This program comes with ABSOLUTELY NO WARRANTY; for details type 'show w'.");
+			TextMode.WriteLine ("This program comes with ABSOLUTELY NO WARRANTY; for details type 'show w'.");
                         TextMode.WriteLine ("This is free software, and you are welcome to redistribute it");
                         TextMode.WriteLine ("under certain conditions; type 'show c' for details.");
 			TextMode.WriteLine ();

@@ -144,6 +144,15 @@ namespace SharpOS.Kernel {
 			while (stayInLoop) ;
 		}
 
+		public static void DisplayBanner ()
+		{
+			TextMode.SaveAttributes ();
+			TextMode.SetAttributes (TextColor.BrightWhite, TextColor.Black);
+			TextMode.WriteLine ("SharpOS v0.0.1 Copyright (C) 2007 The SharpOS Team (http://www.sharpos.org/)");
+			TextMode.WriteLine ();
+			TextMode.RestoreAttributes ();
+		}
+
 		static unsafe void StageMessage(string message)
 		{
 			TextMode.SaveAttributes();

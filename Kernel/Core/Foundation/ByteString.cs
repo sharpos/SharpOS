@@ -99,7 +99,7 @@ namespace SharpOS.Kernel.Foundation {
 
 			if (c == 0)
 				c = aLength;
-
+			
 			for (int x = 0; x < c; ++x) {
 
 				if (x >= c)
@@ -175,62 +175,40 @@ namespace SharpOS.Kernel.Foundation {
 			//Test constant CString buffers
 			if (ByteString.Compare (ptr1, ptr2) == 0)
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' != 'SK'");
-			else
-				TextMode.WriteLine ("ByteString.Compare(): test pass: 'US' != 'SK'");
 
-			if (ByteString.Compare (ptr1, ptr1) == 0)
-				TextMode.WriteLine ("ByteString.Compare(): test pass: 'US' == 'US'");
-			else
+			if (ByteString.Compare (ptr1, ptr1) != 0)
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' == 'US'");
 
-			if (ByteString.Compare (ptr1, 1, ptr1, 1, 1) == 0)
-				TextMode.WriteLine ("ByteString.Compare(): test pass: 'U[S]' == 'U[S]'");
-			else
+			if (ByteString.Compare (ptr1, 1, ptr1, 1, 1) != 0)
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'U[S]' == 'U[S]'");
 
-			if (ByteString.Compare (longer, 4, ptr1, 0, 2) == 0)
-				TextMode.WriteLine ("ByteString.Compare(): test pass: 'The [US]' == 'US'");
-			else
+			if (ByteString.Compare (longer, 4, ptr1, 0, 2) != 0)
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == 'US'");
 
 			//Test constant CString buffer with constant String type
 
 			if (ByteString.Compare (ptr1, "SK") == 0)
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' != const 'SK'");
-			else
-				TextMode.WriteLine ("ByteString.Compare(): test pass: 'US' != const 'SK'");
 
-			if (ByteString.Compare (ptr1, "US") == 0)
-				TextMode.WriteLine ("ByteString.Compare(): test pass: 'US' == const 'US'");
-			else
+			if (ByteString.Compare (ptr1, "US") != 0)
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' == const 'US'");
 
-			if (ByteString.Compare (longer, 4, "US", 0, 2) == 0)
-				TextMode.WriteLine ("ByteString.Compare(): test pass: 'The [US]' == const 'US'");
-			else
+			if (ByteString.Compare (longer, 4, "US", 0, 2) != 0)
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == const 'US'");
 
 			//Test that constant String is working properly
 			const string str1 = "US";
 			const string str2 = "SK";
-			if ((byte)str1[0] == (byte)'U')
-				TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[0]==(byte)'U'");
-			else
+			if ((byte)str1[0] != (byte)'U')
 				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[0]==(byte)'U'");
 
-			if ((byte)str1[1] == (byte)'S')
-				TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[1]==(byte)'S'");
-			else
+			if ((byte)str1[1] != (byte)'S')
 				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)'S'");
 
-			if (str1.Length == 2)
-				TextMode.WriteLine("ByteString : test pass: \"US\".Length==2");
-			else
+			if (str1.Length != 2)
 				TextMode.WriteLine("ByteString : test FAIL: \"US\".Length==2");
 
-			if ((byte)str1[1] == (byte)str2[0])
-				TextMode.WriteLine("ByteString : test pass: (byte)\"US\"[1]==(byte)\"SK\"[0]");
-			else
+			if ((byte)str1[1] != (byte)str2[0])
 				TextMode.WriteLine("ByteString : test FAIL: (byte)\"US\"[1]==(byte)\"SK\"[0]");
 		}
 
