@@ -3,7 +3,7 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
-//  Bruce Markham <illuminus86@gmail.com>
+//	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
