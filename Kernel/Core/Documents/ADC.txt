@@ -3,5 +3,30 @@ Copyright (C) 2007, the SharpOS team (http://sharpos.sf.net/)
 
 Authors:
 	William Lahti <xfurious@gmail.com>
+	Jonathan Dickinson <jonathan.za@gmail.com>
 
+About ADC
+---------
 
+The ADC allows us to seperate the code that depends on specific architectures. For now we only have a X86 architecture.
+
+Creating a new ADC Component
+----------------------------
+
+In the ADC directory you will find a bunch of classes. These classes have no implementations (they are stubs). The AOT is responsible for finding an implementation. It does this by prefixing the class namespace with the architecture in question. Thus:
+
+SharpOS.Kernel.ADT.Keyboard.cs
+
+receives its implementation from (under X86):
+
+SharpOS.Kernel.ADT.X86.Keyboard.cs
+
+Both classes must have the exact same member methods.
+
+Note that no code is ever compiled by the AOT under the ADC area, only a specific architecture such as ADC.X86. You may put whatever you want in the ADC code to make the C# compiler happy. Most often:
+
+* A blank method for a VOID method
+* A "return 0;" for integral or float types.
+* A "return null;" for object types.
+
+If your ADC component is complex, please provide object bindings for it once they have been completed.
