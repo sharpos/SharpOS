@@ -86,6 +86,12 @@ namespace SharpOS.Tools {
 		public int Column;
 		public TokenType Type;
 
+		public string PositionString {
+			get {
+				return string.Format ("({0}, {1})", Line, Column);
+			}
+		}
+
 		public override string ToString ()
 		{
 			return string.Format ("[{0}] on line {1} col {2}", Text, Line, Column);

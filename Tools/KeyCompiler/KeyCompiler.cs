@@ -703,7 +703,7 @@ namespace SharpOS.Tools.KeyCompiler {
 				text = text.Replace ("\\\\", "\\");
 
 				if (text.Length != 1)
-					throw new Exception ("Expected one character, not string '" + text + "'");
+					throw new Exception (tok.PositionString + ": Expected one character, not string '" + text + "'");
 
 				return text [0];
 			} else if (tok.Text == "@") {
