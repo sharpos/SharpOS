@@ -16,51 +16,6 @@ namespace SharpOS.Kernel.Tests {
 		{
 #if KERNEL_TESTS
 			int failures = 0;
-			if (SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.MethodArguments.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.MethodArguments.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.MethodArguments.CMP1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.MethodArguments.CMP1' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.MethodArguments.CMP2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.MethodArguments.CMP2' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.Addition.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.Addition.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.Addition.CMP1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
-				failures++;
-			}
-
 			if (SharpOS.Kernel.Tests.IL.SHR.CMP0 () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.SHR.CMP0' failed.");
 				failures++;
@@ -298,6 +253,51 @@ namespace SharpOS.Kernel.Tests {
 
 			if (SharpOS.Kernel.Tests.IL.SUB.CMP0 () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.SUB.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.MethodArguments.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.MethodArguments.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.MethodArguments.CMP1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.MethodArguments.CMP1' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.MethodArguments.CMP2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.MethodArguments.CMP2' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.Addition.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.Addition.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.IL.Addition.CMP1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
 				failures++;
 			}
 

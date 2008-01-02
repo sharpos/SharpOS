@@ -11,8 +11,9 @@
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
 
-namespace Internal.System {
-	public class String : Internal.System.Object {
+namespace InternalSystem {
+	[TargetNamespace ("System")]
+	public class String : InternalSystem.Object {
 		private int length;
 		private char firstChar;
 

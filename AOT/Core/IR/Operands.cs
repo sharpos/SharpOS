@@ -400,15 +400,29 @@ namespace SharpOS.AOT.IR.Operands {
 
 		protected MemberReference type = null;
 
-		public MemberReference Type
-		{
-			get
-			{
+		public MemberReference Type {
+			get {
 				return type;
 			}
-			set
-			{
+			set {
 				type = value;
+			}
+		}
+
+		public string TypeFullName {
+			get {
+				if (this.type is TypeDefinition) {
+					TypeDefinition typeDefinition = this.type as TypeDefinition;
+
+					foreach (CustomAttribute attribute in typeDefinition.CustomAttributes) {
+						if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
+							continue;
+						
+						return attribute.ConstructorParameters [0].ToString () + "." + this.type.Name;
+					}
+				}
+
+				return this.type.ToString ();
 			}
 		}
 	}

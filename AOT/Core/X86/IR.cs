@@ -623,7 +623,7 @@ namespace SharpOS.AOT.X86 {
 
 		private void Initialize (IR.Operands.Identifier identifier)
 		{
-			int size = this.method.Engine.GetTypeSize (identifier.Type.ToString (), 4) / 4;
+			int size = this.method.Engine.GetTypeSize (identifier.TypeFullName, 4) / 4;
 
 			if (size == 1) {
 				this.assembly.XOR (R32.EAX, R32.EAX);

@@ -953,8 +953,6 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		private const string INTERNAL = "Internal.";
-
 		/// <summary>
 		/// Gets the label.
 		/// </summary>
@@ -966,8 +964,12 @@ namespace SharpOS.AOT.IR {
 
 			string value = method.DeclaringType.FullName;
 
-			if (value.StartsWith (INTERNAL))
-				value = value.Substring (INTERNAL.Length);
+			foreach (CustomAttribute attribute in method.DeclaringType.CustomAttributes) {
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
+					continue;
+
+				value = attribute.ConstructorParameters [0].ToString () + "." + method.DeclaringType.Name;
+			}
 
 			result.Append (value + "." + method.Name);
 
@@ -1289,7 +1291,7 @@ namespace SharpOS.AOT.IR {
 		private void SetNextStackPosition (Identifier identifier)
 		{
 			if (identifier.InternalType == InternalType.ValueType)
-				this.stackSize += this.engine.GetTypeSize (identifier.Type.ToString (), 4) >> 2;
+				this.stackSize += this.engine.GetTypeSize (identifier.TypeFullName, 4) >> 2;
 
 			else
 				this.stackSize += this.engine.GetTypeSize (identifier.InternalType, 4) >> 2;
@@ -1434,7 +1436,7 @@ namespace SharpOS.AOT.IR {
 				TypeReference typeReference = this.methodDefinition.Body.Variables [i].VariableType;
 
 				Local local = new Local (i, typeReference);
-				local.InternalType = this.Engine.GetInternalType (typeReference.ToString ());
+				local.InternalType = this.Engine.GetInternalType (local.TypeFullName);
 
 				this.locals.Add (local);
 			}
@@ -1454,7 +1456,7 @@ namespace SharpOS.AOT.IR {
 				TypeReference typeReference = this.methodDefinition.Parameters [i].ParameterType;
 
 				Argument argument = new Argument (delta + i, typeReference);
-				argument.InternalType = this.engine.GetInternalType (typeReference.ToString ());
+				argument.InternalType = this.engine.GetInternalType (argument.TypeFullName);
 
 				this.arguments.Add (argument);
 			}

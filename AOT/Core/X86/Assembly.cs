@@ -75,7 +75,7 @@ namespace SharpOS.AOT.X86 {
 		#region RUNTIME
 		const string VTABLE_LABEL = "{0} VTable";
 		const string VTABLE_CLASS = "SharpOS.Korlib.Runtime.VTable";
-		const string SYSTEM_STRING = "Internal.System.String";
+		const string SYSTEM_STRING = "InternalSystem.String";
 		#endregion
 
 		Engine engine;

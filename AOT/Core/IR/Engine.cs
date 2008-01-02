@@ -71,7 +71,7 @@ namespace SharpOS.AOT.IR {
 		ADCLayer adcLayer = null;
 
 		List<AssemblyDefinition> assemblies = new List<AssemblyDefinition> ();
-		List<Class> classes = new List<Class> ();
+		Dictionary<string, Class> classes = new Dictionary<string, Class> ();
 		Dictionary<string, byte []> resources = null;
 
 		Status status;
@@ -567,7 +567,10 @@ namespace SharpOS.AOT.IR {
 
 					Class _class = new Class (this, type);
 
-					this.classes.Add (_class);
+					if (this.classes.ContainsKey (_class.TypeFullName))
+						throw new NotImplementedEngineException ();
+					else
+						this.classes[_class.TypeFullName] = _class;
 
 					foreach (MethodDefinition entry in type.Constructors) {
 						Method method = new Method (this, entry);
@@ -603,7 +606,7 @@ namespace SharpOS.AOT.IR {
 			int classes = 0;
 			int methods = 0;
 			int ilInstructions = 0;
-			foreach (Class _class in this.classes) {
+			foreach (Class _class in this.classes.Values) {
 				classes++;
 
 				foreach (Method _method in _class) {
@@ -625,7 +628,7 @@ namespace SharpOS.AOT.IR {
 			Method markedEntryPoint = null;
 			Method mainEntryPoint = null;
 
-			foreach (Class _class in this.classes) {
+			foreach (Class _class in this.classes.Values) {
 				List<string> defNames = new List<string> ();
 
 				this.currentModule = _class.ClassDefinition.Module;
@@ -709,7 +712,7 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		IEnumerator<Class> IEnumerable<Class>.GetEnumerator ()
 		{
-			foreach (Class _class in this.classes)
+			foreach (Class _class in this.classes.Values)
 				yield return _class;
 		}
 
@@ -760,7 +763,7 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public int GetTypeSize (object type, int align)
 		{
-			int result = 0;
+			int result = -1;
 			Operands.InternalType sizeType;
 
 			if (type is InternalType)
@@ -773,88 +776,49 @@ namespace SharpOS.AOT.IR {
 				throw new EngineException (string.Format ("'{0}' is not supported.", type.GetType ().ToString ()));
 
 			switch (sizeType) {
-			case InternalType.I1:
-			case InternalType.U1:
-				result = 1;
-				break;
+				case InternalType.I1:
+				case InternalType.U1:
+					result = 1;
+					break;
 
-			case InternalType.I2:
-			case InternalType.U2:
-				result = 2;
-				break;
+				case InternalType.I2:
+				case InternalType.U2:
+					result = 2;
+					break;
 
-			case InternalType.I4:
-			case InternalType.U4:
-				result = 4;
-				break;
+				case InternalType.I4:
+				case InternalType.U4:
+					result = 4;
+					break;
 
-			case InternalType.I:
-			case InternalType.U:
-			case InternalType.O:
-			case InternalType.M:
-				result = this.asm.IntSize;
-				break;
+				case InternalType.I:
+				case InternalType.U:
+				case InternalType.O:
+				case InternalType.M:
+					result = this.asm.IntSize;
+					break;
 
-			case InternalType.I8:
-			case InternalType.U8:
-				result = 8;
-				break;
+				case InternalType.I8:
+				case InternalType.U8:
+					result = 8;
+					break;
 
-			case InternalType.R4:
-				result = 4;
-				break;
+				case InternalType.R4:
+					result = 4;
+					break;
 
-			case InternalType.R8:
-				result = 8;
-				break;
+				case InternalType.R8:
+					result = 8;
+					break;
 
-			case InternalType.ValueType:
-				foreach (Class _class in this.classes) {
-					if (_class.ClassDefinition.FullName.Equals (type)) {
-						if (_class.ClassDefinition.IsEnum) {
-							foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-								if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
-									result = this.GetTypeSize (field.FieldType.FullName);
-									break;
-								}
-							}
+				case InternalType.ValueType:
+					if (this.classes.ContainsKey (type.ToString ()))
+						result = this.classes [type.ToString ()].GetSize ();
 
-							break;
-
-						} else if (_class.ClassDefinition.IsValueType) {
-							if ((_class.ClassDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
-								foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-									if ((field as FieldDefinition).IsStatic)
-										continue;
-
-									int value = (int) (field.Offset + this.GetTypeSize (field.FieldType.FullName));
-
-									if (value > result)
-										result = value;
-								}
-
-								break;
-
-							} else {
-								foreach (FieldReference field in _class.ClassDefinition.Fields) {
-									if ((field as FieldDefinition).IsStatic)
-										continue;
-
-									result += this.GetFieldSize (field.FieldType.FullName);
-								}
-
-								break;
-							}
-
-						} else
-							break;
-					}
-				}
-
-				break;
+					break;
 			}
 
-			if (result == 0)
+			if (result == -1)
 				throw new EngineException ("'" + type + "' not supported.");
 
 			if (align != 0 && result % align != 0)
@@ -881,6 +845,11 @@ namespace SharpOS.AOT.IR {
 				return Operands.InternalType.U;
 			else if (type.EndsWith ("[]"))
 				return Operands.InternalType.U;
+
+			else if (type.Equals ("System.IntPtr"))
+				return Operands.InternalType.I;
+			else if (type.Equals ("System.UIntPtr"))
+				return Operands.InternalType.I;
 
 			else if (type.Equals ("void"))
 				return Operands.InternalType.NotSet;
@@ -948,39 +917,21 @@ namespace SharpOS.AOT.IR {
 			else if (type.Equals ("System.Object"))
 				return Operands.InternalType.O;
 
+			else if (type.Equals ("System.TypedReference"))
+				return Operands.InternalType.TypedReference;
+
 			else if (this.Assembly != null && this.Assembly.IsRegister (type))
 				return this.Assembly.GetRegisterSizeType (type);
 
 			if (type.IndexOf ("::") != -1) {
 				string objectName = type.Substring (0, type.IndexOf ("::"));
 				string fieldName = type.Substring (type.IndexOf ("::") + 2);
+				
+				if (this.classes.ContainsKey (objectName))
+					return this.classes [objectName].GetFieldType (fieldName);
 
-				foreach (Class _class in this.classes) {
-					if (_class.ClassDefinition.FullName.Equals (objectName)) {
-						foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-							if (field.Name.Equals (fieldName))
-								return this.GetInternalType (field.FieldType.FullName);
-						}
-					}
-				}
-
-			} else {
-				foreach (Class _class in this.classes) {
-					if (_class.ClassDefinition.FullName.Equals (type)) {
-						if (_class.ClassDefinition.IsEnum) {
-							foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-								if ((field.Attributes & FieldAttributes.RTSpecialName) != 0)
-									return this.GetInternalType (field.FieldType.FullName);
-							}
-
-						} else if (_class.ClassDefinition.IsValueType)
-							return Operands.InternalType.ValueType;
-
-						else if (_class.ClassDefinition.IsClass)
-							return Operands.InternalType.O;
-					}
-				}
-			}
+			} else if (this.classes.ContainsKey (type.ToString ()))
+				return this.classes [type.ToString ()].GetInternalType ();
 
 			Console.Error.WriteLine ("WARNING: '" + type + "' not supported.");
 

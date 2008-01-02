@@ -9,7 +9,7 @@
 //
 
 namespace SharpOS.Korlib.Runtime {
-	internal class VTable : Internal.System.Object {
+	internal class VTable : InternalSystem.Object {
 
 	}
 }

@@ -41,11 +41,22 @@ namespace SharpOS.AOT.IR {
 		/// Gets the class definition.
 		/// </summary>
 		/// <value>The class definition.</value>
-		public TypeDefinition ClassDefinition
-		{
-			get
-			{
+		public TypeDefinition ClassDefinition {
+			get {
 				return this.classDefinition;
+			}
+		}
+
+		public string TypeFullName {
+			get {
+				foreach (CustomAttribute attribute in classDefinition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
+							continue;
+
+					return attribute.ConstructorParameters [0].ToString () + "." + this.classDefinition.Name;
+				}
+
+				return this.classDefinition.FullName;
 			}
 		}
 
@@ -95,6 +106,89 @@ namespace SharpOS.AOT.IR {
 				return this.classDefinition.FullName;
 
 			return base.ToString ();
+		}
+
+		/// <summary>
+		/// Gets the type of the field.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
+		public InternalType GetFieldType (string value)
+		{
+			foreach (FieldDefinition field in this.classDefinition.Fields) {
+				if (field.Name.Equals (value))
+					return this.engine.GetInternalType (field.FieldType.FullName);
+			}
+
+			return InternalType.NotSet;
+		}
+
+		/// <summary>
+		/// Gets the type of the internal.
+		/// </summary>
+		/// <returns></returns>
+		public InternalType GetInternalType ()
+		{
+			if (this.classDefinition.IsEnum) {
+				foreach (FieldDefinition field in this.classDefinition.Fields) {
+					if ((field.Attributes & FieldAttributes.RTSpecialName) != 0)
+						return this.engine.GetInternalType (field.FieldType.FullName);
+				}
+
+			} else if (this.classDefinition.IsValueType)
+				return Operands.InternalType.ValueType;
+
+			else if (this.classDefinition.IsClass)
+				return Operands.InternalType.O;
+
+			return InternalType.NotSet;
+		}
+
+		/// <summary>
+		/// Gets the size.
+		/// </summary>
+		/// <returns></returns>
+		public int GetSize ()
+		{
+			int result = -1;
+
+			if (this.classDefinition.IsEnum) {
+				result = 0;
+
+				foreach (FieldDefinition field in this.classDefinition.Fields) {
+					if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
+						result = this.engine.GetTypeSize (field.FieldType.FullName);
+						break;
+					}
+				}
+
+			} else if (this.classDefinition.IsValueType) {
+				if ((this.classDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
+					result = 0;
+
+					foreach (FieldDefinition field in this.classDefinition.Fields) {
+						if ((field as FieldDefinition).IsStatic)
+							continue;
+
+						int value = (int) (field.Offset + this.engine.GetTypeSize (field.FieldType.FullName));
+
+						if (value > result)
+							result = value;
+					}
+
+				} else {
+					result = 0;
+
+					foreach (FieldReference field in this.classDefinition.Fields) {
+						if ((field as FieldDefinition).IsStatic)
+							continue;
+
+						result += this.engine.GetFieldSize (field.FieldType.FullName);
+					}
+				}
+			} 
+
+			return result;
 		}
 	}
 }

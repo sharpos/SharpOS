@@ -8,12 +8,14 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+using SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
 
-namespace Internal.System {
+namespace InternalSystem {
+	[TargetNamespace ("System")]
 	public class Object {
-		internal VTable VTable;
-		internal uint Synchronisation;
+		internal VTable VTable = null;
+		internal uint Synchronisation = 0;
 
 		public Object ()
 		{

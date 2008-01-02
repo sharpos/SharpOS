@@ -13,51 +13,6 @@ using NUnit.Framework;
 [TestFixture]
 public class KernelTests {
 	[Test]
-	public void SharpOS_Kernel_Tests_IL_ConditionChecking_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_MethodArguments_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.MethodArguments.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.MethodArguments.CMP0' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_MethodArguments_CMP1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.MethodArguments.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.MethodArguments.CMP1' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_MethodArguments_CMP2 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.MethodArguments.CMP2 () == 1, "'SharpOS.Kernel.Tests.IL.MethodArguments.CMP2' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_ConstantLoading_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_ConstantLoading_CMP1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_ConversionOperations_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_Addition_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP0' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_Addition_CMP1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
-	}
-	[Test]
 	public void SharpOS_Kernel_Tests_IL_SHR_CMP0 ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.IL.SHR.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.SHR.CMP0' failed.");
@@ -296,6 +251,51 @@ public class KernelTests {
 	public void SharpOS_Kernel_Tests_IL_SUB_CMP0 ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.IL.SUB.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.SUB.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_ConditionChecking_CMP0 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_MethodArguments_CMP0 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.MethodArguments.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.MethodArguments.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_MethodArguments_CMP1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.MethodArguments.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.MethodArguments.CMP1' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_MethodArguments_CMP2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.MethodArguments.CMP2 () == 1, "'SharpOS.Kernel.Tests.IL.MethodArguments.CMP2' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_ConstantLoading_CMP0 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_ConstantLoading_CMP1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_ConversionOperations_CMP0 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_Addition_CMP0 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_IL_Addition_CMP1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_Arguments_CMPArguments1 ()
