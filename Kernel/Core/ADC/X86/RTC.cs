@@ -36,23 +36,15 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//while ((IO.In8(IO.Port.RTC_DataPort) & 0x80) == 0);
 
 			do {
-				seconds = CMOSRead (0);			// Get seconds (00 to 59)
-				minutes = CMOSRead (2);			// Get minutes (00 to 59)
-				hour = CMOSRead (4);			// Get hours (see notes)
-				day = CMOSRead (7);			// Get day of month (01 to 31)
-				month = CMOSRead (8);			// Get month (01 to 12)
-				year = 2000 + CMOSRead (9);	// Get year (00 to 99)
-			} while (seconds != CMOSRead (0));
+				seconds		= CMOS.Read (CMOS.Address.Seconds);			// Get seconds (00 to 59)
+				minutes		= CMOS.Read (CMOS.Address.Minutes);			// Get minutes (00 to 59)
+				hour		= CMOS.Read (CMOS.Address.Hour);				// Get hours
+				day			= CMOS.Read (CMOS.Address.Month);			// Get day of month (01 to 31)
+				month		= CMOS.Read (CMOS.Address.DayOfMonth);		// Get month (01 to 12)
+				year		= 2000 + CMOS.Read (CMOS.Address.Year);		// Get year (00 to 99)
+			} while (seconds != CMOS.Read (CMOS.Address.Seconds));
 
 			long ticks = ToTicks (year, month, day, hour, minutes, seconds, 0);
-		}
-		#endregion
-
-		#region CMOSRead
-		private static byte CMOSRead (byte offset)
-		{
-			IO.Out8 (IO.Port.RTC_CommandPort, (byte) (0x80 | offset));
-			return IO.In8 (IO.Port.RTC_DataPort);
 		}
 		#endregion
 

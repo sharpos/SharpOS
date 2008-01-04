@@ -124,6 +124,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		static void WaitUntilReady ()
 		{
+			// implement timeout for situations like this...
 			while ((IO.In8 (IO.Port.KB_controller_commands) & 0x02) != 0)
 				;
 		}

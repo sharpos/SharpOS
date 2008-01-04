@@ -21,11 +21,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 	public class IO {
 		#region Ports
 		public enum Port : ushort {
-			//0000-001F - First Direct Memory Access (DMA) Controller
+			//0000-001F - Primary Direct Memory Access (DMA) Controller
 
 			#region 0020-0021 - Programmable Interrupt (PIC) Controller
-			Master_PIC_CommandPort = 0x0020,
-			Master_PIC_DataPort = 0x0021,
+			Master_PIC_CommandPort					= 0x0020,
+			Master_PIC_DataPort						= 0x0021,
 			#endregion
 
 			//0022-002B - Intel 82355, part of chipset for 386sx
@@ -33,10 +33,10 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//0022-0023 - Cyrix Cx486SLC/DLC processor Cache Configuration Registers
 			//0026-0027 - Power Management
 
-			#region 0040-005F - First Programmable Interrupt Timer (PIT) Controller
-			PIT_counter_0_counter_divisor = 0x0040, // read/write
-			PIT_counter_1_RAM_refresh_counter = 0x0041, // read/write
-			PIT_counter_2_cassette_and_speaker = 0x0042, // read/write
+			#region 0040-005F - Primary Programmable Interrupt Timer (PIT) Controller
+			PIT_counter_0_counter_divisor		= 0x0040, // read/write
+			PIT_counter_1_RAM_refresh_counter	= 0x0041, // read/write
+			PIT_counter_2_cassette_and_speaker	= 0x0042, // read/write
 			#region 0x0043 PIT_mode_control_port
 			/// <summary>
 			/// 0043 r/w PIT mode port, control word register for counters 0-2
@@ -58,10 +58,10 @@ namespace SharpOS.Kernel.ADC.X86 {
 			///						= 1 BCD counter</item>
 			/// </list>
 			/// </summary>
-			PIT_mode_control_port = 0x0043, // read/write
+			PIT_mode_control_port				= 0x0043, // read/write
 			#endregion
-			PIT_counter_3 = 0x0044, // read/write
-			PIT_counter_3_control_port = 0x0047, // read/write
+			PIT_counter_3						= 0x0044, // read/write
+			PIT_counter_3_control_port			= 0x0047, // read/write
 			#endregion
 
 			#region 0060-006F - Keyboard Controller
@@ -129,7 +129,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			///		Note: must issue command D4h to port 64h first to access
 			///		mouse functions
 			/// </summary>
-			KB_data_port = 0x0060,
+			KB_data_port						= 0x0060,
 			#endregion
 
 			//0060 r KeyBoard or KB controller data output buffer (via PPI on XT)
@@ -138,7 +138,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//0061 w PPI Programmable Peripheral Interface 8255 (XT only)
 			//0062 r/w PPI (XT only)
 			//0063 r/w PPI (XT only) command mode register (read dipswitches)
-
+			
 			#region 0x0064 KB_controller_read_status (read)
 			///<summary>
 			///KB controller read status (ISA, EISA)
@@ -182,7 +182,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			///		<item>bit 2 system flag status: 0=power up or reset 1=soft</item>
 			/// </list>
 			///</summary>
-			KB_controller_read_status = 0x0064,
+			KB_controller_read_status			= 0x0064,
 			#endregion
 
 			#region 0x0064 KB_controller_commands (write)
@@ -250,22 +250,22 @@ namespace SharpOS.Kernel.ADC.X86 {
 			///						55 in the output buffer.</item>
 			/// </list>
 			/// </summary>
-			KB_controller_commands = 0x0064,
+			KB_controller_commands				= 0x0064,
 			#endregion
 
 			#endregion
 
 			#region 0070-007F - CMOS RAM / Real Time Clock
-			RTC_CommandPort = 0x0070,
-			RTC_DataPort = 0x0071,
+			RTC_CommandPort						= 0x0070,
+			RTC_DataPort						= 0x0071,
 			#endregion
 
 			//0080-008F - DMA page registers
-			#region 00A0-00AF - Second Programmable Interrupt Controller (PIC) Controller
-			Slave_PIC_CommandPort = 0x00A0,
-			Slave_PIC_DataPort = 0x00A1,
+			#region 00A0-00AF - Secondary Programmable Interrupt Controller (PIC) Controller
+			Slave_PIC_CommandPort				= 0x00A0,
+			Slave_PIC_DataPort					= 0x00A1,
 			#endregion
-			//00C0-00DF - Second Direct Memory Access (DMA) Controller
+			//00C0-00DF - Secondary Direct Memory Access (DMA) Controller
 			//00F0-00FF - coprocessor (8087..80387)
 			//0130-0133 - Adaptec 154xB/154xC SCSI adapter
 			//0134-0137 - Adaptec 154xB/154xC SCSI adapter.
@@ -289,7 +289,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//0330-0331 - MIDI interface
 			//0330-0333 - Adaptec 154xB/154xC SCSI adapter
 			//0334-0337 - Adaptec 154xB/154xC SCSI adapter
-			//0370-0377 - Second Floppy Disk Controller
+			//0370-0377 - Secondary Floppy Disk Controller
 			//0378-037A - parallel printer port, same as 0278 and 03BC
 			//0388-0389 - Sound Blaster / Adlib port
 			//0388-0389 - Soundblaster PRO FM-Chip
@@ -305,7 +305,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			///03B4 w MDA CRT index register (EGA/VGA)
 			///		selects which register (0-11h) is to be accessed through 3B5
 			///</summary>
-			MDA_CRT_index_register = 0x03B4,
+			MDA_CRT_index_register				= 0x03B4,
 
 			///<summary>
 			///03B5 r/w MDA CRT data register (EGA/VGA)
@@ -331,7 +331,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			///		<item>11 light pen low</item>
 			/// </list>
 			///</summary>
-			MDA_CRT_data_register = 0x03B5,
+			MDA_CRT_data_register				= 0x03B5,
 
 			//03B6 same as 03B4
 			//03B7 same as 03B5
@@ -349,10 +349,10 @@ namespace SharpOS.Kernel.ADC.X86 {
 			///		<item>bit 0 high resolution mode</item>
 			/// </list>
 			///</summary>
-			MDA_mode_control_register = 0x03B8,
-
+			MDA_mode_control_register			= 0x03B8,
+			
 			//03B9 reserved for color select register on color adapter
-
+			
 			///<summary>
 			///03BA r CRT status register EGA/VGA: input status 1 register
 			/// <list>
@@ -366,20 +366,20 @@ namespace SharpOS.Kernel.ADC.X86 {
 			///		<item>bit 0 horizontal drive</item>
 			/// </list>
 			///</summary>
-			MDA_CRT_status_register = 0x03B8,
-
+			MDA_CRT_status_register				= 0x03B8,
+			
 			//03BA w EGA/VGA feature control register
 			//03BB reserved for light pen strobe reset
 			#endregion
 
 			//03BC-03BF - parallel printer port, same as 0278 and 0378
-			#region 03C0-03CF - First Enhanced Graphics Adapter
+			#region 03C0-03CF - Primary Enhanced Graphics Adapter
 			//03C0	(r)/w	EGA VGA ATC index/data register
 			//03C1	r		VGA other attribute register
 			//03C2	r		EGA VGA input status 0 register
 			//		w		VGA miscellaneous output register
-			EGA_input_status_0_register = 0x03C2,
-			VGA_input_status_0_register = 0x03C2,
+			EGA_input_status_0_register			= 0x03C2,
+			VGA_input_status_0_register			= 0x03C2,
 			//03C3	r/w		VGA video subsystem enable (see also port 46E8h)
 			//				for IBM, motherboard VGA only
 			//03C4	w		EGA TS index register
@@ -395,14 +395,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//		r		VGA feature control register
 			//03CC	w		EGA graphics 1 position register
 			//		r		VGA miscellaneous output register
-			EGA_graphics_1_position_register = 0x03CC,
-			VGA_miscellaneous_output_register = 0x03CC,
+			EGA_graphics_1_position_register	= 0x03CC,
+			VGA_miscellaneous_output_register	= 0x03CC,
 			//03CE	w		EGA GDC index register
 			//		r/w		VGA graphics address register
 			//03CF	w		EGA GDC data register
 			//		r/w		VGA other graphics register
 			#endregion
-
+			
 			#region 03D0-03DF - CGA (Color Graphics Adapter)
 			//03D0 same as 03D4
 			//03D1 same as 03D5
@@ -410,11 +410,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//03D3 same as 03D5
 			//03D4 w CRT (6845) index register (EGA/VGA)
 			//	selects which register (0-11h) is to be accessed through 3B5
-			CGA_CRT_index_register = 0x03D4,
+			CGA_CRT_index_register				= 0x03D4,
 			//03D5 w CRT (6845) data register (EGA/VGA)
 			//	selected by port 3B4. registers C-F may be read
 			//	(for registers see at 3B5)
-			CGA_CRT_data_register = 0x03D5,
+			CGA_CRT_data_register				= 0x03D5,
 			//03D6 same as 03D4
 			//03D7 same as 03D5
 			//03D8 r/w CGA mode control register (except PCjr)
@@ -427,7 +427,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//				= 1 320*200 graphics mode
 			//		bit 0	= 0 40*25 text mode
 			//				= 1 80*25 text mode
-			CGA_CRT_mode_control_register = 0x03D8,
+			CGA_CRT_mode_control_register		= 0x03D8,
 			//03D9 r/w CGA palette register
 			//		bit 7-6 not used
 			//		bit 5	= 0 active color set: red, green brown
@@ -441,7 +441,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//				320*200, green foreground in 640*200
 			//		bit 0	blue border in 40*25, blue background in 320*200,
 			//		blue foreground in 640*200
-			CGA_CRT_palette_register = 0x03D9,
+			CGA_CRT_palette_register			= 0x03D9,
 			//03DA r CGA status register EGA/VGA: input status 1 register
 			//		bit 7-4 not used
 			//		bit 3	= 1 in vertical retrace
@@ -449,47 +449,151 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//		bit 1	= 1 positive edge from light pen has set trigger
 			//		bit 0	= 0 do not use memory
 			//				= 1 memory access without interfering with display
-			CGA_CRT_status_register = 0x03DA,
+			CGA_CRT_status_register				= 0x03DA,
 			//03DA w EGA/VGA feature control register
-			CGA_feature_control_register = 0x03DA,
+			CGA_feature_control_register		= 0x03DA,
 			//03DB w clear light pen latch
 			//03DC r/w preset light pen latch
 			//03DF CRT/CPU page register (PCjr only)
 			#endregion
 
-			#region 03E8-03EF - serial port, same as 02E8, 02F8 and 03F8
-			/// <summary>
-			/// Port 0x03F8
-			/// </summary>
-			UART_Transmit_Receive_Buffer = 0x03F8,
-			/// <summary>
-			/// Port 0x03F9
-			/// </summary>
-			UART_Interrupt_Enable_Register = 0x03F9,
-			/// <summary>
-			/// Port 0x03FA
-			/// </summary>
-			UART_Interrupt_Identification_Register = 0x03FA,
-			/// <summary>
-			/// Port 0x03FB
-			/// </summary>
-			UART_Line_Control_Register = 0x03FB,
-			/// <summary>
-			/// Port 0x03FC
-			/// </summary>
-			UART_Modem_Control_Register = 0x03FC,
-			/// <summary>
-			/// Port 0x03FD
-			/// </summary>
-			UART_Line_Status_Register = 0x03FD,
-			/// <summary>
-			/// Port 0x03FE
-			/// </summary>
-			UART_Modem_Status_Register = 0x03FE
-			#endregion
+            #region 03E8-03EF - serial port, same as 02E8, 02F8 and 03F8
+            /// <summary>
+            /// Port 0x03F8
+            /// </summary>
+            UART_Transmit_Receive_Buffer = 0x03F8,
+            /// <summary>
+            /// Port 0x03F9
+            /// </summary>
+            UART_Interrupt_Enable_Register = 0x03F9,
+            /// <summary>
+            /// Port 0x03FA
+            /// </summary>
+            UART_Interrupt_Identification_Register = 0x03FA,
+            /// <summary>
+            /// Port 0x03FB
+            /// </summary>
+            UART_Line_Control_Register = 0x03FB,
+            /// <summary>
+            /// Port 0x03FC
+            /// </summary>
+            UART_Modem_Control_Register = 0x03FC,
+            /// <summary>
+            /// Port 0x03FD
+            /// </summary>
+            UART_Line_Status_Register = 0x03FD,
+            /// <summary>
+            /// Port 0x03FE
+            /// </summary>
+            UART_Modem_Status_Register = 0x03FE,
+            #endregion
 
-			//03F0-03F7 - First Floppy Disk Controller
-			//03F8-03FF - serial port (8250,8251,16450,16550)
+			#region 03F0-03F7 - Primary Floppy Disk Controller (PFC)
+			PFC_status_A						= 0x03F0,	// r	diskette controller status A (PS/2 model 30)
+			//				 			 			 			 		bit 7	 interrupt pending
+			//				 			 			 			 		bit 6	 -DRV2	second drive installed
+			//				 			 			 			 		bit 5	 step
+			//				 			 			 			 		bit 4	 -track 0
+			//				 			 			 			 		bit 3	 head 1 select
+			//				 			 			 			 		bit 2	 -index
+			//				 			 			 			 		bit 1	 -write protect
+			//				 			 			 			 		bit 0	 +direction
+			PFC_status_B						= 0x03F1,	// r	diskette controller status B (PS/2)
+			//															bit 7-6 =1 reserved
+			//															bit 5 drive select (0=A:, 1=B:)
+			//															bit 4 write data
+			//															bit 3 read data
+			//															bit 2 write enable
+			//															bit 1 motor enable 1
+			//															bit 0 motor enable 0
+			PFC_control_port					= 0x03F2,	// w	diskette controller DOR (Digital Output Register)
+			//															bit 7-6 reserved on PS/2
+			//															bit 7 = 1 drive 3 motor enable
+			//															bit 6 = 1 drive 2 motor enable
+			//															bit 5 = 1 drive 1 motor enable
+			//															bit 4 = 1 drive 0 motor enable
+			//															bit 3 = 1 diskette DMA enable (reserved PS/2)
+			//															bit 2 = 1 FDC enable (controller reset)
+			//																  = 0 hold FDC at reset
+			//															bit 1-0 drive select (0=A 1=B ..)
+			PFC_tape_drive						= 0x03F3,
+			//															bit 7-2 reserved, tri-state
+			//															bit 1-0 tape select
+			//																= 00 none, drive 0 cannot be a tape drive.
+			//																= 01 drive1
+			//																= 10 drive2
+			//																= 11 drive3
+			PFC_status_register					= 0x03F4,	// r	diskette controller main status register
+			//															bit 7 = 1 RQM data register is ready
+			//																	0 no access is permitted
+			//															bit 6 = 1 transfer is from controller to system
+			//																	0 transfer is from system to controller
+			//															bit 5 = 1 non-DMA mode
+			//															bit 4 = 1 diskette controller is busy
+			//															bit 3 = 1 drive 3 busy (reserved on PS/2)
+			//															bit 2 = 1 drive 2 busy (reserved on PS/2)
+			//															bit 1 = 1 drive 1 busy (= drive is in seek mode)
+			//															bit 0 = 1 drive 0 busy (= drive is in seek mode)
+			//															Note:	in non-DMA mode, all data transfers occur through
+			//																	port 03F5h and the status registers (bit 5 here
+			//																	indicates data read/write rather than than
+			//																	command/status read/write)
+			PFC_data_rate_Select_register		= 0x03F4,	// w	diskette controller data rate select register
+			//															bit 7 = 1 S/W reset
+			//															bit 6 = 1 power down
+			//															bit 5 = 0 reserved
+			//															bit 4-2 write precompensation, 000 default
+			//															bit 1-0 data rate select
+			//																= 00 500 Kb/s (MFM)
+			//																= 01 300 Kb/s (MFM)
+			//																= 10 250 Kb/s (MFM)
+			//																= 11 1 Mb/s (MFM)
+			PFC_data_FIFO						= 0x03F5,	// r	diskette command/data register 0 (ST0)
+			//															bit 7-6 last command status
+			//																= 00 command terminated successfully
+			//																= 01 command terminated abnormally
+			//																= 10 invalid command
+			//																= 11 terminated abnormally by change in ready signal
+			//															bit 5 = 1 seek completed
+			//															bit 4 = 1 equipment check occurred after error
+			//															bit 3 = 1 not ready
+			//															bit 2 = 1 head number at interrupt
+			//															bit 1-0 = 1 unit select (0=A 1=B .. )
+			//																(on PS/2 01=A 10=B)
+			//
+			//														status register 1 (ST1)
+			//															bit 7 end of cylinder; sector# greater then sectors/track
+			//															bit 6 = 0
+			//															bit 5 = 1 CRC error in ID or data field
+			//															bit 4 = 1 overrun
+			//															bit 3 = 0
+			//															bit 2 = 1 sector ID not found
+			//															bit 1 = 1 write protect detected during write
+			//															bit 0 = 1 ID address mark not found
+			//
+			//														status register 2 (ST2)
+			//															bit 7 = 0
+			//															bit 6 = 1 deleted Data Address Mark detected
+			//															bit 5 = 1 CRC error in data
+			//															bit 4 = 1 wrong cylinder detected
+			//															bit 3 = 1 scan command equal condition satisfied
+			//															bit 2 = 1 scan command failed, sector not found
+			//															bit 1 = 1 bad cylinder, ID not found
+			//															bit 0 = 1 missing Data Address Mark
+			//
+			//														status register 3 (ST3)
+			//															bit 7 fault status signal
+			//															bit 6 write protect status
+			//															bit 5 ready status
+			//															bit 4 track zero status
+			//															bit 3 two sided status signal
+			//															bit 2 side select (head select)
+			//															bit 1-0 unit select (0=A 1=B .. )
+			PFC_controller_data					= 0x03F6,	// w	diskette command register..
+			PFC_digital_input					= 0x03F7,	// read-only
+			PFC_configuration_control_register	= 0x03F7	// write-only
+			#endregion
+            //03F8-03FF - serial port (8250,8251,16450,16550)
 		};
 		#endregion
 
