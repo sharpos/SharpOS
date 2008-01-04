@@ -16,7 +16,6 @@ using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.ADC
 {
-	// FIXME: ...Causes lots of "not implemented" errors in the AOT
 	public static unsafe class Interlocked {
 		#region Add
 		[AOTAttr.ADCStub]

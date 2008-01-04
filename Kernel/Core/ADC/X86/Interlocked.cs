@@ -13,7 +13,6 @@ using System;
 
 namespace SharpOS.Kernel.ADC.X86
 {
-	// FIXME: ...Causes lots of "not implemented" errors in the AOT
 	public static class Interlocked	{
 		
 		#region Add
@@ -21,7 +20,7 @@ namespace SharpOS.Kernel.ADC.X86
 		{
 			Asm.MOV(R32.EDX, &value);
 			Asm.LOCK();
-			Asm.ADD(location, R32.EDX);
+			Asm.ADD(&location, R32.EDX);
 			return *location;
 		}
 		#endregion
@@ -29,12 +28,12 @@ namespace SharpOS.Kernel.ADC.X86
 		#region CompareExchange
 		public static unsafe uint CompareExchange(uint* location, uint value, uint comparand)
 		{
-			Asm.MOV(R32.ECX, location);
+			Asm.MOV(R32.ECX, &location);
 			Asm.MOV(R32.EDX, &value);
 			Asm.MOV(R32.EAX, &comparand);
 			Asm.LOCK();
 			Asm.CMPXCHG(R32.ECX, R32.EDX);
-			Asm.MOV(location, R32.EAX);
+			Asm.MOV(&location, R32.EAX);
 			return *location;
 		}
 		#endregion
@@ -43,7 +42,7 @@ namespace SharpOS.Kernel.ADC.X86
 		public static unsafe uint Decrement(uint* location)
 		{
 			Asm.LOCK();
-			Asm.DEC(location);
+			Asm.DEC(&location);
 			return *location;
 		}
 		#endregion
@@ -51,11 +50,11 @@ namespace SharpOS.Kernel.ADC.X86
 		#region Exchange
 		public static unsafe uint Exchange(uint* location, uint value)
 		{
-			Asm.MOV(R32.ECX, location);
+			Asm.MOV(R32.ECX, &location);
 			Asm.MOV(R32.EDX, &value);
 			Asm.LOCK();
 			Asm.XCHG(R32.ECX, R32.EDX);
-			Asm.MOV(location, R32.EDX); //? a guess
+			Asm.MOV(&location, R32.EDX);
 			return *location;
 		}
 		#endregion
@@ -64,7 +63,7 @@ namespace SharpOS.Kernel.ADC.X86
 		public static unsafe uint Increment(uint* location)
 		{
 			Asm.LOCK();
-			Asm.INC(location);
+			Asm.INC(&location);
 			return *location;
 		}
 		#endregion
