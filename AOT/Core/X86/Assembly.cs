@@ -165,11 +165,13 @@ namespace SharpOS.AOT.X86 {
 					// The offset to the code that the label points to in the binary
 					this.DATA ((uint) 0);
 
+#if PE
 					// The section
 					if (this.symbols [i] is COFF.Static)
 						this.DATA (PE_DATA_SECTION);
 					else
 						this.DATA (PE_CODE_SECTION);
+#endif
 
 					// The type
 					if (this.symbols [i] is COFF.Function)
