@@ -16,13 +16,13 @@ using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.ADC
 {
+	// FIXME: ...Causes lots of "not implemented" errors in the AOT
 	public static unsafe class Interlocked {
-		/* .. causes error in AOT ..
+		/*
 		#region Add
 		[AOTAttr.ADCStub]
 		public static unsafe uint Add(uint* location, uint value) { throw new Exception("not implemented"); }
 		#endregion
-		*/
 
 		#region CompareExchange
 		[AOTAttr.ADCStub]
@@ -43,5 +43,6 @@ namespace SharpOS.Kernel.ADC
 		[AOTAttr.ADCStub]
 		public static unsafe uint Increment(ref uint location) { throw new Exception("not implemented"); }
 		#endregion
+		*/
 	}
 }

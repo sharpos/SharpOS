@@ -13,8 +13,9 @@ using System;
 
 namespace SharpOS.Kernel.ADC.X86
 {
+	// FIXME: ...Causes lots of "not implemented" errors in the AOT
 	public static class Interlocked	{
-		/* .. causes error in AOT ..
+		/*
 		#region Add
 		public static unsafe uint Add(uint* location, uint value)
 		{
@@ -23,7 +24,6 @@ namespace SharpOS.Kernel.ADC.X86
 			return *location;
 		}
 		#endregion
-		*/
 		  
 		#region CompareExchange
 		public static unsafe uint CompareExchange(uint* location, uint value, uint comparand)
@@ -67,5 +67,6 @@ namespace SharpOS.Kernel.ADC.X86
 			return *location;
 		}
 		#endregion
+		*/
 	}
 }
