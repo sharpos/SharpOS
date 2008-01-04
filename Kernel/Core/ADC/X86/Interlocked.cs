@@ -15,12 +15,13 @@ namespace SharpOS.Kernel.ADC.X86
 {
 	// FIXME: ...Causes lots of "not implemented" errors in the AOT
 	public static class Interlocked	{
-		/*
+		
 		#region Add
 		public static unsafe uint Add(uint* location, uint value)
 		{
+			Asm.MOV(R32.EDX, &value);
 			Asm.LOCK();
-			Asm.ADD(location, value);
+			Asm.ADD(location, R32.EDX);
 			return *location;
 		}
 		#endregion
@@ -46,7 +47,7 @@ namespace SharpOS.Kernel.ADC.X86
 			return *location;
 		}
 		#endregion
-
+		
 		#region Exchange
 		public static unsafe uint Exchange(uint* location, uint value)
 		{
@@ -58,7 +59,7 @@ namespace SharpOS.Kernel.ADC.X86
 			return *location;
 		}
 		#endregion
-
+		
 		#region Increment
 		public static unsafe uint Increment(uint* location)
 		{
@@ -67,6 +68,5 @@ namespace SharpOS.Kernel.ADC.X86
 			return *location;
 		}
 		#endregion
-		*/
 	}
 }

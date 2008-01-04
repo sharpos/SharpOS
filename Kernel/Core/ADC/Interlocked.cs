@@ -18,31 +18,29 @@ namespace SharpOS.Kernel.ADC
 {
 	// FIXME: ...Causes lots of "not implemented" errors in the AOT
 	public static unsafe class Interlocked {
-		/*
 		#region Add
 		[AOTAttr.ADCStub]
-		public static unsafe uint Add(uint* location, uint value) { throw new Exception("not implemented"); }
+		public static unsafe uint Add(uint* location, uint value) { return 0; }
 		#endregion
-
+		
 		#region CompareExchange
 		[AOTAttr.ADCStub]
-		public static unsafe uint CompareExchange(uint* location, uint value, uint comparand) { throw new Exception("not implemented"); }
+		public static unsafe uint CompareExchange(uint* location, uint value, uint comparand) { return 0; }
 		#endregion
-
+	
 		#region Decrement
 		[AOTAttr.ADCStub]
-		public static unsafe uint Decrement(uint* location) { throw new Exception("not implemented"); }
+		public static unsafe uint Decrement(uint* location) { return 0; }
 		#endregion
 
 		#region Exchange
 		[AOTAttr.ADCStub]
-		public static unsafe uint Exchange(uint* location, uint value) { throw new Exception("not implemented"); }
+		public static unsafe uint Exchange(uint* location, uint value) { return 0; }
 		#endregion
 
 		#region Increment
 		[AOTAttr.ADCStub]
-		public static unsafe uint Increment(ref uint location) { throw new Exception("not implemented"); }
+		public static unsafe uint Increment(ref uint location) { return 0; }
 		#endregion
-		*/
 	}
 }
