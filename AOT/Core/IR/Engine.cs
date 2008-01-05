@@ -169,6 +169,16 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		Class vtableClass = null;
+
+		public Class VTableClass
+		{
+			get
+			{
+				return vtableClass;
+			}
+		}
+
 		/// <summary>
 		/// Changes the Status property of the Engine.
 		/// </summary>
@@ -329,6 +339,7 @@ namespace SharpOS.AOT.IR {
 
 								if (def.Name != call.Name)
 									continue;
+
 								if (def.ReturnType.ReturnType != call.ReturnType.ReturnType)
 									continue;
 
@@ -423,6 +434,47 @@ namespace SharpOS.AOT.IR {
 			return false;
 		}
 
+		internal int GetBaseTypeSize (TypeDefinition type)
+		{
+			int result = 0;
+
+			if (type != null) {
+				result = this.GetBaseTypeSize (type.BaseType as TypeDefinition);
+
+				foreach (FieldReference field in type.Fields) {
+					if ((field as FieldDefinition).IsStatic)
+						continue;
+
+					result += this.GetFieldSize (field.FieldType.FullName);
+				}
+			}
+
+			return result;
+		}
+
+		// TODO refactor this one
+		internal int GetFieldOffset (IR.Operands.FieldOperand field)
+		{
+			string objectName = Class.GetTypeFullName (field.Field.Type.DeclaringType);
+			string fieldName = field.Field.Type.Name;
+
+			if (this.classes.ContainsKey (objectName))
+				return this.classes [objectName].GetFieldOffset (fieldName);
+
+			throw new EngineException ("'" + field.Field.Type.ToString () + "' has not been found.");
+		}
+
+		public Field GetField (FieldReference field)
+		{
+			string typeFullName = Class.GetTypeFullName (field);
+
+			if (this.classes.ContainsKey (typeFullName))
+				return this.classes [typeFullName].GetFieldByName (field.Name);
+
+			throw new EngineException (string.Format ("Field '{0}' not found.", field.ToString ()));
+
+		}
+
 		/// <summary>
 		/// Runs the AOT compiler engine.
 		/// </summary>
@@ -456,6 +508,22 @@ namespace SharpOS.AOT.IR {
 			this.asm = asm;
 			this.resources = this.options.Resources;
 
+			string aotCorePath = System.Reflection.MethodBase.GetCurrentMethod ().Module.Assembly.Location;
+			bool found = false;
+
+			foreach (string assemblyFile in options.Assemblies) {
+				if (assemblyFile == aotCorePath) {
+					found = true;
+					break;
+				}
+			}
+			
+			if (!found) {
+				List<string> array = new List<string> (options.Assemblies);
+				array.Add (aotCorePath);
+				options.Assemblies = array.ToArray ();
+			}
+
 			foreach (string assemblyFile in options.Assemblies) {
 				bool skip = false;
 
@@ -470,130 +538,14 @@ namespace SharpOS.AOT.IR {
 
 				LoadResources (library);
 
-				// Check for ADCLayerAttribute
-
-				Message (2, "Aggregating ADC layers...");
-				SetStatus (Status.ADCLayerSelection);
-
-				foreach (CustomAttribute ca in library.CustomAttributes) {
-
-					if (ca.Constructor.DeclaringType.FullName ==
-					    typeof (AOTAttr.ADCLayerAttribute).FullName) {
-						if (ca.ConstructorParameters.Count != 2)
-							throw new EngineException (string.Format (
-								"[ADCLayer] in assembly `{0}': must have 2 parameters",
-								library.Name));
-
-						string adcCPU = ca.ConstructorParameters [0] as string;
-						string adcNamespace = ca.ConstructorParameters [1] as string;
-
-						if (adcCPU == null || adcNamespace == null)
-							throw new EngineException (string.Format (
-								"[ADCLayer] in assembly `{0}': both parameters must be strings",
-								library.Name));
-
-						// check for any conflicts with previously found layers
-
-						foreach (ADCLayer layer in adcLayers) {
-							if (layer.CPU == adcCPU)
-								throw new EngineException (string.Format (
-									"Multiple ADC layers claim processor type `{0}'",
-									adcCPU));
-						}
-
-						ADCLayer newLayer = new ADCLayer (adcCPU, adcNamespace);
-
-						if (options.CPU == adcCPU)
-							adcLayer = newLayer;
-
-						Message (2, "Assembly `{0}' implements ADC for CPU `{1}' in namespace `{2}'",
-							 library.Name,
-							 adcCPU,
-							 adcNamespace);
-
-						adcLayers.Add (newLayer);
-					} else if (ca.Constructor.DeclaringType.FullName ==
-						   typeof (AOTAttr.ADCInterfaceAttribute).FullName) {
-
-						if (ca.ConstructorParameters.Count != 1)
-							throw new EngineException (string.Format (
-								"[ADCLayer] in assembly `{0}': must have 1 parameters",
-								library.Name));
-
-						string iface = ca.ConstructorParameters [0] as string;
-						adcInterfaces.Add (iface);
-
-						Message (2, "Assembly `{0}' contains an ADC interface in namespace `{1}'",
-							library.Name,
-							iface);
-					}
-				}
+				AggregateADCLayers (library);
 
 				assemblies.Add (library);
 
-				Dump.Element (library, assemblyFile);
-				Message (1, "Generating IR for assembly types...");
-				SetStatus (Status.IRGeneration);
-
-				// We first add the data (Classes and Methods)
-				foreach (TypeDefinition type in library.MainModule.Types) {
-					bool ignore = false;
-					string ignoreReason = null;
-
-					if (type.Name.Equals ("<Module>"))
-						continue;
-
-					foreach (ADCLayer layer in this.adcLayers) {
-						if (layer == this.adcLayer)
-							continue;
-
-						if (type.Namespace.StartsWith (layer.Namespace)) {
-							Message (2, "Ignoring unused ADC type `{0}' in layer `{1}'",
-								 type.FullName, layer.CPU);
-
-							ignore = true;
-							ignoreReason = "Unused ADC implementation";
-							break;
-						}
-					}
-
-					if (skip) {
-						Dump.IgnoreMember (type.Name, ignoreReason);
-
-						continue;
-					}
-
-					Dump.Element (type);
-
-					Class _class = new Class (this, type);
-
-					if (this.classes.ContainsKey (_class.TypeFullName))
-						throw new NotImplementedEngineException ();
-					else
-						this.classes[_class.TypeFullName] = _class;
-
-					foreach (MethodDefinition entry in type.Constructors) {
-						Method method = new Method (this, entry);
-
-						_class.Add (method);
-					}
-
-					foreach (MethodDefinition entry in type.Methods) {
-						if (entry.ImplAttributes != MethodImplAttributes.Managed) {
-							Dump.IgnoreMember (entry.Name,
-									"Method is unmanaged");
-
-							continue;
-						}
-
-						Method method = new Method (this, entry);
-
-						_class.Add (method);
-					}
-				}
-
-				Dump.PopElement ();
+				GenerateIR (assemblyFile, skip, library);
 			}
+
+			PostIRProcessing ();
 
 			if (adcLayer != null)
 				Message (1, "Selected ADC layer `{0}' for compilation",
@@ -602,26 +554,205 @@ namespace SharpOS.AOT.IR {
 				Message (1, "No available ADC layer matches CPU type.");
 
 
-			// Statistics
-			int classes = 0;
-			int methods = 0;
-			int ilInstructions = 0;
-			foreach (Class _class in this.classes.Values) {
-				classes++;
+			DumpStatistics ();
 
-				foreach (Method _method in _class) {
-					methods++;
+			ProcessIRMethods ();
 
-					if (_method.MethodDefinition.Body != null)
-						ilInstructions += _method.MethodDefinition.Body.Instructions.Count;
+			Message (1, "Encoding output for `{0}' to `{1}'...", options.CPU,
+					options.OutputFilename);
+			SetStatus (Status.Encoding);
+
+			asm.Encode (this, options.OutputFilename);
+
+			Dump.PopElement ();
+			SetStatus (Status.Success);
+
+			return;
+		}
+
+		/// <summary>
+		/// Generates the IR.
+		/// </summary>
+		/// <param name="assemblyFile">The assembly file.</param>
+		/// <param name="skip">if set to <c>true</c> [skip].</param>
+		/// <param name="library">The library.</param>
+		private void GenerateIR (string assemblyFile, bool skip, AssemblyDefinition library)
+		{
+			Dump.Element (library, assemblyFile);
+			Message (1, "Generating IR for assembly types...");
+			SetStatus (Status.IRGeneration);
+
+			bool isAOTCore = library.MainModule.Name == System.Reflection.MethodBase.GetCurrentMethod ().Module.ToString ();
+
+			// We first add the data (Classes and Methods)
+			foreach (TypeDefinition type in library.MainModule.Types) {
+				if (isAOTCore) {
+					if (!this.asm.IsInstruction (type.FullName)
+							&& !this.asm.IsRegister(type.FullName)
+							&& !this.asm.IsMemoryAddress (type.FullName))
+						continue;
+				}
+
+				bool ignore = false;
+				string ignoreReason = null;
+
+				if (type.Name.Equals ("<Module>"))
+					continue;
+
+				foreach (ADCLayer layer in this.adcLayers) {
+					if (layer == this.adcLayer)
+						continue;
+
+					if (type.Namespace.StartsWith (layer.Namespace)) {
+						Message (2, "Ignoring unused ADC type `{0}' in layer `{1}'",
+							 type.FullName, layer.CPU);
+
+						ignore = true;
+						ignoreReason = "Unused ADC implementation";
+						break;
+					}
+				}
+
+				if (skip) {
+					Dump.IgnoreMember (type.Name, ignoreReason);
+
+					continue;
+				}
+
+				Dump.Element (type);
+
+				Class _class = new Class (this, type);
+
+				if (this.classes.ContainsKey (_class.TypeFullName))
+					throw new NotImplementedEngineException ();
+				
+				this.classes [_class.TypeFullName] = _class;
+
+				// We don't need the methods of the registers
+				if (isAOTCore && !this.asm.IsInstruction (type.FullName))
+					continue;
+
+				foreach (MethodDefinition entry in type.Constructors) {
+					Method method = new Method (this, entry);
+
+					_class.Add (method);
+				}
+
+				foreach (MethodDefinition entry in type.Methods) {
+					if (entry.ImplAttributes != MethodImplAttributes.Managed) {
+						Dump.IgnoreMember (entry.Name,
+								"Method is unmanaged");
+
+						continue;
+					}
+
+					Method method = new Method (this, entry);
+
+					_class.Add (method);
 				}
 			}
 
-			Message (1, "Classes: `{0}'", classes);
-			Message (1, "Methods: `{0}'", methods);
-			Message (1, "IL Instructions: `{0}'", ilInstructions);
+			Dump.PopElement ();
+		}
 
+		/// <summary>
+		/// Posts the IR processing.
+		/// </summary>
+		private void PostIRProcessing ()
+		{
+			// Post processing
+			foreach (Class _class in this.classes.Values) {
+				_class.Setup ();
 
+				foreach (CustomAttribute customAttribute in _class.ClassDefinition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName !=
+							typeof (SharpOS.AOT.Attributes.VTableAttribute).FullName)
+						continue;
+
+					if (this.vtableClass != null)
+						throw new EngineException ("More than one class was tagged as VTable Class.");
+
+					this.vtableClass = _class;
+				}
+			}
+
+			if (this.vtableClass == null)
+				throw new EngineException ("No VTable Class defined.");
+		}
+
+		/// <summary>
+		/// Aggregates the ADC layers.
+		/// </summary>
+		/// <param name="library">The library.</param>
+		private void AggregateADCLayers (AssemblyDefinition library)
+		{
+			// In the AOT.Core itself there are no attributes
+			if (library.MainModule.Name == System.Reflection.MethodBase.GetCurrentMethod ().Module.ToString ())
+				return;
+
+			// Check for ADCLayerAttribute
+			Message (2, "Aggregating ADC layers...");
+			SetStatus (Status.ADCLayerSelection);
+
+			foreach (CustomAttribute ca in library.CustomAttributes) {
+
+				if (ca.Constructor.DeclaringType.FullName ==
+				    typeof (AOTAttr.ADCLayerAttribute).FullName) {
+					if (ca.ConstructorParameters.Count != 2)
+						throw new EngineException (string.Format (
+							"[ADCLayer] in assembly `{0}': must have 2 parameters",
+							library.Name));
+
+					string adcCPU = ca.ConstructorParameters [0] as string;
+					string adcNamespace = ca.ConstructorParameters [1] as string;
+
+					if (adcCPU == null || adcNamespace == null)
+						throw new EngineException (string.Format (
+							"[ADCLayer] in assembly `{0}': both parameters must be strings",
+							library.Name));
+
+					// check for any conflicts with previously found layers
+					foreach (ADCLayer layer in adcLayers) {
+						if (layer.CPU == adcCPU)
+							throw new EngineException (string.Format (
+								"Multiple ADC layers claim processor type `{0}'",
+								adcCPU));
+					}
+
+					ADCLayer newLayer = new ADCLayer (adcCPU, adcNamespace);
+
+					if (options.CPU == adcCPU)
+						adcLayer = newLayer;
+
+					Message (2, "Assembly `{0}' implements ADC for CPU `{1}' in namespace `{2}'",
+						 library.Name,
+						 adcCPU,
+						 adcNamespace);
+
+					adcLayers.Add (newLayer);
+				} else if (ca.Constructor.DeclaringType.FullName ==
+					   typeof (AOTAttr.ADCInterfaceAttribute).FullName) {
+
+					if (ca.ConstructorParameters.Count != 1)
+						throw new EngineException (string.Format (
+							"[ADCLayer] in assembly `{0}': must have 1 parameters",
+							library.Name));
+
+					string iface = ca.ConstructorParameters [0] as string;
+					adcInterfaces.Add (iface);
+
+					Message (2, "Assembly `{0}' contains an ADC interface in namespace `{1}'",
+						library.Name,
+						iface);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Processes the IR methods.
+		/// </summary>
+		private void ProcessIRMethods ()
+		{
 			Message (1, "Processing IR methods...");
 			SetStatus (Status.IRProcessing);
 
@@ -689,17 +820,31 @@ namespace SharpOS.AOT.IR {
 
 			else
 				throw new EngineException ("No entry point defined.");
+		}
 
-			Message (1, "Encoding output for `{0}' to `{1}'...", options.CPU,
-					options.OutputFilename);
-			SetStatus (Status.Encoding);
+		/// <summary>
+		/// Dumps the statistics.
+		/// </summary>
+		private void DumpStatistics ()
+		{
+			// Statistics
+			int classes = 0;
+			int methods = 0;
+			int ilInstructions = 0;
+			foreach (Class _class in this.classes.Values) {
+				classes++;
 
-			asm.Encode (this, options.OutputFilename);
+				foreach (Method _method in _class) {
+					methods++;
 
-			Dump.PopElement ();
-			SetStatus (Status.Success);
+					if (_method.MethodDefinition.Body != null)
+						ilInstructions += _method.MethodDefinition.Body.Instructions.Count;
+				}
+			}
 
-			return;
+			Message (1, "Classes: `{0}'", classes);
+			Message (1, "Methods: `{0}'", methods);
+			Message (1, "IL Instructions: `{0}'", ilInstructions);
 		}
 
 		/// <summary>
@@ -813,7 +958,7 @@ namespace SharpOS.AOT.IR {
 
 				case InternalType.ValueType:
 					if (this.classes.ContainsKey (type.ToString ()))
-						result = this.classes [type.ToString ()].GetSize ();
+						result = this.classes [type.ToString ()].Size;
 
 					break;
 			}
@@ -931,7 +1076,7 @@ namespace SharpOS.AOT.IR {
 					return this.classes [objectName].GetFieldType (fieldName);
 
 			} else if (this.classes.ContainsKey (type.ToString ()))
-				return this.classes [type.ToString ()].GetInternalType ();
+				return this.classes [type.ToString ()].InternalType;
 
 			Console.Error.WriteLine ("WARNING: '" + type + "' not supported.");
 

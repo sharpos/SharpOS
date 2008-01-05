@@ -72,8 +72,8 @@ namespace SharpOS.AOT.X86 {
 
 		public static string GetName (object value)
 		{
-			if (value is IR.Operands.Field)
-				return (value as IR.Operands.Field).Type.Name;
+			if (value is IR.Operands.FieldOperand)
+				return (value as IR.Operands.FieldOperand).Field.Type.Name;
 
 			if (value is System.String)
 				return value as System.String;

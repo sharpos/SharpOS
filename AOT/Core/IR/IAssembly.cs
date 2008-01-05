@@ -65,11 +65,20 @@ namespace SharpOS.AOT.IR {
 		bool IsRegister (string value);
 
 		/// <summary>
-		/// Determines whether the specified value is instruction.
+		/// Determines whether the specified value is a memory address.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>
-		/// 	<c>true</c> if the specified value is instruction; otherwise, <c>false</c>.
+		/// 	<c>true</c> if the specified value is a memory address; otherwise, <c>false</c>.
+		/// </returns>
+		bool IsMemoryAddress (string value);
+
+		/// <summary>
+		/// Determines whether the specified value is an instruction.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value is an instruction; otherwise, <c>false</c>.
 		/// </returns>
 		bool IsInstruction (string value);
 

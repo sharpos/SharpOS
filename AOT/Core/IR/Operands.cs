@@ -411,18 +411,7 @@ namespace SharpOS.AOT.IR.Operands {
 
 		public string TypeFullName {
 			get {
-				if (this.type is TypeDefinition) {
-					TypeDefinition typeDefinition = this.type as TypeDefinition;
-
-					foreach (CustomAttribute attribute in typeDefinition.CustomAttributes) {
-						if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
-							continue;
-						
-						return attribute.ConstructorParameters [0].ToString () + "." + this.type.Name;
-					}
-				}
-
-				return this.type.ToString ();
+				return Class.GetTypeFullName (this.type);
 			}
 		}
 	}
@@ -499,25 +488,44 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 	}
 
-	public class Field : Operand {
-		public Field (FieldReference type, Operand instance)
+	public class Field {
+		public Field (FieldDefinition type)
 		{
-			this.type = type;
-			this.instance = instance;
-		}
+			System.Diagnostics.Debug.Assert (type != null);
 
-		public Field (FieldReference type)
-		{
 			this.type = type;
 		}
 
-		private FieldReference type = null;
+		FieldDefinition type;
 
-		public FieldReference Type
+		public FieldDefinition Type
 		{
 			get
 			{
 				return this.type;
+			}
+		}
+	}
+
+	public class FieldOperand : Operand {
+		public FieldOperand (Field field, Operand instance)
+		{
+			this.field = field;
+			this.instance = instance;
+		}
+
+		public FieldOperand (Field field)
+		{
+			this.field = field;
+		}
+
+		private Field field = null;
+
+		public Field Field
+		{
+			get
+			{
+				return this.field;
 			}
 		}
 
@@ -525,7 +533,7 @@ namespace SharpOS.AOT.IR.Operands {
 		{
 			get
 			{
-				return this.type.FieldType.Name;
+				return this.field.Type.FieldType.Name;
 			}
 		}
 
@@ -536,7 +544,7 @@ namespace SharpOS.AOT.IR.Operands {
 			if (this.instance != null)
 				result += this.instance.ToString () + "->";
 
-			result += this.type.ToString ();
+			result += this.Field.Type.ToString ();
 
 			return result;
 		}
@@ -552,6 +560,14 @@ namespace SharpOS.AOT.IR.Operands {
 			set
 			{
 				instance = value;
+			}
+		}
+
+		public string TypeFullName
+		{
+			get
+			{
+				return Class.GetTypeFullName (this.field.Type);
 			}
 		}
 	}

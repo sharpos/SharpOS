@@ -335,7 +335,7 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (call.Use.Length == 2) {
-				SegType segment = Seg.GetByID ((Operand.GetNonRegister (call.Use [0], typeof (Field)) as Field).ShortFieldTypeName);
+				SegType segment = Seg.GetByID ((Operand.GetNonRegister (call.Use [0], typeof (FieldOperand)) as FieldOperand).ShortFieldTypeName);
 				string label = (Operand.GetNonRegister (call.Use [1], typeof (StringConstant)) as SharpOS.AOT.IR.Operands.StringConstant).Value;
 
 				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
@@ -361,9 +361,9 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (call.Use.Length == 3) {
-				SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (Field)));
-				R16Type _base = R16.GetByID (Operand.GetNonRegister (call.Use [1], typeof (Field)));
-				R16Type index = R16.GetByID (Operand.GetNonRegister (call.Use [2], typeof (Field)));
+				SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (FieldOperand)));
+				R16Type _base = R16.GetByID (Operand.GetNonRegister (call.Use [1], typeof (FieldOperand)));
+				R16Type index = R16.GetByID (Operand.GetNonRegister (call.Use [2], typeof (FieldOperand)));
 
 				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
 					return new Memory (segment, _base, index);
@@ -389,9 +389,9 @@ namespace SharpOS.AOT.X86 {
 
 			} else if (call.Use.Length == 4) {
 				if (call.Method.Parameters [1].ParameterType.FullName.IndexOf ("16") != -1) {
-					SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (Field)));
-					R16Type _base = R16.GetByID (Operand.GetNonRegister (call.Use [1], typeof (Field)));
-					R16Type index = R16.GetByID (Operand.GetNonRegister (call.Use [2], typeof (Field)));
+					SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (FieldOperand)));
+					R16Type _base = R16.GetByID (Operand.GetNonRegister (call.Use [1], typeof (FieldOperand)));
+					R16Type index = R16.GetByID (Operand.GetNonRegister (call.Use [2], typeof (FieldOperand)));
 					Int16 displacement = System.Convert.ToInt16 ((Operand.GetNonRegister (call.Use [3], typeof (IntConstant)) as IntConstant).Value);
 
 					if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
@@ -417,9 +417,9 @@ namespace SharpOS.AOT.X86 {
 					}
 
 				} else {
-					SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (Field)));
-					R32Type _base = R32.GetByID (Operand.GetNonRegister (call.Use [1], typeof (Field)));
-					R32Type index = R32.GetByID (Operand.GetNonRegister (call.Use [2], typeof (Field)));
+					SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (FieldOperand)));
+					R32Type _base = R32.GetByID (Operand.GetNonRegister (call.Use [1], typeof (FieldOperand)));
+					R32Type index = R32.GetByID (Operand.GetNonRegister (call.Use [2], typeof (FieldOperand)));
 					Byte scale = System.Convert.ToByte ((Operand.GetNonRegister (call.Use [3], typeof (IntConstant)) as IntConstant).Value);
 
 					if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
@@ -446,9 +446,9 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (call.Use.Length == 5) {
-				SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (Field)));
-				R32Type _base = R32.GetByID (Operand.GetNonRegister (call.Use [1], typeof (Field)));
-				R32Type index = R32.GetByID (Operand.GetNonRegister (call.Use [2], typeof (Field)));
+				SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (FieldOperand)));
+				R32Type _base = R32.GetByID (Operand.GetNonRegister (call.Use [1], typeof (FieldOperand)));
+				R32Type index = R32.GetByID (Operand.GetNonRegister (call.Use [2], typeof (FieldOperand)));
 				Byte scale = System.Convert.ToByte ((Operand.GetNonRegister (call.Use [3], typeof (IntConstant)) as IntConstant).Value);
 				Int32 displacement = System.Convert.ToInt32 ((Operand.GetNonRegister (call.Use [4], typeof (IntConstant)) as IntConstant).Value);
 
@@ -528,9 +528,9 @@ namespace SharpOS.AOT.X86 {
 						}
 					}
 
-				} else if (operand is Field) {
-					Field field = operand as Field;
-					MemberReference memberReference = field.Type;
+				} else if (operand is FieldOperand) {
+					FieldOperand field = operand as FieldOperand;
+					MemberReference memberReference = field.Field.Type;
 					parameterTypes += field.ShortFieldTypeName;
 					operands [i] = memberReference.Name;
 
@@ -1064,7 +1064,7 @@ namespace SharpOS.AOT.X86 {
 		private void Ldfld (IR.Instructions.Ldfld instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
-			IR.Operands.Field field = instruction.Use [0] as IR.Operands.Field;
+			IR.Operands.FieldOperand field = instruction.Use [0] as IR.Operands.FieldOperand;
 
 			Load (assignee, field.InternalType, this.GetAddress (field));
 		}
@@ -1072,7 +1072,7 @@ namespace SharpOS.AOT.X86 {
 		private void Ldsfld (IR.Instructions.Ldsfld instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
-			IR.Operands.Field field = instruction.Use [0] as IR.Operands.Field;
+			IR.Operands.FieldOperand field = instruction.Use [0] as IR.Operands.FieldOperand;
 
 			Load (assignee, field.InternalType, this.GetAddress (field));
 		}
@@ -1080,7 +1080,7 @@ namespace SharpOS.AOT.X86 {
 		private void Ldflda (IR.Instructions.Ldflda instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
-			Memory memory = new Memory (this.GetAddress (instruction.Use [0] as Field));
+			Memory memory = new Memory (this.GetAddress (instruction.Use [0] as FieldOperand));
 
 			if (assignee.IsRegisterSet) {
 				this.assembly.LEA (Assembly.GetRegister (assignee.Register), memory);
@@ -1228,18 +1228,18 @@ namespace SharpOS.AOT.X86 {
 
 		private void Stfld (IR.Instructions.Stfld instruction)
 		{
-			IR.Operands.Field assignee = instruction.Use [0] as IR.Operands.Field;
+			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
 			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
 
-			Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			Save (assignee.Field.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		private void Stsfld (IR.Instructions.Stsfld instruction)
 		{
-			IR.Operands.Field assignee = instruction.Use [0] as IR.Operands.Field;
+			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
 			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
 
-			Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			Save (assignee.Field.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		private void Convert (IR.Instructions.Convert instruction)

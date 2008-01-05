@@ -34,6 +34,45 @@ namespace SharpOS.AOT.IR {
 			this.classDefinition = classDefinition;
 		}
 
+		public void Setup ()
+		{
+			if (this.classDefinition.IsEnum) {
+				foreach (FieldDefinition field in this.classDefinition.Fields) {
+					if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
+						this.internalType = this.engine.GetInternalType (field.FieldType.FullName);
+						break;
+					}
+				}
+
+			} else if (this.classDefinition.IsValueType)
+				this.internalType = Operands.InternalType.ValueType;
+
+			else if (this.classDefinition.IsClass)
+				this.internalType = Operands.InternalType.O;
+
+
+			foreach (FieldDefinition field in this.classDefinition.Fields)
+				fields [field.Name] = new Field (field);
+		}
+
+		Dictionary<string, Field> fields = new Dictionary<string, Field> ();
+
+		public Dictionary<string, Field> Fields
+		{
+			get
+			{
+				return this.fields;
+			}
+		}
+
+		public Field GetFieldByName (string value)
+		{
+			if (!fields.ContainsKey (value))
+				throw new EngineException (string.Format ("Field '{0}' not found.", value));
+
+			return fields [value];
+		}
+
 		private Engine engine = null;
 		private TypeDefinition classDefinition = null;
 
@@ -41,22 +80,19 @@ namespace SharpOS.AOT.IR {
 		/// Gets the class definition.
 		/// </summary>
 		/// <value>The class definition.</value>
-		public TypeDefinition ClassDefinition {
-			get {
+		public TypeDefinition ClassDefinition
+		{
+			get
+			{
 				return this.classDefinition;
 			}
 		}
 
-		public string TypeFullName {
-			get {
-				foreach (CustomAttribute attribute in classDefinition.CustomAttributes) {
-					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
-							continue;
-
-					return attribute.ConstructorParameters [0].ToString () + "." + this.classDefinition.Name;
-				}
-
-				return this.classDefinition.FullName;
+		public string TypeFullName
+		{
+			get
+			{
+				return Class.GetTypeFullName (this.classDefinition);
 			}
 		}
 
@@ -124,71 +160,122 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the type of the internal.
+		/// Gets the field offset.
 		/// </summary>
+		/// <param name="fieldName">Name of the field.</param>
 		/// <returns></returns>
-		public InternalType GetInternalType ()
+		public int GetFieldOffset (string fieldName)
 		{
-			if (this.classDefinition.IsEnum) {
-				foreach (FieldDefinition field in this.classDefinition.Fields) {
-					if ((field.Attributes & FieldAttributes.RTSpecialName) != 0)
-						return this.engine.GetInternalType (field.FieldType.FullName);
+			int result = this.engine.GetBaseTypeSize (this.classDefinition.BaseType as TypeDefinition);
+
+			foreach (FieldReference field in this.classDefinition.Fields) {
+				if ((field as FieldDefinition).IsStatic)
+					continue;
+
+				if (field.Name.Equals (fieldName)) {
+					// An ExplicitLayout has already the offset defined
+					if (this.classDefinition.IsValueType
+							&& (this.classDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0)
+						result = (int) (field as FieldDefinition).Offset;
+
+					break;
 				}
 
-			} else if (this.classDefinition.IsValueType)
-				return Operands.InternalType.ValueType;
+				result += this.engine.GetFieldSize (field.FieldType.FullName);
+			}
 
-			else if (this.classDefinition.IsClass)
-				return Operands.InternalType.O;
+			return result;
+		}
 
-			return InternalType.NotSet;
+		internal static string GetTypeFullName (MemberReference type)
+		{
+			if (type is TypeDefinition) {
+				TypeDefinition typeDefinition = type as TypeDefinition;
+
+				foreach (CustomAttribute attribute in typeDefinition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
+						continue;
+					
+					return attribute.ConstructorParameters [0].ToString () + "." + type.Name;
+				}
+			} else if (type is FieldReference) {
+				FieldReference typeDefinition = type as FieldReference;
+
+				foreach (CustomAttribute attribute in typeDefinition.DeclaringType.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
+						continue;
+					
+					return attribute.ConstructorParameters [0].ToString () + "." + type.DeclaringType.Name;
+				}
+
+				return typeDefinition.DeclaringType.FullName;
+			}
+
+			return type.ToString ();
+		}
+
+		InternalType internalType = InternalType.NotSet;
+
+		/// <summary>
+		/// Gets the type of the internal type.
+		/// </summary>
+		/// <value>The type of the internal.</value>
+		public InternalType InternalType
+		{
+			get
+			{
+				return internalType;
+			}
 		}
 
 		/// <summary>
 		/// Gets the size.
 		/// </summary>
 		/// <returns></returns>
-		public int GetSize ()
+		public int Size
 		{
-			int result = -1;
+			get
+			{
+				int result = -1;
 
-			if (this.classDefinition.IsEnum) {
-				result = 0;
-
-				foreach (FieldDefinition field in this.classDefinition.Fields) {
-					if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
-						result = this.engine.GetTypeSize (field.FieldType.FullName);
-						break;
-					}
-				}
-
-			} else if (this.classDefinition.IsValueType) {
-				if ((this.classDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
+				if (this.classDefinition.IsEnum) {
 					result = 0;
 
 					foreach (FieldDefinition field in this.classDefinition.Fields) {
-						if ((field as FieldDefinition).IsStatic)
-							continue;
-
-						int value = (int) (field.Offset + this.engine.GetTypeSize (field.FieldType.FullName));
-
-						if (value > result)
-							result = value;
+						if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
+							result = this.engine.GetTypeSize (field.FieldType.FullName);
+							break;
+						}
 					}
 
-				} else {
-					result = 0;
+				} else if (this.classDefinition.IsValueType) {
+					if ((this.classDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
+						result = 0;
 
-					foreach (FieldReference field in this.classDefinition.Fields) {
-						if ((field as FieldDefinition).IsStatic)
-							continue;
+						foreach (FieldDefinition field in this.classDefinition.Fields) {
+							if ((field as FieldDefinition).IsStatic)
+								continue;
 
-						result += this.engine.GetFieldSize (field.FieldType.FullName);
+							int value = (int) (field.Offset + this.engine.GetTypeSize (field.FieldType.FullName));
+
+							if (value > result)
+								result = value;
+						}
+
+					} else {
+						result = 0;
+
+						foreach (FieldReference field in this.classDefinition.Fields) {
+							if ((field as FieldDefinition).IsStatic)
+								continue;
+
+							result += this.engine.GetFieldSize (field.FieldType.FullName);
+						}
 					}
 				}
-			} 
 
-			return result;
+				return result;
+			}
 		}
 	}
 }

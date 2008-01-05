@@ -470,8 +470,8 @@ namespace SharpOS.AOT.X86 {
 		{
 			Memory address = null;
 
-			if (operand is Field) {
-				address = this.GetAddress (operand as Field);
+			if (operand is FieldOperand) {
+				address = this.GetAddress (operand as FieldOperand);
 
 			} else if (operand is Argument) {
 				address = this.GetAddress (operand as Argument);
@@ -527,7 +527,7 @@ namespace SharpOS.AOT.X86 {
 			return new Memory (null, R32.EBP, null, 0, this.GetIdentifierDisplacement (register));
 		}
 
-		private Memory GetAddress (IR.Operands.Field field)
+		private Memory GetAddress (IR.Operands.FieldOperand field)
 		{
 			if (field.Instance != null) {
 				IR.Operands.Register identifier = field.Instance as IR.Operands.Register;
@@ -542,10 +542,10 @@ namespace SharpOS.AOT.X86 {
 					this.assembly.MOV (register, new DWordMemory (this.GetAddress (identifier)));
 				}
 
-				return new Memory (null, register, null, 0, this.assembly.GetFieldOffset (field.Type));
+				return new Memory (null, register, null, 0, this.assembly.Engine.GetFieldOffset (field));
 			}
 
-			return new Memory (field.Type.ToString ());
+			return new Memory (field.Field.Type.ToString ());
 		}
 
 		private Memory GetAddress (IR.Operands.Identifier identifier)

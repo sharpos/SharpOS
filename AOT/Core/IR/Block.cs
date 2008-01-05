@@ -1922,7 +1922,7 @@ namespace SharpOS.AOT.IR {
 
 			Register instance = this.GetRegister ();
 
-			Field field = new Field (fieldReference, instance);
+			FieldOperand field = new FieldOperand (this.method.Engine.GetField (fieldReference), instance);
 
 			Register assignee = this.SetRegister ();
 
@@ -1935,7 +1935,7 @@ namespace SharpOS.AOT.IR {
 
 			Register instance = this.GetRegister ();
 
-			Field field = new Field (fieldReference, instance);
+			FieldOperand field = new FieldOperand (this.method.Engine.GetField (fieldReference), instance);
 
 			Register assignee = this.SetRegister ();
 
@@ -1946,7 +1946,7 @@ namespace SharpOS.AOT.IR {
 		{
 			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
 
-			Field field = new Field (fieldReference);
+			FieldOperand field = new FieldOperand (this.method.Engine.GetField (fieldReference));
 
 			Register assignee = this.SetRegister ();
 
@@ -1957,7 +1957,7 @@ namespace SharpOS.AOT.IR {
 		{
 			FieldReference fieldReference = cilInstruction.Operand as FieldReference;
 
-			Field field = new Field (fieldReference);
+			FieldOperand field = new FieldOperand (this.method.Engine.GetField (fieldReference));
 
 			Register assignee = this.SetRegister ();
 
@@ -1972,7 +1972,7 @@ namespace SharpOS.AOT.IR {
 
 			Register instance = this.GetRegister ();
 
-			Field field = new Field (fieldReference, instance);
+			FieldOperand field = new FieldOperand (this.method.Engine.GetField (fieldReference), instance);
 
 			return new Stfld (field, value);
 		}
@@ -1983,7 +1983,7 @@ namespace SharpOS.AOT.IR {
 
 			Register value = this.GetRegister ();
 
-			Field field = new Field (fieldReference);
+			FieldOperand field = new FieldOperand (this.method.Engine.GetField (fieldReference));
 
 			return new Stsfld (field, value);
 		}

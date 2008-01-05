@@ -9,7 +9,8 @@
 //
 
 namespace SharpOS.Korlib.Runtime {
+	[SharpOS.AOT.Attributes.VTable]
 	internal class VTable : InternalSystem.Object {
-
+		internal uint Size;
 	}
 }

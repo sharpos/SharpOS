@@ -74,11 +74,19 @@ namespace SharpOS.AOT.X86 {
 
 		#region RUNTIME
 		const string VTABLE_LABEL = "{0} VTable";
-		const string VTABLE_CLASS = "SharpOS.Korlib.Runtime.VTable";
-		const string SYSTEM_STRING = "InternalSystem.String";
+		//const string VTABLE_CLASS = "SharpOS.Korlib.Runtime.VTable";
 		#endregion
 
 		Engine engine;
+
+		public Engine Engine
+		{
+			get
+			{
+				return engine;
+			}
+		}
+
 		Assembly data;
 		Assembly bss;
 		Dictionary<string, Instruction> labels;
@@ -251,18 +259,6 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines whether the specified value is register.
-		/// </summary>
-		/// <param name="value">The value.</param>
-		/// <returns>
-		/// 	<c>true</c> if the specified value is register; otherwise, <c>false</c>.
-		/// </returns>
-		public bool IsRegister (string value)
-		{
-			return value.StartsWith ("SharpOS.AOT.X86.");
-		}
-
-		/// <summary>
 		/// Gets the type of the register size.
 		/// </summary>
 		/// <param name="value">The value.</param>
@@ -284,6 +280,15 @@ namespace SharpOS.AOT.X86 {
 			else if (value.StartsWith ("SharpOS.AOT.X86.CRType"))
 				return InternalType.U4;
 
+			else if (value.StartsWith ("SharpOS.AOT.X86.DRType"))
+				return InternalType.U4;
+			
+			else if (value.StartsWith ("SharpOS.AOT.X86.TRType"))
+				return InternalType.U4;
+
+			else if (value.StartsWith ("SharpOS.AOT.X86.FPType"))
+				return InternalType.F;
+
 			else
 				throw new EngineException ("'" + value + "' is not supported.");
 		}
@@ -297,19 +302,45 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		public bool IsInstruction (string value)
 		{
-			return value.StartsWith ("SharpOS.AOT.X86.");
+			return value.StartsWith ("SharpOS.AOT.X86.Asm");
 		}
 
+
 		/// <summary>
-		/// Determines whether [is assembly stub] [the specified value].
+		/// Determines whether the specified value is register.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		/// <returns>
-		/// 	<c>true</c> if [is assembly stub] [the specified value]; otherwise, <c>false</c>.
+		/// 	<c>true</c> if the specified value is register; otherwise, <c>false</c>.
 		/// </returns>
-		internal static bool IsAssemblyStub (string value)
+		public bool IsRegister (string value)
 		{
-			return value.Equals ("SharpOS.AOT.X86.Asm");
+			return value.StartsWith ("SharpOS.AOT.X86.R32")
+				|| value.StartsWith ("SharpOS.AOT.X86.R16")
+				|| value.StartsWith ("SharpOS.AOT.X86.R8")
+				|| value.StartsWith ("SharpOS.AOT.X86.Seg")
+				|| value.StartsWith ("SharpOS.AOT.X86.DR")
+				|| value.StartsWith ("SharpOS.AOT.X86.CR")
+				|| value.StartsWith ("SharpOS.AOT.X86.FP")
+				|| value.StartsWith ("SharpOS.AOT.X86.TR");
+		}
+
+
+		/// <summary>
+		/// Determines whether the specified value is a memory address.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns>
+		/// 	<c>true</c> if the specified value is a memory address; otherwise, <c>false</c>.
+		/// </returns>
+		public bool IsMemoryAddress (string value)
+		{
+			return value.StartsWith ("SharpOS.AOT.X86.Memory")
+				|| value.StartsWith ("SharpOS.AOT.X86.ByteMemory")
+				|| value.StartsWith ("SharpOS.AOT.X86.WordMemory")
+				|| value.StartsWith ("SharpOS.AOT.X86.DWordMemory")
+				|| value.StartsWith ("SharpOS.AOT.X86.QWordMemory")
+				|| value.StartsWith ("SharpOS.AOT.X86.TWordMemory");
 		}
 
 		/// <summary>
@@ -492,63 +523,6 @@ namespace SharpOS.AOT.X86 {
 		public void MOV (R32Type target, string label)
 		{
 			this.instructions.Add (new Instruction (true, string.Empty, label, "MOV", target.ToString () + ", " + Assembly.FormatLabelName (label), null, null, target, new UInt32 [] { 0 }, new string [] { "o32", "B8+r", "id" }));
-		}
-
-		private int GetBaseTypeSize (TypeDefinition type)
-		{
-			int result = 0;
-
-			if (type != null) {
-				result = this.GetBaseTypeSize (type.BaseType as TypeDefinition);
-
-				foreach (FieldReference field in type.Fields) {
-					if ((field as FieldDefinition).IsStatic)
-						continue;
-
-					result += this.engine.GetFieldSize (field.FieldType.FullName);
-				}
-			}
-
-			return result;
-		}
-
-		/// <summary>
-		/// Gets the field offset.
-		/// </summary>
-		/// <param name="value">The value.</param>
-		/// <returns></returns>
-		public int GetFieldOffset (FieldReference value)
-		{
-			int result = 0;
-
-			string objectName = value.DeclaringType.FullName;
-			string fieldName = value.Name;
-
-			foreach (Class _class in this.engine) {
-				if (_class.ClassDefinition.FullName.Equals (objectName)) {
-					result = this.GetBaseTypeSize (_class.ClassDefinition.BaseType as TypeDefinition);
-
-					foreach (FieldReference field in _class.ClassDefinition.Fields) {
-						if ((field as FieldDefinition).IsStatic)
-							continue;
-
-						if (field.Name.Equals (fieldName)) {
-							// An ExplicitLayout has already the offset defined
-							if (_class.ClassDefinition.IsValueType
-									&& (_class.ClassDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0)
-								result = (int) (field as FieldDefinition).Offset;
-
-							break;
-						}
-
-						result += this.engine.GetFieldSize (field.FieldType.FullName);
-					}
-
-					return result;
-				}
-			}
-
-			throw new EngineException ("'" + value + "' has not been found.");
 		}
 
 		/// <summary>
@@ -1103,6 +1077,15 @@ namespace SharpOS.AOT.X86 {
 			this.HLT ();
 		}
 
+		private void AddObjectFields (string _class)
+		{
+			// VTable
+			this.ADDRESSOF (string.Format (VTABLE_LABEL, _class));
+
+			// Synchronisation
+			this.DATA ((uint) 0);
+		}
+
 		/// <summary>
 		/// Adds the data.
 		/// </summary>
@@ -1117,27 +1100,25 @@ namespace SharpOS.AOT.X86 {
 				if (_class.ClassDefinition.IsEnum)
 					continue;
 
-				if (_class.ClassDefinition.IsValueType)
-					continue;
-
 				this.ALIGN (OBJECT_ALIGNMENT);
 
 				// Writing the Runtime VTable instances
-				string label = string.Format (VTABLE_LABEL, _class.ClassDefinition.FullName);
+				string label = string.Format (VTABLE_LABEL, _class.TypeFullName);
 				this.AddSymbol (new COFF.Label (label));
 				this.LABEL (label);
 
-				// VTable
-				this.ADDRESSOF (string.Format (VTABLE_LABEL, VTABLE_CLASS));
+				this.AddObjectFields (this.engine.VTableClass.TypeFullName);
 
-				// Synchronisation
-				this.DATA ((uint) 0);
+				// TODO Add the other VTable fiels: Size ....
 
-				foreach (FieldDefinition field in _class.ClassDefinition.Fields) {
-					string fullname = field.ToString ();
+				if (_class.ClassDefinition.IsValueType)
+					continue;
+
+				foreach (Field field in _class.Fields.Values) {
+					string fullname = field.Type.ToString ();
 					//field.DeclaringType.FullName + "::" + field.Name;
 
-					if (!field.IsStatic) {
+					if (!field.Type.IsStatic) {
 						this.engine.Dump.IgnoreMember (fullname,
 								"Non-static field");
 
@@ -1147,35 +1128,37 @@ namespace SharpOS.AOT.X86 {
 					this.AddSymbol (new COFF.Static (fullname));
 					this.LABEL (fullname);
 
-					switch (engine.GetInternalType (field.FieldType.FullName)) {
-					case InternalType.I1:
-					case InternalType.U1:
-						this.DATA ((byte) 0);
-						break;
+					// TODO refactor this
+					switch (engine.GetInternalType (field.Type.FieldType.FullName)) {
+						case InternalType.I1:
+						case InternalType.U1:
+							this.DATA ((byte) 0);
+							break;
 
-					case InternalType.I2:
-					case InternalType.U2:
-						this.DATA ((ushort) 0);
-						break;
+						case InternalType.I2:
+						case InternalType.U2:
+							this.DATA ((ushort) 0);
+							break;
 
-					case InternalType.O:
-					case InternalType.I:
-					case InternalType.U:
-					case InternalType.I4:
-					case InternalType.U4:
-					case InternalType.R4:
-						this.DATA ((uint) 0);
-						break;
+						case InternalType.O:
+						case InternalType.I:
+						case InternalType.U:
+						case InternalType.I4:
+						case InternalType.U4:
+						case InternalType.R4:
+							this.DATA ((uint) 0);
+							break;
 
-					case InternalType.I8:
-					case InternalType.U8:
-					case InternalType.R8:
-						this.DATA ((uint) 0);
-						this.DATA ((uint) 0);
-						break;
+						case InternalType.I8:
+						case InternalType.U8:
+						case InternalType.R8:
+						case InternalType.F:
+							this.DATA ((uint) 0);
+							this.DATA ((uint) 0);
+							break;
 
-					default:
-						throw new NotImplementedEngineException ("'" + field.FieldType + "' is not supported.");
+						default:
+							throw new NotImplementedEngineException ("'" + field.Type.FieldType + "' is not supported.");
 					}
 				}
 			}
@@ -1995,11 +1978,7 @@ namespace SharpOS.AOT.X86 {
 
 				data.LABEL (label);
 
-				// VTable
-				data.ADDRESSOF (string.Format (VTABLE_LABEL, SYSTEM_STRING));
-
-				// Synchronisation;
-				data.DATA ((uint) 0);
+				data.AddObjectFields (Mono.Cecil.Constants.String);
 
 				// Length
 				data.DATA ((uint) value.Length);

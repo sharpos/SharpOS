@@ -16,6 +16,7 @@ using SharpOS.Kernel;
 using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 using SharpOS.Kernel.Memory;
+using SharpOS.Korlib.Runtime;
 
 namespace SharpOS.Kernel {
 
@@ -205,6 +206,18 @@ namespace SharpOS.Kernel {
 			BootControl.Reboot ();
 		}
 
+		#endregion
+		#region Object Support
+		/*[SharpOS.AOT.Attributes.AllocObject]
+		internal unsafe InternalSystem.Object AllocObject (VTable vtable)
+		{
+			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate (vtable.Size);
+
+			InternalSystem.Object _object = Stubs.GetObjectFromPointer (result);
+			_object.VTable = vtable;
+
+			return _object;
+		}*/
 		#endregion
 	}
 }

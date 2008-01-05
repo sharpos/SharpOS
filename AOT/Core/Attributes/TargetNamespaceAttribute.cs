@@ -15,9 +15,7 @@ using SharpOS.AOT;
 
 namespace SharpOS.AOT.Attributes {
 	/// <summary>
-	/// Used to mark a method as the AOT String() stub
-	/// that allows character constants to be used in 
-	/// AOTed code.
+	/// Used to mark a define the real namespace of a class/enum/struct/interface.
 	/// </summary>
 	[AttributeUsage (AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Interface)]
 	public sealed class TargetNamespaceAttribute : Attribute {

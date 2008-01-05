@@ -394,23 +394,23 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		public void LdfldProcess (Method method)
 		{
-			Field field = (this.use [0] as Field);
+			FieldOperand field = (this.use [0] as FieldOperand);
 
-			string type = field.Type.FieldType.ToString ();
+			string type = field.Field.Type.FieldType.ToString ();
 
 			field.InternalType = method.Engine.GetInternalType (type);
 
 			this.def.InternalType = this.AdjustRegisterInternalType (field.InternalType);
 
 			if (this.def.InternalType == InternalType.ValueType)
-				(this.def as Identifier).Type = field.Type;
+				(this.def as Identifier).Type = field.Field.Type;
 		}
 
 		public void StfldProcess (Method method)
 		{
-			Field field = (this.use [0] as Field);
+			FieldOperand field = (this.use [0] as FieldOperand);
 
-			string type = field.Type.FieldType.ToString ();
+			string type = field.Field.Type.FieldType.ToString ();
 
 			field.InternalType = method.Engine.GetInternalType (type);
 		}
@@ -1174,7 +1174,7 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public class Ldfld : Instruction {
-		public Ldfld (Register result, Field value)
+		public Ldfld (Register result, FieldOperand value)
 			: base ("Ldfld", result, new Operand [] { value })
 		{
 		}
@@ -1186,7 +1186,7 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public class Ldflda : Instruction {
-		public Ldflda (Register result, Field value)
+		public Ldflda (Register result, FieldOperand value)
 			: base ("Ldflda", result, new Operand [] { value })
 		{
 		}
@@ -1200,7 +1200,7 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public class Ldsfld : Instruction {
-		public Ldsfld (Register result, Field value)
+		public Ldsfld (Register result, FieldOperand value)
 			: base ("Ldsfld", result, new Operand [] { value })
 		{
 		}
@@ -1212,7 +1212,7 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public class Ldsflda : Instruction {
-		public Ldsflda (Register result, Field value)
+		public Ldsflda (Register result, FieldOperand value)
 			: base ("Ldsflda", result, new Operand [] { value })
 		{
 		}
@@ -1226,7 +1226,7 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public class Stfld : Instruction {
-		public Stfld (Field field, Register value)
+		public Stfld (FieldOperand field, Register value)
 			: base ("Stfld", null, new Operand [] { field, value })
 		{
 		}
@@ -1238,7 +1238,7 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public class Stsfld : Instruction {
-		public Stsfld (Field field, Register value)
+		public Stsfld (FieldOperand field, Register value)
 			: base ("Stsfld", null, new Operand [] { field, value })
 		{
 		}

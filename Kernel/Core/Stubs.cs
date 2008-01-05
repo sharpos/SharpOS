@@ -65,6 +65,12 @@ namespace SharpOS.Kernel {
 		{
 			return 0;
 		}
+
+		[SharpOS.AOT.Attributes.PointerToObject]
+		public unsafe static InternalSystem.Object GetObjectFromPointer (void* pointer)
+		{
+			return null;
+		}
 		#endregion
 	}
 }
