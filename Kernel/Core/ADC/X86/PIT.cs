@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -29,20 +29,21 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public static ushort HZ = 100;
 
 		private static uint ticks = 0;
-		public static uint timerEvent = 0;
+		unsafe static uint* timerEvent =
+			(uint*)Stubs.StaticAlloc(sizeof(uint) * EntryModule.MaxEventHandlers);
 
 		/*
 		// sigh.. one can only dream
 		public delegate void somefunction(uint value);
-		unsafe static somefunction[] timerEvents = (somefunction[])Stubs.StaticAlloc<somefunction>(Kernel.MaxEventHandlers);		
+		unsafe static somefunction[] timerEvents = (somefunction[])Stubs.StaticAlloc<somefunction>(Kernel.MaxEventHandlers);
 		public event somefunction function
 		{
-			add 
+			add
 			{
 				for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
 					if (timerEvents[x] == value)
 						return;
-			
+
 				for (int x = 0; x < Kernel.MaxEventHandlers; ++x)
 					if (timerEvents[x] == null)
 						timerEvents[x] = value;
@@ -79,14 +80,20 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region TimerEvent
 		public static EventRegisterStatus RegisterTimerEvent (uint address)
 		{
-			if (timerEvent != 0)
-				return EventRegisterStatus.CapacityExceeded;
-			if (timerEvent == address)
-				return EventRegisterStatus.AlreadySubscribed;
+			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
+				if (timerEvent[x] == address)
+					return EventRegisterStatus.AlreadySubscribed;
+			}
 
-			timerEvent = address;
+			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x)
+			{
+				if (timerEvent[x] == 0) {
+					timerEvent[x] = address;
+					return EventRegisterStatus.Success;
+				}
+			}
 
-			return EventRegisterStatus.Success;
+			return EventRegisterStatus.CapacityExceeded;
 		}
 		#endregion
 
@@ -95,8 +102,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 		private static unsafe void TimerHandler (IDT.ISRData data)
 		{
 			ticks++;
-			if (timerEvent != 0)
-				Memory.Call (timerEvent, ticks);
+
+			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
+				if (timerEvent[x] == 0)
+					continue;
+
+				Memory.Call(timerEvent[x], ticks);
+			}
 
 			// run scheduler here..
 			data = *((IDT.ISRData*) ADC.Scheduler.GetNextThread ((void*) &data));

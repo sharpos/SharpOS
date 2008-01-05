@@ -268,6 +268,7 @@ namespace SharpOS.Kernel.Shell.Commands {
 			header->AddEntry (BuiltIn.MemDump.CREATE ());
 			header->AddEntry (BuiltIn.Panic.CREATE ());
 			header->AddEntry (BuiltIn.Reboot.CREATE ());
+            header->AddEntry(BuiltIn.Snake.CREATE());
 			header->AddEntry (BuiltIn.Stage.CREATE ());
 			header->AddEntry (BuiltIn.Version.CREATE ());
 
