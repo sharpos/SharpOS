@@ -10,6 +10,7 @@
 
 namespace SharpOS.Kernel.ADC {
 	public enum Keys : uint {
+		Escape = 0x0001,
 		Backspace = 0x000E,
 		Tab = 0x000F,
 		Enter = 0x001C,
