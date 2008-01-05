@@ -44,7 +44,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <Target Name="Build">
-    <Exec Command="$(TargetDir)\KernelTestsWrapperGen.exe -c $(MSBuildBinPath)\ilasm.exe" />
+    <Exec Command="$(TargetDir)\KernelTestsWrapperGen.exe -c %windir%\microsoft.net\framework\v2.0.50727\ilasm.exe" />
   </Target>
   <Target Name="Clean">
     <Delete Files="..\..\..\build\SharpOS.Kernel.Tests.IL.dll;..\..\..\build\SharpOS.Kernel.Tests.IL.pdb" />
