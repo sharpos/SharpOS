@@ -31,6 +31,8 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 				ShowCopyright ();
 			else if (context->parameters->Compare ("d") == 0)
 				ShowDevelopers ();
+			else
+				GetHelp (context);
 		}
 
 		public static void ShowWarranty ()
