@@ -313,6 +313,11 @@ namespace SharpOS.AOT.IR {
 						   call.DeclaringType.IsValueType);
 			adcStubType = GetTypeDefinition (ntype.Namespace, ntype.Name);
 
+			if (adcStubType == null)
+				throw new EngineException (string.Format (
+					"No match found for the ADC stub class `{0}'",
+					ntype.Name));
+
 			// Find the equivalent ADC layer method
 			foreach (MethodDefinition def in adcStubType.Methods) {
 				if (def.ReturnType.ReturnType.FullName == call.ReturnType.ReturnType.FullName &&
@@ -593,7 +598,7 @@ namespace SharpOS.AOT.IR {
 					break;
 				}
 			}
-			
+
 			if (!found) {
 				List<string> array = new List<string> (options.Assemblies);
 				array.Add (aotCorePath);
@@ -664,7 +669,7 @@ namespace SharpOS.AOT.IR {
 			foreach (TypeDefinition type in library.MainModule.Types) {
 				if (isAOTCore) {
 					if (!this.asm.IsInstruction (type.FullName)
-							&& !this.asm.IsRegister(type.FullName)
+							&& !this.asm.IsRegister (type.FullName)
 							&& !this.asm.IsMemoryAddress (type.FullName))
 						continue;
 				}
@@ -701,7 +706,7 @@ namespace SharpOS.AOT.IR {
 
 				if (this.classes.ContainsKey (_class.TypeFullName))
 					throw new NotImplementedEngineException ();
-				
+
 				this.classes [_class.TypeFullName] = _class;
 
 				// We don't need the constructors of the registers
@@ -1024,46 +1029,46 @@ namespace SharpOS.AOT.IR {
 				throw new EngineException (string.Format ("'{0}' is not supported.", type.GetType ().ToString ()));
 
 			switch (sizeType) {
-				case InternalType.I1:
-				case InternalType.U1:
-					result = 1;
-					break;
+			case InternalType.I1:
+			case InternalType.U1:
+				result = 1;
+				break;
 
-				case InternalType.I2:
-				case InternalType.U2:
-					result = 2;
-					break;
+			case InternalType.I2:
+			case InternalType.U2:
+				result = 2;
+				break;
 
-				case InternalType.I4:
-				case InternalType.U4:
-					result = 4;
-					break;
+			case InternalType.I4:
+			case InternalType.U4:
+				result = 4;
+				break;
 
-				case InternalType.I:
-				case InternalType.U:
-				case InternalType.O:
-				case InternalType.M:
-					result = this.asm.IntSize;
-					break;
+			case InternalType.I:
+			case InternalType.U:
+			case InternalType.O:
+			case InternalType.M:
+				result = this.asm.IntSize;
+				break;
 
-				case InternalType.I8:
-				case InternalType.U8:
-					result = 8;
-					break;
+			case InternalType.I8:
+			case InternalType.U8:
+				result = 8;
+				break;
 
-				case InternalType.R4:
-					result = 4;
-					break;
+			case InternalType.R4:
+				result = 4;
+				break;
 
-				case InternalType.R8:
-					result = 8;
-					break;
+			case InternalType.R8:
+				result = 8;
+				break;
 
-				case InternalType.ValueType:
-					if (this.classes.ContainsKey (type.ToString ()))
-						result = this.classes [type.ToString ()].Size;
+			case InternalType.ValueType:
+				if (this.classes.ContainsKey (type.ToString ()))
+					result = this.classes [type.ToString ()].Size;
 
-					break;
+				break;
 			}
 
 			if (result == -1)
@@ -1174,7 +1179,7 @@ namespace SharpOS.AOT.IR {
 			if (type.IndexOf ("::") != -1) {
 				string objectName = type.Substring (0, type.IndexOf ("::"));
 				string fieldName = type.Substring (type.IndexOf ("::") + 2);
-				
+
 				if (this.classes.ContainsKey (objectName))
 					return this.classes [objectName].GetFieldType (fieldName);
 
@@ -1187,4 +1192,5 @@ namespace SharpOS.AOT.IR {
 		}
 	}
 }
+
 
