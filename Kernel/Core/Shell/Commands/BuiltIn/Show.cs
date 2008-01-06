@@ -52,6 +52,12 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 			TextMode.WriteLine ("illuminus - Bruce Markham - illuminus86 /at/ gmail /dot/ com");
 			TextMode.WriteLine ("darxkies - Mircea-Cristian Racasan - darx_kies /at/ gmx /dot/ net");
 			TextMode.WriteLine ("moitoius - Jonathan Dickinson - jonathand /dot/ za /at/ gmail /dot/ com");
+			TextMode.WriteLine ("Logical_Error - Sander van Rossen - sander/dot/ vanrossen /at/ gmail /dot/ com");
+			TextMode.WriteLine ("lsmithmier");
+			TextMode.WriteLine ("jmacdonagh");
+			TextMode.WriteLine ("msieradzki");
+			TextMode.WriteLine ("asgeirh");
+			TextMode.WriteLine ("darkdonno");
 		}
 
 		[Label (lblGetHelp)]
