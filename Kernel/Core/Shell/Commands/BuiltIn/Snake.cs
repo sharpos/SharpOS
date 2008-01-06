@@ -97,6 +97,12 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		private const TextColor BODY_COLOUR_FG = TextColor.Green;
 		private const TextColor HEAD_COLOUR_BG = BODY_COLOUR_BG;
 		private const TextColor HEAD_COLOUR_FG = BODY_COLOUR_FG;
+		private const Keys DIRECTION_LEFT = Keys.LeftArrow;
+		private const Keys DIRECTION_RIGHT = Keys.RightArrow;
+		private const Keys DIRECTION_UP = Keys.UpArrow;
+		private const Keys DIRECTION_DOWN = Keys.DownArrow;
+		private const Keys PAUSE_KEY = Keys.Backspace;
+		private const Keys QUIT_KEY = Keys.Escape;
 
 		[Label(SNAKE_TIMER_HANDLER)]
 		public static void Timer(uint ticks)
@@ -142,18 +148,24 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 
 			Keys key = (Keys)scancode;
 
-			if (key == Keys.Escape) {
+			if (key == QUIT_KEY) {
 				QuitGame();
-			} else if (key == Keys.LeftArrow) {
+			} else if (key == PAUSE_KEY) {
+				TextMode.MoveTo (0, 0);
+				TextMode.ClearToEndOfLine ();
+				TextMode.Write ("Game paused, press any key to continue...");
+				waiting = true;
+				playing = false;
+			} else if (key == DIRECTION_LEFT) {
 				if (IsDirectionVertical())
 					nextDirection = Direction.Left;
-			} else if (key == Keys.RightArrow) {
+			} else if (key == DIRECTION_RIGHT) {
 				if (IsDirectionVertical())
 					nextDirection = Direction.Right;
-			} else if (key == Keys.UpArrow) {
+			} else if (key == DIRECTION_UP) {
 				if (!IsDirectionVertical())
 					nextDirection = Direction.Up;
-			} else if (key == Keys.DownArrow) {
+			} else if (key == DIRECTION_DOWN) {
 				if (!IsDirectionVertical())
 					nextDirection = Direction.Down;
 			}
@@ -561,7 +573,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		{
 			TextMode.ClearScreen ();
 			WriteInfo ();
-			TextMode.WriteLine ("Use the arrow keys to move around and eat the apples. Hit escape to quit.");
+			TextMode.WriteLine ("Use the arrow keys to move around and eat the apples. Hit escape to quit and backspace to pause.");
 			TextMode.WriteLine ("Press any key to continue...");
 
 			playing = false;
