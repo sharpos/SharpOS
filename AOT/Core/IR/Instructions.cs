@@ -1262,18 +1262,19 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public abstract class CallInstruction : Instruction {
-		public CallInstruction (string name, Operand def, Operand [] use)
+		public CallInstruction (Method method, string name, Operand def, Operand [] use)
 			: base (name, def, use)
 		{
+			this.method = method;
 		}
 
-		protected MethodReference methodReference;
+		protected Method method;
 
-		public MethodReference Method
+		public Method Method
 		{
 			get
 			{
-				return this.methodReference;
+				return this.method;
 			}
 		}
 
@@ -1284,44 +1285,42 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			get
 			{
-				return IR.Method.GetLabel (this.Method);
+				return IR.Method.GetLabel (this.Method.MethodDefinition);
 			}
 		}
 	}
 
 	// TODO add support for call/callvirt/calli/jmp
 	public class Call : CallInstruction {
-		public Call (MethodReference methodReference, Register result, Operand [] parameters)
-			: base ("Call " + methodReference.ToString () + " ", result, parameters)
+		public Call (Method method, Register result, Operand [] parameters)
+			: base (method, "Call " + method.MethodDefinition.ToString () + " ", result, parameters)
 		{
-			this.methodReference = methodReference;
 		}
 
 
 		public override void Process (Method method)
 		{
 			if (this.def != null) {
-				this.def.InternalType = this.AdjustRegisterInternalType (method.Engine.GetInternalType (this.methodReference.ReturnType.ReturnType.ToString ()));
+				this.def.InternalType = this.AdjustRegisterInternalType (method.Engine.GetInternalType (Class.GetTypeFullName (this.method.MethodDefinition.ReturnType.ReturnType)));
 
 				if (this.def.InternalType == InternalType.ValueType)
-					(this.def as Register).Type = this.methodReference.ReturnType.ReturnType;
+					(this.def as Register).Type = this.method.MethodDefinition.ReturnType.ReturnType;
 			}
 		}
 	}
 
 	public class Newobj : CallInstruction {
-		public Newobj (MethodReference methodReference, Register result, Operand [] parameters)
-			: base ("Newobj " + methodReference.ToString () + " ", result, parameters)
+		public Newobj (Method method, Register result, Operand [] parameters)
+			: base (method, "Newobj " + method.MethodDefinition.ToString () + " ", result, parameters)
 		{
-			this.methodReference = methodReference;
 			result.InternalType = InternalType.O;
 		}
 
 		public override void Process (Method method)
 		{
-			if (this.methodReference.DeclaringType.IsValueType) {
+			if (this.method.MethodDefinition.DeclaringType.IsValueType) {
 				this.def.InternalType = InternalType.ValueType;
-				(this.def as IR.Operands.Register).Type = this.methodReference.DeclaringType;
+				(this.def as IR.Operands.Register).Type = this.method.MethodDefinition.DeclaringType;
 
 			} else
 				this.def.InternalType = InternalType.O;

@@ -42,6 +42,9 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public bool GetAssemblyCode ()
 		{
+			if (this.method.SkipProcessing)
+				return true;
+
 			string fullname = method.MethodFullName;
 
 			assembly.ALIGN (Assembly.ALIGNMENT);

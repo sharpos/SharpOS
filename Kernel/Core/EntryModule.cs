@@ -208,7 +208,7 @@ namespace SharpOS.Kernel {
 
 		#endregion
 		#region Object Support
-		/*[SharpOS.AOT.Attributes.AllocObject]
+		[SharpOS.AOT.Attributes.AllocObject]
 		internal unsafe InternalSystem.Object AllocObject (VTable vtable)
 		{
 			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate (vtable.Size);
@@ -217,7 +217,7 @@ namespace SharpOS.Kernel {
 			_object.VTable = vtable;
 
 			return _object;
-		}*/
+		}
 		#endregion
 	}
 }

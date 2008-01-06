@@ -65,12 +65,30 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the name of the field by.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public Field GetFieldByName (string value)
 		{
 			if (!fields.ContainsKey (value))
 				throw new EngineException (string.Format ("Field '{0}' not found.", value));
 
 			return fields [value];
+		}
+
+		/// <summary>
+		/// Gets the name of the method by.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
+		public Method GetMethodByName (string value)
+		{
+			if (!this.methodsDictionary.ContainsKey (value))
+				throw new EngineException (string.Format ("Method '{0}' not found.", value));
+
+			return this.methodsDictionary [value];
 		}
 
 		private Engine engine = null;
@@ -103,9 +121,21 @@ namespace SharpOS.AOT.IR {
 		public void Add (Method method)
 		{
 			this.methods.Add (method);
+
+			this.methodsDictionary [method.MethodFullName] = method;
+
+			foreach (CustomAttribute customAttribute in method.MethodDefinition.CustomAttributes) {
+				if (!customAttribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ()))
+					continue;
+
+				string name = customAttribute.ConstructorParameters [0].ToString ();
+
+				this.methodsDictionary [name] = method;
+			}
 		}
 
 		private List<Method> methods = new List<Method> ();
+		private Dictionary<string, Method> methodsDictionary = new Dictionary<string, Method> ();
 
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection.

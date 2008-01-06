@@ -121,11 +121,11 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		private bool IsKernelString (SharpOS.AOT.IR.Instructions.Call call)
 		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method.MethodDefinition is MethodDefinition)
+					|| (call.Method.MethodDefinition as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+			foreach (CustomAttribute attribute in (call.Method.MethodDefinition as MethodDefinition).CustomAttributes) {
 				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.StringAttribute).ToString ()))
 					continue;
 
@@ -167,11 +167,11 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		private bool IsKernelAlloc (SharpOS.AOT.IR.Instructions.Call call)
 		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method.MethodDefinition is MethodDefinition)
+					|| (call.Method.MethodDefinition as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+			foreach (CustomAttribute attribute in (call.Method.MethodDefinition as MethodDefinition).CustomAttributes) {
 				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString ()))
 					continue;
 
@@ -214,11 +214,11 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		private bool IsKernelLabelledAlloc (SharpOS.AOT.IR.Instructions.Call call)
 		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method.MethodDefinition is MethodDefinition)
+					|| (call.Method.MethodDefinition as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+			foreach (CustomAttribute attribute in (call.Method.MethodDefinition as MethodDefinition).CustomAttributes) {
 				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString ()))
 					continue;
 
@@ -263,11 +263,11 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		private bool IsKernelLabelAddress (SharpOS.AOT.IR.Instructions.Call call)
 		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method.MethodDefinition is MethodDefinition)
+					|| (call.Method.MethodDefinition as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
+			foreach (CustomAttribute attribute in (call.Method.MethodDefinition as MethodDefinition).CustomAttributes) {
 				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString ()))
 					continue;
 
@@ -298,12 +298,54 @@ namespace SharpOS.AOT.X86 {
 			return false;
 		}
 
+		/// <summary>
+		/// Determines whether [is kernel object from pointer] [the specified call].
+		/// </summary>
+		/// <param name="call">The call.</param>
+		/// <returns>
+		/// 	<c>true</c> if [is kernel object from pointer] [the specified call]; otherwise, <c>false</c>.
+		/// </returns>
+		private bool IsKernelObjectFromPointer (SharpOS.AOT.IR.Instructions.Call call)
+		{
+			if (!(call.Method.MethodDefinition is MethodDefinition)
+					|| (call.Method.MethodDefinition as MethodDefinition).CustomAttributes.Count == 0)
+				return false;
+
+			foreach (CustomAttribute attribute in (call.Method.MethodDefinition as MethodDefinition).CustomAttributes) {
+				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString ()))
+					continue;
+
+				if (!(Class.GetTypeFullName (call.Method.ReturnType.ReturnType).Equals ("System.Object")
+						&& call.Method.Parameters.Count == 1
+						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.Void*")))
+					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString () + "' method.");
+
+				IR.Operands.Register value = call.Use [0] as IR.Operands.Register;
+				IR.Operands.Register assignee = call.Def as IR.Operands.Register;
+
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				return true;
+			}
+
+			return false;
+		}
+
 		private void HandleBuiltIns (SharpOS.AOT.IR.Instructions.Call call)
 		{
 			if (!this.IsKernelString (call)
 					&& !this.IsKernelAlloc (call)
 					&& !this.IsKernelLabelledAlloc (call)
-					&& !this.IsKernelLabelAddress (call))
+					&& !this.IsKernelLabelAddress (call)
+					&& !this.IsKernelObjectFromPointer (call))
 				throw new EngineException (string.Format ("Unknown Built-In '{0}'. ({1})", call.ToString (), this.method.MethodFullName));
 		}
 

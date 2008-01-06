@@ -32,6 +32,20 @@ namespace SharpOS.AOT.IR {
 	/// Represents a method in the AOT's intermediate representation. 
 	/// </summary>
 	public class Method : IEnumerable<Block> {
+		private bool skipProcessing = false;
+
+		public bool SkipProcessing
+		{
+			get
+			{
+				return this.skipProcessing;
+			}
+			set
+			{
+				this.skipProcessing = value;
+			}
+		}
+
 		private bool entryPoint = false;
 
 		/// <summary>
@@ -93,6 +107,46 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				return this.methodDefinition;
+			}
+		}
+
+		public string Name
+		{
+			get
+			{
+				return this.methodDefinition.Name;
+			}
+		}
+
+		public TypeReference DeclaringType
+		{
+			get
+			{
+				return this.methodDefinition.DeclaringType;
+			}
+		}
+
+		public MethodReturnType ReturnType
+		{
+			get
+			{
+				return this.methodDefinition.ReturnType;
+			}
+		}
+
+		public ParameterDefinitionCollection Parameters
+		{
+			get
+			{
+				return this.methodDefinition.Parameters;
+			}
+		}
+
+		public bool HasThis
+		{
+			get
+			{
+				return this.methodDefinition.HasThis;
 			}
 		}
 
@@ -658,7 +712,7 @@ namespace SharpOS.AOT.IR {
 						Instructions.Call call = (instruction as Instructions.Call);
 
 						if (!engine.HasSharpOSAttribute (call)
-								&& !engine.Assembly.IsInstruction (call.Method.DeclaringType.FullName))
+								&& !engine.Assembly.IsInstruction (call.Method.MethodDefinition.DeclaringType.FullName))
 							continue;
 
 						instruction.IsSpecialCase = true;
@@ -1467,6 +1521,9 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void Process ()
 		{
+			if (this.skipProcessing)
+				return;
+
 			if (this.engine.Options.Dump)
 				this.engine.Dump.Element (this.methodDefinition);
 
@@ -1516,8 +1573,6 @@ namespace SharpOS.AOT.IR {
 
 			if (this.engine.Options.Dump)
 				this.engine.Dump.PopElement ();	// method
-
-			return;
 		}
 
 		private List<Block> blocks;
@@ -1557,6 +1612,26 @@ namespace SharpOS.AOT.IR {
 				return this.MethodFullName;
 
 			return base.ToString ();
+		}
+
+		public bool IsAllocObject
+		{
+			get
+			{
+				foreach (CustomAttribute customAttribute in this.methodDefinition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocObjectAttribute).ToString ())
+						continue;
+
+					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != "System.Object"
+							|| methodDefinition.Parameters.Count != 1
+							|| methodDefinition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName)
+						throw new EngineException (string.Format ("'{0}' is not a valid AllocObject method", this.methodDefinition.ToString ()));
+
+					return true;
+				}
+
+				return false;
+			}
 		}
 	}
 }

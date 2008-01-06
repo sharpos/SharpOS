@@ -1561,7 +1561,7 @@ namespace SharpOS.AOT.IR {
 
 			Register assignee = this.SetRegister ();
 
-			return new Newobj (call, assignee, operands);
+			return new Newobj (this.method.Engine.GetMethod (call), assignee, operands);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldobj (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -1907,11 +1907,11 @@ namespace SharpOS.AOT.IR {
 				operands [operands.Length - 1 - i] = this.GetRegister ();
 
 			if (call.ReturnType.ReturnType.FullName == Constants.Void)
-				return new Call (call, null, operands);
+				return new Call (this.method.Engine.GetMethod (call), null, operands);
 
 			Register assignee = this.SetRegister ();
 
-			return new Call (call, assignee, operands);
+			return new Call (this.method.Engine.GetMethod (call), assignee, operands);
 		}
 		#endregion
 

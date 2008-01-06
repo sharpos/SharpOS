@@ -171,11 +171,29 @@ namespace SharpOS.AOT.IR {
 
 		Class vtableClass = null;
 
+		/// <summary>
+		/// Gets the VTable class.
+		/// </summary>
+		/// <value>The V table class.</value>
 		public Class VTableClass
 		{
 			get
 			{
 				return vtableClass;
+			}
+		}
+
+		Method allocObject = null;
+
+		/// <summary>
+		/// Gets the alloc object method.
+		/// </summary>
+		/// <value>The alloc object.</value>
+		public Method AllocObject
+		{
+			get
+			{
+				return this.allocObject;
 			}
 		}
 
@@ -187,6 +205,13 @@ namespace SharpOS.AOT.IR {
 			this.status = status;
 		}
 
+		/// <summary>
+		/// Gets the status information.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
+		/// <param name="module">The module.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="method">The method.</param>
 		public void GetStatusInformation (out AssemblyDefinition assembly, out ModuleDefinition module, out
 						  TypeDefinition type, out MethodDefinition method)
 		{
@@ -196,6 +221,9 @@ namespace SharpOS.AOT.IR {
 			method = this.currentMethod;
 		}
 
+		/// <summary>
+		/// Clears the status information.
+		/// </summary>
 		public void ClearStatusInformation ()
 		{
 			this.currentAssembly = null;
@@ -204,6 +232,13 @@ namespace SharpOS.AOT.IR {
 			this.currentMethod = null;
 		}
 
+		/// <summary>
+		/// Sets the status information.
+		/// </summary>
+		/// <param name="assembly">The assembly.</param>
+		/// <param name="module">The module.</param>
+		/// <param name="type">The type.</param>
+		/// <param name="method">The method.</param>
 		public void SetStatusInformation (AssemblyDefinition assembly, ModuleDefinition module,
 						  TypeDefinition type, MethodDefinition method)
 		{
@@ -405,6 +440,10 @@ namespace SharpOS.AOT.IR {
 			Run (asm);
 		}
 
+		/// <summary>
+		/// Loads the resources.
+		/// </summary>
+		/// <param name="def">The def.</param>
 		public void LoadResources (AssemblyDefinition def)
 		{
 			// TODO: does this cover multi-module assemblies?
@@ -420,20 +459,37 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Determines whether [has sharp OS attribute] [the specified call].
+		/// </summary>
+		/// <param name="call">The call.</param>
+		/// <returns>
+		/// 	<c>true</c> if [has sharp OS attribute] [the specified call]; otherwise, <c>false</c>.
+		/// </returns>
 		internal bool HasSharpOSAttribute (SharpOS.AOT.IR.Instructions.Call call)
 		{
-			if (!(call.Method is MethodDefinition)
-					|| (call.Method as MethodDefinition).CustomAttributes.Count == 0)
+			if (!(call.Method.MethodDefinition is MethodDefinition)
+					|| (call.Method.MethodDefinition as MethodDefinition).CustomAttributes.Count == 0)
 				return false;
 
-			foreach (CustomAttribute attribute in (call.Method as MethodDefinition).CustomAttributes) {
-				if (attribute.Constructor.DeclaringType.FullName.StartsWith (SHARPOS_ATTRIBUTES))
-					return true;
+			foreach (CustomAttribute attribute in (call.Method.MethodDefinition as MethodDefinition).CustomAttributes) {
+				if (!attribute.Constructor.DeclaringType.FullName.StartsWith (SHARPOS_ATTRIBUTES))
+					continue;
+
+				if (attribute.Constructor.DeclaringType.FullName == typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ())
+					continue;
+
+				return true;
 			}
 
 			return false;
 		}
 
+		/// <summary>
+		/// Gets the size of the base type.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
 		internal int GetBaseTypeSize (TypeDefinition type)
 		{
 			int result = 0;
@@ -464,6 +520,11 @@ namespace SharpOS.AOT.IR {
 			throw new EngineException ("'" + field.Field.Type.ToString () + "' has not been found.");
 		}
 
+		/// <summary>
+		/// Gets the field.
+		/// </summary>
+		/// <param name="field">The field.</param>
+		/// <returns></returns>
 		public Field GetField (FieldReference field)
 		{
 			string typeFullName = Class.GetTypeFullName (field);
@@ -472,7 +533,22 @@ namespace SharpOS.AOT.IR {
 				return this.classes [typeFullName].GetFieldByName (field.Name);
 
 			throw new EngineException (string.Format ("Field '{0}' not found.", field.ToString ()));
+		}
 
+		/// <summary>
+		/// Gets the method.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		/// <returns></returns>
+		public Method GetMethod (MethodReference method)
+		{
+			string typeFullName = Class.GetTypeFullName (method.DeclaringType);
+			string methodName = Method.GetLabel (method);
+
+			if (this.classes.ContainsKey (typeFullName))
+				return this.classes [typeFullName].GetMethodByName (methodName);
+
+			throw new EngineException (string.Format ("Method '{0}' not found.", method.ToString ()));
 		}
 
 		/// <summary>
@@ -628,15 +704,25 @@ namespace SharpOS.AOT.IR {
 				
 				this.classes [_class.TypeFullName] = _class;
 
-				// We don't need the methods of the registers
-				if (isAOTCore && !this.asm.IsInstruction (type.FullName))
+				// We don't need the constructors of the registers
+				if (isAOTCore && !this.asm.IsMemoryAddress (type.FullName)
+						&& !this.asm.IsInstruction (type.FullName))
 					continue;
+
+				
 
 				foreach (MethodDefinition entry in type.Constructors) {
 					Method method = new Method (this, entry);
 
+					if (isAOTCore && this.asm.IsMemoryAddress (type.FullName))
+						method.SkipProcessing = true;
+
 					_class.Add (method);
 				}
+
+				// We don't need the methods of the registers or memory addresses
+				if (isAOTCore && !this.asm.IsInstruction (type.FullName))
+					continue;
 
 				foreach (MethodDefinition entry in type.Methods) {
 					if (entry.ImplAttributes != MethodImplAttributes.Managed) {
@@ -674,10 +760,27 @@ namespace SharpOS.AOT.IR {
 
 					this.vtableClass = _class;
 				}
+
 			}
 
 			if (this.vtableClass == null)
 				throw new EngineException ("No VTable Class defined.");
+
+			// This block of code needs the vtableClass to be set
+			foreach (Class _class in this.classes.Values) {
+				foreach (Method _method in _class) {
+					if (!_method.IsAllocObject)
+						continue;
+
+					if (this.allocObject != null)
+						throw new EngineException ("More than one method was tagged as AllocObject Method.");
+
+					this.allocObject = _method;
+				}
+			}
+
+			if (this.allocObject == null)
+				throw new EngineException ("No AllocObject Method defined.");
 		}
 
 		/// <summary>
