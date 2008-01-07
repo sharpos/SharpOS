@@ -18,186 +18,178 @@ using System.Runtime.InteropServices;
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Kernel.FileSystem
-{
-    public unsafe static class Ext2FS
-    {
-        static byte* floppyDiskData = (byte*)0x00000000;
-        static FileSystem* fileSystem = null;
-        static INode* root = null;
-        static DirectoryFileFormat* format = null;
+namespace SharpOS.Kernel.FileSystem {
+	public unsafe static class Ext2FS {
+		static byte* floppyDiskData = (byte*) 0x00000000;
+		static FileSystem* fileSystem = null;
+		static INode* root = null;
+		static DirectoryFileFormat* format = null;
 
-        public static void Setup()
-        {
-            FloppyDiskController.ReadData();
+		public static void Setup ()
+		{
+			FloppyDiskController.ReadData ();
 
-            ReadSuperBlock();
-            ReadGroupDescriptor();
+			/*ReadSuperBlock ();
+			ReadGroupDescriptor ();
 
-            root = ReadINode(INode.EXT2_ROOT_INO);
+			root = ReadINode (INode.EXT2_ROOT_INO);
 
-            format = (DirectoryFileFormat*)MemoryManager.Allocate((uint)(sizeof(DirectoryFileFormat) * 20));
-        }
+			format = (DirectoryFileFormat*) MemoryManager.Allocate ((uint) (sizeof (DirectoryFileFormat) * 20));*/
+		}
 
-        public static void ListFile()
-        {
-            GetDirectoryEntries(root, format);
-        }
+		public static void ListFile ()
+		{
+			GetDirectoryEntries (root, format);
+		}
 
-        private static bool IsDirectory(INode* inode)
-        {
-            return (inode->Mode & INode.EXT2_S_IFDIR) != 0;
-        }
+		private static bool IsDirectory (INode* inode)
+		{
+			return (inode->Mode & INode.EXT2_S_IFDIR) != 0;
+		}
 
-        private static void GetDataBlocks(INode* inode, uint* blocks, bool* indirectBlocks, ref int blockCount)
-        {
-            uint count = 0;
+		private static void GetDataBlocks (INode* inode, uint* blocks, bool* indirectBlocks, ref int blockCount)
+		{
+			uint count = 0;
 
-            count = (uint)(inode->Size / fileSystem->BlockSize);
+			count = (uint) (inode->Size / fileSystem->BlockSize);
 
-            blockCount = (int)count;
+			blockCount = (int) count;
 
-            uint* blockDatas = inode->BlockData;
+			uint* blockDatas = inode->BlockData;
 
-            for (int i = 0; i < 12 && count > 0; i++, count--)
-            {
-                blocks[i] = blockDatas[i];
-                indirectBlocks[i] = false;
-            }
+			for (int i = 0; i < 12 && count > 0; i++, count--) {
+				blocks [i] = blockDatas [i];
+				indirectBlocks [i] = false;
+			}
 
-            if (count == 0)
-                return;
+			if (count == 0)
+				return;
 
-            //this.GetIndirectDataBlocks(ref count, inode.BlockData[12], 0, blocks, indirectBlocks);
+			//this.GetIndirectDataBlocks(ref count, inode.BlockData[12], 0, blocks, indirectBlocks);
 
-            //if (count == 0)
-            //    return;
+			//if (count == 0)
+			//    return;
 
-            //this.GetIndirectDataBlocks(ref count, inode.BlockData[13], 1, blocks, indirectBlocks);
+			//this.GetIndirectDataBlocks(ref count, inode.BlockData[13], 1, blocks, indirectBlocks);
 
-            //if (count == 0)
-            //    return;
+			//if (count == 0)
+			//    return;
 
-            //this.GetIndirectDataBlocks(ref count, inode.BlockData[14], 2, blocks, indirectBlocks);
+			//this.GetIndirectDataBlocks(ref count, inode.BlockData[14], 2, blocks, indirectBlocks);
 
-            //if (count > 0)
-            //    throw new Exception(string.Format("File too big. (Inode #{0})", inode));
-        }
+			//if (count > 0)
+			//    throw new Exception(string.Format("File too big. (Inode #{0})", inode));
+		}
 
-        private static void GetDirectoryEntries(INode* inode, DirectoryFileFormat* format)
-        {
-            if (!IsDirectory(inode))
-                return;
+		private static void GetDirectoryEntries (INode* inode, DirectoryFileFormat* format)
+		{
+			if (!IsDirectory (inode))
+				return;
 
-            int blockCount = 0;
+			int blockCount = 0;
 
-            uint* blocks = (uint*)MemoryManager.Allocate(sizeof(uint) * 100);
-            bool* indirectBlocks = (bool*)MemoryManager.Allocate(sizeof(bool) * 100);
-            GetDataBlocks(inode, blocks, indirectBlocks, ref blockCount);
+			uint* blocks = (uint*) MemoryManager.Allocate (sizeof (uint) * 100);
+			bool* indirectBlocks = (bool*) MemoryManager.Allocate (sizeof (bool) * 100);
+			GetDataBlocks (inode, blocks, indirectBlocks, ref blockCount);
 
-            int formatCount = 0;
+			int formatCount = 0;
 
-            for (int i = 0; i < blockCount; ++i)
-            {
-                byte* source = floppyDiskData;
-                byte* buffer = (byte*)(source + (blocks[i] * fileSystem->BlockSize));
+			for (int i = 0; i < blockCount; ++i) {
+				byte* source = floppyDiskData;
+				byte* buffer = (byte*) (source + (blocks [i] * fileSystem->BlockSize));
 
-                Block* dataBlock = (Block*)MemoryManager.Allocate((uint)sizeof(Block));
-                dataBlock->SetBlock(blocks[i] * fileSystem->BlockSize, buffer);
+				Block* dataBlock = (Block*) MemoryManager.Allocate ((uint) sizeof (Block));
+				dataBlock->SetBlock (blocks [i] * fileSystem->BlockSize, buffer);
 
-                uint offset = 0;
+				uint offset = 0;
 
-                while (offset < fileSystem->BlockSize)
-                {
-                    format[formatCount].SetBlock(dataBlock, offset);
-                    if (format[formatCount].INode != 0)
-                    {
-                        //TextMode.WriteLine("INode Exist : ", (int)format[formatCount].INode);
-                    }
+				while (offset < fileSystem->BlockSize) {
+					format [formatCount].SetBlock (dataBlock, offset);
+					if (format [formatCount].INode != 0) {
+						//TextMode.WriteLine("INode Exist : ", (int)format[formatCount].INode);
+					}
 
-                    offset += format[formatCount].RecordLength;
-                    TextMode.WriteLine(format[formatCount].Name);
+					offset += format [formatCount].RecordLength;
+					TextMode.WriteLine (format [formatCount].Name);
 
-                    formatCount++;
-                }
-            }
-        }
+					formatCount++;
+				}
+			}
+		}
 
-        private static void ReadSuperBlock()
-        {
-            byte* source = floppyDiskData;
-            byte* buffer = (byte*)(source + 1024);
+		private static void ReadSuperBlock ()
+		{
+			byte* source = floppyDiskData;
+			byte* buffer = (byte*) (source + 1024);
 
-            uint sizeOfBlock = (uint)sizeof(Block);
-            Block* block = (Block*)SharpOS.Kernel.ADC.MemoryManager.Allocate(sizeOfBlock);//block.Setup(1024, buffer);
+			uint sizeOfBlock = (uint) sizeof (Block);
+			Block* block = (Block*) SharpOS.Kernel.ADC.MemoryManager.Allocate (sizeOfBlock);//block.Setup(1024, buffer);
 
-            block->SetBlock(1024, buffer);
-            SuperBlock* superBlock = (SuperBlock*)SharpOS.Kernel.ADC.MemoryManager.Allocate((uint)sizeof(SuperBlock));
-            superBlock->SetBlock(block);
+			block->SetBlock (1024, buffer);
+			SuperBlock* superBlock = (SuperBlock*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) sizeof (SuperBlock));
+			superBlock->SetBlock (block);
 
-            fileSystem = (FileSystem*)MemoryManager.Allocate((uint)sizeof(FileSystem));
-            fileSystem->SetSuperBlock(superBlock);
+			fileSystem = (FileSystem*) MemoryManager.Allocate ((uint) sizeof (FileSystem));
+			fileSystem->SetSuperBlock (superBlock);
 
-            if (fileSystem->SuperBlock->Magic != SuperBlock.EXT2_MAGIC)
-                TextMode.WriteLine("Not an Ext2 partition.");
+			if (fileSystem->SuperBlock->Magic != SuperBlock.EXT2_MAGIC)
+				TextMode.WriteLine ("Not an Ext2 partition.");
 
-            if (fileSystem->SuperBlock->Errors != SuperBlock.EXT2_ERRORS_CONTINUE)
-                TextMode.WriteLine("Invalid Ext2 SuperBlock state.");
+			if (fileSystem->SuperBlock->Errors != SuperBlock.EXT2_ERRORS_CONTINUE)
+				TextMode.WriteLine ("Invalid Ext2 SuperBlock state.");
 
-            if (fileSystem->SuperBlock->AlgorithmsBitmap != 0)
-                TextMode.WriteLine("Unsupported Bitmap Compression Algorithm.");
-        }
+			if (fileSystem->SuperBlock->AlgorithmsBitmap != 0)
+				TextMode.WriteLine ("Unsupported Bitmap Compression Algorithm.");
+		}
 
-        private static void ReadGroupDescriptor()
-        {
-            Block* block = null;
+		private static void ReadGroupDescriptor ()
+		{
+			Block* block = null;
 
-            for (uint i = 0; i < fileSystem->GroupsCount; i++)
-            {
-                if (i % fileSystem->GroupDescriptorsPerBlock == 0)
-                {
-                    uint offset = fileSystem->SuperBlock->FirstDataDlock + 1;
-                    offset += (uint)(i / fileSystem->GroupDescriptorsPerBlock);
-                    offset *= fileSystem->BlockSize;
+			for (uint i = 0; i < fileSystem->GroupsCount; i++) {
+				if (i % fileSystem->GroupDescriptorsPerBlock == 0) {
+					uint offset = fileSystem->SuperBlock->FirstDataDlock + 1;
+					offset += (uint) (i / fileSystem->GroupDescriptorsPerBlock);
+					offset *= fileSystem->BlockSize;
 
-                    uint sizeOfBlock = (uint)sizeof(Block);
-                    block = (Block*)SharpOS.Kernel.ADC.MemoryManager.Allocate(sizeOfBlock);
+					uint sizeOfBlock = (uint) sizeof (Block);
+					block = (Block*) SharpOS.Kernel.ADC.MemoryManager.Allocate (sizeOfBlock);
 
-                    byte* source = floppyDiskData;
-                    byte* buffer = (byte*)(source + offset);
+					byte* source = floppyDiskData;
+					byte* buffer = (byte*) (source + offset);
 
-                    block->SetBlock(offset, buffer);
-                }
+					block->SetBlock (offset, buffer);
+				}
 
-                fileSystem->GroupDescriptors[i].SetBlock(block, (uint)((i % fileSystem->GroupDescriptorsPerBlock) * GroupDescriptor.GroupDescriptorSize));
-            }
-        }
+				fileSystem->GroupDescriptors [i].SetBlock (block, (uint) ((i % fileSystem->GroupDescriptorsPerBlock) * GroupDescriptor.GroupDescriptorSize));
+			}
+		}
 
-        private static INode* ReadINode(uint value)
-        {
-            value--;
+		private static INode* ReadINode (uint value)
+		{
+			value--;
 
-            uint group = value / fileSystem->SuperBlock->INodesPerGroup;
+			uint group = value / fileSystem->SuperBlock->INodesPerGroup;
 
-            uint index = (value % fileSystem->SuperBlock->INodesPerGroup) * fileSystem->SuperBlock->INodeSize;
+			uint index = (value % fileSystem->SuperBlock->INodesPerGroup) * fileSystem->SuperBlock->INodeSize;
 
-            uint offset = index % fileSystem->BlockSize;
+			uint offset = index % fileSystem->BlockSize;
 
-            uint blockNumber = fileSystem->GroupDescriptors[group].INodeTable + (index / fileSystem->BlockSize);
+			uint blockNumber = fileSystem->GroupDescriptors [group].INodeTable + (index / fileSystem->BlockSize);
 
-            uint fileOffset = blockNumber * fileSystem->BlockSize;
+			uint fileOffset = blockNumber * fileSystem->BlockSize;
 
-            byte* source = floppyDiskData;
-            byte* buffer = (byte*)(source + fileOffset);
+			byte* source = floppyDiskData;
+			byte* buffer = (byte*) (source + fileOffset);
 
-            uint sizeOfBlock = (uint)sizeof(Block);
-            Block* block = (Block*)SharpOS.Kernel.ADC.MemoryManager.Allocate(sizeOfBlock);
-            block->SetBlock(fileOffset, buffer);
+			uint sizeOfBlock = (uint) sizeof (Block);
+			Block* block = (Block*) SharpOS.Kernel.ADC.MemoryManager.Allocate (sizeOfBlock);
+			block->SetBlock (fileOffset, buffer);
 
-            INode* result = (INode*)MemoryManager.Allocate((uint)sizeof(INode));
-            result->SetBlock(block, offset);
+			INode* result = (INode*) MemoryManager.Allocate ((uint) sizeof (INode));
+			result->SetBlock (block, offset);
 
-            return result;
-        }
-    }
+			return result;
+		}
+	}
 }

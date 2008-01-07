@@ -10,49 +10,49 @@
 
 namespace SharpOS.Kernel.Tests.CS {
 	public class Boxing {
-		/*		private struct Point {
-					public int x, y;
+		/*private struct Point {
+			public int x, y;
 
-					public Point (int x, int y)
-					{
-						this.x = x;
-						this.y = y;
-					}
+			public Point (int x, int y)
+			{
+				this.x = x;
+				this.y = y;
+			}
 
-					public int GetSum ()
-					{
-						return this.x + this.y;
-					}
-				}
+			public int GetSum ()
+			{
+				return this.x + this.y;
+			}
+		}
 
-				private static object GetPoint (int a, int b)
-				{
-					return new Point (a, b);
-				}
+		private static object GetPoint (int a, int b)
+		{
+			return new Point (a, b);
+		}
 
-				private static int Add (int a, int b)
-				{
-					Point point = (Point) GetPoint (a, b);
+		private static int Add (int a, int b)
+		{
+			Point point = (Point) GetPoint (a, b);
 
-					return point.x + point.y;
-				}
-		
-				public static uint CMPBoxUnbox ()
-				{
-					if (Add (100, 200) == 300)
-						return 1;
+			return point.x + point.y;
+		}
 
-					return 0;
-				}
+		public static uint CMPBoxUnbox ()
+		{
+			if (Add (100, 200) == 300)
+				return 1;
 
-				public static uint CMP2 ()
-				{
-					object o = 0xbeef;
+			return 0;
+		}
 
-					if ((int) o == 0xbeef)
-						return 1;
+		public static uint CMP2 ()
+		{
+			object o = 0xbeef;
 
-					return 0;
-				}*/
+			if ((int) o == 0xbeef)
+				return 1;
+
+			return 0;
+		}*/
 	}
 }

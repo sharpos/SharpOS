@@ -23,8 +23,8 @@
 	</target>
 
 	<target name="test">
-		<nant buildfile="./Core/Core.build" target="test" />
 		<nant buildfile="./Tests/Tests.build"/>
+		<nant buildfile="./Core/Core.build" target="test" />
 	</target>
 
 	<target name="aot" depends="build">
@@ -39,7 +39,7 @@
 			commandline="-i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>
 
-	<target name="aot-test" depends="test">
+	<target name="aot-test">
 		<echo message="AOT compiling the SharpOS Kernel" />
 		<exec program="${path::combine(prefix, 'sharpos-aot.exe')}" 
 			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}"/>

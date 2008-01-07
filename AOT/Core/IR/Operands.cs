@@ -15,29 +15,86 @@ using Mono.Cecil;
 
 
 namespace SharpOS.AOT.IR.Operands {
+	/// <summary>
+	/// 
+	/// </summary>
 	public enum InternalType {
+		/// <summary>
+		/// 
+		/// </summary>
 		NotSet,
+		/// <summary>
+		/// 
+		/// </summary>
 		I1,
+		/// <summary>
+		/// 
+		/// </summary>
 		U1,
 
+		/// <summary>
+		/// 
+		/// </summary>
 		I2,
+		/// <summary>
+		/// 
+		/// </summary>
 		U2,
 
+		/// <summary>
+		/// 
+		/// </summary>
 		I4,
+		/// <summary>
+		/// 
+		/// </summary>
 		U4,
+		/// <summary>
+		/// 
+		/// </summary>
 		I,
+		/// <summary>
+		/// 
+		/// </summary>
 		U,
 
+		/// <summary>
+		/// 
+		/// </summary>
 		I8,
+		/// <summary>
+		/// 
+		/// </summary>
 		U8,
 
+		/// <summary>
+		/// 
+		/// </summary>
 		R4,
+		/// <summary>
+		/// 
+		/// </summary>
 		R8,
+		/// <summary>
+		/// 
+		/// </summary>
 		F,
 
+		/// <summary>
+		/// 
+		/// </summary>
 		ValueType,
+		/// <summary>
+		/// 
+		/// </summary>
 		O,
+		/// <summary>
+		/// 
+		/// </summary>
 		M,
+		/// <summary>
+		/// 
+		/// </summary>
 		TypedReference
 	}
 
@@ -61,6 +118,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		protected InternalType internalType = InternalType.NotSet;
 
+		/// <summary>
+		/// Gets or sets the type of the internal.
+		/// </summary>
+		/// <value>The type of the internal.</value>
 		public virtual InternalType InternalType
 		{
 			get
@@ -73,6 +134,12 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Gets the non register.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
 		public static Operand GetNonRegister (Operand value, Type type)
 		{
 			Operand operand = value;
@@ -105,12 +172,22 @@ namespace SharpOS.AOT.IR.Operands {
 	public abstract class Constant : Operand {
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class NullConstant : Constant {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="NullConstant"/> class.
+		/// </summary>
 		public NullConstant ()
 		{
 			this.InternalType = InternalType.I;
 		}
 
+		/// <summary>
+		/// Gets the value.
+		/// </summary>
+		/// <value>The value.</value>
 		public int Value
 		{
 			get
@@ -119,13 +196,26 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </returns>
 		public override string ToString ()
 		{
 			return "null";
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class IntConstant : Constant {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="IntConstant"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public IntConstant (int value)
 		{
 			this.value = value;
@@ -148,7 +238,14 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class LongConstant : Constant {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="LongConstant"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public LongConstant (long value)
 		{
 			this.value = value;
@@ -171,7 +268,14 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class FloatConstant : Constant {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FloatConstant"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public FloatConstant (float value)
 		{
 			this.value = value;
@@ -194,7 +298,14 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class DoubleConstant : Constant {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="DoubleConstant"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public DoubleConstant (double value)
 		{
 			this.value = value;
@@ -217,7 +328,14 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class StringConstant : Constant {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="StringConstant"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public StringConstant (string value)
 		{
 			this.value = value;
@@ -240,7 +358,14 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class TokenConstant : Constant {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="TokenConstant"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public TokenConstant (string value)
 		{
 			this.value = value;
@@ -260,6 +385,11 @@ namespace SharpOS.AOT.IR.Operands {
 	/// Base class for Arguments, Local Variables...
 	/// </summary>
 	public abstract class Identifier : Operand {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Identifier"/> class.
+		/// </summary>
+		/// <param name="typeName">Name of the type.</param>
+		/// <param name="index">The index.</param>
 		public Identifier (string typeName, int index)
 		{
 			this.index = index;
@@ -372,6 +502,10 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Gets the ID.
+		/// </summary>
+		/// <value>The ID.</value>
 		public string ID
 		{
 			get
@@ -388,6 +522,12 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </returns>
 		public override string ToString ()
 		{
 			string result = this.ID;
@@ -400,6 +540,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		protected MemberReference type = null;
 
+		/// <summary>
+		/// Gets or sets the type.
+		/// </summary>
+		/// <value>The type.</value>
 		public MemberReference Type {
 			get {
 				return type;
@@ -409,6 +553,10 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Gets the full name of the type.
+		/// </summary>
+		/// <value>The full name of the type.</value>
 		public string TypeFullName {
 			get {
 				return Class.GetTypeFullName (this.type);
@@ -420,6 +568,10 @@ namespace SharpOS.AOT.IR.Operands {
 	/// .NET Stack Register.
 	/// </summary>
 	public class Register : Identifier {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Register"/> class.
+		/// </summary>
+		/// <param name="index">The index.</param>
 		public Register (int index)
 			: base ("Reg", index)
 		{
@@ -427,6 +579,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private Register phi = null;
 
+		/// <summary>
+		/// Gets or sets the PHI.
+		/// </summary>
+		/// <value>The PHI.</value>
 		public Register PHI
 		{
 			get
@@ -441,6 +597,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		Instructions.Instruction parent = null;
 
+		/// <summary>
+		/// Gets or sets the parent.
+		/// </summary>
+		/// <value>The parent.</value>
 		public Instructions.Instruction Parent
 		{
 			get
@@ -453,6 +613,10 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Toes the string.
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString ()
 		{
 			string suffix = "";
@@ -468,6 +632,11 @@ namespace SharpOS.AOT.IR.Operands {
 	/// Local Variable
 	/// </summary>
 	public class Local : Identifier {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Local"/> class.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <param name="type">The type.</param>
 		public Local (int index, TypeReference type)
 			: base ("Loc", index)
 		{
@@ -480,6 +649,11 @@ namespace SharpOS.AOT.IR.Operands {
 	/// Method Argument
 	/// </summary>
 	public class Argument : Identifier {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Argument"/> class.
+		/// </summary>
+		/// <param name="index">The index.</param>
+		/// <param name="type">The type.</param>
 		public Argument (int index, TypeReference type)
 			: base ("Arg", index)
 		{
@@ -488,7 +662,14 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Field {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Field"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
 		public Field (FieldDefinition type)
 		{
 			System.Diagnostics.Debug.Assert (type != null);
@@ -498,6 +679,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		FieldDefinition type;
 
+		/// <summary>
+		/// Gets the type.
+		/// </summary>
+		/// <value>The type.</value>
 		public FieldDefinition Type
 		{
 			get
@@ -507,7 +692,15 @@ namespace SharpOS.AOT.IR.Operands {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class FieldOperand : Operand {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="FieldOperand"/> class.
+		/// </summary>
+		/// <param name="field">The field.</param>
+		/// <param name="instance">The instance.</param>
 		public FieldOperand (Field field, Operand instance)
 		{
 			this.field = field;
@@ -521,6 +714,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		private Field field = null;
 
+		/// <summary>
+		/// Gets the field.
+		/// </summary>
+		/// <value>The field.</value>
 		public Field Field
 		{
 			get
@@ -529,6 +726,10 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Gets the short name of the field type.
+		/// </summary>
+		/// <value>The short name of the field type.</value>
 		public string ShortFieldTypeName
 		{
 			get
@@ -537,6 +738,12 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </returns>
 		public override string ToString ()
 		{
 			string result = "";
@@ -551,6 +758,10 @@ namespace SharpOS.AOT.IR.Operands {
 
 		Operand instance = null;
 
+		/// <summary>
+		/// Gets or sets the instance.
+		/// </summary>
+		/// <value>The instance.</value>
 		public Operand Instance
 		{
 			get
@@ -563,6 +774,10 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		/// <summary>
+		/// Gets the full name of the type.
+		/// </summary>
+		/// <value>The full name of the type.</value>
 		public string TypeFullName
 		{
 			get

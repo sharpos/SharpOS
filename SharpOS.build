@@ -8,25 +8,28 @@
 -->
 
 <project name="SharpOS" default="build">
-	<target name="build">
-		<echo message="Building projects" />
+	<target name="copy">
 		<copy todir="build">
 			<fileset basedir="References">
 				<include name="*" />
 			</fileset>
 		</copy>
+	</target>
+	
+	<target name="build" depends="copy">
+		<echo message="Building projects" />
 		<nant buildfile="./Tools/Tools.build" />
 		<nant buildfile="./AOT/AOT.build" />
 		<nant buildfile="./Data/Data.build" />
 		<nant buildfile="./Kernel/Kernel.build" />
 	</target>
 
-	<target name="test" depends="build">
+	<target name="test" depends="copy">
 		<echo message="Running integrity tests..." />
-		<nant buildfile="./Tools/Tools.build" target="test" />
-		<nant buildfile="./AOT/AOT.build" target="test" />
+		<nant buildfile="./Tools/Tools.build"/>
+		<nant buildfile="./AOT/AOT.build"/>
+		<nant buildfile="./Data/Data.build"/>
 		<nant buildfile="./Kernel/Kernel.build" target="test" />
-		<nant buildfile="./Data/Data.build" target="test" />
 	</target>
 
 	<target name="dist" depends="build">

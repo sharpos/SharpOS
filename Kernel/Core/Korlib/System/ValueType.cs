@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -8,11 +8,11 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-using System;
-using System.Text;
+using SharpOS.AOT.Attributes;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.AOT.Attributes {
-	[AttributeUsage (AttributeTargets.Method)]
-	public sealed class NewObjectAttribute : Attribute {
+namespace InternalSystem {
+	[TargetNamespace ("System")]
+	public abstract class ValueType : InternalSystem.Object {
 	}
 }

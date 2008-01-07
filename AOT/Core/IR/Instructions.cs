@@ -1277,17 +1277,6 @@ namespace SharpOS.AOT.IR.Instructions {
 				return this.method;
 			}
 		}
-
-		/// <summary>
-		/// It returns the unique name of this call. (e.g. "void namespace.class.method UInt32 UInt16")
-		/// </summary>
-		public string AssemblyLabel
-		{
-			get
-			{
-				return IR.Method.GetLabel (this.Method.MethodDefinition);
-			}
-		}
 	}
 
 	// TODO add support for call/callvirt/calli/jmp
@@ -1431,67 +1420,67 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	public class Box : Instruction {
-		public Box (TypeReference typeReference, Register result, Register value)
+		public Box (Class type, Register result, Register value)
 			: base ("Box", result, new Operand [] { value })
 		{
-			this.typeReference = typeReference;
+			this.type = type;
 
 			result.InternalType = InternalType.O;
 		}
 
-		TypeReference typeReference;
+		Class type;
 
-		public TypeReference Type
+		public Class Type
 		{
 			get
 			{
-				return this.typeReference;
+				return this.type;
 			}
 		}
 	}
 
 	public class Unbox : Instruction {
-		public Unbox (TypeReference typeReference, Register result, Register instance)
+		public Unbox (Class type, Register result, Register instance)
 			: base ("Unbox", result, new Operand [] { instance })
 		{
-			this.typeReference = typeReference;
+			this.type = type;
 
 			result.InternalType = InternalType.I;
 		}
 
-		TypeReference typeReference;
+		Class type;
 
-		public TypeReference Type
+		public Class Type
 		{
 			get
 			{
-				return this.typeReference;
+				return this.type;
 			}
 		}
 	}
 
 	public class UnboxAny : Instruction {
-		public UnboxAny (TypeReference typeReference, Register result, Register instance)
+		public UnboxAny (Class type, Register result, Register instance)
 			: base ("UnboxAny", result, new Operand [] { instance })
 		{
-			this.typeReference = typeReference;
+			this.type = type;
 		}
 
-		TypeReference typeReference;
+		Class type;
 
-		public TypeReference Type
+		public Class Type
 		{
 			get
 			{
-				return this.typeReference;
+				return this.type;
 			}
 		}
 
 		public override void Process (Method method)
 		{
-			if (this.typeReference.IsValueType) {
+			if (this.type.ClassDefinition.IsValueType) {
 				this.def.InternalType = InternalType.ValueType;
-				(this.def as Identifier).Type = this.typeReference;
+				(this.def as Identifier).Type = this.type.ClassDefinition;
 
 			} else
 				throw new NotImplementedEngineException ();

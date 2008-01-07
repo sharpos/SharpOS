@@ -108,19 +108,20 @@ namespace SharpOS.Kernel {
 			StageMessage ("Keyboard setup...");
 			Keyboard.Setup ();
 
-            StageMessage("Floppy Disk Controller setup...");
-            FloppyDiskController.Setup();
+			StageMessage("Floppy Disk Controller setup...");
+			FloppyDiskController.Setup();
 
-            StageMessage("Scheduler setup...");
+			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
 
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();
 
-            StageMessage("Ext2FS FileSystem setup...");
-            SharpOS.Kernel.FileSystem.Ext2FS.Setup();
+			// It doesn't work with qemu and it crashes vmware
+			/*StageMessage("Ext2FS FileSystem setup...");
+			SharpOS.Kernel.FileSystem.Ext2FS.Setup();*/
 
-            TextMode.SaveAttributes();
+			TextMode.SaveAttributes();
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
 			TextMode.WriteLine("");
 			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
@@ -129,6 +130,7 @@ namespace SharpOS.Kernel {
 
 #if KERNEL_TESTS
 			// Testcases
+			TextMode.WriteLine ("Run tests");
 			ByteString.__RunTests ();
 			StringBuilder.__RunTests ();
 			CString8.__RunTests ();
@@ -215,12 +217,19 @@ namespace SharpOS.Kernel {
 		#endregion
 		#region Object Support
 		[SharpOS.AOT.Attributes.AllocObject]
-		internal unsafe InternalSystem.Object AllocObject (VTable vtable)
+		internal static unsafe InternalSystem.Object AllocObject (VTable vtable)
 		{
+			TextMode.WriteLine ("AllocObject called");
+			TextMode.Write ("Size: ");
+			TextMode.Write ((int) vtable.Size);
+			TextMode.WriteLine ();
+
 			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate (vtable.Size);
 
 			InternalSystem.Object _object = Stubs.GetObjectFromPointer (result);
 			_object.VTable = vtable;
+
+			TextMode.WriteLine ("AllocObject Exit");
 
 			return _object;
 		}

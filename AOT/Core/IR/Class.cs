@@ -53,7 +53,12 @@ namespace SharpOS.AOT.IR {
 
 			foreach (FieldDefinition field in this.classDefinition.Fields)
 				fields [field.Name] = new Field (field);
+
+			if (this.TypeFullName != Mono.Cecil.Constants.Object)
+				this._base = this.engine.GetClass (this.classDefinition.BaseType);
 		}
+
+		Class _base = null;
 
 		Dictionary<string, Field> fields = new Dictionary<string, Field> ();
 
@@ -196,7 +201,9 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public int GetFieldOffset (string fieldName)
 		{
-			int result = this.engine.GetBaseTypeSize (this.classDefinition.BaseType as TypeDefinition);
+			//this.engine.GetBaseTypeSize (this.classDefinition.BaseType as TypeDefinition);
+
+			int result = this.BaseSize;
 
 			foreach (FieldReference field in this.classDefinition.Fields) {
 				if ((field as FieldDefinition).IsStatic)
@@ -258,6 +265,43 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		private bool isInternal = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is internal.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is internal; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsInternal
+		{
+			get
+			{
+				return this.isInternal;
+			}
+			set
+			{
+				this.isInternal = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets the size of the base.
+		/// </summary>
+		/// <value>The size of the base.</value>
+		public int BaseSize
+		{
+			get
+			{
+				if (!this.classDefinition.IsValueType
+						&& this.classDefinition.IsClass
+						&& this._base != null)
+					return this._base.Size;
+
+				return 0;
+			}
+		}
+
 		/// <summary>
 		/// Gets the size.
 		/// </summary>
@@ -266,11 +310,9 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				int result = -1;
+				int result = 0;
 
 				if (this.classDefinition.IsEnum) {
-					result = 0;
-
 					foreach (FieldDefinition field in this.classDefinition.Fields) {
 						if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
 							result = this.engine.GetTypeSize (field.FieldType.FullName);
@@ -278,10 +320,11 @@ namespace SharpOS.AOT.IR {
 						}
 					}
 
-				} else if (this.classDefinition.IsValueType) {
-					if ((this.classDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
-						result = 0;
+				} else if (this.classDefinition.IsValueType
+						|| this.classDefinition.IsClass) {
+					result = this.BaseSize;
 
+					if ((this.classDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
 						foreach (FieldDefinition field in this.classDefinition.Fields) {
 							if ((field as FieldDefinition).IsStatic)
 								continue;
@@ -293,16 +336,16 @@ namespace SharpOS.AOT.IR {
 						}
 
 					} else {
-						result = 0;
-
 						foreach (FieldReference field in this.classDefinition.Fields) {
 							if ((field as FieldDefinition).IsStatic)
 								continue;
 
 							result += this.engine.GetFieldSize (field.FieldType.FullName);
 						}
-					}
-				}
+					} 
+
+				} else
+					throw new NotImplementedEngineException ();
 
 				return result;
 			}

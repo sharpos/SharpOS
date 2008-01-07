@@ -46,6 +46,7 @@ namespace SharpOS.Kernel {
 		/// <summary>
 		public unsafe static void Panic (string msg, KernelStage stage, KernelError code)
 		{
+#if false
 			PString8* buf = PString8.Wrap (intermediateStringBuffer, MaxMessageLength);
 
 			buf->Concat ("Stage: ");
@@ -81,7 +82,7 @@ namespace SharpOS.Kernel {
 			TextMode.WriteLine ("The SharpOS Project would appreciate your feedback on this bug.");
 
 			TextMode.RestoreAttributes ();
-
+#endif
 			EntryModule.Halt ();
 		}
 

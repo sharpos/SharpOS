@@ -484,18 +484,25 @@ namespace SharpOS.AOT.IR {
 				if (attribute.Constructor.DeclaringType.FullName == typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ())
 					continue;
 
+				// No need for internal propagation
+				if (attribute.Constructor.DeclaringType.FullName == typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString ()) {
+					call.IsSpecialCase = true;
+					continue;
+				}
+
 				return true;
 			}
 
 			return false;
 		}
 
+		// TODO refactor this one
 		/// <summary>
 		/// Gets the size of the base type.
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns></returns>
-		internal int GetBaseTypeSize (TypeDefinition type)
+		/*internal int GetBaseTypeSize (TypeDefinition type)
 		{
 			int result = 0;
 
@@ -511,7 +518,7 @@ namespace SharpOS.AOT.IR {
 			}
 
 			return result;
-		}
+		}*/
 
 		// TODO refactor this one
 		internal int GetFieldOffset (IR.Operands.FieldOperand field)
@@ -538,6 +545,21 @@ namespace SharpOS.AOT.IR {
 				return this.classes [typeFullName].GetFieldByName (field.Name);
 
 			throw new EngineException (string.Format ("Field '{0}' not found.", field.ToString ()));
+		}
+
+		/// <summary>
+		/// Gets the class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
+		public Class GetClass (TypeReference type)
+		{
+			string typeFullName = Class.GetTypeFullName (type);
+
+			if (this.classes.ContainsKey (typeFullName))
+				return this.classes [typeFullName];
+
+			throw new EngineException (string.Format ("Class '{0}' not found.", type.ToString ()));
 		}
 
 		/// <summary>
@@ -710,14 +732,16 @@ namespace SharpOS.AOT.IR {
 				this.classes [_class.TypeFullName] = _class;
 
 				// We don't need the constructors of the registers
-				if (isAOTCore && !this.asm.IsMemoryAddress (type.FullName)
-						&& !this.asm.IsInstruction (type.FullName))
-					continue;
+				if (isAOTCore) {
+					_class.IsInternal = true;
 
-				
+					if (!this.asm.IsMemoryAddress (type.FullName)
+							&& !this.asm.IsInstruction (type.FullName))
+						continue;
+				}
 
 				foreach (MethodDefinition entry in type.Constructors) {
-					Method method = new Method (this, entry);
+					Method method = new Method (this, _class, entry);
 
 					if (isAOTCore && this.asm.IsMemoryAddress (type.FullName))
 						method.SkipProcessing = true;
@@ -737,7 +761,7 @@ namespace SharpOS.AOT.IR {
 						continue;
 					}
 
-					Method method = new Method (this, entry);
+					Method method = new Method (this, _class, entry);
 
 					_class.Add (method);
 				}

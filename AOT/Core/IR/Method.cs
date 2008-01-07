@@ -110,6 +110,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the name.
+		/// </summary>
+		/// <value>The name.</value>
 		public string Name
 		{
 			get
@@ -118,6 +122,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the type of the declaring.
+		/// </summary>
+		/// <value>The type of the declaring.</value>
 		public TypeReference DeclaringType
 		{
 			get
@@ -126,6 +134,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the type of the return.
+		/// </summary>
+		/// <value>The type of the return.</value>
 		public MethodReturnType ReturnType
 		{
 			get
@@ -134,6 +146,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the parameters.
+		/// </summary>
+		/// <value>The parameters.</value>
 		public ParameterDefinitionCollection Parameters
 		{
 			get
@@ -142,6 +158,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance has this.
+		/// </summary>
+		/// <value><c>true</c> if this instance has this; otherwise, <c>false</c>.</value>
 		public bool HasThis
 		{
 			get
@@ -150,14 +170,25 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		private Class _class;
+
+		public Class Class
+		{
+			get
+			{
+				return this._class;
+			}
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Method"/> class.
 		/// </summary>
 		/// <param name="engine">The engine.</param>
 		/// <param name="methodDefinition">The method definition.</param>
-		public Method (Engine engine, MethodDefinition methodDefinition)
+		public Method (Engine engine, Class _class, MethodDefinition methodDefinition)
 		{
 			this.engine = engine;
+			this._class = _class;
 			this.methodDefinition = methodDefinition;
 		}
 
@@ -1622,7 +1653,8 @@ namespace SharpOS.AOT.IR {
 					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocObjectAttribute).ToString ())
 						continue;
 
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != "System.Object"
+					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+							|| !methodDefinition.IsStatic
 							|| methodDefinition.Parameters.Count != 1
 							|| methodDefinition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName)
 						throw new EngineException (string.Format ("'{0}' is not a valid AllocObject method", this.methodDefinition.ToString ()));
@@ -1631,6 +1663,18 @@ namespace SharpOS.AOT.IR {
 				}
 
 				return false;
+			}
+		}
+
+
+		/// <summary>
+		/// It returns the unique name of this call. (e.g. "void namespace.class.method UInt32 UInt16")
+		/// </summary>
+		public string AssemblyLabel
+		{
+			get
+			{
+				return IR.Method.GetLabel (this.methodDefinition);
 			}
 		}
 	}

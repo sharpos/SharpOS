@@ -74,7 +74,6 @@ namespace SharpOS.AOT.X86 {
 
 		#region RUNTIME
 		const string VTABLE_LABEL = "{0} VTable";
-		//const string VTABLE_CLASS = "SharpOS.Korlib.Runtime.VTable";
 		#endregion
 
 		Engine engine;
@@ -315,9 +314,10 @@ namespace SharpOS.AOT.X86 {
 		/// </returns>
 		public bool IsRegister (string value)
 		{
-			return value.StartsWith ("SharpOS.AOT.X86.R32")
-				|| value.StartsWith ("SharpOS.AOT.X86.R16")
+			return value.StartsWith ("SharpOS.AOT.X86.Register")
 				|| value.StartsWith ("SharpOS.AOT.X86.R8")
+				|| value.StartsWith ("SharpOS.AOT.X86.R16")
+				|| value.StartsWith ("SharpOS.AOT.X86.R32")
 				|| value.StartsWith ("SharpOS.AOT.X86.Seg")
 				|| value.StartsWith ("SharpOS.AOT.X86.DR")
 				|| value.StartsWith ("SharpOS.AOT.X86.CR")
@@ -1077,10 +1077,24 @@ namespace SharpOS.AOT.X86 {
 			this.HLT ();
 		}
 
+		/// <summary>
+		/// Gets the V table label.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
+		public string GetVTableLabel (string value)
+		{
+			return string.Format (VTABLE_LABEL, value);
+		}
+
+		/// <summary>
+		/// Adds the object fields.
+		/// </summary>
+		/// <param name="_class">The _class.</param>
 		private void AddObjectFields (string _class)
 		{
 			// VTable
-			this.ADDRESSOF (string.Format (VTABLE_LABEL, _class));
+			this.ADDRESSOF (this.GetVTableLabel (_class));
 
 			// Synchronisation
 			this.DATA ((uint) 0);
@@ -1097,19 +1111,23 @@ namespace SharpOS.AOT.X86 {
 			this.LABEL (START_DATA);
 
 			foreach (Class _class in engine) {
+				if (_class.IsInternal)
+					continue;
+
 				if (_class.ClassDefinition.IsEnum)
 					continue;
 
 				this.ALIGN (OBJECT_ALIGNMENT);
 
 				// Writing the Runtime VTable instances
-				string label = string.Format (VTABLE_LABEL, _class.TypeFullName);
+				string label = this.GetVTableLabel (_class.TypeFullName);
 				this.AddSymbol (new COFF.Label (label));
 				this.LABEL (label);
 
 				this.AddObjectFields (this.engine.VTableClass.TypeFullName);
 
-				// TODO Add the other VTable fiels: Size ....
+				// VTable Size Field
+				this.DATA ((uint) _class.Size);
 
 				if (_class.ClassDefinition.IsValueType)
 					continue;

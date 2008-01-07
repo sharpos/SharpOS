@@ -429,9 +429,15 @@ namespace SharpOS.AOT.IR {
 
 				Instructions.Instruction instruction = Block.ilDispatcher [(int) cilInstruction.OpCode.Code] (this, cilInstruction);
 
-				if (instruction != null) {
+				// Avoid System.Object::.ctor from calling itself
+				if (instruction is Call
+						&& this.method.MethodDefinition.IsConstructor
+						&& this.method.Class.TypeFullName == Mono.Cecil.Constants.Object
+						&& (instruction as Call).Method.Class.TypeFullName == Mono.Cecil.Constants.Object) 
+					instruction = null;
+
+				if (instruction != null)
 					this.AddInstruction (instruction);
-				}
 			}
 
 			this.converted = true;
@@ -2116,12 +2122,18 @@ namespace SharpOS.AOT.IR {
 
 			Register result = this.SetRegister ();
 
-			return new Box (typeReference, result, value);
+			return new Box (this.method.Engine.GetClass (typeReference), result, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Unbox (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new NotImplementedEngineException ();
+			TypeReference typeReference = cilInstruction.Operand as TypeReference;
+
+			Register value = this.GetRegister ();
+
+			Register result = this.SetRegister ();
+
+			return new Unbox (this.method.Engine.GetClass (typeReference), result, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Unbox_Any (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -2132,7 +2144,7 @@ namespace SharpOS.AOT.IR {
 
 			Register result = this.SetRegister ();
 
-			return new UnboxAny (typeReference, result, value);
+			return new UnboxAny (this.method.Engine.GetClass (typeReference), result, value);
 		}
 		#endregion
 

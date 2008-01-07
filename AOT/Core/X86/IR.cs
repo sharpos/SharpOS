@@ -44,7 +44,7 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.PUSH (R32.EAX);
 			}
 
-			assembly.CALL (call.AssemblyLabel);
+			assembly.CALL (call.Method.AssemblyLabel);
 
 			PopCallParameters (call);
 
@@ -2215,22 +2215,42 @@ namespace SharpOS.AOT.X86 {
 
 		private void Newobj (IR.Instructions.Newobj instruction)
 		{
-			if (!instruction.Method.DeclaringType.IsValueType)
+			if (instruction.Method.Class.ClassDefinition.IsValueType) {
+				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+				this.Initialize (assignee);
+
+				this.PushCallParameters (instruction);
+
+				this.assembly.LEA (R32.EAX, new DWordMemory (this.GetAddress (assignee)));
+
+				this.assembly.PUSH (R32.EAX);
+
+				this.assembly.CALL (instruction.Method.AssemblyLabel);
+
+				this.PopCallParameters (instruction);
+
+			} else if (instruction.Method.Class.ClassDefinition.IsClass) {
+				this.PushCallParameters (instruction);
+
+				this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Method.Class.TypeFullName)); 
+				this.assembly.PUSH (R32.EAX);
+				this.assembly.CALL (this.assembly.Engine.AllocObject.AssemblyLabel);
+				assembly.ADD (R32.ESP, 4);
+
+				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+				
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				this.assembly.PUSH (R32.EAX);
+				this.assembly.CALL (instruction.Method.AssemblyLabel);
+				this.PopCallParameters (instruction);
+
+			} else
 				throw new NotImplementedEngineException ();
-
-			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
-
-			this.Initialize (assignee);
-
-			this.PushCallParameters (instruction);
-
-			this.assembly.LEA (R32.EAX, new DWordMemory (this.GetAddress (assignee)));
-
-			this.assembly.PUSH (R32.EAX);
-
-			this.assembly.CALL (instruction.AssemblyLabel);
-
-			this.PopCallParameters (instruction);
 		}
 
 		private void Stobj (IR.Instructions.Stobj instruction)
@@ -2367,7 +2387,8 @@ namespace SharpOS.AOT.X86 {
 
 		private void UnboxAny (IR.Instructions.UnboxAny instruction)
 		{
-			if (instruction.Type.IsValueType) {
+			if (instruction.Type.ClassDefinition.IsValueType) {
+				throw new NotImplementedEngineException ();
 
 			} else {
 				// TODO check the value if it is a reference or generic

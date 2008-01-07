@@ -83,7 +83,19 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="*.cs" />
-    <Compile Include="Attributes\*.cs" />
+    <Compile Include="Attributes\ADCInterfaceAttribute.cs" />
+    <Compile Include="Attributes\ADCLayerAttribute.cs" />
+    <Compile Include="Attributes\ADCStubAttribute.cs" />
+    <Compile Include="Attributes\AllocAttribute.cs" />
+    <Compile Include="Attributes\AllocObjectAttribute.cs" />
+    <Compile Include="Attributes\KernelMainAttribute.cs" />
+    <Compile Include="Attributes\LabelAddressAttribute.cs" />
+    <Compile Include="Attributes\LabelAttribute.cs" />
+    <Compile Include="Attributes\LabelledAllocAttribute.cs" />
+    <Compile Include="Attributes\PointerToObjectAttribute.cs" />
+    <Compile Include="Attributes\StringAttribute.cs" />
+    <Compile Include="Attributes\TargetNamespaceAttribute.cs" />
+    <Compile Include="Attributes\VTableAttribute.cs" />
     <Compile Include="IR\*.cs" />
     <Compile Include="X86\*.cs" />
   </ItemGroup>

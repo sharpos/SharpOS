@@ -47,7 +47,7 @@
 	<target name="test" depends="keymaps">
 		<echo message="Building the SharpOS kernel and tests" />
 
-		<csc target="library" output="${path::combine(prefix, 'SharpOS.Kernel.dll')}" debug="${debug}" unsafe="true" define="KERNEL_TESTS">
+		<csc target="library" output="${path::combine(prefix, 'SharpOS.Kernel.dll')}" debug="true" unsafe="true" define="KERNEL_TESTS">
 			<references>
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
