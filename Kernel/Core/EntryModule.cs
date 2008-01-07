@@ -108,8 +108,11 @@ namespace SharpOS.Kernel {
 			StageMessage ("Keyboard setup...");
 			Keyboard.Setup ();
 
-			StageMessage ("Scheduler setup...");
-			Scheduler.Setup ();
+            StageMessage("Floppy Disk Controller setup...");
+            FloppyDiskController.Setup();
+
+            StageMessage("Scheduler setup...");
+			Scheduler.Setup();
 
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();

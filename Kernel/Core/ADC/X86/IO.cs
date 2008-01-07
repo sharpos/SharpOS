@@ -255,8 +255,23 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			#endregion
 
-			#region 0070-007F - CMOS RAM / Real Time Clock
-			RTC_CommandPort						= 0x0070,
+            #region 03F2-03F5 - Floppy Disk Controller
+            FDC_DORPort                         = 0x03F2,
+            FDC_StatusPort                      = 0x03F4,
+            FDC_CommandPort                     = 0x03F4,
+            FDC_DataPort                        = 0x03F5,
+            #endregion
+
+            #region DMA Register
+            DMA_ModeRegister                    = 0x000B,
+            DMA_AddressRegister                 = 0x0004,
+            DMA_TempRegister                    = 0x0081,
+            DMA_ChannelMaskRegister             = 0x000A,
+            DMA_CountRegister                   = 0x0005,
+            #endregion
+
+            #region 0070-007F - CMOS RAM / Real Time Clock
+            RTC_CommandPort						= 0x0070,
 			RTC_DataPort						= 0x0071,
 			#endregion
 
