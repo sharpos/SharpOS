@@ -29,12 +29,12 @@ namespace SharpOS.Kernel.FileSystem {
 		{
 			FloppyDiskController.ReadData ();
 
-			/*ReadSuperBlock ();
+			ReadSuperBlock ();
 			ReadGroupDescriptor ();
 
 			root = ReadINode (INode.EXT2_ROOT_INO);
 
-			format = (DirectoryFileFormat*) MemoryManager.Allocate ((uint) (sizeof (DirectoryFileFormat) * 20));*/
+			format = (DirectoryFileFormat*) MemoryManager.Allocate ((uint) (sizeof (DirectoryFileFormat) * 20));
 		}
 
 		public static void ListFile ()

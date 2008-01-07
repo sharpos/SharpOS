@@ -219,6 +219,8 @@ namespace SharpOS.Kernel {
 		[SharpOS.AOT.Attributes.AllocObject]
 		internal static unsafe InternalSystem.Object AllocObject (VTable vtable)
 		{
+			// TODO add GC support here
+
 			TextMode.WriteLine ("AllocObject called");
 			TextMode.Write ("Size: ");
 			TextMode.Write ((int) vtable.Size);
