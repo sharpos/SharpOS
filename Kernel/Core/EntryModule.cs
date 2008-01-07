@@ -117,12 +117,15 @@ namespace SharpOS.Kernel {
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();
 
-			TextMode.SaveAttributes ();
-			TextMode.SetAttributes (TextColor.LightGreen, TextColor.Black);
-			TextMode.WriteLine ("");
-			TextMode.WriteLine ("Pinky: What are we gonna do tonight, Brain?");
-			TextMode.WriteLine ("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
-			TextMode.RestoreAttributes ();
+            StageMessage("Ext2FS FileSystem setup...");
+            SharpOS.Kernel.FileSystem.Ext2FS.Setup();
+
+            TextMode.SaveAttributes();
+			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
+			TextMode.WriteLine("");
+			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
+			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
+			TextMode.RestoreAttributes();
 
 #if KERNEL_TESTS
 			// Testcases
