@@ -1479,7 +1479,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		public override void Process (Method method)
 		{
 			if (this.type.ClassDefinition.IsValueType) {
-				this.def.InternalType = InternalType.ValueType;
+				this.def.InternalType = method.Class.Engine.GetInternalType (this.type.TypeFullName);
 				(this.def as Identifier).Type = this.type.ClassDefinition;
 
 			} else

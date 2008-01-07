@@ -10,7 +10,7 @@
 
 namespace SharpOS.Kernel.Tests.CS {
 	public class Boxing {
-		/*private struct Point {
+		private struct Point {
 			public int x, y;
 
 			public Point (int x, int y)
@@ -53,6 +53,6 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 1;
 
 			return 0;
-		}*/
+		}
 	}
 }

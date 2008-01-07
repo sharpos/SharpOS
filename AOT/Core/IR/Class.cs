@@ -97,6 +97,15 @@ namespace SharpOS.AOT.IR {
 		}
 
 		private Engine engine = null;
+
+		public Engine Engine
+		{
+			get
+			{
+				return engine;
+			}
+		}
+
 		private TypeDefinition classDefinition = null;
 
 		/// <summary>

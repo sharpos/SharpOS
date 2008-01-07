@@ -541,6 +541,16 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
+			if (SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Boxing.CMP2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Boxing.CMP2' failed.");
+				failures++;
+			}
+
 			if (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd' failed.");
 				failures++;

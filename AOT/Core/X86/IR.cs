@@ -2377,18 +2377,93 @@ namespace SharpOS.AOT.X86 {
 
 		private void Box (IR.Instructions.Box instruction)
 		{
-			throw new NotImplementedEngineException ();
+			this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Type.TypeFullName));
+			this.assembly.PUSH (R32.EAX);
+			this.assembly.CALL (this.assembly.Engine.AllocObject.AssemblyLabel);
+			assembly.ADD (R32.ESP, 4);
+
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+			else
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+			this.assembly.PUSH (R32.ECX);
+			this.assembly.PUSH (R32.ESI);
+			this.assembly.PUSH (R32.EDI);
+
+			this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.GetObjectSize);
+			this.assembly.MOV (R32.EDI, R32.EAX);
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.ESI, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.MOV (R32.ECX, (uint) instruction.Type.Size);
+
+			this.assembly.CLD ();
+			this.assembly.REP ();
+			this.assembly.MOVSB ();
+
+			this.assembly.POP (R32.EDI);
+			this.assembly.POP (R32.ESI);
+			this.assembly.POP (R32.ECX);
 		}
 
 		private void Unbox (IR.Instructions.Unbox instruction)
 		{
-			throw new NotImplementedEngineException ();
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.LEA (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.GetObjectSize);
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+			else
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
 
 		private void UnboxAny (IR.Instructions.UnboxAny instruction)
 		{
 			if (instruction.Type.ClassDefinition.IsValueType) {
-				throw new NotImplementedEngineException ();
+				IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+				this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.GetObjectSize);
+
+				this.assembly.PUSH (R32.ECX);
+				this.assembly.PUSH (R32.ESI);
+				this.assembly.PUSH (R32.EDI);
+
+				this.assembly.MOV (R32.ESI, R32.EAX);
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (R32.EDI, Assembly.GetRegister (assignee.Register));
+				else
+					this.assembly.LEA (R32.EDI, new DWordMemory (this.GetAddress (assignee)));
+
+				this.assembly.MOV (R32.ECX, (uint) instruction.Type.Size);
+
+				this.assembly.CLD ();
+				this.assembly.REP ();
+				this.assembly.MOVSB ();
+
+				this.assembly.POP (R32.EDI);
+				this.assembly.POP (R32.ESI);
+				this.assembly.POP (R32.ECX);
 
 			} else {
 				// TODO check the value if it is a reference or generic

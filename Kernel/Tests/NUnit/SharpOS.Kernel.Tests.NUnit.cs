@@ -538,6 +538,16 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject () == 1, "'SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject' failed.");
 	}
 	[Test]
+	public void SharpOS_Kernel_Tests_CS_Boxing_CMPBoxUnbox ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox () == 1, "'SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Boxing_CMP2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boxing.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Boxing.CMP2' failed.");
+	}
+	[Test]
 	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleAnd ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd () == 1, "'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd' failed.");

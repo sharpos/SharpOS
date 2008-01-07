@@ -272,6 +272,21 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
+		/// Gets the size of the get object.
+		/// </summary>
+		/// <value>The size of the get object.</value>
+		public int GetObjectSize
+		{
+			get
+			{
+				if (!this.classes.ContainsKey (Mono.Cecil.Constants.Object))
+					throw new EngineException ("System.Object not found.");
+
+				return this.classes [Mono.Cecil.Constants.Object].Size;
+			}
+		}
+
+		/// <summary>
 		/// Prints a console message if <paramref name="lvl" /> is less
 		/// than or equal to the Verbosity option.
 		/// </summary>
