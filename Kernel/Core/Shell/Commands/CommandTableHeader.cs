@@ -257,22 +257,22 @@ namespace SharpOS.Kernel.Shell.Commands {
 
 			header->firstEntry = null;
 
-			//header->AddEntry (BuiltIn.victim.CREATE ());
-			header->AddEntry (BuiltIn.Help.CREATE ());
-			header->AddEntry (BuiltIn.Cls.CREATE ());
-			header->AddEntry (BuiltIn.Commands.CREATE ());
-			header->AddEntry (BuiltIn.CpuId.CREATE ());
-			header->AddEntry (BuiltIn.Egg.CREATE ());
-			header->AddEntry (BuiltIn.Halt.CREATE ());
-			header->AddEntry (BuiltIn.Keymap.CREATE ());
-			header->AddEntry (BuiltIn.MemDump.CREATE ());
-			header->AddEntry (BuiltIn.Panic.CREATE ());
-			header->AddEntry (BuiltIn.Reboot.CREATE ());
-			header->AddEntry (BuiltIn.Stage.CREATE ());
-			header->AddEntry (BuiltIn.Version.CREATE ());
-			header->AddEntry (BuiltIn.Show.CREATE ());
-			header->AddEntry (BuiltIn.Snake.CREATE ());
-			return header;
-		}
+            //header->AddEntry (BuiltIn.victim.CREATE ());
+            header->AddEntry(BuiltIn.Help.CREATE());
+            header->AddEntry(BuiltIn.Cls.CREATE());
+            header->AddEntry(BuiltIn.Commands.CREATE());
+            header->AddEntry(BuiltIn.CpuId.CREATE());
+            header->AddEntry(BuiltIn.Egg.CREATE());
+            header->AddEntry(BuiltIn.Halt.CREATE());
+            header->AddEntry(BuiltIn.Keymap.CREATE());
+            header->AddEntry(BuiltIn.LS.CREATE());
+            header->AddEntry(BuiltIn.MemDump.CREATE());
+            header->AddEntry(BuiltIn.Panic.CREATE());
+            header->AddEntry(BuiltIn.Reboot.CREATE());
+            header->AddEntry(BuiltIn.Stage.CREATE());
+            header->AddEntry(BuiltIn.Version.CREATE());
+
+            return header;
+        }
 	}
 }
