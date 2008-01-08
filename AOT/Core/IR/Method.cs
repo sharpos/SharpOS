@@ -387,6 +387,11 @@ namespace SharpOS.AOT.IR {
 							&& this.blocks [i - 1].Outs.Count == 1
 							&& this.blocks [i].Ins [0] == this.blocks [i - 1]
 							&& this.blocks [i - 1].Outs [0] == this.blocks [i]) {
+
+						if (this.blocks [i - 1].CIL.Count > 0
+								&& this.blocks [i - 1].CIL [this.blocks [i - 1].CIL.Count - 1].OpCode.FlowControl == FlowControl.Cond_Branch)
+							continue;
+
 						this.blocks [i - 1].Merge (this.blocks [i]);
 
 						this.blocks.Remove (this.blocks [i]);

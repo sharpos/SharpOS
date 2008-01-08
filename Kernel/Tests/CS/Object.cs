@@ -19,9 +19,21 @@ namespace SharpOS.Kernel.Tests.CS {
 				this.y = y;
 			}
 
-			public int GetSum ()
+			public virtual int GetSum ()
 			{
 				return this.x + this.y;
+			}
+		}
+
+		private class SuperPoint : Point {
+			public SuperPoint (int x, int y)
+				: base (x, y)
+			{
+			}
+
+			public override int GetSum ()
+			{
+				return base.GetSum () * 2;
 			}
 		}
 
@@ -30,6 +42,16 @@ namespace SharpOS.Kernel.Tests.CS {
 			Point point = new Point (100, 200);
 
 			if (point.GetSum () == 300)
+				return 1;
+
+			return 0;
+		}
+
+		public static uint CMPOverrideObject ()
+		{
+			SuperPoint point = new SuperPoint (100, 200);
+
+			if (point.GetSum () == 600)
 				return 1;
 
 			return 0;

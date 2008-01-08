@@ -221,8 +221,7 @@ namespace SharpOS.Kernel {
 		{
 			// TODO add GC support here
 
-			TextMode.WriteLine ("AllocObject called");
-			TextMode.Write ("Size: ");
+			TextMode.Write ("Alloc Object of Size: ");
 			TextMode.Write ((int) vtable.Size);
 			TextMode.WriteLine ();
 
@@ -230,8 +229,6 @@ namespace SharpOS.Kernel {
 
 			InternalSystem.Object _object = Stubs.GetObjectFromPointer (result);
 			_object.VTable = vtable;
-
-			TextMode.WriteLine ("AllocObject Exit");
 
 			return _object;
 		}
