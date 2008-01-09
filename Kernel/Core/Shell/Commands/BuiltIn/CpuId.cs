@@ -27,6 +27,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		{
 			// ARCHDEPENDS: X86
 
+			SharpOS.Kernel.ADC.X86.CPU.WriteVendorName ();
 			SharpOS.Kernel.ADC.X86.CPU.WriteBrandName ();
 			SharpOS.Kernel.ADC.X86.CPU.WriteProcessorInfo ();
 		}

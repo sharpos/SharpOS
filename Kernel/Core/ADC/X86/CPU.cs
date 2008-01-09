@@ -182,16 +182,29 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		public unsafe static void WriteBrandName ()
 		{
+			uint ebx;
+			
+			// Check is brand name is available
+			// (ebx&0xff)==0 means it isn't
+			Asm.XOR (R32.EAX, R32.EAX);
+			Asm.INC (R32.EAX);
+			Asm.CPUID ();
+			Asm.MOV (&ebx, R32.EBX);
+
 			// Brand Name
 			ADC.TextMode.SaveAttributes ();
 			ADC.TextMode.SetAttributes (TextColor.LightMagenta, TextColor.Black);
 			ADC.TextMode.Write ("CPU Brand: ");
 			ADC.TextMode.SetAttributes (TextColor.LightCyan, TextColor.Black);
 
-			for (uint i = 0x80000002; i <= 0x80000004; i++)
-				WriteBrandName (i);
+			if ((ebx & 0xff) == 0)
+				ADC.TextMode.WriteLine ("unknown");
+			else {
+				for (uint i = 0x80000002; i <= 0x80000004; i++)
+					WriteBrandName (i);
+				ADC.TextMode.WriteLine ();
+			}
 
-			ADC.TextMode.WriteLine ();
 			ADC.TextMode.RestoreAttributes ();
 		}
 
@@ -227,4 +240,5 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 	}
 }
+
 
