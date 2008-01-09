@@ -658,18 +658,17 @@ namespace SharpOS.AOT.X86 {
 			assembly.JMP (method.MethodFullName + " exit");
 		}
 
-		private void Initialize (IR.Instructions.Initialize initialize, bool eaxDirty)
+		private void Initialize (IR.Instructions.Initialize initialize)
 		{
-			this.Initialize (initialize.Use [0] as IR.Operands.Local, eaxDirty);
+			this.Initialize (initialize.Use [0] as IR.Operands.Local);
 		}
 
-		private void Initialize (IR.Operands.Identifier identifier, bool eaxDirty)
+		private void Initialize (IR.Operands.Identifier identifier)
 		{
 			int size = this.method.Engine.GetTypeSize (identifier.TypeFullName, 4) / 4;
 
 			if (size == 1) {
-				if(eaxDirty)
-					this.assembly.XOR (R32.EAX, R32.EAX);
+				this.assembly.XOR (R32.EAX, R32.EAX);
 
 				if (identifier.IsRegisterSet)
 					this.assembly.MOV (Assembly.GetRegister (identifier.Register), R32.EAX);
@@ -680,8 +679,7 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.PUSH (R32.ECX);
 				this.assembly.PUSH (R32.EDI);
 
-				if(eaxDirty)
-					this.assembly.XOR (R32.EAX, R32.EAX);
+				this.assembly.XOR (R32.EAX, R32.EAX);
 
 				if (identifier.IsRegisterSet)
 					this.assembly.MOV (R32.EDI, Assembly.GetRegister (identifier.Register));
@@ -2220,7 +2218,7 @@ namespace SharpOS.AOT.X86 {
 			if (instruction.Method.Class.ClassDefinition.IsValueType) {
 				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
-				this.Initialize (assignee, true);
+				this.Initialize (assignee);
 
 				this.PushCallParameters (instruction);
 

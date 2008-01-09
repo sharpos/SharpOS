@@ -76,8 +76,6 @@ namespace SharpOS.AOT.X86 {
 				assembly.SUB (R32.ESP, (UInt32) (method.StackSize * 4));
 
 			foreach (Block block in method) {
-				bool eaxDirty = true;
-
 				assembly.LABEL (fullname + " " + block.Index.ToString ());
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
@@ -92,11 +90,10 @@ namespace SharpOS.AOT.X86 {
 					else if (instruction is IR.Instructions.Return)
 						this.Return (instruction as IR.Instructions.Return);
 
-					else if (instruction is IR.Instructions.Initialize) {
-						this.Initialize (instruction as IR.Instructions.Initialize, eaxDirty);
-						eaxDirty = false;
+					else if (instruction is IR.Instructions.Initialize)
+						this.Initialize (instruction as IR.Instructions.Initialize);
 						
-					} else if (instruction is IR.Instructions.Ldc)
+					else if (instruction is IR.Instructions.Ldc)
 						this.Ldc (instruction as IR.Instructions.Ldc);
 
 					else if (instruction is IR.Instructions.Ldind)
