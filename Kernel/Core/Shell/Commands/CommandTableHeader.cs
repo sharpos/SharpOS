@@ -266,6 +266,7 @@ namespace SharpOS.Kernel.Shell.Commands {
             header->AddEntry(BuiltIn.Halt.CREATE());
             header->AddEntry(BuiltIn.Keymap.CREATE());
             header->AddEntry(BuiltIn.LS.CREATE());
+            header->AddEntry(BuiltIn.LsPci.CREATE());
             header->AddEntry(BuiltIn.MemDump.CREATE());
             header->AddEntry(BuiltIn.Panic.CREATE());
             header->AddEntry(BuiltIn.Reboot.CREATE());

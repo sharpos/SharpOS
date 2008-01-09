@@ -4,6 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
+//	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -606,10 +607,15 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//															bit 1-0 unit select (0=A 1=B .. )
 			PFC_controller_data					= 0x03F6,	// w	diskette command register..
 			PFC_digital_input					= 0x03F7,	// read-only
-			PFC_configuration_control_register	= 0x03F7	// write-only
+			PFC_configuration_control_register			= 0x03F7,	// write-only
 			#endregion
             //03F8-03FF - serial port (8250,8251,16450,16550)
-		};
+
+            #region PCI Config
+            PCI_Config_Address = 0x0CF8,
+            PCI_Config_Data = 0x0CFC,
+            #endregion
+        };
 		#endregion
 
 		#region In8
