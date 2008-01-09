@@ -47,12 +47,12 @@ namespace SharpOS.Kernel.Shell {
 
 
 			TextMode.SetAttributes (TextColor.Yellow, TextColor.Black);
-TextMode.WriteLine ("This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted");
-TextMode.WriteLine ("by local law.");
-TextMode.WriteLine ("This is free software, and you are welcome to redistribute it");
-TextMode.WriteLine ("under the terms of the GNU General Public License version 3.0 with the");
-TextMode.WriteLine ("GNU Classpath linking exception.");
-TextMode.WriteLine ();
+			TextMode.WriteLine ("This program comes with ABSOLUTELY NO WARRANTY, to the extent permitted");
+			TextMode.WriteLine ("by local law.");
+			TextMode.WriteLine ("This is free software, and you are welcome to redistribute it");
+			TextMode.WriteLine ("under the terms of the GNU General Public License version 3.0 with the");
+			TextMode.WriteLine ("GNU Classpath linking exception.");
+			TextMode.WriteLine ();
 
 			TextMode.SetAttributes (TextColor.White, TextColor.Black);
 			TextMode.Write ("Welcome to ");

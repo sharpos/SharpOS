@@ -72,17 +72,13 @@ namespace SharpOS.Kernel {
 			switch (ch) {
 			case (byte) ' ':
 				return true;
-				break;
 			case (byte) '\n':
 				return true;
-				break;
 			case (byte) '\r':
 				return true;
-				break;
 			default:
 				return false;
 			}
-			return false;
 		}
 	}
 }

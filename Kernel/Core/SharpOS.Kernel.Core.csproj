@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1BDA3EE0-BC5F-4C4A-986C-31730A8EFADC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -76,7 +76,101 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="**\*.cs" Exclude="*.svn" />
+    <Compile Include="ADC\Architecture.cs" />
+    <Compile Include="ADC\BootControl.cs" />
+    <Compile Include="ADC\FloppyDiskController.cs" />
+    <Compile Include="ADC\Interlocked.cs" />
+    <Compile Include="ADC\Keyboard.cs" />
+    <Compile Include="ADC\Keys.cs" />
+    <Compile Include="ADC\Memory.cs" />
+    <Compile Include="ADC\MemoryManager.cs" />
+    <Compile Include="ADC\Pager.cs" />
+    <Compile Include="ADC\Processor.cs" />
+    <Compile Include="ADC\ProcessorType.cs" />
+    <Compile Include="ADC\Scheduler.cs" />
+    <Compile Include="ADC\Serial.cs" />
+    <Compile Include="ADC\TextColor.cs" />
+    <Compile Include="ADC\TextMode.cs" />
+    <Compile Include="ADC\Timer.cs" />
+    <Compile Include="ADC\X86\Architecture.cs" />
+    <Compile Include="ADC\X86\AssemblyAttributes.cs" />
+    <Compile Include="ADC\X86\BootControl.cs" />
+    <Compile Include="ADC\X86\CMOS.cs" />
+    <Compile Include="ADC\X86\Constants.cs" />
+    <Compile Include="ADC\X86\CPU.cs" />
+    <Compile Include="ADC\X86\DTPointer.cs" />
+    <Compile Include="ADC\X86\FloppyDiskController.cs" />
+    <Compile Include="ADC\X86\GDT.cs" />
+    <Compile Include="ADC\X86\IDT.cs" />
+    <Compile Include="ADC\X86\Interlocked.cs" />
+    <Compile Include="ADC\X86\IO.cs" />
+    <Compile Include="ADC\X86\Keyboard.cs" />
+    <Compile Include="ADC\X86\Memory.cs" />
+    <Compile Include="ADC\X86\Pager.cs" />
+    <Compile Include="ADC\X86\PCI.cs" />
+    <Compile Include="ADC\X86\PIC.cs" />
+    <Compile Include="ADC\X86\PIT.cs" />
+    <Compile Include="ADC\X86\RTC.cs" />
+    <Compile Include="ADC\X86\Scheduler.cs" />
+    <Compile Include="ADC\X86\Serial.cs" />
+    <Compile Include="ADC\X86\TextMode.cs" />
+    <Compile Include="ADC\X86\Timer.cs" />
+    <Compile Include="ASCII.cs" />
+    <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="CommandLine.cs" />
+    <Compile Include="Console.cs" />
+    <Compile Include="Diagnostics.cs" />
+    <Compile Include="EntryModule.cs" />
+    <Compile Include="EventRegisterStatus.cs" />
+    <Compile Include="FileSystem\Block.cs" />
+    <Compile Include="FileSystem\DirectoryFileFormat.cs" />
+    <Compile Include="FileSystem\Ext2FS.cs" />
+    <Compile Include="FileSystem\FileSystem.cs" />
+    <Compile Include="FileSystem\GroupDescriptor.cs" />
+    <Compile Include="FileSystem\INode.cs" />
+    <Compile Include="FileSystem\SuperBlock.cs" />
+    <Compile Include="Foundation\BinaryTool.cs" />
+    <Compile Include="Foundation\ByteString.cs" />
+    <Compile Include="Foundation\Convert.cs" />
+    <Compile Include="Foundation\CString8.cs" />
+    <Compile Include="Foundation\PString8.cs" />
+    <Compile Include="Foundation\StringBuilder.cs" />
+    <Compile Include="KernelError.cs" />
+    <Compile Include="KernelStage.cs" />
+    <Compile Include="KernelTestsWrapper.cs" />
+    <Compile Include="KeyMap.cs" />
+    <Compile Include="Korlib\Runtime\VTable.cs" />
+    <Compile Include="Korlib\System\Enum.cs" />
+    <Compile Include="Korlib\System\Int32.cs" />
+    <Compile Include="Korlib\System\Object.cs" />
+    <Compile Include="Korlib\System\String.cs" />
+    <Compile Include="Korlib\System\ValueType.cs" />
+    <Compile Include="Multiboot.cs" />
+    <Compile Include="PageAllocator.cs" />
+    <Compile Include="PageAttributes.cs" />
+    <Compile Include="PagingMemoryRequirements.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Cls.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Commands.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\CpuId.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Egg.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Halt.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Help.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Keymap.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\LS.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\LsPci.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\MemDump.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Panic.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Reboot.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Show.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Snake.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Stage.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Version.cs" />
+    <Compile Include="Shell\Commands\CommandExecutionAttemptResult.cs" />
+    <Compile Include="Shell\Commands\CommandExecutionContext.cs" />
+    <Compile Include="Shell\Commands\CommandTableEntry.cs" />
+    <Compile Include="Shell\Commands\CommandTableHeader.cs" />
+    <Compile Include="Shell\Prompter.cs" />
+    <Compile Include="Stubs.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\build\Temp\BuiltinKeymaps.ska">

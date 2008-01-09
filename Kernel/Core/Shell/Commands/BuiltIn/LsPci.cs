@@ -27,11 +27,11 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		{
 			// ARCHDEPENDS: X86
 
-			if(SharpOS.Kernel.ADC.X86.PCI.IsAvailable ()) {
-				ADC.TextMode.WriteLine("Pci found");
-				ADC.X86.PCI.ReportConfig();
+			if (SharpOS.Kernel.ADC.X86.PCI.IsAvailable ()) {
+				ADC.TextMode.WriteLine ("Pci found");
+				ADC.X86.PCI.ReportConfig ();
 			} else
-				ADC.TextMode.WriteLine("Pci not found");
+				ADC.TextMode.WriteLine ("Pci not found");
 		}
 
 		[Label (lblGetHelp)]

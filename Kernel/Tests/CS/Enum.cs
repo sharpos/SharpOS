@@ -40,18 +40,24 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPLiteralToInt ()
 		{
+//Unreachable code detected
+#pragma warning disable 0162
 			if ((int) IntEnum.E != 4 || (int) IntEnum.A != 0)
 				return 0;
 
 			return 1;
+#pragma warning restore 0162
 		}
 
 		public static uint CMPIntToLiteral ()
 		{
+//Unreachable code detected
+#pragma warning disable 0162
 			if ((IntEnum) 4 != IntEnum.E || (IntEnum) 0 != IntEnum.A)
 				return 0;
 
 			return 1;
+#pragma warning restore 0162
 		}
 
 		public static uint CMPConstantComparison ()
