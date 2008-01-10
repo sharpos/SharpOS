@@ -72,7 +72,7 @@ namespace SharpOS.AOT.IR {
 
 			if (file != null) {
 				this.type |= (byte) DumpType.File;
-				this.streamWriter = new StreamWriter (file);
+				this.streamWriter = new StreamWriter (this.file);
 				this.streamWriter.AutoFlush = true;
 			}
 		}
@@ -155,7 +155,7 @@ namespace SharpOS.AOT.IR {
 
 				if (streamWriter != null)
 					streamWriter.Dispose ();
-			} catch (Exception ex) {
+			} catch (Exception) {
 				//Console.WriteLine (ex.ToString ());
 			}
 		}
@@ -470,9 +470,6 @@ namespace SharpOS.AOT.IR {
 		/// <param name="sect">The sect.</param>
 		public void Section (DumpSection sect)
 		{
-			string tag = null;
-			string text = null;
-			string close_text = null;
 			bool addPrefix = true;
 
 			switch (sect) {

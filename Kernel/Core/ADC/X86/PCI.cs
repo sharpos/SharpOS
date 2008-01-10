@@ -40,15 +40,15 @@ namespace SharpOS.Kernel.ADC.X86 {
 				id = ReadConfig32(bus, dev, fun, 0);
 				if(id != 0xffffffff) {
 					ADC.TextMode.Write("bus:dev:fun -> ");
-					ADC.TextMode.WriteNumber((int)bus);
+					ADC.TextMode.Write((int)bus);
 					ADC.TextMode.Write(":");
-					ADC.TextMode.WriteNumber((int)dev);
+					ADC.TextMode.Write((int)dev);
 					ADC.TextMode.Write(":");
-					ADC.TextMode.WriteNumber((int)fun);
+					ADC.TextMode.Write((int)fun);
 					ADC.TextMode.Write(" device ");
-					ADC.TextMode.WriteNumber((int)(id&0xffff), true);
+					ADC.TextMode.Write((int)(id&0xffff), true);
 					ADC.TextMode.Write(":");
-					ADC.TextMode.WriteNumber((int)((id>>16)&0xffff), true);
+					ADC.TextMode.Write((int)((id>>16)&0xffff), true);
 					ADC.TextMode.WriteLine();
 				}
 				

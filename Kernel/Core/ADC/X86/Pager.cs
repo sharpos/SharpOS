@@ -226,7 +226,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			// Page directory needs to span all 4 GBs
 			// FIXME: What about PAE support might diffrent implementation
-			uint totalPages = UInt32.MaxValue / 4096; // Each page spans of memory 4MB
+			// uint totalPages = UInt32.MaxValue / 4096; // Each page spans of memory 4MB
 			uint totalTables = 1024; // 1024 * 4MB = 4GB
 
 			Memory.MemSet32 (0, (uint) PageDirectory, 1024);

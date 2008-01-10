@@ -114,7 +114,6 @@ namespace SharpOS.Tools.KeyCompiler {
 
 		void EncodeKeymap (Keymap map, BinaryWriter w)
 		{
-			int encodedItems = 0;
 			int max = 0;
 
 			foreach (KeyValuePair<int, int> kvp in map.Entries) {
@@ -192,7 +191,6 @@ namespace SharpOS.Tools.KeyCompiler {
 
 		void EncodeKeymap (Keymap map, BinaryWriter w)
 		{
-			int encodedItems = 0;
 			int max = 0;
 
 			foreach (KeyValuePair<int, int> kvp in map.Entries) {
@@ -290,8 +288,6 @@ namespace SharpOS.Tools.KeyCompiler {
 				sw.WriteLine ("default {");
 
 				foreach (KeyValuePair<int, int> kvp in defaultMap.Entries) {
-					string val;
-
 					if (kvp.Value <= 128)
 						sw.WriteLine ("\t{0} = '{1}';", kvp.Key, (char) kvp.Value);
 					else
@@ -479,7 +475,6 @@ namespace SharpOS.Tools.KeyCompiler {
 		{
 			string content;
 			Tokenizer t;
-			Token token;
 			int errors = 0;
 			int line, col;
 
@@ -584,8 +579,8 @@ namespace SharpOS.Tools.KeyCompiler {
 
 		public int ReadInt (Tokenizer t)
 		{
-			bool neg = false, hex = false;
-			int num = 0;
+			bool neg = false;
+			int num;
 			Token tok = t.Read ();
 
 			if (tok.Text == "-") {
@@ -620,7 +615,10 @@ namespace SharpOS.Tools.KeyCompiler {
 			} else
 				throw new UnexpectedTokenException (tok, "<number>");
 
-			return num;
+			if (neg)
+				return -num;
+			else
+				return num;
 		}
 
 		public int ReadEqInt (Tokenizer t)

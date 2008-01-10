@@ -246,8 +246,6 @@ namespace SharpOS.Kernel.Memory {
 		/// </summary>
 		public static void* Alloc ()
 		{
-			void* page = null;
-
 			return PopFreePage ();
 		}
 

@@ -160,11 +160,9 @@ namespace SharpOS.Kernel {
 		public static void WriteKeymaps ()
 		{
 			byte* table = (byte*) keymapArchive + 4;
-			byte* ret_table;
 			byte* buf = getBuiltinKeyMapBuffer;
 
 			for (int x = 0; x < keymapEntries; ++x) {
-				int nSize = 0;
 				int tSize = 0;
 				int error = 0;
 				int strSize = 0;
@@ -173,9 +171,6 @@ namespace SharpOS.Kernel {
 				    EntryModule.MaxKeyMapNameLength, &error);
 
 				table += strSize;
-				nSize = ByteString.Length (buf);
-
-				ret_table = table;
 
 				table += 2; // keymask/statebit
 
@@ -471,4 +466,5 @@ namespace SharpOS.Kernel {
 
 	}
 }
+
 

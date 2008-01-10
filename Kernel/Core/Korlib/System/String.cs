@@ -54,7 +54,7 @@ namespace InternalSystem {
 			string str2 = "US";
 			string str3 = "Longer String Than Most";
 
-			if (str.Length == 5)
+			if ((str.Length == 5) && (str2.Length == 2) && (str3.Length == 23))
 				TextMode.WriteLine ("System.String.Length: test passed");
 			else
 				TextMode.WriteLine ("System.String.Length: test FAILED");

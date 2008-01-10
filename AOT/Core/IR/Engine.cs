@@ -440,8 +440,6 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void Run ()
 		{
-			DumpType dumpType = DumpType.XML;
-
 			IAssembly asm = null;
 
 			switch (options.CPU) {
@@ -453,7 +451,6 @@ namespace SharpOS.AOT.IR {
 				throw new EngineException (string.Format (
 					"Error: processor type `{0}' not supported",
 					options.CPU));
-				break;
 			}
 
 			Message (1, "AOT compiling for processor `{0}'", options.CPU);
@@ -711,7 +708,7 @@ namespace SharpOS.AOT.IR {
 						continue;
 				}
 
-				bool ignore = false;
+				// bool ignore = false;
 				string ignoreReason = null;
 
 				if (type.Name.Equals ("<Module>"))
@@ -725,7 +722,7 @@ namespace SharpOS.AOT.IR {
 						Message (2, "Ignoring unused ADC type `{0}' in layer `{1}'",
 							 type.FullName, layer.CPU);
 
-						ignore = true;
+						// ignore = true;
 						ignoreReason = "Unused ADC implementation";
 						break;
 					}
@@ -1231,5 +1228,6 @@ namespace SharpOS.AOT.IR {
 		}
 	}
 }
+
 
 

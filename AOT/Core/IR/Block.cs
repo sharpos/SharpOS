@@ -425,8 +425,6 @@ namespace SharpOS.AOT.IR {
 						}
 			*/
 			foreach (Mono.Cecil.Cil.Instruction cilInstruction in this.cil) {
-				int oldState = this.stack.Count;
-
 				Instructions.Instruction instruction = Block.ilDispatcher [(int) cilInstruction.OpCode.Code] (this, cilInstruction);
 
 				// Avoid System.Object::.ctor from calling itself

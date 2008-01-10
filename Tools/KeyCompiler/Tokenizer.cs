@@ -480,7 +480,7 @@ namespace SharpOS.Tools {
 
 			char c = Text [_Caret];
 
-			Token t = new Token (this, c, _Caret, _Line, _Column), orig = t;
+			Token t = new Token (this, c, _Caret, _Line, _Column);
 
 			if (StringMode)
 				return t;	// it has just switched to, so return this and await string parsing.

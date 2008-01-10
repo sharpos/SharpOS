@@ -79,7 +79,7 @@ public class RuntimeCop {
 
 		try {
 			cop = new RuntimeCop (new CopOptions (args));
-		} catch (ArgumentException e) {
+		} catch (ArgumentException) {
 			Console.Error.WriteLine ("Bad arguments, see -help");
 			return 1;
 		}

@@ -141,7 +141,6 @@ namespace SharpOS.Kernel.Foundation {
 			Diagnostics.Assert (count >= 0, "StringBuilder::Remove(int,int): Parameter 'count' is out of range");
 			Diagnostics.Assert ((startIndex + count) <= length, "StringBuilder::Remove(int,int): Parameter 'count' is out of range");
 
-			int partA_first = 0;
 			int partA_last = startIndex - 1;
 
 			int partB_first = partA_last + count + 1;
@@ -167,8 +166,6 @@ namespace SharpOS.Kernel.Foundation {
 
 		public uint EnsureCapacity (uint minimumCapacity)
 		{
-			uint thisLength = (uint) this.Length;
-
 			if (minimumCapacity > this.capacity) {
 				uint amountToExpand =
 				    (((minimumCapacity - this.capacity) / DefaultCapacity) + 1)

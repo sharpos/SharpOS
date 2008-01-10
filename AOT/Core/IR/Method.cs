@@ -740,8 +740,6 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void InternalPropagation ()
 		{
-			List<Instructions.Instruction> remove = new List<SharpOS.AOT.IR.Instructions.Instruction> ();
-
 			foreach (Block block in this.blocks) {
 				foreach (Instructions.Instruction instruction in block) {
 					if (instruction is Instructions.Call) {
