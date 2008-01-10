@@ -221,9 +221,9 @@ namespace SharpOS.Kernel {
 		{
 			// TODO add GC support here
 
-			TextMode.Write ("Alloc Object of Size: ");
+			/*TextMode.Write ("Alloc Object of Size: ");
 			TextMode.Write ((int) vtable.Size);
-			TextMode.WriteLine ();
+			TextMode.WriteLine ();*/
 
 			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate (vtable.Size);
 

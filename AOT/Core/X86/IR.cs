@@ -81,13 +81,13 @@ namespace SharpOS.AOT.X86 {
 
 				case InternalType.I8:
 					Memory assigneeMemory = this.GetAddress (assignee);
-					DWordMemory high = new DWordMemory (assigneeMemory);
-					high.DisplacementDelta = 4;
 					DWordMemory low = new DWordMemory (assigneeMemory);
-
-					this.assembly.MOV (high, R32.EDX);
 					this.assembly.MOV (low, R32.EAX);
 
+					DWordMemory high = new DWordMemory (assigneeMemory);
+					high.DisplacementDelta = 4;
+					this.assembly.MOV (high, R32.EDX);
+	
 					break;
 
 				case InternalType.ValueType:
@@ -632,12 +632,12 @@ namespace SharpOS.AOT.X86 {
 
 				case InternalType.I8:
 					Memory assigneeMemory = this.GetAddress (value);
+					DWordMemory low = new DWordMemory (assigneeMemory);
+					this.assembly.MOV (R32.EAX, low);
+					
 					DWordMemory high = new DWordMemory (assigneeMemory);
 					high.DisplacementDelta = 4;
-					DWordMemory low = new DWordMemory (assigneeMemory);
-
-					this.assembly.MOV (high, R32.EDX);
-					this.assembly.MOV (low, R32.EAX);
+					this.assembly.MOV (R32.EDX, high);
 
 					break;
 
