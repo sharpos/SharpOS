@@ -1866,28 +1866,53 @@ namespace SharpOS.AOT.IR {
 		#region Call
 		private SharpOS.AOT.IR.Instructions.Instruction Call (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return CallHandling (cilInstruction);
+			Method method;
+			Register result;
+			Operand [] parameters;
+
+			CallHandling (cilInstruction, out method, out result, out parameters);
+
+			return new Call (method, result, parameters);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Calli (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return CallHandling (cilInstruction);
+			Method method;
+			Register result;
+			Operand [] parameters;
+
+			CallHandling (cilInstruction, out method, out result, out parameters);
+
+			return new Call (method, result, parameters);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Callvirt (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return CallHandling (cilInstruction);
+			Method method;
+			Register result;
+			Operand [] parameters;
+
+			CallHandling (cilInstruction, out method, out result, out parameters);
+
+			return new Callvirt (method, result, parameters);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Jmp (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return CallHandling (cilInstruction);
+			Method method;
+			Register result;
+			Operand [] parameters;
+
+			CallHandling (cilInstruction, out method, out result, out parameters);
+
+			return new Call (method, result, parameters);
 		}
 
-		private SharpOS.AOT.IR.Instructions.Instruction CallHandling (Mono.Cecil.Cil.Instruction cilInstruction)
+		private void CallHandling (Mono.Cecil.Cil.Instruction cilInstruction, out Method method, out Register result, out Operand [] operands)
 		{
 			Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
 			MethodDefinition def = this.Method.Engine.GetCILDefinition (call);
+			result = null;
 
 			if (def != null) {
 				foreach (CustomAttribute attr in def.CustomAttributes) {
@@ -1899,7 +1924,7 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
-			Operand [] operands;
+			method = this.method.Engine.GetMethod (call);
 
 			if (call.HasThis)
 				operands = new Operand [call.Parameters.Count + 1];
@@ -1910,13 +1935,10 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < operands.Length; i++)
 				operands [operands.Length - 1 - i] = this.GetRegister ();
 
-			if (call.ReturnType.ReturnType.FullName == Constants.Void)
-				return new Call (this.method.Engine.GetMethod (call), null, operands);
-
-			Register assignee = this.SetRegister ();
-
-			return new Call (this.method.Engine.GetMethod (call), assignee, operands);
+			if (call.ReturnType.ReturnType.FullName != Constants.Void)
+				result = this.SetRegister ();
 		}
+
 		#endregion
 
 		#region Fld

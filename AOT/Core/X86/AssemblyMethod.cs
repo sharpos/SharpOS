@@ -415,12 +415,12 @@ namespace SharpOS.AOT.X86 {
 
 				case InternalType.I8:
 					Memory memory = this.GetAddress (identifier);
-					DWordMemory high = new DWordMemory (memory);
-					high.DisplacementDelta = 4;
-					assembly.PUSH (high);
-
 					DWordMemory low = new DWordMemory (memory);
-					assembly.PUSH (new DWordMemory (low));
+					low.DisplacementDelta = 4;
+					assembly.PUSH (low);
+
+					DWordMemory high = new DWordMemory (memory);
+					assembly.PUSH (new DWordMemory (high));
 					break;
 
 				case InternalType.ValueType:

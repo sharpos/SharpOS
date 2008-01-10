@@ -1129,6 +1129,10 @@ namespace SharpOS.AOT.X86 {
 				// VTable Size Field
 				this.DATA ((uint) _class.Size);
 
+				// Virtual Methods
+				foreach (Method method in _class.VirtualMethods)
+					this.ADDRESSOF (method.AssemblyLabel);
+
 				if (_class.ClassDefinition.IsValueType)
 					continue;
 

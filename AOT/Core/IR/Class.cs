@@ -56,6 +56,8 @@ namespace SharpOS.AOT.IR {
 
 			if (this.TypeFullName != Mono.Cecil.Constants.Object)
 				this._base = this.engine.GetClass (this.classDefinition.BaseType);
+
+			this.AddVirtualMethods (this.virtualMethods);
 		}
 
 		Class _base = null;
@@ -357,6 +359,38 @@ namespace SharpOS.AOT.IR {
 					throw new NotImplementedEngineException ();
 
 				return result;
+			}
+		}
+
+		private List<Method> virtualMethods = new List<Method> ();
+
+		public List<Method> VirtualMethods
+		{
+			get
+			{
+				return virtualMethods;
+			}
+		}
+
+		private void AddVirtualMethods (List<Method> list)
+		{
+			if (this._base != null)
+				this._base.AddVirtualMethods (list);
+
+			foreach (Method method in this.methods) {
+				if (method.MethodDefinition.IsNewSlot) {
+					method.VirtualSlot = list.Count;
+					list.Add (method);
+
+				} else if (method.MethodDefinition.IsVirtual) {
+					for (int i = 0; i < list.Count; i++) {
+						if (list [i].ID == method.ID) {
+							method.VirtualSlot = i;
+							list [i] = method;
+							break;
+						}
+					}
+				}
 			}
 		}
 	}

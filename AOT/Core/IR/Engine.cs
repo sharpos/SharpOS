@@ -286,6 +286,14 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		public int GetVTableSize
+		{
+			get
+			{
+				return this.vtableClass.Size;
+			}
+		}
+
 		/// <summary>
 		/// Prints a console message if <paramref name="lvl" /> is less
 		/// than or equal to the Verbosity option.

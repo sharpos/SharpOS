@@ -33,7 +33,6 @@ namespace SharpOS.AOT.X86 {
 			}
 
 			// TODO add support for call/callvirt/calli/jmp and for tail.
-
 			PushCallParameters (call);
 
 			IR.Operands.Register assignee = call.Def as IR.Operands.Register;
@@ -44,7 +43,26 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.PUSH (R32.EAX);
 			}
 
-			assembly.CALL (call.Method.AssemblyLabel);
+			if (call is Callvirt
+					&& (call.Method.MethodDefinition.IsNewSlot
+						|| call.Method.MethodDefinition.IsVirtual)) {
+				IR.Operands.Register _this = call.Use [0] as IR.Operands.Register;				
+
+				if (_this.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (_this.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (_this)));
+
+				int address = this.assembly.Engine.GetVTableSize + this.assembly.IntSize * call.Method.VirtualSlot;
+
+				// Get the Object's VTable
+				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
+				
+				// Call virtual method using the table in the Object's VTable
+				this.assembly.CALL (new DWordMemory (null, R32.EAX, null, 0, address));
+
+			} else
+				assembly.CALL (call.Method.AssemblyLabel);
 
 			PopCallParameters (call);
 
@@ -109,7 +127,8 @@ namespace SharpOS.AOT.X86 {
 			if (returnType != null && returnType.IsValueType)
 				result += 4;
 
-			assembly.ADD (R32.ESP, result);
+			if (result > 0)
+				assembly.ADD (R32.ESP, result);
 		}
 
 		/// <summary>

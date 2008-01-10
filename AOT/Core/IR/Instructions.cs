@@ -1298,6 +1298,13 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	public class Callvirt : Call {
+		public Callvirt (Method method, Register result, Operand [] parameters)
+			: base (method, result, parameters)
+		{
+		}
+	}
+
 	public class Newobj : CallInstruction {
 		public Newobj (Method method, Register result, Operand [] parameters)
 			: base (method, "Newobj " + method.MethodDefinition.ToString () + " ", result, parameters)

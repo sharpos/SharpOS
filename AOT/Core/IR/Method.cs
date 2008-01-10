@@ -1076,6 +1076,27 @@ namespace SharpOS.AOT.IR {
 			return result.ToString ();
 		}
 
+		public static string GetID (Mono.Cecil.MethodReference method)
+		{
+			StringBuilder result = new StringBuilder ();
+
+			result.Append (method.Name);
+
+			result.Append ("(");
+
+			for (int i = 0; i < method.Parameters.Count; i++) {
+				if (i != 0)
+					result.Append (",");
+
+				result.Append (method.Parameters [i].ParameterType.FullName);
+			}
+
+
+			result.Append (")");
+
+			return result.ToString ();
+		}
+
 		/// <summary>
 		/// Transformation out of SSA
 		/// </summary>
@@ -1678,6 +1699,28 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				return IR.Method.GetLabel (this.methodDefinition);
+			}
+		}
+
+		public string ID
+		{
+			get
+			{
+				return IR.Method.GetID (this.methodDefinition);
+			}
+		}
+
+		private int virtualSlot = int.MinValue;
+
+		public int VirtualSlot
+		{
+			get
+			{
+				return virtualSlot;
+			}
+			set
+			{
+				virtualSlot = value;
 			}
 		}
 	}
