@@ -290,8 +290,8 @@ namespace SharpOS.Kernel.ADC {
 
 		/// <summary>
 		/// Writes an bool to the screen
-		/// </summary>
 		/// <param name="value">boolean value to write</param>
+		/// </summary>
 		public static void Write (bool value)
 		{
 			if (value) {
