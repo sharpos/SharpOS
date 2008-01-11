@@ -202,7 +202,7 @@ namespace SharpOS.Kernel.ADC {
 		/// <summary>
 		/// Common Write() implementation. Serves Write(CString8*), Write(PString8*), and
 		/// Write(byte*).
-		/// <summary>
+		/// </summary>
 		public unsafe static void Write (byte* str, int len)
 		{
 			for (int i = 0; i < len; i++)
