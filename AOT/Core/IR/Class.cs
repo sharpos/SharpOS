@@ -62,6 +62,14 @@ namespace SharpOS.AOT.IR {
 
 		Class _base = null;
 
+		public Class Base
+		{
+			get
+			{
+				return this._base;
+			}
+		}
+
 		Dictionary<string, Field> fields = new Dictionary<string, Field> ();
 
 		public Dictionary<string, Field> Fields

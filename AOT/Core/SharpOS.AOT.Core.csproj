@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -88,6 +88,7 @@
     <Compile Include="Attributes\ADCStubAttribute.cs" />
     <Compile Include="Attributes\AllocAttribute.cs" />
     <Compile Include="Attributes\AllocObjectAttribute.cs" />
+    <Compile Include="Attributes\TypeInfoAttribute.cs" />
     <Compile Include="Attributes\KernelMainAttribute.cs" />
     <Compile Include="Attributes\LabelAddressAttribute.cs" />
     <Compile Include="Attributes\LabelAttribute.cs" />

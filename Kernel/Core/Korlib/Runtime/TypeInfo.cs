@@ -11,10 +11,10 @@
 using System.Runtime.InteropServices;
 
 namespace SharpOS.Korlib.Runtime {
-	[SharpOS.AOT.Attributes.VTable]
+	[SharpOS.AOT.Attributes.TypeInfo]
 	[StructLayout (LayoutKind.Sequential)]
-	internal class VTable : InternalSystem.Object {
-		internal TypeInfo Type;
-		internal uint Size;
+	internal class TypeInfo : InternalSystem.Object {
+		internal string Name;
+		internal TypeInfo Base;
 	}
 }

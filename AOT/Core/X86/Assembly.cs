@@ -74,6 +74,7 @@ namespace SharpOS.AOT.X86 {
 
 		#region RUNTIME
 		const string VTABLE_LABEL = "{0} VTable";
+		const string TYPE_INFO_LABEL = "{0} TypeInfo";
 		#endregion
 
 		Engine engine;
@@ -1087,6 +1088,11 @@ namespace SharpOS.AOT.X86 {
 			return string.Format (VTABLE_LABEL, value);
 		}
 
+		public string GetTypeInfoLabel (string value)
+		{
+			return string.Format (TYPE_INFO_LABEL, value);
+		}
+
 		/// <summary>
 		/// Adds the object fields.
 		/// </summary>
@@ -1117,6 +1123,29 @@ namespace SharpOS.AOT.X86 {
 				if (_class.ClassDefinition.IsEnum)
 					continue;
 
+
+				this.ALIGN (OBJECT_ALIGNMENT);
+
+				// Writing the Type Info instances
+				string typeInfoLabel = this.GetTypeInfoLabel (_class.TypeFullName);
+				this.AddSymbol (new COFF.Label (typeInfoLabel));
+				this.LABEL (typeInfoLabel);
+
+				// Type Info Object Header
+				this.AddObjectFields (this.engine.TypeInfoClass.TypeFullName);
+
+				// Type Info Name
+				this.ADDRESSOF (this.AddString (_class.TypeFullName));
+
+				// Type Info Base Instance
+				if (_class.Base == null)
+					// NULL
+					this.DATA ((uint) 0);
+				else
+					this.ADDRESSOF (this.GetTypeInfoLabel (_class.Base.TypeFullName));
+
+
+
 				this.ALIGN (OBJECT_ALIGNMENT);
 
 				// Writing the Runtime VTable instances
@@ -1125,6 +1154,9 @@ namespace SharpOS.AOT.X86 {
 				this.LABEL (label);
 
 				this.AddObjectFields (this.engine.VTableClass.TypeFullName);
+
+				// Type Info Field
+				this.ADDRESSOF (typeInfoLabel);
 
 				// VTable Size Field
 				this.DATA ((uint) _class.Size);

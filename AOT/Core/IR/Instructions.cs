@@ -20,6 +20,12 @@ namespace SharpOS.AOT.IR.Instructions {
 	/// Base class for all instructions
 	/// </summary>
 	public abstract class Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Instruction"/> class.
+		/// </summary>
+		/// <param name="name">The name.</param>
+		/// <param name="def">The def.</param>
+		/// <param name="use">The use.</param>
 		public Instruction (string name, Operand def, Operand [] use)
 		{
 			this.name = name;
@@ -47,6 +53,12 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private bool isSpecialCase = false;
 
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is special case.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is special case; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsSpecialCase
 		{
 			get
@@ -61,6 +73,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Block block = null;
 
+		/// <summary>
+		/// Gets or sets the block.
+		/// </summary>
+		/// <value>The block.</value>
 		public Block Block
 		{
 			get
@@ -199,6 +215,12 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Returns a <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </summary>
+		/// <returns>
+		/// A <see cref="T:System.String"/> that represents the current <see cref="T:System.Object"/>.
+		/// </returns>
 		public override string ToString ()
 		{
 			string result = "";
@@ -256,6 +278,12 @@ namespace SharpOS.AOT.IR.Instructions {
 			dumpProcessor.AddElement ("code", this.FormatedIndex + this.ToString (), true, true, false);
 		}
 
+		/// <summary>
+		/// Gets the type of the bitwise result.
+		/// </summary>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
+		/// <returns></returns>
 		protected InternalType GetBitwiseResultType (Operand first, Operand second)
 		{
 			if (first.InternalType == InternalType.I4
@@ -277,6 +305,16 @@ namespace SharpOS.AOT.IR.Instructions {
 			return InternalType.NotSet;
 		}
 
+		/// <summary>
+		/// Gets the type of the arithmetical result.
+		/// </summary>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
+		/// <param name="add">if set to <c>true</c> [add].</param>
+		/// <param name="sub">if set to <c>true</c> [sub].</param>
+		/// <param name="unsignedDiv">if set to <c>true</c> [unsigned div].</param>
+		/// <param name="overflow">if set to <c>true</c> [overflow].</param>
+		/// <returns></returns>
 		protected InternalType GetArithmeticalResultType (Operand first, Operand second, bool add, bool sub, bool unsignedDiv, bool overflow)
 		{
 			if (first.InternalType == InternalType.I4) {
@@ -330,11 +368,20 @@ namespace SharpOS.AOT.IR.Instructions {
 			return InternalType.NotSet;
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public virtual void Process (Method method)
 		{
 			return;
 		}
 
+		/// <summary>
+		/// Adjusts the type of the register internal.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
 		public InternalType AdjustRegisterInternalType (InternalType type)
 		{
 			InternalType result = InternalType.NotSet;
@@ -384,6 +431,10 @@ namespace SharpOS.AOT.IR.Instructions {
 			return result;
 		}
 
+		/// <summary>
+		/// Lds the process.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public void LdProcess (Method method)
 		{
 			this.def.InternalType = this.AdjustRegisterInternalType (this.use [0].InternalType);
@@ -392,6 +443,10 @@ namespace SharpOS.AOT.IR.Instructions {
 				(this.def as Identifier).Type = (this.use [0] as Identifier).Type;
 		}
 
+		/// <summary>
+		/// LDFLDs the process.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public void LdfldProcess (Method method)
 		{
 			FieldOperand field = (this.use [0] as FieldOperand);
@@ -406,6 +461,10 @@ namespace SharpOS.AOT.IR.Instructions {
 				(this.def as Identifier).Type = field.Field.Type;
 		}
 
+		/// <summary>
+		/// STFLDs the process.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public void StfldProcess (Method method)
 		{
 			FieldOperand field = (this.use [0] as FieldOperand);
@@ -416,6 +475,9 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Add : Instruction {
 		public enum Type {
 			Add,
@@ -423,6 +485,13 @@ namespace SharpOS.AOT.IR.Instructions {
 			AddUnsignedWithOverflowCheck
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Add"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Add (Type type, Register result, Register first, Register second)
 			: base ("Add", result, new Operand [] { first, second })
 		{
@@ -439,12 +508,19 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.GetArithmeticalResultType (this.use [0], this.use [1], true, false, false, this.type != Type.Add);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Sub : Instruction {
 		public enum Type {
 			Sub,
@@ -452,6 +528,13 @@ namespace SharpOS.AOT.IR.Instructions {
 			SubUnsignedWithOverflowCheck
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Sub"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Sub (Type type, Register result, Register first, Register second)
 			: base ("Sub", result, new Operand [] { first, second })
 		{
@@ -468,12 +551,19 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.GetArithmeticalResultType (this.use [0], this.use [1], false, true, false, this.type != Type.Sub);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Mul : Instruction {
 		public enum Type {
 			Mul,
@@ -481,6 +571,13 @@ namespace SharpOS.AOT.IR.Instructions {
 			MulUnsignedWithOverflowCheck
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Mul"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Mul (Type type, Register result, Register first, Register second)
 			: base ("Mul", result, new Operand [] { first, second })
 		{
@@ -497,18 +594,32 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.GetArithmeticalResultType (this.use [0], this.use [1], false, false, false, this.type != Type.Mul);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Div : Instruction {
 		public enum Type {
 			Div,
 			DivUnsigned
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Div"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Div (Type type, Register result, Register first, Register second)
 			: base ("Div", result, new Operand [] { first, second })
 		{
@@ -525,18 +636,32 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.GetArithmeticalResultType (this.use [0], this.use [1], false, false, this.type == Type.Div, false);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Rem : Instruction {
 		public enum Type {
 			Remainder,
 			RemainderUnsigned
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Rem"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Rem (Type type, Register result, Register first, Register second)
 			: base ("Rem", result, new Operand [] { first, second })
 		{
@@ -553,19 +678,35 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.GetArithmeticalResultType (this.use [0], this.use [1], false, false, false, false);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Neg : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Neg"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Neg (Register result, Register value)
 			: base ("Neg", result, new Operand [] { value })
 		{
 			result.InternalType = value.InternalType;
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			Register register = this.use [0] as Register;
@@ -578,24 +719,47 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Shl : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Shl"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Shl (Register result, Register first, Register second)
 			: base ("Shl", result, new Operand [] { first, second })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.use [0].InternalType;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Shr : Instruction {
 		public enum Type {
 			SHR,
 			SHRUnsigned
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Shr"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Shr (Type type, Register result, Register first, Register second)
 			: base ("Shr", result, new Operand [] { first, second })
 		{
@@ -612,6 +776,10 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.use [0].InternalType;
@@ -631,7 +799,16 @@ namespace SharpOS.AOT.IR.Instructions {
 		NotEqualOrUnordered
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Branch : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Branch"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Branch (RelationalType type, Register first, Register second)
 			: base ("Branch", null, new Operand [] { first, second })
 		{
@@ -649,12 +826,20 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class SimpleBranch : Instruction {
 		public enum Type {
 			True,
 			False
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SimpleBranch"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="operand">The operand.</param>
 		public SimpleBranch (Type type, Register operand)
 			: base ("SimpleBranch " + type.ToString () + " ", null, new Operand [] { operand })
 		{
@@ -672,7 +857,17 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class ConditionCheck : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="ConditionCheck"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public ConditionCheck (RelationalType type, Register result, Register first, Register second)
 			: base ("ConditionCheck", result, new Operand [] { first, second })
 		{
@@ -689,6 +884,10 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			// TODO check the parameters
@@ -697,6 +896,9 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Convert : Instruction {
 		public enum Type {
 			Conv_I,
@@ -734,6 +936,12 @@ namespace SharpOS.AOT.IR.Instructions {
 			Conv_U8
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Convert"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Convert (Type type, Register result, Register value)
 			: base (type.ToString (), result, new Operand [] { value })
 		{
@@ -824,13 +1032,22 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Jump : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Jump"/> class.
+		/// </summary>
 		public Jump ()
 			: base ("Jump", null, null)
 		{
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Throw : Instruction {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Throw"/> class.
@@ -847,6 +1064,9 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Return : Instruction {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Return"/> class.
@@ -857,13 +1077,25 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Return"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public Return (Register value)
 			: base ("Return", null, new Operand [] { value })
 		{
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Switch : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Switch"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <param name="blocks">The blocks.</param>
 		public Switch (Register value, Block [] blocks)
 			: base ("Switch", null, new Operand [] { value })
 		{
@@ -881,19 +1113,38 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Pop : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Pop"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public Pop (Register value)
 			: base ("Pop", null, new Operand [] { value })
 		{
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Dup : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Dup"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Dup (Register result, Register value)
 			: base ("Dup", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.use [0].InternalType;
@@ -901,141 +1152,289 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Not : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Not"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Not (Register result, Register value)
 			: base ("Not", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.use [0].InternalType;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class And : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="And"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public And (Register result, Register first, Register second)
 			: base ("And", result, new Operand [] { first, second })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.GetBitwiseResultType (this.use [0], this.use [1]);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Or : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Or"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Or (Register result, Register first, Register second)
 			: base ("Or", result, new Operand [] { first, second })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.GetBitwiseResultType (this.use [0], this.use [1]);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Xor : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Xor"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Xor (Register result, Register first, Register second)
 			: base ("Xor", result, new Operand [] { first, second })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.GetBitwiseResultType (this.use [0], this.use [1]);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldlen : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldlen"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldlen (Register result, Register value)
 			: base ("Ldlen", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.U;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldnull : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldnull"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
 		public Ldnull (Register result)
 			: base ("Ldnull", result, new Operand [] { new NullConstant () })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.M;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldstr : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldstr"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldstr (Register result, StringConstant value)
 			: base ("Ldstr", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.O;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldloc : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldloc"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldloc (Register result, Local value)
 			: base ("Ldloc", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			base.LdProcess (method);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Stloc : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Stloc"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Stloc (Local result, Register value)
 			: base ("Stloc", result, new Operand [] { value })
 		{
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldloca : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldloca"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldloca (Register result, Local value)
 			: base ("Ldloca", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.M;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldarg : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldarg"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldarg (Register result, Argument value)
 			: base ("Ldarg", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			base.LdProcess (method);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Starg : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Starg"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Starg (Argument result, Register value)
 			: base ("Starg", result, new Operand [] { value })
 		{
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldelem : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldelem"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
 		public Ldelem (InternalType type, Register result, Register first, Register second)
 			: base ("Ldelem", result, new Operand [] { first, second })
 		{
@@ -1045,6 +1444,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		InternalType type;
 
+		/// <summary>
+		/// Gets the type of the internal.
+		/// </summary>
+		/// <value>The type of the internal.</value>
 		public InternalType InternalType
 		{
 			get
@@ -1054,7 +1457,17 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Stelem : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Stelem"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="first">The first.</param>
+		/// <param name="second">The second.</param>
+		/// <param name="value">The value.</param>
 		public Stelem (InternalType type, Register first, Register second, Register value)
 			: base ("Stelem", null, new Operand [] { first, second, value })
 		{
@@ -1063,6 +1476,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		InternalType type;
 
+		/// <summary>
+		/// Gets the type of the internal.
+		/// </summary>
+		/// <value>The type of the internal.</value>
 		public InternalType InternalType
 		{
 			get
@@ -1072,7 +1489,16 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldind : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldind"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldind (InternalType type, Register result, Register value)
 			: base ("Ldind", result, new Operand [] { value })
 		{
@@ -1082,6 +1508,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		InternalType type;
 
+		/// <summary>
+		/// Gets the type of the internal.
+		/// </summary>
+		/// <value>The type of the internal.</value>
 		public InternalType InternalType
 		{
 			get
@@ -1091,7 +1521,16 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Stind : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Stind"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Stind (InternalType type, Register result, Register value)
 			: base ("Stind", null, new Operand [] { result, value })
 		{
@@ -1100,6 +1539,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		InternalType type;
 
+		/// <summary>
+		/// Gets the type of the internal.
+		/// </summary>
+		/// <value>The type of the internal.</value>
 		public InternalType InternalType
 		{
 			get
@@ -1109,19 +1552,39 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Localloc : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Localloc"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Localloc (Register result, Register value)
 			: base ("Localloc", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.M;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class SizeOf : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="SizeOf"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="typeReference">The type reference.</param>
 		public SizeOf (Register result, TypeReference typeReference)
 			: base ("SizeOf", result, null)
 		{
@@ -1130,6 +1593,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private TypeReference typeReference;
 
+		/// <summary>
+		/// Gets the type.
+		/// </summary>
+		/// <value>The type.</value>
 		public TypeReference Type
 		{
 			get
@@ -1138,59 +1605,115 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Toes the string.
+		/// </summary>
+		/// <returns></returns>
 		public override string ToString ()
 		{
 			return this.name + "(" + this.def.ToString () + "<=" + this.typeReference.ToString () + ")";
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.I4;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldtoken : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldtoken"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldtoken (Register result, TokenConstant value)
 			: base ("Ldtoken", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.M;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldftn : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldftn"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldftn (Register result, TokenConstant value)
 			: base ("Ldftn", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.M;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldfld : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldfld"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldfld (Register result, FieldOperand value)
 			: base ("Ldfld", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			base.LdfldProcess (method);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldflda : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldflda"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldflda (Register result, FieldOperand value)
 			: base ("Ldflda", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			base.LdfldProcess (method);
@@ -1199,24 +1722,43 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldsfld : Instruction {
 		public Ldsfld (Register result, FieldOperand value)
 			: base ("Ldsfld", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			base.LdfldProcess (method);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldsflda : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldsflda"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldsflda (Register result, FieldOperand value)
 			: base ("Ldsflda", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			base.LdfldProcess (method);
@@ -1225,42 +1767,76 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Stfld : Instruction {
 		public Stfld (FieldOperand field, Register value)
 			: base ("Stfld", null, new Operand [] { field, value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			base.StfldProcess (method);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Stsfld : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Stsfld"/> class.
+		/// </summary>
+		/// <param name="field">The field.</param>
+		/// <param name="value">The value.</param>
 		public Stsfld (FieldOperand field, Register value)
 			: base ("Stsfld", null, new Operand [] { field, value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			base.StfldProcess (method);
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldarga : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldarga"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldarga (Register result, Argument value)
 			: base ("Ldarga", result, new Operand [] { value })
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.M;
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public abstract class CallInstruction : Instruction {
 		public CallInstruction (Method method, string name, Operand def, Operand [] use)
 			: base (name, def, use)
@@ -1280,13 +1856,26 @@ namespace SharpOS.AOT.IR.Instructions {
 	}
 
 	// TODO add support for call/callvirt/calli/jmp
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Call : CallInstruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Call"/> class.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="parameters">The parameters.</param>
 		public Call (Method method, Register result, Operand [] parameters)
 			: base (method, "Call " + method.MethodDefinition.ToString () + " ", result, parameters)
 		{
 		}
 
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			if (this.def != null) {
@@ -1298,20 +1887,42 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Callvirt : Call {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Callvirt"/> class.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="parameters">The parameters.</param>
 		public Callvirt (Method method, Register result, Operand [] parameters)
 			: base (method, result, parameters)
 		{
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Newobj : CallInstruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Newobj"/> class.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="parameters">The parameters.</param>
 		public Newobj (Method method, Register result, Operand [] parameters)
 			: base (method, "Newobj " + method.MethodDefinition.ToString () + " ", result, parameters)
 		{
 			result.InternalType = InternalType.O;
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			if (this.method.MethodDefinition.DeclaringType.IsValueType) {
@@ -1323,7 +1934,16 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldobj : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldobj"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="typeReference">The type reference.</param>
+		/// <param name="instance">The instance.</param>
 		public Ldobj (Register result, TypeReference typeReference, Register instance)
 			: base ("Ldobj", result, new Operand [] { instance })
 		{
@@ -1343,7 +1963,16 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Stobj : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Stobj"/> class.
+		/// </summary>
+		/// <param name="typeReference">The type reference.</param>
+		/// <param name="instance">The instance.</param>
+		/// <param name="value">The value.</param>
 		public Stobj (TypeReference typeReference, Register instance, Register value)
 			: base ("Stobj", null, new Operand [] { instance, value })
 		{
@@ -1361,7 +1990,15 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Initobj : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Initobj"/> class.
+		/// </summary>
+		/// <param name="typeReference">The type reference.</param>
+		/// <param name="instance">The instance.</param>
 		public Initobj (TypeReference typeReference, Register instance)
 			: base ("Initobj", null, new Operand [] { instance })
 		{
@@ -1379,7 +2016,15 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Ldc : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Ldc"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Ldc (Register result, Constant value)
 			: base ("Ldc", result, new Operand [] { value })
 		{
@@ -1387,12 +2032,24 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class PHI : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="PHI"/> class.
+		/// </summary>
+		/// <param name="result">The result.</param>
+		/// <param name="operands">The operands.</param>
 		public PHI (Register result, Operand [] operands)
 			: base ("PHI", result, operands)
 		{
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			InternalType type = this.use [0].InternalType;
@@ -1409,6 +2066,9 @@ namespace SharpOS.AOT.IR.Instructions {
 			this.def.InternalType = type;
 		}
 
+		/// <summary>
+		/// Attaches this instance.
+		/// </summary>
 		public void Attach ()
 		{
 			foreach (Register register in this.use)
@@ -1416,7 +2076,15 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Initialize : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Initialize"/> class.
+		/// </summary>
+		/// <param name="source">The source.</param>
+		/// <param name="typeReference">The type reference.</param>
 		public Initialize (Local source, TypeReference typeReference)
 			: base ("Initialize", null, new Operand [] { source })
 		{
@@ -1426,7 +2094,16 @@ namespace SharpOS.AOT.IR.Instructions {
 		TypeReference typeReference;
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Box : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Box"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="value">The value.</param>
 		public Box (Class type, Register result, Register value)
 			: base ("Box", result, new Operand [] { value })
 		{
@@ -1446,7 +2123,16 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Unbox : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Unbox"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="instance">The instance.</param>
 		public Unbox (Class type, Register result, Register instance)
 			: base ("Unbox", result, new Operand [] { instance })
 		{
@@ -1466,7 +2152,16 @@ namespace SharpOS.AOT.IR.Instructions {
 		}
 	}
 
+	/// <summary>
+	/// 
+	/// </summary>
 	public class UnboxAny : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="UnboxAny"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="instance">The instance.</param>
 		public UnboxAny (Class type, Register result, Register instance)
 			: base ("UnboxAny", result, new Operand [] { instance })
 		{
@@ -1483,6 +2178,10 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			if (this.type.ClassDefinition.IsValueType) {

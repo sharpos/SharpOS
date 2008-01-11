@@ -183,6 +183,17 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		Class typeInfoClass = null;
+
+		public Class TypeInfoClass
+		{
+			get
+			{
+				return this.typeInfoClass;
+			}
+		}
+
+
 		Method allocObject = null;
 
 		/// <summary>
@@ -800,20 +811,31 @@ namespace SharpOS.AOT.IR {
 				_class.Setup ();
 
 				foreach (CustomAttribute customAttribute in _class.ClassDefinition.CustomAttributes) {
-					if (customAttribute.Constructor.DeclaringType.FullName !=
-							typeof (SharpOS.AOT.Attributes.VTableAttribute).FullName)
-						continue;
+					if (customAttribute.Constructor.DeclaringType.FullName ==
+							typeof (SharpOS.AOT.Attributes.VTableAttribute).FullName) {
 
-					if (this.vtableClass != null)
-						throw new EngineException ("More than one class was tagged as VTable Class.");
+						if (this.vtableClass != null)
+							throw new EngineException ("More than one class was tagged as VTable Class.");
 
-					this.vtableClass = _class;
+						this.vtableClass = _class;
+
+					} else if (customAttribute.Constructor.DeclaringType.FullName ==
+							typeof (SharpOS.AOT.Attributes.TypeInfoAttribute).FullName) {
+
+						if (this.typeInfoClass != null)
+							throw new EngineException ("More than one class was tagged as TypeInfo Class.");
+
+						this.typeInfoClass = _class;
+					}
 				}
 
 			}
 
 			if (this.vtableClass == null)
 				throw new EngineException ("No VTable Class defined.");
+
+			if (this.typeInfoClass == null)
+				throw new EngineException ("No TypeInfo Class defined.");
 
 			// This block of code needs the vtableClass to be set
 			foreach (Class _class in this.classes.Values) {
