@@ -267,6 +267,7 @@ namespace SharpOS.Kernel.Shell.Commands {
 			header->AddEntry (BuiltIn.LS.CREATE ());
 			header->AddEntry (BuiltIn.LsPci.CREATE ());
 			header->AddEntry (BuiltIn.MemDump.CREATE ());
+			header->AddEntry (BuiltIn.MemView.CREATE ());
 			header->AddEntry (BuiltIn.Panic.CREATE ());
 			header->AddEntry (BuiltIn.Reboot.CREATE ());
 			header->AddEntry (BuiltIn.Show.CREATE ());
