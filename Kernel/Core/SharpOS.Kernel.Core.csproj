@@ -142,6 +142,7 @@
     <Compile Include="Korlib\Runtime\TypeInfo.cs" />
     <Compile Include="Korlib\Runtime\VTable.cs" />
     <Compile Include="Korlib\System\Enum.cs" />
+    <Compile Include="Korlib\System\Int16.cs" />
     <Compile Include="Korlib\System\Int32.cs" />
     <Compile Include="Korlib\System\Object.cs" />
     <Compile Include="Korlib\System\String.cs" />

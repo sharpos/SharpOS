@@ -786,56 +786,6 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Array.CMPIntArray () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPIntArray' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPShortArray () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPShortArray' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPByteArray () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPByteArray' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPLongArray () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPLongArray' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPUIntArray () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPUIntArray' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPUShortArray () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPUShortArray' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPSByteArray () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPSByteArray' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPULongArray () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPULongArray' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPIntArrayLength () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPIntArrayLength' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Array.CMPIntArrayZeroLength () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Array.CMPIntArrayZeroLength' failed.");
-				failures++;
-			}
-
 			if (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte' failed.");
 				failures++;

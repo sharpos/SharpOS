@@ -783,56 +783,6 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPShortArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPShortArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPShortArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPByteArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPByteArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPByteArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPLongArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPLongArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPLongArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPUIntArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUIntArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUIntArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPUShortArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUShortArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUShortArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPSByteArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPSByteArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPSByteArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPULongArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPULongArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPULongArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArrayLength ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArrayLength () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArrayLength' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArrayZeroLength ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArrayZeroLength () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArrayZeroLength' failed.");
-	}
-	[Test]
 	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUInt2Byte ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte' failed.");
