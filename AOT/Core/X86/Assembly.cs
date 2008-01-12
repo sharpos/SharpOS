@@ -1123,47 +1123,9 @@ namespace SharpOS.AOT.X86 {
 				if (_class.ClassDefinition.IsEnum)
 					continue;
 
+				string typeInfoLabel = AddTypeInfoFields (_class);
 
-				this.ALIGN (OBJECT_ALIGNMENT);
-
-				// Writing the Type Info instances
-				string typeInfoLabel = this.GetTypeInfoLabel (_class.TypeFullName);
-				this.AddSymbol (new COFF.Label (typeInfoLabel));
-				this.LABEL (typeInfoLabel);
-
-				// Type Info Object Header
-				this.AddObjectFields (this.engine.TypeInfoClass.TypeFullName);
-
-				// Type Info Name
-				this.ADDRESSOF (this.AddString (_class.TypeFullName));
-
-				// Type Info Base Instance
-				if (_class.Base == null)
-					// NULL
-					this.DATA ((uint) 0);
-				else
-					this.ADDRESSOF (this.GetTypeInfoLabel (_class.Base.TypeFullName));
-
-
-
-				this.ALIGN (OBJECT_ALIGNMENT);
-
-				// Writing the Runtime VTable instances
-				string label = this.GetVTableLabel (_class.TypeFullName);
-				this.AddSymbol (new COFF.Label (label));
-				this.LABEL (label);
-
-				this.AddObjectFields (this.engine.VTableClass.TypeFullName);
-
-				// Type Info Field
-				this.ADDRESSOF (typeInfoLabel);
-
-				// VTable Size Field
-				this.DATA ((uint) _class.Size);
-
-				// Virtual Methods
-				foreach (Method method in _class.VirtualMethods)
-					this.ADDRESSOF (method.AssemblyLabel);
+				AddVTableFields (_class, typeInfoLabel);
 
 				if (_class.ClassDefinition.IsValueType)
 					continue;
@@ -1226,6 +1188,52 @@ namespace SharpOS.AOT.X86 {
 
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (END_DATA);
+		}
+
+		private void AddVTableFields (Class _class, string typeInfoLabel)
+		{
+			this.ALIGN (OBJECT_ALIGNMENT);
+
+			// Writing the Runtime VTable instances
+			string label = this.GetVTableLabel (_class.TypeFullName);
+			this.AddSymbol (new COFF.Label (label));
+			this.LABEL (label);
+
+			this.AddObjectFields (this.engine.VTableClass.TypeFullName);
+
+			// Type Info Field
+			this.ADDRESSOF (typeInfoLabel);
+
+			// VTable Size Field
+			this.DATA ((uint) _class.Size);
+
+			// Virtual Methods
+			foreach (Method method in _class.VirtualMethods)
+				this.ADDRESSOF (method.AssemblyLabel);
+		}
+
+		private string AddTypeInfoFields (Class _class)
+		{
+			this.ALIGN (OBJECT_ALIGNMENT);
+
+			// Writing the Type Info instances
+			string typeInfoLabel = this.GetTypeInfoLabel (_class.TypeFullName);
+			this.AddSymbol (new COFF.Label (typeInfoLabel));
+			this.LABEL (typeInfoLabel);
+
+			// Type Info Object Header
+			this.AddObjectFields (this.engine.TypeInfoClass.TypeFullName);
+
+			// Type Info Name
+			this.ADDRESSOF (this.AddString (_class.TypeFullName));
+
+			// Type Info Base Instance
+			if (_class.Base == null)
+				// NULL
+				this.DATA ((uint) 0);
+			else
+				this.ADDRESSOF (this.GetTypeInfoLabel (_class.Base.TypeFullName));
+			return typeInfoLabel;
 		}
 
 		/// <summary>

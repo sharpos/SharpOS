@@ -11,7 +11,6 @@
 #define ARRAYS_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
-#if !ARRAYS_NOT_SUPPORTED
 	public unsafe class Array {
 
 		/// <summary>
@@ -228,5 +227,4 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 1;
 		}
 	}
-#endif
 }

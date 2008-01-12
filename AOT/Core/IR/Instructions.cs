@@ -2192,4 +2192,40 @@ namespace SharpOS.AOT.IR.Instructions {
 				throw new NotImplementedEngineException ();
 		}
 	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class Newarr : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Newarr"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="instance">The instance.</param>
+		public Newarr (Class type, Register result, Register instance)
+			: base ("Newarr", result, new Operand [] { instance })
+		{
+			this.type = type;
+		}
+
+		Class type;
+
+		public Class Type
+		{
+			get
+			{
+				return this.type;
+			}
+		}
+
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		public override void Process (Method method)
+		{
+			this.def.InternalType = InternalType.O;
+		}
+	}
 }

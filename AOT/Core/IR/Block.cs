@@ -2168,6 +2168,17 @@ namespace SharpOS.AOT.IR {
 		}
 		#endregion
 
+		private SharpOS.AOT.IR.Instructions.Instruction Newarr (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			TypeReference typeReference = cilInstruction.Operand as TypeReference;
+
+			Register value = this.GetRegister ();
+
+			Register result = this.SetRegister ();
+
+			return new Newarr (this.method.Engine.GetClass (typeReference), result, value);
+		}
+
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_Any (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new NotImplementedEngineException ();
@@ -2179,11 +2190,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelema (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new NotImplementedEngineException ();
-		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction Newarr (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new NotImplementedEngineException ();
 		}
