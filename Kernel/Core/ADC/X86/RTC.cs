@@ -79,6 +79,22 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//return CalculateTicks(AbsoluteDays(year, month, day), hours, minutes, seconds, milliseconds);
 		}
 		#endregion
+
+		#region GetTimeString
+		public static void WriteTime()
+		{
+			Foundation.StringBuilder* sbtime = Foundation.StringBuilder.CREATE();
+			byte Hours = CMOS.Read(CMOS.Address.Hour);
+			byte Minutes = CMOS.Read(CMOS.Address.Minutes);
+			byte Seconds = CMOS.Read(CMOS.Address.Seconds);
+			SharpOS.Kernel.ADC.TextMode.WriteByte(Hours);
+			SharpOS.Kernel.ADC.TextMode.Write(":");
+			SharpOS.Kernel.ADC.TextMode.WriteByte(Minutes);
+			SharpOS.Kernel.ADC.TextMode.Write(":");
+			SharpOS.Kernel.ADC.TextMode.WriteByte(Seconds);
+		}
+		#endregion
 	}
 }
+
 

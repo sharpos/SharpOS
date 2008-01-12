@@ -262,7 +262,7 @@ namespace SharpOS.Kernel {
 				TextMode.SaveAttributes ();
 				TextMode.MoveTo (0, 24);
 				TextMode.SetAttributes (TextColor.Yellow, TextColor.Red);
-				TextMode.WriteLine ("Timer ticks: ", (int) ticks);
+				ADC.X86.RTC.WriteTime();
 				TextMode.RestoreAttributes ();
 				TextMode.MoveTo (x, y);
 			}
@@ -271,4 +271,5 @@ namespace SharpOS.Kernel {
 		}
 	}
 }
+
 
