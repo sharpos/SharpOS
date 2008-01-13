@@ -68,6 +68,7 @@ namespace SharpOS.Kernel.ADC.X86
 
 			EnableDMA			= 0x08,
 			EnableController	= 0x04,
+			EnableAllMotors		= 0x10,
 			DisableAll			= 0x00,
 
 			DriveSelectShift	= 0x00,
@@ -115,7 +116,7 @@ namespace SharpOS.Kernel.ADC.X86
 		public static void TurnOnMotor ()
 		{
 			IO.Out8 (IO.Port.FDC_DORPort,
-					    (byte) (DORFlags.EnableDMA | DORFlags.EnableController));
+						(byte)(DORFlags.EnableDMA | DORFlags.EnableController | DORFlags.EnableAllMotors));
 		}
 
 		private unsafe static void SendCommandToFDC (FIFOCommand command)
