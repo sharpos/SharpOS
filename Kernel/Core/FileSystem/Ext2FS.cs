@@ -20,14 +20,20 @@ using SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.FileSystem {
 	public unsafe static class Ext2FS {
-		static byte* floppyDiskData = (byte*) 0x00000000;
+		static byte* floppyDiskData = null; 
 		static FileSystem* fileSystem = null;
 		static INode* root = null;
 		static DirectoryFileFormat* format = null;
 
+		static UInt16 readCount = 512 * 18 * 7;
+
 		public static void Setup ()
 		{
-			FloppyDiskController.ReadData ();
+			byte* floppyData = (byte*)0x00000000;
+
+			floppyDiskData = (byte*)MemoryManager.Allocate(readCount);
+
+			FloppyDiskController.Read(floppyDiskData, 0, readCount);
 
 			ReadSuperBlock ();
 			ReadGroupDescriptor ();

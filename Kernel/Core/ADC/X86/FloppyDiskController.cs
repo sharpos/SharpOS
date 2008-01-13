@@ -119,7 +119,7 @@ namespace SharpOS.Kernel.ADC.X86
 						(byte)(DORFlags.EnableDMA | DORFlags.EnableController | DORFlags.EnableAllMotors));
 		}
 
-		private unsafe static void SendCommandToFDC (FIFOCommand command)
+		private unsafe static void SendCommandToFDC (byte command)
 		{
 			byte status = 0;
 
@@ -128,7 +128,7 @@ namespace SharpOS.Kernel.ADC.X86
 			}
 			while ((status & 0xC0) != 0x80); //TODO: implement timeout
 
-			IO.Out8 (IO.Port.FDC_DataPort, (byte) command);
+			IO.Out8 (IO.Port.FDC_DataPort, command);
 		}
 
 		private unsafe static void SendDataToFDC (byte data)
@@ -147,7 +147,7 @@ namespace SharpOS.Kernel.ADC.X86
 		//		..should we create a DMA.cs for all kernel DMA handling?
 		public unsafe static void SetupDMA ()
 		{
-			System.UInt16 count = BYTES_PER_SECTOR * SECTORS_PER_TRACK * 7 - 1;
+			System.UInt16 count = BYTES_PER_SECTOR * SECTORS_PER_TRACK - 1;
 
 			IO.Out8 (IO.Port.DMA_ModeRegister, 0x46);
 
@@ -164,8 +164,32 @@ namespace SharpOS.Kernel.ADC.X86
 			IO.Out8 (IO.Port.DMA_ChannelMaskRegister, 0x02);
 		}
 
+		public unsafe static void Read(byte* buffer, uint offset, uint length)
+		{
+			byte* data = (byte*)0x00000000;
+
+			uint readBlockCount = (length + (512 * 18 - 1)) / (512 * 18);
+
+			for (uint b = 0; b < readBlockCount; ++b)
+			{
+				byte sector = (byte)(offset / BYTES_PER_SECTOR);
+
+				byte head = (byte)((sector % (SECTORS_PER_TRACK * 2)) / SECTORS_PER_TRACK);
+				byte track = (byte)(sector / (SECTORS_PER_TRACK * 2));
+
+				sector = (byte)((sector % SECTORS_PER_TRACK) + 1);
+
+				ReadData(head, track, sector);
+
+				for (uint index = offset, index2 = 0; index < offset + 512 * 18; ++index, ++index2)
+					buffer[index] = data[index2];
+
+				offset += 512 * 18;
+			}
+		}
+
 		//TODO: replace integer values with enums or describe in comments
-		public unsafe static void ReadData ()
+		public unsafe static void ReadData(byte head, byte track, byte sector)
 		{
 			SetInterruptOccurred (false);
 
@@ -178,7 +202,7 @@ namespace SharpOS.Kernel.ADC.X86
 			SetInterruptOccurred (false);
 
 			{
-				SendCommandToFDC (FIFOCommand.Recalibrate);
+				SendCommandToFDC((byte)FIFOCommand.Recalibrate);
 				SendDataToFDC (0x00);
 			}
 			// FIXME: interrupt never gets called here .. (at least in bochs)
@@ -188,9 +212,9 @@ namespace SharpOS.Kernel.ADC.X86
 			SetInterruptOccurred (false);
 
 			{
-				SendCommandToFDC (FIFOCommand.Seek);
-				SendDataToFDC ((0x00 << 2) + 0);
-				SendDataToFDC (0);
+				SendCommandToFDC((byte)FIFOCommand.Seek);
+				SendCommandToFDC((byte)((head << 2) + 0));
+				SendCommandToFDC(track);
 			}
 			while (HasInterruptOccurred () == false)
 				;
@@ -200,18 +224,22 @@ namespace SharpOS.Kernel.ADC.X86
 			SetInterruptOccurred (false);
 
 			{
-				SendCommandToFDC (FIFOCommand.Read);
-				SendDataToFDC ((0x00 << 2) + 0);
-				SendDataToFDC (0);
-				SendDataToFDC (0);
-				SendDataToFDC (1);
-				SendDataToFDC (2);
-				SendDataToFDC (18);
-				SendDataToFDC (27);
+				SendCommandToFDC((byte)FIFOCommand.Read);
+				SendCommandToFDC((byte)((head << 2) + 0));
+				SendCommandToFDC(track);
+				SendCommandToFDC(head);
+				SendCommandToFDC(sector);
+				SendDataToFDC(2);
+				SendCommandToFDC(SECTORS_PER_TRACK);
+				SendDataToFDC(27);
 				SendDataToFDC (0xff);
 			}
 			while (HasInterruptOccurred () == false)
 				;
+
+			{
+				TurnOffMotor();
+			}
 		}
 	}
 }

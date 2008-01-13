@@ -57,9 +57,14 @@ namespace SharpOS.Kernel.ADC
         {
         }
 
-        [AOTAttr.ADCStub]
-        public static void ReadData()
-        {
-        }
-    }
+		[AOTAttr.ADCStub]
+		public unsafe static void Read(byte* buffer, uint offset, uint length)
+		{
+		}
+
+		[AOTAttr.ADCStub]
+		public unsafe static void ReadData(byte head, byte track, byte sector)
+		{
+		}
+	}
 }
