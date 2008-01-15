@@ -44,7 +44,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 				return;
 			}
 			if (result == CommandExecutionAttemptResult.BlankEntry) {
-				ADC.Memory.Call ((void*) Stubs.GetFunctionPointer (lblGetHelp), (void*) context);
+				ADC.MemoryUtil.Call ((void*) Stubs.GetFunctionPointer (lblGetHelp), (void*) context);
 			}
 		}
 

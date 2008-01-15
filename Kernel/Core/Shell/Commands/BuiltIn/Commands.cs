@@ -33,7 +33,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		{
 			if (context->parameters == null ||
 			    context->parameters->Length == 0) {
-				ADC.Memory.Call ((void*) Stubs.GetFunctionPointer (lblExecute), (void*) context);
+				ADC.MemoryUtil.Call ((void*) Stubs.GetFunctionPointer (lblExecute), (void*) context);
 			} else {
 				CommandExecutionAttemptResult result;
 				result = Prompter.CommandTable->HandleLine (context->parameters, false, true);
@@ -54,7 +54,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 					return;
 				}
 				if (result == CommandExecutionAttemptResult.BlankEntry) {
-					ADC.Memory.Call ((void*) Stubs.GetFunctionPointer (Help.lblGetHelp), (void*) context);
+					ADC.MemoryUtil.Call ((void*) Stubs.GetFunctionPointer (Help.lblGetHelp), (void*) context);
 				}
 
 			}

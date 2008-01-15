@@ -217,9 +217,9 @@ namespace SharpOS.Kernel.Shell.Commands {
 			Diagnostics.Message("Prompter::HandleLine(CString8*): Getting ready to call command");
 #endif
 			if (!useHelp)
-				ADC.Memory.Call (command->func_Execute, (void*) commandExecutionContext);
+				ADC.MemoryUtil.Call (command->func_Execute, (void*) commandExecutionContext);
 			else
-				ADC.Memory.Call (command->func_GetHelp, (void*) commandExecutionContext);
+				ADC.MemoryUtil.Call (command->func_GetHelp, (void*) commandExecutionContext);
 #if Prompter_DebuggingVerbosity
 			Diagnostics.Message("Prompter::HandleLine(CString8*): Done calling command");
 #endif

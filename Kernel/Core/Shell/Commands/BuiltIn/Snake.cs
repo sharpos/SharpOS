@@ -380,7 +380,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 			for (int i = 0; i < keyCount; i++) {
 				// Calling Console.KeyDown() directly makes the AOT compiler
 				// error out, so I trick it
-				SharpOS.Kernel.ADC.Memory.Call ((void*) Stubs.GetFunctionPointer (
+				SharpOS.Kernel.ADC.MemoryUtil.Call ((void*) Stubs.GetFunctionPointer (
 					Console.CONSOLE_KEY_DOWN_HANDLER), (void*) (uint) Keys.Backspace);
 			}
 

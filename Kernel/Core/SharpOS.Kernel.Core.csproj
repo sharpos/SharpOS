@@ -82,8 +82,8 @@
     <Compile Include="ADC\Interlocked.cs" />
     <Compile Include="ADC\Keyboard.cs" />
     <Compile Include="ADC\Keys.cs" />
-    <Compile Include="ADC\Memory.cs" />
     <Compile Include="ADC\MemoryManager.cs" />
+    <Compile Include="ADC\MemoryUtil.cs" />
     <Compile Include="ADC\Pager.cs" />
     <Compile Include="ADC\Processor.cs" />
     <Compile Include="ADC\ProcessorType.cs" />
@@ -105,7 +105,7 @@
     <Compile Include="ADC\X86\Interlocked.cs" />
     <Compile Include="ADC\X86\IO.cs" />
     <Compile Include="ADC\X86\Keyboard.cs" />
-    <Compile Include="ADC\X86\Memory.cs" />
+    <Compile Include="ADC\X86\MemoryUtil.cs" />
     <Compile Include="ADC\X86\Pager.cs" />
     <Compile Include="ADC\X86\PCI.cs" />
     <Compile Include="ADC\X86\PIC.cs" />
