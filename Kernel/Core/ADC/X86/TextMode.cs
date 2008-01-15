@@ -316,7 +316,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			x = 0;
 			y = 0;
-			Memory.MemSet (fill, addressStart, bufferSize);
+			MemoryUtil.MemSet (fill, addressStart, bufferSize);
 			SetReadPos (0);
 			writeY = 0;
 			SetCursor (x, y);
@@ -330,7 +330,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			uint count = (uint) (bytePerChar * (width - x));
 			byte* video = (byte*) addressStart;
 			video += (uint) (x + ((y + writeY) * scanline));
-			Memory.MemSet (fill, (uint) video, count);
+			MemoryUtil.MemSet (fill, (uint) video, count);
 		}
 
 		public static void MovePage (int value)
@@ -352,8 +352,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 				fill_dst = addressStart;
 			}
 
-			Memory.MemCopy (move_src, move_dst, move_count);
-			Memory.MemSet (fill, fill_dst, fill_count);
+			MemoryUtil.MemCopy (move_src, move_dst, move_count);
+			MemoryUtil.MemSet (fill, fill_dst, fill_count);
 		}
 
 		public static void ScrollPageWrite (int value)

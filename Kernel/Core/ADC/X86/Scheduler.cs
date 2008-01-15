@@ -30,7 +30,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 				if (ThreadMemoryUsed [i] == false) {
 					ThreadMemoryUsed [i] = true;
 
-					Memory.MemSet32 (0, (uint) (void*) &(ThreadMemory [i]), (uint) (sizeof (IDT.ISRData) / 4));
+					MemoryUtil.MemSet32 (0, (uint) (void*) &(ThreadMemory [i]), (uint) (sizeof (IDT.ISRData) / 4));
 
 					// ... temp code
 					ThreadMemory [i].FS = GDT.DataSelector;

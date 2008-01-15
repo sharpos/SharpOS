@@ -107,7 +107,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 				if (timerEvent[x] == 0)
 					continue;
 
-				Memory.Call(timerEvent[x], ticks);
+				MemoryUtil.Call(timerEvent[x], ticks);
 			}
 
 			// run scheduler here..

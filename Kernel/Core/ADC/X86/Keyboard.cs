@@ -263,14 +263,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 					if (keyDownEvent [x] == 0)
 						continue;
 
-					Memory.Call (keyDownEvent [x], scancode);
+					MemoryUtil.Call (keyDownEvent [x], scancode);
 				}
 			} else {
 				for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
 					if (keyUpEvent [x] == 0)
 						continue;
 
-					Memory.Call (keyUpEvent [x], scancode);
+					MemoryUtil.Call (keyUpEvent [x], scancode);
 				}
 
 			}
