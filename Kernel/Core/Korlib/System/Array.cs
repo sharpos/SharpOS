@@ -13,7 +13,13 @@ using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public struct Int32 {
-		internal int Value;
+	public abstract class Array {
+		internal struct BoundEntry {
+			internal int LowerBound;
+			internal int Length;
+		}
+
+		internal int Rank;
+		internal BoundEntry FirstEntry;
 	}
 }

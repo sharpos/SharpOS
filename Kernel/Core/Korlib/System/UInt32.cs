@@ -13,7 +13,7 @@ using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public struct Int32 {
-		internal int Value;
+	public struct UInt32 {
+		internal uint Value;
 	}
 }

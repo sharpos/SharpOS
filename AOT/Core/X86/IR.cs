@@ -72,6 +72,8 @@ namespace SharpOS.AOT.X86 {
 				case InternalType.M:
 				case InternalType.O:
 				case InternalType.I4:
+				case InternalType.SZArray:
+				case InternalType.Array:
 					if (assignee.IsRegisterSet)
 						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 					else
@@ -623,6 +625,8 @@ namespace SharpOS.AOT.X86 {
 				case InternalType.M:
 				case InternalType.O:
 				case InternalType.I4:
+				case InternalType.SZArray:
+				case InternalType.Array:
 					if (value.IsRegisterSet)
 						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 					else
@@ -810,6 +814,8 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.I:
 			case InternalType.I4:
 			case InternalType.U4:
+			case InternalType.SZArray:
+			case InternalType.Array:
 				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
 
 				if (assignee.IsRegisterSet)
@@ -901,6 +907,8 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.U:
 			case InternalType.O:
 			case InternalType.M:
+			case InternalType.SZArray:
+			case InternalType.Array:
 				this.assembly.MOV (R32.EAX, new DWordMemory (memory));
 
 				if (assignee.IsRegisterSet)
@@ -1014,6 +1022,8 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.I:
 			case InternalType.U:
 			case InternalType.O:
+			case InternalType.SZArray:
+			case InternalType.Array:
 				if (value.IsRegisterSet)
 					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 
@@ -1255,6 +1265,8 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.M:
 			case InternalType.O:
 			case InternalType.I4:
+			case InternalType.SZArray:
+			case InternalType.Array:
 				if (value.IsRegisterSet)
 					this.assembly.MOV (R32.EDX, Assembly.GetRegister (value.Register));
 
@@ -1504,6 +1516,8 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.O:
 			case InternalType.I:
 			case InternalType.I4:
+			case InternalType.SZArray:
+			case InternalType.Array:
 				if (first.IsRegisterSet)
 					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
 				else
@@ -1571,6 +1585,8 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.O:
 			case InternalType.M:
 			case InternalType.I4:
+			case InternalType.SZArray:
+			case InternalType.Array:
 				if (value.IsRegisterSet)
 					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 				else
@@ -2234,7 +2250,7 @@ namespace SharpOS.AOT.X86 {
 
 		private void Newobj (IR.Instructions.Newobj instruction)
 		{
-			if (instruction.Method.Class.ClassDefinition.IsValueType) {
+			if (instruction.Method.Class.IsValueType) {
 				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
 				this.Initialize (assignee);
@@ -2249,7 +2265,7 @@ namespace SharpOS.AOT.X86 {
 
 				this.PopCallParameters (instruction);
 
-			} else if (instruction.Method.Class.ClassDefinition.IsClass) {
+			} else if (instruction.Method.Class.IsClass) {
 				this.PushCallParameters (instruction);
 
 				this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Method.Class.TypeFullName)); 
@@ -2440,7 +2456,7 @@ namespace SharpOS.AOT.X86 {
 			if (value.IsRegisterSet)
 				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 			else
-				this.assembly.LEA (R32.EAX, new DWordMemory (this.GetAddress (value)));
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
 			this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.GetObjectSize);
 
@@ -2488,6 +2504,11 @@ namespace SharpOS.AOT.X86 {
 				// TODO check the value if it is a reference or generic
 				throw new NotImplementedEngineException ();
 			}
+		}
+
+		private void Newarr (IR.Instructions.Newarr instruction)
+		{
+			throw new NotImplementedEngineException ();
 		}
 	}
 }

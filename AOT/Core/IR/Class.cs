@@ -28,7 +28,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="engine">The engine.</param>
 		/// <param name="classDefinition">The class definition.</param>
-		public Class (Engine engine, TypeDefinition classDefinition)
+		public Class (Engine engine, TypeReference classDefinition)
 		{
 			this.engine = engine;
 			this.classDefinition = classDefinition;
@@ -36,32 +36,124 @@ namespace SharpOS.AOT.IR {
 
 		public void Setup ()
 		{
-			if (this.classDefinition.IsEnum) {
-				foreach (FieldDefinition field in this.classDefinition.Fields) {
-					if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
-						this.internalType = this.engine.GetInternalType (field.FieldType.FullName);
-						break;
+			if (this.classDefinition is TypeDefinition) {
+				TypeDefinition typeDefinition = this.classDefinition as TypeDefinition;
+
+				this.hasExplicitLayout = (typeDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0;
+
+				if (typeDefinition.IsEnum) {
+					this.isEnum = true;
+
+					foreach (FieldDefinition field in typeDefinition.Fields) {
+						if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
+							this.internalType = this.engine.GetInternalType (field.FieldType.FullName);
+							break;
+						}
 					}
+
+				} else if (typeDefinition.IsValueType) {
+					this.isValueType = true;
+
+					this.internalType = Operands.InternalType.ValueType;
+
+				} else if (typeDefinition.IsClass) {
+					this.isClass = true;
+
+					this.internalType = Operands.InternalType.O;
 				}
 
-			} else if (this.classDefinition.IsValueType)
-				this.internalType = Operands.InternalType.ValueType;
+				foreach (FieldDefinition field in typeDefinition.Fields)
+					fields [field.Name] = new Field (field);
 
-			else if (this.classDefinition.IsClass)
-				this.internalType = Operands.InternalType.O;
+				if (this.TypeFullName != Mono.Cecil.Constants.Object)
+					this._base = this.engine.GetClass (typeDefinition.BaseType);
 
+				this.AddVirtualMethods (this.virtualMethods);
 
-			foreach (FieldDefinition field in this.classDefinition.Fields)
-				fields [field.Name] = new Field (field);
+			} else
+				throw new NotImplementedEngineException ();
+		}
 
-			if (this.TypeFullName != Mono.Cecil.Constants.Object)
-				this._base = this.engine.GetClass (this.classDefinition.BaseType);
+		private bool isSpecialType = false;
 
-			this.AddVirtualMethods (this.virtualMethods);
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is special type.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is special type; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsSpecialType
+		{
+			get
+			{
+				return this.isSpecialType;
+			}
+			set
+			{
+				this.isSpecialType = value;
+			}
+		}
+
+		private bool isValueType = false;
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is value type.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is value type; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsValueType
+		{
+			get
+			{
+				return isValueType;
+			}
+		}
+
+		private bool isClass = false;
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is class.
+		/// </summary>
+		/// <value><c>true</c> if this instance is class; otherwise, <c>false</c>.</value>
+		public bool IsClass
+		{
+			get
+			{
+				return isClass;
+			}
+		}
+
+		private bool isEnum = false;
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is enum.
+		/// </summary>
+		/// <value><c>true</c> if this instance is enum; otherwise, <c>false</c>.</value>
+		public bool IsEnum
+		{
+			get
+			{
+				return isEnum;
+			}
+		}
+
+		private bool hasExplicitLayout = false;
+
+		public bool HasExplicitLayout
+		{
+			get
+			{
+				return hasExplicitLayout;
+			}
 		}
 
 		Class _base = null;
 
+		/// <summary>
+		/// Gets the base.
+		/// </summary>
+		/// <value>The base.</value>
 		public Class Base
 		{
 			get
@@ -72,6 +164,10 @@ namespace SharpOS.AOT.IR {
 
 		Dictionary<string, Field> fields = new Dictionary<string, Field> ();
 
+		/// <summary>
+		/// Gets the fields.
+		/// </summary>
+		/// <value>The fields.</value>
 		public Dictionary<string, Field> Fields
 		{
 			get
@@ -108,6 +204,10 @@ namespace SharpOS.AOT.IR {
 
 		private Engine engine = null;
 
+		/// <summary>
+		/// Gets the engine.
+		/// </summary>
+		/// <value>The engine.</value>
 		public Engine Engine
 		{
 			get
@@ -116,13 +216,13 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		private TypeDefinition classDefinition = null;
+		private TypeReference classDefinition = null;
 
 		/// <summary>
 		/// Gets the class definition.
 		/// </summary>
 		/// <value>The class definition.</value>
-		public TypeDefinition ClassDefinition
+		public TypeReference ClassDefinition
 		{
 			get
 			{
@@ -130,6 +230,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the full name of the type.
+		/// </summary>
+		/// <value>The full name of the type.</value>
 		public string TypeFullName
 		{
 			get
@@ -205,9 +309,10 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public InternalType GetFieldType (string value)
 		{
-			foreach (FieldDefinition field in this.classDefinition.Fields) {
-				if (field.Name.Equals (value))
-					return this.engine.GetInternalType (field.FieldType.FullName);
+			// TODO Refactoring
+			foreach (Field field in this.fields.Values) {
+				if (field.Type.Name.Equals (value))
+					return this.engine.GetInternalType (field.Type.FieldType.FullName);
 			}
 
 			return InternalType.NotSet;
@@ -220,24 +325,22 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public int GetFieldOffset (string fieldName)
 		{
-			//this.engine.GetBaseTypeSize (this.classDefinition.BaseType as TypeDefinition);
-
 			int result = this.BaseSize;
 
-			foreach (FieldReference field in this.classDefinition.Fields) {
-				if ((field as FieldDefinition).IsStatic)
+			// TODO Refactoring
+			foreach (Field field in this.fields.Values) {
+				if (field.Type.IsStatic)
 					continue;
 
-				if (field.Name.Equals (fieldName)) {
+				if (field.Type.Name.Equals (fieldName)) {
 					// An ExplicitLayout has already the offset defined
-					if (this.classDefinition.IsValueType
-							&& (this.classDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0)
-						result = (int) (field as FieldDefinition).Offset;
+					if (this.IsValueType && this.hasExplicitLayout)
+						result = (int) field.Type.Offset;
 
 					break;
 				}
 
-				result += this.engine.GetFieldSize (field.FieldType.FullName);
+				result += this.engine.GetFieldSize (field.Type.FieldType.FullName);
 			}
 
 			return result;
@@ -312,8 +415,8 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				if (!this.classDefinition.IsValueType
-						&& this.classDefinition.IsClass
+				if (!this.IsValueType
+						&& this.IsClass
 						&& this._base != null)
 					return this._base.Size;
 
@@ -331,35 +434,35 @@ namespace SharpOS.AOT.IR {
 			{
 				int result = 0;
 
-				if (this.classDefinition.IsEnum) {
-					foreach (FieldDefinition field in this.classDefinition.Fields) {
-						if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
-							result = this.engine.GetTypeSize (field.FieldType.FullName);
+				if (this.IsEnum) {
+					foreach (Field field in this.fields.Values) {
+						if ((field.Type.Attributes & FieldAttributes.RTSpecialName) != 0) {
+							result = this.engine.GetTypeSize (field.Type.FieldType.FullName);
 							break;
 						}
 					}
 
-				} else if (this.classDefinition.IsValueType
-						|| this.classDefinition.IsClass) {
+				} else if (this.IsValueType
+						|| this.IsClass) {
 					result = this.BaseSize;
 
-					if ((this.classDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0) {
-						foreach (FieldDefinition field in this.classDefinition.Fields) {
-							if ((field as FieldDefinition).IsStatic)
+					if (this.hasExplicitLayout) {
+						foreach (Field field in this.fields.Values) {
+							if (field.Type.IsStatic)
 								continue;
 
-							int value = (int) (field.Offset + this.engine.GetTypeSize (field.FieldType.FullName));
+							int value = (int) (field.Type.Offset + this.engine.GetTypeSize (field.Type.FieldType.FullName));
 
 							if (value > result)
 								result = value;
 						}
 
 					} else {
-						foreach (FieldReference field in this.classDefinition.Fields) {
-							if ((field as FieldDefinition).IsStatic)
+						foreach (Field field in this.fields.Values) {
+							if (field.Type.IsStatic)
 								continue;
 
-							result += this.engine.GetFieldSize (field.FieldType.FullName);
+							result += this.engine.GetFieldSize (field.Type.FieldType.FullName);
 						}
 					} 
 

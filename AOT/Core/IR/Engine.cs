@@ -78,7 +78,7 @@ namespace SharpOS.AOT.IR {
 		string currentAssemblyFile;
 		AssemblyDefinition currentAssembly;
 		ModuleDefinition currentModule;
-		TypeDefinition currentType;
+		TypeReference currentType;
 		MethodDefinition currentMethod;
 
 		public Status CurrentStatus
@@ -224,7 +224,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="type">The type.</param>
 		/// <param name="method">The method.</param>
 		public void GetStatusInformation (out AssemblyDefinition assembly, out ModuleDefinition module, out
-						  TypeDefinition type, out MethodDefinition method)
+						  TypeReference type, out MethodDefinition method)
 		{
 			assembly = this.currentAssembly;
 			module = this.currentModule;
@@ -251,7 +251,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="type">The type.</param>
 		/// <param name="method">The method.</param>
 		public void SetStatusInformation (AssemblyDefinition assembly, ModuleDefinition module,
-						  TypeDefinition type, MethodDefinition method)
+						  TypeReference type, MethodDefinition method)
 		{
 			this.currentAssembly = assembly;
 			this.currentModule = module;
@@ -590,7 +590,17 @@ namespace SharpOS.AOT.IR {
 			if (this.classes.ContainsKey (typeFullName))
 				return this.classes [typeFullName];
 
+			else if (type is TypeSpecification)
+				return AddSpecialType (type);
+
 			throw new EngineException (string.Format ("Class '{0}' not found.", type.ToString ()));
+		}
+
+		private Class AddSpecialType (TypeReference type)
+		{
+			Class _class = new Class (this, type);
+
+			return _class;
 		}
 
 		/// <summary>
@@ -934,10 +944,13 @@ namespace SharpOS.AOT.IR {
 			Method mainEntryPoint = null;
 
 			foreach (Class _class in this.classes.Values) {
+				if (_class.IsSpecialType)
+					continue;
+
 				List<string> defNames = new List<string> ();
 
 				this.currentModule = _class.ClassDefinition.Module;
-				this.currentType = _class.ClassDefinition;
+				this.currentType = _class.ClassDefinition as TypeDefinition;
 
 				foreach (Method _method in _class) {
 					foreach (CustomAttribute attribute in _method.MethodDefinition.CustomAttributes) {
@@ -1114,6 +1127,8 @@ namespace SharpOS.AOT.IR {
 			case InternalType.U:
 			case InternalType.O:
 			case InternalType.M:
+			case InternalType.SZArray:
+			case InternalType.Array:
 				result = this.asm.IntSize;
 				break;
 

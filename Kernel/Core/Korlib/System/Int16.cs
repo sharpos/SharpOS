@@ -14,9 +14,6 @@ using SharpOS.Kernel.ADC;
 namespace InternalSystem {
 	[TargetNamespace ("System")]
 	public struct Int16 {
-		public const short MaxValue =  32767;
-		public const short MinValue = -32768;
-		
-		internal short value;
+		internal short Value;
 	}
 }

@@ -95,7 +95,15 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <summary>
 		/// 
 		/// </summary>
-		TypedReference
+		TypedReference,
+		/// <summary>
+		/// 
+		/// </summary>
+		Array,
+		/// <summary>
+		/// 
+		/// </summary>
+		SZArray
 	}
 
 	#region Operands
@@ -134,6 +142,24 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
+		private Class type = null;
+
+		/// <summary>
+		/// Gets or sets the type.
+		/// </summary>
+		/// <value>The type.</value>
+		public Class Type
+		{
+			get
+			{
+				return this.type;
+			}
+			set
+			{
+				this.type = value;
+			}
+		}
+		
 		/// <summary>
 		/// Gets the non register.
 		/// </summary>
@@ -538,28 +564,13 @@ namespace SharpOS.AOT.IR.Operands {
 			return result;
 		}
 
-		protected MemberReference type = null;
-
-		/// <summary>
-		/// Gets or sets the type.
-		/// </summary>
-		/// <value>The type.</value>
-		public MemberReference Type {
-			get {
-				return type;
-			}
-			set {
-				type = value;
-			}
-		}
-
 		/// <summary>
 		/// Gets the full name of the type.
 		/// </summary>
 		/// <value>The full name of the type.</value>
 		public string TypeFullName {
 			get {
-				return Class.GetTypeFullName (this.type);
+				return this.Type.TypeFullName;
 			}
 		}
 	}
@@ -637,10 +648,10 @@ namespace SharpOS.AOT.IR.Operands {
 		/// </summary>
 		/// <param name="index">The index.</param>
 		/// <param name="type">The type.</param>
-		public Local (int index, TypeReference type)
+		public Local (int index, Class type)
 			: base ("Loc", index)
 		{
-			this.type = type;
+			this.Type = type;
 			this.ForceSpill = true;
 		}
 	}
@@ -654,10 +665,10 @@ namespace SharpOS.AOT.IR.Operands {
 		/// </summary>
 		/// <param name="index">The index.</param>
 		/// <param name="type">The type.</param>
-		public Argument (int index, TypeReference type)
+		public Argument (int index, Class type)
 			: base ("Arg", index)
 		{
-			this.type = type;
+			this.Type = type;
 			this.ForceSpill = true;
 		}
 	}

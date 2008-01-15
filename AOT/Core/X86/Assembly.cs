@@ -1120,7 +1120,7 @@ namespace SharpOS.AOT.X86 {
 				if (_class.IsInternal)
 					continue;
 
-				if (_class.ClassDefinition.IsEnum)
+				if (_class.IsEnum)
 					continue;
 
 				string typeInfoLabel = AddTypeInfoFields (_class);
@@ -1156,6 +1156,8 @@ namespace SharpOS.AOT.X86 {
 							this.DATA ((ushort) 0);
 							break;
 
+						case InternalType.SZArray:
+						case InternalType.Array:
 						case InternalType.O:
 						case InternalType.I:
 						case InternalType.U:

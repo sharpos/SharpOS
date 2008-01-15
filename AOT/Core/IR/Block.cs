@@ -1576,7 +1576,7 @@ namespace SharpOS.AOT.IR {
 
 			Register register = this.SetRegister ();
 
-			return new Ldobj (register, typeReference, instance);
+			return new Ldobj (register, this.method.Engine.GetClass (typeReference), instance);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stobj (Mono.Cecil.Cil.Instruction cilInstruction)

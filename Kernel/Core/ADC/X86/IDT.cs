@@ -4,7 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
-//  Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
+//	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries

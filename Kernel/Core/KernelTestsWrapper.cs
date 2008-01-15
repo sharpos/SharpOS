@@ -16,36 +16,6 @@ namespace SharpOS.Kernel.Tests {
 		{
 #if KERNEL_TESTS
 			int failures = 0;
-			if (SharpOS.Kernel.Tests.IL.Addition.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.Addition.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.Addition.CMP1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0' failed.");
-				failures++;
-			}
-
 			if (SharpOS.Kernel.Tests.IL.SHR.CMP0 () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.SHR.CMP0' failed.");
 				failures++;
@@ -286,6 +256,11 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
+			if (SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0' failed.");
+				failures++;
+			}
+
 			if (SharpOS.Kernel.Tests.IL.MethodArguments.CMP0 () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.MethodArguments.CMP0' failed.");
 				failures++;
@@ -301,148 +276,28 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPConstants () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPConstants' failed.");
+			if (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValues () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValues' failed.");
+			if (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValuesAndConstants () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValuesAndConstants' failed.");
+			if (SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleAND () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleAND' failed.");
+			if (SharpOS.Kernel.Tests.IL.Addition.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.Addition.CMP0' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleOR () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleOR' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleXOR () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleXOR' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftLeft () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftLeft' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPUnsignedShiftLeft () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPUnsignedShiftLeft' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleAdd32 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleAdd32' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleSubtract32 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleSubtract32' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleMultiply32 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleMultiply32' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleDivide32 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleDivide32' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleAdd64 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleAdd64' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleSubtract64 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleSubtract64' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleMultiply64 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleMultiply64' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowAdd64 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowAdd64' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowSubtract64 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowSubtract64' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowMultiply64 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowMultiply64' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Switch.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Switch.CMP1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMP1' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Switch.CMP2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMP2' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Switch.CMP3 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMP3' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.X86.CMPPushArgument () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.X86.CMPPushArgument' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.X86.CMPReadArgument () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.X86.CMPReadArgument' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.X86.CMPLabelHandling () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.X86.CMPLabelHandling' failed.");
+			if (SharpOS.Kernel.Tests.IL.Addition.CMP1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
 				failures++;
 			}
 
@@ -461,43 +316,73 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Enum.CMPLiteralToInt () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPLiteralToInt' failed.");
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPConstructor () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Enum.CMPIntToLiteral () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPIntToLiteral' failed.");
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Enum.CMPConstantComparison () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPConstantComparison' failed.");
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Enum.CMPValueComparison () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPValueComparison' failed.");
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Enum.CMPSimpleFlags () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPSimpleFlags' failed.");
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Enum.CMPEnumReturn () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPEnumReturn' failed.");
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments1' failed.");
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPCopy () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2' failed.");
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPReturn () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.X86.CMPPushArgument () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.X86.CMPPushArgument' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.X86.CMPReadArgument () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.X86.CMPReadArgument' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.X86.CMPLabelHandling () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.X86.CMPLabelHandling' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.ByteString.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.ByteString.CMP0' failed.");
 				failures++;
 			}
 
@@ -538,6 +423,26 @@ namespace SharpOS.Kernel.Tests {
 
 			if (SharpOS.Kernel.Tests.CS.PointerCast.CMPLongP2VoidP () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.PointerCast.CMPLongP2VoidP' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Misc.CMP1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Misc.CMP1' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Misc.CMP2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Misc.CMP2' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Misc.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Misc.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.StaticConstructor.CMPStaticConstructor () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.StaticConstructor.CMPStaticConstructor' failed.");
 				failures++;
 			}
 
@@ -606,8 +511,183 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
+			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Byte () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Byte' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Short () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Short' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Int () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Int' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Long () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Long' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2SByte () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2SByte' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UShort () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UShort' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UInt () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UInt' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2ULong () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2ULong' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMP0 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMP1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMP1' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMP2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMP2' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMP3 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMP3' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2SByte () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2SByte' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Int () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Int' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Short () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Short' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2SByte () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2SByte' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2Int () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2Int' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2Short () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2Short' failed.");
+				failures++;
+			}
+
 			if (SharpOS.Kernel.Tests.CS.WhileLoop.CMP0 () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.WhileLoop.CMP0' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPConstants () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPConstants' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValues () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValues' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPConstants () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPConstants' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValues () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValues' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValuesAndConstants () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValuesAndConstants' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleAND () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleAND' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleOR () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleOR' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleXOR () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleXOR' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftLeft () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftLeft' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPUnsignedShiftLeft () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPUnsignedShiftLeft' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments1' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2' failed.");
 				failures++;
 			}
 
@@ -638,111 +718,6 @@ namespace SharpOS.Kernel.Tests {
 
 			if (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2UShort () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2UShort' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Misc.CMP1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Misc.CMP1' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Misc.CMP2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Misc.CMP2' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Misc.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Misc.CMP0' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.StaticConstructor.CMPStaticConstructor () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.StaticConstructor.CMPStaticConstructor' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPConstructor () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPCopy () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPReturn () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPConstants () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPConstants' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValues () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValues' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Objects.CMPOverrideObject () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Objects.CMPOverrideObject' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Boxing.CMP2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Boxing.CMP2' failed.");
 				failures++;
 			}
 
@@ -786,73 +761,23 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Byte () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Byte' failed.");
+			if (SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Short () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Short' failed.");
+			if (SharpOS.Kernel.Tests.CS.Boxing.CMP2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Boxing.CMP2' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Int () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Int' failed.");
+			if (SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject' failed.");
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Long () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Long' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2SByte () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2SByte' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UShort () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UShort' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UInt () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UInt' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2ULong () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2ULong' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2SByte () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2SByte' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Int () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Int' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Short () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Short' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2SByte () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2SByte' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2Int () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2Int' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2Short () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2Short' failed.");
+			if (SharpOS.Kernel.Tests.CS.Objects.CMPOverrideObject () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Objects.CMPOverrideObject' failed.");
 				failures++;
 			}
 
@@ -876,8 +801,83 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.ByteString.CMP0 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.ByteString.CMP0' failed.");
+			if (SharpOS.Kernel.Tests.CS.Enum.CMPLiteralToInt () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPLiteralToInt' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Enum.CMPIntToLiteral () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPIntToLiteral' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Enum.CMPConstantComparison () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPConstantComparison' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Enum.CMPValueComparison () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPValueComparison' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Enum.CMPSimpleFlags () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPSimpleFlags' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Enum.CMPEnumReturn () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Enum.CMPEnumReturn' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleAdd32 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleAdd32' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleSubtract32 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleSubtract32' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleMultiply32 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleMultiply32' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleDivide32 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleDivide32' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleAdd64 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleAdd64' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleSubtract64 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleSubtract64' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleMultiply64 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPSimpleMultiply64' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowAdd64 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowAdd64' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowSubtract64 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowSubtract64' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowMultiply64 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowMultiply64' failed.");
 				failures++;
 			}
 

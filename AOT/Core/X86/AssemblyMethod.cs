@@ -227,6 +227,9 @@ namespace SharpOS.AOT.X86 {
 
 					else if (instruction is IR.Instructions.UnboxAny)
 						this.UnboxAny (instruction as IR.Instructions.UnboxAny);
+					
+					else if (instruction is IR.Instructions.Newarr)
+						this.Newarr (instruction as IR.Instructions.Newarr);
 
 					else
 						throw new EngineException ("'" + instruction + "' is not supported.");
@@ -401,6 +404,8 @@ namespace SharpOS.AOT.X86 {
 				IR.Operands.Register identifier = operand as IR.Operands.Register;
 
 				switch (identifier.InternalType) {
+				case InternalType.SZArray:
+				case InternalType.Array:
 				case InternalType.I:
 				case InternalType.O:
 				case InternalType.M:
@@ -503,7 +508,9 @@ namespace SharpOS.AOT.X86 {
 					|| operand.InternalType == InternalType.U
 					|| operand.InternalType == InternalType.ValueType
 					|| operand.InternalType == InternalType.O
-					|| operand.InternalType == InternalType.M) {
+					|| operand.InternalType == InternalType.M
+					|| operand.InternalType == InternalType.SZArray
+					|| operand.InternalType == InternalType.Array) {
 				address = new DWordMemory (address);
 
 			} else if (operand.InternalType == InternalType.I8

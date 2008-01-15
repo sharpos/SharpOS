@@ -422,6 +422,14 @@ namespace SharpOS.AOT.IR.Instructions {
 			case InternalType.O:
 				result = InternalType.O;
 				break;
+			
+			case InternalType.SZArray:
+				result = InternalType.SZArray;
+				break;
+			
+			case InternalType.Array:
+				result = InternalType.Array;
+				break;
 
 			case InternalType.M:
 				result = InternalType.M;
@@ -440,7 +448,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			this.def.InternalType = this.AdjustRegisterInternalType (this.use [0].InternalType);
 
 			if (this.def.InternalType == InternalType.ValueType)
-				(this.def as Identifier).Type = (this.use [0] as Identifier).Type;
+				this.def.Type = this.use [0].Type;
 		}
 
 		/// <summary>
@@ -458,7 +466,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			this.def.InternalType = this.AdjustRegisterInternalType (field.InternalType);
 
 			if (this.def.InternalType == InternalType.ValueType)
-				(this.def as Identifier).Type = field.Field.Type;
+				this.def.Type = method.Engine.GetClass (field.Field.Type.FieldType);
 		}
 
 		/// <summary>
@@ -1148,7 +1156,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		public override void Process (Method method)
 		{
 			this.def.InternalType = this.use [0].InternalType;
-			(this.def as Register).Type = (this.use [0] as Register).Type;
+			this.def.Type = this.use [0].Type;
 		}
 	}
 
@@ -1882,7 +1890,7 @@ namespace SharpOS.AOT.IR.Instructions {
 				this.def.InternalType = this.AdjustRegisterInternalType (method.Engine.GetInternalType (Class.GetTypeFullName (this.method.MethodDefinition.ReturnType.ReturnType)));
 
 				if (this.def.InternalType == InternalType.ValueType)
-					(this.def as Register).Type = this.method.MethodDefinition.ReturnType.ReturnType;
+					this.def.Type = method.Engine.GetClass (this.method.MethodDefinition.ReturnType.ReturnType);
 			}
 		}
 	}
@@ -1927,7 +1935,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			if (this.method.MethodDefinition.DeclaringType.IsValueType) {
 				this.def.InternalType = InternalType.ValueType;
-				(this.def as IR.Operands.Register).Type = this.method.MethodDefinition.DeclaringType;
+				this.def.Type = method.Engine.GetClass (this.method.MethodDefinition.DeclaringType);
 
 			} else
 				this.def.InternalType = InternalType.O;
@@ -1942,24 +1950,13 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// Initializes a new instance of the <see cref="Ldobj"/> class.
 		/// </summary>
 		/// <param name="result">The result.</param>
-		/// <param name="typeReference">The type reference.</param>
+		/// <param name="type">The type.</param>
 		/// <param name="instance">The instance.</param>
-		public Ldobj (Register result, TypeReference typeReference, Register instance)
+		public Ldobj (Register result, Class type, Register instance)
 			: base ("Ldobj", result, new Operand [] { instance })
 		{
 			result.InternalType = InternalType.ValueType;
-			result.Type = typeReference;
-			this.typeReference = typeReference;
-		}
-
-		TypeReference typeReference;
-
-		public TypeReference Type
-		{
-			get
-			{
-				return this.typeReference;
-			}
+			result.Type = type;
 		}
 	}
 
@@ -2186,7 +2183,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			if (this.type.ClassDefinition.IsValueType) {
 				this.def.InternalType = method.Class.Engine.GetInternalType (this.type.TypeFullName);
-				(this.def as Identifier).Type = this.type.ClassDefinition;
+				this.def.Type = this.type;
 
 			} else
 				throw new NotImplementedEngineException ();
@@ -2225,7 +2222,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
-			this.def.InternalType = InternalType.O;
+			this.def.InternalType = InternalType.SZArray;
 		}
 	}
 }

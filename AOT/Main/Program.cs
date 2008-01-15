@@ -188,7 +188,7 @@ namespace SharpOS.AOT {
 				} catch (Exception e) {
 					AssemblyDefinition assembly;
 					ModuleDefinition module;
-					TypeDefinition type;
+					TypeReference type;
 					MethodDefinition method;
 
 					// Error handling

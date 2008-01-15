@@ -1544,7 +1544,7 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
 				TypeReference typeReference = this.methodDefinition.Body.Variables [i].VariableType;
 
-				Local local = new Local (i, typeReference);
+				Local local = new Local (i, this.engine.GetClass (typeReference));
 				local.InternalType = this.Engine.GetInternalType (local.TypeFullName);
 
 				this.locals.Add (local);
@@ -1553,7 +1553,7 @@ namespace SharpOS.AOT.IR {
 			if (this.methodDefinition.HasThis) {
 				TypeReference typeReference = this.methodDefinition.DeclaringType;
 
-				Argument argument = new Argument (0, typeReference);
+				Argument argument = new Argument (0, this.engine.GetClass (typeReference));
 				argument.InternalType = InternalType.M; // this.engine.GetInternalType (typeReference.ToString ());
 
 				this.arguments.Add (argument);
@@ -1564,7 +1564,7 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.methodDefinition.Parameters.Count; i++) {
 				TypeReference typeReference = this.methodDefinition.Parameters [i].ParameterType;
 
-				Argument argument = new Argument (delta + i, typeReference);
+				Argument argument = new Argument (delta + i, this.engine.GetClass (typeReference));
 				argument.InternalType = this.engine.GetInternalType (argument.TypeFullName);
 
 				this.arguments.Add (argument);
