@@ -10,8 +10,6 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-#define NEW_BLOCK_HANDLING
-
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -1544,8 +1542,10 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
 				TypeReference typeReference = this.methodDefinition.Body.Variables [i].VariableType;
 
-				Local local = new Local (i, this.engine.GetClass (typeReference));
-				local.InternalType = this.Engine.GetInternalType (local.TypeFullName);
+				Class _class = this.engine.GetClass (typeReference);
+				InternalType internalType = this.Engine.GetInternalType (_class.TypeFullName);
+
+				Local local = new Local (i, _class, internalType);
 
 				this.locals.Add (local);
 			}
@@ -1553,8 +1553,10 @@ namespace SharpOS.AOT.IR {
 			if (this.methodDefinition.HasThis) {
 				TypeReference typeReference = this.methodDefinition.DeclaringType;
 
-				Argument argument = new Argument (0, this.engine.GetClass (typeReference));
-				argument.InternalType = InternalType.M; // this.engine.GetInternalType (typeReference.ToString ());
+				Class _class = this.engine.GetClass (typeReference);
+				InternalType internalType = InternalType.M;
+
+				Argument argument = new Argument (0, _class, internalType);
 
 				this.arguments.Add (argument);
 			}
@@ -1564,8 +1566,10 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.methodDefinition.Parameters.Count; i++) {
 				TypeReference typeReference = this.methodDefinition.Parameters [i].ParameterType;
 
-				Argument argument = new Argument (delta + i, this.engine.GetClass (typeReference));
-				argument.InternalType = this.engine.GetInternalType (argument.TypeFullName);
+				Class _class = this.engine.GetClass (typeReference);
+				InternalType internalType = this.engine.GetInternalType (_class.TypeFullName);
+
+				Argument argument = new Argument (delta + i, _class, internalType);
 
 				this.arguments.Add (argument);
 			}
@@ -1669,6 +1673,12 @@ namespace SharpOS.AOT.IR {
 			return base.ToString ();
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is alloc object.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is alloc object; otherwise, <c>false</c>.
+		/// </value>
 		public bool IsAllocObject
 		{
 			get
@@ -1690,6 +1700,34 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is alloc SZ array.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is alloc SZ array; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAllocSZArray
+		{
+			get
+			{
+				foreach (CustomAttribute customAttribute in this.methodDefinition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocSZArrayAttribute).ToString ())
+						continue;
+
+					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+							|| !methodDefinition.IsStatic
+							|| methodDefinition.Parameters.Count != 3
+							|| methodDefinition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName
+							|| methodDefinition.Parameters [1].ParameterType.FullName != Mono.Cecil.Constants.Int32
+							|| methodDefinition.Parameters [2].ParameterType.FullName != Mono.Cecil.Constants.Int32)
+						throw new EngineException (string.Format ("'{0}' is not a valid AllocSZArray method", this.methodDefinition.ToString ()));
+
+					return true;
+				}
+
+				return false;
+			}
+		}
 
 		/// <summary>
 		/// It returns the unique name of this call. (e.g. "void namespace.class.method UInt32 UInt16")

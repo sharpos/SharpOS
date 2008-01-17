@@ -298,6 +298,81 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
 	}
 	[Test]
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP1 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP1' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP2' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP0 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP3 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP3 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP3' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP4 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP4 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP4' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArray ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArray' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPShortArray ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPShortArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPShortArray' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPByteArray ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPByteArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPByteArray' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPLongArray ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPLongArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPLongArray' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPUIntArray ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUIntArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUIntArray' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPUShortArray ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUShortArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUShortArray' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPSByteArray ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPSByteArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPSByteArray' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPULongArray ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPULongArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPULongArray' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArrayLength ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArrayLength () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArrayLength' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArrayZeroLength ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArrayZeroLength () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArrayZeroLength' failed.");
+	}
+	[Test]
 	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleAnd ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd () == 1, "'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd' failed.");
@@ -421,21 +496,6 @@ public class KernelTests {
 	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPLongP2VoidP ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPLongP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPLongP2VoidP' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMP1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP1 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP1' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMP2 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP2' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP0' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_StaticConstructor_CMPStaticConstructor ()

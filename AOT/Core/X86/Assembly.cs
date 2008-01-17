@@ -1120,21 +1120,20 @@ namespace SharpOS.AOT.X86 {
 				if (_class.IsInternal)
 					continue;
 
-				if (_class.IsEnum)
-					continue;
-
 				string typeInfoLabel = AddTypeInfoFields (_class);
 
 				AddVTableFields (_class, typeInfoLabel);
 
-				if (_class.ClassDefinition.IsValueType)
+				if (_class.IsEnum)
+					continue;
+
+				if (_class.IsValueType)
 					continue;
 
 				foreach (Field field in _class.Fields.Values) {
-					string fullname = field.Type.ToString ();
-					//field.DeclaringType.FullName + "::" + field.Name;
+					string fullname = field.FieldDefinition.ToString ();
 
-					if (!field.Type.IsStatic) {
+					if (!field.IsStatic) {
 						this.engine.Dump.IgnoreMember (fullname,
 								"Non-static field");
 
@@ -1145,7 +1144,7 @@ namespace SharpOS.AOT.X86 {
 					this.LABEL (fullname);
 
 					// TODO refactor this
-					switch (engine.GetInternalType (field.Type.FieldType.FullName)) {
+					switch (engine.GetInternalType (field.FieldDefinition.FieldType.FullName)) {
 						case InternalType.I1:
 						case InternalType.U1:
 							this.DATA ((byte) 0);
@@ -1176,7 +1175,7 @@ namespace SharpOS.AOT.X86 {
 							break;
 
 						default:
-							throw new NotImplementedEngineException ("'" + field.Type.FieldType + "' is not supported.");
+							throw new NotImplementedEngineException ("'" + field.FieldDefinition.FieldType + "' is not supported.");
 					}
 				}
 			}

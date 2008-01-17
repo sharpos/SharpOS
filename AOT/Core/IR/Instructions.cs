@@ -459,14 +459,14 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			FieldOperand field = (this.use [0] as FieldOperand);
 
-			string type = field.Field.Type.FieldType.ToString ();
+			string type = field.Field.FieldDefinition.FieldType.ToString ();
 
 			field.InternalType = method.Engine.GetInternalType (type);
 
 			this.def.InternalType = this.AdjustRegisterInternalType (field.InternalType);
 
 			if (this.def.InternalType == InternalType.ValueType)
-				this.def.Type = method.Engine.GetClass (field.Field.Type.FieldType);
+				this.def.Type = method.Engine.GetClass (field.Field.FieldDefinition.FieldType);
 		}
 
 		/// <summary>
@@ -477,7 +477,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			FieldOperand field = (this.use [0] as FieldOperand);
 
-			string type = field.Field.Type.FieldType.ToString ();
+			string type = field.Field.FieldDefinition.FieldType.ToString ();
 
 			field.InternalType = method.Engine.GetInternalType (type);
 		}
@@ -487,9 +487,21 @@ namespace SharpOS.AOT.IR.Instructions {
 	/// 
 	/// </summary>
 	public class Add : Instruction {
+		/// <summary>
+		/// 
+		/// </summary>
 		public enum Type {
+			/// <summary>
+			/// 
+			/// </summary>
 			Add,
+			/// <summary>
+			/// 
+			/// </summary>
 			AddSignedWithOverflowCheck,
+			/// <summary>
+			/// 
+			/// </summary>
 			AddUnsignedWithOverflowCheck
 		}
 
@@ -508,6 +520,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Type type;
 
+		/// <summary>
+		/// Gets the type of the add.
+		/// </summary>
+		/// <value>The type of the add.</value>
 		public Type AddType
 		{
 			get
@@ -1447,7 +1463,7 @@ namespace SharpOS.AOT.IR.Instructions {
 			: base ("Ldelem", result, new Operand [] { first, second })
 		{
 			this.type = type;
-			result.InternalType = type;
+			result.InternalType = this.AdjustRegisterInternalType (type);
 		}
 
 		InternalType type;
@@ -2223,6 +2239,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		public override void Process (Method method)
 		{
 			this.def.InternalType = InternalType.SZArray;
+			this.def.Type = this.type;
 		}
 	}
 }

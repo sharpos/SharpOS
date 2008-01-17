@@ -113,5 +113,47 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return ilen + size;
 		}
+
+		public static int Value2 (int i)
+		{
+			return i;
+		}
+
+		public static int Value (int i, int cmp, int first, int second)
+		{
+			return Value2 (i == cmp ? first : second);
+		}
+
+		public static uint CMP3 ()
+		{
+			if (Value (1, 1, 300, 0) == 300)
+				return 1;
+
+			return 0;
+		}
+
+		public static int Value4 (int i)
+		{
+			int result;
+
+			if (i == 1)
+				result = 301;
+
+			else if (i == 2)
+				result = 0;
+
+			else
+				result = 300;
+
+			return result;
+		}
+
+		public static uint CMP4 ()
+		{
+			if (Value4 (5) == 300)
+				return 1;
+
+			return 0;
+		}
 	}
 }

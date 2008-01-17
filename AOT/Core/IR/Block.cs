@@ -2176,7 +2176,7 @@ namespace SharpOS.AOT.IR {
 
 			Register result = this.SetRegister ();
 
-			return new Newarr (this.method.Engine.GetClass (typeReference), result, value);
+			return new Newarr (this.method.Engine.GetClassByName (typeReference.FullName + "[]"), result, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_Any (Mono.Cecil.Cil.Instruction cilInstruction)

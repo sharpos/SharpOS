@@ -142,7 +142,7 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
-		private Class type = null;
+		protected Class type = null;
 
 		/// <summary>
 		/// Gets or sets the type.
@@ -460,7 +460,7 @@ namespace SharpOS.AOT.IR.Operands {
 			}
 		}
 
-		private bool forceSpill = false;
+		protected bool forceSpill = false;
 
 		/// <summary>
 		/// If set, the Register Allocation doesn't allocate a register for this identifier.
@@ -648,11 +648,13 @@ namespace SharpOS.AOT.IR.Operands {
 		/// </summary>
 		/// <param name="index">The index.</param>
 		/// <param name="type">The type.</param>
-		public Local (int index, Class type)
+		/// <param name="internalType">Type of the internal.</param>
+		public Local (int index, Class type, InternalType internalType)
 			: base ("Loc", index)
 		{
-			this.Type = type;
-			this.ForceSpill = true;
+			this.type = type;
+			this.internalType = internalType;
+			this.forceSpill = true;
 		}
 	}
 
@@ -665,11 +667,13 @@ namespace SharpOS.AOT.IR.Operands {
 		/// </summary>
 		/// <param name="index">The index.</param>
 		/// <param name="type">The type.</param>
-		public Argument (int index, Class type)
+		/// <param name="internalType">Type of the internal.</param>
+		public Argument (int index, Class type, InternalType internalType)
 			: base ("Arg", index)
 		{
-			this.Type = type;
-			this.ForceSpill = true;
+			this.type = type;
+			this.internalType = internalType;
+			this.forceSpill = true;
 		}
 	}
 
@@ -680,25 +684,59 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Field"/> class.
 		/// </summary>
-		/// <param name="type">The type.</param>
-		public Field (FieldDefinition type)
+		/// <param name="fieldDefinition">The field definition.</param>
+		public Field (FieldDefinition fieldDefinition)
 		{
-			System.Diagnostics.Debug.Assert (type != null);
-
-			this.type = type;
+			this.fieldDefinition = fieldDefinition;
 		}
 
-		FieldDefinition type;
+		FieldDefinition fieldDefinition;
 
 		/// <summary>
 		/// Gets the type.
 		/// </summary>
 		/// <value>The type.</value>
-		public FieldDefinition Type
+		public FieldDefinition FieldDefinition
 		{
 			get
 			{
-				return this.type;
+				return this.fieldDefinition;
+			}
+		}
+
+		/// <summary>
+		/// Gets the name.
+		/// </summary>
+		/// <value>The name.</value>
+		public string Name
+		{
+			get
+			{
+				return this.fieldDefinition.Name;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is static.
+		/// </summary>
+		/// <value><c>true</c> if this instance is static; otherwise, <c>false</c>.</value>
+		public bool IsStatic
+		{
+			get
+			{
+				return this.fieldDefinition.IsStatic;
+			}
+		}
+
+		/// <summary>
+		/// Gets the offset.
+		/// </summary>
+		/// <value>The offset.</value>
+		public uint Offset
+		{
+			get
+			{
+				return this.fieldDefinition.Offset;
 			}
 		}
 	}
@@ -745,7 +783,7 @@ namespace SharpOS.AOT.IR.Operands {
 		{
 			get
 			{
-				return this.field.Type.FieldType.Name;
+				return this.field.FieldDefinition.FieldType.Name;
 			}
 		}
 
@@ -762,7 +800,7 @@ namespace SharpOS.AOT.IR.Operands {
 			if (this.instance != null)
 				result += this.instance.ToString () + "->";
 
-			result += this.Field.Type.ToString ();
+			result += this.field.FieldDefinition.ToString ();
 
 			return result;
 		}
@@ -793,7 +831,7 @@ namespace SharpOS.AOT.IR.Operands {
 		{
 			get
 			{
-				return Class.GetTypeFullName (this.field.Type);
+				return Class.GetTypeFullName (this.field.FieldDefinition);
 			}
 		}
 	}

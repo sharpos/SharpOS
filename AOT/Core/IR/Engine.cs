@@ -185,6 +185,10 @@ namespace SharpOS.AOT.IR {
 
 		Class typeInfoClass = null;
 
+		/// <summary>
+		/// Gets the type info class.
+		/// </summary>
+		/// <value>The type info class.</value>
 		public Class TypeInfoClass
 		{
 			get
@@ -193,6 +197,21 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+
+		/// <summary>
+		/// Gets the array class.
+		/// </summary>
+		/// <value>The array class.</value>
+		public Class ArrayClass
+		{
+			get
+			{
+				if (!this.classes.ContainsKey ("System.Array"))
+					throw new EngineException ("'System.Array' not found.");
+
+				return this.classes ["System.Array"];
+			}
+		}
 
 		Method allocObject = null;
 
@@ -205,6 +224,20 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				return this.allocObject;
+			}
+		}
+
+		Method allocSZArray = null;
+
+		/// <summary>
+		/// Gets the alloc SZArray method.
+		/// </summary>
+		/// <value>The alloc SZArray method.</value>
+		public Method AllocSZArray
+		{
+			get
+			{
+				return this.allocSZArray;
 			}
 		}
 
@@ -527,40 +560,16 @@ namespace SharpOS.AOT.IR {
 			return false;
 		}
 
-		// TODO refactor this one
-		/// <summary>
-		/// Gets the size of the base type.
-		/// </summary>
-		/// <param name="type">The type.</param>
-		/// <returns></returns>
-		/*internal int GetBaseTypeSize (TypeDefinition type)
-		{
-			int result = 0;
-
-			if (type != null) {
-				result = this.GetBaseTypeSize (type.BaseType as TypeDefinition);
-
-				foreach (FieldReference field in type.Fields) {
-					if ((field as FieldDefinition).IsStatic)
-						continue;
-
-					result += this.GetFieldSize (field.FieldType.FullName);
-				}
-			}
-
-			return result;
-		}*/
-
-		// TODO refactor this one
+		// TODO Refactor
 		internal int GetFieldOffset (IR.Operands.FieldOperand field)
 		{
-			string objectName = Class.GetTypeFullName (field.Field.Type.DeclaringType);
-			string fieldName = field.Field.Type.Name;
+			string objectName = Class.GetTypeFullName (field.Field.FieldDefinition.DeclaringType);
+			string fieldName = field.Field.Name;
 
 			if (this.classes.ContainsKey (objectName))
 				return this.classes [objectName].GetFieldOffset (fieldName);
 
-			throw new EngineException ("'" + field.Field.Type.ToString () + "' has not been found.");
+			throw new EngineException ("'" + field.Field.FieldDefinition.ToString () + "' has not been found.");
 		}
 
 		/// <summary>
@@ -596,9 +605,32 @@ namespace SharpOS.AOT.IR {
 			throw new EngineException (string.Format ("Class '{0}' not found.", type.ToString ()));
 		}
 
+
+		/// <summary>
+		/// Gets the name of the class by.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
+		public Class GetClassByName (string value)
+		{
+			if (this.classes.ContainsKey (value))
+				return this.classes [value];
+
+			throw new EngineException (string.Format ("Class '{0}' not found.", value));
+		}
+
+		/// <summary>
+		/// Adds the type of the special.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
 		private Class AddSpecialType (TypeReference type)
 		{
 			Class _class = new Class (this, type);
+
+			this.classes [_class.TypeFullName] = _class;
+
+			_class.Setup ();
 
 			return _class;
 		}
@@ -850,18 +882,26 @@ namespace SharpOS.AOT.IR {
 			// This block of code needs the vtableClass to be set
 			foreach (Class _class in this.classes.Values) {
 				foreach (Method _method in _class) {
-					if (!_method.IsAllocObject)
-						continue;
+					if (_method.IsAllocObject) {
+						if (this.allocObject != null)
+							throw new EngineException ("More than one method was tagged as AllocObject Method.");
 
-					if (this.allocObject != null)
-						throw new EngineException ("More than one method was tagged as AllocObject Method.");
+						this.allocObject = _method;
 
-					this.allocObject = _method;
+					} else if (_method.IsAllocSZArray) {
+						if (this.allocSZArray != null)
+							throw new EngineException ("More than one method was tagged as AllocSZArray Method.");
+
+						this.allocSZArray = _method;
+					}
 				}
 			}
 
 			if (this.allocObject == null)
 				throw new EngineException ("No AllocObject Method defined.");
+
+			if (this.allocSZArray == null)
+				throw new EngineException ("No AllocSZArray Method defined.");
 		}
 
 		/// <summary>
@@ -943,7 +983,9 @@ namespace SharpOS.AOT.IR {
 			Method markedEntryPoint = null;
 			Method mainEntryPoint = null;
 
-			foreach (Class _class in this.classes.Values) {
+			List<Class> _classes = new List<Class> (this.classes.Values);
+
+			foreach (Class _class in _classes) {
 				if (_class.IsSpecialType)
 					continue;
 
@@ -1178,7 +1220,7 @@ namespace SharpOS.AOT.IR {
 			else if (type.EndsWith ("&"))
 				return Operands.InternalType.U;
 			else if (type.EndsWith ("[]"))
-				return Operands.InternalType.U;
+				return Operands.InternalType.SZArray;
 
 			else if (type.Equals ("System.IntPtr"))
 				return Operands.InternalType.I;

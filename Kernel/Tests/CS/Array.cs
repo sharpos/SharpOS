@@ -8,7 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-#define ARRAYS_NOT_SUPPORTED
+//#define ARRAYS_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
 #if !ARRAYS_NOT_SUPPORTED

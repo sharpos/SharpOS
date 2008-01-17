@@ -88,6 +88,7 @@
     <Compile Include="Attributes\ADCStubAttribute.cs" />
     <Compile Include="Attributes\AllocAttribute.cs" />
     <Compile Include="Attributes\AllocObjectAttribute.cs" />
+    <Compile Include="Attributes\AllocSZArrayAttribute.cs" />
     <Compile Include="Attributes\TypeInfoAttribute.cs" />
     <Compile Include="Attributes\KernelMainAttribute.cs" />
     <Compile Include="Attributes\LabelAddressAttribute.cs" />

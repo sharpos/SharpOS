@@ -593,7 +593,7 @@ namespace SharpOS.AOT.X86 {
 
 				} else if (operand is FieldOperand) {
 					FieldOperand field = operand as FieldOperand;
-					MemberReference memberReference = field.Field.Type;
+					MemberReference memberReference = field.Field.FieldDefinition;
 					parameterTypes += field.ShortFieldTypeName;
 					operands [i] = memberReference.Name;
 
@@ -1304,7 +1304,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
 			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
 
-			Save (assignee.Field.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		private void Stsfld (IR.Instructions.Stsfld instruction)
@@ -1312,7 +1312,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
 			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
 
-			Save (assignee.Field.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		private void Convert (IR.Instructions.Convert instruction)
@@ -1323,6 +1323,7 @@ namespace SharpOS.AOT.X86 {
 			switch (value.InternalType) {
 			case InternalType.M:
 			case InternalType.I:
+			case InternalType.U:
 			case InternalType.I4:
 				switch (instruction.ConvertType) {
 				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I1:
@@ -2508,7 +2509,39 @@ namespace SharpOS.AOT.X86 {
 
 		private void Newarr (IR.Instructions.Newarr instruction)
 		{
-			throw new NotImplementedEngineException ();
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+			if (value.IsRegisterSet)
+				this.assembly.PUSH (Assembly.GetRegister (value.Register));
+			else
+				this.assembly.PUSH (new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Type.TypeFullName));
+			this.assembly.PUSH (R32.EAX);
+
+			this.assembly.CALL (this.assembly.Engine.AllocSZArray.AssemblyLabel);
+			assembly.ADD (R32.ESP, 12);
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+			else
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+		}
+
+		private void Stelem (IR.Instructions.Stelem instruction)
+		{
+		}
+
+		private void Ldelem (IR.Instructions.Ldelem instruction)
+		{
+		}
+
+		private void Ldlen (IR.Instructions.Ldlen instruction)
+		{
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
 		}
 	}
 }

@@ -8,10 +8,12 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+using System.Runtime.InteropServices;
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
+	[StructLayout (LayoutKind.Sequential)]
 	[TargetNamespace ("System")]
 	public class String : InternalSystem.Object {
 		private int length;

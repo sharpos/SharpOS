@@ -156,6 +156,7 @@
     <Compile Include="Korlib\System\UInt32.cs" />
     <Compile Include="Korlib\System\UInt64.cs" />
     <Compile Include="Korlib\System\ValueType.cs" />
+    <Compile Include="Korlib\System\Void.cs" />
     <Compile Include="Multiboot.cs" />
     <Compile Include="PageAllocator.cs" />
     <Compile Include="PageAttributes.cs" />

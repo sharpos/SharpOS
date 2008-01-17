@@ -70,8 +70,33 @@ namespace SharpOS.AOT.IR {
 
 				this.AddVirtualMethods (this.virtualMethods);
 
+			} else if (this.classDefinition is TypeSpecification) {
+				this.isSpecialType = true;
+
+				if (this.classDefinition is ArrayType) {
+					this._base = this.engine.ArrayClass;
+					this.specialTypeElement = this.engine.GetClass (this.classDefinition.GetOriginalType ());
+
+				} else
+					this._base = this.engine.GetClass (this.classDefinition.GetOriginalType ());
+
 			} else
 				throw new NotImplementedEngineException ();
+		}
+
+
+		private Class specialTypeElement = null;
+
+		/// <summary>
+		/// Gets the special type element.
+		/// </summary>
+		/// <value>The special type element.</value>
+		public Class SpecialTypeElement
+		{
+			get
+			{
+				return specialTypeElement;
+			}
 		}
 
 		private bool isSpecialType = false;
@@ -311,8 +336,8 @@ namespace SharpOS.AOT.IR {
 		{
 			// TODO Refactoring
 			foreach (Field field in this.fields.Values) {
-				if (field.Type.Name.Equals (value))
-					return this.engine.GetInternalType (field.Type.FieldType.FullName);
+				if (field.Name.Equals (value))
+					return this.engine.GetInternalType (field.FieldDefinition.FieldType.FullName);
 			}
 
 			return InternalType.NotSet;
@@ -329,18 +354,18 @@ namespace SharpOS.AOT.IR {
 
 			// TODO Refactoring
 			foreach (Field field in this.fields.Values) {
-				if (field.Type.IsStatic)
+				if (field.IsStatic)
 					continue;
 
-				if (field.Type.Name.Equals (fieldName)) {
+				if (field.Name.Equals (fieldName)) {
 					// An ExplicitLayout has already the offset defined
 					if (this.IsValueType && this.hasExplicitLayout)
-						result = (int) field.Type.Offset;
+						result = (int) field.Offset;
 
 					break;
 				}
 
-				result += this.engine.GetFieldSize (field.Type.FieldType.FullName);
+				result += this.engine.GetFieldSize (field.FieldDefinition.FieldType.FullName);
 			}
 
 			return result;
@@ -436,8 +461,8 @@ namespace SharpOS.AOT.IR {
 
 				if (this.IsEnum) {
 					foreach (Field field in this.fields.Values) {
-						if ((field.Type.Attributes & FieldAttributes.RTSpecialName) != 0) {
-							result = this.engine.GetTypeSize (field.Type.FieldType.FullName);
+						if ((field.FieldDefinition.Attributes & FieldAttributes.RTSpecialName) != 0) {
+							result = this.engine.GetTypeSize (field.FieldDefinition.FieldType.FullName);
 							break;
 						}
 					}
@@ -448,10 +473,10 @@ namespace SharpOS.AOT.IR {
 
 					if (this.hasExplicitLayout) {
 						foreach (Field field in this.fields.Values) {
-							if (field.Type.IsStatic)
+							if (field.IsStatic)
 								continue;
 
-							int value = (int) (field.Type.Offset + this.engine.GetTypeSize (field.Type.FieldType.FullName));
+							int value = (int) (field.Offset + this.engine.GetTypeSize (field.FieldDefinition.FieldType.FullName));
 
 							if (value > result)
 								result = value;
@@ -459,14 +484,26 @@ namespace SharpOS.AOT.IR {
 
 					} else {
 						foreach (Field field in this.fields.Values) {
-							if (field.Type.IsStatic)
+							if (field.IsStatic)
 								continue;
 
-							result += this.engine.GetFieldSize (field.Type.FieldType.FullName);
+							result += this.engine.GetFieldSize (field.FieldDefinition.FieldType.FullName);
 						}
-					} 
+					}
 
-				} else
+				} else if (this.classDefinition is PointerType)
+					result = this.engine.Assembly.IntSize;
+
+				else if (this.classDefinition is ReferenceType)
+					result = this.engine.Assembly.IntSize;
+
+				else if (this.classDefinition is PinnedType)
+					result = this.engine.Assembly.IntSize;
+
+				else if (this.classDefinition is ArrayType)
+					result = this.engine.ArrayClass.Size;
+
+				else
 					throw new NotImplementedEngineException ();
 
 				return result;
@@ -475,6 +512,10 @@ namespace SharpOS.AOT.IR {
 
 		private List<Method> virtualMethods = new List<Method> ();
 
+		/// <summary>
+		/// Gets the virtual methods.
+		/// </summary>
+		/// <value>The virtual methods.</value>
 		public List<Method> VirtualMethods
 		{
 			get

@@ -92,7 +92,7 @@ namespace SharpOS.AOT.X86 {
 
 					else if (instruction is IR.Instructions.Initialize)
 						this.Initialize (instruction as IR.Instructions.Initialize);
-						
+
 					else if (instruction is IR.Instructions.Ldc)
 						this.Ldc (instruction as IR.Instructions.Ldc);
 
@@ -227,9 +227,18 @@ namespace SharpOS.AOT.X86 {
 
 					else if (instruction is IR.Instructions.UnboxAny)
 						this.UnboxAny (instruction as IR.Instructions.UnboxAny);
-					
+
 					else if (instruction is IR.Instructions.Newarr)
 						this.Newarr (instruction as IR.Instructions.Newarr);
+
+					else if (instruction is IR.Instructions.Stelem)
+						this.Stelem (instruction as IR.Instructions.Stelem);
+
+					else if (instruction is IR.Instructions.Ldelem)
+						this.Ldelem (instruction as IR.Instructions.Ldelem);
+
+					else if (instruction is IR.Instructions.Ldlen)
+						this.Ldlen (instruction as IR.Instructions.Ldlen);
 
 					else
 						throw new EngineException ("'" + instruction + "' is not supported.");
@@ -556,7 +565,7 @@ namespace SharpOS.AOT.X86 {
 				return new Memory (null, register, null, 0, this.assembly.Engine.GetFieldOffset (field));
 			}
 
-			return new Memory (field.Field.Type.ToString ());
+			return new Memory (field.Field.FieldDefinition.ToString ());
 		}
 
 		private Memory GetAddress (IR.Operands.Identifier identifier)
