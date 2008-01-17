@@ -119,8 +119,8 @@ namespace SharpOS.Kernel {
 				return -1;
 
 			while (argumentIndex < commandLine->Length) {
-				if (commandLine->GetChar (argumentIndex) != ' ')
-					return argumentIndex;
+				if (commandLine->GetChar (argumentIndex) == ' ')
+					return argumentIndex+1;
 
 				++argumentIndex;
 			}
@@ -132,7 +132,7 @@ namespace SharpOS.Kernel {
 		{
 			int x = argumentIndex;
 
-			Diagnostics.Assert (argumentIndex < 0 || argumentIndex >= commandLine->Length,
+			Diagnostics.Assert (argumentIndex >= 0 && argumentIndex < commandLine->Length,
 				"CommandLine.GetArgumentLength(): argument `argumentIndex' is out of range");
 
 			while (x < commandLine->Length && commandLine->GetChar (x) != ' ')
@@ -142,4 +142,5 @@ namespace SharpOS.Kernel {
 		}
 	}
 }
+
 

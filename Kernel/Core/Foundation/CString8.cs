@@ -99,14 +99,14 @@ namespace SharpOS.Kernel.Foundation {
 				"CString8.IndexOf(): argument `substr' is null");
 			Diagnostics.Assert (offset >= 0 && offset < substrLen,
 				"CString8.IndexOf(): argument `offset' is out of range");
-			Diagnostics.Assert (count >= 0 && from + count < Length && from + count < substrLen,
+			Diagnostics.Assert (count >= 0 && from + count < Length,
 				"CString8.IndexOf(): argument `count' is out of range");
 
 			if (count == 0)
 				count = Length - substrLen - offset;
 
-			for (int x = from; x < from + count; ++x) {
-				if (x + substrLen >= Length)
+			for (int x = from; x <= from + count; ++x) {
+				if (x + substrLen > Length)
 					break;
 
 				if (Compare (x, substr, offset, substrLen) == 0) {
@@ -128,7 +128,7 @@ namespace SharpOS.Kernel.Foundation {
 
 			for (int x = 0; x < substr.Length; ++x)
 				cstr [x] = (byte) substr [x];
-
+			
 			return IndexOf (from, cstr, substr.Length, offset, count);
 
 			/*/
@@ -509,13 +509,37 @@ namespace SharpOS.Kernel.Foundation {
 
 		public static void __Test1 ()
 		{
-			CString8* buf = (CString8*) Stubs.CString ("--keymap arg");
+			CString8* buf = (CString8*) Stubs.CString ("--keymap arg\n");
 
-			if (buf->IndexOf ("--keymap") != 0)
-				TextMode.WriteLine ("CString8.IndexOf(): test FAIL: result should be 0");
+			if (buf->Compare ("--keymap", 8) != 0)
+				TextMode.WriteLine ("CString8.Compare(): test[1] FAIL: result should be 0");
 
-			if (buf->IndexOf ("arg") != 9)
-				TextMode.WriteLine ("CString8.IndexOf(): test FAIL: result should be 9");
+			if (buf->Compare (9, "arg", 0, 3) != 0)
+				TextMode.WriteLine ("CString8.Compare(): test[2a] FAIL: result should be 0");
+
+			if (buf->Compare (9, "arg\n", 0, 0) != 0)
+				TextMode.WriteLine ("CString8.Compare(): test[2b] FAIL: result should be 0");
+
+			if (buf->Compare ((CString8*) Stubs.CString ("--keymap"), 8) != 0)
+				TextMode.WriteLine ("CString8.Compare(): test[1] FAIL: result should be 0");
+
+			if (buf->Compare (9, (CString8*) Stubs.CString ("arg"), 0, 3) != 0)
+				TextMode.WriteLine ("CString8.Compare(): test[2a] FAIL: result should be 0");
+
+			if (buf->Compare (9, (CString8*) Stubs.CString ("arg\n"), 0, 0) != 0)
+				TextMode.WriteLine ("CString8.Compare(): test[2b] FAIL: result should be 0");
+
+			int ind = buf->IndexOf ("--keymap"); 
+			if (ind != 0)
+				TextMode.WriteLine ("CString8.IndexOf(): test[3] FAIL: result should be 0");
+
+			ind = buf->IndexOf ("arg");
+			if (ind != 9)
+				TextMode.WriteLine ("CString8.IndexOf(): test[4] FAIL: result should be 9");
+
+			ind = buf->IndexOf ("\n");
+			if (ind != 12)
+				TextMode.WriteLine ("CString8.IndexOf(): test[5] FAIL: result should be 12");
 		}
 
 		#endregion

@@ -62,7 +62,7 @@ namespace SharpOS.Kernel.Foundation {
 			if (len == 0)
 				len = strLen - offset;
 
-			Diagnostics.Assert (offset + len >= strLen, "PString8.Concat(): offset + len >= strLen");
+			Diagnostics.Assert (offset + len <= strLen, "PString8.Concat(): offset + len <= strLen");
 
 			for (int x = offset; x < strLen && (x - offset) < len; ++x)
 				Concat (str [x]);

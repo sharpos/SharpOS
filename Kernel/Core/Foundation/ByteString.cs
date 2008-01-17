@@ -90,14 +90,14 @@ namespace SharpOS.Kernel.Foundation {
 		public static int Compare (byte* a, int aFrom, byte* b, int bFrom, int count)
 		{
 			int c = count;
-			int aLength = ByteString.Length (a), bLength = ByteString.Length (b);
+			int aLength = ByteString.Length (a + aFrom), bLength = ByteString.Length (b + bFrom);
 
 			if (count == 0 && aLength != bLength)
 				return aLength - bLength;
-			else if (count != 0 && (aFrom + count > aLength || bFrom + count > bLength))
+			else if (count != 0 && (count > aLength || count > bLength))
 				return aLength - bLength;
 
-			if (c == 0)
+			if (c == 0) // aLen == bLen - filtered at first if
 				c = aLength;
 
 			for (int x = 0; x < c; ++x) {
@@ -114,15 +114,14 @@ namespace SharpOS.Kernel.Foundation {
 		public static int Compare (byte* a, int aFrom, string b, int bFrom, int count)
 		{
 			int c = count;
-			int aLength = ByteString.Length (a);
+			int aLength = ByteString.Length (a + aFrom), bLength = b.Length - bFrom;
 
-			if (count == 0 && aLength != b.Length) {
-				return aLength - b.Length;
-			} else if (count != 0 && (aFrom + count > aLength || bFrom + count > b.Length)) {
-				return aLength - b.Length;
-			}
+			if (count == 0 && aLength != bLength)
+				return aLength - bLength;
+			else if (count != 0 && (count > aLength || count > bLength))
+				return aLength - bLength;
 
-			if (c == 0)
+			if (c == 0) // aLen == bLen - filtered at first if
 				c = aLength;
 
 			for (int x = 0; x < c; ++x) {
@@ -183,7 +182,10 @@ namespace SharpOS.Kernel.Foundation {
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'U[S]' == 'U[S]'");
 
 			if (ByteString.Compare (longer, 4, ptr1, 0, 2) != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == 'US'");
+				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == 'US' (count=2)");
+
+			if (ByteString.Compare (longer, 4, ptr1, 0, 0) != 0)
+				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == 'US' (count=0)");
 
 			//Test constant CString buffer with constant String type
 
@@ -194,7 +196,10 @@ namespace SharpOS.Kernel.Foundation {
 				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' == const 'US'");
 
 			if (ByteString.Compare (longer, 4, "US", 0, 2) != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == const 'US'");
+				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == const 'US' (count=2)");
+
+			if (ByteString.Compare (longer, 4, "US", 0, 0) != 0)
+				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == const 'US' (count=0)");
 
 			//Test that constant String is working properly
 			const string str1 = "US";
@@ -210,6 +215,9 @@ namespace SharpOS.Kernel.Foundation {
 
 			if ((byte) str1 [1] != (byte) str2 [0])
 				TextMode.WriteLine ("ByteString : test FAIL: (byte)\"US\"[1]==(byte)\"SK\"[0]");
+			
+			if ("\n".Length != 1)
+				TextMode.WriteLine ("ByteString : test FAIL: \"\\n\".Length==1");
 		}
 
 		#endregion
