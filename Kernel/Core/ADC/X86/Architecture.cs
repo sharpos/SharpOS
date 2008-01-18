@@ -16,8 +16,16 @@ using ADC = SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.ADC.X86 {
 	public unsafe class Architecture {
-		// ..should be replaced with an array
-		static private IProcessor processors = null;
+
+		public static void Setup ()
+		{
+			GDT.Setup ();	// Global Descriptor Table
+			PIC.Setup ();	// Programmable Interrupt Controller
+			IDT.Setup ();	// Interrupt Descriptor table
+			RTC.Setup ();	// Real Time Clock
+			PIT.Setup ();	// Periodic Interrupt Timer
+			Serial.Setup (); // Setup serial I/O
+		}
 
 		/**
 			<summary>
@@ -28,16 +36,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public static bool CheckCompatibility ()
 		{
 			return true; // if we're running, we're at least 386.
-		}
-
-		public static void Setup ()
-		{
-			GDT.Setup ();	// Global Descriptor Table
-			PIC.Setup ();	// Programmable Interrupt Controller
-			IDT.Setup ();	// Interrupt Descriptor table
-			RTC.Setup ();	// Real Time Clock
-			PIT.Setup ();	// Periodic Interrupt Timer
-			Serial.Setup (); // Setup serial I/O
 		}
 
 		/**
@@ -66,6 +64,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//return processors.Length;
 		}
 
+		// ..should be replaced with an array
+		static private IProcessor processors = null;
+
 		public static IProcessor GetProcessors ()
 		{
 			if (processors == null)
@@ -73,31 +74,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return processors; // TODO
 		}
 
+
+		// TODO: this needs to be moved out of architecture..
 		public static EventRegisterStatus RegisterTimerEvent (uint func)
 		{
 			return PIT.RegisterTimerEvent (func);
-		}
-
-		/// <summary>
-		///		Disable interrupts
-		/// </summary>
-		/// <remarks>
-		/// This function should be made "inline" by the AOT
-		/// </remarks>
-		public static void DisableInterrupts ()
-		{
-			Asm.CLI ();
-		}
-
-		/// <summary>
-		///		Enable interrupts
-		/// </summary>
-		/// <remarks>
-		/// This function should be made "inline" by the AOT
-		/// </remarks>
-		public static void EnableInterrupts ()
-		{
-			Asm.STI ();
 		}
 	}
 }

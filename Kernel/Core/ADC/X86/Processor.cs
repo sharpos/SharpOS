@@ -147,6 +147,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		public override void Setup ()
 		{
+			Asm.CLI();
+
 			bool haveCPU = HaveCPUID ();
 			if (!haveCPU)
 			{
@@ -176,6 +178,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 				familyName = CString8.Copy("Not implemented yet");
 				modelName = CString8.Copy("Not implemented yet");
 			}
+			Asm.STI();		
 		}
 
 		private ProcessorType			archType		= ProcessorType.Unknown;

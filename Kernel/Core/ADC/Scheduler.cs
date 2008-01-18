@@ -24,7 +24,7 @@ namespace SharpOS.Kernel.ADC {
 
 		public static void DumpThreads ()
 		{
-			Architecture.DisableInterrupts ();
+			Barrier.Enter();
 			for (int i = 0; i < EntryModule.MaxThreads; i++) {
 				if (ThreadScheduled [i] == null)
 					continue;
@@ -34,22 +34,22 @@ namespace SharpOS.Kernel.ADC {
 				TextMode.WriteLine ();
 			}
 			TextMode.WriteLine ();
-			Architecture.EnableInterrupts ();
+			Barrier.Exit();
 		}
 
 		public static bool ScheduleThread (void* newThread)
 		{
-			Architecture.DisableInterrupts ();
+			Barrier.Enter();
 			for (int i = 0; i < EntryModule.MaxThreads; i++) {
 				if (ThreadScheduled [i] != null)
 					continue;
 
 				ThreadScheduled [i] = newThread;
 
-				Architecture.EnableInterrupts ();
+				Barrier.Exit();
 				return true;
 			}
-			Architecture.EnableInterrupts ();
+			Barrier.Exit();
 			return false;
 		}
 

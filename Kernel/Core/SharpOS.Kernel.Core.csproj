@@ -77,6 +77,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADC\Architecture.cs" />
+    <Compile Include="ADC\Barrier.cs" />
     <Compile Include="ADC\BootControl.cs" />
     <Compile Include="ADC\FloppyDiskController.cs" />
     <Compile Include="ADC\Interlocked.cs" />
@@ -95,6 +96,7 @@
     <Compile Include="ADC\Timer.cs" />
     <Compile Include="ADC\X86\Architecture.cs" />
     <Compile Include="ADC\X86\AssemblyAttributes.cs" />
+    <Compile Include="ADC\X86\Barrier.cs" />
     <Compile Include="ADC\X86\BootControl.cs" />
     <Compile Include="ADC\X86\CMOS.cs" />
     <Compile Include="ADC\X86\Constants.cs" />
