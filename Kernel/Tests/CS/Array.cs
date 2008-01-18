@@ -3,15 +3,16 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
+//	Sam Wilson <tecywiz121@hotmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
 //
 
-//#define ARRAYS_NOT_SUPPORTED
+//#define JAGGED_ARRAYS_NOT_SUPPORTED
+#define MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
-#if !ARRAYS_NOT_SUPPORTED
 	public unsafe class Array {
 
 		/// <summary>
@@ -24,7 +25,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			arr [0] = 7;
 			arr [1] = 9;
 			arr [2] = 44;
-			
+
 			if (arr [0] != 7)
 				return 0;
 
@@ -36,7 +37,118 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 1;
 		}
-		
+
+		/// <summary>
+		/// int[][] read/write
+		/// </summary>
+		public static uint CMPIntJaggedArray ()
+		{
+#if !JAGGED_ARRAYS_NOT_SUPPORTED
+			int [] [] arr = new int [3] [];
+
+			arr [0] = new int [5];
+			arr [1] = new int [3];
+			arr [2] = new int [2];
+
+			arr [0] [0] = 39;
+			arr [0] [1] = 7;
+			arr [0] [2] = 1009;
+			arr [0] [3] = -22;
+			arr [0] [4] = 1;
+
+			arr [1] [0] = 88887;
+			arr [1] [1] = -987788;
+			arr [1] [2] = 0;
+
+			arr [2] [0] = 6;
+			arr [2] [1] = arr [0] [0] * arr [2] [0];
+
+			if (arr [0] [0] != 39)
+				return 0;
+
+			if (arr [0] [1] != 7)
+				return 0;
+
+			if (arr [0] [2] != 1009)
+				return 0;
+
+			if (arr [0] [3] != -22)
+				return 0;
+
+			if (arr [0] [4] != 1)
+				return 0;
+
+
+
+			if (arr [1] [0] != 88887)
+				return 0;
+
+			if (arr [1] [1] != -987788)
+				return 0;
+
+			if (arr [1] [2] != 0)
+				return 0;
+
+
+			if (arr [2] [0] != 6)
+				return 0;
+
+			if (arr [2] [1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
+		/// <summary>
+		/// int[,] read/write
+		/// </summary>
+		public static uint CMPIntMultidimensionalArray ()
+		{
+#if !MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+			int [,] arr = new int [3, 2];
+
+			arr [0, 0] = 39;
+			arr [0, 1] = 7;
+
+			arr [1, 0] = 88887;
+			arr [1, 1] = -987788;
+
+			arr [2, 0] = 6;
+			arr [2, 1] = arr [0, 0] * arr [2, 0];
+
+			if (arr [0, 0] != 39)
+				return 0;
+
+			if (arr [0, 1] != 7)
+				return 0;
+
+
+
+			if (arr [1, 0] != 88887)
+				return 0;
+
+			if (arr [1, 1] != -987788)
+				return 0;
+
+
+
+			if (arr [2, 0] != 6)
+				return 0;
+
+			if (arr [2, 1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
+
+
 		/// <summary>
 		/// short[] read/write
 		/// </summary>
@@ -47,7 +159,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			arr [0] = 7;
 			arr [1] = 9;
 			arr [2] = 44;
-			
+
 			if (arr [0] != 7)
 				return 0;
 
@@ -59,7 +171,116 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 1;
 		}
-		
+
+		/// <summary>
+		/// Short[][] read/write
+		/// </summary>
+		public static uint CMPShortJaggedArray ()
+		{
+#if !JAGGED_ARRAYS_NOT_SUPPORTED
+			short [] [] arr = new short [3] [];
+
+			arr [0] = new short [5];
+			arr [1] = new short [3];
+			arr [2] = new short [2];
+
+			arr [0] [0] = 39;
+			arr [0] [1] = 7;
+			arr [0] [2] = 1009;
+			arr [0] [3] = -22;
+			arr [0] [4] = 1;
+
+			arr [1] [0] = 667;
+			arr [1] [1] = -876;
+			arr [1] [2] = 0;
+
+			arr [2] [0] = 6;
+			arr [2] [1] = 39 * 6;
+
+			if (arr [0] [0] != 39)
+				return 0;
+
+			if (arr [0] [1] != 7)
+				return 0;
+
+			if (arr [0] [2] != 1009)
+				return 0;
+
+			if (arr [0] [3] != -22)
+				return 0;
+
+			if (arr [0] [4] != 1)
+				return 0;
+
+
+
+			if (arr [1] [0] != 667)
+				return 0;
+
+			if (arr [1] [1] != -876)
+				return 0;
+
+			if (arr [1] [2] != 0)
+				return 0;
+
+
+			if (arr [2] [0] != 6)
+				return 0;
+
+			if (arr [2] [1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
+		/// <summary>
+		/// short[,] read/write
+		/// </summary>
+		public static uint CMPShortMultidimensionalArray ()
+		{
+#if !MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+			short [,] arr = new short [3, 2];
+
+			arr [0, 0] = 39;
+			arr [0, 1] = 7;
+
+			arr [1, 0] = 667;
+			arr [1, 1] = -876;
+
+			arr [2, 0] = 6;
+			arr [2, 1] = (short) (arr [0, 0] * arr [2, 0]);
+
+			if (arr [0, 0] != 39)
+				return 0;
+
+			if (arr [0, 1] != 7)
+				return 0;
+
+
+
+			if (arr [1, 0] != 667)
+				return 0;
+
+			if (arr [1, 1] != -876)
+				return 0;
+
+
+
+			if (arr [2, 0] != 6)
+				return 0;
+
+			if (arr [2, 1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
 		/// <summary>
 		/// byte[] read/write
 		/// </summary>
@@ -70,7 +291,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			arr [0] = 7;
 			arr [1] = 9;
 			arr [2] = 44;
-			
+
 			if (arr [0] != 7)
 				return 0;
 
@@ -84,7 +305,116 @@ namespace SharpOS.Kernel.Tests.CS {
 		}
 
 		/// <summary>
-		/// int[] read/write
+		/// Byte[][] read/write
+		/// </summary>
+		public static uint CMPByteJaggedArray ()
+		{
+#if !JAGGED_ARRAYS_NOT_SUPPORTED
+			byte [] [] arr = new byte [3] [];
+
+			arr [0] = new byte [5];
+			arr [1] = new byte [3];
+			arr [2] = new byte [2];
+
+			arr [0] [0] = 39;
+			arr [0] [1] = 7;
+			arr [0] [2] = 76;
+			arr [0] [3] = 22;
+			arr [0] [4] = 1;
+
+			arr [1] [0] = 99;
+			arr [1] [1] = 87;
+			arr [1] [2] = 0;
+
+			arr [2] [0] = 6;
+			arr [2] [1] = (byte) (arr [0] [0] * arr [2] [0]);
+
+			if (arr [0] [0] != 39)
+				return 0;
+
+			if (arr [0] [1] != 7)
+				return 0;
+
+			if (arr [0] [2] != 76)
+				return 0;
+
+			if (arr [0] [3] != 22)
+				return 0;
+
+			if (arr [0] [4] != 1)
+				return 0;
+
+
+
+			if (arr [1] [0] != 99)
+				return 0;
+
+			if (arr [1] [1] != 87)
+				return 0;
+
+			if (arr [1] [2] != 0)
+				return 0;
+
+
+			if (arr [2] [0] != 6)
+				return 0;
+
+			if (arr [2] [1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
+
+		/// <summary>
+		/// byte[,] read/write
+		/// </summary>
+		public static uint CMPByteMultidimensionalArray ()
+		{
+#if !MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+			byte [,] arr = new byte [3, 2];
+
+			arr [0, 0] = 39;
+			arr [0, 1] = 7;
+
+			arr [1, 0] = 123;
+			arr [1, 1] = 24;
+
+			arr [2, 0] = 6;
+			arr [2, 1] = (byte) (arr [0, 0] * arr [2, 0]);
+
+			if (arr [0, 0] != 39)
+				return 0;
+
+			if (arr [0, 1] != 7)
+				return 0;
+
+
+
+			if (arr [1, 0] != 123)
+				return 0;
+
+			if (arr [1, 1] != 24)
+				return 0;
+
+
+
+			if (arr [2, 0] != 6)
+				return 0;
+
+			if (arr [2, 1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+		/// <summary>
+		/// Long[] read/write
 		/// </summary>
 		public static uint CMPLongArray ()
 		{
@@ -93,7 +423,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			arr [0] = 7;
 			arr [1] = 9;
 			arr [2] = 44;
-			
+
 			if (arr [0] != 7)
 				return 0;
 
@@ -104,6 +434,115 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 0;
 
 			return 1;
+		}
+
+		/// <summary>
+		/// long[][] read/write
+		/// </summary>
+		public static uint CMPLongJaggedArray ()
+		{
+#if !JAGGED_ARRAYS_NOT_SUPPORTED
+			long [] [] arr = new long [3] [];
+
+			arr [0] = new long [5];
+			arr [1] = new long [3];
+			arr [2] = new long [2];
+
+			arr [0] [0] = 39;
+			arr [0] [1] = 7;
+			arr [0] [2] = 1009;
+			arr [0] [3] = -22;
+			arr [0] [4] = 1;
+
+			arr [1] [0] = 88887;
+			arr [1] [1] = -987788;
+			arr [1] [2] = 0;
+
+			arr [2] [0] = 6;
+			arr [2] [1] = arr [0] [0] * arr [2] [0];
+
+			if (arr [0] [0] != 39)
+				return 0;
+
+			if (arr [0] [1] != 7)
+				return 0;
+
+			if (arr [0] [2] != 1009)
+				return 0;
+
+			if (arr [0] [3] != -22)
+				return 0;
+
+			if (arr [0] [4] != 1)
+				return 0;
+
+
+
+			if (arr [1] [0] != 88887)
+				return 0;
+
+			if (arr [1] [1] != -987788)
+				return 0;
+
+			if (arr [1] [2] != 0)
+				return 0;
+
+
+			if (arr [2] [0] != 6)
+				return 0;
+
+			if (arr [2] [1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
+		/// <summary>
+		/// long[,] read/write
+		/// </summary>
+		public static uint CMPLongMultidimensionalArray ()
+		{
+#if !MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+			long [,] arr = new long [3, 2];
+
+			arr [0, 0] = 39;
+			arr [0, 1] = 7;
+
+			arr [1, 0] = 88887;
+			arr [1, 1] = -987788;
+
+			arr [2, 0] = 6;
+			arr [2, 1] = arr [0, 0] * arr [2, 0];
+
+			if (arr [0, 0] != 39)
+				return 0;
+
+			if (arr [0, 1] != 7)
+				return 0;
+
+
+
+			if (arr [1, 0] != 88887)
+				return 0;
+
+			if (arr [1, 1] != -987788)
+				return 0;
+
+
+
+			if (arr [2, 0] != 6)
+				return 0;
+
+			if (arr [2, 1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
 		}
 		///////////////////
 
@@ -117,7 +556,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			arr [0] = 7;
 			arr [1] = 9;
 			arr [2] = 44;
-			
+
 			if (arr [0] != 7)
 				return 0;
 
@@ -129,18 +568,127 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 1;
 		}
-		
+
+		/// <summary>
+		/// uint[][] read/write
+		/// </summary>
+		public static uint CMPUIntJaggedArray ()
+		{
+#if !JAGGED_ARRAYS_NOT_SUPPORTED
+			uint [] [] arr = new uint [3] [];
+
+			arr [0] = new uint [5];
+			arr [1] = new uint [3];
+			arr [2] = new uint [2];
+
+			arr [0] [0] = 39;
+			arr [0] [1] = 7;
+			arr [0] [2] = 76;
+			arr [0] [3] = 22;
+			arr [0] [4] = 4294967294;
+
+			arr [1] [0] = 99;
+			arr [1] [1] = 87;
+			arr [1] [2] = 0;
+
+			arr [2] [0] = 6;
+			arr [2] [1] = arr [0] [0] * arr [2] [0];
+
+			if (arr [0] [0] != 39)
+				return 0;
+
+			if (arr [0] [1] != 7)
+				return 0;
+
+			if (arr [0] [2] != 76)
+				return 0;
+
+			if (arr [0] [3] != 22)
+				return 0;
+
+			if (arr [0] [4] != 4294967294)
+				return 0;
+
+
+
+			if (arr [1] [0] != 99)
+				return 0;
+
+			if (arr [1] [1] != 87)
+				return 0;
+
+			if (arr [1] [2] != 0)
+				return 0;
+
+
+			if (arr [2] [0] != 6)
+				return 0;
+
+			if (arr [2] [1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
+		/// <summary>
+		/// uint[,] read/write
+		/// </summary>
+		public static uint CMPUIntMultidimensionalArray ()
+		{
+#if !MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+			uint [,] arr = new uint [3, 2];
+
+			arr [0, 0] = 39;
+			arr [0, 1] = 7;
+
+			arr [1, 0] = 123;
+			arr [1, 1] = 24;
+
+			arr [2, 0] = 6;
+			arr [2, 1] = arr [0, 0] * arr [2, 0];
+
+			if (arr [0, 0] != 39)
+				return 0;
+
+			if (arr [0, 1] != 7)
+				return 0;
+
+
+
+			if (arr [1, 0] != 123)
+				return 0;
+
+			if (arr [1, 1] != 24)
+				return 0;
+
+
+
+			if (arr [2, 0] != 6)
+				return 0;
+
+			if (arr [2, 1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
 		/// <summary>
 		/// ushort[] read/write
 		/// </summary>
 		public static uint CMPUShortArray ()
 		{
-			short [] arr = new short [3];
+			ushort [] arr = new ushort [3];
 
 			arr [0] = 7;
 			arr [1] = 9;
 			arr [2] = 44;
-			
+
 			if (arr [0] != 7)
 				return 0;
 
@@ -152,7 +700,115 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 1;
 		}
-		
+
+		/// <summary>
+		/// ushort[][] read/write
+		/// </summary>
+		public static uint CMPUShortJaggedArray ()
+		{
+#if !JAGGED_ARRAYS_NOT_SUPPORTED
+			ushort [] [] arr = new ushort [3] [];
+
+			arr [0] = new ushort [5];
+			arr [1] = new ushort [3];
+			arr [2] = new ushort [2];
+
+			arr [0] [0] = 39;
+			arr [0] [1] = 7;
+			arr [0] [2] = 76;
+			arr [0] [3] = 22;
+			arr [0] [4] = 1;
+
+			arr [1] [0] = 99;
+			arr [1] [1] = 87;
+			arr [1] [2] = 0;
+
+			arr [2] [0] = 6;
+			arr [2] [1] = (ushort) (arr [0] [0] * arr [2] [0]);
+
+			if (arr [0] [0] != 39)
+				return 0;
+
+			if (arr [0] [1] != 7)
+				return 0;
+
+			if (arr [0] [2] != 76)
+				return 0;
+
+			if (arr [0] [3] != 22)
+				return 0;
+
+			if (arr [0] [4] != 1)
+				return 0;
+
+
+
+			if (arr [1] [0] != 99)
+				return 0;
+
+			if (arr [1] [1] != 87)
+				return 0;
+
+			if (arr [1] [2] != 0)
+				return 0;
+
+
+			if (arr [2] [0] != 6)
+				return 0;
+
+			if (arr [2] [1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+		/// <summary>
+		/// ushort[,] read/write
+		/// </summary>
+		public static uint CMPUShortMultidimensionalArray ()
+		{
+#if !MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+			ushort [,] arr = new ushort [3, 2];
+
+			arr [0, 0] = 39;
+			arr [0, 1] = 7;
+
+			arr [1, 0] = 123;
+			arr [1, 1] = 24;
+
+			arr [2, 0] = 6;
+			arr [2, 1] = (ushort) (arr [0, 0] * arr [2, 0]);
+
+			if (arr [0, 0] != 39)
+				return 0;
+
+			if (arr [0, 1] != 7)
+				return 0;
+
+
+
+			if (arr [1, 0] != 123)
+				return 0;
+
+			if (arr [1, 1] != 24)
+				return 0;
+
+
+
+			if (arr [2, 0] != 6)
+				return 0;
+
+			if (arr [2, 1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
 		/// <summary>
 		/// sbyte[] read/write
 		/// </summary>
@@ -163,7 +819,138 @@ namespace SharpOS.Kernel.Tests.CS {
 			arr [0] = 7;
 			arr [1] = 9;
 			arr [2] = 44;
-			
+
+			if (arr [0] != 7)
+				return 0;
+
+			if (arr [1] != 9)
+				return 0;
+
+			if (arr [2] != 44)
+				return 0;
+
+			return 1;
+		}
+		/// <summary>
+		/// sbyte[][] read/write
+		/// </summary>
+		public static uint CMPSByteJaggedArray ()
+		{
+#if !JAGGED_ARRAYS_NOT_SUPPORTED
+			sbyte [] [] arr = new sbyte [3] [];
+
+			arr [0] = new sbyte [5];
+			arr [1] = new sbyte [3];
+			arr [2] = new sbyte [2];
+
+			arr [0] [0] = 39;
+			arr [0] [1] = 7;
+			arr [0] [2] = 76;
+			arr [0] [3] = 22;
+			arr [0] [4] = 1;
+
+			arr [1] [0] = 99;
+			arr [1] [1] = 87;
+			arr [1] [2] = 0;
+
+			arr [2] [0] = 2;
+			arr [2] [1] = (sbyte) (arr [0] [0] * arr [2] [0]);
+
+			if (arr [0] [0] != 39)
+				return 0;
+
+			if (arr [0] [1] != 7)
+				return 0;
+
+			if (arr [0] [2] != 76)
+				return 0;
+
+			if (arr [0] [3] != 22)
+				return 0;
+
+			if (arr [0] [4] != 1)
+				return 0;
+
+
+
+			if (arr [1] [0] != 99)
+				return 0;
+
+			if (arr [1] [1] != 87)
+				return 0;
+
+			if (arr [1] [2] != 0)
+				return 0;
+
+
+			if (arr [2] [0] != 2)
+				return 0;
+
+			if (arr [2] [1] != 39 * 2)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
+
+		/// <summary>
+		/// sbyte[,] read/write
+		/// </summary>
+		public static uint CMPSByteMultidimensionalArray ()
+		{
+#if !MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+			sbyte [,] arr = new sbyte [3, 2];
+
+			arr [0, 0] = 39;
+			arr [0, 1] = 7;
+
+			arr [1, 0] = 123;
+			arr [1, 1] = 24;
+
+			arr [2, 0] = 2;
+			arr [2, 1] = (sbyte) (arr [0, 0] * arr [2, 0]);
+
+			if (arr [0, 0] != 39)
+				return 0;
+
+			if (arr [0, 1] != 7)
+				return 0;
+
+
+
+			if (arr [1, 0] != 123)
+				return 0;
+
+			if (arr [1, 1] != 24)
+				return 0;
+
+
+
+			if (arr [2, 0] != 2)
+				return 0;
+
+			if (arr [2, 1] != 39 * 2)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+		/// <summary>
+		/// ulong[] read/write
+		/// </summary>
+		public static uint CMPULongArray ()
+		{
+			ulong [] arr = new ulong [3];
+
+			arr [0] = 7;
+			arr [1] = 9;
+			arr [2] = 44;
+
 			if (arr [0] != 7)
 				return 0;
 
@@ -177,28 +964,114 @@ namespace SharpOS.Kernel.Tests.CS {
 		}
 
 		/// <summary>
-		/// ulong[] read/write
+		/// ulong[][] read/write
 		/// </summary>
-		public static uint CMPULongArray ()
+		public static uint CMPULongJaggedArray ()
 		{
-			ulong [] arr = new ulong [3];
+#if !JAGGED_ARRAYS_NOT_SUPPORTED
+			ulong [] [] arr = new ulong [3] [];
 
-			arr [0] = 7;
-			arr [1] = 9;
-			arr [2] = 44;
-			
-			if (arr [0] != 7)
+			arr [0] = new ulong [5];
+			arr [1] = new ulong [3];
+			arr [2] = new ulong [2];
+
+			arr [0] [0] = 39;
+			arr [0] [1] = 7;
+			arr [0] [2] = 76;
+			arr [0] [3] = 22;
+			arr [0] [4] = 4294967294;
+
+			arr [1] [0] = 99;
+			arr [1] [1] = 87;
+			arr [1] [2] = 0;
+
+			arr [2] [0] = 6;
+			arr [2] [1] = arr [0] [0] * arr [2] [0];
+
+			if (arr [0] [0] != 39)
 				return 0;
 
-			if (arr [1] != 9)
+			if (arr [0] [1] != 7)
 				return 0;
 
-			if (arr [2] != 44)
+			if (arr [0] [2] != 76)
+				return 0;
+
+			if (arr [0] [3] != 22)
+				return 0;
+
+			if (arr [0] [4] != 4294967294)
+				return 0;
+
+
+
+			if (arr [1] [0] != 99)
+				return 0;
+
+			if (arr [1] [1] != 87)
+				return 0;
+
+			if (arr [1] [2] != 0)
+				return 0;
+
+
+			if (arr [2] [0] != 6)
+				return 0;
+
+			if (arr [2] [1] != 39 * 6)
 				return 0;
 
 			return 1;
+#else
+			return 0;
+#endif
 		}
-		
+
+		/// <summary>
+		/// ulong[,] read/write
+		/// </summary>
+		public static uint CMPULongMultidimensionalArray ()
+		{
+#if !MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+			ulong [,] arr = new ulong [3, 2];
+
+			arr [0, 0] = 39;
+			arr [0, 1] = 7;
+
+			arr [1, 0] = 123;
+			arr [1, 1] = 24;
+
+			arr [2, 0] = 6;
+			arr [2, 1] = arr [0, 0] * arr [2, 0];
+
+			if (arr [0, 0] != 39)
+				return 0;
+
+			if (arr [0, 1] != 7)
+				return 0;
+
+
+
+			if (arr [1, 0] != 123)
+				return 0;
+
+			if (arr [1, 1] != 24)
+				return 0;
+
+
+
+			if (arr [2, 0] != 6)
+				return 0;
+
+			if (arr [2, 1] != 39 * 6)
+				return 0;
+
+			return 1;
+#else
+			return 0;
+#endif
+		}
+
 		/// <summary>
 		/// int[].Length
 		/// </summary>
@@ -214,7 +1087,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 1;
 		}
-		
+
 		/// <summary>
 		/// int[].Length
 		/// </summary>
@@ -228,5 +1101,4 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 1;
 		}
 	}
-#endif
 }
