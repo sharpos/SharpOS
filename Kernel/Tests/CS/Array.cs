@@ -9,10 +9,12 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-//#define JAGGED_ARRAYS_NOT_SUPPORTED
+#define ARRAYS_NOT_SUPPORTED
+#define JAGGED_ARRAYS_NOT_SUPPORTED
 #define MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
+#if !ARRAYS_NOT_SUPPORTED
 	public unsafe class Array {
 
 		/// <summary>
@@ -1101,4 +1103,5 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 1;
 		}
 	}
+#endif
 }

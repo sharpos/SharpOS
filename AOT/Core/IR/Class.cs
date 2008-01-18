@@ -34,51 +34,81 @@ namespace SharpOS.AOT.IR {
 			this.classDefinition = classDefinition;
 		}
 
+		/// <summary>
+		/// Setups this instance.
+		/// </summary>
 		public void Setup ()
+		{
+			Setup (0);
+			Setup (1);
+		}
+
+		/// <summary>
+		/// Setups this instance.
+		/// </summary>
+		public void Setup (int step)
 		{
 			if (this.classDefinition is TypeDefinition) {
 				TypeDefinition typeDefinition = this.classDefinition as TypeDefinition;
 
-				this.hasExplicitLayout = (typeDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0;
+				if (step == 0) {
+					this.hasExplicitLayout = (typeDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0;
 
-				if (typeDefinition.IsEnum) {
-					this.isEnum = true;
+					if (typeDefinition.IsEnum) {
+						this.isEnum = true;
 
-					foreach (FieldDefinition field in typeDefinition.Fields) {
-						if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
-							this.internalType = this.engine.GetInternalType (field.FieldType.FullName);
-							break;
+						foreach (FieldDefinition field in typeDefinition.Fields) {
+							if ((field.Attributes & FieldAttributes.RTSpecialName) != 0) {
+								this.internalType = this.engine.GetInternalType (field.FieldType.FullName);
+								break;
+							}
 						}
+
+					} else if (typeDefinition.IsValueType) {
+						this.isValueType = true;
+
+						this.internalType = Operands.InternalType.ValueType;
+
+					} else if (typeDefinition.IsClass) {
+						this.isClass = true;
+
+						this.internalType = Operands.InternalType.O;
 					}
 
-				} else if (typeDefinition.IsValueType) {
-					this.isValueType = true;
+					if (this.TypeFullName != Mono.Cecil.Constants.Object)
+						this._base = this.engine.GetClass (typeDefinition.BaseType);
+					
+					this.AddVirtualMethods (this.virtualMethods);
 
-					this.internalType = Operands.InternalType.ValueType;
+				} else if (step == 1) {
+					if (!this.isInternal || (this.isInternal && !this.engine.Assembly.IgnoreTypeContent (this.TypeFullName))) {
+						foreach (FieldDefinition field in typeDefinition.Fields) {
+							Class _class = this.engine.GetClass (field.FieldType);
+							InternalType _internalType = this.engine.GetInternalType (_class.TypeFullName);
 
-				} else if (typeDefinition.IsClass) {
-					this.isClass = true;
+							Field _field = new Field (field, _class, _internalType);
 
-					this.internalType = Operands.InternalType.O;
-				}
-
-				foreach (FieldDefinition field in typeDefinition.Fields)
-					fields [field.Name] = new Field (field);
-
-				if (this.TypeFullName != Mono.Cecil.Constants.Object)
-					this._base = this.engine.GetClass (typeDefinition.BaseType);
-
-				this.AddVirtualMethods (this.virtualMethods);
+							fields.Add (_field);
+							fieldsDictionary [field.Name] = _field;
+						}
+					}
+				} else
+					throw new NotImplementedEngineException ();
 
 			} else if (this.classDefinition is TypeSpecification) {
-				this.isSpecialType = true;
+				if (step == 0) {
+					this.isSpecialType = true;
+					this.internalType = this.engine.GetInternalType (this.TypeFullName);
 
-				if (this.classDefinition is ArrayType) {
-					this._base = this.engine.ArrayClass;
-					this.specialTypeElement = this.engine.GetClass (this.classDefinition.GetOriginalType ());
+					if (this.classDefinition is ArrayType) {
+						this._base = this.engine.ArrayClass;
+						this.specialTypeElement = this.engine.GetClass (this.classDefinition.GetOriginalType ());
 
-				} else
-					this._base = this.engine.GetClass (this.classDefinition.GetOriginalType ());
+					} else
+						this._base = this.engine.GetClass (this.classDefinition.GetOriginalType ());
+
+				} else if (step != 1)
+					throw new NotImplementedEngineException ();
 
 			} else
 				throw new NotImplementedEngineException ();
@@ -165,6 +195,12 @@ namespace SharpOS.AOT.IR {
 
 		private bool hasExplicitLayout = false;
 
+		/// <summary>
+		/// Gets a value indicating whether this instance has explicit layout.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance has explicit layout; otherwise, <c>false</c>.
+		/// </value>
 		public bool HasExplicitLayout
 		{
 			get
@@ -187,19 +223,21 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		Dictionary<string, Field> fields = new Dictionary<string, Field> ();
+		Dictionary<string, Field> fieldsDictionary = new Dictionary<string, Field> ();
+		List<Field> fields = new List<Field> ();
 
 		/// <summary>
 		/// Gets the fields.
 		/// </summary>
 		/// <value>The fields.</value>
-		public Dictionary<string, Field> Fields
+		public List<Field> Fields
 		{
 			get
 			{
 				return this.fields;
 			}
 		}
+
 
 		/// <summary>
 		/// Gets the name of the field by.
@@ -208,10 +246,10 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Field GetFieldByName (string value)
 		{
-			if (!fields.ContainsKey (value))
+			if (!fieldsDictionary.ContainsKey (value))
 				throw new EngineException (string.Format ("Field '{0}' not found.", value));
 
-			return fields [value];
+			return fieldsDictionary [value];
 		}
 
 		/// <summary>
@@ -335,7 +373,7 @@ namespace SharpOS.AOT.IR {
 		public InternalType GetFieldType (string value)
 		{
 			// TODO Refactoring
-			foreach (Field field in this.fields.Values) {
+			foreach (Field field in this.fields) {
 				if (field.Name.Equals (value))
 					return this.engine.GetInternalType (field.FieldDefinition.FieldType.FullName);
 			}
@@ -353,7 +391,7 @@ namespace SharpOS.AOT.IR {
 			int result = this.BaseSize;
 
 			// TODO Refactoring
-			foreach (Field field in this.fields.Values) {
+			foreach (Field field in this.fields) {
 				if (field.IsStatic)
 					continue;
 
@@ -460,7 +498,7 @@ namespace SharpOS.AOT.IR {
 				int result = 0;
 
 				if (this.IsEnum) {
-					foreach (Field field in this.fields.Values) {
+					foreach (Field field in this.fields) {
 						if ((field.FieldDefinition.Attributes & FieldAttributes.RTSpecialName) != 0) {
 							result = this.engine.GetTypeSize (field.FieldDefinition.FieldType.FullName);
 							break;
@@ -472,7 +510,7 @@ namespace SharpOS.AOT.IR {
 					result = this.BaseSize;
 
 					if (this.hasExplicitLayout) {
-						foreach (Field field in this.fields.Values) {
+						foreach (Field field in this.fields) {
 							if (field.IsStatic)
 								continue;
 
@@ -483,7 +521,7 @@ namespace SharpOS.AOT.IR {
 						}
 
 					} else {
-						foreach (Field field in this.fields.Values) {
+						foreach (Field field in this.fields) {
 							if (field.IsStatic)
 								continue;
 

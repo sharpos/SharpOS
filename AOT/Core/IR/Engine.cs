@@ -71,7 +71,8 @@ namespace SharpOS.AOT.IR {
 		ADCLayer adcLayer = null;
 
 		List<AssemblyDefinition> assemblies = new List<AssemblyDefinition> ();
-		Dictionary<string, Class> classes = new Dictionary<string, Class> ();
+		List<Class> classes = new List<Class> (); 
+		Dictionary<string, Class> classesDictionary = new Dictionary<string, Class> ();
 		Dictionary<string, byte []> resources = null;
 
 		Status status;
@@ -206,10 +207,10 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				if (!this.classes.ContainsKey ("System.Array"))
+				if (!this.classesDictionary.ContainsKey ("System.Array"))
 					throw new EngineException ("'System.Array' not found.");
 
-				return this.classes ["System.Array"];
+				return this.classesDictionary ["System.Array"];
 			}
 		}
 
@@ -323,10 +324,10 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				if (!this.classes.ContainsKey (Mono.Cecil.Constants.Object))
+				if (!this.classesDictionary.ContainsKey (Mono.Cecil.Constants.Object))
 					throw new EngineException ("System.Object not found.");
 
-				return this.classes [Mono.Cecil.Constants.Object].Size;
+				return this.classesDictionary [Mono.Cecil.Constants.Object].Size;
 			}
 		}
 
@@ -566,8 +567,8 @@ namespace SharpOS.AOT.IR {
 			string objectName = Class.GetTypeFullName (field.Field.FieldDefinition.DeclaringType);
 			string fieldName = field.Field.Name;
 
-			if (this.classes.ContainsKey (objectName))
-				return this.classes [objectName].GetFieldOffset (fieldName);
+			if (this.classesDictionary.ContainsKey (objectName))
+				return this.classesDictionary [objectName].GetFieldOffset (fieldName);
 
 			throw new EngineException ("'" + field.Field.FieldDefinition.ToString () + "' has not been found.");
 		}
@@ -581,8 +582,8 @@ namespace SharpOS.AOT.IR {
 		{
 			string typeFullName = Class.GetTypeFullName (field);
 
-			if (this.classes.ContainsKey (typeFullName))
-				return this.classes [typeFullName].GetFieldByName (field.Name);
+			if (this.classesDictionary.ContainsKey (typeFullName))
+				return this.classesDictionary [typeFullName].GetFieldByName (field.Name);
 
 			throw new EngineException (string.Format ("Field '{0}' not found.", field.ToString ()));
 		}
@@ -596,8 +597,8 @@ namespace SharpOS.AOT.IR {
 		{
 			string typeFullName = Class.GetTypeFullName (type);
 
-			if (this.classes.ContainsKey (typeFullName))
-				return this.classes [typeFullName];
+			if (this.classesDictionary.ContainsKey (typeFullName))
+				return this.classesDictionary [typeFullName];
 
 			else if (type is TypeSpecification)
 				return AddSpecialType (type);
@@ -613,8 +614,8 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Class GetClassByName (string value)
 		{
-			if (this.classes.ContainsKey (value))
-				return this.classes [value];
+			if (this.classesDictionary.ContainsKey (value))
+				return this.classesDictionary [value];
 
 			throw new EngineException (string.Format ("Class '{0}' not found.", value));
 		}
@@ -628,7 +629,8 @@ namespace SharpOS.AOT.IR {
 		{
 			Class _class = new Class (this, type);
 
-			this.classes [_class.TypeFullName] = _class;
+			this.classes.Add (_class);
+			this.classesDictionary [_class.TypeFullName] = _class;
 
 			_class.Setup ();
 
@@ -645,8 +647,8 @@ namespace SharpOS.AOT.IR {
 			string typeFullName = Class.GetTypeFullName (method.DeclaringType);
 			string methodName = Method.GetLabel (method);
 
-			if (this.classes.ContainsKey (typeFullName))
-				return this.classes [typeFullName].GetMethodByName (methodName);
+			if (this.classesDictionary.ContainsKey (typeFullName))
+				return this.classesDictionary [typeFullName].GetMethodByName (methodName);
 
 			throw new EngineException (string.Format ("Method '{0}' not found.", method.ToString ()));
 		}
@@ -799,10 +801,11 @@ namespace SharpOS.AOT.IR {
 
 				Class _class = new Class (this, type);
 
-				if (this.classes.ContainsKey (_class.TypeFullName))
+				if (this.classesDictionary.ContainsKey (_class.TypeFullName))
 					throw new NotImplementedEngineException ();
 
-				this.classes [_class.TypeFullName] = _class;
+				this.classes.Add (_class);
+				this.classesDictionary [_class.TypeFullName] = _class;
 
 				// We don't need the constructors of the registers
 				if (isAOTCore) {
@@ -848,9 +851,11 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void PostIRProcessing ()
 		{
+			List<Class> temp = new List<Class> (this.classes);
+
 			// Post processing
-			foreach (Class _class in this.classes.Values) {
-				_class.Setup ();
+			foreach (Class _class in temp) {
+				_class.Setup (0);
 
 				foreach (CustomAttribute customAttribute in _class.ClassDefinition.CustomAttributes) {
 					if (customAttribute.Constructor.DeclaringType.FullName ==
@@ -870,8 +875,11 @@ namespace SharpOS.AOT.IR {
 						this.typeInfoClass = _class;
 					}
 				}
-
 			}
+
+			// 2nd Step Post Processing
+			foreach (Class _class in temp)
+				_class.Setup (1);
 
 			if (this.vtableClass == null)
 				throw new EngineException ("No VTable Class defined.");
@@ -880,7 +888,7 @@ namespace SharpOS.AOT.IR {
 				throw new EngineException ("No TypeInfo Class defined.");
 
 			// This block of code needs the vtableClass to be set
-			foreach (Class _class in this.classes.Values) {
+			foreach (Class _class in this.classes) {
 				foreach (Method _method in _class) {
 					if (_method.IsAllocObject) {
 						if (this.allocObject != null)
@@ -983,7 +991,7 @@ namespace SharpOS.AOT.IR {
 			Method markedEntryPoint = null;
 			Method mainEntryPoint = null;
 
-			List<Class> _classes = new List<Class> (this.classes.Values);
+			List<Class> _classes = new List<Class> (this.classes);
 
 			foreach (Class _class in _classes) {
 				if (_class.IsSpecialType)
@@ -1060,7 +1068,7 @@ namespace SharpOS.AOT.IR {
 			int classes = 0;
 			int methods = 0;
 			int ilInstructions = 0;
-			foreach (Class _class in this.classes.Values) {
+			foreach (Class _class in this.classes) {
 				classes++;
 
 				foreach (Method _method in _class) {
@@ -1086,7 +1094,7 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		IEnumerator<Class> IEnumerable<Class>.GetEnumerator ()
 		{
-			foreach (Class _class in this.classes.Values)
+			foreach (Class _class in this.classes)
 				yield return _class;
 		}
 
@@ -1126,7 +1134,7 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public int GetFieldSize (string type)
 		{
-			return this.GetTypeSize (type, 0); //2);
+			return this.GetTypeSize (type, 0); 
 		}
 
 		/// <summary>
@@ -1188,8 +1196,8 @@ namespace SharpOS.AOT.IR {
 				break;
 
 			case InternalType.ValueType:
-				if (this.classes.ContainsKey (type.ToString ()))
-					result = this.classes [type.ToString ()].Size;
+				if (this.classesDictionary.ContainsKey (type.ToString ()))
+					result = this.classesDictionary [type.ToString ()].Size;
 
 				break;
 			}
@@ -1303,11 +1311,11 @@ namespace SharpOS.AOT.IR {
 				string objectName = type.Substring (0, type.IndexOf ("::"));
 				string fieldName = type.Substring (type.IndexOf ("::") + 2);
 
-				if (this.classes.ContainsKey (objectName))
-					return this.classes [objectName].GetFieldType (fieldName);
+				if (this.classesDictionary.ContainsKey (objectName))
+					return this.classesDictionary [objectName].GetFieldType (fieldName);
 
-			} else if (this.classes.ContainsKey (type.ToString ()))
-				return this.classes [type.ToString ()].InternalType;
+			} else if (this.classesDictionary.ContainsKey (type.ToString ()))
+				return this.classesDictionary [type.ToString ()].InternalType;
 
 			Console.Error.WriteLine ("WARNING: '" + type + "' not supported.");
 

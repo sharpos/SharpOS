@@ -680,13 +680,15 @@ namespace SharpOS.AOT.IR.Operands {
 	/// <summary>
 	/// 
 	/// </summary>
-	public class Field {
+	public class Field: Operand {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Field"/> class.
 		/// </summary>
 		/// <param name="fieldDefinition">The field definition.</param>
-		public Field (FieldDefinition fieldDefinition)
+		public Field (FieldDefinition fieldDefinition, Class type, InternalType internalType)
 		{
+			this.type = type;
+			this.internalType = internalType;
 			this.fieldDefinition = fieldDefinition;
 		}
 
@@ -737,6 +739,18 @@ namespace SharpOS.AOT.IR.Operands {
 			get
 			{
 				return this.fieldDefinition.Offset;
+			}
+		}
+
+		/// <summary>
+		/// Gets or sets the type of the internal.
+		/// </summary>
+		/// <value>The type of the internal.</value>
+		public override InternalType InternalType
+		{
+			get
+			{
+				return this.internalType;
 			}
 		}
 	}
@@ -832,6 +846,14 @@ namespace SharpOS.AOT.IR.Operands {
 			get
 			{
 				return Class.GetTypeFullName (this.field.FieldDefinition);
+			}
+		}
+
+		public override InternalType InternalType
+		{
+			get
+			{
+				return this.field.InternalType;
 			}
 		}
 	}

@@ -446,9 +446,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		public void LdProcess (Method method)
 		{
 			this.def.InternalType = this.AdjustRegisterInternalType (this.use [0].InternalType);
-
-			if (this.def.InternalType == InternalType.ValueType)
-				this.def.Type = this.use [0].Type;
+			this.def.Type = this.use [0].Type;
 		}
 
 		/// <summary>
@@ -459,14 +457,8 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			FieldOperand field = (this.use [0] as FieldOperand);
 
-			string type = field.Field.FieldDefinition.FieldType.ToString ();
-
-			field.InternalType = method.Engine.GetInternalType (type);
-
 			this.def.InternalType = this.AdjustRegisterInternalType (field.InternalType);
-
-			if (this.def.InternalType == InternalType.ValueType)
-				this.def.Type = method.Engine.GetClass (field.Field.FieldDefinition.FieldType);
+			this.def.Type = field.Field.Type;
 		}
 
 		/// <summary>
@@ -475,11 +467,6 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="method">The method.</param>
 		public void StfldProcess (Method method)
 		{
-			FieldOperand field = (this.use [0] as FieldOperand);
-
-			string type = field.Field.FieldDefinition.FieldType.ToString ();
-
-			field.InternalType = method.Engine.GetInternalType (type);
 		}
 	}
 

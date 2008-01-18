@@ -13,36 +13,6 @@ using NUnit.Framework;
 [TestFixture]
 public class KernelTests {
 	[Test]
-	public void SharpOS_Kernel_Tests_IL_Addition_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP0' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_Addition_CMP1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_ConditionChecking_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_ConstantLoading_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_ConstantLoading_CMP1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_IL_ConversionOperations_CMP0 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0' failed.");
-	}
-	[Test]
 	public void SharpOS_Kernel_Tests_IL_SHR_CMP0 ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.IL.SHR.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.SHR.CMP0' failed.");
@@ -283,6 +253,11 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.IL.SUB.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.SUB.CMP0' failed.");
 	}
 	[Test]
+	public void SharpOS_Kernel_Tests_IL_ConditionChecking_CMP0 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConditionChecking.CMP0' failed.");
+	}
+	[Test]
 	public void SharpOS_Kernel_Tests_IL_MethodArguments_CMP0 ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.IL.MethodArguments.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.MethodArguments.CMP0' failed.");
@@ -298,124 +273,74 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.IL.MethodArguments.CMP2 () == 1, "'SharpOS.Kernel.Tests.IL.MethodArguments.CMP2' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Boxing_CMPBoxUnbox ()
+	public void SharpOS_Kernel_Tests_IL_ConstantLoading_CMP0 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox () == 1, "'SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP0' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Boxing_CMP2 ()
+	public void SharpOS_Kernel_Tests_IL_ConstantLoading_CMP1 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boxing.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Boxing.CMP2' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.ConstantLoading.CMP1' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_String_CMPGetLength ()
+	public void SharpOS_Kernel_Tests_IL_ConversionOperations_CMP0 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPGetLength () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPGetLength' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.ConversionOperations.CMP0' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_String_CMPGetChars ()
+	public void SharpOS_Kernel_Tests_IL_Addition_CMP0 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPGetChars () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPGetChars' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP0 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP0' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_String_CMPGetChars2 ()
+	public void SharpOS_Kernel_Tests_IL_Addition_CMP1 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPGetChars2 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPGetChars2' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.IL.Addition.CMP1 () == 1, "'SharpOS.Kernel.Tests.IL.Addition.CMP1' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_String_CMPBumperIndexing1 ()
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP1 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPBumperIndexing1 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPBumperIndexing1' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP1 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP1' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_String_CMPBumperIndexing2 ()
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP2 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPBumperIndexing2 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPBumperIndexing2' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP2' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_String_CMPBumperLength ()
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP0 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPBumperLength () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPBumperLength' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP0' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_String_CMPCStringStub1 ()
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP3 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPCStringStub1 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPCStringStub1' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP3 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP3' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_String_CMPConstIndexing3 ()
+	public void SharpOS_Kernel_Tests_CS_Misc_CMP4 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPConstIndexing3 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPConstIndexing3' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP4 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP4' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2Byte ()
+	public void SharpOS_Kernel_Tests_CS_Interface_CMPGetProperty ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Byte () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Byte' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPGetProperty () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPGetProperty' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2Short ()
+	public void SharpOS_Kernel_Tests_CS_Interface_CMPCallGet100 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Short () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Short' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPCallGet100 () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPCallGet100' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2Int ()
+	public void SharpOS_Kernel_Tests_CS_Interface_CMPCallChosenInterface1 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Int () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Int' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPCallChosenInterface1 () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPCallChosenInterface1' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2Long ()
+	public void SharpOS_Kernel_Tests_CS_Interface_CMPCallChosenInterface2 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Long () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Long' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2SByte ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2SByte () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2SByte' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2UShort ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UShort () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UShort' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2UInt ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UInt () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UInt' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2ULong ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2ULong () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2ULong' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleAND ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleAND () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleAND' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleOR ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleOR () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleOR' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleXOR ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleXOR () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleXOR' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleShiftLeft ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftLeft () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftLeft' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPUnsignedShiftLeft ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPUnsignedShiftLeft () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPUnsignedShiftLeft' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleShiftRight ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPCallChosenInterface2 () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPCallChosenInterface2' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_Inheritance_CMPCallInherited ()
@@ -448,49 +373,29 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Inheritance.CMPCallShadowedMemberFromBase () == 1, "'SharpOS.Kernel.Tests.CS.Inheritance.CMPCallShadowedMemberFromBase' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleAnd ()
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPGetAbstractProperty ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd () == 1, "'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleOr ()
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallInherited ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleOr () == 1, "'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleOr' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleNot ()
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallProxiedInherited ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleNot () == 1, "'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleNot' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUInt2Byte ()
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallOverridden ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPByte2UInt ()
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallAbstractMember ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPByte2UInt () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPByte2UInt' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPByte2UShort ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPByte2UShort () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPByte2UShort' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUShort2Byte ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUShort2Byte () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUShort2Byte' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUShort2UInt ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUShort2UInt () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUShort2UInt' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUInt2UShort ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2UShort () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2UShort' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_Enum_CMPLiteralToInt ()
@@ -553,199 +458,69 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Enum.CMPULongEnumReturn () == 1, "'SharpOS.Kernel.Tests.CS.Enum.CMPULongEnumReturn' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Switch_CMP0 ()
+	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleAnd ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP0' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd () == 1, "'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleAnd' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Switch_CMP1 ()
+	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleOr ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP1 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP1' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleOr () == 1, "'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleOr' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Switch_CMP2 ()
+	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleNot ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP2' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleNot () == 1, "'SharpOS.Kernel.Tests.CS.Boolean.CMPSimpleNot' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Switch_CMP3 ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPConstructor ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP3 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP3' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPConstructor () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2a ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructPointer ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2b ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructPointer2 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2c ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPEmptyStruct ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_StaticConstructor_CMPStaticConstructor ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructParameter ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.StaticConstructor.CMPStaticConstructor () == 1, "'SharpOS.Kernel.Tests.CS.StaticConstructor.CMPStaticConstructor' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMP1 ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPNoChanges ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP1 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP1' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMP2 ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPCopy ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP2' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPCopy () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMP0 ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPReturn ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP0' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPReturn () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMP3 ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPSizeof1 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP3 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP3' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Misc_CMP4 ()
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPSizeof2 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP4 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP4' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPIntJaggedArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntJaggedArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntJaggedArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPIntMultidimensionalArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntMultidimensionalArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntMultidimensionalArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPShortArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPShortArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPShortArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPShortJaggedArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPShortJaggedArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPShortJaggedArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPShortMultidimensionalArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPShortMultidimensionalArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPShortMultidimensionalArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPByteArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPByteArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPByteArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPByteJaggedArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPByteJaggedArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPByteJaggedArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPByteMultidimensionalArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPByteMultidimensionalArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPByteMultidimensionalArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPLongArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPLongArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPLongArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPLongJaggedArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPLongJaggedArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPLongJaggedArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPLongMultidimensionalArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPLongMultidimensionalArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPLongMultidimensionalArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPUIntArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUIntArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUIntArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPUIntJaggedArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUIntJaggedArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUIntJaggedArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPUIntMultidimensionalArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUIntMultidimensionalArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUIntMultidimensionalArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPUShortArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUShortArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUShortArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPUShortJaggedArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUShortJaggedArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUShortJaggedArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPUShortMultidimensionalArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPUShortMultidimensionalArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPUShortMultidimensionalArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPSByteArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPSByteArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPSByteArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPSByteJaggedArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPSByteJaggedArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPSByteJaggedArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPSByteMultidimensionalArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPSByteMultidimensionalArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPSByteMultidimensionalArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPULongArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPULongArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPULongArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPULongJaggedArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPULongJaggedArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPULongJaggedArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPULongMultidimensionalArray ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPULongMultidimensionalArray () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPULongMultidimensionalArray' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArrayLength ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArrayLength () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArrayLength' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Array_CMPIntArrayZeroLength ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Array.CMPIntArrayZeroLength () == 1, "'SharpOS.Kernel.Tests.CS.Array.CMPIntArrayZeroLength' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_X86_CMPPushArgument ()
@@ -763,64 +538,54 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.X86.CMPLabelHandling () == 1, "'SharpOS.Kernel.Tests.CS.X86.CMPLabelHandling' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_OrderOfOperations_CMPConstants ()
+	public void SharpOS_Kernel_Tests_CS_ByteString_CMP0 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPConstants () == 1, "'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPConstants' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.ByteString.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.ByteString.CMP0' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_OrderOfOperations_CMPValues ()
+	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPVoidP2ByteP ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValues () == 1, "'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValues' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2ByteP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2ByteP' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_OrderOfOperations_CMPValuesAndConstants ()
+	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPVoidP2ShortP ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants () == 1, "'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2ShortP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2ShortP' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Arguments_CMPArguments1 ()
+	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPVoidP2IntP ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments1 () == 1, "'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments1' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2IntP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2IntP' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Arguments_CMPArguments2 ()
+	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPVoidP2LongP ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2 () == 1, "'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2LongP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2LongP' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_WhileLoop_CMP0 ()
+	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPByteP2VoidP ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.WhileLoop.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.WhileLoop.CMP0' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPByteP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPByteP2VoidP' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPInt2SByte ()
+	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPShortP2VoidP ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2SByte () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2SByte' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPShortP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPShortP2VoidP' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPSByte2Int ()
+	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPIntP2VoidP ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Int () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Int' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPIntP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPIntP2VoidP' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPSByte2Short ()
+	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPLongP2VoidP ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Short () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Short' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPLongP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPLongP2VoidP' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPShort2SByte ()
+	public void SharpOS_Kernel_Tests_CS_StaticConstructor_CMPStaticConstructor ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2SByte () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2SByte' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPShort2Int ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2Int () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2Int' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPInt2Short ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2Short () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2Short' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.StaticConstructor.CMPStaticConstructor () == 1, "'SharpOS.Kernel.Tests.CS.StaticConstructor.CMPStaticConstructor' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_MixedIntegerCast_CMPUInt2SByte ()
@@ -888,49 +653,274 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerCast.CMPInt2UShort () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerCast.CMPInt2UShort' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPVoidP2ByteP ()
+	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2Byte ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2ByteP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2ByteP' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Byte () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Byte' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPVoidP2ShortP ()
+	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2Short ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2ShortP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2ShortP' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Short () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Short' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPVoidP2IntP ()
+	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2Int ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2IntP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2IntP' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Int () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Int' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPVoidP2LongP ()
+	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2Long ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2LongP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPVoidP2LongP' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Long () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2Long' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPByteP2VoidP ()
+	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2SByte ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPByteP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPByteP2VoidP' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2SByte () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2SByte' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPShortP2VoidP ()
+	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2UShort ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPShortP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPShortP2VoidP' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UShort () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UShort' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPIntP2VoidP ()
+	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2UInt ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPIntP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPIntP2VoidP' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UInt () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2UInt' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_PointerCast_CMPLongP2VoidP ()
+	public void SharpOS_Kernel_Tests_CS_MixedIntegerPointerCast_CMPVoidP2ULong ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.PointerCast.CMPLongP2VoidP () == 1, "'SharpOS.Kernel.Tests.CS.PointerCast.CMPLongP2VoidP' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2ULong () == 1, "'SharpOS.Kernel.Tests.CS.MixedIntegerPointerCast.CMPVoidP2ULong' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_ByteString_CMP0 ()
+	public void SharpOS_Kernel_Tests_CS_Switch_CMP0 ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.ByteString.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.ByteString.CMP0' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMP1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP1 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP1' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMP2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP2' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMP3 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMP3 () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMP3' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2a ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2a' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2b ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2b' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Switch_CMPMisc2c ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c () == 1, "'SharpOS.Kernel.Tests.CS.Switch.CMPMisc2c' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPInt2SByte ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2SByte () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2SByte' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPSByte2Int ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Int () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Int' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPSByte2Short ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Short () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPSByte2Short' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPShort2SByte ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2SByte () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2SByte' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPShort2Int ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2Int () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPShort2Int' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_SignedIntegerCast_CMPInt2Short ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2Short () == 1, "'SharpOS.Kernel.Tests.CS.SignedIntegerCast.CMPInt2Short' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_WhileLoop_CMP0 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.WhileLoop.CMP0 () == 1, "'SharpOS.Kernel.Tests.CS.WhileLoop.CMP0' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_OrderOfOperations_CMPConstants ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPConstants () == 1, "'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPConstants' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_OrderOfOperations_CMPValues ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValues () == 1, "'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValues' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_OrderOfOperations_CMPValuesAndConstants ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants () == 1, "'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BooleanOrderOfOperations_CMPConstants ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPConstants () == 1, "'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPConstants' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BooleanOrderOfOperations_CMPValues ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValues () == 1, "'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValues' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BooleanOrderOfOperations_CMPValuesAndConstants ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValuesAndConstants () == 1, "'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValuesAndConstants' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleAND ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleAND () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleAND' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleOR ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleOR () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleOR' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleXOR ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleXOR () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleXOR' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleShiftLeft ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftLeft () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftLeft' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPUnsignedShiftLeft ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPUnsignedShiftLeft () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPUnsignedShiftLeft' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_BitwiseOperators_CMPSimpleShiftRight ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight () == 1, "'SharpOS.Kernel.Tests.CS.BitwiseOperators.CMPSimpleShiftRight' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Arguments_CMPArguments1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments1 () == 1, "'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments1' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Arguments_CMPArguments2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2 () == 1, "'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUInt2Byte ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPByte2UInt ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPByte2UInt () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPByte2UInt' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPByte2UShort ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPByte2UShort () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPByte2UShort' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUShort2Byte ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUShort2Byte () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUShort2Byte' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUShort2UInt ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUShort2UInt () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUShort2UInt' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUInt2UShort ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2UShort () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2UShort' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_String_CMPGetLength ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPGetLength () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPGetLength' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_String_CMPGetChars ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPGetChars () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPGetChars' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_String_CMPGetChars2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPGetChars2 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPGetChars2' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_String_CMPBumperIndexing1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPBumperIndexing1 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPBumperIndexing1' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_String_CMPBumperIndexing2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPBumperIndexing2 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPBumperIndexing2' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_String_CMPBumperLength ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPBumperLength () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPBumperLength' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_String_CMPCStringStub1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPCStringStub1 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPCStringStub1' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_String_CMPConstIndexing3 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.String.CMPConstIndexing3 () == 1, "'SharpOS.Kernel.Tests.CS.String.CMPConstIndexing3' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Boxing_CMPBoxUnbox ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox () == 1, "'SharpOS.Kernel.Tests.CS.Boxing.CMPBoxUnbox' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Boxing_CMP2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Boxing.CMP2 () == 1, "'SharpOS.Kernel.Tests.CS.Boxing.CMP2' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Objects_CMPCreateObject ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject () == 1, "'SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Objects_CMPOverrideObject ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Objects.CMPOverrideObject () == 1, "'SharpOS.Kernel.Tests.CS.Objects.CMPOverrideObject' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_Arithmetic_CMPSimpleAdd32 ()
@@ -981,125 +971,5 @@ public class KernelTests {
 	public void SharpOS_Kernel_Tests_CS_Arithmetic_CMPOverflowMultiply64 ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowMultiply64 () == 1, "'SharpOS.Kernel.Tests.CS.Arithmetic.CMPOverflowMultiply64' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPConstructor ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPConstructor () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructPointer ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructPointer2 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPEmptyStruct ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructParameter ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPNoChanges ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPCopy ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPCopy () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPReturn ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPReturn () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPSizeof1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPSizeof2 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Objects_CMPCreateObject ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject () == 1, "'SharpOS.Kernel.Tests.CS.Objects.CMPCreateObject' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Objects_CMPOverrideObject ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Objects.CMPOverrideObject () == 1, "'SharpOS.Kernel.Tests.CS.Objects.CMPOverrideObject' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BooleanOrderOfOperations_CMPConstants ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPConstants () == 1, "'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPConstants' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BooleanOrderOfOperations_CMPValues ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValues () == 1, "'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValues' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_BooleanOrderOfOperations_CMPValuesAndConstants ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValuesAndConstants () == 1, "'SharpOS.Kernel.Tests.CS.BooleanOrderOfOperations.CMPValuesAndConstants' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Abstract_CMPGetAbstractProperty ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallInherited ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallProxiedInherited ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallOverridden ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallAbstractMember ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Interface_CMPGetProperty ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPGetProperty () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPGetProperty' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Interface_CMPCallGet100 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPCallGet100 () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPCallGet100' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Interface_CMPCallChosenInterface1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPCallChosenInterface1 () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPCallChosenInterface1' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Interface_CMPCallChosenInterface2 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPCallChosenInterface2 () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPCallChosenInterface2' failed.");
 	}
 }

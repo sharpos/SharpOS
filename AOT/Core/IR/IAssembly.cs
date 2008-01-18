@@ -82,6 +82,14 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		bool IsInstruction (string value);
 
+
+		/// <summary>
+		/// Ignores the content of the type.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
+		bool IgnoreTypeContent (string value);
+
 		/// <summary>
 		/// Gets the type of the register size.
 		/// </summary>

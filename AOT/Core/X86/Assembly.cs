@@ -289,6 +289,30 @@ namespace SharpOS.AOT.X86 {
 			else if (value.StartsWith ("SharpOS.AOT.X86.FPType"))
 				return InternalType.F;
 
+			else if (value.StartsWith ("SharpOS.AOT.X86.R8"))
+				return InternalType.NotSet;
+
+			else if (value.StartsWith ("SharpOS.AOT.X86.R16"))
+				return InternalType.NotSet;
+
+			else if (value.StartsWith ("SharpOS.AOT.X86.R32"))
+				return InternalType.NotSet;
+
+			else if (value.StartsWith ("SharpOS.AOT.X86.Seg"))
+				return InternalType.NotSet;
+
+			else if (value.StartsWith ("SharpOS.AOT.X86.DR"))
+				return InternalType.NotSet;
+
+			else if (value.StartsWith ("SharpOS.AOT.X86.CR"))
+				return InternalType.NotSet;
+
+			else if (value.StartsWith ("SharpOS.AOT.X86.FP"))
+				return InternalType.NotSet;
+
+			else if (value.StartsWith ("SharpOS.AOT.X86.TR"))
+				return InternalType.NotSet;
+
 			else
 				throw new EngineException ("'" + value + "' is not supported.");
 		}
@@ -342,6 +366,17 @@ namespace SharpOS.AOT.X86 {
 				|| value.StartsWith ("SharpOS.AOT.X86.DWordMemory")
 				|| value.StartsWith ("SharpOS.AOT.X86.QWordMemory")
 				|| value.StartsWith ("SharpOS.AOT.X86.TWordMemory");
+		}
+
+		/// <summary>
+		/// Ignores the content of the type.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
+		public bool IgnoreTypeContent (string value)
+		{
+			return value.Equals ("SharpOS.AOT.X86.Memory")
+				|| value.Equals ("SharpOS.AOT.X86.Register");
 		}
 
 		/// <summary>
@@ -1130,7 +1165,7 @@ namespace SharpOS.AOT.X86 {
 				if (_class.IsValueType)
 					continue;
 
-				foreach (Field field in _class.Fields.Values) {
+				foreach (Field field in _class.Fields) {
 					string fullname = field.FieldDefinition.ToString ();
 
 					if (!field.IsStatic) {
