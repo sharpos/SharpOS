@@ -43,6 +43,11 @@ namespace SharpOS.Kernel.Tests.CS {
 			{
 				return 58;
 			}
+
+			public virtual Enum.IntEnum GetIntEnumAOverrideIntEnumB ()
+			{
+				return Enum.IntEnum.A;
+			}
 		}
 
 		private class SubClass : Base {
@@ -67,6 +72,11 @@ namespace SharpOS.Kernel.Tests.CS {
 			{
 				return 69;
 			}
+
+			public override Enum.IntEnum GetIntEnumAOverrideIntEnumB ()
+			{
+				return Enum.IntEnum.B;
+			}
 		}
 
 		public static uint CMPCallInherited ()
@@ -85,9 +95,17 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 0;
 		}
 
-		public static uint CMPCallOverridden ()
+		public static uint CMPCallOverriddenInt ()
 		{
 			if (new SubClass ().Get50override100 () == 100)
+				return 1;
+
+			return 0;
+		}
+
+		public static uint CMPCallOverriddenEnum ()
+		{
+			if (new SubClass ().GetIntEnumAOverrideIntEnumB () == Enum.IntEnum.B)
 				return 1;
 
 			return 0;

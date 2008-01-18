@@ -10,6 +10,7 @@
 
 namespace SharpOS.Kernel.Tests.CS {
 	public class Enum {
+		public 
 		enum IntEnum : int {
 			A = 0,
 			B = 1,
@@ -60,8 +61,10 @@ namespace SharpOS.Kernel.Tests.CS {
 #pragma warning restore 0162
 		}
 
-		public static uint CMPConstantComparison ()
+		public static uint CMPIntConstantComparison ()
 		{
+//Unreachable code detected
+#pragma warning disable 0162
 			if (IntEnum.A != IntEnum.A)
 				return 0;		// but really... come on.
 
@@ -72,9 +75,10 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 0;
 
 			return 1;
+#pragma warning restore 0162
 		}
 
-		public static uint CMPValueComparison ()
+		public static uint CMPIntValueComparison ()
 		{
 			IntEnum a, b;
 
@@ -100,8 +104,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 1;
 		}
 
-		public static uint CMPSimpleFlags ()
+		public static uint CMPSimpleIntFlags ()
 		{
+//Unreachable code detected
+#pragma warning disable 0162
 			IntEnum a;
 
 			if ((int) (IntEnum.A | IntEnum.C) != 2)
@@ -125,35 +131,189 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 0;
 
 			return 1;
+#pragma warning restore 0162
 		}
 
-		private static IntEnum ReturnA ()
+		private static IntEnum ReturnIntA ()
 		{
 			return IntEnum.A;
 		}
 
-		private static IntEnum ReturnB ()
+		private static IntEnum ReturnIntB ()
 		{
 			return IntEnum.B;
 		}
 
-		private static IntEnum ReturnC ()
+		private static IntEnum ReturnIntC ()
 		{
 			return IntEnum.C;
 		}
 
-		public static int CMPEnumReturn ()
+		public static int CMPIntEnumReturn ()
 		{
-			if (ReturnA () != IntEnum.A)
+			if (ReturnIntA () != IntEnum.A)
 				return 0;
 
-			if (ReturnB () != IntEnum.B)
+			if (ReturnIntB () != IntEnum.B)
 				return 0;
 
-			if (ReturnC () != IntEnum.C)
+			if (ReturnIntC () != IntEnum.C)
 				return 0;
 
 			return 1;
+		}
+
+		enum ULongEnum : ulong {
+			A = 0,
+			B = 1,
+			C = 2,
+			D = 3,
+			E = 4
+		}
+
+		[System.Flags]
+		enum ULongAnonFlagsEnum : ulong {
+			Zero = 0,
+			A,
+			B,
+			C,
+			D,
+			E
+		}
+
+		[System.Flags]
+		enum ULongFlagsEnum : ulong {
+			Zero = 0,
+			A = 1,
+			B = (1 << 1),
+			C = (1 << 2),
+			D = (1 << 3),
+			E = (1 << 4),
+		}
+
+		public static ulong CMPLiteralToULong ()
+		{
+//Unreachable code detected
+#pragma warning disable 0162
+			if ((ulong) ULongEnum.E != 4 || (ulong) ULongEnum.A != 0)
+				return 0;
+
+			return 1;
+#pragma warning restore 0162
+		}
+
+		public static ulong CMPULongToLiteral ()
+		{
+//Unreachable code detected
+#pragma warning disable 0162
+			if ((ULongEnum) 4 != ULongEnum.E || (ULongEnum) 0 != ULongEnum.A)
+				return 0;
+
+			return 1;
+#pragma warning restore 0162
+		}
+
+		public static ulong CMPULongConstantComparison ()
+		{
+//Unreachable code detected
+#pragma warning disable 0162
+			if (ULongEnum.A != ULongEnum.A)
+				return 0;		// but really... come on.
+
+			if (ULongEnum.A == ULongEnum.B)
+				return 0;
+
+			if (ULongEnum.A == ULongEnum.E)
+				return 0;
+
+			return 1;
+#pragma warning restore 0162
+		}
+
+		public static ulong CMPULongValueComparison ()
+		{
+			ULongEnum a, b;
+
+			/*a = ULongEnum.A;
+			b = ULongEnum.B;
+			
+			if (a != b)
+				return 0;		// but really... come on.
+			*/
+
+			a = ULongEnum.A;
+			b = ULongEnum.B;
+
+			if (a == b)
+				return 0;
+
+			a = ULongEnum.A;
+			b = ULongEnum.E;
+
+			if (a == b)
+				return 0;
+
+			return 1;
+		}
+
+		public static ulong CMPSimpleULongFlags ()
+		{
+			ULongEnum a;
+
+			if ((long) (ULongEnum.A | ULongEnum.C) != 2)
+				return 0;
+
+			a = ULongEnum.A | ULongEnum.C | ULongEnum.E;
+
+			if ((a & ULongEnum.A) != 0)
+				return 0;
+
+			if ((a & ULongEnum.B) != 0)
+				return 0;
+
+			if ((a & ULongEnum.C) == 0)
+				return 0;
+
+			if ((a & ULongEnum.D) == 0)
+				return 0;
+
+			if ((a & ULongEnum.E) == 0)
+				return 0;
+
+			return 1;
+#pragma warning restore 0162
+		}
+
+		private static ULongEnum ReturnULongA ()
+		{
+			return ULongEnum.A;
+		}
+
+		private static ULongEnum ReturnULongB ()
+		{
+			return ULongEnum.B;
+		}
+
+		private static ULongEnum ReturnULongC ()
+		{
+			return ULongEnum.C;
+		}
+
+		public static ulong CMPULongEnumReturn ()
+		{
+//Unreachable code detected
+#pragma warning disable 0162
+			if (ReturnULongA () != ULongEnum.A)
+				return 0;
+
+			if (ReturnULongB () != ULongEnum.B)
+				return 0;
+
+			if (ReturnULongC () != ULongEnum.C)
+				return 0;
+
+			return 1;
+#pragma warning restore 0162
 		}
 	}
 }
