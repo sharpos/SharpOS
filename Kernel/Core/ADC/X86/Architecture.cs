@@ -16,6 +16,9 @@ using ADC = SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.ADC.X86 {
 	public unsafe class Architecture {
+		// ..should be replaced with an array
+		static private IProcessor processors = null;
+
 		/**
 			<summary>
 				Checks for compatibility with the current system, using 
@@ -42,9 +45,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 				Gets the ADC platform identifier.
 			</summary>
 		*/
-		public static string GetCPU ()
+		public static string GetPlatform()
 		{
-			return "x86";
+			return "X86";
 		}
 
 		public static string GetAuthor ()
@@ -60,11 +63,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public static int GetProcessorCount ()
 		{
 			return 0;
+			//return processors.Length;
 		}
 
-		public static Processor* GetProcessors ()
+		public static IProcessor GetProcessors ()
 		{
-			return null; // TODO
+			if (processors == null)
+				processors = new Processor();
+			return processors; // TODO
 		}
 
 		public static EventRegisterStatus RegisterTimerEvent (uint func)

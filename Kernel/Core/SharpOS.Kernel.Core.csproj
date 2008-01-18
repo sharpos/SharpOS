@@ -80,12 +80,13 @@
     <Compile Include="ADC\BootControl.cs" />
     <Compile Include="ADC\FloppyDiskController.cs" />
     <Compile Include="ADC\Interlocked.cs" />
+    <Compile Include="ADC\IProcessor.cs" />
     <Compile Include="ADC\Keyboard.cs" />
     <Compile Include="ADC\Keys.cs" />
     <Compile Include="ADC\MemoryManager.cs" />
     <Compile Include="ADC\MemoryUtil.cs" />
     <Compile Include="ADC\Pager.cs" />
-    <Compile Include="ADC\Processor.cs" />
+    <Compile Include="ADC\PCI.cs" />
     <Compile Include="ADC\ProcessorType.cs" />
     <Compile Include="ADC\Scheduler.cs" />
     <Compile Include="ADC\Serial.cs" />
@@ -97,7 +98,6 @@
     <Compile Include="ADC\X86\BootControl.cs" />
     <Compile Include="ADC\X86\CMOS.cs" />
     <Compile Include="ADC\X86\Constants.cs" />
-    <Compile Include="ADC\X86\CPU.cs" />
     <Compile Include="ADC\X86\DTPointer.cs" />
     <Compile Include="ADC\X86\FloppyDiskController.cs" />
     <Compile Include="ADC\X86\GDT.cs" />
@@ -110,6 +110,7 @@
     <Compile Include="ADC\X86\PCI.cs" />
     <Compile Include="ADC\X86\PIC.cs" />
     <Compile Include="ADC\X86\PIT.cs" />
+    <Compile Include="ADC\X86\Processor.cs" />
     <Compile Include="ADC\X86\RTC.cs" />
     <Compile Include="ADC\X86\Scheduler.cs" />
     <Compile Include="ADC\X86\Serial.cs" />

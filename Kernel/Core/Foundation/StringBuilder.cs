@@ -62,6 +62,13 @@ namespace SharpOS.Kernel.Foundation {
 
 			Write_INTERNAL (ch);
 		}
+
+		public void AppendSubstring (byte* message, int offset, int len)
+		{
+			for (int i = offset; message[i] != 0 && i < (offset + len); ++i)
+				Write_INTERNAL(message[i]);
+		}
+
 		public void Append (string str)
 		{
 			uint strLength = (uint) str.Length;
@@ -79,6 +86,7 @@ namespace SharpOS.Kernel.Foundation {
 
 			Write_INTERNAL (str, strLength);
 		}
+
 		public void Append (CString8* str)
 		{
 			Append ((byte*) str->Pointer);

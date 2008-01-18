@@ -37,7 +37,7 @@ namespace SharpOS.Kernel.ADC {
 		/// displayed to the user.
 		/// </summary>
 		[AOTAttr.ADCStub]
-		public static byte* GetCPU ()
+		public static string GetCPU()
 		{
 			return null;
 		}
@@ -61,7 +61,7 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		[AOTAttr.ADCStub]
-		public static Processor* GetProcessors ()
+		public static IProcessor GetProcessors ()
 		{
 			return null;
 		}
