@@ -3,74 +3,108 @@
 //
 // Authors:
 //	Stanislaw Pitucha <viraptor@gmail.com>
+//	Cédric Rousseau <cedrou@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
 //
 
-using System;
-using SharpOS.Kernel;
-using SharpOS.AOT.X86;
-using ADC = SharpOS.Kernel.ADC;
-
 namespace SharpOS.Kernel.ADC.X86 {
-	public unsafe class PCI {
-		const uint BASE_VALUE = 0x80000000;
+  public unsafe class PCIController	{
+		#region Constants
+
+		private static readonly uint MAX_DEVICES = 16;
+		private static readonly uint BASE_VALUE = 0x80000000;
+
+		#endregion
 		
-		// Read configuration DWORD from PCI address
-		public unsafe static uint ReadConfig32(uint bus, uint dev, uint fun, uint register) {
-			uint address = (uint)(BASE_VALUE | (bus << 16) | (dev << 11) | (fun << 8) | (register & ~3));
-			IO.Out32(IO.Port.PCI_Config_Address, address);
-			return IO.In32(IO.Port.PCI_Config_Data);
+		#region Private fields
+
+    private static bool isAvailable;
+		private static PCIDevice** deviceList;
+    private static int deviceCount;
+
+		#endregion
+
+		#region ADC implementation
+
+		public unsafe static uint Devices(int index) 
+    {
+      if (index >= 0 && index < MAX_DEVICES) 
+        return (uint)deviceList[index]; 
+      return 0; 
+    }
+
+    public static int DeviceCount
+		{
+      get { return deviceCount; }
 		}
-		
+
+    public static uint ReadConfig(uint bus, uint slot, uint function, uint register)
+    {
+      uint address = 0x80000000
+                   | ((bus & 0xFF) << 16)
+                   | ((slot & 0x0F) << 11)
+                   | ((function & 0x07) << 8)
+                   | (register & 0xFC);
+
+      IO.Out32(IO.Port.PCI_Config_Address, address);
+      return IO.In32(IO.Port.PCI_Config_Data);
+    }
+
+		// check for the presence of a device at the specific PCI address
+    public static bool ProbeDevice(uint bus, uint slot, uint fun)
+    {
+      uint data = ReadConfig(bus, slot, fun, 0);
+      return (data != 0xFFFFFFFF);
+    }
+
 		// check PCI bus availability by probing IO
-		public unsafe static bool IsAvailable() {
-			IO.Out32(IO.Port.PCI_Config_Address, BASE_VALUE);
-			if(IO.In32(IO.Port.PCI_Config_Address) != BASE_VALUE)
-				return false;
-			else
-				return true;
+		public static bool IsAvailable 
+		{
+      get { return isAvailable; }
 		}
 		
-		// iterate over bus/device/function to list all devices
-		public unsafe static void ReportConfig() {
-			uint id, bus=0, dev=0, fun=0;
-			while(true) {
-				id = ReadConfig32(bus, dev, fun, 0);
-				if(id != 0xffffffff) {
-					ADC.TextMode.Write("bus:dev:fun -> ");
-					ADC.TextMode.Write((int)bus);
-					ADC.TextMode.Write(":");
-					ADC.TextMode.Write((int)dev);
-					ADC.TextMode.Write(":");
-					ADC.TextMode.Write((int)fun);
-					ADC.TextMode.Write(" device ");
-					ADC.TextMode.Write((int)(id&0xffff), true);
-					ADC.TextMode.Write(":");
-					ADC.TextMode.Write((int)((id>>16)&0xffff), true);
-					ADC.TextMode.WriteLine();
-				}
-				
-				// maximum of 8 functions per device
-				if(fun<7)
-					fun++;
-				else {
-					// maximum 32 devices
-					if(dev<31)
-						dev++;
-					else {
-						// maximum 8 buses
-						if(bus<7)
-							bus++;
-						else
-							break;
-						dev=0;
-					}
-					fun=0;
-				}
-			}
-			ADC.TextMode.WriteLine("End of listing.");
+
+    public unsafe static void Setup()
+    {
+			IO.Out32(IO.Port.PCI_Config_Address, BASE_VALUE);
+      isAvailable = (IO.In32 (IO.Port.PCI_Config_Address) == BASE_VALUE);
+
+			//CR- Don't know why but the following static allocation code cannot be AOTted.
+			//CR- The same error occurs when the allocation is done with the declaration of deviceList.
+			//CR-     EXEC : error : SharpOS.AOT.IR.EngineException: Could not propagate 'Reg0_4__I4'.
+      //deviceList = (PCIDevice**)Stubs.StaticAlloc((uint)(sizeof(PCIDevice*) * MAX_DEVICES));
+			deviceList = (PCIDevice**)MemoryManager.Allocate ((uint)sizeof (PCIDevice*) * MAX_DEVICES);
+			for (int index = 0; index < MAX_DEVICES; index++)
+      {
+        deviceList[index] = (PCIDevice*)0;
+      }
+      deviceCount = 0;
+
+			// iterate over bus/device/function to list all devices
+			for (uint bus = 0; bus < 256 && deviceCount < MAX_DEVICES; bus++) {
+        for (uint slot = 0; slot < 16 && deviceCount < MAX_DEVICES; slot++) {
+          for (uint fun = 0; fun < 7 && deviceCount < MAX_DEVICES; fun++) {
+            if (ProbeDevice(bus, slot, fun)) {
+              deviceList[deviceCount++] = PCIDevice.CREATE(bus, slot, fun);
+            }
+          }
+        }
+      }
+    }
+
+		//[cedrou] is this member really useful ???
+    public unsafe static void Destroy()
+    {
+      for (int index = 0; index < MAX_DEVICES; index++) {
+        if ((int)deviceList[index] != 0) {
+          MemoryManager.Free((void*)deviceList[index]);
+        }
+      }
+			MemoryManager.Free ((void*)deviceList);
 		}
+
+		#endregion
 	}
 }

@@ -102,6 +102,9 @@ namespace SharpOS.Kernel {
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
 
+			StageMessage ("PCIController setup...");
+			PCIController.Setup ();
+
 			StageMessage ("Keymap setup...");
 			KeyMap.Setup ();
 
@@ -266,4 +269,5 @@ namespace SharpOS.Kernel {
 		#endregion
 	}
 }
+
 
