@@ -73,12 +73,5 @@ namespace SharpOS.Kernel.ADC.X86 {
 				processors = new Processor();
 			return processors; // TODO
 		}
-
-
-		// TODO: this needs to be moved out of architecture..
-		public static EventRegisterStatus RegisterTimerEvent (uint func)
-		{
-			return PIT.RegisterTimerEvent (func);
-		}
 	}
 }

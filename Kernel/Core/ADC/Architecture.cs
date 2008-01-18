@@ -65,13 +65,5 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return null;
 		}
-		
-
-		// TODO: this needs to be moved out of architecture..
-		[AOTAttr.ADCStub]
-		public static EventRegisterStatus RegisterTimerEvent (uint func)
-		{
-			return EventRegisterStatus.NotSupported;
-		}
 	}
 }

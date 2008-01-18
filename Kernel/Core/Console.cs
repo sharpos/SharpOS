@@ -50,7 +50,7 @@ namespace SharpOS.Kernel {
 
 			Keyboard.RegisterKeyUpEvent (Stubs.GetFunctionPointer (CONSOLE_KEY_UP_HANDLER));
 			Keyboard.RegisterKeyDownEvent (Stubs.GetFunctionPointer (CONSOLE_KEY_DOWN_HANDLER));
-			Architecture.RegisterTimerEvent (Stubs.GetFunctionPointer (CONSOLE_TIMER_HANDLER));
+			SharpOS.Kernel.ADC.Timer.RegisterTimerEvent (Stubs.GetFunctionPointer (CONSOLE_TIMER_HANDLER));
 
 			initialized = true;
 			TextMode.RefreshCursor ();
