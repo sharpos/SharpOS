@@ -2,7 +2,6 @@
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
-//	???
 //	Stanisław Pitucha <viraptor@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
@@ -10,9 +9,9 @@
 //
 
 namespace SharpOS.Kernel.Tests.CS {
-	public class Inheritance {
-		private class Base {
-			int number;
+	public class Abstract {
+		private abstract class Base {
+			protected int number;
 
 			public Base ()
 			{
@@ -23,6 +22,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			{
 				this.number = number;
 			}
+
+			//public abstract int Number {
+			//        get;
+			//}
 
 			public int GetNumber ()
 			{
@@ -39,10 +42,7 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 50;
 			}
 
-			public int Get58shadowWith69 ()
-			{
-				return 58;
-			}
+			//public abstract int GetAbstract42 ();
 		}
 
 		private class SubClass : Base {
@@ -52,6 +52,11 @@ namespace SharpOS.Kernel.Tests.CS {
 			public SubClass (int number) : base (number)
 			{
 			}
+
+			//public override int Number
+			//{
+			//        get { return number; }
+			//}
 
 			public int GetInheritedNumber ()
 			{
@@ -63,10 +68,18 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 100;
 			}
 
-			public new int Get58shadowWith69 ()
-			{
-				return 69;
-			}
+			//public override int GetAbstract42 ()
+			//{
+			//        return 42;
+			//}
+		}
+
+		public static uint CMPGetAbstractProperty ()
+		{
+			//if (new SubClass (37).Number == 37)
+			//        return 1;
+
+			return 0;
 		}
 
 		public static uint CMPCallInherited ()
@@ -93,18 +106,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 0;
 		}
 
-		public static uint CMPCallShadowedMember ()
+		public static uint CMPCallAbstractMember ()
 		{
-			if (new SubClass ().Get58shadowWith69 () == 69)
-				return 1;
-
-			return 0;
-		}
-
-		public static uint CMPCallShadowedMemberFromBase ()
-		{
-			if ((new SubClass () as Base).Get58shadowWith69 () == 58)
-				return 1;
+			//if (new SubClass ().GetAbstract42 () == 42)
+			//        return 1;
 
 			return 0;
 		}
