@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -28,7 +28,7 @@ namespace SharpOS.Kernel {
 	///		- move left/right in command
 	///		- insert overwrite
 	/// - add capslock/numlock support
-	///		just like we're now passing a 'shifted' boolean value to translate, 
+	///		just like we're now passing a 'shifted' boolean value to translate,
 	///		should we also pass a 'numlock' boolean value to translate?
 	///		maybe this needs to be generalized somehow (eventually)?
 	///		what if a keyboard manifacturer has programmable keys/modes etc.?
@@ -124,8 +124,8 @@ namespace SharpOS.Kernel {
 
 				int x, y, width, height;
 
-				TextMode.GetScreenSize (&width, &height);
-				TextMode.GetCursor (&x, &y);
+				TextMode.GetScreenSize (out width, out height);
+				TextMode.GetCursor (out x, out y);
 				x--;
 				if (x < 0) {
 					x = width - 1;
@@ -149,8 +149,8 @@ namespace SharpOS.Kernel {
 #if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
-				TextMode.GetScreenSize(&width, &height);
-				TextMode.GetCursor(&x, &y);
+				TextMode.GetScreenSize(out width, out height);
+				TextMode.GetCursor(out x, out y);
 				x = x - 1; if (x < 0) x = 0;
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
@@ -164,8 +164,8 @@ namespace SharpOS.Kernel {
 #if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
-				TextMode.GetScreenSize(&width, &height);
-				TextMode.GetCursor(&x, &y);
+				TextMode.GetScreenSize(out width, out height);
+				TextMode.GetCursor(out x, out y);
 				x = x + 1; if (x >= width) x = width - 1;
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
@@ -179,8 +179,8 @@ namespace SharpOS.Kernel {
 #if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
-				TextMode.GetScreenSize(&width, &height);
-				TextMode.GetCursor(&x, &y);
+				TextMode.GetScreenSize(out width, out height);
+				TextMode.GetCursor(out x, out y);
 				y = y - 1; if (y < 0) y = 0;
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
@@ -194,8 +194,8 @@ namespace SharpOS.Kernel {
 #if !FORBID_ARROW_KEYS
 				int x, y, width, height;
 
-				TextMode.GetScreenSize(&width, &height);
-				TextMode.GetCursor(&x, &y);
+				TextMode.GetScreenSize(out width, out height);
+				TextMode.GetCursor(out x, out y);
 				y = y + 1; if (y >= height) y = height - 1;
 				TextMode.MoveTo(x, y);
 				TextMode.RefreshCursor();
@@ -257,12 +257,11 @@ namespace SharpOS.Kernel {
 		{
 			if (ticks % SharpOS.Kernel.ADC.Timer.GetFrequency () == 0) {
 				int x, y;
-
-				TextMode.GetCursor (&x, &y);
+				TextMode.GetCursor (out x, out y);
 				TextMode.SaveAttributes ();
 				TextMode.MoveTo (0, 24);
 				TextMode.SetAttributes (TextColor.Yellow, TextColor.Red);
-				ADC.X86.RTC.WriteTime();
+				Clock.Write ();
 				TextMode.RestoreAttributes ();
 				TextMode.MoveTo (x, y);
 			}

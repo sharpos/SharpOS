@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -255,9 +255,14 @@ namespace SharpOS.Kernel.Foundation {
 			StringBuilder* sb = StringBuilder.CREATE (5);
 
 			sb->AppendChar ((byte) 'a');
-			Diagnostics.Assert (sb->buffer->Pointer [0] == (byte) 'a', "StringBuilder.AppendChar(byte): AppendChar not working correctly!");
+			Testcase.Test (sb->buffer->Pointer [0] == (byte) 'a',
+				"StringBuilder.AppendChar(byte)",
+				"Test A (append 'a')");
+
 			sb->Append ("b");
-			Diagnostics.Assert (sb->buffer->Pointer [1] == (byte) 'b', "StringBuilder.Append(string): Append not working correctly!");
+			Testcase.Test (sb->buffer->Pointer [1] == (byte) 'b',
+				"StringBuilder.Append(string)",
+				"Test B (append 'b')");
 
 			ADC.MemoryManager.Free ((void*) sb);
 		}
@@ -268,11 +273,17 @@ namespace SharpOS.Kernel.Foundation {
 			sb->Append ("abcd");
 			sb->Append ("e");
 
-			Diagnostics.Assert (sb->Length == 5, "StringBuilder.Append(string): Length is being mismanaged!");
-			Diagnostics.Assert (sb->capacity == 50, "StringBuilder.Append(string): Capacity is being mismanaged!");
+			Testcase.Test (sb->Length == 5,
+				"StringBuilder.Append(string)",
+				"Length misalignment");
+			Testcase.Test (sb->capacity == 50,
+				"StringBuilder.Append(string)",
+				"Capacity misalignment");
 
 			sb->Clear ();
-			Diagnostics.Assert (sb->Length == 0, "StringBuilder.Clear(): Not clearing correctly");
+			Testcase.Test (sb->Length == 0,
+				"StringBuilder.Clear()",
+				"Correct clear behavior");
 
 			ADC.MemoryManager.Free ((void*) sb);
 		}
@@ -283,15 +294,21 @@ namespace SharpOS.Kernel.Foundation {
 			sb->Append ("abcd");
 
 			sb->RemoveAt (1, 2);
-			Diagnostics.Assert (sb->buffer->Compare ("ad") == 0, "StringBuilder.RemoveAt(int,int): Middle-of-string removal is not working!");
+			Testcase.Test (sb->buffer->Compare ("ad") == 0,
+				"StringBuilder.RemoveAt(int,int)",
+				"Middle-of-string removal");
 
 			sb->Append ("e");
 			sb->RemoveAt (0, 2);
-			Diagnostics.Assert (sb->buffer->Compare ("e") == 0, "StringBuilder.RemoveAt(int,int): Beginning-of-string removal is not working!");
+			Testcase.Test (sb->buffer->Compare ("e") == 0,
+				"StringBuilder.RemoveAt(int,int)",
+				"Beginning-of-string removal");
 
 			sb->Append ("fg");
 			sb->RemoveAt (1, 2);
-			Diagnostics.Assert (sb->buffer->Compare ("e") == 0, "StringBuilder.RemoveAt(int,int): End-of-string removal is not working!");
+			Testcase.Test (sb->buffer->Compare ("e") == 0,
+				"StringBuilder.RemoveAt(int,int)",
+				"End-of-string removal");
 
 			ADC.MemoryManager.Free ((void*) sb);
 		}

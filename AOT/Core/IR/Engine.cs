@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -28,8 +28,8 @@ using Mono.Cecil.Metadata;
 namespace SharpOS.AOT.IR {
 
 	/// <summary>
-	/// The core class of the AOT compiler. To embed the AOT compiler, 
-	/// an instance of this class should be constructed with an 
+	/// The core class of the AOT compiler. To embed the AOT compiler,
+	/// an instance of this class should be constructed with an
 	/// <see cref="SharpOS.AOT.IR.EngineOptions" /> instance.
 	/// </summary>
 	public partial class Engine : IEnumerable<Class> {
@@ -37,7 +37,7 @@ namespace SharpOS.AOT.IR {
 		/// Initializes a new instance of the <see cref="Engine"/> class.
 		/// </summary>
 		/// <param name="opts">
-		/// Specifies the set of options used to perform the AOT 
+		/// Specifies the set of options used to perform the AOT
 		/// operation.
 		/// </param>
 		public Engine (EngineOptions opts)
@@ -45,14 +45,62 @@ namespace SharpOS.AOT.IR {
 			options = opts;
 		}
 
+		/// <summary>
+		/// Represents the current stage of the compilation process.
+		/// </summary>
 		public enum Status : int {
+			/// <summary>
+			/// The stage is unknown.
+			/// </summary>
 			None = 0,
+
+			/// <summary>
+			/// Loads assemblies using Mono.Cecil and collects all types
+			/// in a list.
+			/// </summary>
 			AssemblyLoading,
+
+			/// <summary>
+			/// During this stage, the AOT chooses which architecture-dependent
+			/// implementation will be compiled into the kernel binary.
+			/// </summary>
 			ADCLayerSelection,
+
+			/// <summary>
+			/// Generates the intermediate representation of IL, so that
+			/// we can translate  it into Static-Single-Assign format,
+			/// perform register allocation, and (optionally) optimizations.
+			/// Register allocation is used to increase the speed of the
+			/// code, as IL uses a 'stack' for almost all it's operations.
+			/// Instead of using the native (X86) stack exclusively, we use
+			/// register allocation to improve efficiency. On X86, the
+			/// ebx, esi, and edi registers are used for register allocation,
+			/// and thus cannot be used directly.
+			/// </summary>
 			IRGeneration,
+
+			/// <summary>
+			/// During this stage, the IR is actually converted to SSA form,
+			/// register allocation is done, and any optimizations.
+			/// </summary>
 			IRProcessing,
+
+			/// <summary>
+			/// In this phase the intermediate representation of the code is
+			/// converted to native assembly and encoded into the kernel binary.
+			/// Multiboot information is inserted here, as well as the PE header
+			/// and COFF table.
+			/// </summary>
 			Encoding,
+
+			/// <summary>
+			/// A successful operation.
+			/// </summary>
 			Success,
+
+			/// <summary>
+			/// A failed operation.
+			/// </summary>
 			Failure
 		}
 
@@ -60,6 +108,10 @@ namespace SharpOS.AOT.IR {
 		/// Represents the version of the AOT compiler engine.
 		/// </summary>
 		public const string EngineVersion = "svn";
+
+		/// <summary>
+		/// A constant string used by the AOT to identify it's own attributes.
+		/// </summary>
 		public const string SHARPOS_ATTRIBUTES = "SharpOS.AOT.Attributes.";
 
 		EngineOptions options = null;
@@ -82,6 +134,9 @@ namespace SharpOS.AOT.IR {
 		TypeReference currentType;
 		MethodDefinition currentMethod;
 
+		/// <summary>
+		/// The current engine status.
+		/// </summary>
 		public Status CurrentStatus
 		{
 			get
@@ -90,6 +145,11 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// A dictionary of resource filenames and their
+		/// data. Holds the embedded resources of the
+		/// assemblies being compiled.
+		/// </summary>
 		public Dictionary<string, byte []> Resources
 		{
 			get
@@ -99,7 +159,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Provides storage for information about the architecture-dependent 
+		/// Provides storage for information about the architecture-dependent
 		/// code layers found during initial processing of the assemblies to
 		/// be AOTed.
 		/// </summary>
@@ -162,6 +222,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Provides the filename of the assembly file currently
+		/// being processed.
+		/// </summary>
 		public string ProcessingAssemblyFile
 		{
 			get
@@ -173,9 +237,11 @@ namespace SharpOS.AOT.IR {
 		Class vtableClass = null;
 
 		/// <summary>
-		/// Gets the VTable class.
+		/// Gets the Class object representing the kernel type
+		/// used to store vtable information. In the SharpOS
+		/// kernel this type is SharpOS.Korlib.Runtime.VTable.
 		/// </summary>
-		/// <value>The V table class.</value>
+		/// <value>The VTable class in the kernel.</value>
 		public Class VTableClass
 		{
 			get
@@ -431,7 +497,7 @@ namespace SharpOS.AOT.IR {
 		/// <summary>
 		/// Finds the MethodDefinition that matches the method reference
 		/// <paramref name="call" />. This method searches through the list
-		/// of assemblies provided by the 'Assemblies' option in 
+		/// of assemblies provided by the 'Assemblies' option in
 		/// <see cref="EngineOptions" />.
 		/// </summary>
 		public MethodDefinition GetCILDefinition (Mono.Cecil.MethodReference call)
@@ -486,9 +552,9 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Creates the correct IAssembly object corresponding to 
-		/// the CPU architecture chosen by the 'CPU' option of 
-		/// <see cref="EngineOptions" />, then runs the AOT compiler 
+		/// Creates the correct IAssembly object corresponding to
+		/// the CPU architecture chosen by the 'CPU' option of
+		/// <see cref="EngineOptions" />, then runs the AOT compiler
 		/// engine using <see cref="Run(IAssembly)" />.
 		/// </summary>
 		public void Run ()
@@ -1089,7 +1155,7 @@ namespace SharpOS.AOT.IR {
 		/// objects that this instance contains.
 		/// </summary>
 		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that 
+		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that
 		/// can be used to iterate through the collection.
 		/// </returns>
 		IEnumerator<Class> IEnumerable<Class>.GetEnumerator ()
@@ -1103,7 +1169,7 @@ namespace SharpOS.AOT.IR {
 		/// objects that this instance contains.
 		/// </summary>
 		/// <returns>
-		/// An <see cref="T:System.Collections.IEnumerator"></see> object that 
+		/// An <see cref="T:System.Collections.IEnumerator"></see> object that
 		/// can be used to iterate through the collection.
 		/// </returns>
 		IEnumerator IEnumerable.GetEnumerator ()
@@ -1115,8 +1181,8 @@ namespace SharpOS.AOT.IR {
 		/// Gets the size of the type <paramref name="type" />.
 		/// </summary>
 		/// <param name="type">
-		/// Either the C# name for the type (`int', `short', `bool') 
-		/// or a fully-qualified type name (`System.Int32', 
+		/// Either the C# name for the type (`int', `short', `bool')
+		/// or a fully-qualified type name (`System.Int32',
 		/// `System.Int16', `System.Boolean').
 		/// </param>
 		/// <returns>
@@ -1212,12 +1278,12 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets a <see cref="Operands.InternalType" /> that 
+		/// Gets a <see cref="Operands.InternalType" /> that
 		/// represents the type <paramref name="type" />.
 		/// </summary>
 		/// <param name="type">
-		/// Either the C# name for the type (`int', `short', `bool') 
-		/// or a fully-qualified type name (`System.Int32', 
+		/// Either the C# name for the type (`int', `short', `bool')
+		/// or a fully-qualified type name (`System.Int32',
 		/// `System.Int16', `System.Boolean').
 		/// </param>
 		/// <returns></returns>

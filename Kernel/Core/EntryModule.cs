@@ -90,7 +90,7 @@ namespace SharpOS.Kernel {
 			if (multibootInfo == null) {
 				StageError ("Error: multiboot loader required!");
 				return;
-			} 
+			}
 
 			StageMessage ("Commandline setup...");
 			CommandLine.Setup (multibootInfo);
@@ -101,6 +101,9 @@ namespace SharpOS.Kernel {
 
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
+
+			StageMessage ("Clock setup...");
+			Clock.Setup ();
 
 			StageMessage ("PCIController setup...");
 			PCIController.Setup ();
@@ -139,6 +142,7 @@ namespace SharpOS.Kernel {
 			CString8.__RunTests ();
 			PString8.__RunTests ();
 			SharpOS.Kernel.Tests.Wrapper.Run ();
+			InternalSystem.String.__RunTests ();
 #endif
 
 			StageMessage ("Shell setup...");
@@ -229,7 +233,7 @@ namespace SharpOS.Kernel {
 			TextMode.Write (" Type: ");
 			TextMode.Write (vtable.Type.Name);
 			TextMode.WriteLine ();*/
-			
+
 
 			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate (vtable.Size);
 

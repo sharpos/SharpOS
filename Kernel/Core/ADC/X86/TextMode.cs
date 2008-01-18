@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -176,7 +176,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		/// <reference>http://www.cknow.com/refs/VideoDisplayStandards.html</reference>
 		public static void Setup ()
 		{
-			// Find CRT controller addresses			
+			// Find CRT controller addresses
 			if ((IO.In8 (IO.Port.EGA_graphics_1_position_register) & 1) == 1) {
 				// CGA/EGA color text mode
 
@@ -202,7 +202,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 				haveBuffer = false;
 			}
 
-			// read the width			
+			// read the width
 			width = HardwareCommand (CRT_Indices.horizontal_displayed) + 1;
 
 			// this returns a funny number... what am i doing wrong here?
@@ -254,16 +254,16 @@ namespace SharpOS.Kernel.ADC.X86 {
 			HardwareCommand (CRT_Indices.cursor_location, position);
 		}
 
-		public static void GetCursor (int* ret_x, int* ret_y)
+		public static void GetCursor (out int ret_x, out int ret_y)
 		{
-			*ret_x = x;
-			*ret_y = y;
+			ret_x = x;
+			ret_y = y;
 		}
 
-		public static void GetScreenSize (int* ret_w, int* ret_h)
+		public static void GetScreenSize (out int ret_w, out int ret_h)
 		{
-			*ret_w = width;
-			*ret_h = height;
+			ret_w = width;
+			ret_h = height;
 		}
 
 		public static int GetBufferHeight ()

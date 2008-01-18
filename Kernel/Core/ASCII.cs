@@ -1,8 +1,8 @@
-// 
+//
 // (C) 2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
-//	(??)
+//	William Lahti <xfurious@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,

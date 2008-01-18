@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -16,6 +16,63 @@ using SharpOS.Kernel.ADC;
 namespace SharpOS.Kernel.Foundation {
 	public unsafe class Convert {
 
+		public unsafe static int ToInt32 (CString8 *str)
+		{
+			return ToInt32 (str, 0, str->Length);
+		}
+
+		public unsafe static int ToInt32 (CString8 *str, int offset, int length)
+		{
+			return ToInt32 (str->Pointer, offset, length, str->Length);
+		}
+
+		public unsafe static int ToInt32 (PString8 *str, int offset, int length)
+		{
+			return ToInt32 (str->Pointer, offset, length, str->Length);
+		}
+
+		public unsafe static int ToInt32 (PString8 *str)
+		{
+			return ToInt32 (str->Pointer, 0, str->Length, str->Length);
+		}
+
+		public unsafe static int ToInt32 (byte *buffer, int offset, int length, int capacity)
+		{
+			bool started = false;
+			int result, place;
+
+			result = 0;
+			place = 1;
+
+			Diagnostics.Assert (offset + length >= capacity,
+				"Convert.ToInt32(): offset + length >= capacity");
+
+			for (int x = offset + length; x >= offset; --x) {
+				int digit = 0;
+
+				if (!started && buffer [x] == '\0')
+					continue;
+
+				started = false;
+
+				digit = buffer [x] - (byte)'0';
+
+				if (x == 0 && buffer [x] == '-') {
+					result = 0 - result;
+					continue;
+				}
+
+				if (!ASCII.IsNumeric (buffer [x])) {
+					Diagnostics.Error ("Convert.ToInt32(): Contains non-digit");
+					return 0;
+				}
+
+				result += place * digit;
+				place *= 10;
+			}
+
+			return result;
+		}
 
 		public unsafe static int ToByteString (string str, byte* buffer, int bufferLen, int offset)
 		{
@@ -148,7 +205,7 @@ namespace SharpOS.Kernel.Foundation {
                         CString8* p1 = (CString8*)Stubs.CString("105"), p2 = (CString8*)Stubs.CString("-1805");
                         CString8* p3 = (CString8*)Stubs.CString("6F"), p4 = (CString8*)Stubs.CString("-96A");
 
-                        
+
                         if (!__StringComp(Convert.ToString(t1, false), p1))
                                 TextMode.WriteLine("Convert.ToString(long, bool) Failed Test:  105");
 
@@ -201,7 +258,7 @@ namespace SharpOS.Kernel.Foundation {
 			CString8* p3 = (CString8*) Stubs.CString ("6F");
                         CString8* p4 = (CString8*)Stubs.CString("-96A");
 
-                        
+
                         if (!__StringComp(Convert.ToString(t1, false), p1))
                                 TextMode.WriteLine("Convert.ToString(int, bool) Failed Test:  105");
 

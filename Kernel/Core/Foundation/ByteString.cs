@@ -172,49 +172,65 @@ namespace SharpOS.Kernel.Foundation {
 			byte* longer = (byte*) Stubs.CString ("The US");
 
 			//Test constant CString buffers
-			if (ByteString.Compare (ptr1, ptr2) == 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' != 'SK'");
+			Testcase.Test (ByteString.Compare (ptr1, ptr2) != 0,
+				"ByteString.Compare()",
+				"Comparing: 'US' != 'SK'");
 
-			if (ByteString.Compare (ptr1, ptr1) != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' == 'US'");
+			Testcase.Test (ByteString.Compare (ptr1, ptr1) == 0,
+				"ByteString.Compare()",
+				"Comparing: 'US' == 'US'");
 
-			if (ByteString.Compare (ptr1, 1, ptr1, 1, 1) != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'U[S]' == 'U[S]'");
+			Testcase.Test (ByteString.Compare (ptr1, 1, ptr1, 1, 1) == 0,
+				"ByteString.Compare()",
+				"Comparing substrings: 'U[S]' == 'U[S]'");
 
-			if (ByteString.Compare (longer, 4, ptr1, 0, 2) != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == 'US' (count=2)");
+			Testcase.Test (ByteString.Compare (longer, 4, ptr1, 0, 2) == 0,
+				"ByteString.Compare()",
+				"Comparing substrings: 'The [US]' == 'US'");
 
-			if (ByteString.Compare (longer, 4, ptr1, 0, 0) != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == 'US' (count=0)");
+			Testcase.Test (ByteString.Compare (longer, 4, ptr1, 0, 0) != 0,
+				"ByteString.Compare()",
+				"Comparing substrings: 'The [US]' == 'US' (count=0)");
 
 			//Test constant CString buffer with constant String type
 
-			if (ByteString.Compare (ptr1, "SK") == 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' != const 'SK'");
+			Testcase.Test (ByteString.Compare (ptr1, "SK") != 0,
+				"ByteString.Compare()",
+				"Comparing byte* and string constant: 'US' != const 'SK'");
 
-			if (ByteString.Compare (ptr1, "US") != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'US' == const 'US'");
+			Testcase.Test (ByteString.Compare (ptr1, "US") == 0,
+				"ByteString.Compare()",
+				"Comparing byte* and string constant: 'US' == const 'US'");
 
-			if (ByteString.Compare (longer, 4, "US", 0, 2) != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == const 'US' (count=2)");
+			Testcase.Test (ByteString.Compare (longer, 4, "US", 0, 2) == 0,
+				"ByteString.Compare()",
+				"Comparing byte* substring and string constant: 'The [US]' == const 'US'");
+			Testcase.Test (ByteString.Compare (longer, 4, "US", 0, 2) != 0,
+				"ByteString.Compare()",
+				"Comparing byte* substring and string constant: 'The [US]' == const 'US' (count=2)");
 
-			if (ByteString.Compare (longer, 4, "US", 0, 0) != 0)
-				TextMode.WriteLine ("ByteString.Compare(): test FAIL: 'The [US]' == const 'US' (count=0)");
+			Testcase.Test (ByteString.Compare (longer, 4, "US", 0, 0) != 0,
+				"ByteString.Compare()",
+				"Comparing byte* substring and string constant: 'The [US]' == const 'US' (count=0)");
 
 			//Test that constant String is working properly
 			const string str1 = "US";
 			const string str2 = "SK";
-			if ((byte) str1 [0] != (byte) 'U')
-				TextMode.WriteLine ("ByteString : test FAIL: (byte)\"US\"[0]==(byte)'U'");
+			Testcase.Test ((byte) str1 [0] == (byte) 'U',
+				"ByteString",
+				"Testing string constants: (byte)\"US\" [0] == (byte)'U'");
 
-			if ((byte) str1 [1] != (byte) 'S')
-				TextMode.WriteLine ("ByteString : test FAIL: (byte)\"US\"[1]==(byte)'S'");
+			Testcase.Test ((byte) str1 [1] == (byte) 'S',
+				"ByteString",
+				"Testing string constants: (byte)\"US\" [1] == (byte)'S'");
 
-			if (str1.Length != 2)
-				TextMode.WriteLine ("ByteString : test FAIL: \"US\".Length==2");
+			Testcase.Test (str1.Length == 2,
+				"ByteString",
+				"Testing string constant length: \"US\".Length == 2");
 
-			if ((byte) str1 [1] != (byte) str2 [0])
-				TextMode.WriteLine ("ByteString : test FAIL: (byte)\"US\"[1]==(byte)\"SK\"[0]");
+			Testcase.Test ((byte) str1 [1] != (byte) str2 [0],
+				"ByteString",
+				"Testing string constants: (byte)\"US\" [1] == (byte)\"SK\" [0]");
 			
 			if ("\n".Length != 1)
 				TextMode.WriteLine ("ByteString : test FAIL: \"\\n\".Length==1");

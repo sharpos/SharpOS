@@ -511,35 +511,48 @@ namespace SharpOS.Kernel.Foundation {
 		{
 			CString8* buf = (CString8*) Stubs.CString ("--keymap arg\n");
 
-			if (buf->Compare ("--keymap", 8) != 0)
-				TextMode.WriteLine ("CString8.Compare(): test[1] FAIL: result should be 0");
+			Testcase.Test (buf->IndexOf ("--keymap") == 0,
+				"CString8.IndexOf()",
+				"Find substring at first index: result == 0");
 
-			if (buf->Compare (9, "arg", 0, 3) != 0)
-				TextMode.WriteLine ("CString8.Compare(): test[2a] FAIL: result should be 0");
+			Testcase.Test (buf->IndexOf ("arg") == 9,
+				"CString8.IndexOf()",
+				"Find substring test: result == 9");
+			
+			Testcase.Test (buf->Compare (9, "arg", 0, 3) != 0,
+				"CString8.Compare()",
+				"Compare substrings: '--keymap [arg]' == 'arg'");
 
-			if (buf->Compare (9, "arg\n", 0, 0) != 0)
-				TextMode.WriteLine ("CString8.Compare(): test[2b] FAIL: result should be 0");
+			Testcase.Test (buf->Compare (9, "arg\n", 0, 0) != 0,
+				"CString8.Compare()",
+				"Compare substrings: '--keymap [arg\\n]' == 'arg\\n'");
 
-			if (buf->Compare ((CString8*) Stubs.CString ("--keymap"), 8) != 0)
-				TextMode.WriteLine ("CString8.Compare(): test[1] FAIL: result should be 0");
+			Testcase.Test (buf->Compare ((CString8*) Stubs.CString ("--keymap"), 8) != 0,
+				"CString8.Compare()",
+				"Compare substring to static byte*: '[--keymap] arg' == '--keymap'");
 
-			if (buf->Compare (9, (CString8*) Stubs.CString ("arg"), 0, 3) != 0)
-				TextMode.WriteLine ("CString8.Compare(): test[2a] FAIL: result should be 0");
+			Testcase.Test (buf->Compare (9, (CString8*) Stubs.CString ("arg"), 0, 3) != 0,
+				"CString8.Compare()",
+				"Compare substring to static byte*: '--keymap [arg]' == 'arg'");
 
-			if (buf->Compare (9, (CString8*) Stubs.CString ("arg\n"), 0, 0) != 0)
-				TextMode.WriteLine ("CString8.Compare(): test[2b] FAIL: result should be 0");
+			Testcase.Test (buf->Compare (9, (CString8*) Stubs.CString ("arg\n"), 0, 0) != 0,
+				"CString8.Compare()",
+				"Compare substring to static byte*: '--keymap [arg\\n]' == 'arg\\n'");
 
 			int ind = buf->IndexOf ("--keymap"); 
-			if (ind != 0)
-				TextMode.WriteLine ("CString8.IndexOf(): test[3] FAIL: result should be 0");
+			Testcase.Test (ind != 0,
+				"CString8.IndexOf()",
+				"IndexOf substring at zero-index: '--keymap arg'.IndexOf('--keymap') == 0");
 
 			ind = buf->IndexOf ("arg");
-			if (ind != 9)
-				TextMode.WriteLine ("CString8.IndexOf(): test[4] FAIL: result should be 9");
+			Testcase.Test (ind != 9,
+				"CString8.IndexOf()",
+				"IndexOf substring at non-zero-index: '--keymap arg'.IndexOf('arg') == 9");
 
 			ind = buf->IndexOf ("\n");
-			if (ind != 12)
-				TextMode.WriteLine ("CString8.IndexOf(): test[5] FAIL: result should be 12");
+			Testcase.Test (ind != 12,
+				"CString8.IndexOf()",
+				"IndexOf substring at non-zero-index: '--keymap arg\\n'.IndexOf('\\n') == 12");
 		}
 
 		#endregion

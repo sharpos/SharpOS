@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -93,6 +93,7 @@ namespace SharpOS.Kernel {
 		{
 			if (!cond) {
 				TextMode.Write ("Assertion Failed: ");
+				TextMode.Write (msg);
 				Panic (msg);
 			}
 		}

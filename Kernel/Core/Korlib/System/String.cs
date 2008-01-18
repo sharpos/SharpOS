@@ -11,6 +11,7 @@
 using System.Runtime.InteropServices;
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.Foundation;
 
 namespace InternalSystem {
 	[StructLayout (LayoutKind.Sequential)]
@@ -56,10 +57,8 @@ namespace InternalSystem {
 			string str2 = "US";
 			string str3 = "Longer String Than Most";
 
-			if ((str.Length == 5) && (str2.Length == 2) && (str3.Length == 23))
-				TextMode.WriteLine ("System.String.Length: test passed");
-			else
-				TextMode.WriteLine ("System.String.Length: test FAILED");
+			Testcase.Test ((str.Length == 5) && (str2.Length == 2) && (str3.Length == 23),
+				"System.String", "Length test");
 		}
 	}
 }

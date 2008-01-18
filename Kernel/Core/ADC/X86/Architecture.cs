@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -22,7 +22,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 			GDT.Setup ();	// Global Descriptor Table
 			PIC.Setup ();	// Programmable Interrupt Controller
 			IDT.Setup ();	// Interrupt Descriptor table
-			RTC.Setup ();	// Real Time Clock
 			PIT.Setup ();	// Periodic Interrupt Timer
 			Serial.Setup (); // Setup serial I/O
 		}

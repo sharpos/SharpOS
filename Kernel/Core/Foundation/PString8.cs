@@ -257,7 +257,14 @@ namespace SharpOS.Kernel.Foundation {
 
 		public int Concat (int number, bool hex)
 		{
-			return Convert.ToString (number, hex, Pointer, capacity, length);
+			int ret = 0;
+			CString8 *str = null;
+
+			str = Convert.ToString (number, hex);
+			ret = Concat (str);
+			MemoryManager.Free(str);
+
+			return ret;
 		}
 
 		public int Concat (int number)

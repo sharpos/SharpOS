@@ -1153,7 +1153,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 			int width;
 			int height;
 
-			TextMode.GetScreenSize (&width, &height);
+			TextMode.GetScreenSize (out width, out height);
 
 			//Account for the tick counter and the points header
 			mapHeight = height - 3;

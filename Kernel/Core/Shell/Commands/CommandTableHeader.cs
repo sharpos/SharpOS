@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -274,6 +274,9 @@ namespace SharpOS.Kernel.Shell.Commands {
 			header->AddEntry (BuiltIn.Snake.CREATE ());
 			header->AddEntry (BuiltIn.Stage.CREATE ());
 			header->AddEntry (BuiltIn.Version.CREATE ());
+			header->AddEntry (BuiltIn.Time.CREATE ());
+			header->AddEntry (BuiltIn.Timezone.CREATE ());
+			header->AddEntry (BuiltIn.Testcase.CREATE ());
 
 			return header;
 		}
