@@ -13,6 +13,7 @@ using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.ADC {
 
+	// ..rename to enviroment?
 	public unsafe class Architecture {
 		/// <summary>
 		/// Checks for compatibility with the current system, using 
@@ -55,7 +56,7 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		[AOTAttr.ADCStub]
-		public static int GetProcessorCount ()
+		public static int ProcessorCount ()
 		{
 			return 0;
 		}

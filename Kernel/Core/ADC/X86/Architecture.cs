@@ -15,6 +15,8 @@ using SharpOS.AOT.IR;
 using ADC = SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.ADC.X86 {
+
+	// ..rename to enviroment?
 	public unsafe class Architecture {
 
 		public static void Setup ()

@@ -89,6 +89,7 @@
     <Compile Include="ADC\Pager.cs" />
     <Compile Include="ADC\PCI.cs" />
     <Compile Include="ADC\ProcessorType.cs" />
+    <Compile Include="ADC\RTC.cs" />
     <Compile Include="ADC\Scheduler.cs" />
     <Compile Include="ADC\Serial.cs" />
     <Compile Include="ADC\TextColor.cs" />
@@ -120,6 +121,7 @@
     <Compile Include="ADC\X86\Timer.cs" />
     <Compile Include="ASCII.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="Clock.cs" />
     <Compile Include="CommandLine.cs" />
     <Compile Include="Console.cs" />
     <Compile Include="Diagnostics.cs" />
@@ -134,10 +136,16 @@
     <Compile Include="FileSystem\SuperBlock.cs" />
     <Compile Include="Foundation\BinaryTool.cs" />
     <Compile Include="Foundation\ByteString.cs" />
+    <Compile Include="Foundation\CalendarType.cs" />
     <Compile Include="Foundation\Convert.cs" />
     <Compile Include="Foundation\CString8.cs" />
+    <Compile Include="Foundation\GregorianCalendar.cs" />
     <Compile Include="Foundation\PString8.cs" />
     <Compile Include="Foundation\StringBuilder.cs" />
+    <Compile Include="Foundation\Testcase.cs" />
+    <Compile Include="Foundation\Time.cs" />
+    <Compile Include="Foundation\Timestamp.cs" />
+    <Compile Include="Foundation\Timezone.cs" />
     <Compile Include="KernelError.cs" />
     <Compile Include="KernelStage.cs" />
     <Compile Include="KernelTestsWrapper.cs" />
@@ -180,6 +188,9 @@
     <Compile Include="Shell\Commands\BuiltIn\Show.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Snake.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Stage.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Testcase.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Time.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Timezone.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Version.cs" />
     <Compile Include="Shell\Commands\CommandExecutionAttemptResult.cs" />
     <Compile Include="Shell\Commands\CommandExecutionContext.cs" />
