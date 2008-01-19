@@ -53,7 +53,7 @@ namespace SharpOS.AOT.X86 {
 				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (_this)));
 
-				int address = this.assembly.Engine.GetVTableSize + this.assembly.IntSize * call.Method.VirtualSlot;
+				int address = this.assembly.Engine.VTableSize + this.assembly.IntSize * call.Method.VirtualSlot;
 
 				// Get the Object's VTable
 				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
@@ -935,30 +935,39 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			case InternalType.ValueType:
-				this.assembly.PUSH (R32.ECX);
-				this.assembly.PUSH (R32.ESI);
-				this.assembly.PUSH (R32.EDI);
+				uint size = (uint) assignee.Type.Size;
 
-				this.assembly.LEA (R32.ESI, new DWordMemory (memory));
+				if (size == 4) {
+					this.assembly.MOV (R32.EAX, new DWordMemory (memory));
+					
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
-				if (assignee.IsRegisterSet)
-					this.assembly.MOV (R32.EDI, Assembly.GetRegister (assignee.Register));
-				else
-					this.assembly.LEA (R32.EDI, new DWordMemory (this.GetAddress (assignee)));
+				} else {
+					this.assembly.PUSH (R32.ECX);
+					this.assembly.PUSH (R32.ESI);
+					this.assembly.PUSH (R32.EDI);
 
-				string typeName = assignee.Type.ToString ();
+					this.assembly.LEA (R32.ESI, new DWordMemory (memory));
 
-				uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (R32.EDI, Assembly.GetRegister (assignee.Register));
+					else
+						this.assembly.LEA (R32.EDI, new DWordMemory (this.GetAddress (assignee)));
 
-				this.assembly.MOV (R32.ECX, size);
+					this.assembly.MOV (R32.ECX, size);
 
-				this.assembly.CLD ();
-				this.assembly.REP ();
-				this.assembly.MOVSD ();
+					this.assembly.CLD ();
+					this.assembly.REP ();
+					this.assembly.MOVSB ();
 
-				this.assembly.POP (R32.EDI);
-				this.assembly.POP (R32.ESI);
-				this.assembly.POP (R32.ECX);
+					this.assembly.POP (R32.EDI);
+					this.assembly.POP (R32.ESI);
+					this.assembly.POP (R32.ECX);
+				}
+
 				break;
 
 			case InternalType.R4:
@@ -1050,30 +1059,38 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			case InternalType.ValueType:
-				this.assembly.PUSH (R32.ECX);
-				this.assembly.PUSH (R32.ESI);
-				this.assembly.PUSH (R32.EDI);
+				uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4);
 
-				if (value.IsRegisterSet)
-					this.assembly.MOV (R32.ESI, Assembly.GetRegister (value.Register));
-				else
-					this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (value)));
+				if (size == 4) {
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-				this.assembly.LEA (R32.EDI, new DWordMemory (memory));
+					this.assembly.MOV (new DWordMemory (memory), R32.EAX);
 
-				//string typeName = value.Type.ToString ();
+				} else {
+					this.assembly.PUSH (R32.ECX);
+					this.assembly.PUSH (R32.ESI);
+					this.assembly.PUSH (R32.EDI);
 
-				uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.ESI, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.LEA (R32.ESI, new DWordMemory (this.GetAddress (value)));
 
-				this.assembly.MOV (R32.ECX, size);
+					this.assembly.LEA (R32.EDI, new DWordMemory (memory));
 
-				this.assembly.CLD ();
-				this.assembly.REP ();
-				this.assembly.MOVSD ();
+					this.assembly.MOV (R32.ECX, size);
 
-				this.assembly.POP (R32.EDI);
-				this.assembly.POP (R32.ESI);
-				this.assembly.POP (R32.ECX);
+					this.assembly.CLD ();
+					this.assembly.REP ();
+					this.assembly.MOVSB ();
+
+					this.assembly.POP (R32.EDI);
+					this.assembly.POP (R32.ESI);
+					this.assembly.POP (R32.ECX);
+				}
 				break;
 
 			case InternalType.R4:
@@ -1091,7 +1108,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.Local local = instruction.Use [0] as IR.Operands.Local;
 
-			Load (assignee, local.InternalType, this.GetAddress (local));
+			this.Load (assignee, local.InternalType, this.GetAddress (local));
 		}
 
 		private void Ldloca (IR.Instructions.Ldloca instruction)
@@ -1114,7 +1131,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.Argument argument = instruction.Use [0] as IR.Operands.Argument;
 
-			Load (assignee, argument.InternalType, this.GetAddress (argument));
+			this.Load (assignee, argument.InternalType, this.GetAddress (argument));
 		}
 
 		private void Ldarga (IR.Instructions.Ldarga instruction)
@@ -1137,7 +1154,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.FieldOperand field = instruction.Use [0] as IR.Operands.FieldOperand;
 
-			Load (assignee, field.InternalType, this.GetAddress (field));
+			this.Load (assignee, field.InternalType, this.GetAddress (field));
 		}
 
 		private void Ldsfld (IR.Instructions.Ldsfld instruction)
@@ -1145,7 +1162,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.FieldOperand field = instruction.Use [0] as IR.Operands.FieldOperand;
 
-			Load (assignee, field.InternalType, this.GetAddress (field));
+			this.Load (assignee, field.InternalType, this.GetAddress (field));
 		}
 
 		private void Ldflda (IR.Instructions.Ldflda instruction)
@@ -1216,7 +1233,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Local assignee = instruction.Def as IR.Operands.Local;
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
-			Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			this.Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		private void Starg (IR.Instructions.Starg instruction)
@@ -1224,7 +1241,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Argument assignee = instruction.Def as IR.Operands.Argument;
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
-			Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			this.Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		private void Stind (IR.Instructions.Stind instruction)
@@ -1304,7 +1321,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
 			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
 
-			Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			this.Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		private void Stsfld (IR.Instructions.Stsfld instruction)
@@ -1312,7 +1329,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
 			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
 
-			Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			this.Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		private void Convert (IR.Instructions.Convert instruction)
@@ -2512,6 +2529,8 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
+			this.assembly.PUSH ((uint) instruction.Type.SpecialTypeElement.Size);
+
 			if (value.IsRegisterSet)
 				this.assembly.PUSH (Assembly.GetRegister (value.Register));
 			else
@@ -2531,10 +2550,82 @@ namespace SharpOS.AOT.X86 {
 
 		private void Stelem (IR.Instructions.Stelem instruction)
 		{
+			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
+			string labelOk = this.GetLabel (instruction.Block, instruction.Index, 1);
+
+			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
+			IR.Operands.Register index = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Use [2] as IR.Operands.Register;
+
+			int lengthOffset = this.assembly.Engine.GetSystemArrayLengthOffset ();
+			int baseSize = this.assembly.Engine.ArrayClass.Size;
+			int elementSize = assignee.Type.SpecialTypeElement.Size;
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (R32.ECX, Assembly.GetRegister (assignee.Register));
+			else
+				this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (assignee)));
+
+			if (index.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (index.Register));
+			else
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
+
+			this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, lengthOffset), R32.EAX);
+			this.assembly.JNA (labelError);
+
+			this.assembly.MOV (R32.EDX, (uint) elementSize);
+			this.assembly.MUL (R32.EDX);
+			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, baseSize));
+
+			this.Save (assignee.Type.SpecialTypeElement.TypeFullName, assignee.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0), value);
+
+			this.assembly.JMP (labelOk);
+			this.assembly.LABEL (labelError);
+
+			// TODO throw IndexOutOfRangeException
+
+			this.assembly.LABEL (labelOk);
 		}
 
 		private void Ldelem (IR.Instructions.Ldelem instruction)
 		{
+			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
+			string labelOk = this.GetLabel (instruction.Block, instruction.Index, 1);
+
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register index = instruction.Use [1] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+			int lengthOffset = this.assembly.Engine.GetSystemArrayLengthOffset ();
+			int baseSize = this.assembly.Engine.ArrayClass.Size;
+			int elementSize = value.Type.SpecialTypeElement.Size;
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
+
+			if (index.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (index.Register));
+			else
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
+
+			this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, lengthOffset), R32.EAX);
+			this.assembly.JNA (labelError);
+
+			this.assembly.MOV (R32.EDX, (uint) elementSize);
+			this.assembly.MUL (R32.EDX);
+			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, baseSize));
+
+			this.Load (assignee, value.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0));
+
+			this.assembly.JMP (labelOk);
+			this.assembly.LABEL (labelError);
+
+			// TODO throw IndexOutOfRangeException
+
+			this.assembly.LABEL (labelOk);
 		}
 
 		private void Ldlen (IR.Instructions.Ldlen instruction)
@@ -2542,6 +2633,37 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
+			int offset = this.assembly.Engine.GetSystemArrayLengthOffset ();
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0, offset));
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+			else
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+		}
+
+		private void Isinst (IR.Instructions.Isinst instruction)
+		{
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+			
+			// TODO call the real isinst, that does the job
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+			else
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
 	}
 }

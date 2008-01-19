@@ -120,6 +120,9 @@ namespace SharpOS.Kernel {
 			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
 
+			StageMessage ("Serial setup...");
+			Serial.Setup ();
+
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();
 
@@ -263,10 +266,10 @@ namespace SharpOS.Kernel {
 
 			// TODO set the rank, rank data and initialize the data
 			
-			/*InternalSystem.Array _array = _object as InternalSystem.Array;
+			InternalSystem.Array _array = _object as InternalSystem.Array;
 			_array.Rank = 1;
 			_array.FirstEntry.LowerBound = 0;
-			_array.FirstEntry.Length = count;*/
+			_array.FirstEntry.Length = count;
 
 			return _object;
 		}

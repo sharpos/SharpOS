@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -36,6 +37,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 			IO.Out8 (IO.Port.UART_Transmit_Receive_Buffer, ch);
 		}
 
+		public static void WriteLine ()
+		{
+			WriteChar ((byte) '\n');
+		}
+
 		public unsafe static void Write (byte* str)
 		{
 			int strLength = ByteString.Length (str);
@@ -54,6 +60,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 					continue;
 				IO.Out8 (IO.Port.UART_Transmit_Receive_Buffer, (byte) str [x]);
 			}
+		}
+
+		public static void WriteLine (string str)
+		{
+			Write (str);
+			WriteLine ();
 		}
 	}
 }

@@ -10,6 +10,7 @@
 
 namespace SharpOS.Kernel.Tests.CS {
 	public class Abstract {
+#if false
 		private abstract class Base {
 			protected int number;
 
@@ -113,5 +114,11 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
+#else
+		public static uint CMPImplement ()
+		{
+			return 0;
+		}
+#endif
 	}
 }

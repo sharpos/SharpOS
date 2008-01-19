@@ -240,6 +240,9 @@ namespace SharpOS.AOT.X86 {
 					else if (instruction is IR.Instructions.Ldlen)
 						this.Ldlen (instruction as IR.Instructions.Ldlen);
 
+					else if (instruction is IR.Instructions.Isinst)
+						this.Isinst (instruction as IR.Instructions.Isinst);
+
 					else
 						throw new EngineException ("'" + instruction + "' is not supported.");
 				}
@@ -261,6 +264,11 @@ namespace SharpOS.AOT.X86 {
 		private string GetLabel (Block block)
 		{
 			return method.MethodFullName + " " + block.Index.ToString ();
+		}
+
+		private string GetLabel (Block block, int instruction, int index)
+		{
+			return this.GetLabel (block) + " " + instruction + " " + index;
 		}
 
 		private void RelationalTypeCMP (RelationalType type, string okLabel, string errorLabel)

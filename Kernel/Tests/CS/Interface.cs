@@ -53,7 +53,6 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 69;
 			}
 		}
-#endif
 
 		public static uint CMPGetProperty ()
 		{
@@ -86,5 +85,11 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
+#else
+		public static uint CMPImplement ()
+		{
+			return 0;
+		}
+#endif
 	}
 }

@@ -113,6 +113,7 @@ namespace SharpOS.AOT.IR {
 		/// A constant string used by the AOT to identify it's own attributes.
 		/// </summary>
 		public const string SHARPOS_ATTRIBUTES = "SharpOS.AOT.Attributes.";
+		public const string SYSTEM_ARRAY = "System.Array";
 
 		EngineOptions options = null;
 		IAssembly asm = null;
@@ -273,10 +274,10 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				if (!this.classesDictionary.ContainsKey ("System.Array"))
+				if (!this.classesDictionary.ContainsKey (SYSTEM_ARRAY))
 					throw new EngineException ("'System.Array' not found.");
 
-				return this.classesDictionary ["System.Array"];
+				return this.classesDictionary [SYSTEM_ARRAY];
 			}
 		}
 
@@ -397,7 +398,11 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		public int GetVTableSize
+		/// <summary>
+		/// Gets the size of the VTable.
+		/// </summary>
+		/// <value>The size of the get V table.</value>
+		public int VTableSize
 		{
 			get
 			{
@@ -637,6 +642,18 @@ namespace SharpOS.AOT.IR {
 				return this.classesDictionary [objectName].GetFieldOffset (fieldName);
 
 			throw new EngineException ("'" + field.Field.FieldDefinition.ToString () + "' has not been found.");
+		}
+
+		internal int GetSystemArrayLengthOffset ()
+		{
+			Class _class = this.ArrayClass;
+
+			Field firstEntry = _class.GetFieldByName ("FirstEntry");
+
+			int result = _class.GetFieldOffset ("FirstEntry");
+			result += firstEntry.Type.GetFieldOffset ("Length");
+
+			return result;
 		}
 
 		/// <summary>

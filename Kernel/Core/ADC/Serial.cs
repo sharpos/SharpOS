@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -27,9 +28,21 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		[AOTAttr.ADCStub]
+		public static void WriteLine ()
+		{
+			Diagnostics.Warning ("Serial.WriteLine() - not implemented!");
+		}
+
+		[AOTAttr.ADCStub]
 		public static void Write (string str)
 		{
 			Diagnostics.Warning ("Serial.Write(string) - not implemented!");
+		}
+
+		[AOTAttr.ADCStub]
+		public static void WriteLine (string str)
+		{
+			Diagnostics.Warning ("Serial.WriteLine(string) - not implemented!");
 		}
 
 		[AOTAttr.ADCStub]

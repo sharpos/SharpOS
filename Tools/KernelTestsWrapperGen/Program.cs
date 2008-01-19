@@ -86,7 +86,11 @@ namespace KernelTestsWrapperGen {
 
 					} else {
 						tr.WriteLine ("\t\t\tif (" + entryFullName + " () != 1) {");
-						tr.WriteLine ("\t\t\t\tTextMode.WriteLine (\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\");");
+						
+						string errorMessage = "\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\"";
+
+						tr.WriteLine ("\t\t\t\tTextMode.WriteLine (" + errorMessage + ");");
+						tr.WriteLine ("\t\t\t\tSerial.WriteLine (" + errorMessage + ");");
 						tr.WriteLine ("\t\t\t\tfailures++;");
 						tr.WriteLine ("\t\t\t}");
 						tr.WriteLine ("");

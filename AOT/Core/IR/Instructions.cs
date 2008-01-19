@@ -1466,6 +1466,15 @@ namespace SharpOS.AOT.IR.Instructions {
 				return this.type;
 			}
 		}
+
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		public override void Process (Method method)
+		{
+			this.def.Type = this.use [0].Type.SpecialTypeElement;
+		}
 	}
 
 	/// <summary>
@@ -2227,6 +2236,47 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			this.def.InternalType = InternalType.SZArray;
 			this.def.Type = this.type;
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class Isinst : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Isinst"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="instance">The instance.</param>
+		public Isinst (Class type, Register result, Register instance)
+			: base ("Isinst", result, new Operand [] { instance })
+		{
+			this.type = type;
+		}
+
+		Class type;
+
+		/// <summary>
+		/// Gets the type.
+		/// </summary>
+		/// <value>The type.</value>
+		public Class Type
+		{
+			get
+			{
+				return this.type;
+			}
+		}
+
+		public override void Process (Method method)
+		{
+			if (this.type.IsClass) {
+				this.def.InternalType = InternalType.O;
+				this.def.Type = type;
+
+			} else
+				throw new NotImplementedEngineException ();
 		}
 	}
 }

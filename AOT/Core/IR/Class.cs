@@ -67,7 +67,10 @@ namespace SharpOS.AOT.IR {
 					} else if (typeDefinition.IsValueType) {
 						this.isValueType = true;
 
-						this.internalType = Operands.InternalType.ValueType;
+						this.internalType = this.engine.GetInternalType (this.TypeFullName);
+
+						if (this.internalType == InternalType.NotSet)
+							this.internalType = Operands.InternalType.ValueType;
 
 					} else if (typeDefinition.IsClass) {
 						this.isClass = true;
@@ -113,7 +116,6 @@ namespace SharpOS.AOT.IR {
 			} else
 				throw new NotImplementedEngineException ();
 		}
-
 
 		private Class specialTypeElement = null;
 
@@ -487,14 +489,28 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		/// <summary>
-		/// Gets the size.
-		/// </summary>
-		/// <returns></returns>
 		public int Size
 		{
 			get
 			{
+				return this.InternalSize;
+			}
+		}
+
+		private int size = -1;
+
+
+		/// <summary>
+		/// Gets the size.
+		/// </summary>
+		/// <returns></returns>
+		private int InternalSize
+		{
+			get
+			{
+				if (this.size != -1)
+					return this.size;
+
 				int result = 0;
 
 				if (this.IsEnum) {
@@ -544,6 +560,8 @@ namespace SharpOS.AOT.IR {
 				else
 					throw new NotImplementedEngineException ();
 
+				this.size = result;
+				
 				return result;
 			}
 		}
