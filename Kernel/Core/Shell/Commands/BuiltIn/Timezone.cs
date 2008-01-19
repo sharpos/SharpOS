@@ -19,8 +19,16 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		public static void Execute (CommandExecutionContext* context)
 		{
 			if (context->parameters->Compare ("--set", 0, 5) == 0) {
-				CString8 *substr = context->parameters->Substring (6);
-				int result = Convert.ToInt32 (substr);
+				CString8 *substr;
+				int result;
+
+				if (context->parameters->Length <= 6) {
+					GetHelp (context);
+					return;
+				}
+
+				substr = context->parameters->Substring (6);
+				result = Convert.ToInt32 (substr);
 				MemoryManager.Free (substr);
 
 				TextMode.WriteLine ("Setting timezone to `", result, "'");
@@ -37,7 +45,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		[Label (lblGetHelp)]
 		public static void GetHelp (CommandExecutionContext* context)
 		{
-			TextMode.WriteLine ("Usage: time [--set ZONE]");
+			TextMode.WriteLine ("Usage: timezone [--set ZONE]");
 		}
 
 		public static CommandTableEntry* CREATE ()
