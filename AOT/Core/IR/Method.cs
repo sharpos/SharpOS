@@ -121,18 +121,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the type of the declaring.
-		/// </summary>
-		/// <value>The type of the declaring.</value>
-		public TypeReference DeclaringType
-		{
-			get
-			{
-				return this.methodDefinition.DeclaringType;
-			}
-		}
-
-		/// <summary>
 		/// Gets the type of the return.
 		/// </summary>
 		/// <value>The type of the return.</value>

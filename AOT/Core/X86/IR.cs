@@ -24,7 +24,7 @@ namespace SharpOS.AOT.X86 {
 		private void Call (SharpOS.AOT.IR.Instructions.Call call)
 		{
 			if (call.IsSpecialCase) {
-				if (this.assembly.IsInstruction (call.Method.DeclaringType.FullName))
+				if (this.assembly.IsInstruction (call.Method.Class.TypeFullName))
 					this.HandleAssemblyStub (call);
 				else
 					this.HandleBuiltIns (call);
@@ -153,7 +153,7 @@ namespace SharpOS.AOT.X86 {
 				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
 						&& call.Method.Parameters.Count == 1
 						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String")))
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no 'String' method.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "." + call.Method.Name + "' is no 'String' method.");
 
 				assembly.UTF7StringEncoding = true;
 
@@ -199,14 +199,14 @@ namespace SharpOS.AOT.X86 {
 				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
 						&& call.Method.Parameters.Count == 1
 						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.UInt32")))
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method.");
 
 				IntConstant constant = Operand.GetNonRegister (call.Use [0], typeof (IntConstant)) as IntConstant;
 
 				UInt32 size = System.Convert.ToUInt32 (constant.Value);
 
 				if (size == 0)
-					throw new EngineException ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
+					throw new EngineException ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method '" + call.Method.Class.TypeFullName + "." + call.Method.Name + "' is not valid.");
 
 				IR.Operands.Register assignee = call.Def as IR.Operands.Register;
 
@@ -247,7 +247,7 @@ namespace SharpOS.AOT.X86 {
 						&& call.Method.Parameters.Count == 2
 						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String")
 						&& call.Method.Parameters [1].ParameterType.FullName.Equals ("System.UInt32")))
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method.");
 
 				StringConstant stringConstant = Operand.GetNonRegister (call.Use [0], typeof (StringConstant)) as StringConstant;
 				IntConstant intConstant = Operand.GetNonRegister (call.Use [1], typeof (IntConstant)) as IntConstant;
@@ -256,7 +256,7 @@ namespace SharpOS.AOT.X86 {
 
 				if (stringConstant.Value.Length == 0
 						&& size == 0)
-					throw new EngineException ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
+					throw new EngineException ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method '" + call.Method.Class.TypeFullName + "." + call.Method.Name + "' is not valid.");
 
 				IR.Operands.Register assignee = call.Def as IR.Operands.Register;
 
@@ -295,12 +295,12 @@ namespace SharpOS.AOT.X86 {
 				if (!(call.Method.ReturnType.ReturnType.FullName.Equals ("System.UInt32")
 						&& call.Method.Parameters.Count == 1
 						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.String")))
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method.");
 
 				StringConstant stringConstant = Operand.GetNonRegister (call.Use [0], typeof (StringConstant)) as StringConstant;
 
 				if (stringConstant.Value.Length == 0)
-					throw new EngineException ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method '" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is not valid.");
+					throw new EngineException ("The parameter of the '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method '" + call.Method.Class.TypeFullName + "." + call.Method.Name + "' is not valid.");
 
 				IR.Operands.Register assignee = call.Def as IR.Operands.Register;
 
@@ -339,7 +339,7 @@ namespace SharpOS.AOT.X86 {
 				if (!(Class.GetTypeFullName (call.Method.ReturnType.ReturnType).Equals ("System.Object")
 						&& call.Method.Parameters.Count == 1
 						&& call.Method.Parameters [0].ParameterType.FullName.Equals ("System.Void*")))
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString () + "' method.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "." + call.Method.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString () + "' method.");
 
 				IR.Operands.Register value = call.Use [0] as IR.Operands.Register;
 				IR.Operands.Register assignee = call.Def as IR.Operands.Register;
@@ -375,52 +375,52 @@ namespace SharpOS.AOT.X86 {
 			if (call.Use.Length == 1) {
 				string parameter = (Operand.GetNonRegister (call.Use [0], typeof (StringConstant)) as SharpOS.AOT.IR.Operands.StringConstant).Value;
 
-				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
+				if (call.Method.Class.TypeFullName.EndsWith (".Memory")) {
 					return new Memory (parameter);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".ByteMemory")) {
 					return new ByteMemory (parameter);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".WordMemory")) {
 					return new WordMemory (parameter);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".DWordMemory")) {
 					return new DWordMemory (parameter);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".QWordMemory")) {
 					return new QWordMemory (parameter);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".TWordMemory")) {
 					return new TWordMemory (parameter);
 
 				} else {
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "' is not supported.");
 				}
 
 			} else if (call.Use.Length == 2) {
 				SegType segment = Seg.GetByID ((Operand.GetNonRegister (call.Use [0], typeof (FieldOperand)) as FieldOperand).ShortFieldTypeName);
 				string label = (Operand.GetNonRegister (call.Use [1], typeof (StringConstant)) as SharpOS.AOT.IR.Operands.StringConstant).Value;
 
-				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
+				if (call.Method.Class.TypeFullName.EndsWith (".Memory")) {
 					return new Memory (segment, label);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".ByteMemory")) {
 					return new ByteMemory (segment, label);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".WordMemory")) {
 					return new WordMemory (segment, label);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".DWordMemory")) {
 					return new DWordMemory (segment, label);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".QWordMemory")) {
 					return new QWordMemory (segment, label);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".TWordMemory")) {
 					return new TWordMemory (segment, label);
 
 				} else {
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "' is not supported.");
 				}
 
 			} else if (call.Use.Length == 3) {
@@ -428,26 +428,26 @@ namespace SharpOS.AOT.X86 {
 				R16Type _base = R16.GetByID (Operand.GetNonRegister (call.Use [1], typeof (FieldOperand)));
 				R16Type index = R16.GetByID (Operand.GetNonRegister (call.Use [2], typeof (FieldOperand)));
 
-				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
+				if (call.Method.Class.TypeFullName.EndsWith (".Memory")) {
 					return new Memory (segment, _base, index);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".ByteMemory")) {
 					return new ByteMemory (segment, _base, index);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".WordMemory")) {
 					return new WordMemory (segment, _base, index);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".DWordMemory")) {
 					return new DWordMemory (segment, _base, index);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".QWordMemory")) {
 					return new QWordMemory (segment, _base, index);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".TWordMemory")) {
 					return new TWordMemory (segment, _base, index);
 
 				} else {
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "' is not supported.");
 				}
 
 			} else if (call.Use.Length == 4) {
@@ -457,26 +457,26 @@ namespace SharpOS.AOT.X86 {
 					R16Type index = R16.GetByID (Operand.GetNonRegister (call.Use [2], typeof (FieldOperand)));
 					Int16 displacement = System.Convert.ToInt16 ((Operand.GetNonRegister (call.Use [3], typeof (IntConstant)) as IntConstant).Value);
 
-					if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
+					if (call.Method.Class.TypeFullName.EndsWith (".Memory")) {
 						return new Memory (segment, _base, index, displacement);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".ByteMemory")) {
 						return new ByteMemory (segment, _base, index, displacement);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".WordMemory")) {
 						return new WordMemory (segment, _base, index, displacement);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".DWordMemory")) {
 						return new DWordMemory (segment, _base, index, displacement);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".QWordMemory")) {
 						return new QWordMemory (segment, _base, index, displacement);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".TWordMemory")) {
 						return new TWordMemory (segment, _base, index, displacement);
 
 					} else {
-						throw new EngineException ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+						throw new EngineException ("'" + call.Method.Class.TypeFullName + "' is not supported.");
 					}
 
 				} else {
@@ -485,26 +485,26 @@ namespace SharpOS.AOT.X86 {
 					R32Type index = R32.GetByID (Operand.GetNonRegister (call.Use [2], typeof (FieldOperand)));
 					Byte scale = System.Convert.ToByte ((Operand.GetNonRegister (call.Use [3], typeof (IntConstant)) as IntConstant).Value);
 
-					if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
+					if (call.Method.Class.TypeFullName.EndsWith (".Memory")) {
 						return new Memory (segment, _base, index, scale);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".ByteMemory")) {
 						return new ByteMemory (segment, _base, index, scale);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".WordMemory")) {
 						return new WordMemory (segment, _base, index, scale);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".DWordMemory")) {
 						return new DWordMemory (segment, _base, index, scale);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".QWordMemory")) {
 						return new QWordMemory (segment, _base, index, scale);
 
-					} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
+					} else if (call.Method.Class.TypeFullName.EndsWith (".TWordMemory")) {
 						return new TWordMemory (segment, _base, index, scale);
 
 					} else {
-						throw new EngineException ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+						throw new EngineException ("'" + call.Method.Class.TypeFullName + "' is not supported.");
 					}
 				}
 
@@ -515,26 +515,26 @@ namespace SharpOS.AOT.X86 {
 				Byte scale = System.Convert.ToByte ((Operand.GetNonRegister (call.Use [3], typeof (IntConstant)) as IntConstant).Value);
 				Int32 displacement = System.Convert.ToInt32 ((Operand.GetNonRegister (call.Use [4], typeof (IntConstant)) as IntConstant).Value);
 
-				if (call.Method.DeclaringType.FullName.EndsWith (".Memory")) {
+				if (call.Method.Class.TypeFullName.EndsWith (".Memory")) {
 					return new Memory (segment, _base, index, scale, displacement);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".ByteMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".ByteMemory")) {
 					return new ByteMemory (segment, _base, index, scale, displacement);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".WordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".WordMemory")) {
 					return new WordMemory (segment, _base, index, scale, displacement);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".DWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".DWordMemory")) {
 					return new DWordMemory (segment, _base, index, scale, displacement);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".QWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".QWordMemory")) {
 					return new QWordMemory (segment, _base, index, scale, displacement);
 
-				} else if (call.Method.DeclaringType.FullName.EndsWith (".TWordMemory")) {
+				} else if (call.Method.Class.TypeFullName.EndsWith (".TWordMemory")) {
 					return new TWordMemory (segment, _base, index, scale, displacement);
 
 				} else {
-					throw new EngineException ("'" + call.Method.DeclaringType.FullName + "' is not supported.");
+					throw new EngineException ("'" + call.Method.Class.TypeFullName + "' is not supported.");
 				}
 
 			} else
