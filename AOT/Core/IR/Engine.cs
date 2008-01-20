@@ -1096,21 +1096,17 @@ namespace SharpOS.AOT.IR {
 						markedEntryPoint = _method;
 					}
 
-					if (_method.MethodDefinition.Name.Equals ("Main")
-							&& _method.MethodDefinition.Parameters.Count == 0
-							&& (_method.MethodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Int32)
-								|| _method.MethodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Void))) {
-
+					if (_method.IsSimpleMain) {
 						if (mainEntryPoint != null)
 							throw new EngineException ("More than one Main Entry Point found.");
 
 						mainEntryPoint = _method;
 					}
 
-					if (defNames.Contains (_method.MethodDefinition.ToString ()))
+					if (defNames.Contains (_method.MethodFullName))
 						throw new EngineException ("Already compiled this method: " +
-							_method.MethodDefinition.ToString ());
-					defNames.Add (_method.MethodDefinition.ToString ());
+							_method.MethodFullName);
+					defNames.Add (_method.MethodFullName);
 					this.currentMethod = _method.MethodDefinition;
 
 					if (this.options.DumpFilter.Length > 0
@@ -1157,8 +1153,7 @@ namespace SharpOS.AOT.IR {
 				foreach (Method _method in _class) {
 					methods++;
 
-					if (_method.MethodDefinition.Body != null)
-						ilInstructions += _method.MethodDefinition.Body.Instructions.Count;
+					ilInstructions += _method.CILInstructionsCount;
 				}
 			}
 

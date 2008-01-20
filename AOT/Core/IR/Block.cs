@@ -333,6 +333,10 @@ namespace SharpOS.AOT.IR {
 
 		Stack<Register> stack = new Stack<Register> ();
 
+		/// <summary>
+		/// Gets the stack.
+		/// </summary>
+		/// <value>The stack.</value>
 		public Stack<Register> Stack
 		{
 			get
@@ -343,7 +347,7 @@ namespace SharpOS.AOT.IR {
 
 		private Register SetRegister ()
 		{
-			if (this.stack.Count > this.method.MethodDefinition.Body.MaxStack)
+			if (this.stack.Count > this.method.MaxStack)
 				throw new EngineException ("Stack overflow. ('" + this.method.MethodFullName + "')");
 
 			Register register = new Register (this.stack.Count);
@@ -429,7 +433,7 @@ namespace SharpOS.AOT.IR {
 
 				// Avoid System.Object::.ctor from calling itself
 				if (instruction is Call
-						&& this.method.MethodDefinition.IsConstructor
+						&& this.method.IsConstructor
 						&& this.method.Class.TypeFullName == Mono.Cecil.Constants.Object
 						&& (instruction as Call).Method.Class.TypeFullName == Mono.Cecil.Constants.Object) 
 					instruction = null;
@@ -1271,7 +1275,7 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ret (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			if (this.method.MethodDefinition.ReturnType.ReturnType.FullName.Equals ("System.Void"))
+			if (this.method.MethodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Void))
 				return new Return ();
 
 			return new Return (this.GetRegister ());

@@ -1887,7 +1887,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="result">The result.</param>
 		/// <param name="parameters">The parameters.</param>
 		public Call (Method method, Register result, Operand [] parameters)
-			: base (method, "Call " + method.MethodDefinition.ToString () + " ", result, parameters)
+			: base (method, "Call " + method.MethodFullName + " ", result, parameters)
 		{
 		}
 
@@ -1934,7 +1934,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="result">The result.</param>
 		/// <param name="parameters">The parameters.</param>
 		public Newobj (Method method, Register result, Operand [] parameters)
-			: base (method, "Newobj " + method.MethodDefinition.ToString () + " ", result, parameters)
+			: base (method, "Newobj " + method.MethodFullName + " ", result, parameters)
 		{
 			result.InternalType = InternalType.O;
 		}
@@ -1945,9 +1945,9 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
-			if (this.method.MethodDefinition.DeclaringType.IsValueType) {
+			if (this.method.Class.IsValueType) {
 				this.def.InternalType = InternalType.ValueType;
-				this.def.Type = method.Engine.GetClass (this.method.MethodDefinition.DeclaringType);
+				this.def.Type = this.method.Class;
 
 			} else
 				this.def.InternalType = InternalType.O;

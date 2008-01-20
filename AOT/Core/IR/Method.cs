@@ -32,6 +32,10 @@ namespace SharpOS.AOT.IR {
 	public class Method : IEnumerable<Block> {
 		private bool skipProcessing = false;
 
+		/// <summary>
+		/// Gets or sets a value indicating whether [skip processing].
+		/// </summary>
+		/// <value><c>true</c> if [skip processing]; otherwise, <c>false</c>.</value>
 		public bool SkipProcessing
 		{
 			get
@@ -158,6 +162,10 @@ namespace SharpOS.AOT.IR {
 
 		private Class _class;
 
+		/// <summary>
+		/// Gets the class.
+		/// </summary>
+		/// <value>The class.</value>
 		public Class Class
 		{
 			get
@@ -170,6 +178,7 @@ namespace SharpOS.AOT.IR {
 		/// Initializes a new instance of the <see cref="Method"/> class.
 		/// </summary>
 		/// <param name="engine">The engine.</param>
+		/// <param name="_class">The _class.</param>
 		/// <param name="methodDefinition">The method definition.</param>
 		public Method (Engine engine, Class _class, MethodDefinition methodDefinition)
 		{
@@ -198,10 +207,11 @@ namespace SharpOS.AOT.IR {
 		List<Argument> arguments = new List<Argument> ();
 
 		/// <summary>
-		/// Gets an Argument object that represents the numbered method 
-		/// argument named by <paramref name="i"/>. 
+		/// Gets an Argument object that represents the numbered method
+		/// argument named by <paramref name="i"/>.
 		/// </summary>
 		/// <param name="i">The i.</param>
+		/// <param name="sequence">if set to <c>true</c> [sequence].</param>
 		/// <returns></returns>
 		public Argument GetArgument (int i, bool sequence)
 		{
@@ -732,7 +742,7 @@ namespace SharpOS.AOT.IR {
 						Instructions.Call call = (instruction as Instructions.Call);
 
 						if (!engine.HasSharpOSAttribute (call)
-								&& !engine.Assembly.IsInstruction (call.Method.MethodDefinition.DeclaringType.FullName))
+								&& !engine.Assembly.IsInstruction (call.Method.Class.TypeFullName))
 							continue;
 
 						instruction.IsSpecialCase = true;
@@ -1728,6 +1738,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the ID.
+		/// </summary>
+		/// <value>The ID.</value>
 		public string ID
 		{
 			get
@@ -1738,6 +1752,10 @@ namespace SharpOS.AOT.IR {
 
 		private int virtualSlot = int.MinValue;
 
+		/// <summary>
+		/// Gets or sets the virtual slot.
+		/// </summary>
+		/// <value>The virtual slot.</value>
 		public int VirtualSlot
 		{
 			get
@@ -1747,6 +1765,257 @@ namespace SharpOS.AOT.IR {
 			set
 			{
 				virtualSlot = value;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is constructor.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is constructor; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsConstructor
+		{
+			get
+			{
+				return this.methodDefinition.IsConstructor;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is virtual.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is virtual; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsVirtual
+		{
+			get
+			{
+				return this.methodDefinition.IsVirtual;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is new slot.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is new slot; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsNewSlot
+		{
+			get
+			{
+				return this.methodDefinition.IsNewSlot;
+			}
+		}
+
+		/// <summary>
+		/// Gets the max stack.
+		/// </summary>
+		/// <value>The max stack.</value>
+		public int MaxStack
+		{
+			get
+			{
+				if (this.methodDefinition.Body != null)
+					return this.methodDefinition.Body.MaxStack;
+
+				return 0;
+			}
+		}
+
+		/// <summary>
+		/// Gets the CIL instructions count.
+		/// </summary>
+		/// <value>The CIL instructions count.</value>
+		public int CILInstructionsCount
+		{
+			get
+			{
+				if (this.methodDefinition.Body != null)
+					return this.methodDefinition.Body.Instructions.Count;
+
+				return 0;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is simple main.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is simple main; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsSimpleMain
+		{
+			get
+			{
+				return this.Name.Equals ("Main")
+						&& this.methodDefinition.Parameters.Count == 0
+						&& (this.methodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Int32)
+							|| this.methodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Void));
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is kernel object from pointer.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is kernel object from pointer; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsKernelObjectFromPointer
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute attribute in definition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString ()))
+						continue;
+
+					if (!(Class.GetTypeFullName (definition.ReturnType.ReturnType).Equals ("System.Object")
+							&& definition.Parameters.Count == 1
+							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.Void*")))
+						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString () + "' method.");
+
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is kernel label address.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is kernel label address; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsKernelLabelAddress
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute attribute in definition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString ()))
+						continue;
+
+					if (!(definition.ReturnType.ReturnType.FullName.Equals ("System.UInt32")
+							&& definition.Parameters.Count == 1
+							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.String")))
+						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method.");
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is kernel labeled alloc.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is kernel labeled alloc; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsKernelLabeledAlloc
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute attribute in definition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString ()))
+						continue;
+
+					if (!(definition.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+							&& definition.Parameters.Count == 2
+							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.String")
+							&& definition.Parameters [1].ParameterType.FullName.Equals ("System.UInt32")))
+						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString () + "' method.");
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is kernel alloc.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is kernel alloc; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsKernelAlloc
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute attribute in definition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString ()))
+						continue;
+
+					if (!(definition.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+							&& definition.Parameters.Count == 1
+							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.UInt32")))
+						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method.");
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is kernel string.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is kernel string; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsKernelString
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute attribute in definition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.StringAttribute).ToString ()))
+						continue;
+
+					if (!(definition.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+							&& definition.Parameters.Count == 1
+							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.String")))
+						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no 'String' method.");
+
+					return true;
+				}
+
+				return false;
 			}
 		}
 	}

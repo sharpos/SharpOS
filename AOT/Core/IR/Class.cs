@@ -586,11 +586,11 @@ namespace SharpOS.AOT.IR {
 				this._base.AddVirtualMethods (list);
 
 			foreach (Method method in this.methods) {
-				if (method.MethodDefinition.IsNewSlot) {
+				if (method.IsNewSlot) {
 					method.VirtualSlot = list.Count;
 					list.Add (method);
 
-				} else if (method.MethodDefinition.IsVirtual) {
+				} else if (method.IsVirtual) {
 					for (int i = 0; i < list.Count; i++) {
 						if (list [i].ID == method.ID) {
 							method.VirtualSlot = i;
