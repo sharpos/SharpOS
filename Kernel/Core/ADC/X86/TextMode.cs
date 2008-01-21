@@ -146,14 +146,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		private static int HardwareCommand (CRT_Indices index)
 		{
-			IO.Out8 (CRT_index_register, (byte) index);
-			return IO.In8 (CRT_data_register);
+			IO.Write8 (CRT_index_register, (byte) index);
+			return IO.Read8 (CRT_data_register);
 		}
 
 		private static void HardwareCommand (CRT_Indices index, byte value)
 		{
-			IO.Out8 (CRT_index_register, (byte) index);
-			IO.Out8 (CRT_data_register, (byte) value);
+			IO.Write8 (CRT_index_register, (byte) index);
+			IO.Write8 (CRT_data_register, (byte) value);
 		}
 
 		private static void HardwareCommand (CRT_Indices index, ushort value)
@@ -177,7 +177,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public static void Setup ()
 		{
 			// Find CRT controller addresses
-			if ((IO.In8 (IO.Port.EGA_graphics_1_position_register) & 1) == 1) {
+			if ((IO.Read8 (IO.Port.EGA_graphics_1_position_register) & 1) == 1) {
 				// CGA/EGA color text mode
 
 				CRT_index_register = IO.Port.CGA_CRT_index_register;

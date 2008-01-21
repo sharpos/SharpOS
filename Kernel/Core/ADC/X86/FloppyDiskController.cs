@@ -109,13 +109,13 @@ namespace SharpOS.Kernel.ADC.X86
 
 		public static void TurnOffMotor ()
 		{
-			IO.Out8 (IO.Port.FDC_DORPort,
+			IO.Write8 (IO.Port.FDC_DORPort,
 				(byte) DORFlags.DisableAll);
 		}
 
 		public static void TurnOnMotor ()
 		{
-			IO.Out8 (IO.Port.FDC_DORPort,
+			IO.Write8 (IO.Port.FDC_DORPort,
 						(byte)(DORFlags.EnableDMA | DORFlags.EnableController | DORFlags.EnableAllMotors));
 		}
 
@@ -124,11 +124,11 @@ namespace SharpOS.Kernel.ADC.X86
 			byte status = 0;
 
 			do {
-				status = IO.In8 (IO.Port.FDC_StatusPort);
+				status = IO.Read8 (IO.Port.FDC_StatusPort);
 			}
 			while ((status & 0xC0) != 0x80); //TODO: implement timeout
 
-			IO.Out8 (IO.Port.FDC_DataPort, command);
+			IO.Write8 (IO.Port.FDC_DataPort, command);
 		}
 
 		private unsafe static void SendDataToFDC (byte data)
@@ -136,11 +136,11 @@ namespace SharpOS.Kernel.ADC.X86
 			byte status = 0;
 
 			do {
-				status = IO.In8 (IO.Port.FDC_StatusPort);
+				status = IO.Read8 (IO.Port.FDC_StatusPort);
 			}
 			while ((status & 0xC0) != 0x80); //TODO: implement timeout
 
-			IO.Out8 (IO.Port.FDC_DataPort, data);
+			IO.Write8 (IO.Port.FDC_DataPort, data);
 		}
 
 		//TODO: replace integer values with enums or describe in comments
@@ -149,19 +149,19 @@ namespace SharpOS.Kernel.ADC.X86
 		{
 			System.UInt16 count = BYTES_PER_SECTOR * SECTORS_PER_TRACK - 1;
 
-			IO.Out8 (IO.Port.DMA_ModeRegister, 0x46);
+			IO.Write8 (IO.Port.DMA_ModeRegister, 0x46);
 
 			// Set Address
-			IO.Out8 (IO.Port.DMA_AddressRegister, 0x00);
-			IO.Out8 (IO.Port.DMA_AddressRegister, 0x00);
-			IO.Out8 (IO.Port.DMA_TempRegister, 0x00);
+			IO.Write8 (IO.Port.DMA_AddressRegister, 0x00);
+			IO.Write8 (IO.Port.DMA_AddressRegister, 0x00);
+			IO.Write8 (IO.Port.DMA_TempRegister, 0x00);
 
 			// Set Count
-			IO.Out8 (IO.Port.DMA_CountRegister, (byte) count);
-			IO.Out8 (IO.Port.DMA_CountRegister, (byte) (count >> 8));
+			IO.Write8 (IO.Port.DMA_CountRegister, (byte) count);
+			IO.Write8 (IO.Port.DMA_CountRegister, (byte) (count >> 8));
 
 			// Enable DMA Controller
-			IO.Out8 (IO.Port.DMA_ChannelMaskRegister, 0x02);
+			IO.Write8 (IO.Port.DMA_ChannelMaskRegister, 0x02);
 		}
 
 		public unsafe static void Read(byte* buffer, uint offset, uint length)

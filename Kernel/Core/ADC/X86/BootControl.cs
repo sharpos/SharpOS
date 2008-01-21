@@ -79,13 +79,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 			// Clear all keyboard buffers (output and command buffers)
 			byte temp;
 			do {
-				temp = IO.In8 (IO.Port.KB_controller_commands);
+				temp = IO.Read8 (IO.Port.KB_controller_commands);
 				if ((temp & 0x01) != 0)
-					IO.In8 (IO.Port.KB_data_port); // Empty keyboard buffer
+					IO.Read8 (IO.Port.KB_data_port); // Empty keyboard buffer
 			} while ((temp & 0x02) != 0);
 
 			// Reset the system
-			IO.Out8 (IO.Port.KB_controller_commands, 0xFE);
+			IO.Write8 (IO.Port.KB_controller_commands, 0xFE);
 
 			// Halt the system (in case reset didn't work)
 			Asm.HLT ();
