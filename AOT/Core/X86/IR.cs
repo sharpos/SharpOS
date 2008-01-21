@@ -1120,6 +1120,21 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		private void Ldsflda (IR.Instructions.Ldsflda instruction)
+		{
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+			Memory memory = new Memory (this.GetAddress (instruction.Use [0] as FieldOperand));
+
+			if (assignee.IsRegisterSet) {
+				this.assembly.LEA (Assembly.GetRegister (assignee.Register), memory);
+
+			} else {
+				this.assembly.LEA (R32.EAX, memory);
+
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+			}
+		}
+
 		private void Localloc (IR.Instructions.Localloc instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
