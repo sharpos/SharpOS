@@ -100,7 +100,6 @@
     <Compile Include="ADC\X86\Barrier.cs" />
     <Compile Include="ADC\X86\BootControl.cs" />
     <Compile Include="ADC\X86\CMOS.cs" />
-    <Compile Include="ADC\X86\Constants.cs" />
     <Compile Include="ADC\X86\DTPointer.cs" />
     <Compile Include="ADC\X86\FloppyDiskController.cs" />
     <Compile Include="ADC\X86\GDT.cs" />

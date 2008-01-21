@@ -25,7 +25,7 @@ namespace SharpOS.Kernel.Foundation {
 		private const string CLOCK_HANDLER = "CLOCK_HANDLER";
 		static ulong bootTime = 0;
 		static Time *currentTime = (Time*) Stubs.StaticAlloc (64);
-		static int secondChunks = 0;
+		//static int secondChunks = 0;
 		static ulong nanoSeconds = 0;
 		static int sinceHardwareSync = 0;
 		static CalendarType Calendar = CalendarType.Gregorian;
@@ -104,7 +104,7 @@ namespace SharpOS.Kernel.Foundation {
 			Time *time = stackalloc Time [1];
 
 			return (GetHardwareTime (time) ? time->Ticks : 0);
-			return time->Ticks;
+			//return time->Ticks;
 		}
 
 		/// <summary>

@@ -13,6 +13,8 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPConstants ()
 		{
+//Unreachable code detected
+#pragma warning disable 0162
 			if (10 * 3 / 2 != 15)
 				return 0;
 
@@ -32,6 +34,7 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 0;
 
 			return 1;
+#pragma warning restore 0162
 		}
 
 		public static uint CMPValues ()
@@ -90,7 +93,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPValuesAndConstants ()
 		{
-			uint a, b, c, d, e, f, g;
+			uint a, b, c, d, /*e,*/ f, g;
 
 			a = 10;
 			c = 2;

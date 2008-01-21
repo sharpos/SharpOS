@@ -258,6 +258,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static ulong CMPSimpleULongFlags ()
 		{
+#pragma warning disable 0162
 			ULongEnum a;
 
 			if ((long) (ULongEnum.A | ULongEnum.C) != 2)

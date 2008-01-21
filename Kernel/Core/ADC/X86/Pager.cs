@@ -148,7 +148,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (R32.EAX, &page);
 
 			Asm.MOV (R32.ECX, CR.CR0);
-			Asm.OR (R32.ECX, (uint) CR0.PG);
+			Asm.OR (R32.ECX, (uint) CR0Flags.PG);
 
 			Asm.MOV (CR.CR3, R32.EAX);
 			Asm.MOV (CR.CR0, R32.ECX);

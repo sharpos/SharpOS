@@ -546,7 +546,8 @@ namespace SharpOS.AOT.IR {
 		{
 			instruction.Dump (this);
 		}
-
+		
+		/*
 		/// <summary>
 		/// Elements the specified ins.
 		/// </summary>
@@ -554,7 +555,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="lvalue">The lvalue.</param>
 		/// <param name="attr">The attr.</param>
 		/// <param name="lblock">The lblock.</param>
-		/*public void Element (SharpOS.AOT.IR.Instructions.Instruction ins, object lvalue, 
+		public void Element (SharpOS.AOT.IR.Instructions.Instruction ins, object lvalue, 
 					Dictionary<string, string> attr, int ?lblock)
 		{
 			object value = lvalue;

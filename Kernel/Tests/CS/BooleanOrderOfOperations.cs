@@ -13,6 +13,8 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPConstants ()
 		{
+//Unreachable code detected
+#pragma warning disable 0162
 			if ((true && false || true) != true)
 				return 0;
 
@@ -26,6 +28,7 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 0;
 
 			return 1;
+#pragma warning restore 0162
 		}
 
 		public static uint CMPValues ()

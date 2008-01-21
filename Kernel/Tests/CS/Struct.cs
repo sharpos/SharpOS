@@ -155,9 +155,12 @@ namespace SharpOS.Kernel.Tests.CS {
 		}
 
 		unsafe struct Header {
-			Header* Next;
-			Header* Prev;
-			byte test;
+//Unreachable code detected
+#pragma warning disable 0169
+			Header*	Next;
+			Header*	Prev;
+			byte	test;
+#pragma warning restore 0169
 		}
 
 		public unsafe static int CMPSizeof2 ()

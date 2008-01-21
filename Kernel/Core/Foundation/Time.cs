@@ -53,7 +53,6 @@ namespace SharpOS.Kernel.Foundation {
 						fixed (Time *me = &this)
 							return Timezone.GetUTC (
 								GregorianCalendar.EncodeTimestamp (me));
-						break;
 					default:
 						Diagnostics.Error ("Time::Ticks: Calendar not supported");
 						break;
@@ -69,7 +68,6 @@ namespace SharpOS.Kernel.Foundation {
 					case CalendarType.Gregorian:
 						fixed (Time *me = &this)
 							return GregorianCalendar.EncodeTimestamp (me);
-						break;
 					default:
 						Diagnostics.Error ("Time::Ticks: Calendar not supported");
 						break;

@@ -22,7 +22,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 			bool onlyPass = false;
 			bool showTest = false;
 			CString8 *source = null;
-			int sourceColumn = 32;
+			//int sourceColumn = 32;
 			int idColumn = 6;
 			int id = 0;
 

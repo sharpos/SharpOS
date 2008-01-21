@@ -237,9 +237,8 @@ namespace SharpOS.Kernel.ADC.X86
 			while (HasInterruptOccurred () == false)
 				;
 
-			{
-				TurnOffMotor();
-			}
+			
+			TurnOffMotor();
 		}
 	}
 }

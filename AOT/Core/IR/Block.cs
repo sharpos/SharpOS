@@ -618,11 +618,12 @@ namespace SharpOS.AOT.IR {
 
 			return p.ToString ();
 		}
-
+		
+		/*
 		/// <summary>
 		/// Updates the index.
 		/// </summary>
-		/*public void UpdateIndex ()
+		public void UpdateIndex ()
 		{
 			int index = 0;
 
