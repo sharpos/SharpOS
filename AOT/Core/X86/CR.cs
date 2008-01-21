@@ -18,23 +18,45 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
+
+	#region CR0Flags
+	/// <summary>Flags for control register 0</summary>
 	[System.Flags]
 	public enum CR0Flags : uint {
-		PE = (1U << 0),		// protected mode
-		MP = (1U << 1),		// math present
-		EM = (1U << 2),		// emulate numeric extension
-		TS = (1U << 3),		// task switched
-		ET = (1U << 4),		// extension type
-		NE = (1U << 5),		// numeric error enable
+		/// <summary>Protected mode</summary>
+		PE = (1U << 0),		
+		
+		/// <summary>Math present</summary>
+		MP = (1U << 1),		
+		
+		/// <summary>Emulate numeric extension</summary>
+		EM = (1U << 2),		
+		
+		/// <summary>Task switched</summary>
+		TS = (1U << 3),		
+		
+		/// <summary>Extension type</summary>
+		ET = (1U << 4),		
+		
+		/// <summary>Numeric error enable</summary>
+		NE = (1U << 5),		
 
-		WP = (1U << 16),	// write protect
+		/// <summary>Write protect</summary>
+		WP = (1U << 16),	
 
-		AM = (1U << 18),	// alignment mask
+		/// <summary>Alignment mask</summary>
+		AM = (1U << 18),	
 
-		NW = (1U << 29),	// not write-through
-		CD = (1U << 30),	// cache disable
-		PG = (1U << 31)		// paging enable
+		/// <summary>Not write-through</summary>
+		NW = (1U << 29),	
+		
+		/// <summary>Cache disable</summary>
+		CD = (1U << 30),	
+		
+		/// <summary>Paging enable</summary>
+		PG = (1U << 31)
 	}
+	#endregion
 
 	public class CR {
 
