@@ -49,12 +49,10 @@ namespace SharpOS.AOT.X86 {
 
 			assembly.ALIGN (Assembly.ALIGNMENT);
 
-			foreach (CustomAttribute attribute in method.MethodDefinition.CustomAttributes) {
-				if (attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ())) {
-					assembly.LABEL (attribute.ConstructorParameters [0].ToString ());
+			foreach (string label in method.Labels) {
+				assembly.LABEL (label);
 
-					this.assembly.AddSymbol (new COFF.Label (attribute.ConstructorParameters [0].ToString ()));
-				}
+				this.assembly.AddSymbol (new COFF.Label (label));
 			}
 
 			if (this.method.EntryPoint) {

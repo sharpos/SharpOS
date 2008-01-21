@@ -32,6 +32,12 @@ namespace SharpOS.AOT.X86 {
 				return;
 			}
 
+			if (call.Method.Class.IsArray
+					&& call.Method.SkipProcessing) {
+
+				return;
+			}
+
 			// TODO add support for call/callvirt/calli/jmp and for tail.
 			PushCallParameters (call);
 
@@ -2235,6 +2241,8 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.PUSH (R32.EAX);
 				this.assembly.CALL (instruction.Method.AssemblyLabel);
 				this.PopCallParameters (instruction);
+
+			} else if (instruction.Method.Class.IsArray) {
 
 			} else
 				throw new NotImplementedEngineException ();

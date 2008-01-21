@@ -22,6 +22,9 @@ using Mono.Cecil.Cil;
 using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Class : IEnumerable<Method> {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Class"/> class.
@@ -181,6 +184,18 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance is array.
+		/// </summary>
+		/// <value><c>true</c> if this instance is array; otherwise, <c>false</c>.</value>
+		public bool IsArray
+		{
+			get
+			{
+				return this.isSpecialType && this._base.TypeFullName.Equals (Engine.SYSTEM_ARRAY);
+			}
+		}
+
 		private bool isEnum = false;
 
 		/// <summary>
@@ -257,14 +272,25 @@ namespace SharpOS.AOT.IR {
 		/// <summary>
 		/// Gets the name of the method by.
 		/// </summary>
-		/// <param name="value">The value.</param>
+		/// <param name="methodReference">The method reference.</param>
 		/// <returns></returns>
-		public Method GetMethodByName (string value)
+		public Method GetMethodByName (MethodReference methodReference)
 		{
-			if (!this.methodsDictionary.ContainsKey (value))
-				throw new EngineException (string.Format ("Method '{0}' not found.", value));
+			string value = Method.GetLabel (methodReference);
 
-			return this.methodsDictionary [value];
+			if (this.methodsDictionary.ContainsKey (value))
+				return this.methodsDictionary [value];
+
+			if (this.isSpecialType) {
+				Method method = new Method (this.engine, this, methodReference);
+				method.SkipProcessing = true;
+
+				this.Add (method);
+
+				return method;
+			}
+
+			throw new EngineException (string.Format ("Method '{0}' not found.", value));
 		}
 
 		private Engine engine = null;
@@ -317,14 +343,8 @@ namespace SharpOS.AOT.IR {
 
 			this.methodsDictionary [method.MethodFullName] = method;
 
-			foreach (CustomAttribute customAttribute in method.MethodDefinition.CustomAttributes) {
-				if (!customAttribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ()))
-					continue;
-
-				string name = customAttribute.ConstructorParameters [0].ToString ();
-
-				this.methodsDictionary [name] = method;
-			}
+			foreach (string label in method.Labels)
+				this.methodsDictionary [label] = method;
 		}
 
 		private List<Method> methods = new List<Method> ();
@@ -489,6 +509,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the size.
+		/// </summary>
+		/// <value>The size.</value>
 		public int Size
 		{
 			get

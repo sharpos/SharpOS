@@ -133,7 +133,7 @@ namespace SharpOS.AOT.IR {
 		AssemblyDefinition currentAssembly;
 		ModuleDefinition currentModule;
 		TypeReference currentType;
-		MethodDefinition currentMethod;
+		MethodReference currentMethod;
 
 		/// <summary>
 		/// The current engine status.
@@ -325,7 +325,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="type">The type.</param>
 		/// <param name="method">The method.</param>
 		public void GetStatusInformation (out AssemblyDefinition assembly, out ModuleDefinition module, out
-						  TypeReference type, out MethodDefinition method)
+						  TypeReference type, out MethodReference method)
 		{
 			assembly = this.currentAssembly;
 			module = this.currentModule;
@@ -352,7 +352,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="type">The type.</param>
 		/// <param name="method">The method.</param>
 		public void SetStatusInformation (AssemblyDefinition assembly, ModuleDefinition module,
-						  TypeReference type, MethodDefinition method)
+						  TypeReference type, MethodReference method)
 		{
 			this.currentAssembly = assembly;
 			this.currentModule = module;
@@ -728,10 +728,9 @@ namespace SharpOS.AOT.IR {
 		public Method GetMethod (MethodReference method)
 		{
 			string typeFullName = Class.GetTypeFullName (method.DeclaringType);
-			string methodName = Method.GetLabel (method);
 
 			if (this.classesDictionary.ContainsKey (typeFullName))
-				return this.classesDictionary [typeFullName].GetMethodByName (methodName);
+				return this.classesDictionary [typeFullName].GetMethodByName (method);
 
 			throw new EngineException (string.Format ("Method '{0}' not found.", method.ToString ()));
 		}
@@ -1086,10 +1085,7 @@ namespace SharpOS.AOT.IR {
 				this.currentType = _class.ClassDefinition as TypeDefinition;
 
 				foreach (Method _method in _class) {
-					foreach (CustomAttribute attribute in _method.MethodDefinition.CustomAttributes) {
-						if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.KernelMainAttribute).ToString ()))
-							continue;
-
+					if (_method.IsMarkedMain) {
 						if (markedEntryPoint != null)
 							throw new EngineException ("More than one Marked Entry Point found.");
 
@@ -1305,8 +1301,12 @@ namespace SharpOS.AOT.IR {
 				return Operands.InternalType.U;
 			else if (type.EndsWith ("&"))
 				return Operands.InternalType.U;
+			else if (type.EndsWith ("[][]"))
+				return Operands.InternalType.Array;
 			else if (type.EndsWith ("[]"))
 				return Operands.InternalType.SZArray;
+			else if (type.EndsWith (",]"))
+				return Operands.InternalType.Array;
 
 			else if (type.Equals ("System.IntPtr"))
 				return Operands.InternalType.I;

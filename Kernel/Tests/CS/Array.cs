@@ -10,7 +10,7 @@
 //
 
 //#define ARRAYS_NOT_SUPPORTED
-#define MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
+//#define MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
 #define JAGGED_ARRAYS_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
@@ -137,7 +137,6 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 1;
 		}
-
 
 
 		/// <summary>

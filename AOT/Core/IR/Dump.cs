@@ -362,7 +362,7 @@ namespace SharpOS.AOT.IR {
 		/// Elements the specified type definition.
 		/// </summary>
 		/// <param name="typeDefinition">The type definition.</param>
-		public void Element (TypeDefinition typeDefinition)
+		public void Element (TypeReference typeDefinition)
 		{
 			this.AddElement ("type", typeDefinition.ToString ());
 		}
@@ -371,7 +371,7 @@ namespace SharpOS.AOT.IR {
 		/// Elements the specified method definition.
 		/// </summary>
 		/// <param name="methodDefinition">The method definition.</param>
-		public void Element (MethodDefinition methodDefinition)
+		public void Element (MethodReference methodDefinition)
 		{
 			this.PushElement ("method");
 

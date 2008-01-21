@@ -98,13 +98,13 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		private MethodDefinition methodDefinition = null;
+		private MethodReference methodDefinition = null;
 
 		/// <summary>
 		/// Gets the method definition.
 		/// </summary>
 		/// <value>The method definition.</value>
-		public MethodDefinition MethodDefinition
+		public MethodReference MethodDefinition
 		{
 			get
 			{
@@ -180,7 +180,7 @@ namespace SharpOS.AOT.IR {
 		/// <param name="engine">The engine.</param>
 		/// <param name="_class">The _class.</param>
 		/// <param name="methodDefinition">The method definition.</param>
-		public Method (Engine engine, Class _class, MethodDefinition methodDefinition)
+		public Method (Engine engine, Class _class, MethodReference methodDefinition)
 		{
 			this.engine = engine;
 			this._class = _class;
@@ -267,12 +267,22 @@ namespace SharpOS.AOT.IR {
 			return false;
 		}
 
+		/// <summary>
+		/// Adds the instruction offset.
+		/// </summary>
+		/// <param name="offsets">The offsets.</param>
+		/// <param name="instruction">The instruction.</param>
 		private void AddInstructionOffset (List<int> offsets, Mono.Cecil.Cil.Instruction instruction)
 		{
 			if (instruction != null && !offsets.Contains (instruction.Offset))
 				offsets.Add (instruction.Offset);
 		}
 
+		/// <summary>
+		/// Links the blocks.
+		/// </summary>
+		/// <param name="current">The current.</param>
+		/// <param name="instruction">The instruction.</param>
 		private void LinkBlocks (Block current, Mono.Cecil.Cil.Instruction instruction)
 		{
 			if (instruction == null)
@@ -291,6 +301,11 @@ namespace SharpOS.AOT.IR {
 
 		Dictionary<int, Block> offsetToBlock = new Dictionary<int, Block> ();
 
+		/// <summary>
+		/// Gets the block by offset.
+		/// </summary>
+		/// <param name="i">The i.</param>
+		/// <returns></returns>
 		public Block GetBlockByOffset (int i)
 		{
 			if (!offsetToBlock.ContainsKey (i))
@@ -306,7 +321,7 @@ namespace SharpOS.AOT.IR {
 		{
 			this.blocks = new List<Block> ();
 
-			InstructionCollection instructions = this.methodDefinition.Body.Instructions;
+			InstructionCollection instructions = this.CIL.Instructions;
 			List<int> offsets = new List<int> ();
 
 			// Add all the offsets of the instructions that start a block
@@ -426,7 +441,7 @@ namespace SharpOS.AOT.IR {
 		{
 			this.registerVersions = new List<int> ();
 
-			for (int i = 0; i < this.methodDefinition.Body.MaxStack; i++)
+			for (int i = 0; i < this.MaxStack; i++)
 				this.registerVersions.Add (0);
 
 			foreach (Block block in this.Preorder ())
@@ -434,11 +449,11 @@ namespace SharpOS.AOT.IR {
 
 			// Insert Initialize instructions to initialize the local variables
 			if (blocks.Count > 0
-					&& this.methodDefinition.Body.Variables.Count > 0) {
-				for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
-					VariableDefinition variableDefinition = this.methodDefinition.Body.Variables [this.methodDefinition.Body.Variables.Count - i - 1];
+					&& this.CIL.Variables.Count > 0) {
+				for (int i = 0; i < this.CIL.Variables.Count; i++) {
+					VariableDefinition variableDefinition = this.CIL.Variables [this.CIL.Variables.Count - i - 1];
 
-					Instructions.Instruction instruction = new Initialize (this.GetLocal (this.methodDefinition.Body.Variables.Count - i - 1), variableDefinition.VariableType);
+					Instructions.Instruction instruction = new Initialize (this.GetLocal (this.CIL.Variables.Count - i - 1), variableDefinition.VariableType);
 
 					blocks [0].InsertInstruction (0, instruction);
 				}
@@ -709,6 +724,10 @@ namespace SharpOS.AOT.IR {
 			return;
 		}
 
+		/// <summary>
+		/// Internals the propagation logic.
+		/// </summary>
+		/// <param name="instruction">The instruction.</param>
 		private void InternalPropagationLogic (Instructions.Instruction instruction)
 		{
 			if (instruction.Use == null)
@@ -1072,6 +1091,11 @@ namespace SharpOS.AOT.IR {
 			return result.ToString ();
 		}
 
+		/// <summary>
+		/// Gets the ID.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		/// <returns></returns>
 		public static string GetID (Mono.Cecil.MethodReference method)
 		{
 			StringBuilder result = new StringBuilder ();
@@ -1102,6 +1126,9 @@ namespace SharpOS.AOT.IR {
 				block.TransformationOutOfSSA ();
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public class LiveRange : IComparable {
 			/// <summary>
 			/// Initializes a new instance of the <see cref="LiveRange"/> class.
@@ -1306,6 +1333,12 @@ namespace SharpOS.AOT.IR {
 
 		private List<LiveRange> liveRanges;
 
+		/// <summary>
+		/// Adds the key live range.
+		/// </summary>
+		/// <param name="values">The values.</param>
+		/// <param name="instruction">The instruction.</param>
+		/// <param name="operand">The operand.</param>
 		private void AddKeyLiveRange (Dictionary<string, LiveRange> values, Instructions.Instruction instruction, Operand operand)
 		{
 			if (operand is Register) {
@@ -1535,10 +1568,13 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Pres the process.
+		/// </summary>
 		private void PreProcess ()
 		{
-			for (int i = 0; i < this.methodDefinition.Body.Variables.Count; i++) {
-				TypeReference typeReference = this.methodDefinition.Body.Variables [i].VariableType;
+			for (int i = 0; i < this.CIL.Variables.Count; i++) {
+				TypeReference typeReference = this.CIL.Variables [i].VariableType;
 
 				Class _class = this.engine.GetClass (typeReference);
 				InternalType internalType = this.Engine.GetInternalType (_class.TypeFullName);
@@ -1584,7 +1620,7 @@ namespace SharpOS.AOT.IR {
 			if (this.engine.Options.Dump)
 				this.engine.Dump.Element (this.methodDefinition);
 
-			if (this.methodDefinition.Body == null)
+			if (this.CIL == null)
 				return;
 
 			this.PreProcess ();
@@ -1672,62 +1708,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets a value indicating whether this instance is alloc object.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is alloc object; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsAllocObject
-		{
-			get
-			{
-				foreach (CustomAttribute customAttribute in this.methodDefinition.CustomAttributes) {
-					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocObjectAttribute).ToString ())
-						continue;
-
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
-							|| !methodDefinition.IsStatic
-							|| methodDefinition.Parameters.Count != 1
-							|| methodDefinition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName)
-						throw new EngineException (string.Format ("'{0}' is not a valid AllocObject method", this.methodDefinition.ToString ()));
-
-					return true;
-				}
-
-				return false;
-			}
-		}
-
-		/// <summary>
-		/// Gets a value indicating whether this instance is alloc SZ array.
-		/// </summary>
-		/// <value>
-		/// 	<c>true</c> if this instance is alloc SZ array; otherwise, <c>false</c>.
-		/// </value>
-		public bool IsAllocSZArray
-		{
-			get
-			{
-				foreach (CustomAttribute customAttribute in this.methodDefinition.CustomAttributes) {
-					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocSZArrayAttribute).ToString ())
-						continue;
-
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
-							|| !methodDefinition.IsStatic
-							|| methodDefinition.Parameters.Count != 3
-							|| methodDefinition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName
-							|| methodDefinition.Parameters [1].ParameterType.FullName != Mono.Cecil.Constants.Int32
-							|| methodDefinition.Parameters [2].ParameterType.FullName != Mono.Cecil.Constants.Int32)
-						throw new EngineException (string.Format ("'{0}' is not a valid AllocSZArray method", this.methodDefinition.ToString ()));
-
-					return true;
-				}
-
-				return false;
-			}
-		}
-
-		/// <summary>
 		/// It returns the unique name of this call. (e.g. "void namespace.class.method UInt32 UInt16")
 		/// </summary>
 		public string AssemblyLabel
@@ -1778,7 +1758,12 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				return this.methodDefinition.IsConstructor;
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition != null)
+					return definition.IsConstructor;
+
+				return false;
 			}
 		}
 
@@ -1792,7 +1777,12 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				return this.methodDefinition.IsVirtual;
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition != null)
+					return definition.IsVirtual;
+
+				return false;
 			}
 		}
 
@@ -1806,7 +1796,12 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				return this.methodDefinition.IsNewSlot;
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition != null)
+					return definition.IsNewSlot;
+				
+				return false;
 			}
 		}
 
@@ -1818,8 +1813,11 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				if (this.methodDefinition.Body != null)
-					return this.methodDefinition.Body.MaxStack;
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition != null
+						&& definition.Body != null)
+					return definition.Body.MaxStack;
 
 				return 0;
 			}
@@ -1833,10 +1831,30 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				if (this.methodDefinition.Body != null)
-					return this.methodDefinition.Body.Instructions.Count;
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition != null
+						&& definition.Body != null)
+					return definition.Body.Instructions.Count;
 
 				return 0;
+			}
+		}
+
+		/// <summary>
+		/// Gets the CIL.
+		/// </summary>
+		/// <value>The CIL.</value>
+		public MethodBody CIL
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition != null)
+					return definition.Body;
+
+				return null;
 			}
 		}
 
@@ -1854,6 +1872,32 @@ namespace SharpOS.AOT.IR {
 						&& this.methodDefinition.Parameters.Count == 0
 						&& (this.methodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Int32)
 							|| this.methodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Void));
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is marked main.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is marked main; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsMarkedMain
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+				
+				if (definition == null)
+					return false;
+
+				foreach (CustomAttribute attribute in definition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.KernelMainAttribute).ToString ()))
+						continue;
+
+					return true;
+				}
+
+				return false;
 			}
 		}
 
@@ -2016,6 +2060,99 @@ namespace SharpOS.AOT.IR {
 				}
 
 				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is alloc object.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is alloc object; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAllocObject
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute customAttribute in definition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocObjectAttribute).ToString ())
+						continue;
+
+					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+							|| !definition.IsStatic
+							|| definition.Parameters.Count != 1
+							|| definition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName)
+						throw new EngineException (string.Format ("'{0}' is not a valid AllocObject method", this.methodDefinition.ToString ()));
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is alloc SZ array.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is alloc SZ array; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAllocSZArray
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute customAttribute in definition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocSZArrayAttribute).ToString ())
+						continue;
+
+					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+							|| !definition.IsStatic
+							|| definition.Parameters.Count != 3
+							|| definition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName
+							|| definition.Parameters [1].ParameterType.FullName != Mono.Cecil.Constants.Int32
+							|| definition.Parameters [2].ParameterType.FullName != Mono.Cecil.Constants.Int32)
+						throw new EngineException (string.Format ("'{0}' is not a valid AllocSZArray method", this.methodDefinition.ToString ()));
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		public List<string> Labels
+		{
+			get
+			{
+				List<string> labels = new List<string> ();
+
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return labels;
+
+				foreach (CustomAttribute customAttribute in definition.CustomAttributes) {
+					if (!customAttribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAttribute).ToString ()))
+						continue;
+
+					string name = customAttribute.ConstructorParameters [0].ToString ();
+
+					labels.Add (name);
+				}
+
+				return labels;
 			}
 		}
 	}

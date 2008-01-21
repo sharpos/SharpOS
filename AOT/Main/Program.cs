@@ -189,7 +189,7 @@ namespace SharpOS.AOT {
 					AssemblyDefinition assembly;
 					ModuleDefinition module;
 					TypeReference type;
-					MethodDefinition method;
+					MethodReference method;
 
 					// Error handling
 
