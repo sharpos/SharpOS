@@ -3,6 +3,7 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
+//	Sander van Rossen <sander.vanrossen@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -25,7 +26,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			PIC.Setup ();	// Programmable Interrupt Controller
 			IDT.Setup ();	// Interrupt Descriptor table
 			PIT.Setup ();	// Periodic Interrupt Timer
-			Serial.Setup (); // Setup serial I/O
+			Serial.Setup (); // Setup serial I/O			
 		}
 
 		/**
@@ -34,7 +35,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 				the most well-supported method possible. 
 			</summary>
 		*/
-		public static bool CheckCompatibility ()
+		public static bool CheckCompatibility()
 		{
 			return true; // if we're running, we're at least 386.
 		}
@@ -58,21 +59,33 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			return "SharpOS.ADC.X86";
 		}
+		
+		// must do it here because memory management doesn't work yet in Setup... :(
+		private static void InitializeProcessor()
+		{
+			processors = new IProcessor[1];
+			for (int i = 0; i < processors.Length; i++)
+			{
+				processors[i] = new Processor();
+				processors[i].Setup();
+			}
+		}
 
 		public static int GetProcessorCount ()
 		{
-			return 0;
-			//return processors.Length;
+			if (processors == null)
+				InitializeProcessor();
+
+			return processors.Length;
 		}
 
-		// ..should be replaced with an array
-		static private IProcessor processors = null;
-
-		public static IProcessor GetProcessors ()
+		static private IProcessor[] processors = null;
+		public static IProcessor[] GetProcessors ()
 		{
 			if (processors == null)
-				processors = new Processor();
-			return processors; // TODO
+				InitializeProcessor();
+
+			return processors; 
 		}
 	}
 }

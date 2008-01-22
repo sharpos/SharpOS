@@ -114,8 +114,8 @@ namespace SharpOS.Kernel {
 			StageMessage ("Keyboard setup...");
 			Keyboard.Setup ();
 
-			StageMessage("Floppy Disk Controller setup...");
-			FloppyDiskController.Setup();
+			//StageMessage("Floppy Disk Controller setup...");
+			//FloppyDiskController.Setup();
 
 			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
@@ -126,8 +126,8 @@ namespace SharpOS.Kernel {
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();
 
-			StageMessage("Ext2FS FileSystem setup...");
-			SharpOS.Kernel.FileSystem.Ext2FS.Setup();
+			//StageMessage("Ext2FS FileSystem setup...");
+			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
 
 			TextMode.SaveAttributes();
 			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);

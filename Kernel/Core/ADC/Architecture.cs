@@ -3,6 +3,7 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
+//	Sander van Rossen <sander.vanrossen@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -62,7 +63,7 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		[AOTAttr.ADCStub]
-		public static IProcessor GetProcessors ()
+		public static IProcessor[] GetProcessors ()
 		{
 			return null;
 		}

@@ -15,7 +15,7 @@ workingDir = ""
 debug = "TRUE"
 monitor_control.log_vmsample = "TRUE"
 
-uuid.location = "56 4d 58 c7 e9 ce 36 74-2a 79 cb c1 28 26 a4 22"
+uuid.location = "56 4d ea 85 2b 13 e6 15-c3 aa a3 e3 8d 7e e3 de"
 uuid.bios = "56 4d 5a 8b 15 f8 34 34-18 7b 54 61 34 be f9 f3"
 
 serial0.present = "TRUE"

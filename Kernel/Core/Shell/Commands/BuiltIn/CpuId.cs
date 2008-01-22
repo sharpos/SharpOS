@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Jonathan Dickinson <jonathand.za@gmail.com>
+//	Sander van Rossen <sander.vanrossen@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -55,42 +56,45 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		public static void Execute (CommandExecutionContext* context)
 		{
 			// ARCHDEPENDS: X86
-			IProcessor cpu = Architecture.GetProcessors();
-			cpu.Setup();
+			IProcessor[] cpus = Architecture.GetProcessors();
 
 			TextMode.SaveAttributes();
-			
-			ProcessorType type = cpu.ArchType;
-			if (type == ProcessorType.IA32)
-				RenderItem("Architecture: ", "IA32");
-			if (type == ProcessorType.IA64)
-				RenderItem("Architecture: ", "IA64");
-			if (type == ProcessorType.Unknown)
-				RenderItem("Architecture: ", "Unknown");
 
-			RenderItem("CPU Vendor: ", cpu.VendorName);
-			RenderItem("CPU Brand: ", cpu.BrandName);
-			RenderItem("CPU Family: ", cpu.FamilyName);
-			RenderItem("CPU Model: ", cpu.ModelName);
-			//RenderItem("CPU ClockSpeed: ", cpu.ClockSpeed);
-			//RenderItem("CPU CacheSize: ", cpu.CacheSize);
-
-			RenderItemTitle("CPU Flags2: ");
-			
-			ProcessorFeature[] features = cpu.Features;
-			for (int i = 0; i < features.Length; i++)
+			for (int i = 0; i < cpus.Length; i++)
 			{
-				if (features[i] == null)
+				ProcessorType type = cpus[i].ArchType;
+				
+				if (type == ProcessorType.IA32)
+					RenderItem("Architecture: ", "IA32");
+				if (type == ProcessorType.IA64)
+					RenderItem("Architecture: ", "IA64");
+				if (type == ProcessorType.Unknown)
+					RenderItem("Architecture: ", "Unknown");
+
+				RenderItem("CPU Vendor: ", cpus[i].VendorName);
+				RenderItem("CPU Brand: ", cpus[i].BrandName);
+				RenderItem("CPU Family: ", cpus[i].FamilyName);
+				RenderItem("CPU Model: ", cpus[i].ModelName);
+				//RenderItem("CPU ClockSpeed: ", cpus[i].ClockSpeed);
+				//RenderItem("CPU CacheSize: ", cpus[i].CacheSize);
+
+				RenderItemTitle("CPU Flags: ");
+
+				ProcessorFeature[] features = cpus[i].Features;
+				for (int f = 0; f < features.Length; f++)
 				{
-					TextMode.Write("? ");
-					continue;
-				} 
-				TextMode.Write(features[i].FeatureName);
-				TextMode.Write(" ");
+					if (features[f] == null)
+					{
+						TextMode.Write("? ");
+						continue;
+					}
+					TextMode.Write(features[f].FeatureName);
+					TextMode.Write(" ");
+				}
+				TextMode.WriteLine();
+
+				TextMode.RestoreAttributes();
 			}
-			TextMode.WriteLine();
-			
-			TextMode.RestoreAttributes();
 		}
 
 		[Label (lblGetHelp)]
