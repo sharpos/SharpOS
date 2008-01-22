@@ -160,33 +160,32 @@ namespace SharpOS.Kernel.ADC.X86
 			Barrier.Enter();
 			System.UInt16 count = BYTES_PER_SECTOR * SECTORS_PER_TRACK - 1;
 
-			IO.Write8 (IO.Port.DMA_ModeRegister, 0x46);
+			byte DMA_Channel = 0x02;
+
+			// Disable DMA Controller
+			IO.Write8 (IO.Port.DMA_ChannelMaskRegister, (byte)(DMA_Channel | 4));
+
+			// Set DMA_Channel to write
+			IO.Write8 (IO.Port.DMA_ModeRegister, (byte)(0x48 | DMA_Channel));
 
 			// Set Address
-			IO.Write8 (IO.Port.DMA_AddressRegister, (byte) ((uint)diskBuffer));
-			IO.Write8 (IO.Port.DMA_AddressRegister, (byte) (((uint)diskBuffer) >> 8));
-			IO.Write8 (IO.Port.DMA_TempRegister,	0x00);
+			IO.Write8 (IO.Port.DMA_Channel2AddressByte2,   (byte) (((uint)diskBuffer) >> 16));
+			IO.Write8 (IO.Port.DMA_Channel2AddressByte0_1, (byte) (((uint)diskBuffer) >> 0));
+			IO.Write8 (IO.Port.DMA_Channel2AddressByte0_1, (byte) (((uint)diskBuffer) >> 8));
 
 			// Set Count
-			IO.Write8 (IO.Port.DMA_CountRegister, (byte) count);
-			IO.Write8 (IO.Port.DMA_CountRegister, (byte) (count >> 8));
-
+			IO.Write8 (IO.Port.DMA_Channel2CountByte0_1, (byte) count);
+			IO.Write8 (IO.Port.DMA_Channel2CountByte0_1, (byte) (count >> 8));
+			
 			// Enable DMA Controller
-			IO.Write8 (IO.Port.DMA_ChannelMaskRegister, 0x02);
+			IO.Write8 (IO.Port.DMA_ChannelMaskRegister, (byte)(DMA_Channel));
 			Barrier.Exit();
 		}
 
-		internal static byte* diskBuffer;
+		internal static byte* diskBuffer = (byte*)0x00000000;
 
 		public unsafe static void Read(byte* buffer, uint offset, uint length)
 		{
-			if (diskBuffer == null)
-			{
-				diskBuffer = 
-					(byte*) MemoryManager.Allocate ((uint) BYTES_PER_SECTOR * SECTORS_PER_TRACK);
-			}
-			//byte* data = (byte*)0x00000000;
-
 			uint readBlockCount = (length + (512 * 18 - 1)) / (512 * 18);
 
 			for (uint b = 0; b < readBlockCount; ++b)
@@ -198,6 +197,7 @@ namespace SharpOS.Kernel.ADC.X86
 
 				sector = (byte)((sector % SECTORS_PER_TRACK) + 1);
 
+				MemoryUtil.MemSet(0, (uint)(diskBuffer), (uint)(BYTES_PER_SECTOR * SECTORS_PER_TRACK));
 				ReadData(head, track, sector);
 
 				for (uint index = offset, index2 = 0; index < offset + 512 * 18; ++index, ++index2)
@@ -210,6 +210,7 @@ namespace SharpOS.Kernel.ADC.X86
 		//TODO: replace integer values with enums or describe in comments
 		public unsafe static void ReadData(byte head, byte track, byte sector)
 		{
+			// ...this section should be skipped if motor is already running
 			Barrier.Enter();
 			{
 				SetInterruptOccurred (false);
@@ -220,7 +221,8 @@ namespace SharpOS.Kernel.ADC.X86
 
 			if (!WaitForInterrupt())
 				return;
-						
+					
+			// ...do we need to recalibrate every time?
 			Barrier.Enter();
 			{
 				SetInterruptOccurred (false);
@@ -229,7 +231,6 @@ namespace SharpOS.Kernel.ADC.X86
 			}
 			Barrier.Exit();
 
-			// FIXME: interrupt never gets called here .. (at least in bochs)
 			if (!WaitForInterrupt())
 				return;
 						
@@ -244,21 +245,22 @@ namespace SharpOS.Kernel.ADC.X86
 
 			if (!WaitForInterrupt())
 				return;
-
+									
 			SetupDMA ();
-						
+				
 			Barrier.Enter();
 			{
 				SetInterruptOccurred (false);
+				
 				SendCommandToFDC((byte)FIFOCommand.Read);
-				SendCommandToFDC((byte)((head << 2) + 0));
-				SendCommandToFDC(track);
-				SendCommandToFDC(head);
-				SendCommandToFDC(sector);
-				SendDataToFDC(2);
-				SendCommandToFDC(SECTORS_PER_TRACK);
-				SendDataToFDC(27);
-				SendDataToFDC (0xff);
+				SendDataToFDC ((byte)((head << 2) + 0));
+				SendDataToFDC (track);
+				SendDataToFDC (head);
+				SendDataToFDC (sector);
+				SendDataToFDC (2);		// 512 bytes per sector
+				SendDataToFDC (SECTORS_PER_TRACK);
+				SendDataToFDC (27);
+				SendDataToFDC (0xff);	// DTL (bytes to transfer) = unused
 			}
 			Barrier.Exit();
 

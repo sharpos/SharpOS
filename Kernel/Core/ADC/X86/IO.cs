@@ -22,7 +22,83 @@ namespace SharpOS.Kernel.ADC.X86 {
 	public class IO {
 		#region Ports
 		public enum Port : ushort {
-			//0000-001F - Primary Direct Memory Access (DMA) Controller
+			#region 0000-001F - Primary Direct Memory Access (DMA) Controller
+			DMA_Channel0AddressByte0_1				= 0x0000, // read/write
+			DMA_Channel0CountByte0_1				= 0x0001, // read/write
+            
+			DMA_Channel1AddressByte0_1				= 0x0002, // read/write
+			DMA_Channel1CountByte0_1				= 0x0003, // read/write
+            
+			DMA_Channel2AddressByte0_1				= 0x0004, // read/write
+			DMA_Channel2CountByte0_1				= 0x0005, // read/write
+			
+			DMA_Channel3AddressByte0_1				= 0x0006, // read/write
+			DMA_Channel3CountByte0_1				= 0x0007, // read/write
+			
+			/// <summary>
+			/// 0008 r DMA channel 0-3 status register
+			///		bit 7 = 1 channel 3 request
+			///		bit 6 = 1 channel 2 request
+			///		bit 5 = 1 channel 1 request
+			///		bit 4 = 1 channel 0 request
+			///		bit 3 = 1 channel terminal count on channel 3
+			///		bit 2 = 1 channel terminal count on channel 2
+			///		bit 1 = 1 channel terminal count on channel 1
+			///		bit 0 = 1 channel terminal count on channel 0
+			///	</summary>
+			DMA_StatusRegister						= 0x0008, // read
+			/// <summary>
+			/// 0008 w DMA channel 0-3 command register
+			///		bit 7	= 1 DACK sense active high
+			///				= 0 DACK sense active low
+			///		bit 6	= 1 DREQ sense active high
+			///				= 0 DREQ sense active low
+			///		bit 5	= 1 extended write selection
+			///				= 0 late write selection
+			///		bit 4	= 1 rotating priority
+			///				= 0 fixed priority
+			///		bit 3	= 1 compressed timing
+			///				= 0 normal timing
+			///		bit 2	= 1 enable controller
+			///				= 0 enable memory-to-memory
+			///	</summary>
+			DMA_CommandRegister						= 0x0008, // write
+			DMA_WriteRequestRegister				= 0x0009, // write
+			///	<summary>
+			///	000A r/w DMA channel 0-3 mask register
+			///		bit 7-3	= 0 reserved
+			///		bit 2	= 0 clear mask bit
+			///				= 1 set mask bit
+			///		bit 1-0	= 00 channel 0 select
+			///				= 01 channel 1 select
+			///				= 10 channel 2 select
+			///				= 11 channel 3 select
+			/// </summary>
+			DMA_ChannelMaskRegister					= 0x000A,
+            ///	<summary>
+			///	000B w DMA channel 0-3 mode register
+			///		bit 7-6	= 00 demand mode
+			///				= 01 single mode
+			///				= 10 block mode
+			///				= 11 cascade mode
+			///		bit 5	= 0 address increment select
+			///				= 1 address decrement select
+			///		bit 3-2	= 00 verify operation
+			///				= 01 write to memory
+			///				= 10 read from memory
+			///				= 11 reserved
+			///		bit 1-0	= 00 channel 0 select
+			///				= 01 channel 1 select
+			///				= 10 channel 2 select
+			///				= 11 channel 3 select
+			/// </summary>
+			DMA_ModeRegister						= 0x000B,
+			DMA_ClearBytePointerFlipFlop			= 0x000C, // write
+			DMA_ReadTemporaryRegister				= 0x000D, // read
+			DMA_MasterClear							= 0x000D, // write
+			DMA_ClearMaskRegister					= 0x000E, // write
+			DMA_WriteMaskRegister					= 0x000F, // write
+			#endregion
 
 			#region 0020-0021 - Programmable Interrupt (PIC) Controller
 			Master_PIC_CommandPort					= 0x0020,
@@ -263,20 +339,30 @@ namespace SharpOS.Kernel.ADC.X86 {
             FDC_DataPort                        = 0x03F5,
             #endregion
 
-            #region DMA Register
-            DMA_ModeRegister                    = 0x000B,
-            DMA_AddressRegister                 = 0x0004,
-            DMA_TempRegister                    = 0x0081,
-            DMA_ChannelMaskRegister             = 0x000A,
-            DMA_CountRegister                   = 0x0005,
-            #endregion
-
             #region 0070-007F - CMOS RAM / Real Time Clock
             RTC_CommandPort						= 0x0070,
 			RTC_DataPort						= 0x0071,
 			#endregion
 
-			//0080-008F - DMA page registers
+			#region 0080-008F - DMA page registers
+			DMA_TemporaryStorage				= 0x0080, // read/write extra page register (temporary storage)
+			DMA_Channel2AddressByte2			= 0x0081, // read/write
+			DMA_Channel3AddressByte2			= 0x0082, // read/write
+			DMA_Channel1AddressByte2			= 0x0083, // read/write
+			//0084 r/w extra page register
+			//0085 r/w extra page register
+			//0086 r/w extra page register
+			DMA_Channel0AddressByte2			= 0x0087, // read/write
+			//0088 r/w extra page register
+			DMA_Channel6AddressByte2			= 0x0089, // read/write
+			DMA_Channel7AddressByte2			= 0x008A, // read/write
+			DMA_Channel5AddressByte2			= 0x008B, // read/write
+			//008C r/w extra page register
+			//008D r/w extra page register
+			//008E r/w extra page register
+			DMA_RefreshPageRegister				= 0x008F, // read/write
+			#endregion
+
 			#region 00A0-00AF - Secondary Programmable Interrupt Controller (PIC) Controller
 			Slave_PIC_CommandPort				= 0x00A0,
 			Slave_PIC_DataPort					= 0x00A1,
