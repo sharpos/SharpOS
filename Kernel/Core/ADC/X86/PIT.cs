@@ -70,10 +70,10 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public static void SetTimerFrequency (ushort Hz)
 		{
 			ushort TimerCount = (ushort) (PITFrequency / Hz);
-			IO.Write8 (IO.Port.PIT_mode_control_port, SquareWave);
+			IO.WriteByte (IO.Port.PIT_mode_control_port, SquareWave);
 
-			IO.Write8 (IO.Port.PIT_counter_0_counter_divisor, (byte) (TimerCount & 0xFF));
-			IO.Write8 (IO.Port.PIT_counter_0_counter_divisor, (byte) ((TimerCount >> 8) & 0xFF));
+			IO.WriteByte (IO.Port.PIT_counter_0_counter_divisor, (byte) (TimerCount & 0xFF));
+			IO.WriteByte (IO.Port.PIT_counter_0_counter_divisor, (byte) ((TimerCount >> 8) & 0xFF));
 		}
 		#endregion
 

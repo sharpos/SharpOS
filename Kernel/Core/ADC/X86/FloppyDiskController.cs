@@ -115,13 +115,13 @@ namespace SharpOS.Kernel.ADC.X86
 
 		public static void TurnOffMotor ()
 		{
-			IO.Write8 (IO.Port.FDC_DORPort,
+			IO.WriteByte (IO.Port.FDC_DORPort,
 				(byte) DORFlags.DisableAll);
 		}
 
 		public static void TurnOnMotor ()
 		{
-			IO.Write8 (IO.Port.FDC_DORPort,
+			IO.WriteByte (IO.Port.FDC_DORPort,
 						(byte)(DORFlags.EnableDMA | DORFlags.EnableController | DORFlags.EnableAllMotors));
 		}
 
@@ -131,11 +131,11 @@ namespace SharpOS.Kernel.ADC.X86
 			byte status = 0;
 
 			do {
-				status = IO.Read8 (IO.Port.FDC_StatusPort);
+				status = IO.ReadByte (IO.Port.FDC_StatusPort);
 			}
 			while ((status & 0xC0) != 0x80); //TODO: implement timeout
 
-			IO.Write8 (IO.Port.FDC_DataPort, command);
+			IO.WriteByte (IO.Port.FDC_DataPort, command);
 			Barrier.Exit();
 		}
 
@@ -145,40 +145,11 @@ namespace SharpOS.Kernel.ADC.X86
 			byte status = 0;
 
 			do {
-				status = IO.Read8 (IO.Port.FDC_StatusPort);
+				status = IO.ReadByte (IO.Port.FDC_StatusPort);
 			}
 			while ((status & 0xC0) != 0x80); //TODO: implement timeout
 
-			IO.Write8 (IO.Port.FDC_DataPort, data);
-			Barrier.Exit();
-		}
-
-		//TODO: replace integer values with enums or describe in comments
-		//		..should we create a DMA.cs for all kernel DMA handling?
-		public unsafe static void SetupDMA ()
-		{
-			Barrier.Enter();
-			System.UInt16 count = BYTES_PER_SECTOR * SECTORS_PER_TRACK - 1;
-
-			byte DMA_Channel = 0x02;
-
-			// Disable DMA Controller
-			IO.Write8 (IO.Port.DMA_ChannelMaskRegister, (byte)(DMA_Channel | 4));
-
-			// Set DMA_Channel to write
-			IO.Write8 (IO.Port.DMA_ModeRegister, (byte)(0x48 | DMA_Channel));
-
-			// Set Address
-			IO.Write8 (IO.Port.DMA_Channel2AddressByte2,   (byte) (((uint)diskBuffer) >> 16));
-			IO.Write8 (IO.Port.DMA_Channel2AddressByte0_1, (byte) (((uint)diskBuffer) >> 0));
-			IO.Write8 (IO.Port.DMA_Channel2AddressByte0_1, (byte) (((uint)diskBuffer) >> 8));
-
-			// Set Count
-			IO.Write8 (IO.Port.DMA_Channel2CountByte0_1, (byte) count);
-			IO.Write8 (IO.Port.DMA_Channel2CountByte0_1, (byte) (count >> 8));
-			
-			// Enable DMA Controller
-			IO.Write8 (IO.Port.DMA_ChannelMaskRegister, (byte)(DMA_Channel));
+			IO.WriteByte (IO.Port.FDC_DataPort, data);
 			Barrier.Exit();
 		}
 
@@ -245,8 +216,12 @@ namespace SharpOS.Kernel.ADC.X86
 
 			if (!WaitForInterrupt())
 				return;
-									
-			SetupDMA ();
+
+			DMA.SetupChannel(DMAChannel.Channel2,
+				(byte)(((uint)diskBuffer >> 16) & 0xff),
+				(ushort)(((uint)diskBuffer & 0xffff)),
+				BYTES_PER_SECTOR * SECTORS_PER_TRACK,
+				DMAMode.Read);
 				
 			Barrier.Enter();
 			{

@@ -48,8 +48,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 					   | ((function & 0x07) << 8)
 					   | (register & 0xFC);
 
-			IO.Write32(IO.Port.PCI_Config_Address, address);
-			return IO.Read32(IO.Port.PCI_Config_Data);
+			IO.WriteUInt32(IO.Port.PCI_Config_Address, address);
+			return IO.ReadUInt32(IO.Port.PCI_Config_Data);
 		}
 
 			// check for the presence of a device at the specific PCI address
@@ -68,8 +68,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		public unsafe static void Setup()
 		{
-			IO.Write32(IO.Port.PCI_Config_Address, BASE_VALUE);
-			isAvailable = (IO.Read32 (IO.Port.PCI_Config_Address) == BASE_VALUE);
+			IO.WriteUInt32(IO.Port.PCI_Config_Address, BASE_VALUE);
+			isAvailable = (IO.ReadUInt32 (IO.Port.PCI_Config_Address) == BASE_VALUE);
 
 			//CR- Don't know why but the following static allocation code cannot be AOTted.
 			//CR- The same error occurs when the allocation is done with the declaration of deviceList.

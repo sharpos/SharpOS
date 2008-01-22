@@ -47,40 +47,40 @@ namespace SharpOS.Kernel.ADC.X86 {
 			byte mask1, mask2;
 
 			// save masks
-			mask1 = IO.Read8 (IO.Port.Master_PIC_DataPort);
-			mask2 = IO.Read8 (IO.Port.Slave_PIC_DataPort);
+			mask1 = IO.ReadByte (IO.Port.Master_PIC_DataPort);
+			mask2 = IO.ReadByte (IO.Port.Slave_PIC_DataPort);
 
 
 			// Remap the IRQ
-			IO.Write8 (IO.Port.Master_PIC_CommandPort, MasterICW1);
+			IO.WriteByte (IO.Port.Master_PIC_CommandPort, MasterICW1);
 			IO.Delay ();
 
-			IO.Write8 (IO.Port.Master_PIC_DataPort, MasterIRQBase);
+			IO.WriteByte (IO.Port.Master_PIC_DataPort, MasterIRQBase);
 			IO.Delay ();
 
-			IO.Write8 (IO.Port.Master_PIC_DataPort, MasterICW3);
+			IO.WriteByte (IO.Port.Master_PIC_DataPort, MasterICW3);
 			IO.Delay ();
 
-			IO.Write8 (IO.Port.Master_PIC_DataPort, MasterICW4);
+			IO.WriteByte (IO.Port.Master_PIC_DataPort, MasterICW4);
 			IO.Delay ();
 
 
-			IO.Write8 (IO.Port.Slave_PIC_CommandPort, SlaveICW1);
+			IO.WriteByte (IO.Port.Slave_PIC_CommandPort, SlaveICW1);
 			IO.Delay ();
 
-			IO.Write8 (IO.Port.Slave_PIC_DataPort, SlaveIRQBase);
+			IO.WriteByte (IO.Port.Slave_PIC_DataPort, SlaveIRQBase);
 			IO.Delay ();
 
-			IO.Write8 (IO.Port.Slave_PIC_DataPort, SlaveICW3);
+			IO.WriteByte (IO.Port.Slave_PIC_DataPort, SlaveICW3);
 			IO.Delay ();
 
-			IO.Write8 (IO.Port.Slave_PIC_DataPort, SlaveICW4);
+			IO.WriteByte (IO.Port.Slave_PIC_DataPort, SlaveICW4);
 			IO.Delay ();
 
 
 			// restore saved masks.
-			IO.Write8 (IO.Port.Master_PIC_DataPort, mask1);
-			IO.Write8 (IO.Port.Slave_PIC_DataPort, mask2);
+			IO.WriteByte (IO.Port.Master_PIC_DataPort, mask1);
+			IO.WriteByte (IO.Port.Slave_PIC_DataPort, mask2);
 
 			DisableAllIRQs ();
 		}
@@ -95,8 +95,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 				return;
 
 			if (value >= SlaveIRQBase)
-				IO.Write8 (IO.Port.Slave_PIC_CommandPort, EndOfInterrupt);
-			IO.Write8 (IO.Port.Master_PIC_CommandPort, EndOfInterrupt);
+				IO.WriteByte (IO.Port.Slave_PIC_CommandPort, EndOfInterrupt);
+			IO.WriteByte (IO.Port.Master_PIC_CommandPort, EndOfInterrupt);
 		}
 		#endregion
 
@@ -105,12 +105,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			MasterIRQMask = (byte) 0xFF;
 
-			IO.Write8 (IO.Port.Master_PIC_DataPort, MasterIRQMask);
+			IO.WriteByte (IO.Port.Master_PIC_DataPort, MasterIRQMask);
 			IO.Delay ();
 
 			SlaveIRQMask = (byte) 0xFF;
 
-			IO.Write8 (IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
+			IO.WriteByte (IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
 			IO.Delay ();
 		}
 		#endregion
@@ -125,7 +125,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			MasterIRQMask &= (byte) ~(1 << value);
 
-			IO.Write8 (IO.Port.Master_PIC_DataPort, MasterIRQMask);
+			IO.WriteByte (IO.Port.Master_PIC_DataPort, MasterIRQMask);
 		}
 
 		private static void EnableSlaveIRQ (byte value)
@@ -134,7 +134,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			SlaveIRQMask &= (byte) ~(1 << value);
 
-			IO.Write8 (IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
+			IO.WriteByte (IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
 		}
 
 		public static void EnableIRQ (byte value)
@@ -161,7 +161,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			MasterIRQMask |= (byte) (1 << value);
 
-			IO.Write8 (IO.Port.Master_PIC_DataPort, MasterIRQMask);
+			IO.WriteByte (IO.Port.Master_PIC_DataPort, MasterIRQMask);
 		}
 
 		private static void DisableSlaveIRQ (byte value)
@@ -170,7 +170,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			SlaveIRQMask |= (byte) (1 << value);
 
-			IO.Write8 (IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
+			IO.WriteByte (IO.Port.Slave_PIC_DataPort, SlaveIRQMask);
 		}
 
 		public static void DisableIRQ (byte value)

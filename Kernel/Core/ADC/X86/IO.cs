@@ -23,17 +23,17 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region Ports
 		public enum Port : ushort {
 			#region 0000-001F - Primary Direct Memory Access (DMA) Controller
-			DMA_Channel0AddressByte0_1				= 0x0000, // read/write
-			DMA_Channel0CountByte0_1				= 0x0001, // read/write
+			DMA_Channel0Address						= 0x0000, // read/write
+			DMA_Channel0Count						= 0x0001, // read/write
             
-			DMA_Channel1AddressByte0_1				= 0x0002, // read/write
-			DMA_Channel1CountByte0_1				= 0x0003, // read/write
+			DMA_Channel1Address						= 0x0002, // read/write
+			DMA_Channel1Count						= 0x0003, // read/write
             
-			DMA_Channel2AddressByte0_1				= 0x0004, // read/write
-			DMA_Channel2CountByte0_1				= 0x0005, // read/write
+			DMA_Channel2Address						= 0x0004, // read/write
+			DMA_Channel2Count						= 0x0005, // read/write
 			
-			DMA_Channel3AddressByte0_1				= 0x0006, // read/write
-			DMA_Channel3CountByte0_1				= 0x0007, // read/write
+			DMA_Channel3Address						= 0x0006, // read/write
+			DMA_Channel3Count						= 0x0007, // read/write
 			
 			/// <summary>
 			/// 0008 r DMA channel 0-3 status register
@@ -346,17 +346,17 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			#region 0080-008F - DMA page registers
 			DMA_TemporaryStorage				= 0x0080, // read/write extra page register (temporary storage)
-			DMA_Channel2AddressByte2			= 0x0081, // read/write
-			DMA_Channel3AddressByte2			= 0x0082, // read/write
-			DMA_Channel1AddressByte2			= 0x0083, // read/write
+			DMA_Channel2Page					= 0x0081, // read/write
+			DMA_Channel3Page					= 0x0082, // read/write
+			DMA_Channel1Page					= 0x0083, // read/write
 			//0084 r/w extra page register
 			//0085 r/w extra page register
 			//0086 r/w extra page register
-			DMA_Channel0AddressByte2			= 0x0087, // read/write
+			DMA_Channel0Page					= 0x0087, // read/write
 			//0088 r/w extra page register
-			DMA_Channel6AddressByte2			= 0x0089, // read/write
-			DMA_Channel7AddressByte2			= 0x008A, // read/write
-			DMA_Channel5AddressByte2			= 0x008B, // read/write
+			DMA_Channel6Page					= 0x0089, // read/write
+			DMA_Channel7Page					= 0x008A, // read/write
+			DMA_Channel5Page					= 0x008B, // read/write
 			//008C r/w extra page register
 			//008D r/w extra page register
 			//008E r/w extra page register
@@ -704,8 +704,8 @@ namespace SharpOS.Kernel.ADC.X86 {
         };
 		#endregion
 
-		#region Read8
-		public unsafe static byte Read8 (Port port)
+		#region ReadByte
+		public unsafe static byte ReadByte (Port port)
 		{
 			byte value = 0;
 
@@ -718,8 +718,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 		#endregion
 
-		#region Read16
-		public unsafe static ushort Read16 (Port port)
+		#region ReadUInt16
+		public unsafe static ushort ReadUInt16 (Port port)
 		{
 			ushort value = 0;
 
@@ -732,8 +732,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 		#endregion
 
-		#region Read32
-		public unsafe static uint Read32 (Port port)
+		#region ReadUInt32
+		public unsafe static uint ReadUInt32 (Port port)
 		{
 			uint value = 0;
 
@@ -746,8 +746,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 		#endregion
 
-		#region Write8
-		public unsafe static void Write8 (Port port, byte value)
+		#region WriteByte
+		public unsafe static void WriteByte (Port port, byte value)
 		{
 			Asm.MOV (R16.DX, (ushort*) &port);
 			Asm.MOV (R8.AL, &value);
@@ -755,8 +755,16 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 		#endregion
 
-		#region Write16
-		public unsafe static void Write16 (Port port, ushort value)
+		#region WriteByte2
+		public unsafe static void WriteByte2 (Port port, ushort value)
+		{
+			WriteByte(port, (byte)((value     ) & 0xFF));
+			WriteByte(port, (byte)((value >> 8) & 0xFF));
+		}
+		#endregion
+
+		#region WriteUInt16
+		public unsafe static void WriteUInt16 (Port port, ushort value)
 		{
 			Asm.MOV (R16.DX, (ushort*) &port);
 			Asm.MOV (R16.AX, &value);
@@ -765,7 +773,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 
 		#region Write32
-		public unsafe static void Write32 (Port port, uint value)
+		public unsafe static void WriteUInt32 (Port port, uint value)
 		{
 			Asm.MOV (R16.DX, (ushort*) &port);
 			Asm.MOV (R32.EAX, &value);

@@ -135,11 +135,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public static byte Read(Address address)
 		{
 			Asm.CLI();
-			IO.Write8 (IO.Port.RTC_CommandPort, (byte)(0x80 | (byte)address));
+			IO.WriteByte (IO.Port.RTC_CommandPort, (byte)(0x80 | (byte)address));
 			Asm.NOP();
 			Asm.NOP();
 			Asm.NOP();
-			byte result = IO.Read8(IO.Port.RTC_DataPort);
+			byte result = IO.ReadByte(IO.Port.RTC_DataPort);
 			Asm.STI();
 			return result;
 		}
