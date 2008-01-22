@@ -24,5 +24,28 @@ namespace InternalSystem {
 
 		internal int Rank;
 		internal BoundEntry FirstEntry;
+
+		public unsafe int InternalLength
+		{
+			get
+			{
+				int result = this.FirstEntry.Length;
+
+				fixed (BoundEntry* entries = &this.FirstEntry) {
+					for (int i = 1; i < this.Rank; i++)
+						result *= entries [i].Length;
+				}
+
+				return result;
+			}
+		}
+
+		public int Length
+		{
+			get
+			{
+				return this.InternalLength;
+			}
+		}
 	}
 }

@@ -130,7 +130,7 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				return specialTypeElement;
+				return this.specialTypeElement;
 			}
 		}
 

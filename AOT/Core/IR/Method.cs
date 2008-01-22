@@ -2102,7 +2102,7 @@ namespace SharpOS.AOT.IR {
 		/// <value>
 		/// 	<c>true</c> if this instance is alloc SZ array; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsAllocSZArray
+		public bool IsAllocArray
 		{
 			get
 			{
@@ -2113,16 +2113,15 @@ namespace SharpOS.AOT.IR {
 					return false;
 
 				foreach (CustomAttribute customAttribute in definition.CustomAttributes) {
-					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocSZArrayAttribute).ToString ())
+					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocArrayAttribute).ToString ())
 						continue;
 
 					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
 							|| !definition.IsStatic
-							|| definition.Parameters.Count != 3
+							|| definition.Parameters.Count != 2
 							|| definition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName
-							|| definition.Parameters [1].ParameterType.FullName != Mono.Cecil.Constants.Int32
-							|| definition.Parameters [2].ParameterType.FullName != Mono.Cecil.Constants.Int32)
-						throw new EngineException (string.Format ("'{0}' is not a valid AllocSZArray method", this.methodDefinition.ToString ()));
+							|| definition.Parameters [1].ParameterType.FullName != Mono.Cecil.Constants.Int32)
+						throw new EngineException (string.Format ("'{0}' is not a valid AllocArray method", this.methodDefinition.ToString ()));
 
 					return true;
 				}
@@ -2131,6 +2130,10 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the labels.
+		/// </summary>
+		/// <value>The labels.</value>
 		public List<string> Labels
 		{
 			get

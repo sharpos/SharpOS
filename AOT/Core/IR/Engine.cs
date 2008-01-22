@@ -295,17 +295,17 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		Method allocSZArray = null;
+		Method allocArray = null;
 
 		/// <summary>
 		/// Gets the alloc SZArray method.
 		/// </summary>
 		/// <value>The alloc SZArray method.</value>
-		public Method AllocSZArray
+		public Method AllocArray
 		{
 			get
 			{
-				return this.allocSZArray;
+				return this.allocArray;
 			}
 		}
 
@@ -387,7 +387,7 @@ namespace SharpOS.AOT.IR {
 		/// Gets the size of the get object.
 		/// </summary>
 		/// <value>The size of the get object.</value>
-		public int GetObjectSize
+		public int ObjectSize
 		{
 			get
 			{
@@ -401,7 +401,7 @@ namespace SharpOS.AOT.IR {
 		/// <summary>
 		/// Gets the size of the VTable.
 		/// </summary>
-		/// <value>The size of the get V table.</value>
+		/// <value>The size of the get VTable.</value>
 		public int VTableSize
 		{
 			get
@@ -644,7 +644,7 @@ namespace SharpOS.AOT.IR {
 			throw new EngineException ("'" + field.Field.FieldDefinition.ToString () + "' has not been found.");
 		}
 
-		internal int GetSystemArrayLengthOffset ()
+		/*internal int GetSystemArrayLengthOffset ()
 		{
 			Class _class = this.ArrayClass;
 
@@ -654,7 +654,7 @@ namespace SharpOS.AOT.IR {
 			result += firstEntry.Type.GetFieldOffset ("Length");
 
 			return result;
-		}
+		}*/
 
 		/// <summary>
 		/// Gets the field.
@@ -978,11 +978,11 @@ namespace SharpOS.AOT.IR {
 
 						this.allocObject = _method;
 
-					} else if (_method.IsAllocSZArray) {
-						if (this.allocSZArray != null)
+					} else if (_method.IsAllocArray) {
+						if (this.allocArray != null)
 							throw new EngineException ("More than one method was tagged as AllocSZArray Method.");
 
-						this.allocSZArray = _method;
+						this.allocArray = _method;
 					}
 				}
 			}
@@ -990,7 +990,7 @@ namespace SharpOS.AOT.IR {
 			if (this.allocObject == null)
 				throw new EngineException ("No AllocObject Method defined.");
 
-			if (this.allocSZArray == null)
+			if (this.allocArray == null)
 				throw new EngineException ("No AllocSZArray Method defined.");
 		}
 

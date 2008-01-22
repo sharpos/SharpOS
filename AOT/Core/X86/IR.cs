@@ -34,6 +34,7 @@ namespace SharpOS.AOT.X86 {
 
 			if (call.Method.Class.IsArray
 					&& call.Method.SkipProcessing) {
+				this.ArrayCalls (call);
 
 				return;
 			}
@@ -2258,6 +2259,7 @@ namespace SharpOS.AOT.X86 {
 				this.PopCallParameters (instruction);
 
 			} else if (instruction.Method.Class.IsArray) {
+				this.ArrayMultidimensionalCtor (instruction);
 
 			} else
 				throw new NotImplementedEngineException ();
@@ -2404,7 +2406,7 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.PUSH (R32.ESI);
 			this.assembly.PUSH (R32.EDI);
 
-			this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.GetObjectSize);
+			this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.ObjectSize);
 			this.assembly.MOV (R32.EDI, R32.EAX);
 
 			if (value.IsRegisterSet)
@@ -2433,7 +2435,7 @@ namespace SharpOS.AOT.X86 {
 			else
 				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-			this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.GetObjectSize);
+			this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.ObjectSize);
 
 			if (assignee.IsRegisterSet)
 				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
@@ -2452,7 +2454,7 @@ namespace SharpOS.AOT.X86 {
 				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-				this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.GetObjectSize);
+				this.assembly.ADD (R32.EAX, (uint) this.assembly.Engine.ObjectSize);
 
 				this.assembly.PUSH (R32.ECX);
 				this.assembly.PUSH (R32.ESI);
@@ -2481,28 +2483,53 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		#region ARRAY
+		private const int ARRAY_RANK_OFFSET = 0;
+		private const int ARRAY_BOUND_OFFSET = 4;
+		private const int ARRAY_BOUND_LOWER_BOUND_OFFSET = 0;
+		private const int ARRAY_BOUND_LENGTH_OFFSET = 4;
+		private const int ARRAY_BOUND_SIZE = 8;
+		private const int ARRAY_BASE_SIZE = ARRAY_BOUND_OFFSET + ARRAY_BOUND_SIZE;
+		private const int ARRAY_FIRST_BOUND_LENGTH_OFFSET = ARRAY_BOUND_OFFSET + ARRAY_BOUND_LENGTH_OFFSET;
+
 		private void Newarr (IR.Instructions.Newarr instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+			int objectSize = this.assembly.Engine.ObjectSize;
 
-			this.assembly.PUSH ((uint) instruction.Type.SpecialTypeElement.Size);
+			this.assembly.MOV (R32.EAX, (uint) instruction.Type.SpecialTypeElement.Size);
 
 			if (value.IsRegisterSet)
-				this.assembly.PUSH (Assembly.GetRegister (value.Register));
+				this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
 			else
-				this.assembly.PUSH (new DWordMemory (this.GetAddress (value)));
+				this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.MUL (R32.ECX);
+			this.assembly.ADD (R32.EAX, (uint) (objectSize + ARRAY_BASE_SIZE));
+
+			this.assembly.PUSH (R32.EAX);
 
 			this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Type.TypeFullName));
 			this.assembly.PUSH (R32.EAX);
 
-			this.assembly.CALL (this.assembly.Engine.AllocSZArray.AssemblyLabel);
-			assembly.ADD (R32.ESP, 12);
+			this.assembly.CALL (this.assembly.Engine.AllocArray.AssemblyLabel);
+			assembly.ADD (R32.ESP, 8);
 
 			if (assignee.IsRegisterSet)
 				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 			else
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+			this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0, objectSize + ARRAY_RANK_OFFSET), (uint) 1);
+			this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0, objectSize + ARRAY_BOUND_OFFSET + ARRAY_BOUND_LOWER_BOUND_OFFSET), (uint) 0);
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0, objectSize + ARRAY_FIRST_BOUND_LENGTH_OFFSET), R32.ECX);
 		}
 
 		private void Stelem (IR.Instructions.Stelem instruction)
@@ -2514,8 +2541,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register index = instruction.Use [0] as IR.Operands.Register;
 			IR.Operands.Register assignee = instruction.Use [2] as IR.Operands.Register;
 
-			int lengthOffset = this.assembly.Engine.GetSystemArrayLengthOffset ();
-			int baseSize = this.assembly.Engine.ArrayClass.Size;
+			int objectSize = this.assembly.Engine.ObjectSize;
 			int elementSize = assignee.Type.SpecialTypeElement.Size;
 
 			if (assignee.IsRegisterSet)
@@ -2528,12 +2554,12 @@ namespace SharpOS.AOT.X86 {
 			else
 				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
 
-			this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, lengthOffset), R32.EAX);
+			this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, objectSize + ARRAY_FIRST_BOUND_LENGTH_OFFSET), R32.EAX);
 			this.assembly.JNA (labelError);
 
 			this.assembly.MOV (R32.EDX, (uint) elementSize);
 			this.assembly.MUL (R32.EDX);
-			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, baseSize));
+			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, objectSize + ARRAY_BASE_SIZE));
 
 			this.Save (assignee.Type.SpecialTypeElement.TypeFullName, assignee.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0), value);
 
@@ -2554,8 +2580,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register index = instruction.Use [1] as IR.Operands.Register;
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
-			int lengthOffset = this.assembly.Engine.GetSystemArrayLengthOffset ();
-			int baseSize = this.assembly.Engine.ArrayClass.Size;
+			int objectSize = this.assembly.Engine.ObjectSize;
 			int elementSize = value.Type.SpecialTypeElement.Size;
 
 			if (value.IsRegisterSet)
@@ -2568,12 +2593,12 @@ namespace SharpOS.AOT.X86 {
 			else
 				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
 
-			this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, lengthOffset), R32.EAX);
+			this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, objectSize + ARRAY_FIRST_BOUND_LENGTH_OFFSET), R32.EAX);
 			this.assembly.JNA (labelError);
 
 			this.assembly.MOV (R32.EDX, (uint) elementSize);
 			this.assembly.MUL (R32.EDX);
-			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, baseSize));
+			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, objectSize + ARRAY_BASE_SIZE));
 
 			this.Load (assignee, value.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0));
 
@@ -2590,20 +2615,245 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
-			int offset = this.assembly.Engine.GetSystemArrayLengthOffset ();
+			int objectSize = this.assembly.Engine.ObjectSize;
 
 			if (value.IsRegisterSet)
 				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 			else
 				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-			this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0, offset));
+			this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0, objectSize + ARRAY_FIRST_BOUND_LENGTH_OFFSET));
 
 			if (assignee.IsRegisterSet)
 				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 			else
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
+
+		private void ArrayCalls (IR.Instructions.Call call)
+		{
+			if (call.Method.Name.Equals ("Set"))
+				ArrayMultidimensionalSet (call);
+
+			else if (call.Method.Name.Equals ("Get"))
+				ArrayMultidimensionalGet (call);
+			
+			else
+				throw new NotImplementedEngineException ();
+		}
+
+		private void ArrayMultidimensionalCtor (IR.Instructions.Newobj instruction)
+		{
+			string constructorType = "[" + "".PadLeft (instruction.Use.Length - 1, ',') + "]";
+
+			if (instruction.Method.Class.TypeFullName.EndsWith (constructorType)) {
+				IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+				int objectSize = this.assembly.Engine.ObjectSize;
+
+				// Compute the count of entries in the array 
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+				for (int i = 1; i < instruction.Use.Length; i++) {
+					value = instruction.Use [i] as IR.Operands.Register;
+
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
+
+					this.assembly.MUL (R32.ECX);
+				}
+
+				// Compute the amount of bytes of all entries in the array
+				this.assembly.MOV (R32.ECX, (uint) instruction.Method.Class.SpecialTypeElement.Size);
+				this.assembly.MUL (R32.ECX);
+
+				// Compute the whole size of the array including the overhead
+				this.assembly.ADD (R32.EAX, (uint) (objectSize + ARRAY_BASE_SIZE + (instruction.Use.Length - 1)*ARRAY_BOUND_SIZE));
+
+				this.assembly.PUSH (R32.EAX);
+
+				this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Method.Class.TypeFullName));
+				this.assembly.PUSH (R32.EAX);
+
+				this.assembly.CALL (this.assembly.Engine.AllocArray.AssemblyLabel);
+				assembly.ADD (R32.ESP, 8);
+
+				if (assignee.IsRegisterSet)
+					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+				else
+					this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+				// Set the rank
+				this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0, objectSize + ARRAY_RANK_OFFSET), (uint) instruction.Use.Length);
+
+				// Set the lower boundary & length of every dimension
+				for (int i = 0; i < instruction.Use.Length; i++) {
+					int offset = objectSize + ARRAY_BOUND_OFFSET + i * ARRAY_BOUND_SIZE;
+
+					value = instruction.Use [i] as IR.Operands.Register;
+
+					if (value.IsRegisterSet)
+						this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
+					else
+						this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
+
+					this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0, offset + ARRAY_BOUND_LOWER_BOUND_OFFSET), (uint) 0);
+					this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0, offset + ARRAY_BOUND_LENGTH_OFFSET), R32.ECX);
+				}
+
+			} else
+				throw new NotImplementedEngineException ("Constructor with Lower boundaries not supported yet.");
+
+		}
+
+		private void ArrayMultidimensionalSet (IR.Instructions.Call instruction)
+		{
+			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
+			string labelOk = this.GetLabel (instruction.Block, instruction.Index, 1);
+
+			IR.Operands.Register value = instruction.Use [instruction.Use.Length - 1] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Use [0] as IR.Operands.Register;
+
+			int objectSize = this.assembly.Engine.ObjectSize;
+			int elementSize = assignee.Type.SpecialTypeElement.Size;
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (R32.ECX, Assembly.GetRegister (assignee.Register));
+			else
+				this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (assignee)));
+
+			// Check if every index is valid
+			for (int i = 1; i < instruction.Use.Length - 1; i++) {
+				IR.Operands.Register index = instruction.Use [i] as IR.Operands.Register;
+
+				if (index.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (index.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
+
+				int offset = objectSize + ARRAY_BOUND_OFFSET + (i - 1) * ARRAY_BOUND_SIZE;
+
+				this.assembly.SUB (R32.EAX, new DWordMemory (null, R32.ECX, null, 0, offset + ARRAY_BOUND_LOWER_BOUND_OFFSET));
+
+				this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, offset + ARRAY_BOUND_LENGTH_OFFSET), R32.EAX);
+				this.assembly.JNA (labelError);
+			}
+
+			this.assembly.XOR (R32.EAX, R32.EAX);
+			this.assembly.PUSH (R32.EAX);
+
+			// Compute the position in the table using the indices
+			for (int i = 1; i < instruction.Use.Length - 1; i++) {
+				IR.Operands.Register index = instruction.Use [i] as IR.Operands.Register;
+
+				if (index.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (index.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
+
+				for (int j = i + 1; j < instruction.Use.Length - 1; j++) {
+					int offset = objectSize + ARRAY_BOUND_OFFSET + (j - 1) * ARRAY_BOUND_SIZE;
+
+					this.assembly.MOV (R32.EDX, new DWordMemory (null, R32.ECX, null, 0, offset + ARRAY_BOUND_LENGTH_OFFSET));
+					this.assembly.MUL (R32.EDX); 
+				}
+
+				this.assembly.ADD (new DWordMemory (null, R32.ESP, null, 0), R32.EAX);
+			}
+			
+			this.assembly.POP (R32.EAX);
+
+			this.assembly.MOV (R32.EDX, (uint) elementSize);
+			this.assembly.MUL (R32.EDX);
+			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, objectSize + ARRAY_BASE_SIZE + (instruction.Use.Length - 3)*ARRAY_BOUND_SIZE));
+
+			this.Save (assignee.Type.SpecialTypeElement.TypeFullName, assignee.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0), value);
+
+			this.assembly.JMP (labelOk);
+			this.assembly.LABEL (labelError);
+
+			// TODO throw IndexOutOfRangeException
+
+			this.assembly.LABEL (labelOk);
+		}
+
+		private void ArrayMultidimensionalGet (IR.Instructions.Call instruction)
+		{
+			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
+			string labelOk = this.GetLabel (instruction.Block, instruction.Index, 1);
+
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+			int objectSize = this.assembly.Engine.ObjectSize;
+			int elementSize = value.Type.SpecialTypeElement.Size;
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
+
+			// Check if every index is valid
+			for (int i = 1; i < instruction.Use.Length; i++) {
+				IR.Operands.Register index = instruction.Use [i] as IR.Operands.Register;
+
+				if (index.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (index.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
+
+				int offset = objectSize + ARRAY_BOUND_OFFSET + (i - 1) * ARRAY_BOUND_SIZE;
+
+				this.assembly.SUB (R32.EAX, new DWordMemory (null, R32.ECX, null, 0, offset + ARRAY_BOUND_LOWER_BOUND_OFFSET));
+
+				this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, offset + ARRAY_BOUND_LENGTH_OFFSET), R32.EAX);
+				this.assembly.JNA (labelError);
+			}
+
+			this.assembly.XOR (R32.EAX, R32.EAX);
+			this.assembly.PUSH (R32.EAX);
+
+			// Compute the position in the table using the indices
+			for (int i = 1; i < instruction.Use.Length; i++) {
+				IR.Operands.Register index = instruction.Use [i] as IR.Operands.Register;
+
+				if (index.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (index.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
+
+				for (int j = i + 1; j < instruction.Use.Length; j++) {
+					int offset = objectSize + ARRAY_BOUND_OFFSET + (j - 1) * ARRAY_BOUND_SIZE;
+
+					this.assembly.MOV (R32.EDX, new DWordMemory (null, R32.ECX, null, 0, offset + ARRAY_BOUND_LENGTH_OFFSET));
+					this.assembly.MUL (R32.EDX);
+				}
+
+				this.assembly.ADD (new DWordMemory (null, R32.ESP, null, 0), R32.EAX);
+			}
+
+			this.assembly.POP (R32.EAX);
+
+			this.assembly.MOV (R32.EDX, (uint) elementSize);
+			this.assembly.MUL (R32.EDX);
+			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, objectSize + ARRAY_BASE_SIZE + (instruction.Use.Length - 2) * ARRAY_BOUND_SIZE));
+
+			this.Load (assignee, value.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0));
+
+			this.assembly.JMP (labelOk);
+			this.assembly.LABEL (labelError);
+
+			// TODO throw IndexOutOfRangeException
+
+			this.assembly.LABEL (labelOk);
+		}
+
+		#endregion
 
 		private void Isinst (IR.Instructions.Isinst instruction)
 		{

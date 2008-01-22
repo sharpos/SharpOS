@@ -1949,7 +1949,10 @@ namespace SharpOS.AOT.IR.Instructions {
 				this.def.InternalType = InternalType.ValueType;
 				this.def.Type = this.method.Class;
 
-			} else
+			} else if (this.method.Class.IsArray)
+				this.def.InternalType = InternalType.Array;
+
+			else
 				this.def.InternalType = InternalType.O;
 		}
 	}

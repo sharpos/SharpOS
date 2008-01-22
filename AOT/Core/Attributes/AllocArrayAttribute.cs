@@ -18,6 +18,6 @@ namespace SharpOS.AOT.Attributes {
 	/// Used to mark the method that is responsable to allocate a SZArray on the heap.
 	/// </summary>
 	[AttributeUsage (AttributeTargets.Method)]
-	public sealed class AllocSZArrayAttribute : Attribute {
+	public sealed class AllocArrayAttribute : Attribute {
 	}
 }

@@ -1047,6 +1047,16 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 1;
 		}
+
+		public static uint CMPIntMultidimensionalArrayLength ()
+		{
+			int [,] arr = new int [3, 2];
+
+			if (arr.Length != 6)
+				return 0;
+
+			return 1;
+		}
 #endif
 	}
 }
