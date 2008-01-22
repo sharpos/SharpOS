@@ -70,13 +70,16 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Barrier.Enter();
 			// Disable DMA Controller
 			IO.WriteByte (IO.Port.DMA_ChannelMaskRegister, (byte)((byte)channel | 4));
+						
+			// Clear any current transfers
+			IO.WriteByte (IO.Port.DMA_ClearBytePointerFlipFlop, (byte)0x00);
 
 			// Set DMA_Channel to write
 			IO.WriteByte (IO.Port.DMA_ModeRegister, (byte)((byte)mode | (byte)channel));
 			
 			// Set Address	
-			IO.WriteByte (dma_page, (byte)page);
 			IO.WriteByte2 (dma_address, (ushort)address);
+			IO.WriteByte (dma_page, (byte)page);
 
 			// Set Count
 			IO.WriteByte2 (dma_count, (ushort)(count - 1));

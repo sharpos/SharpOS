@@ -29,8 +29,6 @@ namespace SharpOS.Kernel.FileSystem {
 
 		public static void Setup ()
 		{
-			byte* floppyData = (byte*)0x00000000;
-
 			floppyDiskData = (byte*)MemoryManager.Allocate(readCount);
 
 			FloppyDiskController.Read(floppyDiskData, 0, readCount);
@@ -43,8 +41,6 @@ namespace SharpOS.Kernel.FileSystem {
 			root = ReadINode (INode.EXT2_ROOT_INO);	
 			
 			format = (DirectoryFileFormat*) MemoryManager.Allocate ((uint) (sizeof (DirectoryFileFormat) * 20));
-				
-			TextMode.WriteLine("-6");
 		}
 
 		public static void ListFile ()
