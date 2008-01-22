@@ -108,7 +108,7 @@ namespace SharpOS.AOT.IR {
 
 					if (this.classDefinition is ArrayType) {
 						this._base = this.engine.ArrayClass;
-						this.specialTypeElement = this.engine.GetClass (this.classDefinition.GetOriginalType ());
+						this.specialTypeElement = this.engine.GetClass ((this.classDefinition as ArrayType).ElementType);
 
 					} else
 						this._base = this.engine.GetClass (this.classDefinition.GetOriginalType ());

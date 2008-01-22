@@ -11,7 +11,7 @@
 
 //#define ARRAYS_NOT_SUPPORTED
 //#define MULTIDIMENSIONAL_ARRAYS_NOT_SUPPORTED
-#define JAGGED_ARRAYS_NOT_SUPPORTED
+//#define JAGGED_ARRAYS_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
 #if !ARRAYS_NOT_SUPPORTED
@@ -240,6 +240,65 @@ namespace SharpOS.Kernel.Tests.CS {
 #endif
 
 #if !JAGGED_ARRAYS_NOT_SUPPORTED
+		/// <summary>
+		/// int[][] read/write
+		/// </summary>
+		public static uint CMPIntJaggedMultidimensionalArray ()
+		{
+			int [,] [,,] arr = new int [2,3] [,,];
+
+			arr [1, 0] = new int [2, 2, 5];
+			arr [1, 1] = new int [2, 2, 3];
+			arr [1, 2] = new int [2, 2, 2];
+
+			arr [1, 0] [1, 1, 0] = 39;
+			arr [1, 0] [1, 1, 1] = 7;
+			arr [1, 0] [1, 1, 2] = 1009;
+			arr [1, 0] [1, 1, 3] = -22;
+			arr [1, 0] [1, 1, 4] = 1;
+
+			arr [1, 1] [1, 1, 0] = 88887;
+			arr [1, 1] [1, 1, 1] = -987788;
+			arr [1, 1] [1, 1, 2] = 0;
+
+			arr [1, 2] [1, 1, 0] = 6;
+			arr [1, 2] [1, 1, 1] = arr [1, 0] [1, 1, 0] * arr [1, 2] [1, 1, 0];
+
+			if (arr [1, 0] [1, 1, 0] != 39)
+				return 0;
+
+			if (arr [1, 0] [1, 1, 1] != 7)
+				return 0;
+
+			if (arr [1, 0] [1, 1, 2] != 1009)
+				return 0;
+
+			if (arr [1, 0] [1, 1, 3] != -22)
+				return 0;
+
+			if (arr [1, 0] [1, 1, 4] != 1)
+				return 0;
+
+
+
+			if (arr [1, 1] [1, 1, 0] != 88887)
+				return 0;
+
+			if (arr [1, 1] [1, 1, 1] != -987788)
+				return 0;
+
+			if (arr [1, 1] [1, 1, 2] != 0)
+				return 0;
+
+
+			if (arr [1, 2] [1, 1, 0] != 6)
+				return 0;
+
+			if (arr [1, 2] [1, 1, 1] != 39 * 6)
+				return 0;
+
+			return 1;
+		}
 
 		/// <summary>
 		/// int[][] read/write

@@ -1900,9 +1900,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 			if (this.def != null) {
 				this.def.InternalType = this.AdjustRegisterInternalType (method.Engine.GetInternalType (Class.GetTypeFullName (this.method.MethodDefinition.ReturnType.ReturnType)));
-
-				if (this.def.InternalType == InternalType.ValueType)
-					this.def.Type = method.Engine.GetClass (this.method.MethodDefinition.ReturnType.ReturnType);
+				this.def.Type = method.Engine.GetClass (this.method.MethodDefinition.ReturnType.ReturnType);
 			}
 		}
 	}
@@ -2237,7 +2235,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
-			this.def.InternalType = InternalType.SZArray;
+			this.def.InternalType = this.type.InternalType;
 			this.def.Type = this.type;
 		}
 	}

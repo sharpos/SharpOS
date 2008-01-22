@@ -727,12 +727,16 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Method GetMethod (MethodReference method)
 		{
-			string typeFullName = Class.GetTypeFullName (method.DeclaringType);
+			Class _class = this.GetClass (method.DeclaringType);
+
+			return _class.GetMethodByName (method);
+
+			/*string typeFullName = Class.GetTypeFullName (method.DeclaringType);
 
 			if (this.classesDictionary.ContainsKey (typeFullName))
 				return this.classesDictionary [typeFullName].GetMethodByName (method);
 
-			throw new EngineException (string.Format ("Method '{0}' not found.", method.ToString ()));
+			throw new EngineException (string.Format ("Method '{0}' not found.", method.ToString ()));*/
 		}
 
 		/// <summary>
@@ -1301,12 +1305,12 @@ namespace SharpOS.AOT.IR {
 				return Operands.InternalType.U;
 			else if (type.EndsWith ("&"))
 				return Operands.InternalType.U;
-			else if (type.EndsWith ("[][]"))
+			else if (type.EndsWith ("][]"))
+				return Operands.InternalType.Array;
+			else if (type.EndsWith (",]"))
 				return Operands.InternalType.Array;
 			else if (type.EndsWith ("[]"))
 				return Operands.InternalType.SZArray;
-			else if (type.EndsWith (",]"))
-				return Operands.InternalType.Array;
 
 			else if (type.Equals ("System.IntPtr"))
 				return Operands.InternalType.I;
