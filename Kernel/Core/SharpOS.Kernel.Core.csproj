@@ -106,6 +106,7 @@
     <Compile Include="ADC\X86\IDT.cs" />
     <Compile Include="ADC\X86\Interlocked.cs" />
     <Compile Include="ADC\X86\IO.cs" />
+    <Compile Include="ADC\X86\IOManager.cs" />
     <Compile Include="ADC\X86\Keyboard.cs" />
     <Compile Include="ADC\X86\MemoryUtil.cs" />
     <Compile Include="ADC\X86\Pager.cs" />

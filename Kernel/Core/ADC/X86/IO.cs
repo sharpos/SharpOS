@@ -678,7 +678,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 		#endregion
 
-		#region Out32
+		#region Write32
 		public unsafe static void Write32 (Port port, uint value)
 		{
 			Asm.MOV (R16.DX, (ushort*) &port);

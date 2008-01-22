@@ -26,6 +26,9 @@ namespace SharpOS.Kernel.ADC.X86
 		
 		const string	FLOPPYDISKCONTROLLER_HANDLER = "FLOPPYDISKCONTROLLER_HANDLER";
 
+		const int BYTES_PER_SECTOR = 512;
+		const int SECTORS_PER_TRACK = 18;
+		
 		#endregion
 		#region Enumerations
 		private enum FIFOCommand
@@ -77,14 +80,9 @@ namespace SharpOS.Kernel.ADC.X86
 		#endregion
 
 		static bool fddInterrupt = false;
-
-		const int BYTES_PER_SECTOR = 512;
-		const int SECTORS_PER_TRACK = 18;
-
 		public static void Setup ()
 		{
 			IDT.RegisterIRQ (IDT.Interrupt.FloppyDiskController, Stubs.GetFunctionPointer (FLOPPYDISKCONTROLLER_HANDLER));
-
 			TurnOffMotor ();
 		}
 
@@ -92,9 +90,17 @@ namespace SharpOS.Kernel.ADC.X86
 		static unsafe void FloppyDiskControllerHandler (IDT.ISRData data)
 		{
 			SetInterruptOccurred (true);
-
+			
 			// This is not necesarry, already done in code wrapped around this:
 			//IO.Out8(IO.Port.Master_PIC_CommandPort, 0x20);
+		}
+		
+		public static bool WaitForInterrupt()
+		{
+			int counter = 0;
+			while (HasInterruptOccurred () == false && counter < 10000)
+				counter++;
+			return (counter < 10000);
 		}
 
 		public static bool HasInterruptOccurred ()
@@ -121,6 +127,7 @@ namespace SharpOS.Kernel.ADC.X86
 
 		private unsafe static void SendCommandToFDC (byte command)
 		{
+			Barrier.Enter();
 			byte status = 0;
 
 			do {
@@ -129,10 +136,12 @@ namespace SharpOS.Kernel.ADC.X86
 			while ((status & 0xC0) != 0x80); //TODO: implement timeout
 
 			IO.Write8 (IO.Port.FDC_DataPort, command);
+			Barrier.Exit();
 		}
 
 		private unsafe static void SendDataToFDC (byte data)
 		{
+			Barrier.Enter();
 			byte status = 0;
 
 			do {
@@ -141,20 +150,22 @@ namespace SharpOS.Kernel.ADC.X86
 			while ((status & 0xC0) != 0x80); //TODO: implement timeout
 
 			IO.Write8 (IO.Port.FDC_DataPort, data);
+			Barrier.Exit();
 		}
 
 		//TODO: replace integer values with enums or describe in comments
 		//		..should we create a DMA.cs for all kernel DMA handling?
 		public unsafe static void SetupDMA ()
 		{
+			Barrier.Enter();
 			System.UInt16 count = BYTES_PER_SECTOR * SECTORS_PER_TRACK - 1;
 
 			IO.Write8 (IO.Port.DMA_ModeRegister, 0x46);
 
 			// Set Address
-			IO.Write8 (IO.Port.DMA_AddressRegister, 0x00);
-			IO.Write8 (IO.Port.DMA_AddressRegister, 0x00);
-			IO.Write8 (IO.Port.DMA_TempRegister, 0x00);
+			IO.Write8 (IO.Port.DMA_AddressRegister, (byte) ((uint)diskBuffer));
+			IO.Write8 (IO.Port.DMA_AddressRegister, (byte) (((uint)diskBuffer) >> 8));
+			IO.Write8 (IO.Port.DMA_TempRegister,	0x00);
 
 			// Set Count
 			IO.Write8 (IO.Port.DMA_CountRegister, (byte) count);
@@ -162,11 +173,19 @@ namespace SharpOS.Kernel.ADC.X86
 
 			// Enable DMA Controller
 			IO.Write8 (IO.Port.DMA_ChannelMaskRegister, 0x02);
+			Barrier.Exit();
 		}
+
+		internal static byte* diskBuffer;
 
 		public unsafe static void Read(byte* buffer, uint offset, uint length)
 		{
-			byte* data = (byte*)0x00000000;
+			if (diskBuffer == null)
+			{
+				diskBuffer = 
+					(byte*) MemoryManager.Allocate ((uint) BYTES_PER_SECTOR * SECTORS_PER_TRACK);
+			}
+			//byte* data = (byte*)0x00000000;
 
 			uint readBlockCount = (length + (512 * 18 - 1)) / (512 * 18);
 
@@ -182,7 +201,7 @@ namespace SharpOS.Kernel.ADC.X86
 				ReadData(head, track, sector);
 
 				for (uint index = offset, index2 = 0; index < offset + 512 * 18; ++index, ++index2)
-					buffer[index] = data[index2];
+					buffer[index] = diskBuffer[index2];
 
 				offset += 512 * 18;
 			}
@@ -191,39 +210,46 @@ namespace SharpOS.Kernel.ADC.X86
 		//TODO: replace integer values with enums or describe in comments
 		public unsafe static void ReadData(byte head, byte track, byte sector)
 		{
-			SetInterruptOccurred (false);
-
+			Barrier.Enter();
 			{
+				SetInterruptOccurred (false);
+				TurnOffMotor ();
 				TurnOnMotor ();
 			}
-			while (HasInterruptOccurred () == false)
-				;
+			Barrier.Exit();
 
-			SetInterruptOccurred (false);
-
+			if (!WaitForInterrupt())
+				return;
+						
+			Barrier.Enter();
 			{
+				SetInterruptOccurred (false);
 				SendCommandToFDC((byte)FIFOCommand.Recalibrate);
 				SendDataToFDC (0x00);
 			}
+			Barrier.Exit();
+
 			// FIXME: interrupt never gets called here .. (at least in bochs)
-			while (HasInterruptOccurred () == false)
-				;
-
-			SetInterruptOccurred (false);
-
+			if (!WaitForInterrupt())
+				return;
+						
+			Barrier.Enter();
 			{
+				SetInterruptOccurred (false);
 				SendCommandToFDC((byte)FIFOCommand.Seek);
 				SendCommandToFDC((byte)((head << 2) + 0));
 				SendCommandToFDC(track);
 			}
-			while (HasInterruptOccurred () == false)
-				;
+			Barrier.Exit();
+
+			if (!WaitForInterrupt())
+				return;
 
 			SetupDMA ();
-
-			SetInterruptOccurred (false);
-
+						
+			Barrier.Enter();
 			{
+				SetInterruptOccurred (false);
 				SendCommandToFDC((byte)FIFOCommand.Read);
 				SendCommandToFDC((byte)((head << 2) + 0));
 				SendCommandToFDC(track);
@@ -234,11 +260,16 @@ namespace SharpOS.Kernel.ADC.X86
 				SendDataToFDC(27);
 				SendDataToFDC (0xff);
 			}
-			while (HasInterruptOccurred () == false)
-				;
+			Barrier.Exit();
 
-			
-			TurnOffMotor();
+			if (!WaitForInterrupt())
+				return;
+						
+			Barrier.Enter();
+			{
+				TurnOffMotor();
+			}
+			Barrier.Exit();
 		}
 	}
 }

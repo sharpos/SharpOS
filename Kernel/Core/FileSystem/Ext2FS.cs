@@ -35,12 +35,16 @@ namespace SharpOS.Kernel.FileSystem {
 
 			FloppyDiskController.Read(floppyDiskData, 0, readCount);
 
-			ReadSuperBlock ();
-			ReadGroupDescriptor ();
+			if (!ReadSuperBlock())
+				return;
 
-			root = ReadINode (INode.EXT2_ROOT_INO);
-
+			ReadGroupDescriptor ();	
+			
+			root = ReadINode (INode.EXT2_ROOT_INO);	
+			
 			format = (DirectoryFileFormat*) MemoryManager.Allocate ((uint) (sizeof (DirectoryFileFormat) * 20));
+				
+			TextMode.WriteLine("-6");
 		}
 
 		public static void ListFile ()
@@ -123,7 +127,7 @@ namespace SharpOS.Kernel.FileSystem {
 			}
 		}
 
-		private static void ReadSuperBlock ()
+		private static bool ReadSuperBlock ()
 		{
 			byte* source = floppyDiskData;
 			byte* buffer = (byte*) (source + 1024);
@@ -131,21 +135,35 @@ namespace SharpOS.Kernel.FileSystem {
 			uint sizeOfBlock = (uint) sizeof (Block);
 			Block* block = (Block*) SharpOS.Kernel.ADC.MemoryManager.Allocate (sizeOfBlock);//block.Setup(1024, buffer);
 
-			block->SetBlock (1024, buffer);
+			block->SetBlock (1024, buffer);			
 			SuperBlock* superBlock = (SuperBlock*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) sizeof (SuperBlock));
 			superBlock->SetBlock (block);
 
 			fileSystem = (FileSystem*) MemoryManager.Allocate ((uint) sizeof (FileSystem));
-			fileSystem->SetSuperBlock (superBlock);
+			if (!fileSystem->SetSuperBlock(superBlock))
+			{
+				TextMode.WriteLine ("Not an Ext2 partition.");
+				return false;
+			}
 
 			if (fileSystem->SuperBlock->Magic != SuperBlock.EXT2_MAGIC)
-				TextMode.WriteLine ("Not an Ext2 partition.");
+			{
+				TextMode.WriteLine("Not an Ext2 partition.");
+				return false;
+			}
 
 			if (fileSystem->SuperBlock->Errors != SuperBlock.EXT2_ERRORS_CONTINUE)
-				TextMode.WriteLine ("Invalid Ext2 SuperBlock state.");
+			{
+				TextMode.WriteLine("Invalid Ext2 SuperBlock state.");
+				return false;
+			}
 
 			if (fileSystem->SuperBlock->AlgorithmsBitmap != 0)
-				TextMode.WriteLine ("Unsupported Bitmap Compression Algorithm.");
+			{
+				TextMode.WriteLine("Unsupported Bitmap Compression Algorithm.");
+				return false;
+			}
+			return true;
 		}
 
 		private static void ReadGroupDescriptor ()
