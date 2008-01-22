@@ -153,6 +153,33 @@ namespace SharpOS.Kernel.ADC.X86
 			Barrier.Exit();
 		}
 
+		//TODO: replace integer values with enums or describe in comments
+		//		..should we create a DMA.cs for all kernel DMA handling?
+		/*public unsafe static void SetupDMA ()
+		{
+			Barrier.Enter();
+			ushort count = BYTES_PER_SECTOR * SECTORS_PER_TRACK - 1;
+
+			byte DMA_Channel = 0x02;
+
+			// Disable DMA Controller
+			IO.WriteByte (IO.Port.DMA_ChannelMaskRegister, (byte)(DMA_Channel | 4));
+
+			// Set DMA_Channel to write
+			IO.WriteByte (IO.Port.DMA_ModeRegister, (byte)(0x48 | DMA_Channel));
+
+			// Set Address			
+			IO.WriteByte (IO.Port.DMA_Channel2AddressByte2,   (byte) (((uint)diskBuffer) >> 16));
+			IO.WriteByte2 (IO.Port.DMA_Channel2AddressByte0_1, (ushort)diskBuffer);
+
+			// Set Count
+			IO.WriteByte2 (IO.Port.DMA_Channel2Count, (ushort) count);
+			
+			// Enable DMA Controller
+			IO.WriteByte (IO.Port.DMA_ChannelMaskRegister, (byte)(DMA_Channel));
+			Barrier.Exit();
+		}*/
+
 		internal static byte* diskBuffer = (byte*)0x00000000;
 
 		public unsafe static void Read(byte* buffer, uint offset, uint length)
