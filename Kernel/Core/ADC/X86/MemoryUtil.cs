@@ -13,7 +13,9 @@ using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
 namespace SharpOS.Kernel.ADC.X86 {
-	public static class MemoryUtil {
+	public static class MemoryUtil	{
+
+		#region MemSet
 		public static unsafe void MemSet (uint value, uint dst, uint count)
 		{
 			Asm.CLD ();
@@ -34,7 +36,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.REP ();
 			Asm.STOSD ();
 		}
-
+		#endregion
+		
+		#region MemSet32
 		public static unsafe void MemSet32 (uint value, uint dst, uint count)
 		{
 			Asm.CLD ();
@@ -44,7 +48,55 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.REP ();
 			Asm.STOSD ();
 		}
+		#endregion
+		
+		#region BitCount
+		public static uint BitCount (byte value)
+		{
+			uint count = 0;    
+			while (value > 0)
+			{
+				count += (value & 1u);
+				value >>= 1 ;
+			}
+			return (uint)count;
+		}
+		
+		public static uint BitCount (ushort value)
+		{
+			uint count = 0;    
+			while (value > 0)
+			{
+				count += (value & 1u);
+				value >>= 1 ;
+			}
+			return (uint)count;
+		}
+		
+		public static uint BitCount (uint value)
+		{
+			uint count = 0;    
+			while (value > 0)
+			{
+				count += (value & 1u);
+				value >>= 1 ;
+			}
+			return (uint)count;
+		}
 
+		public static uint BitCount (ulong value)
+		{
+			ulong count = 0;    
+			while (value > 0)
+			{
+				count += (value & 1ul);
+				value >>= 1 ;
+			}
+			return (uint)count;
+		}
+		#endregion
+	
+		#region MemCopy
 		public static unsafe void MemCopy (uint src, uint dst, uint count)
 		{
 			Asm.CLD ();
@@ -87,7 +139,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOVSD ();		// move everything else in 32bit blocks
 			Asm.LABEL ("EndMove");
 		}
-
+		#endregion
+	
+		#region MemCopy32
 		public static unsafe void MemCopy32 (uint src, uint dst, uint count)
 		{
 			Asm.CLD ();
@@ -97,7 +151,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.REP ();
 			Asm.MOVSD ();
 		}
-
+		#endregion
+	
+		#region Call
 		public unsafe static void Call (uint address, uint value)
 		{
 			Asm.PUSH (&value);
@@ -129,5 +185,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 					Asm.CALL(function);
 				}
 		*/
+		#endregion
 	}
 }
