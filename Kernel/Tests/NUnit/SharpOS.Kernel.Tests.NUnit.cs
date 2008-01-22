@@ -328,56 +328,6 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPImplement () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPImplement' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPConstructor ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPConstructor () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructPointer ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructPointer2 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPEmptyStruct ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructParameter ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPNoChanges ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPCopy ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPCopy () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPReturn ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPReturn () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPSizeof1 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
-	}
-	[Test]
-	public void SharpOS_Kernel_Tests_CS_Struct_CMPSizeof2 ()
-	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
-	}
-	[Test]
 	public void SharpOS_Kernel_Tests_CS_Inheritance_CMPCallInherited ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Inheritance.CMPCallInherited () == 1, "'SharpOS.Kernel.Tests.CS.Inheritance.CMPCallInherited' failed.");
@@ -681,6 +631,56 @@ public class KernelTests {
 	public void SharpOS_Kernel_Tests_CS_OrderOfOperations_CMPValuesAndConstants ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants () == 1, "'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPConstructor ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPConstructor () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructPointer ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructPointer2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPEmptyStruct ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPStructParameter ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPNoChanges ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPCopy ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPCopy () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPReturn ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPReturn () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPSizeof1 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Struct_CMPSizeof2 ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2 () == 1, "'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_Boolean_CMPSimpleAnd ()

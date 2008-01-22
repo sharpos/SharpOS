@@ -25,6 +25,8 @@ namespace SharpOS.Kernel.Tests.CS {
 			}
 		}
 
+		private static Point staticPoint;
+
 		private static int Constructor (int a, int b)
 		{
 			Point point = new Point (a, b);

@@ -1208,6 +1208,15 @@ namespace SharpOS.AOT.X86 {
 							this.DATA ((uint) 0);
 							this.DATA ((uint) 0);
 							break;
+						
+						case InternalType.ValueType:
+							for (int i = 0; i < field.Type.Size / 4; i++)
+								this.DATA ((uint) 0);
+
+							for (int i = 0; i < field.Type.Size % 4; i++)
+								this.DATA ((byte) 0);
+
+							break;
 
 						default:
 							throw new NotImplementedEngineException ("'" + field.FieldDefinition.FieldType + "' is not supported.");

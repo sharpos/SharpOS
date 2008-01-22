@@ -394,66 +394,6 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPConstructor () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPCopy () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPReturn () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
-				failures++;
-			}
-
-			if (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2 () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
-				failures++;
-			}
-
 			if (SharpOS.Kernel.Tests.CS.Inheritance.CMPCallInherited () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Inheritance.CMPCallInherited' failed.");
 				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Inheritance.CMPCallInherited' failed.");
@@ -817,6 +757,66 @@ namespace SharpOS.Kernel.Tests {
 			if (SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants' failed.");
 				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.OrderOfOperations.CMPValuesAndConstants' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPConstructor () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPConstructor' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructPointer2' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPEmptyStruct' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPStructParameter' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPNoChanges' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPCopy () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPCopy' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPReturn () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPReturn' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof1' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2 () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Struct.CMPSizeof2' failed.");
 				failures++;
 			}
 
