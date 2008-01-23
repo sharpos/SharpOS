@@ -95,6 +95,19 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			return EventRegisterStatus.CapacityExceeded;
 		}
+
+		public static EventRegisterStatus UnregisterTimerEvent (uint address)
+		{
+			for (int x = 0; x < EntryModule.MaxEventHandlers; ++x) {
+				if (timerEvent[x] == address) {
+					timerEvent[x] = 0;
+					return EventRegisterStatus.Success;
+				}
+			}
+
+			return EventRegisterStatus.NotSubscribed;
+		}
+
 		#endregion
 
 		#region TimerHandler

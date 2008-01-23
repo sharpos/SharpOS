@@ -20,6 +20,11 @@ namespace SharpOS.Kernel.ADC {
 			return EventRegisterStatus.NotSupported;
 		}
 
+		public static EventRegisterStatus UnregisterTimerEvent (uint func)
+		{
+			return EventRegisterStatus.NotSupported;
+		}
+
 		[AOTAttr.ADCStub]
 		public static ushort GetFrequency ()
 		{
