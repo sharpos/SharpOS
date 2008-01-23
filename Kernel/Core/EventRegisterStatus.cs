@@ -17,5 +17,6 @@ namespace SharpOS.Kernel.ADC {
 		NotSupported,
 		CapacityExceeded,
 		AlreadySubscribed,
+		NotSubscribed,
 	}
 }
