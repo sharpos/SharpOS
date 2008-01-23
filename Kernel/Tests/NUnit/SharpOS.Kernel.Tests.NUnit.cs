@@ -323,9 +323,29 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Misc.CMP4 () == 1, "'SharpOS.Kernel.Tests.CS.Misc.CMP4' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Interface_CMPImplement ()
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPGetAbstractProperty ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPImplement () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPImplement' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallInherited ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallProxiedInherited ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallOverridden ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden' failed.");
+	}
+	[Test]
+	public void SharpOS_Kernel_Tests_CS_Abstract_CMPCallAbstractMember ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_Inheritance_CMPCallInherited ()
@@ -358,9 +378,9 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Inheritance.CMPCallShadowedMemberFromBase () == 1, "'SharpOS.Kernel.Tests.CS.Inheritance.CMPCallShadowedMemberFromBase' failed.");
 	}
 	[Test]
-	public void SharpOS_Kernel_Tests_CS_Abstract_CMPImplement ()
+	public void SharpOS_Kernel_Tests_CS_Interface_CMPImplement ()
 	{
-		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Abstract.CMPImplement () == 1, "'SharpOS.Kernel.Tests.CS.Abstract.CMPImplement' failed.");
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Interface.CMPImplement () == 1, "'SharpOS.Kernel.Tests.CS.Interface.CMPImplement' failed.");
 	}
 	[Test]
 	public void SharpOS_Kernel_Tests_CS_String_CMPGetLength ()

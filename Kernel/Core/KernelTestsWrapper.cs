@@ -388,9 +388,33 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Interface.CMPImplement () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Interface.CMPImplement' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Interface.CMPImplement' failed.");
+			if (SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPGetAbstractProperty' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPCallInherited' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPCallProxiedInherited' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPCallOverridden' failed.");
+				failures++;
+			}
+
+			if (SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPCallAbstractMember' failed.");
 				failures++;
 			}
 
@@ -430,9 +454,9 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
-			if (SharpOS.Kernel.Tests.CS.Abstract.CMPImplement () != 1) {
-				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPImplement' failed.");
-				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Abstract.CMPImplement' failed.");
+			if (SharpOS.Kernel.Tests.CS.Interface.CMPImplement () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Interface.CMPImplement' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Interface.CMPImplement' failed.");
 				failures++;
 			}
 

@@ -8,9 +8,10 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+//#define NO_ABSTRACT_SUPPORT
 namespace SharpOS.Kernel.Tests.CS {
 	public class Abstract {
-#if false
+#if !NO_ABSTRACT_SUPPORT
 		private abstract class Base {
 			protected int number;
 
@@ -24,9 +25,9 @@ namespace SharpOS.Kernel.Tests.CS {
 				this.number = number;
 			}
 
-			//public abstract int Number {
-			//        get;
-			//}
+			public abstract int Number {
+			        get;
+			}
 
 			public int GetNumber ()
 			{
@@ -43,7 +44,7 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 50;
 			}
 
-			//public abstract int GetAbstract42 ();
+			public abstract int GetAbstract42 ();
 		}
 
 		private class SubClass : Base {
@@ -54,10 +55,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			{
 			}
 
-			//public override int Number
-			//{
-			//        get { return number; }
-			//}
+			public override int Number
+			{
+			        get { return number; }
+			}
 
 			public int GetInheritedNumber ()
 			{
@@ -69,16 +70,16 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 100;
 			}
 
-			//public override int GetAbstract42 ()
-			//{
-			//        return 42;
-			//}
+			public override int GetAbstract42 ()
+			{
+			        return 42;
+			}
 		}
 
 		public static uint CMPGetAbstractProperty ()
 		{
-			//if (new SubClass (37).Number == 37)
-			//        return 1;
+			if (new SubClass (37).Number == 37)
+			        return 1;
 
 			return 0;
 		}
@@ -109,8 +110,8 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPCallAbstractMember ()
 		{
-			//if (new SubClass ().GetAbstract42 () == 42)
-			//        return 1;
+			if (new SubClass ().GetAbstract42 () == 42)
+			        return 1;
 
 			return 0;
 		}

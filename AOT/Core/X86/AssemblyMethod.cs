@@ -64,6 +64,10 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.AddSymbol (new COFF.Function (fullname));
 
 			assembly.LABEL (fullname);
+			
+			if (this.method.IsAbstract)
+				return true;
+
 			assembly.PUSH (R32.EBP);
 			assembly.MOV (R32.EBP, R32.ESP);
 			assembly.PUSH (R32.EBX);

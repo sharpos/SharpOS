@@ -1787,6 +1787,25 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this instance is abstract.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is abstract; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsAbstract
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition != null)
+					return definition.IsAbstract;
+
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this instance is new slot.
 		/// </summary>
 		/// <value>

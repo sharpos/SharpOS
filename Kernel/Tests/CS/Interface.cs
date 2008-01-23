@@ -56,32 +56,32 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPGetProperty ()
 		{
-			//if (new Class ().Number == 42)
-			//        return 1;
+			if (new Class ().Number == 42)
+			        return 1;
 
 			return 0;
 		}
 
 		public static uint CMPCallGet100 ()
 		{
-			//if (new Class ().Get100() == 100)
-			//        return 1;
+			if (new Class ().Get100() == 100)
+			        return 1;
 
 			return 0;
 		}
 
 		public static uint CMPCallChosenInterface1 ()
 		{
-			//if ((new Class () as Iface1).GetNumber() == 42)
-			//        return 1;
+			if ((new Class () as Iface1).GetNumber() == 42)
+			        return 1;
 
 			return 0;
 		}
 
 		public static uint CMPCallChosenInterface2 ()
 		{
-			//if ((new Class () as Iface2).GetNumber() == 69)
-			//        return 1;
+			if ((new Class () as Iface2).GetNumber() == 69)
+			        return 1;
 
 			return 0;
 		}

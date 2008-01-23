@@ -610,7 +610,8 @@ namespace SharpOS.AOT.IR {
 				this._base.AddVirtualMethods (list);
 
 			foreach (Method method in this.methods) {
-				if (method.IsNewSlot) {
+				if (method.IsNewSlot
+						|| method.IsAbstract) {
 					method.VirtualSlot = list.Count;
 					list.Add (method);
 
