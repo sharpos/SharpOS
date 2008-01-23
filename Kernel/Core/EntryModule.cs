@@ -17,6 +17,7 @@ using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 using SharpOS.Kernel.Memory;
 using SharpOS.Korlib.Runtime;
+using SharpOS.AOT.Metadata;
 
 namespace SharpOS.Kernel {
 
@@ -26,6 +27,9 @@ namespace SharpOS.Kernel {
 		static bool stayInLoop = true;
 		static KernelStage kernelStage = KernelStage.Init;
 		static Multiboot.Info* multibootInfo = null;
+
+		[SharpOS.AOT.Attributes.AddressOf ("SharpOS.Kernel.dll AssemblyRow#0")]
+		static AssemblyRow assemblyRow;
 
 		#endregion
 		#region Constants
@@ -129,12 +133,12 @@ namespace SharpOS.Kernel {
 			//StageMessage("Ext2FS FileSystem setup...");
 			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
 
-			TextMode.SaveAttributes();
-			TextMode.SetAttributes(TextColor.LightGreen, TextColor.Black);
-			TextMode.WriteLine("");
-			TextMode.WriteLine("Pinky: What are we gonna do tonight, Brain?");
-			TextMode.WriteLine("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
-			TextMode.RestoreAttributes();
+			TextMode.SaveAttributes ();
+			TextMode.SetAttributes (TextColor.LightGreen, TextColor.Black);
+			TextMode.WriteLine ("");
+			TextMode.WriteLine ("Pinky: What are we gonna do tonight, Brain?");
+			TextMode.WriteLine ("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
+			TextMode.RestoreAttributes ();
 
 #if KERNEL_TESTS
 			// Testcases
@@ -146,6 +150,16 @@ namespace SharpOS.Kernel {
 			SharpOS.Kernel.Tests.Wrapper.Run ();
 			InternalSystem.String.__RunTests ();
 #endif
+
+			#region Metadata Tests
+			TextMode.Write ("HashAlgId: ");
+			TextMode.WriteNumber ((int) assemblyRow.HashAlgId);
+			TextMode.WriteLine ();
+
+			TextMode.Write ("Name: ");
+			TextMode.WriteNumber ((int) assemblyRow.Name);
+			TextMode.WriteLine ();
+			#endregion
 
 			StageMessage ("Shell setup...");
 			SharpOS.Kernel.Shell.Prompter.Setup ();

@@ -124,7 +124,7 @@ namespace SharpOS.AOT.IR {
 		ADCLayer adcLayer = null;
 
 		List<AssemblyDefinition> assemblies = new List<AssemblyDefinition> ();
-		List<Class> classes = new List<Class> (); 
+		List<Class> classes = new List<Class> ();
 		Dictionary<string, Class> classesDictionary = new Dictionary<string, Class> ();
 		Dictionary<string, byte []> resources = null;
 
@@ -143,6 +143,12 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				return this.status;
+			}
+		}
+
+		public AssemblyDefinition [] Sources {
+			get {
+				return this.assemblies.ToArray ();
 			}
 		}
 
@@ -264,7 +270,6 @@ namespace SharpOS.AOT.IR {
 				return this.typeInfoClass;
 			}
 		}
-
 
 		/// <summary>
 		/// Gets the array class.
@@ -834,6 +839,16 @@ namespace SharpOS.AOT.IR {
 			return;
 		}
 
+		private bool IncludeAOTCoreClass (TypeDefinition typeDefinition)
+		{
+			foreach (CustomAttribute customAttribute in typeDefinition.CustomAttributes) {
+				if (customAttribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.IncludeAttribute).ToString ()))
+					return true;
+			}
+
+			return false;
+		}
+
 		/// <summary>
 		/// Generates the IR.
 		/// </summary>
@@ -846,10 +861,14 @@ namespace SharpOS.AOT.IR {
 			Message (1, "Generating IR for assembly types...");
 			SetStatus (Status.IRGeneration);
 
-			bool isAOTCore = library.MainModule.Name == System.Reflection.MethodBase.GetCurrentMethod ().Module.ToString ();
-
 			// We first add the data (Classes and Methods)
 			foreach (TypeDefinition type in library.MainModule.Types) {
+				bool includeAOTCoreClass = false;
+				bool isAOTCore = library.MainModule.Name == System.Reflection.MethodBase.GetCurrentMethod ().Module.ToString ();
+
+				if (isAOTCore && this.IncludeAOTCoreClass (type))
+					isAOTCore = false;
+
 				if (isAOTCore) {
 					if (!this.asm.IsInstruction (type.FullName)
 							&& !this.asm.IsRegister (type.FullName)
@@ -959,7 +978,7 @@ namespace SharpOS.AOT.IR {
 							throw new EngineException ("More than one class was tagged as TypeInfo Class.");
 
 						this.typeInfoClass = _class;
-					}
+					} 
 				}
 			}
 
@@ -1212,7 +1231,7 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public int GetFieldSize (string type)
 		{
-			return this.GetTypeSize (type, 0); 
+			return this.GetTypeSize (type, 0);
 		}
 
 		/// <summary>

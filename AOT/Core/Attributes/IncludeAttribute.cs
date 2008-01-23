@@ -1,8 +1,8 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
-//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	William Lahti <xfurious@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -14,9 +14,9 @@ using SharpOS.AOT;
 
 namespace SharpOS.AOT.Attributes {
 	/// <summary>
-	/// Used to mark the method that is responsable to allocate an object on the heap.
+	/// Used to mark the classes in the SharpOS.AOT.Core that will be needed by the Kernel.
 	/// </summary>
-	[AttributeUsage (AttributeTargets.Method)]
-	public sealed class AllocObjectAttribute : Attribute {
+	[AttributeUsage (AttributeTargets.Class)]
+	public sealed class IncludeAttribute : Attribute {
 	}
 }

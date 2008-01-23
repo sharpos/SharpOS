@@ -753,6 +753,22 @@ namespace SharpOS.AOT.IR.Operands {
 				return this.internalType;
 			}
 		}
+
+		public string AddressOf
+		{
+			get
+			{
+				foreach (CustomAttribute customAttribute in this.fieldDefinition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName !=
+							typeof (SharpOS.AOT.Attributes.AddressOfAttribute).FullName)
+						continue;
+
+					return customAttribute.ConstructorParameters [0].ToString ();
+				}
+
+				return string.Empty;
+			}
+		}
 	}
 
 	/// <summary>

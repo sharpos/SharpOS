@@ -30,6 +30,7 @@
 				<include name="IR/Operators/*.cs" />
 				<include name="Attributes/*.cs" />
 				<include name="X86/*.cs" />
+				<include name="Metadata/*.cs" />
 			</sources>
 		</csc>
 	</target>

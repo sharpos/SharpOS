@@ -10,13 +10,12 @@
 
 using System;
 using System.Text;
-using SharpOS.AOT;
 
 namespace SharpOS.AOT.Attributes {
-	/// <summary>
-	/// Used to mark the method that is responsable to allocate an object on the heap.
-	/// </summary>
-	[AttributeUsage (AttributeTargets.Method)]
-	public sealed class AllocObjectAttribute : Attribute {
+	[AttributeUsage (AttributeTargets.Field)]
+	public sealed class AddressOfAttribute : Attribute {
+		public AddressOfAttribute (string name)
+		{
+		}
 	}
 }

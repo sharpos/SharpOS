@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -282,7 +282,7 @@ namespace SharpOS.AOT.X86 {
 
 			else if (value.StartsWith ("SharpOS.AOT.X86.DRType"))
 				return InternalType.U4;
-			
+
 			else if (value.StartsWith ("SharpOS.AOT.X86.TRType"))
 				return InternalType.U4;
 
@@ -634,7 +634,7 @@ namespace SharpOS.AOT.X86 {
 #if PE
 		private void AddPEHeader ()
 		{
-			////////////////////////////////////////////////////////////////////// 
+			//////////////////////////////////////////////////////////////////////
 			// DOS Header
 			// Magic number ('MZ')
 			this.DATA ((ushort) 0x5A4D);
@@ -707,7 +707,7 @@ namespace SharpOS.AOT.X86 {
 			this.DATA ((uint) 0);
 
 			//////////////////////////////////////////////////////////////////////
-			// DOS Code 
+			// DOS Code
 			this.BITS32 (false);
 			this.ORG (0);
 
@@ -761,7 +761,7 @@ namespace SharpOS.AOT.X86 {
 
 			//////////////////////////////////////////////////////////////////////
 			// Optional Header
-			// MagicNumber 	
+			// MagicNumber
 			this.DATA ((ushort) 0x010B);
 
 			// MajorLinkerVersion
@@ -1092,7 +1092,7 @@ namespace SharpOS.AOT.X86 {
 			// The kernel Start
 			this.PUSH (BASE_ADDRESS);
 
-			// Pointer to the Multiboot Info 
+			// Pointer to the Multiboot Info
 			this.PUSH (R32.EBX);
 
 			// The magic value
@@ -1132,7 +1132,7 @@ namespace SharpOS.AOT.X86 {
 		/// Adds the object fields.
 		/// </summary>
 		/// <param name="_class">The _class.</param>
-		private void AddObjectFields (string _class)
+		public void AddObjectFields (string _class)
 		{
 			// VTable
 			this.ADDRESSOF (this.GetVTableLabel (_class));
@@ -1150,6 +1150,8 @@ namespace SharpOS.AOT.X86 {
 
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (START_DATA);
+
+			this.AddMetadata ();
 
 			foreach (Class _class in engine) {
 				if (_class.IsInternal)
@@ -1178,48 +1180,55 @@ namespace SharpOS.AOT.X86 {
 					this.AddSymbol (new COFF.Static (fullname));
 					this.LABEL (fullname);
 
-					// TODO refactor this
-					switch (engine.GetInternalType (field.FieldDefinition.FieldType.FullName)) {
-						case InternalType.I1:
-						case InternalType.U1:
-							this.DATA ((byte) 0);
-							break;
+					string addressOf = field.AddressOf;
 
-						case InternalType.I2:
-						case InternalType.U2:
-							this.DATA ((ushort) 0);
-							break;
+					if (addressOf.Length > 0)
+						this.ADDRESSOF (addressOf);
 
-						case InternalType.SZArray:
-						case InternalType.Array:
-						case InternalType.O:
-						case InternalType.I:
-						case InternalType.U:
-						case InternalType.I4:
-						case InternalType.U4:
-						case InternalType.R4:
-							this.DATA ((uint) 0);
-							break;
-
-						case InternalType.I8:
-						case InternalType.U8:
-						case InternalType.R8:
-						case InternalType.F:
-							this.DATA ((uint) 0);
-							this.DATA ((uint) 0);
-							break;
-						
-						case InternalType.ValueType:
-							for (int i = 0; i < field.Type.Size / 4; i++)
-								this.DATA ((uint) 0);
-
-							for (int i = 0; i < field.Type.Size % 4; i++)
+					else {
+						// TODO refactor this
+						switch (engine.GetInternalType (field.FieldDefinition.FieldType.FullName)) {
+							case InternalType.I1:
+							case InternalType.U1:
 								this.DATA ((byte) 0);
+								break;
 
-							break;
+							case InternalType.I2:
+							case InternalType.U2:
+								this.DATA ((ushort) 0);
+								break;
 
-						default:
-							throw new NotImplementedEngineException ("'" + field.FieldDefinition.FieldType + "' is not supported.");
+							case InternalType.SZArray:
+							case InternalType.Array:
+							case InternalType.O:
+							case InternalType.I:
+							case InternalType.U:
+							case InternalType.I4:
+							case InternalType.U4:
+							case InternalType.R4:
+								this.DATA ((uint) 0);
+								break;
+
+							case InternalType.I8:
+							case InternalType.U8:
+							case InternalType.R8:
+							case InternalType.F:
+								this.DATA ((uint) 0);
+								this.DATA ((uint) 0);
+								break;
+
+							case InternalType.ValueType:
+								for (int i = 0; i < field.Type.Size / 4; i++)
+									this.DATA ((uint) 0);
+
+								for (int i = 0; i < field.Type.Size % 4; i++)
+									this.DATA ((byte) 0);
+
+								break;
+
+							default:
+								throw new NotImplementedEngineException ("'" + field.FieldDefinition.FieldType + "' is not supported.");
+						}
 					}
 				}
 			}
@@ -1233,6 +1242,17 @@ namespace SharpOS.AOT.X86 {
 
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (END_DATA);
+		}
+
+		private void AddMetadata ()
+		{
+			MetadataVisitor visit = new MetadataVisitor (this);
+
+			foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
+				foreach (ModuleDefinition moduleDef in assemblyDef.Modules) {
+					visit.Encode (moduleDef);
+				}
+			}
 		}
 
 		private void AddVTableFields (Class _class, string typeInfoLabel)

@@ -10,7 +10,6 @@
 
 using System;
 using System.Text;
-
 using SharpOS.AOT;
 
 namespace SharpOS.AOT.Attributes {
