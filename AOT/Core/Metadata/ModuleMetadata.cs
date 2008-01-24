@@ -8,6 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+// TODO: break each class into separate files!
 
 using System.Runtime.InteropServices;
 using SharpOS.AOT.Attributes;
@@ -29,19 +30,70 @@ namespace SharpOS.AOT.Metadata {
 
 	[Include]
 	[StructLayout (LayoutKind.Sequential)]
+	public class AssemblyOSRow {
+		public uint OSPlatformID;
+		public uint OSMajorVersion;
+		public uint OSMinorVersion;
+	}
+
+	[Include]
+	[StructLayout (LayoutKind.Sequential)]
+	public class AssemblyProcessorRow {
+		public uint Processor;
+	}
+
+	[Include]
+	[StructLayout (LayoutKind.Sequential)]
+	public class AssemblyRefOSRow {
+		public uint OSPlatformID;
+		public uint OSMajorVersion;
+		public uint OSMinorVersion;
+		public uint AssemblyRef;
+	}
+
+	[Include]
+	[StructLayout (LayoutKind.Sequential)]
+	public class AssemblyRefProcessorRow {
+		public uint Processor;
+		public uint AssemblyRef;
+	}
+
+	[Include]
+	[StructLayout (LayoutKind.Sequential)]
+	public class AssemblyRefRow {
+		public ushort MajorVersion;
+		public ushort MinorVersion;
+		public ushort BuildNumber;
+		public ushort RevisionNumber;
+		public uint Flags;
+		public uint PublicKeyOrToken;
+		public uint Name;
+		public uint Culture;
+		public uint HashValue;
+	}
+
+	[Include]
+	[StructLayout (LayoutKind.Sequential)]
+	public class ClassLayoutRow {
+		public ushort PackingSize;
+		public uint Class;
+		public uint Parent;
+	}
+
+	[Include]
+	[StructLayout (LayoutKind.Sequential)]
 	public class ModuleMetadata {
 		public byte [] StringsHeap;
 		public byte [] BlobHeap;
 		public byte [] GuidHeap;
 		public AssemblyRow [] Assembly;
-
-		/*
 		public AssemblyOSRow [] AssemblyOS;
 		public AssemblyProcessorRow [] AssemblyProcessor;
 		public AssemblyRefOSRow [] AssemblyRefOS;
 		public AssemblyRefProcessorRow [] AssemblyRefProcessor;
 		public AssemblyRefRow [] AssemblyRef;
 		public ClassLayoutRow [] ClassLayout;
+		/*
 		public ConstantRow [] Constant;
 		public CustomAttributeRow [] CustomAttribute;
 		public DeclSecurityRow [] DeclSecurity;
