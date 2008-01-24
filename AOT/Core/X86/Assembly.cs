@@ -1151,7 +1151,8 @@ namespace SharpOS.AOT.X86 {
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (START_DATA);
 
-			this.AddMetadata ();
+			if (this.engine.Options.EncodeMetadata)
+				this.AddMetadata ();
 
 			foreach (Class _class in engine) {
 				if (_class.IsInternal)

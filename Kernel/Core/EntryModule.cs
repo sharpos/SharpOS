@@ -28,8 +28,8 @@ namespace SharpOS.Kernel {
 		static KernelStage kernelStage = KernelStage.Init;
 		static Multiboot.Info* multibootInfo = null;
 
-		[SharpOS.AOT.Attributes.AddressOf ("SharpOS.Kernel.dll AssemblyRow#0")]
-		static AssemblyRow assemblyRow;
+		// [SharpOS.AOT.Attributes.AddressOf ("SharpOS.Kernel.dll AssemblyRow#0")]
+		// static AssemblyRow assemblyRow;
 
 		#endregion
 		#region Constants
@@ -152,13 +152,13 @@ namespace SharpOS.Kernel {
 #endif
 
 			#region Metadata Tests
-			TextMode.Write ("HashAlgId: ");
-			TextMode.WriteNumber ((int) assemblyRow.HashAlgId);
-			TextMode.WriteLine ();
+			// TextMode.Write ("HashAlgId: ");
+			// TextMode.WriteNumber ((int) assemblyRow.HashAlgId);
+			// TextMode.WriteLine ();
 
-			TextMode.Write ("Name: ");
-			TextMode.WriteNumber ((int) assemblyRow.Name);
-			TextMode.WriteLine ();
+			// TextMode.Write ("Name: ");
+			// TextMode.WriteNumber ((int) assemblyRow.Name);
+			// TextMode.WriteLine ();
 			#endregion
 
 			StageMessage ("Shell setup...");

@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -69,6 +69,9 @@ namespace SharpOS.AOT {
 		[GetOpts.Option (-1, "Specify a resource to add to the output file", 'R', "res")]
 		public string [] Resources = new string [0];
 
+		[GetOpts.Option ("Enable metadata encoding", "metadata")]
+		public bool EncodeMetadata;
+
 		public EngineOptions GetEngineOptions ()
 		{
 			EngineOptions eo = new EngineOptions ();
@@ -84,6 +87,7 @@ namespace SharpOS.AOT {
 			} else
 				eo.DumpFile = DumpFile;
 
+			eo.EncodeMetadata = EncodeMetadata;
 			eo.AsmFile = AsmFile;
 			eo.TextDump = TextDump;
 			eo.DumpVerbosity = DumpVerbosity;

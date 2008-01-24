@@ -16,7 +16,7 @@ namespace SharpOS.AOT.Attributes {
 	/// <summary>
 	/// Used to mark the classes in the SharpOS.AOT.Core that will be needed by the Kernel.
 	/// </summary>
-	[AttributeUsage (AttributeTargets.Class)]
+	[AttributeUsage (AttributeTargets.Class | AttributeTargets.Enum)]
 	public sealed class IncludeAttribute : Attribute {
 	}
 }

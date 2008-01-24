@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -13,7 +13,7 @@ using System.Collections.Generic;
 namespace SharpOS.AOT.IR {
 
 	/// <summary>
-	/// An instance of this class must be passed to the 
+	/// An instance of this class must be passed to the
 	/// <see cref="SharpOS.AOT.IR.Engine" /> constructor.
 	/// The contained values defined the options used during
 	/// AOT compilation.
@@ -31,6 +31,7 @@ namespace SharpOS.AOT.IR {
 		public string DumpFilter = string.Empty;
 		public Dictionary<string, byte []> Resources =
 			new Dictionary<string, byte []> ();
+		public bool EncodeMetadata = false;
 
 		public bool Dump
 		{
