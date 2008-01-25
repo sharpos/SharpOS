@@ -1299,6 +1299,11 @@ namespace SharpOS.AOT.X86 {
 				this.DATA ((uint) 0);
 			else
 				this.ADDRESSOF (this.GetTypeInfoLabel (_class.Base.TypeFullName));
+
+			// Type Info Metadata token
+
+			this.DATA (_class.ClassDefinition.MetadataToken.ToUInt ());
+
 			return typeInfoLabel;
 		}
 

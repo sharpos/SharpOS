@@ -16,5 +16,6 @@ namespace SharpOS.Korlib.Runtime {
 	internal class TypeInfo : InternalSystem.Object {
 		internal string Name;
 		internal TypeInfo Base;
+		internal uint MetadataToken;
 	}
 }

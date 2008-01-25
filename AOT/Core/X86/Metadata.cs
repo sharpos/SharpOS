@@ -827,7 +827,6 @@ namespace SharpOS.AOT.X86 {
 			foreach (IMetadataTable table in heap.Tables) {
 				this.asm.LABEL (moduleName + " " + table.GetType().Name);
 
-				Console.WriteLine ("Encoding metadata table `{0}'", table.GetType ().Name);
 				encodedTables.Add (table);
 
 				if (table is AssemblyRefTable)
@@ -925,7 +924,7 @@ namespace SharpOS.AOT.X86 {
 				if (found)
 					continue;
 
-				Console.WriteLine ("Stubbing missing metadata table `{0}Table'", missing);
+				Console.WriteLine ("Stubbing missing metadata table `{0} {1}Table'", moduleName, missing);
 
 				this.asm.LABEL (moduleName + " " + missing + "Array");
 				this.ArrayHeader (0);
