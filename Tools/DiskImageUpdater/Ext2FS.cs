@@ -59,14 +59,22 @@ namespace Ext2 {
 						if (mbr [i + 4] != 0x83)
 							throw new Exception ("The bootable partition is not of type Ext2.");
 
-						int head = mbr [i + 1];
+						/*int head = mbr [i + 1];
 						int sector = (mbr [i + 2] & 0x3F);
 						int cylinder = (mbr [i + 2] & 0xC0) << 8 + mbr [i + 3];
 
 						int position = this.CHSToLBA (cylinder, head, sector);
-						position *= 512;
+						position *= 512;*/
 
-						binaryReader.BaseStream.Seek (position, SeekOrigin.Begin);
+						uint value = mbr [i + 8];
+						value += (uint) (mbr [i + 9] << 8);
+						value += (uint) (mbr [i + 10] << 16);
+						value += (uint) (mbr [i + 11] << 24);
+
+						value += 2;
+						value *= 512;
+
+						binaryReader.BaseStream.Seek (value, SeekOrigin.Begin);
 
 						break;
 					}
