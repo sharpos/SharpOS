@@ -34,9 +34,17 @@ namespace Ext2 {
 			block.Dirty = false;
 		}
 
-		private void ReadSuperBlock ()
+		private void ReadSuperBlock (bool hasMBR)
 		{
-			binaryReader.BaseStream.Seek (1024, SeekOrigin.Begin);
+			if (!hasMBR)
+				binaryReader.BaseStream.Seek (1024, SeekOrigin.Begin);
+
+			else {
+				byte [] mbr = binaryReader.ReadBytes (512);
+
+				if (mbr [510] != 55 && mbr [511] != 0xaa)
+					throw new Exception ("Invalid MBR Signature.");
+			}
 
 			byte [] buffer = binaryReader.ReadBytes (1024);
 			Block block = new Block (1024, buffer);
@@ -53,8 +61,6 @@ namespace Ext2 {
 
 			if (this.fileSystem.SuperBlock.AlgorithmsBitmap != 0)
 				throw new Exception ("Unsupported Bitmap Compression Algorithm.");
-
-
 		}
 
 		private void WriteSuperBlock ()
@@ -445,10 +451,10 @@ namespace Ext2 {
 		private System.IO.BinaryReader binaryReader;
 		private INode root;
 
-		public void UpdateKernel (string image, string kernel)
+		public void UpdateKernel (string image, string kernel, bool hasMBR)
 		{
 			using (binaryReader = new BinaryReader (File.Open (image, FileMode.Open))) {
-				this.ReadSuperBlock ();
+				this.ReadSuperBlock (hasMBR);
 
 				///////////////////////////////////////////////////////////////////////
 				this.ReadGroupDescriptor ();

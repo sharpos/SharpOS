@@ -25,6 +25,9 @@ namespace Ext2 {
 			else
 				this.fragmentSize = (uint) (1024 << superBlock.FragmentSize);
 
+			if (superBlock.INodesPerGroup == 0)
+				throw new Exception ("Not a valid SuperBlock.");
+
 			this.groupsCount = (uint) (superBlock.INodesCount / superBlock.INodesPerGroup);
 			this.fragmentsPerBlock = (uint) (this.blockSize / this.fragmentSize);
 			this.groupDescriptorsPerBlock = (uint) (this.blockSize / GroupDescriptor.GroupDescriptorSize); //Marshal.SizeOf (typeof (GroupDescriptor)));

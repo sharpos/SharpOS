@@ -29,12 +29,16 @@ namespace Ext2 {
 
 		[Option ("Specify the SharpOS.Kernel.bin to write to the disk.img", 'i', "in")]
 		public string SharpOSKernelBin = "SharpOS.Kernel.bin";
+
+		[Option ("Has MBR", 'm', "has-mbr")]
+		public bool HasMBR = false;
 	}
 
 	class Program {
 		static int Main (string [] args)
 		{
 			UpdaterOptions opts = new UpdaterOptions (args);
+			bool debuggerAttached = false;
 
 			if (opts.RemainingArguments.Length == 2) {
 				Console.Error.WriteLine ("Usage: DiskImageUpdater -i <kernel> -o <disk image>");
@@ -42,18 +46,30 @@ namespace Ext2 {
 				return 1;
 			}
 
+			// Prevent a Mono error if one occurs.
 			try {
+				debuggerAttached = System.Diagnostics.Debugger.IsAttached;
+			} catch {
+			}
+
+			if (debuggerAttached) {
 				Ext2FS ext2fs = new Ext2FS ();
-				ext2fs.UpdateKernel (opts.DiskImg, opts.SharpOSKernelBin);
+				ext2fs.UpdateKernel (opts.DiskImg, opts.SharpOSKernelBin, opts.HasMBR);
 
-				Console.WriteLine (string.Format ("'{0}' has been updated.", opts.DiskImg));
+			} else {
+				try {
+					Ext2FS ext2fs = new Ext2FS ();
+					ext2fs.UpdateKernel (opts.DiskImg, opts.SharpOSKernelBin, opts.HasMBR);
 
-			} catch (FileNotFoundException exception) {
-				Console.WriteLine (string.Format ("Could not find '{0}'.", exception.FileName));
-				return 1;
-			} catch (Exception exception) {
-				Console.WriteLine (exception.Message);
-				return 1;
+					Console.WriteLine (string.Format ("'{0}' has been updated.", opts.DiskImg));
+
+				} catch (FileNotFoundException exception) {
+					Console.WriteLine (string.Format ("Could not find '{0}'.", exception.FileName));
+					return 1;
+				} catch (Exception exception) {
+					Console.WriteLine (exception.Message);
+					return 1;
+				}
 			}
 
 			return 0;
