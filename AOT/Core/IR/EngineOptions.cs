@@ -31,7 +31,7 @@ namespace SharpOS.AOT.IR {
 		public string DumpFilter = string.Empty;
 		public Dictionary<string, byte []> Resources =
 			new Dictionary<string, byte []> ();
-		public bool EncodeMetadata = false;
+		public bool NoMetadata = false;
 
 		public bool Dump
 		{

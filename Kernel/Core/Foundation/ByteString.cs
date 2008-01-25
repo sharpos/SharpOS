@@ -231,7 +231,7 @@ namespace SharpOS.Kernel.Foundation {
 			Testcase.Test ((byte) str1 [1] != (byte) str2 [0],
 				"ByteString",
 				"Testing string constants: (byte)\"US\" [1] == (byte)\"SK\" [0]");
-			
+
 			if ("\n".Length != 1)
 				TextMode.WriteLine ("ByteString : test FAIL: \"\\n\".Length==1");
 		}

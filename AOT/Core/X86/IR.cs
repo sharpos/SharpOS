@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -53,7 +53,7 @@ namespace SharpOS.AOT.X86 {
 			if (call is Callvirt
 					&& (call.Method.IsNewSlot
 						|| call.Method.IsVirtual)) {
-				IR.Operands.Register _this = call.Use [0] as IR.Operands.Register;				
+				IR.Operands.Register _this = call.Use [0] as IR.Operands.Register;
 
 				if (_this.IsRegisterSet)
 					this.assembly.MOV (R32.EAX, Assembly.GetRegister (_this.Register));
@@ -64,7 +64,7 @@ namespace SharpOS.AOT.X86 {
 
 				// Get the Object's VTable
 				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
-				
+
 				// Call virtual method using the table in the Object's VTable
 				this.assembly.CALL (new DWordMemory (null, R32.EAX, null, 0, address));
 
@@ -96,7 +96,7 @@ namespace SharpOS.AOT.X86 {
 					DWordMemory high = new DWordMemory (assigneeMemory);
 					high.DisplacementDelta = 4;
 					this.assembly.MOV (high, R32.EDX);
-	
+
 					break;
 
 				case InternalType.ValueType:
@@ -131,7 +131,7 @@ namespace SharpOS.AOT.X86 {
 			TypeDefinition returnType = call.Method.ReturnType.ReturnType as TypeDefinition;
 
 			// In case the return type is a structure in that case the last parameter that is pushed on the stack
-			// is the address to the memory where the result gets copied, and that address has to be pulled from 
+			// is the address to the memory where the result gets copied, and that address has to be pulled from
 			// the stack.
 			if (returnType != null && returnType.IsValueType)
 				result += 4;
@@ -184,7 +184,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			if (!call.Method.IsKernelAlloc)
 				return false;
-	
+
 			IntConstant constant = Operand.GetNonRegister (call.Use [0], typeof (IntConstant)) as IntConstant;
 
 			UInt32 size = System.Convert.ToUInt32 (constant.Value);
@@ -284,7 +284,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			if (!call.Method.IsKernelObjectFromPointer)
 				return false;
-			
+
 			IR.Operands.Register value = call.Use [0] as IR.Operands.Register;
 			IR.Operands.Register assignee = call.Def as IR.Operands.Register;
 
@@ -579,7 +579,7 @@ namespace SharpOS.AOT.X86 {
 					Memory assigneeMemory = this.GetAddress (value);
 					DWordMemory low = new DWordMemory (assigneeMemory);
 					this.assembly.MOV (R32.EAX, low);
-					
+
 					DWordMemory high = new DWordMemory (assigneeMemory);
 					high.DisplacementDelta = 4;
 					this.assembly.MOV (R32.EDX, high);
@@ -880,7 +880,7 @@ namespace SharpOS.AOT.X86 {
 
 				if (size == 4) {
 					this.assembly.MOV (R32.EAX, new DWordMemory (memory));
-					
+
 					if (assignee.IsRegisterSet)
 						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 					else
@@ -1409,6 +1409,7 @@ namespace SharpOS.AOT.X86 {
 
 			switch (first.InternalType) {
 			case InternalType.I:
+			case InternalType.O:
 			case InternalType.M:
 			case InternalType.I4:
 				if (first.IsRegisterSet)
@@ -2242,13 +2243,13 @@ namespace SharpOS.AOT.X86 {
 			} else if (instruction.Method.Class.IsClass) {
 				this.PushCallParameters (instruction);
 
-				this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Method.Class.TypeFullName)); 
+				this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Method.Class.TypeFullName));
 				this.assembly.PUSH (R32.EAX);
 				this.assembly.CALL (this.assembly.Engine.AllocObject.AssemblyLabel);
 				assembly.ADD (R32.ESP, 4);
 
 				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
-				
+
 				if (assignee.IsRegisterSet)
 					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
 				else
@@ -2637,7 +2638,7 @@ namespace SharpOS.AOT.X86 {
 
 			else if (call.Method.Name.Equals ("Get"))
 				ArrayMultidimensionalGet (call);
-			
+
 			else
 				throw new NotImplementedEngineException ();
 		}
@@ -2651,7 +2652,7 @@ namespace SharpOS.AOT.X86 {
 				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 				int objectSize = this.assembly.Engine.ObjectSize;
 
-				// Compute the count of entries in the array 
+				// Compute the count of entries in the array
 				if (value.IsRegisterSet)
 					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 				else
@@ -2760,12 +2761,12 @@ namespace SharpOS.AOT.X86 {
 					int offset = objectSize + ARRAY_BOUND_OFFSET + (j - 1) * ARRAY_BOUND_SIZE;
 
 					this.assembly.MOV (R32.EDX, new DWordMemory (null, R32.ECX, null, 0, offset + ARRAY_BOUND_LENGTH_OFFSET));
-					this.assembly.MUL (R32.EDX); 
+					this.assembly.MUL (R32.EDX);
 				}
 
 				this.assembly.ADD (new DWordMemory (null, R32.ESP, null, 0), R32.EAX);
 			}
-			
+
 			this.assembly.POP (R32.EAX);
 
 			this.assembly.MOV (R32.EDX, (uint) elementSize);
@@ -2864,7 +2865,7 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 			else
 				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
-			
+
 			// TODO call the real isinst, that does the job
 
 			if (assignee.IsRegisterSet)

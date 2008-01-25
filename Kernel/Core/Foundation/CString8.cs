@@ -128,7 +128,7 @@ namespace SharpOS.Kernel.Foundation {
 
 			for (int x = 0; x < substr.Length; ++x)
 				cstr [x] = (byte) substr [x];
-			
+
 			return IndexOf (from, cstr, substr.Length, offset, count);
 
 			/*/
@@ -250,6 +250,34 @@ namespace SharpOS.Kernel.Foundation {
 		public int Compare (int from, byte* str, int offset, int count)
 		{
 			return ByteString.Compare (Pointer, from, str, offset, count);
+		}
+
+		public int Compare (int from, byte[] buf, int offset, int count)
+		{
+			int bufx;
+
+			Diagnostics.Assert (from >= 0 && from < Length,
+				"CString8.Compare(): parameter `from' is out of range");
+			Diagnostics.Assert (buf != null,
+				"CString8.Compare(): parameter `buf' is null");
+			Diagnostics.Assert (offset >= 0 && offset < buf.Length,
+				"CString8.Compare(): parameter `offset' is out of range");
+			Diagnostics.Assert (count >= 0,
+				"CString8.Compare(): parameter `count' is negative");
+
+			if (from + count >= Length)
+				return -1;
+
+			bufx = offset;
+
+			for (int x = from; x < from + count && x < Length; ++x) {
+				if (GetChar (x) != buf [bufx])
+					return 1;
+
+				++bufx;
+			}
+
+			return 0;
 		}
 
 		/// <summary>
@@ -461,6 +489,16 @@ namespace SharpOS.Kernel.Foundation {
 		{
 			byte* rslt = (byte*) SharpOS.Kernel.ADC.MemoryManager.Allocate (1);
 			rslt [0] = (byte) '\0';
+
+			return (CString8*) rslt;
+		}
+
+		public static CString8* Create (int capacity)
+		{
+			byte* rslt = (byte*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint)(capacity + 1));
+			rslt [0] = (byte) '\0';
+			rslt [capacity] = (byte) '\0';
+
 			return (CString8*) rslt;
 		}
 
@@ -518,7 +556,7 @@ namespace SharpOS.Kernel.Foundation {
 			Testcase.Test (buf->IndexOf ("arg") == 9,
 				"CString8.IndexOf()",
 				"Find substring test: result == 9");
-			
+
 			Testcase.Test (buf->Compare (9, "arg", 0, 3) != 0,
 				"CString8.Compare()",
 				"Compare substrings: '--keymap [arg]' == 'arg'");
@@ -539,7 +577,7 @@ namespace SharpOS.Kernel.Foundation {
 				"CString8.Compare()",
 				"Compare substring to static byte*: '--keymap [arg\\n]' == 'arg\\n'");
 
-			int ind = buf->IndexOf ("--keymap"); 
+			int ind = buf->IndexOf ("--keymap");
 			Testcase.Test (ind != 0,
 				"CString8.IndexOf()",
 				"IndexOf substring at zero-index: '--keymap arg'.IndexOf('--keymap') == 0");

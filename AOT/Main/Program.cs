@@ -69,8 +69,8 @@ namespace SharpOS.AOT {
 		[GetOpts.Option (-1, "Specify a resource to add to the output file", 'R', "res")]
 		public string [] Resources = new string [0];
 
-		[GetOpts.Option ("Enable metadata encoding", "metadata")]
-		public bool EncodeMetadata;
+		[GetOpts.Option ("Disable metadata encoding", "no-metadata")]
+		public bool NoMetadata = false;
 
 		public EngineOptions GetEngineOptions ()
 		{
@@ -87,7 +87,7 @@ namespace SharpOS.AOT {
 			} else
 				eo.DumpFile = DumpFile;
 
-			eo.EncodeMetadata = EncodeMetadata;
+			eo.NoMetadata = NoMetadata;
 			eo.AsmFile = AsmFile;
 			eo.TextDump = TextDump;
 			eo.DumpVerbosity = DumpVerbosity;

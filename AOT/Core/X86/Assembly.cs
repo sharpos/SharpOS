@@ -1151,7 +1151,7 @@ namespace SharpOS.AOT.X86 {
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (START_DATA);
 
-			if (this.engine.Options.EncodeMetadata)
+			if (!this.engine.Options.NoMetadata)
 				this.AddMetadata ();
 
 			foreach (Class _class in engine) {
@@ -1337,15 +1337,15 @@ namespace SharpOS.AOT.X86 {
 			else
 				this.ADDRESSOF (this.GetTypeInfoLabel (_class.Base.TypeFullName));
 
-			if (this.engine.Options.EncodeMetadata) {
+			if (this.engine.Options.NoMetadata) {
+				this.DATA (0U);
+				this.DATA (0U);
+			} else {
 				// Type Info AssemblyMetadata
 				this.ADDRESSOF (_class.ClassDefinition.Module.Assembly.Name + " MetadataRoot");
 
 				// Type Info Metadata token
 				this.DATA (_class.ClassDefinition.MetadataToken.ToUInt ());
-			} else {
-				this.DATA (0U);
-				this.DATA (0U);
 			}
 
 			return typeInfoLabel;
