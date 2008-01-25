@@ -34,6 +34,11 @@ namespace Ext2 {
 			block.Dirty = false;
 		}
 
+		public int CHSToLBA (int cyl, int head, int sector)
+		{
+			return ((cyl * 10 + head) * 50) + sector - 1;
+		}
+
 		private void ReadSuperBlock (bool hasMBR)
 		{
 			if (!hasMBR)
@@ -44,6 +49,31 @@ namespace Ext2 {
 
 				if (mbr [510] != 55 && mbr [511] != 0xaa)
 					throw new Exception ("Invalid MBR Signature.");
+
+				bool found = false;
+
+				for (int i = 446; i < 510; i += 16) {
+					if ((mbr [i] & 0x80) != 0) {
+						found = true;
+
+						if (mbr [i + 4] != 0x83)
+							throw new Exception ("The bootable partition is not of type Ext2.");
+
+						int head = mbr [i + 1];
+						int sector = (mbr [i + 2] & 0x3F);
+						int cylinder = (mbr [i + 2] & 0xC0) << 8 + mbr [i + 3];
+
+						int position = this.CHSToLBA (cylinder, head, sector);
+						position *= 512;
+
+						binaryReader.BaseStream.Seek (position, SeekOrigin.Begin);
+
+						break;
+					}
+				}
+
+				if (!found)
+					throw new Exception ("No bootable partition found.");
 			}
 
 			byte [] buffer = binaryReader.ReadBytes (1024);
