@@ -68,14 +68,25 @@ namespace SharpOS.AOT.X86 {
 			if (this.method.IsAbstract)
 				return true;
 
-			assembly.PUSH (R32.EBP);
-			assembly.MOV (R32.EBP, R32.ESP);
-			assembly.PUSH (R32.EBX);
-			assembly.PUSH (R32.ESI);
-			assembly.PUSH (R32.EDI);
+			bool isNaked = this.method.IsNaked;
 
-			if (method.StackSize > 0)
-				assembly.SUB (R32.ESP, (UInt32) (method.StackSize * 4));
+			if (!isNaked) {
+				assembly.PUSH (R32.EBP);
+				assembly.MOV (R32.EBP, R32.ESP);
+				assembly.PUSH (R32.EBX);
+				assembly.PUSH (R32.ESI);
+				assembly.PUSH (R32.EDI);
+			}
+
+			if (method.StackSize > 0) {
+				int slots = method.StackSize;
+
+				if (isNaked)
+					// 3 stands for the above PUSH instructions after saving the ESP register
+					slots += 3;
+				
+				assembly.SUB (R32.ESP, (UInt32) (slots * 4));
+			}
 
 			foreach (Block block in method) {
 				assembly.LABEL (fullname + " " + block.Index.ToString ());
@@ -255,12 +266,14 @@ namespace SharpOS.AOT.X86 {
 
 			assembly.LABEL (fullname + " exit");
 
-			assembly.LEA (R32.ESP, new DWordMemory (null, R32.EBP, null, 0, -12));
-			assembly.POP (R32.EDI);
-			assembly.POP (R32.ESI);
-			assembly.POP (R32.EBX);
-			assembly.POP (R32.EBP);
-			assembly.RET ();
+			if (!isNaked) {
+				assembly.LEA (R32.ESP, new DWordMemory (null, R32.EBP, null, 0, -12));
+				assembly.POP (R32.EDI);
+				assembly.POP (R32.ESI);
+				assembly.POP (R32.EBX);
+				assembly.POP (R32.EBP);
+				assembly.RET ();
+			}
 
 			return true;
 		}

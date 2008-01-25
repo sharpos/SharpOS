@@ -649,6 +649,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 
 		#region ISRHandlers
+		[SharpOS.AOT.Attributes.Naked]
 		private static unsafe void ISRHandlers ()
 		{
 			#region ISR Dispatchers

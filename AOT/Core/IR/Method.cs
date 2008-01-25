@@ -2150,6 +2150,34 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this method is naked (Sexy baby... grrrrr).
+		/// </summary>
+		/// <value><c>true</c> if this instance is naked; otherwise, <c>false</c>.</value>
+		public bool IsNaked
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute customAttribute in definition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.NakedAttribute).ToString ())
+						continue;
+
+					if (this.arguments.Count != 0)
+						throw new EngineException (string.Format ("'{0}' is not a valid Naked method. It should have no parameters.", this.methodDefinition.ToString ()));
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Gets the labels.
 		/// </summary>
 		/// <value>The labels.</value>
