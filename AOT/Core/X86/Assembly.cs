@@ -1275,8 +1275,8 @@ namespace SharpOS.AOT.X86 {
 			int count = 0;
 
 			foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
-				visit.Encode (assemblyDef.MainModule);
-					++count;
+				visit.Encode (assemblyDef);
+				++count;
 			}
 
 			// create a root table
@@ -1285,9 +1285,7 @@ namespace SharpOS.AOT.X86 {
 			this.AddArrayFields (count);
 
 			foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
-				foreach (ModuleDefinition moduleDef in assemblyDef.Modules) {
-					this.ADDRESSOF (moduleDef.Name + " MetadataRoot");
-				}
+				this.ADDRESSOF (assemblyDef.Name.FullName + " MetadataRoot");
 			}
 
 			this.LABEL ("MetadataRoot");
@@ -1339,6 +1337,9 @@ namespace SharpOS.AOT.X86 {
 			else
 				this.ADDRESSOF (this.GetTypeInfoLabel (_class.Base.TypeFullName));
 
+			// Type Info AssemblyMetadata
+
+			this.ADDRESSOF (_class.ClassDefinition.Module.Assembly.Name + " MetadataRoot");
 			// Type Info Metadata token
 
 			this.DATA (_class.ClassDefinition.MetadataToken.ToUInt ());

@@ -702,6 +702,6 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[StructLayout (LayoutKind.Sequential)]
 	public class MetadataRoot {
-		public AssemblyMetadata [] Modules;
+		public AssemblyMetadata [] Assemblies;
 	}
 }

@@ -22,7 +22,7 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		Assembly asm;
-		ModuleDefinition currentModule = null;
+		AssemblyDefinition currentModule = null;
 		string moduleName = null;
 		string [] potentiallyMissing = new string[] {
 			"AssemblyRef",
@@ -66,11 +66,11 @@ namespace SharpOS.AOT.X86 {
 			"TypeSpec",
 		};
 
-		public void Encode (ModuleDefinition def)
+		public void Encode (AssemblyDefinition def)
 		{
 			currentModule = def;
-			moduleName = def.Name;
-			currentModule.Image.MetadataRoot.Accept (this);
+			moduleName = def.Name.FullName;
+			currentModule.MainModule.Image.MetadataRoot.Accept (this);
 		}
 
 		public override void TerminateMetadataRoot (MetadataRoot root)
