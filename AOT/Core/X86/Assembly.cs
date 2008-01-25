@@ -1245,15 +1245,54 @@ namespace SharpOS.AOT.X86 {
 			this.LABEL (END_DATA);
 		}
 
+		internal void AddArrayFields (int len)
+		{
+			AddObjectFields ("System.Array");
+			DATA (1U); // Rank
+			DATA (0U); // LowerBound
+			DATA ((uint)len); // Length
+		}
+
+		internal void StaticArray (string name, byte[] arr)
+		{
+			this.LABEL (name);
+			this.AddArrayFields (arr.Length);
+			foreach (byte b in arr)
+				this.DATA (b);
+		}
+
+		internal void StaticArray (string name, uint[] arr)
+		{
+			this.LABEL (name);
+			this.AddArrayFields (arr.Length);
+			foreach (uint u in arr)
+				this.DATA (u);
+		}
+
 		private void AddMetadata ()
 		{
 			MetadataVisitor visit = new MetadataVisitor (this);
+			int count = 0;
+
+			foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
+				visit.Encode (assemblyDef.MainModule);
+					++count;
+			}
+
+			// create a root table
+
+			this.LABEL ("AssemblyMetadataArray");
+			this.AddArrayFields (count);
 
 			foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
 				foreach (ModuleDefinition moduleDef in assemblyDef.Modules) {
-					visit.Encode (moduleDef);
+					this.ADDRESSOF (moduleDef.Name + " MetadataRoot");
 				}
 			}
+
+			this.LABEL ("MetadataRoot");
+			this.AddObjectFields (typeof (SharpOS.AOT.Metadata.MetadataRoot).FullName);
+			this.ADDRESSOF ("AssemblyMetadataArray");
 		}
 
 		private void AddVTableFields (Class _class, string typeInfoLabel)

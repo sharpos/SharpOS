@@ -76,7 +76,7 @@ namespace SharpOS.AOT.X86 {
 		public override void TerminateMetadataRoot (MetadataRoot root)
 		{
 			this.asm.LABEL (moduleName + " MetadataRoot");
-			this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ModuleMetadata).ToString ());
+			this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.AssemblyMetadata).ToString ());
 			this.asm.ADDRESSOF (moduleName + " StringsHeap");
 			this.asm.ADDRESSOF (moduleName + " BlobHeap");
 			this.asm.ADDRESSOF (moduleName + " GuidHeap");
@@ -122,43 +122,24 @@ namespace SharpOS.AOT.X86 {
 			this.asm.ADDRESSOF (moduleName + " TypeSpecArray");
 		}
 
-		void ArrayHeader (int len)
-		{
-			this.asm.AddObjectFields ("System.Array");
-			this.asm.DATA (1U); // Rank
-			this.asm.DATA (0U); // LowerBound
-			this.asm.DATA ((uint)len); // Length
-		}
-
-		void Array (byte[] arr)
-		{
-			this.ArrayHeader (arr.Length);
-			foreach (byte b in arr)
-				this.asm.DATA (b);
-		}
-
 		public override void VisitBlobHeap (BlobHeap heap)
 		{
-			this.asm.LABEL (moduleName + " BlobHeap");
-			this.Array (heap.Data);
+			this.asm.StaticArray (moduleName + " BlobHeap", heap.Data);
 		}
 
 		public override void VisitUserStringsHeap (UserStringsHeap heap)
 		{
-			this.asm.LABEL (moduleName + " UserStringsHeap");
-			this.Array (heap.Data);
+			this.asm.StaticArray (moduleName + " UserStringsHeap", heap.Data);
 		}
 
 		public override void VisitGuidHeap (GuidHeap heap)
 		{
-			this.asm.LABEL (moduleName + " GuidHeap");
-			this.Array (heap.Data);
+			this.asm.StaticArray (moduleName + " GuidHeap", heap.Data);
 		}
 
 		public override void VisitStringsHeap (StringsHeap heap)
 		{
-			this.asm.LABEL (moduleName + " StringsHeap");
-			this.Array (heap.Data);
+			this.asm.StaticArray (moduleName + " StringsHeap", heap.Data);
 		}
 
 		// Encoding
@@ -166,7 +147,7 @@ namespace SharpOS.AOT.X86 {
 		void MetadataArray (string name, IMetadataTable table)
 		{
 			this.asm.LABEL (moduleName + " " + name + "Array");
-			this.ArrayHeader (table.Rows.Count);
+			this.asm.AddArrayFields (table.Rows.Count);
 			for (int x = 0; x < table.Rows.Count; ++x)
 				this.asm.ADDRESSOF (moduleName + " " + name + "Row#" + x);
 		}
@@ -240,7 +221,7 @@ namespace SharpOS.AOT.X86 {
 			// a base type.
 
 			this.asm.LABEL (moduleName + " ConstantArray");
-			this.ArrayHeader (0);
+			this.asm.AddArrayFields (0);
 		}
 
 		void EncodeCustomAttributeTable (CustomAttributeTable table)
@@ -927,7 +908,7 @@ namespace SharpOS.AOT.X86 {
 				Console.WriteLine ("Stubbing missing metadata table `{0} {1}Table'", moduleName, missing);
 
 				this.asm.LABEL (moduleName + " " + missing + "Array");
-				this.ArrayHeader (0);
+				this.asm.AddArrayFields (0);
 			}
 		}
 	}

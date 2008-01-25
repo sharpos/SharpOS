@@ -653,7 +653,7 @@ namespace SharpOS.AOT.Metadata {
 
 	[Include]
 	[StructLayout (LayoutKind.Sequential)]
-	public class ModuleMetadata {
+	public class AssemblyMetadata {
 		public byte [] StringsHeap;
 		public byte [] BlobHeap;
 		public byte [] GuidHeap;
@@ -697,5 +697,11 @@ namespace SharpOS.AOT.Metadata {
 		public TypeDefRow [] TypeDef;
 		public TypeRefRow [] TypeRef;
 		public TypeSpecRow [] TypeSpec;
+	}
+
+	[Include]
+	[StructLayout (LayoutKind.Sequential)]
+	public class MetadataRoot {
+		public AssemblyMetadata [] Modules;
 	}
 }
