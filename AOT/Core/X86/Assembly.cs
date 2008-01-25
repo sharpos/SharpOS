@@ -1337,12 +1337,16 @@ namespace SharpOS.AOT.X86 {
 			else
 				this.ADDRESSOF (this.GetTypeInfoLabel (_class.Base.TypeFullName));
 
-			// Type Info AssemblyMetadata
+			if (this.engine.Options.EncodeMetadata) {
+				// Type Info AssemblyMetadata
+				this.ADDRESSOF (_class.ClassDefinition.Module.Assembly.Name + " MetadataRoot");
 
-			this.ADDRESSOF (_class.ClassDefinition.Module.Assembly.Name + " MetadataRoot");
-			// Type Info Metadata token
-
-			this.DATA (_class.ClassDefinition.MetadataToken.ToUInt ());
+				// Type Info Metadata token
+				this.DATA (_class.ClassDefinition.MetadataToken.ToUInt ());
+			} else {
+				this.DATA (0U);
+				this.DATA (0U);
+			}
 
 			return typeInfoLabel;
 		}
