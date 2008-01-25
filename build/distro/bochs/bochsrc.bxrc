@@ -2,9 +2,9 @@ megs: 64
 debugger_log: debug.log
 log: info.log
 
-floppya: image=./../common/SharpOS.img, status=inserted
+ata0-master: type=disk, mode=flat, path="./../common/SharpOS.img", cylinders=20, heads=16, spt=63 
 
-boot: floppy
+boot: disk
 
 error: action=report
 panic: action=ask

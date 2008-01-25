@@ -28,7 +28,7 @@ namespace Ext2 {
 			if (!block.Dirty)
 				return;
 
-			binaryReader.BaseStream.Seek (block.Offset, SeekOrigin.Begin);
+			binaryReader.BaseStream.Seek (startOffset + block.Offset, SeekOrigin.Begin);
 			binaryReader.BaseStream.Write (block.Buffer, 0, block.Buffer.Length);
 
 			block.Dirty = false;
@@ -39,12 +39,11 @@ namespace Ext2 {
 			return ((cyl * 10 + head) * 50) + sector - 1;
 		}
 
+		private uint startOffset = 0;
+
 		private void ReadSuperBlock (bool hasMBR)
 		{
-			if (!hasMBR)
-				binaryReader.BaseStream.Seek (1024, SeekOrigin.Begin);
-
-			else {
+			if (hasMBR) {
 				byte [] mbr = binaryReader.ReadBytes (512);
 
 				if (mbr [510] != 55 && mbr [511] != 0xaa)
@@ -59,22 +58,12 @@ namespace Ext2 {
 						if (mbr [i + 4] != 0x83)
 							throw new Exception ("The bootable partition is not of type Ext2.");
 
-						/*int head = mbr [i + 1];
-						int sector = (mbr [i + 2] & 0x3F);
-						int cylinder = (mbr [i + 2] & 0xC0) << 8 + mbr [i + 3];
+						startOffset = mbr [i + 8];
+						startOffset += (uint) (mbr [i + 9] << 8);
+						startOffset += (uint) (mbr [i + 10] << 16);
+						startOffset += (uint) (mbr [i + 11] << 24);
 
-						int position = this.CHSToLBA (cylinder, head, sector);
-						position *= 512;*/
-
-						uint value = mbr [i + 8];
-						value += (uint) (mbr [i + 9] << 8);
-						value += (uint) (mbr [i + 10] << 16);
-						value += (uint) (mbr [i + 11] << 24);
-
-						value += 2;
-						value *= 512;
-
-						binaryReader.BaseStream.Seek (value, SeekOrigin.Begin);
+						startOffset *= 512;
 
 						break;
 					}
@@ -83,6 +72,8 @@ namespace Ext2 {
 				if (!found)
 					throw new Exception ("No bootable partition found.");
 			}
+
+			binaryReader.BaseStream.Seek (startOffset + 1024, SeekOrigin.Begin);
 
 			byte [] buffer = binaryReader.ReadBytes (1024);
 			Block block = new Block (1024, buffer);
@@ -116,7 +107,7 @@ namespace Ext2 {
 					offset += (uint) (i / this.fileSystem.GroupDescriptorsPerBlock);
 					offset *= this.fileSystem.BlockSize;
 
-					binaryReader.BaseStream.Seek (offset, SeekOrigin.Begin);
+					binaryReader.BaseStream.Seek (startOffset + offset, SeekOrigin.Begin);
 
 					byte [] buffer = binaryReader.ReadBytes ((int) this.fileSystem.BlockSize);
 					block = new Block (offset, buffer);
@@ -146,7 +137,7 @@ namespace Ext2 {
 
 			uint fileOffset = blockNumber * this.fileSystem.BlockSize;
 
-			binaryReader.BaseStream.Seek (fileOffset, SeekOrigin.Begin);
+			binaryReader.BaseStream.Seek (startOffset + fileOffset, SeekOrigin.Begin);
 
 			byte [] buffer = binaryReader.ReadBytes ((int) this.fileSystem.BlockSize);
 
@@ -190,7 +181,7 @@ namespace Ext2 {
 			blocks.Add (block);
 			indirectBlocks.Add (true);
 
-			this.binaryReader.BaseStream.Seek (block * this.fileSystem.BlockSize, SeekOrigin.Begin);
+			this.binaryReader.BaseStream.Seek (startOffset + block * this.fileSystem.BlockSize, SeekOrigin.Begin);
 			byte [] buffer = binaryReader.ReadBytes ((int) this.fileSystem.BlockSize);
 
 			uint offset = 0;
@@ -231,7 +222,7 @@ namespace Ext2 {
 			this.GetDataBlocks (inode, blocks, indirectBlocks);
 
 			foreach (uint block in blocks) {
-				this.binaryReader.BaseStream.Seek (block * this.fileSystem.BlockSize, SeekOrigin.Begin);
+				this.binaryReader.BaseStream.Seek (startOffset + block * this.fileSystem.BlockSize, SeekOrigin.Begin);
 
 				byte [] buffer = binaryReader.ReadBytes ((int) this.fileSystem.BlockSize);
 
@@ -348,7 +339,7 @@ namespace Ext2 {
 			if (this.fileSystem.GroupDescriptors [descriptor].FreeBlocksCount < count - blocks.Count)
 				throw new Exception ("Not enough free blocks.");
 
-			this.binaryReader.BaseStream.Seek (this.fileSystem.GroupDescriptors [descriptor].BlockBitmap * this.fileSystem.BlockSize, SeekOrigin.Begin);
+			this.binaryReader.BaseStream.Seek (startOffset + this.fileSystem.GroupDescriptors [descriptor].BlockBitmap * this.fileSystem.BlockSize, SeekOrigin.Begin);
 			byte [] buffer = binaryReader.ReadBytes ((int) (this.fileSystem.BlockBitmapBlocksCount * this.fileSystem.BlockSize));
 
 			// TODO better allocation algorithm
@@ -370,7 +361,7 @@ namespace Ext2 {
 			if (blocks.Count != count)
 				throw new Exception ("Could not allocate enough blocks.");
 
-			this.binaryReader.BaseStream.Seek (this.fileSystem.GroupDescriptors [descriptor].BlockBitmap * this.fileSystem.BlockSize, SeekOrigin.Begin);
+			this.binaryReader.BaseStream.Seek (startOffset + this.fileSystem.GroupDescriptors [descriptor].BlockBitmap * this.fileSystem.BlockSize, SeekOrigin.Begin);
 			binaryReader.BaseStream.Write (buffer, 0, (int) (this.fileSystem.BlockBitmapBlocksCount * this.fileSystem.BlockSize));
 		}
 
@@ -381,7 +372,7 @@ namespace Ext2 {
 			// which these blocks are.
 			int descriptor = 0;
 
-			this.binaryReader.BaseStream.Seek (this.fileSystem.GroupDescriptors [descriptor].BlockBitmap * this.fileSystem.BlockSize, SeekOrigin.Begin);
+			this.binaryReader.BaseStream.Seek (startOffset + this.fileSystem.GroupDescriptors [descriptor].BlockBitmap * this.fileSystem.BlockSize, SeekOrigin.Begin);
 			byte [] buffer = binaryReader.ReadBytes ((int) (this.fileSystem.BlockBitmapBlocksCount * this.fileSystem.BlockSize));
 
 			while (blocks.Count > count) {
@@ -399,7 +390,7 @@ namespace Ext2 {
 				this.fileSystem.SuperBlock.FreeBlocksCount++;
 			}
 
-			this.binaryReader.BaseStream.Seek (this.fileSystem.GroupDescriptors [descriptor].BlockBitmap * this.fileSystem.BlockSize, SeekOrigin.Begin);
+			this.binaryReader.BaseStream.Seek (startOffset + this.fileSystem.GroupDescriptors [descriptor].BlockBitmap * this.fileSystem.BlockSize, SeekOrigin.Begin);
 			binaryReader.BaseStream.Write (buffer, 0, (int) (this.fileSystem.BlockBitmapBlocksCount * this.fileSystem.BlockSize));
 		}
 

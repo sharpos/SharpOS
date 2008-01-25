@@ -36,7 +36,7 @@
 		<delete file="${path::combine(common-dir,'SharpOS.img')}" failonerror="false" />
 		<copy file="${path::combine(disk-images-dir, 'TemplateDisk.img')}" tofile="${path::combine(common-dir, 'SharpOS.img')}" overwrite="true" />
 		<exec program="${path::combine(prefix, 'disk-image-updater.exe')}"
-			commandline="-i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
+			commandline="-m -i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>
 
 	<target name="aot-test">
@@ -48,7 +48,7 @@
 		<delete file="${path::combine(common-dir,'SharpOS.img')}" failonerror="false" />
 		<copy file="${path::combine(disk-images-dir, 'TemplateDisk.img')}" tofile="${path::combine(common-dir, 'SharpOS.img')}" overwrite="true" />
 		<exec program="${path::combine(prefix, 'disk-image-updater.exe')}"
-			commandline="-i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
+			commandline="-m -i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>
 	
 	<target name="clean">
