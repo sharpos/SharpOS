@@ -1151,8 +1151,7 @@ namespace SharpOS.AOT.X86 {
 			this.ALIGN (ALIGNMENT);
 			this.LABEL (START_DATA);
 
-			if (!this.engine.Options.NoMetadata)
-				this.AddMetadata ();
+			this.AddMetadata ();
 
 			foreach (Class _class in engine) {
 				if (_class.IsInternal)
@@ -1274,18 +1273,23 @@ namespace SharpOS.AOT.X86 {
 			MetadataVisitor visit = new MetadataVisitor (this);
 			int count = 0;
 
-			foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
-				visit.Encode (assemblyDef);
-				++count;
-			}
+			if (!this.Engine.Options.NoMetadata) {
+				foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
+					visit.Encode (assemblyDef);
+					++count;
+				}
 
-			// create a root table
+				// create a root table
 
-			this.LABEL ("AssemblyMetadataArray");
-			this.AddArrayFields (count);
+				this.LABEL ("AssemblyMetadataArray");
+				this.AddArrayFields (count);
 
-			foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
-				this.ADDRESSOF (assemblyDef.Name.FullName + " MetadataRoot");
+				foreach (AssemblyDefinition assemblyDef in this.engine.Sources) {
+					this.ADDRESSOF (assemblyDef.Name.FullName + " MetadataRoot");
+				}
+			} else {
+				this.LABEL ("AssemblyMetadataArray");
+				this.AddArrayFields (0);
 			}
 
 			this.LABEL ("MetadataRoot");
