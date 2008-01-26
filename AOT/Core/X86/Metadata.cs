@@ -905,7 +905,7 @@ namespace SharpOS.AOT.X86 {
 				if (found)
 					continue;
 
-				Console.WriteLine ("Stubbing missing metadata table `{0} {1}Table'", moduleName, missing);
+				//Console.WriteLine ("Stubbing missing metadata table `{0} {1}Table'", moduleName, missing);
 
 				this.asm.LABEL (moduleName + " " + missing + "Array");
 				this.asm.AddArrayFields (0);
