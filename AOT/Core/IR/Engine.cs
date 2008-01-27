@@ -5,6 +5,7 @@
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	William Lahti <xfurious@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
+//	Stanislaw Pitucha <viraptor@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -254,6 +255,22 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				return vtableClass;
+			}
+		}
+
+		Class itableClass = null;
+
+		/// <summary>
+		/// Gets the Class object representing the kernel type
+		/// used to store itable information. In the SharpOS
+		/// kernel this type is SharpOS.Korlib.Runtime.ITable.
+		/// </summary>
+		/// <value>The ITable class in the kernel.</value>
+		public Class ITableClass
+		{
+			get
+			{
+				return itableClass;
 			}
 		}
 
@@ -907,7 +924,7 @@ namespace SharpOS.AOT.IR {
 				Class _class = new Class (this, type);
 
 				if (this.classesDictionary.ContainsKey (_class.TypeFullName))
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Already contains " + _class.TypeFullName);
 
 				this.classes.Add (_class);
 				this.classesDictionary [_class.TypeFullName] = _class;
@@ -978,7 +995,21 @@ namespace SharpOS.AOT.IR {
 							throw new EngineException ("More than one class was tagged as TypeInfo Class.");
 
 						this.typeInfoClass = _class;
+					} else if (customAttribute.Constructor.DeclaringType.FullName ==
+							typeof (SharpOS.AOT.Attributes.ITableAttribute).FullName) {
+
+						if (this.itableClass != null)
+							throw new EngineException ("More than one class was tagged as ITable Class.");
+
+						this.itableClass = _class;
 					} 
+				}
+
+				// assigning interface method uids
+				if (_class.IsInterface) {
+					foreach (Method _method in _class.VirtualMethods) {
+						_method.AssignInterfaceMethodNumber();
+					}
 				}
 			}
 
@@ -991,6 +1022,9 @@ namespace SharpOS.AOT.IR {
 
 			if (this.typeInfoClass == null)
 				throw new EngineException ("No TypeInfo Class defined.");
+
+			if (this.itableClass == null)
+				throw new EngineException ("No ITable Class defined.");
 
 			// This block of code needs the vtableClass to be set
 			foreach (Class _class in this.classes) {
@@ -1424,6 +1458,7 @@ namespace SharpOS.AOT.IR {
 		}
 	}
 }
+
 
 
 

@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	Stanislaw Pitucha <viraptor@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -60,14 +61,31 @@ namespace SharpOS.AOT.X86 {
 				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (_this)));
 
-				int address = this.assembly.Engine.VTableSize + this.assembly.IntSize * call.Method.VirtualSlot;
+				if (call.Method.InterfaceMethodNumber == -1) {
+					// Do a normal vtable call
+					int address = this.assembly.Engine.VTableSize + this.assembly.IntSize * call.Method.VirtualSlot;
 
-				// Get the Object's VTable
-				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
+					// Get the Object's VTable
+					this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
 
-				// Call virtual method using the table in the Object's VTable
-				this.assembly.CALL (new DWordMemory (null, R32.EAX, null, 0, address));
+					// Call virtual method using the table in the Object's VTable
+					this.assembly.CALL (new DWordMemory (null, R32.EAX, null, 0, address));
+				} else {
+					// Do a IMT lookup call for interface method
+					int address = this.assembly.IntSize * call.Method.InterfaceMethodKey + this.assembly.Engine.ObjectSize;
 
+					// Get the Object's VTable
+					this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0));
+
+					// Get the Object's ITable
+					this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EAX, null, 0, this.assembly.IntSize * 4));
+
+					// IMT key in case call hits a colision resolving stub
+					this.assembly.MOV (R32.ECX, (uint) call.Method.InterfaceMethodNumber);
+ 
+					// Call virtual method using the table in the Object's ITable
+					this.assembly.CALL (new DWordMemory (null, R32.EAX, null, 0, address));
+				}
 			} else
 				assembly.CALL (call.Method.AssemblyLabel);
 
@@ -104,7 +122,7 @@ namespace SharpOS.AOT.X86 {
 					break;
 
 				default:
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Call assignee handling.");
 				}
 			}
 		}
@@ -691,7 +709,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("LDC of " + assignee.InternalType + " not supported yet");
 			}
 		}
 

@@ -5,6 +5,7 @@
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	William Lahti <xfurious@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
+//	Stanislaw Pitucha <viraptor@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -185,6 +186,30 @@ namespace SharpOS.AOT.IR {
 			this.engine = engine;
 			this._class = _class;
 			this.methodDefinition = methodDefinition;
+		}
+
+		public const byte IMTSize = 5;
+
+		public void AssignInterfaceMethodNumber() {
+			if (interfaceMethodNumber != -1)
+				throw new EngineException("Interface number already assigned to " + this.MethodFullName);
+
+			interfaceMethodNumber = interfaceMethodCount;
+			interfaceMethodCount++;
+		}
+		
+		static private int interfaceMethodCount = 0;
+		private int interfaceMethodNumber = -1;
+		
+		public int InterfaceMethodNumber
+		{
+			get { return interfaceMethodNumber; }
+			set { interfaceMethodNumber = value; }
+		}
+		
+		public int InterfaceMethodKey
+		{
+			get { return interfaceMethodNumber % IMTSize; }
 		}
 
 		/// <summary>

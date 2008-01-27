@@ -37,5 +37,13 @@ namespace SharpOS.AOT.X86 {
 				return this.addressOfLabel;
 			}
 		}
+
+		public override string Parameters
+		{
+			get
+			{
+				return string.Format ("DD 0x{0:X8} ; Address of {1}", this.value, AddressOfLabel);
+			}
+		}
 	}
 }

@@ -8,10 +8,8 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-#define NO_INTERFACE_SUPPORT
 namespace SharpOS.Kernel.Tests.CS {
 	public class Interface {
-#if !NO_INTERFACE_SUPPORT
 		private interface Iface1 {
 			int GetNumber ();
 			int Get100 ();
@@ -19,6 +17,9 @@ namespace SharpOS.Kernel.Tests.CS {
 			{
 				get;
 			}
+			void Key1_3();
+			void Key1_4();
+			void Key2_0();
 		}
 
 		private interface Iface2 {
@@ -52,6 +53,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			{
 				return 69;
 			}
+
+			public void Key1_3() {}
+			public void Key1_4() {}
+			public void Key2_0() {}
 		}
 
 		public static uint CMPGetProperty ()
@@ -85,11 +90,5 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
-#else
-		public static uint CMPImplement ()
-		{
-			return 0;
-		}
-#endif
 	}
 }

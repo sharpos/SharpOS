@@ -4,6 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	William Lahti <xfurious@gmail.com>
+//	Stanislaw Pitucha <viraptor@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -72,7 +73,11 @@ namespace SharpOS.AOT.X86 {
 		internal const string HELPER_LSAR = "LSAR";
 		internal const string HELPER_LMUL = "LMUL";
 
+		const string IMT_LABEL = "{0} IMTstub{1}";
+		const string IMT_RANGE_LABEL = "{0} IMTstub{1} {2}_{3}";
+
 		#region RUNTIME
+		const string ITABLE_LABEL = "{0} ITable";
 		const string VTABLE_LABEL = "{0} VTable";
 		const string TYPE_INFO_LABEL = "{0} TypeInfo";
 		#endregion
@@ -1123,6 +1128,21 @@ namespace SharpOS.AOT.X86 {
 			return string.Format (VTABLE_LABEL, value);
 		}
 
+		public string GetITableLabel (string value)
+		{
+			return string.Format (ITABLE_LABEL, value);
+		}
+
+		public string GetITableStubLabel (Class _class, int key)
+		{
+			return string.Format (IMT_LABEL, _class, key);
+		}
+
+		public string GetITableStubPartLabel (Class _class, int key, int fromMethod, int toMethod)
+		{
+			return string.Format (IMT_RANGE_LABEL, _class, key, fromMethod, toMethod);
+		}
+
 		public string GetTypeInfoLabel (string value)
 		{
 			return string.Format (TYPE_INFO_LABEL, value);
@@ -1156,6 +1176,14 @@ namespace SharpOS.AOT.X86 {
 			foreach (Class _class in engine) {
 				if (_class.IsInternal)
 					continue;
+
+				if (_class.IsInterface) {
+					AddTypeInfoFields(_class);
+					continue;
+				}
+
+				if (_class.ImplementsInterfaces)
+					AddITableFields (_class);
 
 				string typeInfoLabel = AddTypeInfoFields (_class);
 
@@ -1313,10 +1341,51 @@ namespace SharpOS.AOT.X86 {
 
 			// VTable Size Field
 			this.DATA ((uint) _class.Size);
+			
+			// ITable pointer
+			if (_class.ImplementsInterfaces)
+				this.ADDRESSOF (this.GetITableLabel(_class.TypeFullName));
+			else
+				this.DATA ((uint) 0);
 
 			// Virtual Methods
-			foreach (Method method in _class.VirtualMethods)
-				this.ADDRESSOF (method.AssemblyLabel);
+			foreach (Method method in _class.VirtualMethods) {
+				// add only non-interface methods to vtable
+				if (method.InterfaceMethodNumber == -1) {
+					this.ADDRESSOF (method.AssemblyLabel);
+				}
+			}
+		}
+
+		private void AddITableFields (Class _class)
+		{
+			this.ALIGN (OBJECT_ALIGNMENT);
+
+			// Writing the Runtime ITable instances
+			string label = this.GetITableLabel (_class.TypeFullName);
+			this.AddSymbol (new COFF.Label (label));
+			this.LABEL (label);
+
+			// Type Info Object Header
+			this.AddObjectFields (this.engine.ITableClass.TypeFullName);
+
+			// count entries - don't write unused fields
+			int lastEntry=0;
+			for (int key = 0; key < Method.IMTSize; ++key) {
+				if (_class.GetInterfaceEntries(key) != null)
+					lastEntry = key;
+			}
+				
+			for (int key = 0; key <= lastEntry; ++key) {
+				List<Method> m = _class.GetInterfaceEntries(key);
+				if (m == null) {
+					this.DATA((uint) 0);
+				} else if (m.Count == 1) {
+					this.ADDRESSOF (m[0].AssemblyLabel);
+				} else {
+					this.ADDRESSOF (GetITableStubLabel(_class, key));
+				}
+			}
 		}
 
 		private string AddTypeInfoFields (Class _class)
@@ -1389,6 +1458,54 @@ namespace SharpOS.AOT.X86 {
 					this.DATA (kvp.Value [x]);
 			}
 		}
+		
+		private void GenerateConflictStubPart (Class _class, int key, List<Method> methods, int rangeStart, int rangeEnd)
+		{
+			// only one element - just jump to that method
+			if (rangeStart == rangeEnd) {
+				this.JMP (methods[rangeStart].AssemblyLabel);
+			} else { // many elements - divide and generate stub parts
+				int divide = (rangeEnd - rangeStart)/2 + rangeStart;
+				string greaterBranchLabel = GetITableStubPartLabel(_class, key, divide+1, rangeEnd);
+
+				this.CMP (R32.ECX, (uint)methods[divide].InterfaceMethodNumber);
+				this.JG (greaterBranchLabel);
+				// needed interface number is lower than middle element
+				GenerateConflictStubPart (_class, key, methods, rangeStart, divide);
+				this.LABEL (greaterBranchLabel);
+				// needed interface number is higher than middle element
+				GenerateConflictStubPart (_class, key, methods, divide + 1, rangeEnd);
+			}
+		}
+
+		private void GenerateConflictStub (Class _class, int key)
+		{
+			List<Method> entries = _class.GetInterfaceEntries (key);
+			entries.Sort (delegate (Method a, Method b) {
+				return Comparer<int>.Default.Compare (a.InterfaceMethodNumber, b.InterfaceMethodNumber);
+			});
+
+			string fullname = GetITableStubLabel(_class, key);
+			this.ALIGN (Assembly.ALIGNMENT);
+
+			this.AddSymbol (new COFF.Function (fullname));
+
+			this.LABEL (fullname);
+			GenerateConflictStubPart (_class, key, entries, 0, entries.Count-1);
+		}
+
+		private void GenerateIMTHelpers(Class _class) {
+			if (!_class.IsClass)
+				return;
+
+			if ((_class.ClassDefinition as TypeDefinition).Interfaces.Count > 0) {
+				for (int i = 0; i < Method.IMTSize; ++i) {
+					List<Method> entries = _class.GetInterfaceEntries (i);
+					if (entries != null && entries.Count > 1)
+						GenerateConflictStub (_class, i);
+				}
+			}
+		}
 
 		/// <summary>
 		/// Encodes the specified engine.
@@ -1419,6 +1536,12 @@ namespace SharpOS.AOT.X86 {
 			this.engine.Dump.Section (DumpSection.MethodEncode);
 
 			foreach (Class _class in engine) {
+				// interfaces don't have method bodies
+				if (_class.IsInterface)
+					continue;
+				
+				GenerateIMTHelpers(_class);
+				
 				foreach (Method method in _class) {
 					this.engine.Dump.MethodEncode (method);
 

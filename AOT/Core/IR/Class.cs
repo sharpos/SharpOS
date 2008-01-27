@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	Stanislaw Pitucha <viraptor@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -80,10 +81,15 @@ namespace SharpOS.AOT.IR {
 
 						this.internalType = Operands.InternalType.O;
 					}
+					
+					if (typeDefinition.IsInterface) {
+						this.isInterface = true;
+					}
 
-					if (this.TypeFullName != Mono.Cecil.Constants.Object)
+					if (this.TypeFullName != Mono.Cecil.Constants.Object && !this.isInterface)
 						this._base = this.engine.GetClass (typeDefinition.BaseType);
 					
+					this.MarkInterfaceMethods ();
 					this.AddVirtualMethods (this.virtualMethods);
 
 				} else if (step == 1) {
@@ -99,7 +105,7 @@ namespace SharpOS.AOT.IR {
 						}
 					}
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Getting size of " + this);
 
 			} else if (this.classDefinition is TypeSpecification) {
 				if (step == 0) {
@@ -210,6 +216,20 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		private bool isInterface = false;
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is interface.
+		/// </summary>
+		/// <value><c>true</c> if this instance is interface; otherwise, <c>false</c>.</value>
+		public bool IsInterface
+		{
+			get
+			{
+				return isInterface;
+			}
+		}
+		
 		private bool hasExplicitLayout = false;
 
 		/// <summary>
@@ -546,7 +566,8 @@ namespace SharpOS.AOT.IR {
 					}
 
 				} else if (this.IsValueType
-						|| this.IsClass) {
+						|| this.IsClass
+						|| this.IsInterface) {
 					result = this.BaseSize;
 
 					if (this.hasExplicitLayout) {
@@ -624,6 +645,63 @@ namespace SharpOS.AOT.IR {
 						}
 					}
 				}
+			}
+		}
+
+		public bool ImplementsInterfaces
+		{
+			get {
+				return (!IsInterface && interfaceMethodsEntries != null);
+			}
+		}
+
+		public List<Method> GetInterfaceEntries (int key) {
+			if (interfaceMethodsEntries == null)
+				return null;
+			return interfaceMethodsEntries[key];
+		}
+
+		private List<Method>[] interfaceMethodsEntries = null;
+
+		private void AddMethodToIMT (Method method) {
+			if (interfaceMethodsEntries == null)
+				interfaceMethodsEntries = new List<Method>[Method.IMTSize];
+
+			int key = method.InterfaceMethodKey;
+
+			if (interfaceMethodsEntries [key] == null)
+				interfaceMethodsEntries [key] = new List<Method> ();
+	
+			interfaceMethodsEntries[key].Add (method);
+		}
+		
+		/// <summary>
+		/// Marks all methods with correct IMT numbers if they are interface implementation 
+		/// </summary>
+		/// <returns></returns>
+		private void MarkInterfaceMethods ()
+		{
+			foreach (Method method in this.methods) {
+				// was implementation explicit?
+				MethodDefinition methodDef = method.MethodDefinition as MethodDefinition;
+				if (methodDef.Overrides.Count > 0) {
+					foreach (MethodReference origReference in methodDef.Overrides) {
+						Method orig = engine.GetMethod (origReference);
+						method.InterfaceMethodNumber = orig.InterfaceMethodNumber;
+						AddMethodToIMT(method);
+					}
+				} else { // was implementation implicit?
+					foreach (TypeReference iface in (this.ClassDefinition as TypeDefinition).Interfaces) {
+						Class ifaceClass = engine.GetClass (iface);
+						Method orig = ifaceClass.methods.Find (delegate (Method m) { return m.ID==method.ID; });
+						if (orig!=null) {
+							method.InterfaceMethodNumber = orig.InterfaceMethodNumber;
+							AddMethodToIMT(method);
+							break;
+						}
+					}
+				}
+				// or it's not interface method
 			}
 		}
 	}
