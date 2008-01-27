@@ -36,6 +36,9 @@ namespace SharpOS.AOT.X86 {
 		protected Method method = null;
 		protected Assembly assembly = null;
 
+		public int reservedStackSlots = 3;
+
+
 		/// <summary>
 		/// Gets the assembly code.
 		/// </summary>
@@ -76,20 +79,35 @@ namespace SharpOS.AOT.X86 {
 				assembly.PUSH (R32.EBX);
 				assembly.PUSH (R32.ESI);
 				assembly.PUSH (R32.EDI);
-			}
 
-			if (method.StackSize > 0) {
-				int slots = method.StackSize;
-
-				if (isNaked)
-					// 3 stands for the above PUSH instructions after saving the ESP register
-					slots += 3;
+			} else {
+				assembly.MOV (R32.EBP, R32.ESP);
 				
-				assembly.SUB (R32.ESP, (UInt32) (slots * 4));
+				// the value stands for the above PUSH instructions 
+				// after saving the ESP register and we set it to 0
+				// as nothing got saved
+				this.reservedStackSlots = 0;
 			}
+
+			if (this.method.HasExceptionHandling)
+				this.reservedStackSlots++;
+
+			if (method.StackSize > 0)
+				assembly.SUB (R32.ESP, (UInt32) (method.StackSize * this.assembly.IntSize));
 
 			foreach (Block block in method) {
 				assembly.LABEL (fullname + " " + block.Index.ToString ());
+
+				// The first block in an Finally/Fault
+				if (block.Ins.Count == 1) {
+					Block ins0 = block.Ins [0];
+
+					if (ins0.Outs.Count == 2
+							&& ins0.Outs [1] == block
+							&& ins0.InstructionsCount > 0
+							&& ins0 [ins0.InstructionsCount - 1] is Leave)
+						this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.ESP);
+				}
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
 					assembly.COMMENT (instruction.ToString ());
@@ -258,6 +276,18 @@ namespace SharpOS.AOT.X86 {
 
 					else if (instruction is IR.Instructions.Isinst)
 						this.Isinst (instruction as IR.Instructions.Isinst);
+
+					else if (instruction is IR.Instructions.Leave)
+						this.Leave (instruction as IR.Instructions.Leave);
+
+					else if (instruction is IR.Instructions.Endfinally)
+						this.Endfinally (instruction as IR.Instructions.Endfinally);
+
+					else if (instruction is IR.Instructions.Endfilter)
+						this.Endfilter (instruction as IR.Instructions.Endfilter);
+
+					else if (instruction is IR.Instructions.Break)
+						this.Break (instruction as IR.Instructions.Break);
 
 					else
 						throw new EngineException ("'" + instruction + "' is not supported.");
@@ -471,7 +501,7 @@ namespace SharpOS.AOT.X86 {
 					uint pushSize = (uint) size;
 
 					if (pushSize % 4 != 0)
-						pushSize = ((pushSize / 4) + 1) * 4;
+						pushSize = (uint) (((pushSize / this.assembly.IntSize) + 1) * this.assembly.IntSize);
 
 					this.assembly.SUB (R32.ESP, pushSize);
 
@@ -560,7 +590,7 @@ namespace SharpOS.AOT.X86 {
 
 		private Memory GetAddress (IR.Operands.Argument argument)
 		{
-			return new Memory (null, R32.EBP, null, 0, this.GetArgumentOffset (argument.Index) * 4);
+			return new Memory (null, R32.EBP, null, 0, this.GetArgumentOffset (argument.Index) * this.assembly.IntSize);
 		}
 
 		private Memory GetAddress (IR.Operands.Local local)
@@ -610,7 +640,7 @@ namespace SharpOS.AOT.X86 {
 
 		private int GetIdentifierDisplacement (IR.Operands.Identifier identifier)
 		{
-			return -((3 + identifier.Stack) * 4);
+			return -((this.reservedStackSlots + identifier.Stack) * this.assembly.IntSize);
 		}
 
 		/// <summary>

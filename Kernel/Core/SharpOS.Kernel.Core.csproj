@@ -152,6 +152,8 @@
     <Compile Include="KernelStage.cs" />
     <Compile Include="KernelTestsWrapper.cs" />
     <Compile Include="KeyMap.cs" />
+    <Compile Include="Korlib\Runtime\ITable.cs" />
+    <Compile Include="Korlib\Runtime\Runtime.cs" />
     <Compile Include="Korlib\Runtime\TypeInfo.cs" />
     <Compile Include="Korlib\Runtime\VTable.cs" />
     <Compile Include="Korlib\System\Array.cs" />

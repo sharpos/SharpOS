@@ -90,6 +90,7 @@
     <Compile Include="Attributes\AllocAttribute.cs" />
     <Compile Include="Attributes\AllocObjectAttribute.cs" />
     <Compile Include="Attributes\AddressOfAttribute.cs" />
+    <Compile Include="Attributes\ITableAttribute.cs" />
     <Compile Include="Attributes\NakedAttribute.cs" />
     <Compile Include="Attributes\IncludeAttribute.cs" />
     <Compile Include="Attributes\TypeInfoAttribute.cs" />

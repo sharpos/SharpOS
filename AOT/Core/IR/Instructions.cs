@@ -1059,6 +1059,45 @@ namespace SharpOS.AOT.IR.Instructions {
 	/// <summary>
 	/// 
 	/// </summary>
+	public class Leave : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Leave"/> class.
+		/// </summary>
+		public Leave ()
+			: base ("Leave", null, null)
+		{
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class Endfinally : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Endfinally"/> class.
+		/// </summary>
+		public Endfinally ()
+			: base ("Endfinally", null, null)
+		{
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class Endfilter : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Endfilter"/> class.
+		/// </summary>
+		public Endfilter ()
+			: base ("Endfilter", null, null)
+		{
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
 	public class Throw : Instruction {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Throw"/> class.
@@ -1069,6 +1108,10 @@ namespace SharpOS.AOT.IR.Instructions {
 		{
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Throw"/> class.
+		/// </summary>
+		/// <param name="value">The value.</param>
 		public Throw (Register value)
 			: base ("Throw", null, new Operand [] { value })
 		{
@@ -1115,6 +1158,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		private Block [] blocks;
 
+		/// <summary>
+		/// Gets the blocks.
+		/// </summary>
+		/// <value>The blocks.</value>
 		public Block [] Blocks
 		{
 			get
@@ -2221,6 +2268,10 @@ namespace SharpOS.AOT.IR.Instructions {
 
 		Class type;
 
+		/// <summary>
+		/// Gets the type.
+		/// </summary>
+		/// <value>The type.</value>
 		public Class Type
 		{
 			get
@@ -2270,6 +2321,10 @@ namespace SharpOS.AOT.IR.Instructions {
 			}
 		}
 
+		/// <summary>
+		/// Processes the specified method.
+		/// </summary>
+		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
 			if (this.type.IsClass) {
@@ -2278,6 +2333,22 @@ namespace SharpOS.AOT.IR.Instructions {
 
 			} else
 				throw new NotImplementedEngineException ();
+		}
+	}
+
+	/// <summary>
+	/// 
+	/// </summary>
+	public class Break : Instruction {
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Newarr"/> class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <param name="result">The result.</param>
+		/// <param name="instance">The instance.</param>
+		public Break ()
+			: base ("Break", null, null)
+		{
 		}
 	}
 }

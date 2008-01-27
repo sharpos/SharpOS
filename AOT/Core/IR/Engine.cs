@@ -406,7 +406,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the size of the get object.
+		/// Gets the size of System.Object.
 		/// </summary>
 		/// <value>The size of the get object.</value>
 		public int ObjectSize

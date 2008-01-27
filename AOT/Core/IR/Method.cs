@@ -395,7 +395,10 @@ namespace SharpOS.AOT.IR {
 				// this is for the conditional jump
 				LinkBlocks (block, instruction.Operand as Mono.Cecil.Cil.Instruction);
 
-				if (instruction.OpCode.FlowControl != FlowControl.Branch)
+				if (instruction.OpCode.FlowControl != FlowControl.Branch
+						|| (instruction.OpCode.FlowControl == FlowControl.Branch
+							&& (instruction.OpCode.Code == Code.Leave
+								|| instruction.OpCode.Code == Code.Leave_S)))
 					LinkBlocks (block, instruction.Next);
 
 				// This is for a 'switch', which can have lots of targets
@@ -1273,6 +1276,9 @@ namespace SharpOS.AOT.IR {
 				return this.identifier + " : " + register + " : " + this.Start.Index + " <-> " + this.End.Index;
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public class SortByStart : IComparer<LiveRange> {
 				/// <summary>
 				/// Compares the specified live range1.
@@ -1298,6 +1304,9 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public class SortByEnd : IComparer<LiveRange> {
 				/// <summary>
 				/// Compares the specified live range1.
@@ -1317,6 +1326,9 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
+			/// <summary>
+			/// 
+			/// </summary>
 			public class SortByRegisterStack : IComparer<LiveRange> {
 				/// <summary>
 				/// Compares the specified live range1.
@@ -2228,6 +2240,19 @@ namespace SharpOS.AOT.IR {
 				}
 
 				return labels;
+			}
+		}
+
+		public bool HasExceptionHandling
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null)
+					return false;
+
+				return definition.Body.ExceptionHandlers.Count != 0;
 			}
 		}
 	}

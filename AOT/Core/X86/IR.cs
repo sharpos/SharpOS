@@ -2891,5 +2891,29 @@ namespace SharpOS.AOT.X86 {
 			else
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
+
+		private void Leave (IR.Instructions.Leave instruction)
+		{
+			//this.assembly.CALL (this.GetLabel (instruction.Block.Outs [1]));
+
+			this.assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));	
+		}
+
+		private void Endfinally (IR.Instructions.Endfinally instruction)
+		{
+			this.assembly.MOV (R32.ESP, new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize));
+
+			this.assembly.RET ();
+		}
+
+		private void Endfilter (IR.Instructions.Endfilter instruction)
+		{
+			throw new NotImplementedEngineException ();
+		}
+
+		private void Break (IR.Instructions.Break instruction)
+		{
+			// Does nothing, perhaps emit a label?
+		}
 	}
 }

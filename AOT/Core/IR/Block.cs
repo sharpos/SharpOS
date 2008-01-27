@@ -1251,17 +1251,22 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Leave (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new Jump ();
+			return new Leave ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Leave_S (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new Jump ();
+			return new Leave ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Endfinally (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new Jump ();
+			return new Endfinally ();
+		}
+
+		private SharpOS.AOT.IR.Instructions.Instruction Endfilter (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return new Endfilter ();
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Throw (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -2195,6 +2200,11 @@ namespace SharpOS.AOT.IR {
 			return new Isinst (this.method.Engine.GetClass (typeReference), result, value);
 		}
 
+		private SharpOS.AOT.IR.Instructions.Instruction Break (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			return new Break ();
+		}
+
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelem_Any (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new NotImplementedEngineException ();
@@ -2206,11 +2216,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelema (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new NotImplementedEngineException ();
-		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction Break (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new NotImplementedEngineException ();
 		}
@@ -2246,11 +2251,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldvirtftn (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new NotImplementedEngineException ();
-		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction Endfilter (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new NotImplementedEngineException ();
 		}
