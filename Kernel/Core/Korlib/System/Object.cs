@@ -20,5 +20,10 @@ namespace InternalSystem {
 		public Object ()
 		{
 		}
+		
+		public virtual string ToString()
+		{
+			return this.VTable.Type.Name;
+		}
 	}
 }

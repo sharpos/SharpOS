@@ -38,6 +38,8 @@ namespace SharpOS.AOT.IR {
 			this.classDefinition = classDefinition;
 		}
 
+		private int setupStep = -1;
+
 		/// <summary>
 		/// Setups this instance.
 		/// </summary>
@@ -52,6 +54,11 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void Setup (int step)
 		{
+			if (setupStep >= step)
+				return;
+
+			setupStep = step;
+
 			if (this.classDefinition is TypeDefinition) {
 				TypeDefinition typeDefinition = this.classDefinition as TypeDefinition;
 
@@ -89,6 +96,15 @@ namespace SharpOS.AOT.IR {
 					if (this.TypeFullName != Mono.Cecil.Constants.Object && !this.isInterface)
 						this._base = this.engine.GetClass (typeDefinition.BaseType);
 					
+					// initialize base class before marking virtual methods
+					if (this._base != null)
+						this._base.Setup (step);
+
+					// initialize base interfaces before marking interface methods
+					foreach (TypeReference interfaceRef in (this.ClassDefinition as TypeDefinition).Interfaces) {
+						this.engine.GetClass(interfaceRef).Setup (step);
+					}
+
 					this.MarkInterfaceMethods ();
 					this.AddVirtualMethods (this.virtualMethods);
 
@@ -118,6 +134,10 @@ namespace SharpOS.AOT.IR {
 
 					} else
 						this._base = this.engine.GetClass (this.classDefinition.GetOriginalType ());
+
+					// initialize base class
+					if (this._base != null)
+						this._base.Setup (step);
 
 				} else if (step != 1)
 					throw new NotImplementedEngineException ();
