@@ -722,6 +722,16 @@ namespace SharpOS.AOT.IR {
 			if (this.classesDictionary.ContainsKey (value))
 				return this.classesDictionary [value];
 
+			if (value.EndsWith ("[]")) {
+				value = value.Substring (0, value.Length - 2);
+
+				if (this.classesDictionary.ContainsKey (value)) {
+					ArrayType arrayType = new ArrayType (this.classesDictionary [value].ClassDefinition);
+
+					return this.AddSpecialType (arrayType);
+				}
+			}
+
 			throw new EngineException (string.Format ("Class '{0}' not found.", value));
 		}
 

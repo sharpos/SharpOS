@@ -227,6 +227,6 @@ $(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ -ar -o:"$(TargetDir)\Temp\Bu
     <PostBuildEvent>$(TargetDir)\SharpOS-AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll $(TargetDir)\SharpOS.Kernel.Tests.CS.dll $(TargetDir)\SharpOS.Kernel.Tests.IL.dll
 copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
 $(TargetDir)\disk-image-updater.exe -m -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img
-$(TargetDir)\distro\qemu\qemu.exe -L $(TargetDir)\distro\qemu $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>
+$(TargetDir)\distro\qemu\qemu.exe -no-kqemu -L $(TargetDir)\distro\qemu $(TargetDir)\distro\common\SharpOS.img</PostBuildEvent>
   </PropertyGroup>
 </Project>
