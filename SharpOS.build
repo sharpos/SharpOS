@@ -42,6 +42,16 @@
 			target="aot-test" />
 	</target>
 	
+	<target name="run" depends="dist">
+		<nant buildfile="./Kernel/Kernel.build" 
+			target="run" />
+	</target>
+	
+	<target name="run-test" depends="dist-test">
+		<nant buildfile="./Kernel/Kernel.build" 
+			target="run" />
+	</target>
+	
 	<target name="clean">
 		<nant buildfile="./Tools/Tools.build" target="clean" />
 		<nant buildfile="./AOT/AOT.build" target="clean" />

@@ -21,7 +21,7 @@ namespace SharpOS.AOT.IR.Instructions {
 	/// </summary>
 	public class Break : Instruction {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Newarr"/> class.
+		/// Initializes a new instance of the <see cref="Break"/> class.
 		/// </summary>
 		public Break ()
 			: base ("Break", null, null)

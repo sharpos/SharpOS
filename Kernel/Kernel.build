@@ -16,7 +16,9 @@
 	<property name="disk-images-dir" value="${path::combine(data-dir, 'DiskImages')}" />
 	<property name="distro-dir" value="${path::combine(prefix, 'distro')}" />
 	<property name="common-dir" value="${path::combine(distro-dir, 'common')}" />
-	
+	<property name="qemu-dir" value="${path::combine(distro-dir, 'qemu')}" />
+	<property name="qemu-bin" value="${path::combine(qemu-dir, 'qemu.exe')}" />
+
 	<target name="build">
 		<echo message="Building the SharpOS kernel" />
 		<nant buildfile="./Core/Core.build" />
@@ -51,6 +53,18 @@
 			commandline="-m -i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
 	</target>
 	
+	<target name="run">
+		<if test="${platform::is-unix() == true}" >
+			<exec program="qemu"
+				commandline="-no-kqemu ${path::combine(common-dir, 'SharpOS.img')}" />
+		</if>
+		
+		<if test="${platform::is-unix() == false}" >
+			<exec program="${qemu-bin}"
+				commandline="-L ${qemu-dir} -no-kqemu ${path::combine(common-dir, 'SharpOS.img')}" />
+		</if>
+	</target>
+
 	<target name="clean">
 		<nant buildfile="./Core/Core.build" target="clean" />
 		<nant buildfile="./Tests/Tests.build" target="clean" />
