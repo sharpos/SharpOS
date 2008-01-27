@@ -850,6 +850,12 @@ namespace SharpOS.Kernel.Tests {
 				failures++;
 			}
 
+			if (SharpOS.Kernel.Tests.CS.Arguments.CMPArgumentsParams () != 1) {
+				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.Arguments.CMPArgumentsParams' failed.");
+				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.Arguments.CMPArgumentsParams' failed.");
+				failures++;
+			}
+
 			if (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte () != 1) {
 				TextMode.WriteLine ("'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte' failed.");
 				Serial.WriteLine ("'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte' failed.");

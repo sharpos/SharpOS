@@ -708,6 +708,11 @@ public class KernelTests {
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2 () == 1, "'SharpOS.Kernel.Tests.CS.Arguments.CMPArguments2' failed.");
 	}
 	[Test]
+	public void SharpOS_Kernel_Tests_CS_Arguments_CMPArgumentsParams ()
+	{
+		Assert.IsTrue (SharpOS.Kernel.Tests.CS.Arguments.CMPArgumentsParams () == 1, "'SharpOS.Kernel.Tests.CS.Arguments.CMPArgumentsParams' failed.");
+	}
+	[Test]
 	public void SharpOS_Kernel_Tests_CS_UnsignedIntegerCast_CMPUInt2Byte ()
 	{
 		Assert.IsTrue (SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte () == 1, "'SharpOS.Kernel.Tests.CS.UnsignedIntegerCast.CMPUInt2Byte' failed.");

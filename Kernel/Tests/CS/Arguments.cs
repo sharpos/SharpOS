@@ -23,6 +23,13 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return;
 		}
+		
+		public static int Arguments3 (params object[] args)
+		{
+			if (args.Length != 2)
+				return -1;
+			return (int)args[0]+(int)args[1];
+		}
 
 		public static uint CMPArguments1 ()
 		{
@@ -43,6 +50,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			Arguments2 (1, 2, out c);
 
 			if (c == 3)
+				return 1;
+
+			return 0;
+		}
+
+		public static uint CMPArgumentsParams ()
+		{
+			if (Arguments3 (1, 2) == 3)
 				return 1;
 
 			return 0;
