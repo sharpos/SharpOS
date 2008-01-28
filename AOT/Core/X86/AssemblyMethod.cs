@@ -81,6 +81,7 @@ namespace SharpOS.AOT.X86 {
 				assembly.PUSH (R32.EDI);
 
 			} else {
+				assembly.MOV (R32.EAX, R32.EBP);
 				assembly.MOV (R32.EBP, R32.ESP);
 				
 				// the value stands for the above PUSH instructions 
