@@ -73,22 +73,22 @@ namespace SharpOS.Korlib.Runtime {
 
 		public unsafe static CString8 *GetString (AssemblyMetadata assembly, uint str)
 		{
-			int length = (int)str;
+			int length = 0;
 			CString8 *buf;
+			int index = 0;
 
 			Diagnostics.Assert (str < assembly.StringsHeap.Length,
 				"Runtime.ReadString(): parameter `str' is out of range");
 			Diagnostics.Assert (assembly != null,
 				"Runtime.ReadString(): parameter `assembly' is null");
 
-			while (assembly.StringsHeap [length] != '\0')
-				++length;
-
-			length -= (int) str;
+			length = GetStringLength (assembly, str);
 			buf = CString8.Create (length);
 
-			for (int x = (int) str; x < length; ++x)
-				buf->SetChar (x - (int) str, assembly.StringsHeap [x]);
+			for (int x = (int) str; index < length; ++x) {
+				buf->SetChar (index, assembly.StringsHeap [x]);
+				++index;
+			}
 
 			return buf;
 		}
@@ -396,6 +396,170 @@ namespace SharpOS.Korlib.Runtime {
 			return result;
 		}
 
+		public unsafe static void PrintTypeName (AssemblyMetadata assembly, TypeDefRow type)
+		{
+			CString8 *name, ns;
+
+			name = GetString (assembly, type.Name);
+			ns = GetString (assembly, type.Namespace);
+
+			Serial.Write (ns);
+			Serial.Write (".");
+			Serial.Write (name);
+
+			MemoryManager.Free (name);
+			MemoryManager.Free (ns);
+		}
+
+		public unsafe static void DumpTypeDef (AssemblyMetadata assembly, TypeDefRow row, int index)
+		{
+			Serial.Write ("TypeDefRow#");
+			Serial.Write (index);
+			Serial.Write (" ");
+			Serial.Write ((int)row.Flags);
+			Serial.Write (" ");
+			Serial.Write ((int)row.Name);
+			Serial.Write (" ");
+			Serial.Write ((int)row.Namespace);
+			Serial.Write (" ");
+			Serial.Write ((int)row.Extends);
+			Serial.Write (" ");
+			Serial.Write ((int)row.FieldList);
+			Serial.Write (" ");
+			Serial.Write ((int)row.MethodList);
+			Serial.Write (" ");
+			PrintTypeName (assembly, row);
+			Serial.WriteLine ();
+		}
+
+		public static bool VerifyMetadata ()
+		{
+			bool result = true;
+
+			//if (Root.Magic != MetadataRoot.MDMagic) {
+			//	TextMode.Write ("Runtime: metadata root has invalid magic `", Root.Magic, true);
+			//	TextMode.Write ("'");
+			//}
+
+			PrintTypeName (Root.Assemblies [0], Root.Assemblies [0].TypeDef [0]);
+
+			for (int x = 0; x < Root.Assemblies.Length; ++x) {
+				bool skip = false;
+
+				Serial.Write ("Assembly#");
+				Serial.Write (x);
+
+				if (Root.Assemblies [x].Magic != MetadataRoot.MDMagic) {
+					Serial.Write (": invalid magic");
+					result = false;
+					skip = true;
+				} else {
+					Serial.Write (": valid magic");
+				}
+
+				Serial.Write (" `0x");
+				Serial.Write ((int)Root.Assemblies [x].Magic, true);
+				Serial.WriteLine ("'");
+
+				if (skip)
+					continue;
+
+				int pass = 0;
+				int total = 0;
+				int startPass = -1;
+				int firstFailure = -1;
+
+				for (int y = 0; y < Root.Assemblies [x].TypeDef.Length; ++y) {
+					TypeDefRow row = Root.Assemblies [x].TypeDef [y];
+
+					if (row.Magic == MetadataRoot.MDMagic) {
+						++pass;
+
+						if (firstFailure == -1) {
+							DumpTypeDef (Root.Assemblies [x], row, y);
+						}
+					} else {
+						result = false;
+						if (y < 3) {
+							Serial.Write ("- TypeDef#");
+							Serial.Write (y);
+							Serial.Write (": invalid metadata `0x");
+							Serial.Write ((int) row.Magic, true);
+							Serial.WriteLine ("'");
+						}
+
+						if (startPass == -1)
+							startPass = pass;
+						if (firstFailure == -1)
+							firstFailure = y;
+					}
+
+					++total;
+				}
+
+				if (pass != total) {
+					Serial.Write (" - ");
+					Serial.Write (Root.Assemblies [x].TypeDef.Length);
+					Serial.Write (" total types, ");
+					Serial.Write (total - pass);
+					Serial.WriteLine (" with invalid magic signatures");
+					Serial.Write (" - ");
+					Serial.Write ((pass * 100 / total));
+					Serial.Write ("% (");
+					Serial.Write (pass);
+					Serial.WriteLine (") of total types pass magic test");
+					Serial.Write (" - ");
+					Serial.Write ((startPass * 100 / total));
+					Serial.Write ("% (");
+					Serial.Write (startPass);
+					Serial.WriteLine (") passed before the first failed magic test");
+					Serial.Write (" - type #");
+					Serial.Write (firstFailure);
+					Serial.WriteLine (" was the first to fail");
+				}
+			}
+
+			//if (Root.Assemblies [0].TypeDef [x].Magic != 200)
+			//	Diagnostics.Error ("Runtime: type has invalid magic");
+
+			return result;
+		}
+
+		public static void __RunTests ()
+		{
+			// Magic tests
+
+			VerifyMetadata ();
+
+			//__TestIsBaseClassOf ();
+		}
+
+		class TestA {
+			public int Member1;
+		}
+
+		class TestB : TestA {
+			public int Member2;
+		}
+
+		public static void __TestIsBaseClassOf ()
+		{
+			object o1 = new TestA ();
+			object o2 = new TestB ();
+			InternalSystem.Object io1, io2;
+			uint ui = 1109;
+
+			io1 = o1 as InternalSystem.Object;
+			io2 = o2 as InternalSystem.Object;
+
+			return;
+
+			Testcase.Test (Runtime.IsBaseClassOf (io2.VTable.Type, io1.VTable.Type),
+				"Runtime", "IsBaseClassOf where result should be true");
+			Testcase.Test (Runtime.IsBaseClassOf (io1.VTable.Type, io2.VTable.Type) == false,
+				"Runtime", "IsBaseClassOf where result should be false");
+		}
+
 		public static bool IsBaseClassOf (TypeInfo type, TypeInfo baseType)
 		{
 			TokenType typeTokType, baseTokType, interimTokType;
@@ -408,13 +572,20 @@ namespace SharpOS.Korlib.Runtime {
 			MetadataToken.Decode (type.MetadataToken, out typeTokType, out typeRID);
 			MetadataToken.Decode (baseType.MetadataToken, out baseTokType, out baseRID);
 
-			if (IsTypeSystemObject (baseType.Assembly, baseTokType, baseRID))
-				return true;
+			//if (IsTypeSystemObject (baseType.Assembly, baseTokType, baseRID))
+			//	return true;
 
 			typeDef = GetType (type.Assembly, typeTokType, typeRID);
 			baseDef = GetType (baseType.Assembly, baseTokType, baseRID);
 			interimDef = typeDef;
 			interimAssembly = type.Assembly;
+
+
+			TextMode.Write ("IsBaseClassOf('");
+			PrintTypeName (type.Assembly, typeDef);
+			TextMode.Write ("', '");
+			PrintTypeName (baseType.Assembly, baseDef);
+			TextMode.WriteLine ("')");
 
 			MetadataToken.Decode (typeDef.Extends, out interimTokType, out interimRID);
 

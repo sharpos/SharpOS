@@ -72,7 +72,7 @@ namespace SharpOS.Kernel.Foundation {
 		{
 			if (boundsCheck) {
 				Diagnostics.Assert (index >= 0 && index < Length,
-					"CString8.get_Indexer(): index out of bounds");
+					"CString8.set_Indexer(): index out of bounds");
 			}
 
 			Pointer [index] = value;
@@ -496,7 +496,9 @@ namespace SharpOS.Kernel.Foundation {
 		public static CString8* Create (int capacity)
 		{
 			byte* rslt = (byte*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint)(capacity + 1));
-			rslt [0] = (byte) '\0';
+
+			for (int x = 0; x < capacity; ++x)
+				rslt [x] = (byte) ' ';
 			rslt [capacity] = (byte) '\0';
 
 			return (CString8*) rslt;

@@ -105,7 +105,7 @@ namespace SharpOS.Kernel {
 
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
-			
+
 			StageMessage ("Device setup...");
 			ADC.Architecture.DeviceManager.Setup ();
 
@@ -155,6 +155,7 @@ namespace SharpOS.Kernel {
 #endif
 
 			#region Metadata Tests
+			Runtime.__RunTests ();
 			// TextMode.Write ("HashAlgId: ");
 			// TextMode.WriteNumber ((int) assemblyRow.HashAlgId);
 			// TextMode.WriteLine ();
@@ -163,6 +164,7 @@ namespace SharpOS.Kernel {
 			// TextMode.WriteNumber ((int) assemblyRow.Name);
 			// TextMode.WriteLine ();
 			#endregion
+
 
 			StageMessage ("Shell setup...");
 			SharpOS.Kernel.Shell.Prompter.Setup ();
@@ -279,7 +281,7 @@ namespace SharpOS.Kernel {
 			_object.VTable = vtable;
 
 			// TODO set the rank, rank data and initialize the data
-			
+
 			/*InternalSystem.Array _array = _object as InternalSystem.Array;
 			_array.Rank = 1;
 			_array.FirstEntry.LowerBound = 0;

@@ -2,7 +2,7 @@
 // (C) 2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
-//	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
+//	ï¿½sgeir Halldï¿½rsson <asgeir.halldorsson@gmail.com>
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //
 // Licensed under the terms of the GNU GPL v3,
@@ -61,6 +61,16 @@ namespace SharpOS.Kernel.ADC {
 			CString8* str = Foundation.Convert.ToString (number, hex);
 			Write (str);
 			ADC.MemoryManager.Free (str);
+		}
+
+		public unsafe static void Write (int number)
+		{
+			WriteNumber (number, false);
+		}
+
+		public unsafe static void Write (int number, bool hex)
+		{
+			WriteNumber (number, hex);
 		}
 	}
 }

@@ -75,8 +75,11 @@ namespace SharpOS.AOT.X86 {
 
 		public override void TerminateMetadataRoot (MetadataRoot root)
 		{
+			this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 			this.asm.LABEL (moduleName + " MetadataRoot");
 			this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.AssemblyMetadata).ToString ());
+
+			this.asm.DATA (Magic);
 			this.asm.ADDRESSOF (moduleName + " StringsHeap");
 			this.asm.ADDRESSOF (moduleName + " BlobHeap");
 			this.asm.ADDRESSOF (moduleName + " GuidHeap");
@@ -146,6 +149,7 @@ namespace SharpOS.AOT.X86 {
 
 		void MetadataArray (string name, IMetadataTable table)
 		{
+			this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 			this.asm.LABEL (moduleName + " " + name + "Array");
 			this.asm.AddArrayFields (table.Rows.Count);
 			for (int x = 0; x < table.Rows.Count; ++x)
@@ -157,6 +161,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (AssemblyRefRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " AssemblyRefRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.AssemblyRefRow).ToString ());
 				this.asm.DATA (row.MajorVersion);
@@ -179,6 +184,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (AssemblyRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " AssemblyRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.AssemblyRow).ToString ());
 				this.asm.DATA ((uint) row.HashAlgId);
@@ -203,6 +209,7 @@ namespace SharpOS.AOT.X86 {
 
 			Console.WriteLine ("encoding class table for {0}", moduleName);
 			foreach (ClassLayoutRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " ClassLayoutRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ClassLayoutRow).ToString ());
 				this.asm.DATA (row.PackingSize);
@@ -220,6 +227,7 @@ namespace SharpOS.AOT.X86 {
 			// Also, the ElementType enum in Cecil does not specify
 			// a base type.
 
+			this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 			this.asm.LABEL (moduleName + " ConstantArray");
 			this.asm.AddArrayFields (0);
 		}
@@ -229,6 +237,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (CustomAttributeRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " CustomAttributeRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.CustomAttributeRow).ToString ());
 				this.asm.DATA (row.Parent.ToUInt ());
@@ -245,6 +254,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (DeclSecurityRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " DeclSecurityRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.DeclSecurityRow).ToString ());
 				this.asm.DATA ((ushort) row.Action);
@@ -261,6 +271,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (EventMapRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " EventMapRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.EventMapRow).ToString ());
 				this.asm.DATA (row.Parent);
@@ -276,6 +287,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (EventPtrRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " EventPtrRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ClassLayoutRow).ToString ());
 				this.asm.DATA (row.Event);
@@ -290,6 +302,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (EventRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " EventRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.EventRow).ToString ());
 				this.asm.DATA ((ushort) row.EventFlags);
@@ -306,6 +319,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (ExportedTypeRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " ExportedTypeRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ExportedTypeRow).ToString ());
 				this.asm.DATA ((uint) row.Flags);
@@ -324,6 +338,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (FieldLayoutRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " FieldLayoutRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.FieldLayoutRow).ToString ());
 				this.asm.DATA (row.Offset);
@@ -339,6 +354,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (FieldMarshalRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " FieldMarshalRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.FieldMarshalRow).ToString ());
 				this.asm.DATA (row.Parent.ToUInt ());
@@ -354,6 +370,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (FieldPtrRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " FieldPtrRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.FieldPtrRow).ToString ());
 
@@ -369,6 +386,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (FieldRVARow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " FieldRVARow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.FieldRVARow).ToString ());
 				this.asm.DATA (row.RVA.Value);
@@ -384,6 +402,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (FieldRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " FieldRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.FieldRow).ToString ());
 
@@ -401,6 +420,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (FileRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " FileRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.FileRow).ToString ());
 				this.asm.DATA ((uint) row.Flags);
@@ -417,6 +437,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (GenericParamConstraintRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " GenericParamConstraintRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.GenericParamConstraintRow).ToString ());
 				this.asm.DATA (row.Owner);
@@ -432,6 +453,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (GenericParamRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " GenericParamRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.GenericParamRow).ToString ());
 				this.asm.DATA (row.Number);
@@ -449,6 +471,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (ImplMapRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " ImplMapRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ImplMapRow).ToString ());
 				this.asm.DATA ((uint) row.MappingFlags);
@@ -466,6 +489,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (InterfaceImplRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " InterfaceImplRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.InterfaceImplRow).ToString ());
 				this.asm.DATA (row.Class);
@@ -481,6 +505,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (ManifestResourceRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " ManifestResourceRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ManifestResourceRow).ToString ());
 				this.asm.DATA (row.Offset);
@@ -498,6 +523,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (MemberRefRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " MemberRefRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.MemberRefRow).ToString ());
 				this.asm.DATA (row.Class.ToUInt ());
@@ -514,6 +540,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (MethodImplRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " MethodImplRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.MethodImplRow).ToString ());
 				this.asm.DATA (row.Class);
@@ -530,6 +557,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (MethodPtrRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " MethodPtrRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.MethodPtrRow).ToString ());
 
@@ -545,6 +573,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (MethodSemanticsRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " MethodSemanticsRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.MethodSemanticsRow).ToString ());
 
@@ -562,6 +591,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (MethodSpecRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " MethodSpecRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.MethodSpecRow).ToString ());
 
@@ -578,6 +608,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (MethodRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " MethodRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.MethodRow).ToString ());
 
@@ -598,6 +629,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (ModuleRefRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " ModuleRefRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ModuleRefRow).ToString ());
 
@@ -613,6 +645,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (ModuleRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " ModuleRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ModuleRow).ToString ());
 
@@ -633,6 +666,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (NestedClassRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " NestedClassRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.NestedClassRow).ToString ());
 
@@ -650,6 +684,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (ParamPtrRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " ParamPtrRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ParamPtrRow).ToString ());
 
@@ -666,6 +701,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (ParamRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " ParamRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.ParamRow).ToString ());
 
@@ -684,6 +720,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (PropertyMapRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " PropertyMapRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.PropertyMapRow).ToString ());
 
@@ -701,6 +738,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (PropertyPtrRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " PropertyPtrRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.PropertyPtrRow).ToString ());
 
@@ -717,6 +755,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (PropertyRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " PropertyRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.PropertyRow).ToString ());
 
@@ -735,6 +774,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (StandAloneSigRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " StandAloneSigRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.StandAloneSigRow).ToString ());
 
@@ -746,14 +786,32 @@ namespace SharpOS.AOT.X86 {
 			this.MetadataArray ("StandAloneSig", table);
 		}
 
+		void DumpTypeDef (TypeDefRow row, int index)
+		{
+			Console.WriteLine ("TypeDefRow#{0} {1} {2} {3} {4} {5} {6}",
+				index,
+				(uint)row.Flags,
+				row.Name,
+				row.Namespace,
+				row.Extends.ToUInt (),
+				row.FieldList,
+				row.MethodList);
+		}
+
 		void EncodeTypeDefTable (TypeDefTable table)
 		{
 			int index = 0;
 
 			foreach (TypeDefRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " TypeDefRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.TypeDefRow).ToString ());
 
+				if (index >= 18 && index < 23) {
+					DumpTypeDef (row, index);
+				}
+
+				this.asm.DATA (Magic);
 				this.asm.DATA ((uint) row.Flags);
 				this.asm.DATA (row.Name);
 				this.asm.DATA (row.Namespace);
@@ -772,6 +830,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (TypeRefRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " TypeRefRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.TypeRefRow).ToString ());
 
@@ -790,6 +849,7 @@ namespace SharpOS.AOT.X86 {
 			int index = 0;
 
 			foreach (TypeSpecRow row in table.Rows) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " TypeSpecRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.TypeSpecRow).ToString ());
 
@@ -801,11 +861,16 @@ namespace SharpOS.AOT.X86 {
 			this.MetadataArray ("TypeSpec", table);
 		}
 
+		uint Magic {
+			get { return SharpOS.AOT.Metadata.MetadataRoot.MDMagic; }
+		}
+
 		public override void VisitTablesHeap (TablesHeap heap)
 		{
 			List <IMetadataTable> encodedTables = new List <IMetadataTable> ();
 
 			foreach (IMetadataTable table in heap.Tables) {
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " " + table.GetType().Name);
 
 				encodedTables.Add (table);
@@ -907,6 +972,7 @@ namespace SharpOS.AOT.X86 {
 
 				//Console.WriteLine ("Stubbing missing metadata table `{0} {1}Table'", moduleName, missing);
 
+				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
 				this.asm.LABEL (moduleName + " " + missing + "Array");
 				this.asm.AddArrayFields (0);
 			}

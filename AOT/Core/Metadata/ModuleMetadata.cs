@@ -629,6 +629,7 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[StructLayout(LayoutKind.Sequential)]
 	public class TypeDefRow {
+		public uint Magic;
 		public TypeAttributes Flags;
 		public uint Name;
 		public uint Namespace;
@@ -654,6 +655,7 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[StructLayout (LayoutKind.Sequential)]
 	public class AssemblyMetadata {
+		public uint Magic;
 		public byte [] StringsHeap;
 		public byte [] BlobHeap;
 		public byte [] GuidHeap;
@@ -702,6 +704,8 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[StructLayout (LayoutKind.Sequential)]
 	public class MetadataRoot {
+		public const uint MDMagic = 0xb33f33;
+		//public uint Magic;
 		public AssemblyMetadata [] Assemblies;
 	}
 }

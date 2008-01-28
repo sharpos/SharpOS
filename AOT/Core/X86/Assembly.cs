@@ -1309,6 +1309,7 @@ namespace SharpOS.AOT.X86 {
 
 				// create a root table
 
+				this.ALIGN (OBJECT_ALIGNMENT);
 				this.LABEL ("AssemblyMetadataArray");
 				this.AddArrayFields (count);
 
@@ -1316,10 +1317,12 @@ namespace SharpOS.AOT.X86 {
 					this.ADDRESSOF (assemblyDef.Name.FullName + " MetadataRoot");
 				}
 			} else {
+				this.ALIGN (OBJECT_ALIGNMENT);
 				this.LABEL ("AssemblyMetadataArray");
 				this.AddArrayFields (0);
 			}
 
+			this.ALIGN (OBJECT_ALIGNMENT);
 			this.LABEL ("MetadataRoot");
 			this.AddObjectFields (typeof (SharpOS.AOT.Metadata.MetadataRoot).FullName);
 			this.ADDRESSOF ("AssemblyMetadataArray");
@@ -1341,7 +1344,7 @@ namespace SharpOS.AOT.X86 {
 
 			// VTable Size Field
 			this.DATA ((uint) _class.Size);
-			
+
 			// ITable pointer
 			if (_class.ImplementsInterfaces)
 				this.ADDRESSOF (this.GetITableLabel(_class.TypeFullName));
@@ -1375,7 +1378,7 @@ namespace SharpOS.AOT.X86 {
 				if (_class.GetInterfaceEntries(key) != null)
 					lastEntry = key;
 			}
-				
+
 			for (int key = 0; key <= lastEntry; ++key) {
 				List<Method> m = _class.GetInterfaceEntries(key);
 				if (m == null) {
@@ -1458,7 +1461,7 @@ namespace SharpOS.AOT.X86 {
 					this.DATA (kvp.Value [x]);
 			}
 		}
-		
+
 		private void GenerateConflictStubPart (Class _class, int key, List<Method> methods, int rangeStart, int rangeEnd)
 		{
 			// only one element - just jump to that method
@@ -1539,9 +1542,9 @@ namespace SharpOS.AOT.X86 {
 				// interfaces don't have method bodies
 				if (_class.IsInterface)
 					continue;
-				
+
 				GenerateIMTHelpers(_class);
-				
+
 				foreach (Method method in _class) {
 					this.engine.Dump.MethodEncode (method);
 
