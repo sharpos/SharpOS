@@ -22,8 +22,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 	///  The LPC bus was introduced by Intel in 1998 as a substitute for 
 	///  the Industry Standard Architecture (ISA) bus.
 	/// </summary>
-	public class LPCDriver : IDriver
-	{
+	/// <TODO>LPCBusDriver should use implementations of LPCDevice/LPCDriver class internally</TODO>
+	public class LPCBusDriver : IDriver	{
+
 		// LPC devices
 		//    FloppyDiskControllers
 		//    FloppyDiskDrives
@@ -31,13 +32,15 @@ namespace SharpOS.Kernel.ADC.X86 {
 		//    PS/2 Mouse
 		//    Parallel ports
 		//    Serial ports
-		#region Initialize
+		#region IsInitialized
 		private bool isInitialized = false;
 		public override bool IsInitialized
 		{
 			get { return isInitialized; }
 		}
+		#endregion
 
+		#region Initialize
 		public override bool Initialize(IDevice device, IHardwareResourceManager manager)
 		{
 			return (isInitialized = false);

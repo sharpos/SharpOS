@@ -12,6 +12,7 @@ namespace SharpOS.Kernel.ADC.X86
 	/// keep as much as possible platform independent.. 
 	/// maybe have an interface for each different type of hardware resource?</todo>
 	internal class HardwareResourceManager : IHardwareResourceManager {
+		
 		public void Setup()
 		{
 		}

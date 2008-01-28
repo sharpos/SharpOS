@@ -33,7 +33,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 		#endregion
 
-
 		// TODO: How usefull is this?
 		#region CheckCompatibility
 		/**
@@ -47,7 +46,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return true; // if we're running, we're at least 386.
 		}
 		#endregion
-
 
 		// TODO: should be put in attributes / seperate class?
 		#region Implementation Information
@@ -72,19 +70,15 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 		#endregion
 
-
-		#region Processors
+		#region Processors (public)
 		// must do it here because memory management doesn't work yet in Setup... :(
 		static private IProcessor[] processors = null;
 		private static void InitializeProcessor()
 		{
-			processors = new IProcessor[1];
-			for (int i = 0; i < processors.Length; i++)
+			processors = new IProcessor[]
 			{
-				Processor processor = new Processor();
-				processor.Setup();
-				processors[i] = processor;
-			}
+				new Processor(0)
+			};
 		}
 
 		public static int GetProcessorCount ()
@@ -103,27 +97,23 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return processors;
 		}
 		#endregion
-
 				
-		#region Devices
+		#region DeviceManager (public)
 		private static DeviceManager	deviceManager = null;
 		public static IDeviceManager	DeviceManager 
 		{
 			get 
 			{
 				if (deviceManager == null)
-				{
 					deviceManager = new DeviceManager();
-					deviceManager.AddRootDevices();
-				}
 				return deviceManager; 
 			}
 		}
 		#endregion
-		
 
-		// WARNING: ..only visible internally in current assembly for security reasons!!
-		#region ResourceManager
+		// WARNING: ..only visible _internally_ in current assembly.
+		//			(for security reasons)
+		#region ResourceManager (internal)
 		private static HardwareResourceManager	resourceManager = null;
 		internal static HardwareResourceManager ResourceManager
 		{

@@ -4,33 +4,9 @@ using System.Text;
 
 namespace SharpOS.Kernel.ADC.X86
 {
+	// TODO: would be nice to be able to use List<IDevice> internally ...
 	public class DeviceManager : IDeviceManager	{
 
-		#region AddRootDevices
-		internal void AddRootDevices()
-		{
-			GenericDevice	lpcDevice = new GenericDevice();
-			lpcDevice.Setup(
-				"LPC", 
-				"Intel", 
-				"Low Pin Count Bus", 
-				"",
-				new LPCDriver());
-
-			GenericDevice	pciDevice = new GenericDevice();
-			pciDevice.Setup(
-				"PCI", 
-				"PCI Special Interest Group", 
-				"Peripheral Component Interconnect", 
-				new PCIDriver());
-
-
-			rootDevices		= new IDevice[2];
-			rootDevices[0]	= lpcDevice;
-			rootDevices[1]	= pciDevice;
-		}
-		#endregion
-		
 		#region Setup
 		public override void Setup()
 		{
@@ -74,7 +50,59 @@ namespace SharpOS.Kernel.ADC.X86
 		#endregion
 		
 		#region Devices
-		private IDevice[]			rootDevices;
+		private IDevice[]	rootDevices = new IDevice[]
+		{
+			new GenericDevice(
+				"LPC", 
+				"Intel", 
+				"Low Pin Count Bus", 
+				new LPCBusDriver()),
+
+			new GenericDevice(
+				"PCI", 
+				"PCI Special Interest Group", 
+				"Peripheral Component Interconnect", 
+				new PCIBusDriver()),
+
+			/*
+			new GenericDevice(
+				"AGP", 
+				"Intel", 
+				"Accelerated Graphics Port", 
+				new AGPBusDriver()),
+			
+			new GenericDevice(
+				"USB", 
+				"USB Implementers Forum", 
+				"Universal Serial Bus", 
+				new USBBusDriver()),
+			
+			new GenericDevice(
+				"SCSI", 
+				"Unknown", 
+				"Small Computer System Interface", 
+				new SCSIBusDriver()),
+			
+			new GenericDevice(
+				"IEEE 1394", 
+				"Institute of Electrical and Electronics Engineers", 
+				"FireWire", 
+				new FireWireBusDriver()),
+			
+			// formerly known as ATA
+			new GenericDevice(
+				"PATA", 
+				"Western Digital", 
+				"Parallel Advanced Technology Attachment", 
+				new PATABusDriver()),
+			
+			new GenericDevice(
+				"SATA", 
+				"Serial ATA International Organization", 
+				"Serial Advanced Technology Attachment", 
+				new SATABusDriver()),
+			*/
+		};
 		public override IDevice[]	Devices { get { return rootDevices; } }
 		#endregion
 	}

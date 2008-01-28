@@ -22,15 +22,18 @@ namespace SharpOS.Kernel.ADC.X86 {
 	///		specifies a computer bus for attaching peripheral devices to a 
 	///		computer motherboard. 
 	/// </summary>
-	public class PCIDriver : IDriver
-	{
-		#region Initialize
+	/// <TODO>PCIBusDriver should use implementations of PCIDevice/PCIDriver class internally</TODO>
+	public class PCIBusDriver : IDriver	{
+
+		#region IsInitialized
 		private bool isInitialized = false;
 		public override bool IsInitialized
 		{
 			get { return isInitialized; }
 		}
+		#endregion
 
+		#region Initialize
 		public override bool Initialize(IDevice device, IHardwareResourceManager manager)
 		{
 			return (isInitialized = false);

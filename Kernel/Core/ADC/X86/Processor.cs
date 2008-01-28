@@ -236,9 +236,12 @@ namespace SharpOS.Kernel.ADC.X86
 
 		private static StringBuilder* textBuffer;
 
-		internal void Setup ()
+		#region Constructor
+		internal Processor (uint _index)
 		{
 			Asm.CLI();
+
+			index = _index;
 
 			bool haveCPU = HaveCPUID ();
 			if (!haveCPU)
@@ -328,26 +331,50 @@ namespace SharpOS.Kernel.ADC.X86
 				if (0 != (flags & (ulong)ProcessorFeatureFlags.X2APIC)) { features[featureCount] = new ProcessorFeature(); features[featureCount].FeatureName = ("X2APIC"); featureCount++; }
 				if (0 != (flags & (ulong)ProcessorFeatureFlags.POPCNT)) { features[featureCount] = new ProcessorFeature(); features[featureCount].FeatureName = ("POPCNT"); featureCount++; }
 			}
-			Asm.STI();		
+			Asm.STI();
 		}
+		#endregion
 
-		private ProcessorType			archType		= ProcessorType.Unknown;
+		#region ArchType
+		private ProcessorType			archType		= ProcessorType.Unknown;		
+		public override ProcessorType	ArchType		{ get { return archType; } }
+		#endregion
+		
+		#region VendorType
 		private CString8*				vendorName		= null;
+		public override CString8*		VendorName		{ get { return vendorName; } }
+		#endregion
+		
+		#region BrandName
 		private CString8*				brandName		= null;
+		public override CString8*		BrandName		{ get { return brandName; } }
+		#endregion
+		
+		#region FamilyName
 		private CString8*				familyName		= null;
+		public override CString8*		FamilyName		{ get { return familyName; } }
+		#endregion
+		
+		#region ModelName
 		private CString8*				modelName		= null;
+		public override CString8*		ModelName		{ get { return modelName; } }
+		#endregion
+		
+		#region Features
 		private ProcessorFeatureFlags	featureFlags;
 		private ProcessorFeature[]		features		= null;
-		
-		public override ProcessorType	ArchType		{ get { return archType; } }
-		public override CString8*		VendorName		{ get { return vendorName; } }
-		public override CString8*		BrandName		{ get { return brandName; } }
-		public override CString8*		FamilyName		{ get { return familyName; } }
-		public override CString8*		ModelName		{ get { return modelName; } }
-		
 		public override ProcessorFeature[] Features		{ get { return features; } }
+		#endregion
 				
-		public override uint			ID				{ get { return 0; } }
+		#region Index
+		private uint					index			= 0;
+		public override uint			Index			{ get { return index; } }
+		#endregion
+		
+		#region ID
+		private uint					id				= 0;
+		public override uint			ID				{ get { return id; } }
+		#endregion
 	}
 }
 

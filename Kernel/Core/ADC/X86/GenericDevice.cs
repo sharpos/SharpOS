@@ -6,12 +6,11 @@ namespace SharpOS.Kernel.ADC.X86
 {
 	public class GenericDevice : IDevice {
 
-		//TODO: use constructors for this instead
-		#region Setup
-		public void Setup(string	_signature,
-						  string	_vendor,
-						  string	_name,
-						  string	_category)
+		#region Constructors
+		public GenericDevice(string		_signature,
+							 string		_vendor,
+							 string		_name,
+							 string		_category)
 		{
 			signature	= _signature;
 			vendor		= _vendor;
@@ -19,9 +18,9 @@ namespace SharpOS.Kernel.ADC.X86
 			category	= _category;
 		}
 
-		public void Setup(string	_signature,
-						  string	_vendor,
-						  string	_name)
+		public GenericDevice(string		_signature,
+							 string		_vendor,
+							 string		_name)
 		{
 			signature	= _signature;
 			vendor		= _vendor;
@@ -29,10 +28,10 @@ namespace SharpOS.Kernel.ADC.X86
 			category	= "";
 		}
 
-		public void Setup(string	_signature,
-						  string	_vendor,
-						  string	_name,
-						  IDriver	_driver)
+		public GenericDevice(string		_signature,
+							 string		_vendor,
+							 string		_name,
+							 IDriver	_driver)
 		{
 			signature	= _signature;
 			vendor		= _vendor;
@@ -41,11 +40,11 @@ namespace SharpOS.Kernel.ADC.X86
 			driver		= _driver;
 		}
 
-		public void Setup(string	_signature,
-						  string	_vendor,
-						  string	_name,
-						  string	_category,
-						  IDriver	_driver)
+		public GenericDevice(string		_signature,
+							 string		_vendor,
+							 string		_name,
+							 string		_category,
+							 IDriver	_driver)
 		{
 			signature	= _signature;
 			vendor		= _vendor;

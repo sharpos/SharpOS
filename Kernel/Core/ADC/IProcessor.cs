@@ -24,6 +24,8 @@ namespace SharpOS.Kernel.ADC {
 	// TODO: turn this into an interface eventually, untill then pretend it's an interface..
 	public unsafe abstract class IProcessor {
 		public abstract uint			ID				{ get; }
+
+		public abstract uint			Index			{ get; }
 		
 		public abstract ProcessorType	ArchType		{ get; }
 		

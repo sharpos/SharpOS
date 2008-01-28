@@ -10,6 +10,7 @@ namespace SharpOS.Kernel.ADC
 	// TODO: need mechanism to tell the system if devices have been removed or added
 	// TODO: turn this into an interface eventually, untill then pretend it's an interface..
 	public abstract class IDriver {
+
 		public abstract bool		Initialize		(IDevice device, IHardwareResourceManager manager);
 		public abstract bool		IsInitialized	{ get; }
 				

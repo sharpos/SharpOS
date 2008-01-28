@@ -106,7 +106,8 @@
     <Compile Include="ADC\X86\BootControl.cs" />
     <Compile Include="ADC\X86\CMOS.cs" />
     <Compile Include="ADC\X86\HardwareResourceManager.cs" />
-    <Compile Include="ADC\X86\PCIDriver.cs" />
+    <Compile Include="ADC\X86\LPCBusDriver.cs" />
+    <Compile Include="ADC\X86\PCIBusDriver.cs" />
     <Compile Include="ADC\X86\DeviceManager.cs" />
     <Compile Include="ADC\X86\DMA.cs" />
     <Compile Include="ADC\X86\DTPointer.cs" />
@@ -117,7 +118,6 @@
     <Compile Include="ADC\X86\Interlocked.cs" />
     <Compile Include="ADC\X86\IO.cs" />
     <Compile Include="ADC\X86\Keyboard.cs" />
-    <Compile Include="ADC\X86\LPCDriver.cs" />
     <Compile Include="ADC\X86\MemoryUtil.cs" />
     <Compile Include="ADC\X86\Pager.cs" />
     <Compile Include="ADC\X86\PCI.cs" />
