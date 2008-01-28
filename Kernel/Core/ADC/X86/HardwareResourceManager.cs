@@ -1,16 +1,34 @@
-﻿using System;
+﻿// 
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Sander van Rossen <sander.vanrossen@gmail.com>
+//
+// Licensed under the terms of the GNU GPL v3,
+//  with Classpath Linking Exception for Libraries
+//
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS.Kernel.ADC.X86
-{
+namespace SharpOS.Kernel.ADC.X86 {
+
 	/// <summary>
 	/// This class is used for drivers to acquire (safe) access to and reserve 
 	/// access to system wide hardware resources.
 	/// </summary>
-	/// <todo>How to abstract away all the different types of hardware resources yet
+	/// <todo>
+	/// Eventually we want to pass an attribute annotated interface to the
+	/// manager and it'll generate a class which implements that interface and
+	/// returns it.. untill we can implement something like that we'll 
+	/// need to work around it
+	/// </todo>
+	/// <todo>
+	/// How to abstract away all the different types of hardware resources yet
 	/// keep as much as possible platform independent.. 
-	/// maybe have an interface for each different type of hardware resource?</todo>
+	/// maybe have an interface for each different type of hardware resource?
+	/// </todo>
 	internal class HardwareResourceManager : IHardwareResourceManager {
 		
 		public void Setup()

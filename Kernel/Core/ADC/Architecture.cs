@@ -14,7 +14,7 @@ using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.ADC {
 
-	// ..rename to enviroment?
+	// TODO: ..rename to enviroment?
 	public unsafe class Architecture {
 		
 		#region Setup
@@ -26,8 +26,7 @@ namespace SharpOS.Kernel.ADC {
 		{
 		}
 		#endregion
-
-
+		
 		// TODO: How usefull is this?
 		#region CheckCompatibility
 		/// <summary>
@@ -41,7 +40,6 @@ namespace SharpOS.Kernel.ADC {
 		}
 		#endregion
 		
-
 		// TODO: should be put in attributes / seperate class?
 		#region Implementation Information
 		/// <summary>
@@ -66,8 +64,7 @@ namespace SharpOS.Kernel.ADC {
 			return null;
 		}
 		#endregion
-
-
+		
 		#region Processors
 		[AOTAttr.ADCStub]
 		public static int ProcessorCount ()
@@ -81,9 +78,8 @@ namespace SharpOS.Kernel.ADC {
 			return null;
 		}
 		#endregion
-
-
-		#region Devices
+		
+		#region DeviceManager
 		public static IDeviceManager DeviceManager 
 		{
 			[AOTAttr.ADCStub]

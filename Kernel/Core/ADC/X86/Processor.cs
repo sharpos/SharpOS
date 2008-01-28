@@ -17,8 +17,7 @@ using SharpOS.AOT.IR;
 using ADC = SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 
-namespace SharpOS.Kernel.ADC.X86
-{
+namespace SharpOS.Kernel.ADC.X86 {
 
 	#region ProcessorFeatureFlags
 	[Flags]

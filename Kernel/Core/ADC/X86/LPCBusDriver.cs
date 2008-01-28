@@ -17,6 +17,7 @@ using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
 namespace SharpOS.Kernel.ADC.X86 {
+
 	/// <summary>
 	/// Low Pin Count bus
 	///  The LPC bus was introduced by Intel in 1998 as a substitute for 
