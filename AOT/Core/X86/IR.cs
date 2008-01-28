@@ -2894,7 +2894,8 @@ namespace SharpOS.AOT.X86 {
 
 		private void Leave (IR.Instructions.Leave instruction)
 		{
-			//this.assembly.CALL (this.GetLabel (instruction.Block.Outs [1]));
+			if (instruction.Block.IsTryEnd)
+				this.assembly.CALL (this.GetLabel (instruction.Block.Outs [1]));
 
 			this.assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));	
 		}

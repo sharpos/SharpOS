@@ -349,6 +349,85 @@ namespace SharpOS.AOT.IR {
 			InstructionCollection instructions = this.CIL.Instructions;
 			List<int> offsets = new List<int> ();
 
+			GetOffsets(instructions, offsets);
+
+			BuildBlocks(instructions, offsets);
+
+			LinkBlocks ();
+
+			MarkBlocks ();
+		}
+
+		private void MarkBlocks ()
+		{
+			MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+			if (definition == null || definition.Body == null)
+				return;
+
+			foreach (ExceptionHandler exceptionHandler in definition.Body.ExceptionHandlers) {
+				Block tryBegin = null;
+				Block tryEnd = null;
+				Block filterBegin = null;
+				Block filterEnd = null;
+				Block handlerBegin = null;
+				Block handlerEnd = null;
+
+				foreach (Block block in this.blocks) {
+					if (block.CIL.Count == 0)
+						continue;
+
+					SetEHStartEnd (ref tryBegin, ref tryEnd, exceptionHandler.TryStart, exceptionHandler.TryEnd, block);
+					SetEHStartEnd (ref filterBegin, ref filterEnd, exceptionHandler.FilterStart, exceptionHandler.FilterEnd, block);
+					SetEHStartEnd (ref handlerBegin, ref handlerEnd, exceptionHandler.HandlerStart, exceptionHandler.HandlerEnd, block);
+				}
+
+				if (tryEnd != null)
+					tryEnd.IsTryEnd = true;
+
+				if (exceptionHandler.Type != ExceptionHandlerType.Catch
+						&& handlerBegin != null)
+					handlerBegin.IsFinallyFilterFaultStart = true;
+
+				if (filterEnd != null)
+					filterEnd.IsFilterEnd = true;
+			}
+		}
+
+		/// <summary>
+		/// Sets the EH start end.
+		/// </summary>
+		/// <param name="start">The start.</param>
+		/// <param name="end">The end.</param>
+		/// <param name="exceptionStart">The exception start.</param>
+		/// <param name="exceptionEnd">The exception end.</param>
+		/// <param name="block">The block.</param>
+		private void SetEHStartEnd (ref Block start, ref Block end, Mono.Cecil.Cil.Instruction exceptionStart, Mono.Cecil.Cil.Instruction exceptionEnd, Block block)
+		{
+			if (exceptionStart == null || exceptionEnd == null)
+				return;
+
+			if (block.StartOffset >= exceptionEnd.Offset)
+				return;
+
+			if (block.StartOffset >= exceptionStart.Offset) {
+				if (start == null)
+					start = block;
+
+				end = block;
+			}
+
+			if (block.EndOffset >= exceptionEnd.Offset)
+				throw new EngineException (string.Format ("The blocks have not been built correctly in '{0}'.", this.MethodFullName));
+		}
+
+		/// <summary>
+		/// Gets the offsets.
+		/// </summary>
+		/// <param name="instructions">The instructions.</param>
+		/// <param name="offsets">The offsets.</param>
+		private void GetOffsets (InstructionCollection instructions, List<int> offsets)
+		{
 			// Add all the offsets of the instructions that start a block
 			if (instructions.Count > 0)
 				offsets.Add (instructions [0].Offset);
@@ -370,8 +449,27 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
-			offsets.Sort ();
+			MethodDefinition definition = this.methodDefinition as MethodDefinition;
 
+			foreach (ExceptionHandler exceptionHandler in definition.Body.ExceptionHandlers) {
+				this.AddInstructionOffset (offsets, exceptionHandler.TryStart);
+				this.AddInstructionOffset (offsets, exceptionHandler.TryEnd);
+				this.AddInstructionOffset (offsets, exceptionHandler.FilterStart);
+				this.AddInstructionOffset (offsets, exceptionHandler.FilterEnd);
+				this.AddInstructionOffset (offsets, exceptionHandler.HandlerStart);
+				this.AddInstructionOffset (offsets, exceptionHandler.HandlerEnd);
+			}
+
+			offsets.Sort ();
+		}
+
+		/// <summary>
+		/// Builds the blocks.
+		/// </summary>
+		/// <param name="instructions">The instructions.</param>
+		/// <param name="offsets">The offsets.</param>
+		private void BuildBlocks (InstructionCollection instructions, List<int> offsets)
+		{
 			// Build the blocks
 			int index = 0;
 			Block current = null;
@@ -387,7 +485,13 @@ namespace SharpOS.AOT.IR {
 
 				current.CIL.Add (instruction);
 			}
+		}
 
+		/// <summary>
+		/// Links the blocks.
+		/// </summary>
+		private void LinkBlocks ()
+		{
 			// Link the blocks
 			foreach (Block block in this.blocks) {
 				Mono.Cecil.Cil.Instruction instruction = block.CIL [block.CIL.Count - 1];
@@ -416,7 +520,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void BlocksOptimization ()
 		{
-			bool changed;
+			/*bool changed;
 
 			do {
 				changed = false;
@@ -440,12 +544,18 @@ namespace SharpOS.AOT.IR {
 					}
 				}
 
-			} while (changed);
-
-			for (int i = 0; i < this.blocks.Count; i++)
-				this.blocks [i].Index = i;
+			} while (changed);*/
 
 			return;
+		}
+
+		/// <summary>
+		/// Sets the index of the block.
+		/// </summary>
+		private void SetBlockIndex ()
+		{
+			for (int i = 0; i < this.blocks.Count; i++)
+				this.blocks [i].Index = i;
 		}
 
 		List<int> registerVersions = new List<int> ();
@@ -1664,7 +1774,9 @@ namespace SharpOS.AOT.IR {
 
 			this.BuildBlocks ();
 
-			this.BlocksOptimization ();
+			//this.BlocksOptimization ();
+			
+			this.SetBlockIndex ();
 
 			this.ConvertFromCIL ();
 

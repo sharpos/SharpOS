@@ -99,16 +99,8 @@ namespace SharpOS.AOT.X86 {
 			foreach (Block block in method) {
 				assembly.LABEL (fullname + " " + block.Index.ToString ());
 
-				// The first block in an Finally/Fault
-				if (block.Ins.Count == 1) {
-					Block ins0 = block.Ins [0];
-
-					if (ins0.Outs.Count == 2
-							&& ins0.Outs [1] == block
-							&& ins0.InstructionsCount > 0
-							&& ins0 [ins0.InstructionsCount - 1] is Leave)
+				if (block.IsFinallyFilterFaultStart)
 						this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.ESP);
-				}
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
 					assembly.COMMENT (instruction.ToString ());

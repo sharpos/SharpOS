@@ -8,7 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-#define EXCEPTION_NOT_SUPPORTED
+//#define EXCEPTION_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
 	public class Exceptions {
@@ -26,7 +26,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			return result;
 		}
 #else
-		public static uint CMPExcepitonHandling ()
+		public static uint CMPExceptionHandling ()
 		{
 			return 0;
 		}

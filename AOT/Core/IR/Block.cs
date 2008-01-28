@@ -277,6 +277,66 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		bool isTryEnd = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is try end.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is try end; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsTryEnd
+		{
+			get
+			{
+				return isTryEnd;
+			}
+			set
+			{
+				isTryEnd = value;
+			}
+		}
+
+		bool isFinallyFilterFaultStart = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is finally filter fault start.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is finally filter fault start; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsFinallyFilterFaultStart
+		{
+			get
+			{
+				return isFinallyFilterFaultStart;
+			}
+			set
+			{
+				isFinallyFilterFaultStart = value;
+			}
+		}
+
+		bool isFilterEnd = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is filter end.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is filter end; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsFilterEnd
+		{
+			get
+			{
+				return isFilterEnd;
+			}
+			set
+			{
+				isFilterEnd = value;
+			}
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Block"/> class.
 		/// </summary>
