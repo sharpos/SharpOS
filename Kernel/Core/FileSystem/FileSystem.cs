@@ -45,13 +45,7 @@ namespace SharpOS.Kernel.FileSystem
 
             this.fragmentsPerBlock = (uint)(this.blockSize / this.fragmentSize);
 
-			if (GroupDescriptor.GroupDescriptorSize == 0)
-			{
-				ADC.TextMode.WriteLine("GroupDescriptor.GroupDescriptorSize == 0");
-				return false;
-			}
-
-            this.groupDescriptorsPerBlock = (uint)(this.blockSize / GroupDescriptor.GroupDescriptorSize); //Marshal.SizeOf (typeof (GroupDescriptor)));
+			this.groupDescriptorsPerBlock = (uint)(this.blockSize / GroupDescriptor.GroupDescriptorSize); //Marshal.SizeOf (typeof (GroupDescriptor)));
             this.indirectCount = this.blockSize >> 2;
 			
             if (this.superBlock->RevisionLevel == 1)

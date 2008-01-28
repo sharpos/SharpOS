@@ -22,18 +22,16 @@ namespace SharpOS.Kernel.ADC {
 	}
 
 	// TODO: turn this into an interface eventually, untill then pretend it's an interface..
-	public unsafe class IProcessor {
-		public virtual void				Setup()			{ }
+	public unsafe abstract class IProcessor {
+		public abstract uint			ID				{ get; }
 		
-		public virtual uint				ID				{ get { return 0; } }
+		public abstract ProcessorType	ArchType		{ get; }
 		
-		public virtual ProcessorType	ArchType		{ get { return ProcessorType.Unknown; } }
+		public abstract CString8*		VendorName		{ get; }
+		public abstract CString8*		BrandName		{ get; }
+		public abstract CString8*		FamilyName		{ get; }
+		public abstract CString8*		ModelName		{ get; }
 		
-		public virtual CString8*		VendorName		{ get { return CString8.Copy (""); } }
-		public virtual CString8*		BrandName		{ get { return CString8.Copy (""); } }
-		public virtual CString8*		FamilyName		{ get { return CString8.Copy (""); } }
-		public virtual CString8*		ModelName		{ get { return CString8.Copy (""); } }
-		
-		public virtual ProcessorFeature[] Features	{ get { return null; } }
+		public abstract ProcessorFeature[] Features		{ get; }
 	}
 }

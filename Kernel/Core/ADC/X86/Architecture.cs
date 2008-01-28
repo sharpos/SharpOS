@@ -17,18 +17,25 @@ using ADC = SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.ADC.X86 {
 
-	// ..rename to enviroment?
+	// TODO: ..rename to enviroment?
+	// TODO: should we initialize memory management here?
+	// TODO: PIT/serial are devices, should be initialized trough the devicemanager
 	public unsafe class Architecture {
 
+		#region Setup
 		public static void Setup ()
 		{
-			GDT.Setup ();	// Global Descriptor Table
-			PIC.Setup ();	// Programmable Interrupt Controller
-			IDT.Setup ();	// Interrupt Descriptor table
-			PIT.Setup ();	// Periodic Interrupt Timer
-			Serial.Setup (); // Setup serial I/O			
+			GDT.Setup ();		// Global Descriptor Table
+			PIC.Setup ();		// Programmable Interrupt Controller
+			IDT.Setup ();		// Interrupt Descriptor table
+			PIT.Setup ();		// Periodic Interrupt Timer
+			Serial.Setup ();	// Setup serial I/O			
 		}
+		#endregion
 
+
+		// TODO: How usefull is this?
+		#region CheckCompatibility
 		/**
 			<summary>
 				Checks for compatibility with the current system, using 
@@ -39,7 +46,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			return true; // if we're running, we're at least 386.
 		}
+		#endregion
 
+
+		// TODO: should be put in attributes / seperate class?
+		#region Implementation Information
 		/**
 			<summary>
 				Gets the ADC platform identifier.
@@ -59,15 +70,20 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			return "SharpOS.ADC.X86";
 		}
-		
+		#endregion
+
+
+		#region Processors
 		// must do it here because memory management doesn't work yet in Setup... :(
+		static private IProcessor[] processors = null;
 		private static void InitializeProcessor()
 		{
 			processors = new IProcessor[1];
 			for (int i = 0; i < processors.Length; i++)
 			{
-				processors[i] = new Processor();
-				processors[i].Setup();
+				Processor processor = new Processor();
+				processor.Setup();
+				processors[i] = processor;
 			}
 		}
 
@@ -79,13 +95,48 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return processors.Length;
 		}
 
-		static private IProcessor[] processors = null;
 		public static IProcessor[] GetProcessors ()
 		{
 			if (processors == null)
 				InitializeProcessor();
 
-			return processors; 
+			return processors;
 		}
+		#endregion
+
+				
+		#region Devices
+		private static DeviceManager	deviceManager = null;
+		public static IDeviceManager	DeviceManager 
+		{
+			get 
+			{
+				if (deviceManager == null)
+				{
+					deviceManager = new DeviceManager();
+					deviceManager.AddRootDevices();
+				}
+				return deviceManager; 
+			}
+		}
+		#endregion
+		
+
+		// WARNING: ..only visible internally in current assembly for security reasons!!
+		#region ResourceManager
+		private static HardwareResourceManager	resourceManager = null;
+		internal static HardwareResourceManager ResourceManager
+		{
+			get
+			{
+				if (resourceManager == null)
+				{
+					resourceManager = new HardwareResourceManager();
+					resourceManager.Setup();
+				}
+				return resourceManager;
+			}
+		}
+		#endregion
 	}
 }

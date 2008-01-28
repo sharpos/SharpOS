@@ -16,6 +16,20 @@ namespace SharpOS.Kernel.ADC {
 
 	// ..rename to enviroment?
 	public unsafe class Architecture {
+		
+		#region Setup
+		/// <summary>
+		/// Does architecture-specific initialization. 
+		/// </summary>
+		[AOTAttr.ADCStub]
+		public static void Setup ()
+		{
+		}
+		#endregion
+
+
+		// TODO: How usefull is this?
+		#region CheckCompatibility
 		/// <summary>
 		/// Checks for compatibility with the current system, using 
 		/// the most well-supported method possible. 
@@ -25,15 +39,11 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return false;
 		}
+		#endregion
+		
 
-		/// <summary>
-		/// Does architecture-specific initialization. 
-		/// </summary>
-		[AOTAttr.ADCStub]
-		public static void Setup ()
-		{
-		}
-
+		// TODO: should be put in attributes / seperate class?
+		#region Implementation Information
 		/// <summary>
 		/// Gets a string representing the CPU type which can be 
 		/// displayed to the user.
@@ -55,7 +65,10 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return null;
 		}
+		#endregion
 
+
+		#region Processors
 		[AOTAttr.ADCStub]
 		public static int ProcessorCount ()
 		{
@@ -67,5 +80,15 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return null;
 		}
+		#endregion
+
+
+		#region Devices
+		public static IDeviceManager DeviceManager 
+		{
+			[AOTAttr.ADCStub]
+			get { return null; }
+		}
+		#endregion
 	}
 }

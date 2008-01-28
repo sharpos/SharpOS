@@ -17,8 +17,10 @@ using SharpOS.AOT.IR;
 using ADC = SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 
-namespace SharpOS.Kernel.ADC.X86 {
+namespace SharpOS.Kernel.ADC.X86
+{
 
+	#region ProcessorFeatureFlags
 	[Flags]
 	public enum ProcessorFeatureFlags : ulong
 	{
@@ -106,6 +108,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		//     = (1ul << 62),	// Reserved.
 		//     = (1ul << 63),	// Reserved.
 	}
+	#endregion
 	
 	// TODO: remove dependency on StringBuilder for names
 	// TODO: implement family & model strings
@@ -233,7 +236,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		private static StringBuilder* textBuffer;
 
-		public override void Setup ()
+		internal void Setup ()
 		{
 			Asm.CLI();
 
@@ -333,7 +336,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		private CString8*				brandName		= null;
 		private CString8*				familyName		= null;
 		private CString8*				modelName		= null;
-		private ProcessorFeatureFlags			featureFlags;
+		private ProcessorFeatureFlags	featureFlags;
 		private ProcessorFeature[]		features		= null;
 		
 		public override ProcessorType	ArchType		{ get { return archType; } }
@@ -342,7 +345,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public override CString8*		FamilyName		{ get { return familyName; } }
 		public override CString8*		ModelName		{ get { return modelName; } }
 		
-		public override ProcessorFeature[] Features	{ get { return features; } }
+		public override ProcessorFeature[] Features		{ get { return features; } }
+				
+		public override uint			ID				{ get { return 0; } }
 	}
 }
 

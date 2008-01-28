@@ -105,6 +105,9 @@ namespace SharpOS.Kernel {
 
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
+			
+			StageMessage ("Device setup...");
+			ADC.Architecture.DeviceManager.Setup ();
 
 			StageMessage ("Clock setup...");
 			Clock.Setup ();
