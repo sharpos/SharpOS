@@ -48,7 +48,7 @@ namespace SharpOS.Kernel.ADC.X86
 					devices[i].Driver == null)
 					continue;
 
-				devices[i].Driver.Initialize(Architecture.ResourceManager);
+				devices[i].Driver.Initialize(devices[i], Architecture.ResourceManager);
 
 				//catch { .. disable device & reclaim driver resources (if any) .. }
 			}
