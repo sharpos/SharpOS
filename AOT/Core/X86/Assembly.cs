@@ -1546,6 +1546,9 @@ namespace SharpOS.AOT.X86 {
 				GenerateIMTHelpers(_class);
 
 				foreach (Method method in _class) {
+					if (_class.IsInternal)
+						continue;
+
 					this.engine.Dump.MethodEncode (method);
 
 					engine.SetStatusInformation (_class.ClassDefinition.Module.Assembly,
