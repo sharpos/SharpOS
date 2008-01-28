@@ -72,6 +72,9 @@ namespace SharpOS.AOT {
 		[GetOpts.Option ("Disable metadata encoding", "no-metadata")]
 		public bool NoMetadata = false;
 
+		[GetOpts.Option ("Force recompile, even if all files are up to date", "force")]
+		public bool ForceRecompile = false;
+
 		public EngineOptions GetEngineOptions ()
 		{
 			EngineOptions eo = new EngineOptions ();
@@ -92,6 +95,7 @@ namespace SharpOS.AOT {
 			eo.TextDump = TextDump;
 			eo.DumpVerbosity = DumpVerbosity;
 			eo.Verbosity = Verbosity;
+			eo.ForceRecompile = ForceRecompile;
 
 			if (Verbosity == 0 && Verbose)
 				eo.Verbosity = 1;

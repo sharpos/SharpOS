@@ -32,6 +32,7 @@ namespace SharpOS.AOT.IR {
 		public Dictionary<string, byte []> Resources =
 			new Dictionary<string, byte []> ();
 		public bool NoMetadata = false;
+		public bool ForceRecompile = false;
 
 		public bool Dump
 		{

@@ -599,6 +599,29 @@ namespace SharpOS.AOT.IR {
 					options.CPU));
 			}
 
+			if (!options.ForceRecompile) {
+				bool outOfDate = false;
+				string aotCore = System.Reflection.Assembly.GetExecutingAssembly ().Location;
+
+				Console.WriteLine ("aot.core: {0}", aotCore);
+
+				if (File.Exists (options.OutputFilename)) {
+					foreach (string assem in options.Assemblies) {
+						if (File.GetLastWriteTime (assem) >= File.GetLastWriteTime (options.OutputFilename)) {
+							outOfDate = true;
+							break;
+						}
+					}
+				}
+				if (File.GetLastWriteTime (aotCore) >= File.GetLastWriteTime (options.OutputFilename))
+					outOfDate = true;
+
+				if (!outOfDate) {
+					Console.WriteLine ("Kernel is up to date. (To force recompilation, use /force)");
+					return;
+				}
+			}
+
 			Message (1, "AOT compiling for processor `{0}'", options.CPU);
 			Run (asm);
 		}
@@ -1012,7 +1035,7 @@ namespace SharpOS.AOT.IR {
 							throw new EngineException ("More than one class was tagged as ITable Class.");
 
 						this.itableClass = _class;
-					} 
+					}
 				}
 
 				// assigning interface method uids
