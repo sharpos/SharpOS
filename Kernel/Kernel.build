@@ -56,12 +56,12 @@
 	<target name="run">
 		<if test="${platform::is-unix() == true}" >
 			<exec program="qemu"
-				commandline="-no-kqemu ${path::combine(common-dir, 'SharpOS.img')}" />
+				commandline="-no-kqemu ${path::combine(common-dir, 'SharpOS.img')} -serial file:${path::combine(common-dir, '../../SerialOutput.txt')}" />
 		</if>
 		
 		<if test="${platform::is-unix() == false}" >
 			<exec program="${qemu-bin}"
-				commandline="-L ${qemu-dir} -no-kqemu ${path::combine(common-dir, 'SharpOS.img')}" />
+				commandline="-L ${qemu-dir} -no-kqemu ${path::combine(common-dir, 'SharpOS.img')} -serial file:${path::combine(common-dir, '../../SerialOutput.txt')}" />
 		</if>
 	</target>
 
@@ -69,4 +69,4 @@
 		<nant buildfile="./Core/Core.build" target="clean" />
 		<nant buildfile="./Tests/Tests.build" target="clean" />
 	</target>
-</project>
+</project>	
