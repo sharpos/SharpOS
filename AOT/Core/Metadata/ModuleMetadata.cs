@@ -19,21 +19,21 @@ namespace SharpOS.AOT.Metadata {
 
 	[Include]
 	public enum SecurityAction : short {
-		Request = 1,
-		Demand = 2,
-		Assert = 3,
-		Deny = 4,
-		PermitOnly = 5,
-		LinkDemand = 6,
-		InheritDemand = 7,
-		RequestMinimum = 8,
-		RequestOptional = 9,
-		RequestRefuse = 10,
-		PreJitGrant = 11,
-		PreJitDeny = 12,
-		NonCasDemand = 13,
-		NonCasLinkDemand = 14,
-		NonCasInheritance = 15
+		Request			= 1,
+		Demand			= 2,
+		Assert			= 3,
+		Deny			= 4,
+		PermitOnly		= 5,
+		LinkDemand		= 6,
+		InheritDemand		= 7,
+		RequestMinimum		= 8,
+		RequestOptional		= 9,
+		RequestRefuse		= 10,
+		PreJitGrant		= 11,
+		PreJitDeny		= 12,
+		NonCasDemand		= 13,
+		NonCasLinkDemand	= 14,
+		NonCasInheritance	= 15
 	}
 
 	///////////////////// Attribute enumerations (*Attributes)
@@ -41,18 +41,29 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[System.Flags]
 	public enum AssemblyFlags : uint {
-		PublicKey = 0x0001,
-		SideBySideCompatible = 0x0000,
-		Retargetable = 0x0100,
-		EnableJITcompileTracking = 0x8000,
-		DisableJITcompileOptimizer = 0x4000
+		PublicKey			= 0x0001,
+		SideBySideCompatible		= 0x0000,
+		Retargetable			= 0x0100,
+		EnableJITcompileTracking	= 0x8000,
+		DisableJITcompileOptimizer	= 0x4000
 	}
 
 	[Include]
 	[System.Flags]
 	public enum EventAttributes : ushort {
-		SpecialName = 0x0200,
-		RTSpecialName = 0x0400,
+		SpecialName	= 0x0200,
+		RTSpecialName	= 0x0400,
+	}
+
+	/// <credits>
+	/// from Mono.Cecil 0.6 by Jb Evain. (C) 2005 Jb Evain.
+	/// </credits>
+	[Include]
+	public enum ExceptionHandlerType {
+		Catch	= 0x0000,
+		Filter	= 0x0001,
+		Finally = 0x0002,
+		Fault	= 0x0004
 	}
 
 	/// <credits>
@@ -63,8 +74,8 @@ namespace SharpOS.AOT.Metadata {
 	public enum TypeAttributes : uint {
 		// Visibility attributes
 		VisibilityMask		= 0x00000007,	// Use this mask to retrieve visibility information
-		NotPublic			= 0x00000000,	// Class has no public scope
-		Public				= 0x00000001,	// Class has public scope
+		NotPublic		= 0x00000000,	// Class has no public scope
+		Public			= 0x00000001,	// Class has public scope
 		NestedPublic		= 0x00000002,	// Class is nested with public visibility
 		NestedPrivate		= 0x00000003,	// Class is nested with private visibility
 		NestedFamily		= 0x00000004,	// Class is nested with family visibility
@@ -73,37 +84,37 @@ namespace SharpOS.AOT.Metadata {
 		NestedFamORAssem	= 0x00000007,	// Class is nested with family or assembly visibility
 
 		// Class layout attributes
-		LayoutMask			= 0x00000018,	// Use this mask to retrieve class layout information
-		AutoLayout			= 0x00000000,	// Class fields are auto-laid out
+		LayoutMask		= 0x00000018,	// Use this mask to retrieve class layout information
+		AutoLayout		= 0x00000000,	// Class fields are auto-laid out
 		SequentialLayout	= 0x00000008,	// Class fields are laid out sequentially
 		ExplicitLayout		= 0x00000010,	// Layout is supplied explicitly
 
 		// Class semantics attributes
 		ClassSemanticMask	= 0x00000020,	// Use this mask to retrieve class semantics information
-		Class				= 0x00000000,	// Type is a class
-		Interface			= 0x00000020,	// Type is an interface
+		Class			= 0x00000000,	// Type is a class
+		Interface		= 0x00000020,	// Type is an interface
 
 		// Special semantics in addition to class semantics
-		Abstract			= 0x00000080,	// Class is abstract
-		Sealed				= 0x00000100,	// Class cannot be extended
-		SpecialName			= 0x00000400,	// Class name is special
+		Abstract		= 0x00000080,	// Class is abstract
+		Sealed			= 0x00000100,	// Class cannot be extended
+		SpecialName		= 0x00000400,	// Class name is special
 
 		// Implementation attributes
-		Import				= 0x00001000,	// Class/Interface is imported
+		Import			= 0x00001000,	// Class/Interface is imported
 		Serializable		= 0x00002000,	// Class is serializable
 
 		// String formatting attributes
 		StringFormatMask	= 0x00030000,	// Use this mask to retrieve string information for native interop
-		AnsiClass			= 0x00000000,	// LPSTR is interpreted as ANSI
+		AnsiClass		= 0x00000000,	// LPSTR is interpreted as ANSI
 		UnicodeClass		= 0x00010000,	// LPSTR is interpreted as Unicode
-		AutoClass			= 0x00020000,	// LPSTR is interpreted automatically
+		AutoClass		= 0x00020000,	// LPSTR is interpreted automatically
 
 		// Class initialization attributes
 		BeforeFieldInit		= 0x00100000,	// Initialize the class before first static field access
 
 		// Additional flags
 		RTSpecialName		= 0x00000800,	// CLI provides 'special' behavior, depending upon the name of the Type
-		HasSecurity			= 0x00040000	 // Type has security associate with it
+		HasSecurity		= 0x00040000	 // Type has security associate with it
 	}
 
 	/// <credits>
@@ -112,35 +123,35 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[System.Flags]
 	public enum FieldAttributes : ushort {
-		FieldAccessMask         = 0x0007,
-		Compilercontrolled      = 0x0000,       // Member not referenceable
-		Private                         = 0x0001,       // Accessible only by the parent type
-		FamANDAssem                     = 0x0002,       // Accessible by sub-types only in this assembly
-		Assembly                        = 0x0003,       // Accessible by anyone in the Assembly
-		Family                          = 0x0004,       // Accessible only by type and sub-types
-		FamORAssem                      = 0x0005,       // Accessible by sub-types anywhere, plus anyone in the assembly
-		Public                          = 0x0006,       // Accessible by anyone who has visibility to this scope field contract attributes
+		FieldAccessMask		= 0x0007,
+		Compilercontrolled	= 0x0000,       // Member not referenceable
+		Private			= 0x0001,       // Accessible only by the parent type
+		FamANDAssem		= 0x0002,       // Accessible by sub-types only in this assembly
+		Assembly		= 0x0003,       // Accessible by anyone in the Assembly
+		Family			= 0x0004,       // Accessible only by type and sub-types
+		FamORAssem		= 0x0005,       // Accessible by sub-types anywhere, plus anyone in the assembly
+		Public			= 0x0006,       // Accessible by anyone who has visibility to this scope field contract attributes
 
-		Static                          = 0x0010,       // Defined on type, else per instance
-		InitOnly                        = 0x0020,       // Field may only be initialized, not written after init
-		Literal                         = 0x0040,       // Value is compile time constant
-		NotSerialized           = 0x0080,       // Field does not have to be serialized when type is remoted
-		SpecialName                     = 0x0200,       // Field is special
+		Static			= 0x0010,       // Defined on type, else per instance
+		InitOnly		= 0x0020,       // Field may only be initialized, not written after init
+		Literal			= 0x0040,       // Value is compile time constant
+		NotSerialized		= 0x0080,       // Field does not have to be serialized when type is remoted
+		SpecialName		= 0x0200,       // Field is special
 
 		// Interop Attributes
-		PInvokeImpl                     = 0x2000,       // Implementation is forwarded through PInvoke
+		PInvokeImpl		= 0x2000,       // Implementation is forwarded through PInvoke
 
 		// Additional flags
-		RTSpecialName           = 0x0400,       // CLI provides 'special' behavior, depending upon the name of the field
-		HasFieldMarshal         = 0x1000,       // Field has marshalling information
-		HasDefault                      = 0x8000,       // Field has default
-		HasFieldRVA                     = 0x0100         // Field has RVA
+		RTSpecialName		= 0x0400,       // CLI provides 'special' behavior, depending upon the name of the field
+		HasFieldMarshal		= 0x1000,       // Field has marshalling information
+		HasDefault		= 0x8000,       // Field has default
+		HasFieldRVA		= 0x0100         // Field has RVA
 	}
 
 	[Include]
 	public enum FileAttributes : uint {
-		ContainsMetaData = 0,
-		ContainsNoMetaData = 1,
+		ContainsMetaData	= 0,
+		ContainsNoMetaData	= 1,
 	}
 
 	/// <credits>
@@ -149,15 +160,15 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[System.Flags]
 	public enum GenericParameterAttributes : ushort {
-		VarianceMask    = 0x0003,
-		NonVariant              = 0x0000,
-		Covariant               = 0x0001,
+		VarianceMask	= 0x0003,
+		NonVariant	= 0x0000,
+		Covariant	= 0x0001,
 		Contravariant   = 0x0002,
 
-		SpecialConstraintMask                   = 0x001c,
-		ReferenceTypeConstraint                 = 0x0004,
-		NotNullableValueTypeConstraint  = 0x0008,
-		DefaultConstructorConstraint    = 0x0010
+		SpecialConstraintMask		= 0x001c,
+		ReferenceTypeConstraint		= 0x0004,
+		NotNullableValueTypeConstraint	= 0x0008,
+		DefaultConstructorConstraint	= 0x0010
 	}
 
 	/// <credits>
@@ -166,15 +177,15 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[System.Flags]
 	public enum PInvokeAttributes : ushort {
-		NoMangle                        = 0x0001,       // PInvoke is to use the member name as specified
+		NoMangle		= 0x0001,       // PInvoke is to use the member name as specified
 
 		// Character set
-		CharSetMask                     = 0x0006,
+		CharSetMask		= 0x0006,
 		CharSetNotSpec          = 0x0000,
-		CharSetAnsi                     = 0x0002,
-		CharSetUnicode          = 0x0004,
-		CharSetAuto                     = 0x0006,
-		SupportsLastError       = 0x0040,       // Information about target function. Not relevant for fields
+		CharSetAnsi		= 0x0002,
+		CharSetUnicode		= 0x0004,
+		CharSetAuto		= 0x0006,
+		SupportsLastError	= 0x0040,       // Information about target function. Not relevant for fields
 
 		// Calling convetion
 		CallConvMask            = 0x0700,
@@ -188,9 +199,9 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[System.Flags]
 	public enum ManifestResourceAttributes : uint {
-		VisibilityMask = 7,
-		Public = 1,
-		Private = 2
+		VisibilityMask	= 7,
+		Public		= 1,
+		Private		= 2
 	}
 
 	/// <credits>
@@ -213,23 +224,23 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[System.Flags]
 	public enum MethodImplAttributes : ushort {
-		CodeTypeMask            = 0x0003,
-		IL                                      = 0x0000,       // Method impl is CIL
-		Native                          = 0x0001,       // Method impl is native
-		OPTIL                           = 0x0002,       // Reserved: shall be zero in conforming implementations
-		Runtime                         = 0x0003,       // Method impl is provided by the runtime
+		CodeTypeMask		= 0x0003,
+		IL			= 0x0000,       // Method impl is CIL
+		Native			= 0x0001,       // Method impl is native
+		OPTIL			= 0x0002,       // Reserved: shall be zero in conforming implementations
+		Runtime			= 0x0003,       // Method impl is provided by the runtime
 
-		ManagedMask                     = 0x0004,       // Flags specifying whether the code is managed or unmanaged
-		Unmanaged                       = 0x0004,       // Method impl is unmanaged, otherwise managed
-		Managed                         = 0x0000,       // Method impl is managed
+		ManagedMask		= 0x0004,       // Flags specifying whether the code is managed or unmanaged
+		Unmanaged		= 0x0004,       // Method impl is unmanaged, otherwise managed
+		Managed			= 0x0000,       // Method impl is managed
 
 		// Implementation info and interop
-		ForwardRef                      = 0x0010,       // Indicates method is defined; used primarily in merge scenarios
-		PreserveSig                     = 0x0080,       // Reserved: conforming implementations may ignore
-		InternalCall            = 0x1000,       // Reserved: shall be zero in conforming implementations
-		Synchronized            = 0x0020,       // Method is single threaded through the body
-		NoInlining                      = 0x0008,       // Method may not be inlined
-		MaxMethodImplVal        = 0xffff         // Range check value
+		ForwardRef		= 0x0010,       // Indicates method is defined; used primarily in merge scenarios
+		PreserveSig		= 0x0080,       // Reserved: conforming implementations may ignore
+		InternalCall		= 0x1000,       // Reserved: shall be zero in conforming implementations
+		Synchronized		= 0x0020,       // Method is single threaded through the body
+		NoInlining		= 0x0008,       // Method may not be inlined
+		MaxMethodImplVal	= 0xffff         // Range check value
 	}
 
 	/// <credits>
@@ -238,56 +249,56 @@ namespace SharpOS.AOT.Metadata {
 	[Include]
 	[System.Flags]
 	public enum MethodAttributes : ushort {
-		MemberAccessMask        = 0x0007,
-		Compilercontrolled      = 0x0000,       // Member not referenceable
-		Private                         = 0x0001,       // Accessible only by the parent type
-		FamANDAssem                     = 0x0002,       // Accessible by sub-types only in this Assembly
-		Assem                           = 0x0003,       // Accessibly by anyone in the Assembly
-		Family                          = 0x0004,       // Accessible only by type and sub-types
-		FamORAssem                      = 0x0005,       // Accessibly by sub-types anywhere, plus anyone in assembly
-		Public                          = 0x0006,       // Accessibly by anyone who has visibility to this scope
+		MemberAccessMask	= 0x0007,
+		Compilercontrolled	= 0x0000,       // Member not referenceable
+		Private			= 0x0001,       // Accessible only by the parent type
+		FamANDAssem		= 0x0002,       // Accessible by sub-types only in this Assembly
+		Assem			= 0x0003,       // Accessibly by anyone in the Assembly
+		Family			= 0x0004,       // Accessible only by type and sub-types
+		FamORAssem		= 0x0005,       // Accessibly by sub-types anywhere, plus anyone in assembly
+		Public			= 0x0006,       // Accessibly by anyone who has visibility to this scope
 
-		Static                          = 0x0010,       // Defined on type, else per instance
-		Final                           = 0x0020,       // Method may not be overridden
-		Virtual                         = 0x0040,       // Method is virtual
-		HideBySig                       = 0x0080,       // Method hides by name+sig, else just by name
+		Static			= 0x0010,       // Defined on type, else per instance
+		Final			= 0x0020,       // Method may not be overridden
+		Virtual			= 0x0040,       // Method is virtual
+		HideBySig		= 0x0080,       // Method hides by name+sig, else just by name
 
-		VtableLayoutMask        = 0x0100,       // Use this mask to retrieve vtable attributes
-		ReuseSlot                       = 0x0000,       // Method reuses existing slot in vtable
-		NewSlot                         = 0x0100,       // Method always gets a new slot in the vtable
+		VtableLayoutMask	= 0x0100,       // Use this mask to retrieve vtable attributes
+		ReuseSlot		= 0x0000,       // Method reuses existing slot in vtable
+		NewSlot			= 0x0100,       // Method always gets a new slot in the vtable
 
-		Abstract                        = 0x0400,       // Method does not provide an implementation
-		SpecialName                     = 0x0800,       // Method is special
+		Abstract		= 0x0400,       // Method does not provide an implementation
+		SpecialName		= 0x0800,       // Method is special
 
 		// Interop Attributes
-		PInvokeImpl                     = 0x2000,       // Implementation is forwarded through PInvoke
-		UnmanagedExport         = 0x0008,       // Reserved: shall be zero for conforming implementations
+		PInvokeImpl		= 0x2000,       // Implementation is forwarded through PInvoke
+		UnmanagedExport		= 0x0008,       // Reserved: shall be zero for conforming implementations
 
 		// Additional flags
-		RTSpecialName           = 0x1000,       // CLI provides 'special' behavior, depending upon the name of the method
-		HasSecurity                     = 0x4000,       // Method has security associate with it
-		RequireSecObject        = 0x8000         // Method calls another method containing security code
+		RTSpecialName		= 0x1000,       // CLI provides 'special' behavior, depending upon the name of the method
+		HasSecurity		= 0x4000,       // Method has security associate with it
+		RequireSecObject	= 0x8000         // Method calls another method containing security code
 	}
 
 	[Include]
 	[System.Flags]
 	public enum ParameterAttributes : ushort {
-		None                            = 0x0000,
-		In                                      = 0x0001,       // Param is [In]
-		Out                                     = 0x0002,       // Param is [Out]
-		Optional                        = 0x0010,       // Param is optional
-		HasDefault                      = 0x1000,       // Param has default value
-		HasFieldMarshal         = 0x2000,       // Param has field marshal
-		Unused                          = 0xcfe0         // Reserved: shall be zero in a conforming implementation
+		None		= 0x0000,
+		In		= 0x0001,       // Param is [In]
+		Out		= 0x0002,       // Param is [Out]
+		Optional	= 0x0010,       // Param is optional
+		HasDefault	= 0x1000,       // Param has default value
+		HasFieldMarshal	= 0x2000,       // Param has field marshal
+		Unused		= 0xcfe0         // Reserved: shall be zero in a conforming implementation
 	}
 
 	[Include]
 	[System.Flags]
 	public enum PropertyAttributes : ushort {
-		SpecialName = 0x0200,
-		RTSpecialName = 0x0400,
-		HasDefault = 0x1000,
-		Unused = 0xe9ff,
+		SpecialName	= 0x0200,
+		RTSpecialName	= 0x0400,
+		HasDefault	= 0x1000,
+		Unused		= 0xe9ff,
 	}
 
 	/// <credits>
@@ -295,41 +306,41 @@ namespace SharpOS.AOT.Metadata {
 	/// </credits>
 	[Include]
 	public enum ElementType : byte {
-		End		 = 0x00,   // Marks end of a list
+		End		= 0x00,   // Marks end of a list
 		Void		= 0x01,
-		Boolean	 = 0x02,
+		Boolean		= 0x02,
 		Char		= 0x03,
-		I1		  = 0x04,
-		U1		  = 0x05,
-		I2		  = 0x06,
-		U2		  = 0x07,
-		I4		  = 0x08,
-		U4		  = 0x09,
-		I8		  = 0x0a,
-		U8		  = 0x0b,
-		R4		  = 0x0c,
-		R8		  = 0x0d,
-		String	  = 0x0e,
-		Ptr		 = 0x0f,   // Followed by <type> token
-		ByRef	   = 0x10,   // Followed by <type> token
-		ValueType   = 0x11,   // Followed by <type> token
-		Class	   = 0x12,   // Followed by <type> token
-		Var        = 0x13,   // Followed by generic parameter number
-		Array	   = 0x14,   // <type> <rank> <boundsCount> <bound1>  <loCount> <lo1>
-		GenericInst = 0x15,   // <type> <type-arg-count> <type-1> ... <type-n> */
-		TypedByRef  = 0x16,
-		I		   = 0x18,   // System.IntPtr
-		U		   = 0x19,   // System.UIntPtr
-		FnPtr	   = 0x1b,   // Followed by full method signature
-		Object	  = 0x1c,   // System.Object
-		SzArray	 = 0x1d,   // Single-dim array with 0 lower bound
-		MVar       = 0x1e,   // Followed by generic parameter number
+		I1		= 0x04,
+		U1		= 0x05,
+		I2		= 0x06,
+		U2		= 0x07,
+		I4		= 0x08,
+		U4		= 0x09,
+		I8		= 0x0a,
+		U8		= 0x0b,
+		R4		= 0x0c,
+		R8		= 0x0d,
+		String		= 0x0e,
+		Ptr		= 0x0f,   // Followed by <type> token
+		ByRef		= 0x10,   // Followed by <type> token
+		ValueType	= 0x11,   // Followed by <type> token
+		Class		= 0x12,   // Followed by <type> token
+		Var		= 0x13,   // Followed by generic parameter number
+		Array		= 0x14,   // <type> <rank> <boundsCount> <bound1>  <loCount> <lo1>
+		GenericInst	= 0x15,   // <type> <type-arg-count> <type-1> ... <type-n> */
+		TypedByRef	= 0x16,
+		I		= 0x18,   // System.IntPtr
+		U		= 0x19,   // System.UIntPtr
+		FnPtr		= 0x1b,   // Followed by full method signature
+		Object		= 0x1c,   // System.Object
+		SzArray		= 0x1d,   // Single-dim array with 0 lower bound
+		MVar		= 0x1e,   // Followed by generic parameter number
 		CModReqD	= 0x1f,   // Required modifier : followed by a TypeDef or TypeRef token
-		CModOpt	 = 0x20,   // Optional modifier : followed by a TypeDef or TypeRef token
+		CModOpt		= 0x20,   // Optional modifier : followed by a TypeDef or TypeRef token
 		Internal	= 0x21,   // Implemented within the CLI
 		Modifier	= 0x40,   // Or'd with following element types
 		Sentinel	= 0x41,   // Sentinel for varargs method signature
-		Pinned	  = 0x45,   // Denotes a local variable that points at a pinned object
+		Pinned		= 0x45,   // Denotes a local variable that points at a pinned object
 
 		// special undocumented constants
 		Type		= 0x50,
