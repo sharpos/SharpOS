@@ -413,20 +413,21 @@ namespace SharpOS.Korlib.Runtime {
 
 		public unsafe static void DumpTypeDef (AssemblyMetadata assembly, TypeDefRow row, int index)
 		{
+			Serial.Write (" ");
 			Serial.Write ("TypeDefRow#");
 			Serial.Write (index);
 			Serial.Write (" ");
-			Serial.Write ((int)row.Flags);
+			Serial.Write ((int)row.Flags, true);
 			Serial.Write (" ");
-			Serial.Write ((int)row.Name);
+			Serial.Write ((int)row.Name, true);
 			Serial.Write (" ");
-			Serial.Write ((int)row.Namespace);
+			Serial.Write ((int)row.Namespace, true);
 			Serial.Write (" ");
-			Serial.Write ((int)row.Extends);
+			Serial.Write ((int)row.Extends, true);
 			Serial.Write (" ");
-			Serial.Write ((int)row.FieldList);
+			Serial.Write ((int)row.FieldList, true);
 			Serial.Write (" ");
-			Serial.Write ((int)row.MethodList);
+			Serial.Write ((int)row.MethodList, true);
 			Serial.Write (" ");
 			PrintTypeName (assembly, row);
 			Serial.WriteLine ();
@@ -469,33 +470,7 @@ namespace SharpOS.Korlib.Runtime {
 				int startPass = -1;
 				int firstFailure = -1;
 
-				for (int y = 0; y < Root.Assemblies [x].TypeDef.Length; ++y) {
-					TypeDefRow row = Root.Assemblies [x].TypeDef [y];
-
-					if (row.Magic == MetadataRoot.MDMagic) {
-						++pass;
-
-						if (firstFailure == -1) {
-							DumpTypeDef (Root.Assemblies [x], row, y);
-						}
-					} else {
-						result = false;
-						if (y < 3) {
-							Serial.Write ("- TypeDef#");
-							Serial.Write (y);
-							Serial.Write (": invalid metadata `0x");
-							Serial.Write ((int) row.Magic, true);
-							Serial.WriteLine ("'");
-						}
-
-						if (startPass == -1)
-							startPass = pass;
-						if (firstFailure == -1)
-							firstFailure = y;
-					}
-
-					++total;
-				}
+				ShowTypeDefs (ref result, x, ref pass, ref total, ref startPass, ref firstFailure);
 
 				if (pass != total) {
 					Serial.Write (" - ");
@@ -523,6 +498,37 @@ namespace SharpOS.Korlib.Runtime {
 			//	Diagnostics.Error ("Runtime: type has invalid magic");
 
 			return result;
+		}
+
+		private static void ShowTypeDefs (ref bool result, int x, ref int pass, ref int total, ref int startPass, ref int firstFailure)
+		{
+			for (int y = 0; y < Root.Assemblies [x].TypeDef.Length; ++y) {
+				TypeDefRow row = Root.Assemblies [x].TypeDef [y];
+
+				if (row.Magic == MetadataRoot.MDMagic) {
+					++pass;
+
+					if (firstFailure == -1) {
+						DumpTypeDef (Root.Assemblies [x], row, y);
+					}
+				} else {
+					result = false;
+					if (y < 3) {
+						Serial.Write ("- TypeDef#");
+						Serial.Write (y);
+						Serial.Write (": invalid metadata `0x");
+						Serial.Write ((int) row.Magic, true);
+						Serial.WriteLine ("'");
+					}
+
+					if (startPass == -1)
+						startPass = pass;
+					if (firstFailure == -1)
+						firstFailure = y;
+				}
+
+				++total;
+			}
 		}
 
 		public static void __RunTests ()

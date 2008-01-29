@@ -563,6 +563,25 @@ namespace SharpOS.AOT.IR {
 
 		private int size = -1;
 
+		/// <summary>
+		/// Gets the size of the reference.
+		/// </summary>
+		/// <value>The size of the reference.</value>
+		public int ReferenceSize
+		{
+			get
+			{
+				if (this.internalType == InternalType.O
+						|| this.internalType == InternalType.I
+						|| this.internalType == InternalType.U
+						|| this.internalType == InternalType.M
+						|| this.internalType == InternalType.SZArray
+						|| this.internalType == InternalType.Array)
+					return this.engine.Assembly.IntSize;
+
+				return this.Size;
+			}
+		}
 
 		/// <summary>
 		/// Gets the size.

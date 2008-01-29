@@ -2517,7 +2517,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			int objectSize = this.assembly.Engine.ObjectSize;
 
-			this.assembly.MOV (R32.EAX, (uint) instruction.Type.SpecialTypeElement.Size);
+			this.assembly.MOV (R32.EAX, (uint) instruction.Type.SpecialTypeElement.ReferenceSize);
 
 			if (value.IsRegisterSet)
 				this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
@@ -2561,7 +2561,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Use [2] as IR.Operands.Register;
 
 			int objectSize = this.assembly.Engine.ObjectSize;
-			int elementSize = assignee.Type.SpecialTypeElement.Size;
+			int elementSize = assignee.Type.SpecialTypeElement.ReferenceSize;
 
 			if (assignee.IsRegisterSet)
 				this.assembly.MOV (R32.ECX, Assembly.GetRegister (assignee.Register));
@@ -2600,7 +2600,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
 			int objectSize = this.assembly.Engine.ObjectSize;
-			int elementSize = value.Type.SpecialTypeElement.Size;
+			int elementSize = value.Type.SpecialTypeElement.ReferenceSize;
 
 			if (value.IsRegisterSet)
 				this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
@@ -2688,7 +2688,7 @@ namespace SharpOS.AOT.X86 {
 				}
 
 				// Compute the amount of bytes of all entries in the array
-				this.assembly.MOV (R32.ECX, (uint) instruction.Method.Class.SpecialTypeElement.Size);
+				this.assembly.MOV (R32.ECX, (uint) instruction.Method.Class.SpecialTypeElement.ReferenceSize);
 				this.assembly.MUL (R32.ECX);
 
 				// Compute the whole size of the array including the overhead
@@ -2739,7 +2739,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Use [0] as IR.Operands.Register;
 
 			int objectSize = this.assembly.Engine.ObjectSize;
-			int elementSize = assignee.Type.SpecialTypeElement.Size;
+			int elementSize = assignee.Type.SpecialTypeElement.ReferenceSize;
 
 			if (assignee.IsRegisterSet)
 				this.assembly.MOV (R32.ECX, Assembly.GetRegister (assignee.Register));
@@ -2810,7 +2810,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
 			int objectSize = this.assembly.Engine.ObjectSize;
-			int elementSize = value.Type.SpecialTypeElement.Size;
+			int elementSize = value.Type.SpecialTypeElement.ReferenceSize;
 
 			if (value.IsRegisterSet)
 				this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));

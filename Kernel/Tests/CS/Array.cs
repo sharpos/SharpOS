@@ -17,6 +17,38 @@ namespace SharpOS.Kernel.Tests.CS {
 #if !ARRAYS_NOT_SUPPORTED
 	public unsafe class Array {
 
+		class SomeObject {
+			public SomeObject (int value)
+			{
+				this.value = value;
+			}
+
+			public int value = 0;
+		}
+
+		/// <summary>
+		/// int[] read/write
+		/// </summary>
+		public static uint CMPObjectArray ()
+		{
+			SomeObject [] arr = new SomeObject [3];
+
+			arr [0] = new SomeObject (7);
+			arr [1] = new SomeObject (9);
+			arr [2] = new SomeObject (44);
+
+			if (arr [0].value != 7)
+				return 0;
+
+			if (arr [1].value != 9)
+				return 0;
+
+			if (arr [2].value != 44)
+				return 0;
+
+			return 1;
+		}
+
 		/// <summary>
 		/// int[] read/write
 		/// </summary>
