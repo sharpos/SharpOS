@@ -25,6 +25,21 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return result;
 		}
+
+		public static uint CMPCatch ()
+		{
+			uint result;
+
+			try {
+				result = 0;
+
+				// throw new Exception ();
+			} catch (System.Exception exception) {
+				result = 1;
+			}
+
+			return result;			
+		}
 #else
 		public static uint CMPExceptionHandling ()
 		{

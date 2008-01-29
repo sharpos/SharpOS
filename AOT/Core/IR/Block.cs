@@ -337,6 +337,26 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		bool isCatchBegin = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is catch begin.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is catch begin; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsCatchBegin
+		{
+			get
+			{
+				return isCatchBegin;
+			}
+			set
+			{
+				isCatchBegin = value;
+			}
+		}
+
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Block"/> class.
 		/// </summary>
@@ -476,22 +496,16 @@ namespace SharpOS.AOT.IR {
 			if (!found && this.ins.Count > 0 && this.index > 0)
 				throw new EngineException ("The conversion from CIL in '" + this.method.MethodFullName + "' for block #'" + this.index + "' failed.");
 
-			/*			
-						// Catch
-						if (this.method.MethodDefinition.Body.ExceptionHandlers.Count > 0 && this.cil.Count > 0) {
-							foreach (ExceptionHandler exceptionHandler in this.method.MethodDefinition.Body.ExceptionHandlers) {
-								if (exceptionHandler.CatchType != null
-										&& exceptionHandler.HandlerStart == this.cil[0]) {
-									this.AddInstruction (new Assign (this.SetRegister (this.stack.Count++), new ExceptionValue()));
-									break;
-								}
-							}
-						}
-			*/
+			if (this.IsCatchBegin) {
+				Register exception = this.SetRegister ();
+				exception.InternalType = InternalType.O;
+				exception.Parent = new Instructions.Ldnull (exception);
+			}
+
 			foreach (Mono.Cecil.Cil.Instruction cilInstruction in this.cil) {
 				Instructions.Instruction instruction = Block.ilDispatcher [(int) cilInstruction.OpCode.Code] (this, cilInstruction);
 
-				// Avoid System.Object::.ctor from calling itself
+				// Prevent System.Object::.ctor from calling itself
 				if (instruction is Call
 						&& this.method.IsConstructor
 						&& this.method.Class.TypeFullName == Mono.Cecil.Constants.Object

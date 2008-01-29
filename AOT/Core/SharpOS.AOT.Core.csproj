@@ -108,6 +108,7 @@
     <Compile Include="IR\Engine.cs" />
     <Compile Include="IR\EngineException.cs" />
     <Compile Include="IR\EngineOptions.cs" />
+    <Compile Include="IR\ExceptionHandlingClause.cs" />
     <Compile Include="IR\IAssembly.cs" />
     <Compile Include="IR\Instructions\Add.cs" />
     <Compile Include="IR\Instructions\Branch.cs" />

@@ -31,6 +31,20 @@ namespace SharpOS.AOT.IR {
 	/// Represents a method in the AOT's intermediate representation. 
 	/// </summary>
 	public class Method : IEnumerable<Block> {
+		List<ExceptionHandlingClause> exceptions = new List<ExceptionHandlingClause> ();
+
+		/// <summary>
+		/// Gets the exceptions.
+		/// </summary>
+		/// <value>The exceptions.</value>
+		private List<ExceptionHandlingClause> Exceptions
+		{
+			get
+			{
+				return exceptions;
+			}
+		}
+
 		private bool skipProcessing = false;
 
 		/// <summary>
@@ -188,8 +202,14 @@ namespace SharpOS.AOT.IR {
 			this.methodDefinition = methodDefinition;
 		}
 
+		/// <summary>
+		/// 
+		/// </summary>
 		public const byte IMTSize = 5;
 
+		/// <summary>
+		/// Assigns the interface method number.
+		/// </summary>
 		public void AssignInterfaceMethodNumber() {
 			if (interfaceMethodNumber != -1)
 				throw new EngineException("Interface number already assigned to " + this.MethodFullName);
@@ -200,13 +220,21 @@ namespace SharpOS.AOT.IR {
 		
 		static private int interfaceMethodCount = 0;
 		private int interfaceMethodNumber = -1;
-		
+
+		/// <summary>
+		/// Gets or sets the interface method number.
+		/// </summary>
+		/// <value>The interface method number.</value>
 		public int InterfaceMethodNumber
 		{
 			get { return interfaceMethodNumber; }
 			set { interfaceMethodNumber = value; }
 		}
-		
+
+		/// <summary>
+		/// Gets the interface method key.
+		/// </summary>
+		/// <value>The interface method key.</value>
 		public int InterfaceMethodKey
 		{
 			get { return interfaceMethodNumber % IMTSize; }
@@ -366,6 +394,9 @@ namespace SharpOS.AOT.IR {
 				return;
 
 			foreach (ExceptionHandler exceptionHandler in definition.Body.ExceptionHandlers) {
+				ExceptionHandlingClause clause = new ExceptionHandlingClause ();
+				clause.Type = (SharpOS.AOT.Metadata.ExceptionHandlerType) exceptionHandler.Type;
+
 				Block tryBegin = null;
 				Block tryEnd = null;
 				Block filterBegin = null;
@@ -385,12 +416,30 @@ namespace SharpOS.AOT.IR {
 				if (tryEnd != null)
 					tryEnd.IsTryEnd = true;
 
-				if (exceptionHandler.Type != ExceptionHandlerType.Catch
-						&& handlerBegin != null)
+				if (handlerBegin != null
+						&& exceptionHandler.Type != ExceptionHandlerType.Catch
+						&& exceptionHandler.Type != ExceptionHandlerType.Filter)
 					handlerBegin.IsFinallyFilterFaultStart = true;
+				else
+					handlerBegin.IsCatchBegin = true;
+
+				if (filterBegin != null)
+					filterBegin.IsFinallyFilterFaultStart = true;
 
 				if (filterEnd != null)
 					filterEnd.IsFilterEnd = true;
+
+				clause.TryBegin = tryBegin;
+				clause.TryEnd = tryEnd;
+				clause.FilterBegin = filterBegin;
+				clause.FilterEnd = filterEnd;
+				clause.HandlerBegin = handlerBegin;
+				clause.HandlerEnd = handlerEnd;
+
+				if (exceptionHandler.CatchType != null)
+					clause.Class = this.engine.GetClass (exceptionHandler.CatchType);
+
+				this.exceptions.Add (clause);
 			}
 		}
 

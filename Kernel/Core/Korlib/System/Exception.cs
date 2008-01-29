@@ -13,17 +13,9 @@ using SharpOS.Korlib.Runtime;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public class Object {
-		internal VTable VTable;
-		internal uint Synchronisation = 0;
-
-		public Object ()
+	public class Exception {
+		public Exception ()
 		{
-		}
-		
-		public virtual string ToString()
-		{
-			return this.VTable.Type.Name;
 		}
 	}
 }

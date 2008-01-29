@@ -9,6 +9,8 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SharpOS.Kernel</RootNamespace>
     <AssemblyName>SharpOS.Kernel</AssemblyName>
+    <StartWorkingDirectory>
+    </StartWorkingDirectory>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -44,7 +46,7 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Test|AnyCPU' ">
-    <OutputPath>bin\Release Test\</OutputPath>
+    <OutputPath>..\..\build\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <DocumentationFile>..\..\build\SharpOS.Kernel.Core.XML</DocumentationFile>
@@ -168,6 +170,7 @@
     <Compile Include="Korlib\System\Boolean.cs" />
     <Compile Include="Korlib\System\Byte.cs" />
     <Compile Include="Korlib\System\Char.cs" />
+    <Compile Include="Korlib\System\Exception.cs" />
     <Compile Include="Korlib\System\Enum.cs" />
     <Compile Include="Korlib\System\Int16.cs" />
     <Compile Include="Korlib\System\Int32.cs" />
