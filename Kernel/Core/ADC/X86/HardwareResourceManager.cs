@@ -37,7 +37,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		public static MemoryMap RequestMemoryMap(uint address, uint length)
 		{
-			return new MemoryMap((byte*)address, length);
+			return new MemoryMap(address, length);
 		}
 
 	}

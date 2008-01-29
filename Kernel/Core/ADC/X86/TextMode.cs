@@ -34,8 +34,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		// Hardware
 		static IO.Port CRT_index_register;
 		static IO.Port CRT_data_register;
-		static uint addressStart = 0xB0000;
-		static uint addressEnd = 0xB8000;
+		static MemoryMap videoMemory;
 		static int bytePerChar = 1;
 		static bool colorMode = false;
 		static bool haveBuffer = false;
@@ -182,8 +181,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 				CRT_index_register = IO.Port.CGA_CRT_index_register;
 				CRT_data_register = IO.Port.CGA_CRT_data_register;
-				addressStart = 0xB8000;
-				addressEnd = 0xBC000;	// CGA has 16kb video memory
+				
+				// HACK!!
+				videoMemory.address = (byte*)0xB8000;
+				videoMemory.length = 0x4000;	// CGA has 16kb video memory
+				//videoMemory = Architecture.ResourceManager.RequestMemoryMap(0xB8000, 0x4000);
+
 				// ideally we'd poll how much video memory
 				// we can use, but we can't so we're
 				// being conservative and only use 16kb.
@@ -195,8 +198,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 				CRT_index_register = IO.Port.MDA_CRT_index_register;
 				CRT_data_register = IO.Port.MDA_CRT_data_register;
-				addressStart = 0xB0000;
-				addressEnd = 0xB1000;	// MDA has 16kb video memory
+				
+				// HACK!!
+				videoMemory.address = (byte*)0xB0000;
+				videoMemory.length = 0x1000;	// MDA has 16kb video memory
+				//videoMemory = Architecture.ResourceManager.RequestMemoryMap(0xB0000, 0x1000);
+
 				bytePerChar = 1;
 				colorMode = false;
 				haveBuffer = false;
@@ -212,7 +219,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			scanline = (uint) (width * bytePerChar);
 
 			if (haveBuffer)
-				bufferHeight = (int) ((addressEnd - addressStart) / scanline) - 1;
+				bufferHeight = (int) (
+					videoMemory.Length
+					/ scanline) - 1;
 			else
 				bufferHeight = height;
 
@@ -316,7 +325,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			x = 0;
 			y = 0;
-			MemoryUtil.MemSet (fill, addressStart, bufferSize);
+			videoMemory.Fill(fill);
 			SetReadPos (0);
 			writeY = 0;
 			SetCursor (x, y);
@@ -327,10 +336,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 		/// </summary>
 		public unsafe static void ClearToEndOfLine ()
 		{
-			uint count = (uint) (bytePerChar * (width - x));
-			byte* video = (byte*) addressStart;
-			video += (uint) (x + ((y + writeY) * scanline));
-			MemoryUtil.MemSet (fill, (uint) video, count);
+			uint count	= (uint) (bytePerChar * (width - x));
+			uint offset = (uint) (x + ((y + writeY) * scanline));
+			videoMemory.Fill(fill, offset, count);
 		}
 
 		public static void MovePage (int value)
@@ -341,19 +349,19 @@ namespace SharpOS.Kernel.ADC.X86 {
 			if (value > 0) {
 				fill_count = (uint) (value * scanline);
 				move_count = bufferSize - fill_count;
-				move_src = addressStart + fill_count;
-				move_dst = addressStart;
-				fill_dst = addressStart + move_count;
+				move_src = fill_count;
+				move_dst = 0;
+				fill_dst = move_count;
 			} else {
 				fill_count = (uint) ((-value) * scanline);
 				move_count = bufferSize - fill_count;
-				move_src = addressStart;
-				move_dst = addressStart + fill_count;
-				fill_dst = addressStart;
+				move_src = 0;
+				move_dst = fill_count;
+				fill_dst = 0;
 			}
 
-			MemoryUtil.MemCopy (move_src, move_dst, move_count);
-			MemoryUtil.MemSet (fill, fill_dst, fill_count);
+			videoMemory.Move(move_src, move_dst, move_count);
+			videoMemory.Fill(fill, fill_dst, fill_count);
 		}
 
 		public static void ScrollPageWrite (int value)
@@ -396,18 +404,18 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		public static void WriteChar (byte value)
 		{
-			byte* video = (byte*) addressStart;
+			int index = 0;
 
 			if (value != (byte) '\n') {
-				video += (uint) ((y + writeY) * scanline);
+				index += (int) ((y + writeY) * scanline);
 
 				if (colorMode) {
-					video += x * 2;
-					*video++ = value;
-					*video = attributes;
+					index += x * 2;
+					videoMemory[index  ] = value;
+					videoMemory[index+1] = attributes;
 				} else {
-					video += x;
-					*video = value;
+					index += x;
+					videoMemory[index  ] = value;
 				}
 
 				x++;
