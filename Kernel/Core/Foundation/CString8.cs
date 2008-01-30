@@ -265,7 +265,7 @@ namespace SharpOS.Kernel.Foundation {
 			Diagnostics.Assert (count >= 0,
 				"CString8.Compare(): parameter `count' is negative");
 
-			if (from + count >= Length)
+			if (from + count > Length)
 				return -1;
 
 			bufx = offset;

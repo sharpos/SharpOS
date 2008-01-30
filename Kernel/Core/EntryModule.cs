@@ -152,19 +152,8 @@ namespace SharpOS.Kernel {
 			PString8.__RunTests ();
 			SharpOS.Kernel.Tests.Wrapper.Run ();
 			InternalSystem.String.__RunTests ();
-#endif
-
-			#region Metadata Tests
 			Runtime.__RunTests ();
-			// TextMode.Write ("HashAlgId: ");
-			// TextMode.WriteNumber ((int) assemblyRow.HashAlgId);
-			// TextMode.WriteLine ();
-
-			// TextMode.Write ("Name: ");
-			// TextMode.WriteNumber ((int) assemblyRow.Name);
-			// TextMode.WriteLine ();
-			#endregion
-
+#endif
 
 			StageMessage ("Shell setup...");
 			SharpOS.Kernel.Shell.Prompter.Setup ();

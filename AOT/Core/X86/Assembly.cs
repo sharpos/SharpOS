@@ -1391,6 +1391,12 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		static void DecodeToken (uint token, out uint type, out uint rid)
+		{
+			type = (token & 0xff000000);
+			rid = (uint) token & 0x00ffffff;
+		}
+
 		private string AddTypeInfoFields (Class _class)
 		{
 			this.ALIGN (OBJECT_ALIGNMENT);
@@ -1419,6 +1425,10 @@ namespace SharpOS.AOT.X86 {
 			} else {
 				// Type Info AssemblyMetadata
 				this.ADDRESSOF (_class.ClassDefinition.Module.Assembly.Name + " MetadataRoot");
+
+				if (_class.ClassDefinition.Name == "TestA")
+					Console.WriteLine ("TestA ******: {0}",
+						_class.ClassDefinition.MetadataToken.ToUInt ().ToString ("x"));
 
 				// Type Info Metadata token
 				this.DATA (_class.ClassDefinition.MetadataToken.ToUInt ());

@@ -16,54 +16,13 @@ using SharpOS.Kernel.Foundation;
 using SharpOS.Kernel.ADC;
 
 namespace SharpOS.Korlib.Runtime {
-	public enum TokenType : uint {
-		Module			= 0x00000000,
-		TypeRef			= 0x01000000,
-		TypeDef			= 0x02000000,
-		Field			= 0x04000000,
-		Method			= 0x06000000,
-		Param			= 0x08000000,
-		InterfaceImpl		= 0x09000000,
-		MemberRef		= 0x0a000000,
-		CustomAttribute		= 0x0c000000,
-		Permission		= 0x0e000000,
-		Signature		= 0x11000000,
-		Event			= 0x14000000,
-		Property		= 0x17000000,
-		ModuleRef		= 0x1a000000,
-		TypeSpec		= 0x1b000000,
-		Assembly		= 0x20000000,
-		AssemblyRef		= 0x23000000,
-		File			= 0x26000000,
-		ExportedType            = 0x27000000,
-		ManifestResource	= 0x28000000,
-		GenericParam		= 0x2a000000,
-		MethodSpec		= 0x2b000000,
-		String			= 0x70000000,
-		Name			= 0x71000000,
-		BaseType		= 0x72000000
+
+	class TestA {
+		public int Member1;
 	}
 
-	public struct MetadataToken {
-		public MetadataToken (uint token)
-		{
-			Decode (token, out this.Type, out this.RID);
-		}
-
-		public MetadataToken (TokenType type, uint rid)
-		{
-			this.Type = type;
-			this.RID = rid;
-		}
-
-		public TokenType Type;
-		public uint RID;
-
-		public static void Decode (uint token, out TokenType type, out uint rid)
-		{
-			type = (TokenType) (token & 0xff000000);
-			rid = (uint) token & 0x00ffffff;
-		}
+	class TestB : TestA {
+		public int Member2;
 	}
 
 	internal class Runtime {
@@ -276,7 +235,6 @@ namespace SharpOS.Korlib.Runtime {
 				AssemblyMetadata def;
 				TypeDefRow result = GetType (Root.Assemblies [x], token.Type, token.RID, out def);
 
-
 				if (result != null) {
 					return result;
 					dest = def;
@@ -320,9 +278,9 @@ namespace SharpOS.Korlib.Runtime {
 					"Runtime.GetType(): token out of range for TypeDef table");
 
 				destAssembly = assembly;
-				return assembly.TypeDef [rid];
+				return assembly.TypeDef [rid - 1];
 			} else {
-				TypeRefRow row = assembly.TypeRef [rid];
+				TypeRefRow row = assembly.TypeRef [rid - 1];
 
 				return ResolveTypeRef (assembly, row, out destAssembly);
 			}
@@ -371,7 +329,8 @@ namespace SharpOS.Korlib.Runtime {
 				Diagnostics.Assert (rid < assembly.TypeRef.Length,
 					"Runtime.IsTypeSystemObject(): invalid metadata token, too large for TypeRef table!");
 
-				row = assembly.TypeRef [rid];
+				row = assembly.TypeRef [rid - 1];
+
 				nsLen = GetStringLength (assembly, row.Namespace);
 				nameLen = GetStringLength (assembly, row.Name);
 
@@ -433,120 +392,11 @@ namespace SharpOS.Korlib.Runtime {
 			Serial.WriteLine ();
 		}
 
-		public static bool VerifyMetadata ()
-		{
-			bool result = true;
-
-			//if (Root.Magic != MetadataRoot.MDMagic) {
-			//	TextMode.Write ("Runtime: metadata root has invalid magic `", Root.Magic, true);
-			//	TextMode.Write ("'");
-			//}
-
-			PrintTypeName (Root.Assemblies [0], Root.Assemblies [0].TypeDef [0]);
-
-			for (int x = 0; x < Root.Assemblies.Length; ++x) {
-				bool skip = false;
-
-				Serial.Write ("Assembly#");
-				Serial.Write (x);
-
-				if (Root.Assemblies [x].Magic != MetadataRoot.MDMagic) {
-					Serial.Write (": invalid magic");
-					result = false;
-					skip = true;
-				} else {
-					Serial.Write (": valid magic");
-				}
-
-				Serial.Write (" `0x");
-				Serial.Write ((int)Root.Assemblies [x].Magic, true);
-				Serial.WriteLine ("'");
-
-				if (skip)
-					continue;
-
-				int pass = 0;
-				int total = 0;
-				int startPass = -1;
-				int firstFailure = -1;
-
-				ShowTypeDefs (ref result, x, ref pass, ref total, ref startPass, ref firstFailure);
-
-				if (pass != total) {
-					Serial.Write (" - ");
-					Serial.Write (Root.Assemblies [x].TypeDef.Length);
-					Serial.Write (" total types, ");
-					Serial.Write (total - pass);
-					Serial.WriteLine (" with invalid magic signatures");
-					Serial.Write (" - ");
-					Serial.Write ((pass * 100 / total));
-					Serial.Write ("% (");
-					Serial.Write (pass);
-					Serial.WriteLine (") of total types pass magic test");
-					Serial.Write (" - ");
-					Serial.Write ((startPass * 100 / total));
-					Serial.Write ("% (");
-					Serial.Write (startPass);
-					Serial.WriteLine (") passed before the first failed magic test");
-					Serial.Write (" - type #");
-					Serial.Write (firstFailure);
-					Serial.WriteLine (" was the first to fail");
-				}
-			}
-
-			//if (Root.Assemblies [0].TypeDef [x].Magic != 200)
-			//	Diagnostics.Error ("Runtime: type has invalid magic");
-
-			return result;
-		}
-
-		private static void ShowTypeDefs (ref bool result, int x, ref int pass, ref int total, ref int startPass, ref int firstFailure)
-		{
-			for (int y = 0; y < Root.Assemblies [x].TypeDef.Length; ++y) {
-				TypeDefRow row = Root.Assemblies [x].TypeDef [y];
-
-				if (row.Magic == MetadataRoot.MDMagic) {
-					++pass;
-
-					if (firstFailure == -1) {
-						DumpTypeDef (Root.Assemblies [x], row, y);
-					}
-				} else {
-					result = false;
-					if (y < 3) {
-						Serial.Write ("- TypeDef#");
-						Serial.Write (y);
-						Serial.Write (": invalid metadata `0x");
-						Serial.Write ((int) row.Magic, true);
-						Serial.WriteLine ("'");
-					}
-
-					if (startPass == -1)
-						startPass = pass;
-					if (firstFailure == -1)
-						firstFailure = y;
-				}
-
-				++total;
-			}
-		}
-
 		public static void __RunTests ()
 		{
-			// Magic tests
-
-			VerifyMetadata ();
-
-			//__TestIsBaseClassOf ();
+			__TestIsBaseClassOf ();
 		}
 
-		class TestA {
-			public int Member1;
-		}
-
-		class TestB : TestA {
-			public int Member2;
-		}
 
 		public static void __TestIsBaseClassOf ()
 		{
@@ -557,8 +407,6 @@ namespace SharpOS.Korlib.Runtime {
 
 			io1 = o1 as InternalSystem.Object;
 			io2 = o2 as InternalSystem.Object;
-
-			return;
 
 			Testcase.Test (Runtime.IsBaseClassOf (io2.VTable.Type, io1.VTable.Type),
 				"Runtime", "IsBaseClassOf where result should be true");
@@ -578,24 +426,17 @@ namespace SharpOS.Korlib.Runtime {
 			MetadataToken.Decode (type.MetadataToken, out typeTokType, out typeRID);
 			MetadataToken.Decode (baseType.MetadataToken, out baseTokType, out baseRID);
 
-			//if (IsTypeSystemObject (baseType.Assembly, baseTokType, baseRID))
-			//	return true;
+			if (IsTypeSystemObject (baseType.Assembly, baseTokType, baseRID))
+				return true;
 
 			typeDef = GetType (type.Assembly, typeTokType, typeRID);
 			baseDef = GetType (baseType.Assembly, baseTokType, baseRID);
 			interimDef = typeDef;
 			interimAssembly = type.Assembly;
 
-
-			TextMode.Write ("IsBaseClassOf('");
-			PrintTypeName (type.Assembly, typeDef);
-			TextMode.Write ("', '");
-			PrintTypeName (baseType.Assembly, baseDef);
-			TextMode.WriteLine ("')");
-
 			MetadataToken.Decode (typeDef.Extends, out interimTokType, out interimRID);
 
-			for (int i = 0; i == 0;) {
+			while (true) {
 				int nameLen;
 				int nsLen;
 
@@ -607,7 +448,7 @@ namespace SharpOS.Korlib.Runtime {
 				lastInterimDef = interimDef;
 				interimDef = GetType (interimAssembly, interimTokType, interimRID, out interimAssembly);
 
-				Diagnostics.Assert (interimDef == null,
+				Diagnostics.Assert (interimDef != null,
 					"Runtime.IsBaseClassOf(): Failed to find TypeDef for the base class of a type");
 
 				Diagnostics.Assert (lastInterimDef != interimDef,

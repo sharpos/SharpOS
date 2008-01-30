@@ -79,7 +79,6 @@ namespace SharpOS.AOT.X86 {
 			this.asm.LABEL (moduleName + " MetadataRoot");
 			this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.AssemblyMetadata).ToString ());
 
-			this.asm.DATA (Magic);
 			this.asm.ADDRESSOF (moduleName + " StringsHeap");
 			this.asm.ADDRESSOF (moduleName + " BlobHeap");
 			this.asm.ADDRESSOF (moduleName + " GuidHeap");
@@ -807,11 +806,6 @@ namespace SharpOS.AOT.X86 {
 				this.asm.LABEL (moduleName + " TypeDefRow#" + index);
 				this.asm.AddObjectFields (typeof (SharpOS.AOT.Metadata.TypeDefRow).ToString ());
 
-				if (index >= 18 && index < 23) {
-					DumpTypeDef (row, index);
-				}
-
-				this.asm.DATA (Magic);
 				this.asm.DATA ((uint) row.Flags);
 				this.asm.DATA (row.Name);
 				this.asm.DATA (row.Namespace);
@@ -861,17 +855,13 @@ namespace SharpOS.AOT.X86 {
 			this.MetadataArray ("TypeSpec", table);
 		}
 
-		uint Magic {
-			get { return SharpOS.AOT.Metadata.MetadataRoot.MDMagic; }
-		}
-
 		public override void VisitTablesHeap (TablesHeap heap)
 		{
 			List <IMetadataTable> encodedTables = new List <IMetadataTable> ();
 
 			foreach (IMetadataTable table in heap.Tables) {
-				this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
-				this.asm.LABEL (moduleName + " " + table.GetType().Name);
+				//this.asm.ALIGN (Assembly.OBJECT_ALIGNMENT);
+				//this.asm.LABEL (moduleName + " " + table.GetType().Name);
 
 				encodedTables.Add (table);
 

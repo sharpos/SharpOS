@@ -72,5 +72,28 @@ namespace SharpOS.Kernel.ADC {
 		{
 			WriteNumber (number, hex);
 		}
+
+		public unsafe static void Write (string str, int number, bool hex)
+		{
+			Write (str);
+			Write (number, hex);
+		}
+
+		public static unsafe void Write (string str, int number)
+		{
+			Write (str, number, false);
+		}
+
+		public static unsafe void WriteLine (string str, int number, bool hex)
+		{
+			Write (str, number, hex);
+			WriteLine ();
+		}
+
+		public static unsafe void WriteLine (string str, int number)
+		{
+			Write (str, number, false);
+			WriteLine ();
+		}
 	}
 }

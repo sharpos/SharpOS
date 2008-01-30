@@ -603,8 +603,6 @@ namespace SharpOS.AOT.IR {
 				bool outOfDate = false;
 				string aotCore = System.Reflection.Assembly.GetExecutingAssembly ().Location;
 
-				Console.WriteLine ("aot.core: {0}", aotCore);
-
 				if (File.Exists (options.OutputFilename)) {
 					foreach (string assem in options.Assemblies) {
 						if (File.GetLastWriteTime (assem) >= File.GetLastWriteTime (options.OutputFilename)) {
