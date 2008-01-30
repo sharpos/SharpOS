@@ -92,6 +92,7 @@
     <Compile Include="ADC\Keyboard.cs" />
     <Compile Include="ADC\Keys.cs" />
     <Compile Include="ADC\MemoryManager.cs" />
+    <Compile Include="ADC\MemoryMap.cs" />
     <Compile Include="ADC\MemoryUtil.cs" />
     <Compile Include="ADC\Pager.cs" />
     <Compile Include="ADC\PCI.cs" />
@@ -163,7 +164,9 @@
     <Compile Include="KernelTestsWrapper.cs" />
     <Compile Include="KeyMap.cs" />
     <Compile Include="Korlib\Runtime\ITable.cs" />
+    <Compile Include="Korlib\Runtime\MetadataToken.cs" />
     <Compile Include="Korlib\Runtime\Runtime.cs" />
+    <Compile Include="Korlib\Runtime\TokenType.cs" />
     <Compile Include="Korlib\Runtime\TypeInfo.cs" />
     <Compile Include="Korlib\Runtime\VTable.cs" />
     <Compile Include="Korlib\System\Array.cs" />

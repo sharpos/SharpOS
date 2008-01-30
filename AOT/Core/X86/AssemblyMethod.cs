@@ -652,12 +652,10 @@ namespace SharpOS.AOT.X86 {
 				result++;
 
 			foreach (ParameterDefinition parameter in this.method.MethodDefinition.Parameters) {
-				InternalType InternalType = this.method.Engine.GetInternalType (parameter.ParameterType.ToString ());
-
 				if (i++ == index)
 					break;
 
-				result += this.method.Engine.GetTypeSize (parameter.ParameterType.ToString (), 4) >> 2;
+				result += this.method.Engine.GetTypeSize (Class.GetTypeFullName (parameter.ParameterType), 4) >> 2;
 			}
 
 			return result;

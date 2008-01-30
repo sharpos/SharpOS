@@ -141,7 +141,7 @@ namespace SharpOS.AOT.X86 {
 			uint result = 0;
 
 			foreach (ParameterDefinition parameter in call.Method.Parameters)
-				result += (uint) this.method.Engine.GetTypeSize (parameter.ParameterType.ToString (), 4);
+				result += (uint) this.method.Engine.GetTypeSize (Class.GetTypeFullName (parameter.ParameterType), 4);
 
 			if (call.Method.HasThis)
 				result += 4;

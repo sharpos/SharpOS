@@ -60,5 +60,33 @@ namespace InternalSystem {
 			Testcase.Test ((str.Length == 5) && (str2.Length == 2) && (str3.Length == 23),
 				"System.String", "Length test");
 		}
+
+		private static unsafe bool CompareChars (InternalSystem.String a, InternalSystem.String b)
+		{
+			fixed (char* pa = &a.firstChar) {
+				fixed (char* pb = &b.firstChar) {
+					for (int i = 0; i < a.Length; ++i) {
+						if (pa [i] != pb [i])
+							return false;
+					}
+				}
+			}
+
+			return true;
+		}
+
+		[Label ("System.String.op_Equality(System.String,System.String)")]
+		public static bool operator == (InternalSystem.String a, InternalSystem.String b)
+		{
+			if (a.length != b.length)
+				return false;
+			return String.CompareChars (a, b);
+		}
+
+		[Label ("System.String.op_Inequality(System.String,System.String)")]
+		public static bool operator != (InternalSystem.String a, InternalSystem.String b)
+		{
+			return !(a == b);
+		}
 	}
 }
