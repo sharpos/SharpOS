@@ -37,5 +37,15 @@ namespace SharpOS.Korlib.Runtime {
 			type = (TokenType) (token & 0xff000000);
 			rid = (uint) token & 0x00ffffff;
 		}
+
+		public static uint Combine (TokenType type, uint rid)
+		{
+			return (uint)type | rid;
+		}
+
+		public uint ToUInt ()
+		{
+			return Combine (Type, RID);
+		}
 	}
 }

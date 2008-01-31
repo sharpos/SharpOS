@@ -232,53 +232,6 @@ namespace SharpOS.Kernel {
 		}
 
 		#endregion
-		#region Object Support
-		[SharpOS.AOT.Attributes.AllocObject]
-		internal static unsafe InternalSystem.Object AllocObject (VTable vtable)
-		{
-			// TODO add GC support here
-
-			/*TextMode.Write ("Alloc Object of Size: ");
-			TextMode.Write ((int) vtable.Size);
-			TextMode.Write (" Type: ");
-			TextMode.Write (vtable.Type.Name);
-			TextMode.WriteLine ();*/
-
-
-			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate (vtable.Size);
-
-			InternalSystem.Object _object = Stubs.GetObjectFromPointer (result);
-			_object.VTable = vtable;
-
-			return _object;
-		}
-
-		[SharpOS.AOT.Attributes.AllocArray]
-		internal static unsafe InternalSystem.Object AllocArray (VTable vtable, int size)
-		{
-			// TODO add GC support here
-
-			/*TextMode.Write ("Alloc Object of Size: ");
-			TextMode.Write ((int) size);
-			TextMode.Write (" Type: ");
-			TextMode.Write (vtable.Type.Name);
-			TextMode.WriteLine ();*/
-
-			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) size);
-
-			InternalSystem.Object _object = Stubs.GetObjectFromPointer (result);
-			_object.VTable = vtable;
-
-			// TODO set the rank, rank data and initialize the data
-
-			/*InternalSystem.Array _array = _object as InternalSystem.Array;
-			_array.Rank = 1;
-			_array.FirstEntry.LowerBound = 0;
-			_array.FirstEntry.Length = count;*/
-
-			return _object;
-		}
-		#endregion
 	}
 }
 

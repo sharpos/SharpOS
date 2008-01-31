@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -28,7 +28,7 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
 	/// <summary>
-	/// Represents a method in the AOT's intermediate representation. 
+	/// Represents a method in the AOT's intermediate representation.
 	/// </summary>
 	public class Method : IEnumerable<Block> {
 		List<ExceptionHandlingClause> exceptions = new List<ExceptionHandlingClause> ();
@@ -203,7 +203,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public const byte IMTSize = 5;
 
@@ -217,7 +217,7 @@ namespace SharpOS.AOT.IR {
 			interfaceMethodNumber = interfaceMethodCount;
 			interfaceMethodCount++;
 		}
-		
+
 		static private int interfaceMethodCount = 0;
 		private int interfaceMethodNumber = -1;
 
@@ -648,7 +648,7 @@ namespace SharpOS.AOT.IR {
 
 			foreach (Block block in this.blocks) {
 				// If the current block is connected to more than one block
-				// and they have not the same number of entries on the stack 
+				// and they have not the same number of entries on the stack
 				// then throw an exception.
 				if (block.Ins.Count > 1) {
 					int stackSize = block.Ins [0].Stack.Count;
@@ -984,7 +984,7 @@ namespace SharpOS.AOT.IR {
 
 							Instructions.Instruction definition = item.Definition;
 
-							// If the PHI values are all the same then PHI is replaced with the first value. 
+							// If the PHI values are all the same then PHI is replaced with the first value.
 							// (e.g. v2 = PHI(v1, v1) -> v2 = v1)
 							if (definition is PHI) {
 								Operand sample = definition.Value.Operands [0];
@@ -1054,13 +1054,13 @@ namespace SharpOS.AOT.IR {
 									// Add X to the queue as "X = 100;"
 									if (definitionOperand != null) {
 										string id = definitionOperand.ID;
-							
+
 										if (!keys.Contains (id))
 											keys.Add (id);
 									}
 								}
 
-								if (remove) { 
+								if (remove) {
 									// Remove the instruction from the block that it is containing it
 									definition.Block.RemoveInstruction (definition);
 
@@ -1093,7 +1093,7 @@ namespace SharpOS.AOT.IR {
 									}
 
 									int replacements = used.ReplaceOperand (key, definition.Value as Identifier, null);
-							
+
 									if (replacements == 0)
 										remove = false;
 
@@ -1128,10 +1128,10 @@ namespace SharpOS.AOT.IR {
 									// Remove the variable from the defuse list
 									this.defuse.Remove (key);
 								}
-					
+
 								this.engine.Dump.PopElement();	// item
-							} 
-				
+							}
+
 							// Constant Folding
 							else if (definition is Assign
 								   && (definition as Assign).Value is Operands.Arithmetic) {
@@ -1314,7 +1314,7 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// 
+		///
 		/// </summary>
 		public class LiveRange : IComparable {
 			/// <summary>
@@ -1436,7 +1436,7 @@ namespace SharpOS.AOT.IR {
 			}
 
 			/// <summary>
-			/// 
+			///
 			/// </summary>
 			public class SortByStart : IComparer<LiveRange> {
 				/// <summary>
@@ -1464,7 +1464,7 @@ namespace SharpOS.AOT.IR {
 			}
 
 			/// <summary>
-			/// 
+			///
 			/// </summary>
 			public class SortByEnd : IComparer<LiveRange> {
 				/// <summary>
@@ -1486,7 +1486,7 @@ namespace SharpOS.AOT.IR {
 			}
 
 			/// <summary>
-			/// 
+			///
 			/// </summary>
 			public class SortByRegisterStack : IComparer<LiveRange> {
 				/// <summary>
@@ -1824,7 +1824,7 @@ namespace SharpOS.AOT.IR {
 			this.BuildBlocks ();
 
 			//this.BlocksOptimization ();
-			
+
 			this.SetBlockIndex ();
 
 			this.ConvertFromCIL ();
@@ -1844,7 +1844,7 @@ namespace SharpOS.AOT.IR {
 				this.DumpBlocks ();
 
 			/*this.Optimizations ();
-				
+
 			if (this.engine.Options.DumpVerbosity >= 3)
 				DumpBlocks ();
 			*/
@@ -2017,7 +2017,7 @@ namespace SharpOS.AOT.IR {
 
 				if (definition != null)
 					return definition.IsNewSlot;
-				
+
 				return false;
 			}
 		}
@@ -2103,7 +2103,7 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				MethodDefinition definition = this.methodDefinition as MethodDefinition;
-				
+
 				if (definition == null)
 					return false;
 
@@ -2142,6 +2142,39 @@ namespace SharpOS.AOT.IR {
 							&& definition.Parameters.Count == 1
 							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.Void*")))
 						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString () + "' method.");
+
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is kernel object from pointer.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is kernel object from pointer; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsKernelPointerFromObject
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute attribute in definition.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.ObjectToPointerAttribute).ToString ()))
+						continue;
+
+					if (!(Class.GetTypeFullName (definition.ReturnType.ReturnType).Equals ("System.Void*")
+							&& definition.Parameters.Count == 1
+							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.Object")))
+						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.ObjectToPointerAttribute).ToString () + "' method.");
 
 
 					return true;

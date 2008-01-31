@@ -82,7 +82,7 @@ namespace SharpOS.AOT.X86 {
 
 					// IMT key in case call hits a colision resolving stub
 					this.assembly.MOV (R32.ECX, (uint) call.Method.InterfaceMethodNumber);
- 
+
 					// Call virtual method using the table in the Object's ITable
 					this.assembly.CALL (new DWordMemory (null, R32.EAX, null, 0, address));
 				}
@@ -298,9 +298,9 @@ namespace SharpOS.AOT.X86 {
 		/// <returns>
 		/// 	<c>true</c> if [is kernel object from pointer] [the specified call]; otherwise, <c>false</c>.
 		/// </returns>
-		private bool IsKernelObjectFromPointer (SharpOS.AOT.IR.Instructions.Call call)
+		private bool IsKernelObjectConversion (SharpOS.AOT.IR.Instructions.Call call)
 		{
-			if (!call.Method.IsKernelObjectFromPointer)
+			if (!call.Method.IsKernelObjectFromPointer && !call.Method.IsKernelPointerFromObject)
 				return false;
 
 			IR.Operands.Register value = call.Use [0] as IR.Operands.Register;
@@ -325,7 +325,7 @@ namespace SharpOS.AOT.X86 {
 					&& !this.IsKernelAlloc (call)
 					&& !this.IsKernelLabelledAlloc (call)
 					&& !this.IsKernelLabelAddress (call)
-					&& !this.IsKernelObjectFromPointer (call))
+					&& !this.IsKernelObjectConversion (call))
 				throw new EngineException (string.Format ("Unknown Built-In '{0}'. ({1})", call.ToString (), this.method.MethodFullName));
 		}
 
@@ -2897,7 +2897,7 @@ namespace SharpOS.AOT.X86 {
 			if (instruction.Block.IsTryEnd)
 				this.assembly.CALL (this.GetLabel (instruction.Block.Outs [1]));
 
-			this.assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));	
+			this.assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));
 		}
 
 		private void Endfinally (IR.Instructions.Endfinally instruction)

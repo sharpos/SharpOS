@@ -664,7 +664,10 @@ namespace SharpOS.AOT.IR {
 					continue;
 
 				// No need for internal propagation
-				if (attribute.Constructor.DeclaringType.FullName == typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString ()) {
+				if (attribute.Constructor.DeclaringType.FullName ==
+				      typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString () ||
+				    attribute.Constructor.DeclaringType.FullName ==
+				      typeof (SharpOS.AOT.Attributes.ObjectToPointerAttribute).ToString ()) {
 					call.IsSpecialCase = true;
 					continue;
 				}

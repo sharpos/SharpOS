@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -71,6 +71,13 @@ namespace SharpOS.Kernel {
 		{
 			return null;
 		}
+
+		[SharpOS.AOT.Attributes.ObjectToPointer]
+		public unsafe static void *GetObjectFromPointer (object obj)
+		{
+			return null;
+		}
+
 		#endregion
 	}
 }

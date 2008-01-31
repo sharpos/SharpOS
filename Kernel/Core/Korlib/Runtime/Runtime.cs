@@ -18,11 +18,19 @@ using SharpOS.Kernel.ADC;
 namespace SharpOS.Korlib.Runtime {
 
 	class TestA {
-		public int Member1;
+		public byte Member1;
 	}
 
 	class TestB : TestA {
-		public int Member2;
+		public byte Member2;
+	}
+
+	class TestC : TestB {
+		public byte Member3;
+	}
+
+	struct TestD {
+		public byte Member1;
 	}
 
 	internal class Runtime {
@@ -286,9 +294,54 @@ namespace SharpOS.Korlib.Runtime {
 			}
 		}
 
-		public static unsafe TypeDefRow GetType (AssemblyMetadata assembly, CString8 *name, CString8 *ns)
+		public static unsafe TypeDefRow GetType (CString8 *ns, CString8 *name, out AssemblyMetadata assembly, out uint token)
+		{
+			token = 0;
+			assembly = null;
+
+			Diagnostics.Assert (ns != null,
+				"Runtime.GetType(): parameter `ns' is null");
+			Diagnostics.Assert (name != null,
+				"Runtime.GetType(): parameter `name' is null");
+
+			for (int x = 0; x < Root.Assemblies.Length; ++x) {
+				TypeDefRow row = GetType (Root.Assemblies [x], ns, name, out token);
+
+				if (row != null) {
+					assembly = Root.Assemblies [x];
+					return row;
+				}
+			}
+
+			return null;
+		}
+
+		public static unsafe TypeDefRow GetType (CString8 *ns, CString8 *name, out AssemblyMetadata assembly)
+		{
+			uint token;
+
+			return GetType (ns, name, out assembly, out token);
+		}
+
+		public static unsafe TypeDefRow GetType (CString8 *ns, CString8 *name)
+		{
+			AssemblyMetadata assembly;
+			uint token;
+
+			return GetType (ns, name, out assembly, out token);
+		}
+
+		public static unsafe TypeDefRow GetType (AssemblyMetadata assembly, CString8 *ns, CString8 *name)
+		{
+			uint token;
+
+			return GetType (assembly, name, ns, out token);
+		}
+
+		public static unsafe TypeDefRow GetType (AssemblyMetadata assembly, CString8 *ns, CString8 *name, out uint token)
 		{
 			TypeDefRow result = null;
+			token = 0;
 
 			for (int x = 0; x < assembly.TypeDef.Length; ++x) {
 				int nameLength = 0;
@@ -304,10 +357,61 @@ namespace SharpOS.Korlib.Runtime {
 					continue;
 
 				result = inspect;
+				token = (uint)TokenType.TypeDef | (uint)x+1U;
 				break;
 			}
 
 			return result;
+		}
+
+		public static unsafe TypeRefRow GetTypeRef (AssemblyMetadata assembly, string ns, string name, out uint token)
+		{
+			CString8 *cns, cname;
+
+			cns = CString8.Copy (ns);
+			cname = CString8.Copy (name);
+
+			try {
+				return GetTypeRef (assembly, cns, cname, out token);
+			} finally {
+				MemoryManager.Free (cns);
+				MemoryManager.Free (cname);
+			}
+		}
+
+		public static unsafe TypeRefRow GetTypeRef (AssemblyMetadata assembly, CString8 *ns, CString8 *name, out uint token)
+		{
+			TypeRefRow result = null;
+			token = 0;
+
+			for (int x = 0; x < assembly.TypeRef.Length; ++x) {
+				int nameLength = 0;
+				int nsLength = 0;
+				TypeRefRow inspect = assembly.TypeRef [x];
+
+				nameLength = GetStringLength (assembly, inspect.Name);
+				nsLength = GetStringLength (assembly, inspect.Namespace);
+
+				if (name->Compare (0, assembly.StringsHeap, (int) inspect.Name, nameLength) != 0)
+					continue;
+				if (ns->Compare (0, assembly.StringsHeap, (int) inspect.Namespace, nsLength) != 0)
+					continue;
+
+				result = inspect;
+				token = (uint)TokenType.TypeRef | (uint)x+1U;
+				break;
+			}
+
+			return result;
+		}
+
+		/// <summary>
+		/// Immediately frees an object allocated using 'new'.
+		/// </summary>
+		public static unsafe void Free (object o)
+		{
+			// TODO: remove this and mark as deprecated when GC is working
+			MemoryManager.Free (GetPointerFromObject (o));
 		}
 
 		public static unsafe bool IsTypeSystemObject (AssemblyMetadata assembly, TokenType type, uint rid)
@@ -370,6 +474,19 @@ namespace SharpOS.Korlib.Runtime {
 			MemoryManager.Free (ns);
 		}
 
+
+		[SharpOS.AOT.Attributes.PointerToObject]
+		public unsafe static InternalSystem.Object GetObjectFromPointer (void* pointer)
+		{
+			return null;
+		}
+
+		[SharpOS.AOT.Attributes.ObjectToPointer]
+		public unsafe static void *GetPointerFromObject (object obj)
+		{
+			return null;
+		}
+
 		public unsafe static void DumpTypeDef (AssemblyMetadata assembly, TypeDefRow row, int index)
 		{
 			Serial.Write (" ");
@@ -394,27 +511,166 @@ namespace SharpOS.Korlib.Runtime {
 
 		public static void __RunTests ()
 		{
+			__TestObjectConversion ();
 			__TestIsBaseClassOf ();
 		}
 
+		public static unsafe void __TestObjectConversion ()
+		{
+			TestA o1 = new TestA ();
+			bool result = false;
+			void *ptr = GetPointerFromObject (o1);
+			object o2;
+
+			o1.Member1 = 4;
+			o2 = GetObjectFromPointer (ptr);
+
+			Testcase.Test (o1 == o2, "Runtime",
+				"Object conversion ((o1 (to) pointer (back to) object) == o1)");
+			Testcase.Test (o1 == o2, "Runtime",
+				"Object conversion (round trip by-reference comparison)");
+			Testcase.Test (o1.Member1 == (o2 as TestA).Member1, "Runtime",
+				"Object conversion (member check)");
+
+			(o2 as TestA).Member1 = 6;
+
+			Testcase.Test (o1.Member1 == 6, "Runtime",
+				"Object conversion (modify member via second reference, member check)");
+
+			Free (o1);
+		}
 
 		public static void __TestIsBaseClassOf ()
 		{
 			object o1 = new TestA ();
 			object o2 = new TestB ();
-			InternalSystem.Object io1, io2;
+			object o3 = new TestC ();
+			object o4 = new TestD ();
+
+			InternalSystem.Object io1, io2, io3, io4;
 			uint ui = 1109;
 
 			io1 = o1 as InternalSystem.Object;
 			io2 = o2 as InternalSystem.Object;
+			io3 = o3 as InternalSystem.Object;
+			io4 = o4 as InternalSystem.Object;
 
 			Testcase.Test (Runtime.IsBaseClassOf (io2.VTable.Type, io1.VTable.Type),
-				"Runtime", "IsBaseClassOf where result should be true");
+				"Runtime", "IsBaseClassOf (new TestB (), new TestA ())");
 			Testcase.Test (Runtime.IsBaseClassOf (io1.VTable.Type, io2.VTable.Type) == false,
-				"Runtime", "IsBaseClassOf where result should be false");
+				"Runtime", "IsBaseClassOf (new TestA (), new TestB ()) should be false");
+			Testcase.Test (Runtime.IsBaseClassOf (io3.VTable.Type, io2.VTable.Type),
+				"Runtime", "IsBaseClassOf (new TestC (), new TestB ())");
+			Testcase.Test (Runtime.IsBaseClassOf (io3.VTable.Type, io1.VTable.Type),
+				"Runtime", "IsBaseClassOf (new TestC (), new TestA ())");
+			//Testcase.Test (Runtime.IsBaseClassOf (io4.VTable.Type, "System", "ValueType") == false,
+			//	"Runtime", "IsBaseClassOf (new TestD (), ('System.ValueType'))");
+		}
+
+		public static TypeDefRow GetType (TypeInfo type)
+		{
+			TokenType tokType;
+			uint rid;
+
+			MetadataToken.Decode (type.MetadataToken, out tokType, out rid);
+
+			return GetType (type.Assembly, tokType, rid);
+		}
+
+		public static bool IsValueType (TypeInfo type)
+		{
+			return IsBaseClassOf (type, "System", "ValueType");
+		}
+
+		public static VTable GetVTable (object obj)
+		{
+			return (obj as InternalSystem.Object).VTable;
+		}
+
+		public static TypeInfo GetTypeInfo (object obj)
+		{
+			return GetVTable (obj).Type;
+		}
+
+		public static TypeDefRow GetObjectType (object obj)
+		{
+			return GetType (GetTypeInfo (obj));
+		}
+
+		[SharpOS.AOT.Attributes.AllocObject]
+		internal static unsafe InternalSystem.Object AllocObject (VTable vtable)
+		{
+			// TODO add GC support here
+
+			/*TextMode.Write ("Alloc Object of Size: ");
+			TextMode.Write ((int) vtable.Size);
+			TextMode.Write (" Type: ");
+			TextMode.Write (vtable.Type.Name);
+			TextMode.WriteLine ();*/
+
+
+			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate (vtable.Size);
+
+			InternalSystem.Object _object = GetObjectFromPointer (result);
+			_object.VTable = vtable;
+
+			return _object;
+		}
+
+		[SharpOS.AOT.Attributes.AllocArray]
+		internal static unsafe InternalSystem.Object AllocArray (VTable vtable, int size)
+		{
+			// TODO add GC support here
+
+			/*TextMode.Write ("Alloc Object of Size: ");
+			TextMode.Write ((int) size);
+			TextMode.Write (" Type: ");
+			TextMode.Write (vtable.Type.Name);
+			TextMode.WriteLine ();*/
+
+			void* result = (void*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) size);
+
+			InternalSystem.Object _object = GetObjectFromPointer (result);
+			_object.VTable = vtable;
+
+			// TODO set the rank, rank data and initialize the data
+
+			/*InternalSystem.Array _array = _object as InternalSystem.Array;
+			_array.Rank = 1;
+			_array.FirstEntry.LowerBound = 0;
+			_array.FirstEntry.Length = count;*/
+
+			return _object;
+		}
+
+		public static unsafe bool IsBaseClassOf (TypeInfo type, string baseNS, string baseType)
+		{
+			CString8 *cBaseNS = CString8.Copy (baseNS);
+			CString8 *cBaseType = CString8.Copy (baseType);
+
+			return IsBaseClassOf (type, cBaseNS, cBaseType);
+		}
+
+		public static unsafe bool IsBaseClassOf (TypeInfo type, CString8 *baseNS, CString8 *baseType)
+		{
+			AssemblyMetadata assembly;
+			uint token;
+			TypeRefRow row;
+
+			row = GetTypeRef (type.Assembly, "System", "Object", out token);
+
+			Diagnostics.Assert (row == null,
+				"Runtime.IsBaseClassOf(): could not locate TypeRef");
+
+			return IsBaseClassOf (type.Assembly, type.MetadataToken, type.Assembly, token);
 		}
 
 		public static bool IsBaseClassOf (TypeInfo type, TypeInfo baseType)
+		{
+			return IsBaseClassOf (type.Assembly, type.MetadataToken, baseType.Assembly, baseType.MetadataToken);
+		}
+
+		public static unsafe bool IsBaseClassOf (AssemblyMetadata typeAsm, uint type, AssemblyMetadata baseAsm, uint baseType)
 		{
 			TokenType typeTokType, baseTokType, interimTokType;
 			uint typeRID, baseRID, interimRID;
@@ -423,16 +679,18 @@ namespace SharpOS.Korlib.Runtime {
 			bool result = false;
 			TypeDefRow lastInterimDef = null;
 
-			MetadataToken.Decode (type.MetadataToken, out typeTokType, out typeRID);
-			MetadataToken.Decode (baseType.MetadataToken, out baseTokType, out baseRID);
+			MetadataToken.Decode (type, out typeTokType, out typeRID);
+			MetadataToken.Decode (baseType, out baseTokType, out baseRID);
 
-			if (IsTypeSystemObject (baseType.Assembly, baseTokType, baseRID))
+			if (IsTypeSystemObject (baseAsm, baseTokType, baseRID))
 				return true;
 
-			typeDef = GetType (type.Assembly, typeTokType, typeRID);
-			baseDef = GetType (baseType.Assembly, baseTokType, baseRID);
+			// Do not assume that 'baseDef' is more than null!
+
+			typeDef = GetType (typeAsm, typeTokType, typeRID);
+			baseDef = GetType (baseAsm, baseTokType, baseRID);
 			interimDef = typeDef;
-			interimAssembly = type.Assembly;
+			interimAssembly = typeAsm;
 
 			MetadataToken.Decode (typeDef.Extends, out interimTokType, out interimRID);
 
@@ -447,6 +705,15 @@ namespace SharpOS.Korlib.Runtime {
 
 				lastInterimDef = interimDef;
 				interimDef = GetType (interimAssembly, interimTokType, interimRID, out interimAssembly);
+
+				// If baseDef is null, it's usually because of a TypeRef which pointed to an assembly that was not
+				// included when AOTing, the primary example of this is mscorlib. To handle this, we make sure
+				// that the involved tokens are TypeRefs, and if the interimRID == baseRID then we have reached
+				// the base type we want.
+
+				if (baseDef == interimDef == null && interimTokType == baseTokType == TokenType.TypeRef &&
+				    interimAssembly == baseAsm && baseRID == interimRID)
+					return true;
 
 				Diagnostics.Assert (interimDef != null,
 					"Runtime.IsBaseClassOf(): Failed to find TypeDef for the base class of a type");
