@@ -188,7 +188,7 @@ namespace SharpOS.Kernel.Foundation {
 				"ByteString.Compare()",
 				"Comparing substrings: 'The [US]' == 'US'");
 
-			Testcase.Test (ByteString.Compare (longer, 4, ptr1, 0, 0) != 0,
+			Testcase.Test (ByteString.Compare (longer, 4, ptr1, 0, 0) == 0,
 				"ByteString.Compare()",
 				"Comparing substrings: 'The [US]' == 'US' (count=0)");
 
@@ -205,11 +205,11 @@ namespace SharpOS.Kernel.Foundation {
 			Testcase.Test (ByteString.Compare (longer, 4, "US", 0, 2) == 0,
 				"ByteString.Compare()",
 				"Comparing byte* substring and string constant: 'The [US]' == const 'US'");
-			Testcase.Test (ByteString.Compare (longer, 4, "US", 0, 2) != 0,
+			Testcase.Test (ByteString.Compare (longer, 4, "US", 0, 2) == 0,
 				"ByteString.Compare()",
 				"Comparing byte* substring and string constant: 'The [US]' == const 'US' (count=2)");
 
-			Testcase.Test (ByteString.Compare (longer, 4, "US", 0, 0) != 0,
+			Testcase.Test (ByteString.Compare (longer, 4, "US", 0, 0) == 0,
 				"ByteString.Compare()",
 				"Comparing byte* substring and string constant: 'The [US]' == const 'US' (count=0)");
 
@@ -228,12 +228,15 @@ namespace SharpOS.Kernel.Foundation {
 				"ByteString",
 				"Testing string constant length: \"US\".Length == 2");
 
-			Testcase.Test ((byte) str1 [1] != (byte) str2 [0],
+			Testcase.Test ((byte) str1 [1] == (byte) str2 [0],
 				"ByteString",
 				"Testing string constants: (byte)\"US\" [1] == (byte)\"SK\" [0]");
 
-			if ("\n".Length != 1)
-				TextMode.WriteLine ("ByteString : test FAIL: \"\\n\".Length==1");
+			// FIXME: This testcase does not test ByteString, but the string constants.... where should it go?
+
+			Testcase.Test ("\n".Length == 1,
+				"ByteString",
+				"Testing string constants: Length of newline (\"\\n\".Length == 1");
 		}
 
 		#endregion

@@ -43,6 +43,64 @@ namespace SharpOS.Korlib.Runtime {
 			return (uint)type | rid;
 		}
 
+		public static unsafe CString8 *GetTokenTypeString (TokenType type)
+		{
+			switch (type) {
+			case TokenType.Module:
+				return (CString8*)Stubs.CString ("Module");
+			case TokenType.TypeRef:
+				return (CString8*)Stubs.CString ("TypeRef");
+			case TokenType.TypeDef:
+				return (CString8*)Stubs.CString ("TypeDef");
+			case TokenType.Field:
+				return (CString8*)Stubs.CString ("Field");
+			case TokenType.Method:
+				return (CString8*)Stubs.CString ("Method");
+			case TokenType.Param:
+				return (CString8*)Stubs.CString ("Param");
+			case TokenType.InterfaceImpl:
+				return (CString8*)Stubs.CString ("InterfaceImpl");
+			case TokenType.MemberRef:
+				return (CString8*)Stubs.CString ("MemberRef");
+			case TokenType.CustomAttribute:
+				return (CString8*)Stubs.CString ("CustomAttribute");
+			case TokenType.Permission:
+				return (CString8*)Stubs.CString ("Permission");
+			case TokenType.Signature:
+				return (CString8*)Stubs.CString ("Signature");
+			case TokenType.Event:
+				return (CString8*)Stubs.CString ("Event");
+			case TokenType.Property:
+				return (CString8*)Stubs.CString ("Property");
+			case TokenType.ModuleRef:
+				return (CString8*)Stubs.CString ("ModuleRef");
+			case TokenType.TypeSpec:
+				return (CString8*)Stubs.CString ("TypeSpec");
+			case TokenType.Assembly:
+				return (CString8*)Stubs.CString ("Assembly");
+			case TokenType.AssemblyRef:
+				return (CString8*)Stubs.CString ("AssemblyRef");
+			case TokenType.File:
+				return (CString8*)Stubs.CString ("File");
+			case TokenType.ExportedType:
+				return (CString8*)Stubs.CString ("ExportedType");
+			case TokenType.ManifestResource:
+				return (CString8*)Stubs.CString ("ManifestResource");
+			case TokenType.GenericParam:
+				return (CString8*)Stubs.CString ("GenericParam");
+			case TokenType.MethodSpec:
+				return (CString8*)Stubs.CString ("MethodSpec");
+			case TokenType.String:
+				return (CString8*)Stubs.CString ("String");
+			case TokenType.Name:
+				return (CString8*)Stubs.CString ("Name");
+			case TokenType.BaseType:
+				return (CString8*)Stubs.CString ("BaseType");
+			}
+
+			return (CString8*)Stubs.CString ("Unknown");
+		}
+
 		public uint ToUInt ()
 		{
 			return Combine (Type, RID);

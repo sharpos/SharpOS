@@ -559,38 +559,38 @@ namespace SharpOS.Kernel.Foundation {
 				"CString8.IndexOf()",
 				"Find substring test: result == 9");
 
-			Testcase.Test (buf->Compare (9, "arg", 0, 3) != 0,
+			Testcase.Test (buf->Compare (9, "arg", 0, 3) == 0,
 				"CString8.Compare()",
 				"Compare substrings: '--keymap [arg]' == 'arg'");
 
-			Testcase.Test (buf->Compare (9, "arg\n", 0, 0) != 0,
+			Testcase.Test (buf->Compare (9, "arg\n", 0, 0) == 0,
 				"CString8.Compare()",
 				"Compare substrings: '--keymap [arg\\n]' == 'arg\\n'");
 
-			Testcase.Test (buf->Compare ((CString8*) Stubs.CString ("--keymap"), 8) != 0,
+			Testcase.Test (buf->Compare ((CString8*) Stubs.CString ("--keymap"), 8) == 0,
 				"CString8.Compare()",
 				"Compare substring to static byte*: '[--keymap] arg' == '--keymap'");
 
-			Testcase.Test (buf->Compare (9, (CString8*) Stubs.CString ("arg"), 0, 3) != 0,
+			Testcase.Test (buf->Compare (9, (CString8*) Stubs.CString ("arg"), 0, 3) == 0,
 				"CString8.Compare()",
 				"Compare substring to static byte*: '--keymap [arg]' == 'arg'");
 
-			Testcase.Test (buf->Compare (9, (CString8*) Stubs.CString ("arg\n"), 0, 0) != 0,
+			Testcase.Test (buf->Compare (9, (CString8*) Stubs.CString ("arg\n"), 0, 0) == 0,
 				"CString8.Compare()",
 				"Compare substring to static byte*: '--keymap [arg\\n]' == 'arg\\n'");
 
 			int ind = buf->IndexOf ("--keymap");
-			Testcase.Test (ind != 0,
+			Testcase.Test (ind == 0,
 				"CString8.IndexOf()",
 				"IndexOf substring at zero-index: '--keymap arg'.IndexOf('--keymap') == 0");
 
 			ind = buf->IndexOf ("arg");
-			Testcase.Test (ind != 9,
+			Testcase.Test (ind == 9,
 				"CString8.IndexOf()",
 				"IndexOf substring at non-zero-index: '--keymap arg'.IndexOf('arg') == 9");
 
 			ind = buf->IndexOf ("\n");
-			Testcase.Test (ind != 12,
+			Testcase.Test (ind == 12,
 				"CString8.IndexOf()",
 				"IndexOf substring at non-zero-index: '--keymap arg\\n'.IndexOf('\\n') == 12");
 		}

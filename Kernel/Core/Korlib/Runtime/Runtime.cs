@@ -38,6 +38,11 @@ namespace SharpOS.Korlib.Runtime {
 		[AddressOf ("MetadataRoot")]
 		private static MetadataRoot Root;
 
+		public unsafe static AssemblyMetadata [] GetAssemblyMetadata ()
+		{
+			return Root.Assemblies;
+		}
+
 		public unsafe static CString8 *GetString (AssemblyMetadata assembly, uint str)
 		{
 			int length = 0;
@@ -364,6 +369,23 @@ namespace SharpOS.Korlib.Runtime {
 			return result;
 		}
 
+		public static unsafe TypeRefRow GetTypeRef (CString8 *ns, CString8 *name, out AssemblyMetadata assembly, out uint token)
+		{
+			assembly = null;
+			token = 0;
+
+			for (int x = 0; x < Root.Assemblies.Length; ++x) {
+				TypeRefRow result = GetTypeRef (Root.Assemblies [x], ns, name, out token);
+
+				if (result != null) {
+					assembly = Root.Assemblies [x];
+					return result;
+				}
+			}
+
+			return null;
+		}
+
 		public static unsafe TypeRefRow GetTypeRef (AssemblyMetadata assembly, string ns, string name, out uint token)
 		{
 			CString8 *cns, cname;
@@ -474,6 +496,21 @@ namespace SharpOS.Korlib.Runtime {
 			MemoryManager.Free (ns);
 		}
 
+		public unsafe static void PrintTypeName (AssemblyMetadata assembly, TypeRefRow type)
+		{
+			CString8 *name, ns;
+
+			name = GetString (assembly, type.Name);
+			ns = GetString (assembly, type.Namespace);
+
+			Serial.Write (ns);
+			Serial.Write (".");
+			Serial.Write (name);
+
+			MemoryManager.Free (name);
+			MemoryManager.Free (ns);
+		}
+
 
 		[SharpOS.AOT.Attributes.PointerToObject]
 		public unsafe static InternalSystem.Object GetObjectFromPointer (void* pointer)
@@ -540,6 +577,34 @@ namespace SharpOS.Korlib.Runtime {
 			Free (o1);
 		}
 
+		static bool HasValidMetadataToken (AssemblyMetadata assembly, uint token)
+		{
+			TokenType type;
+			uint rid;
+
+			MetadataToken.Decode (token, out type, out rid);
+
+			if (type != TokenType.TypeDef && type != TokenType.TypeRef)
+				return false;
+
+			if (type == TokenType.TypeDef && rid-1 >= assembly.TypeDef.Length)
+				return false;
+			else if (type == TokenType.TypeRef && rid-1 >= assembly.TypeRef.Length)
+				return false;
+
+			return true;
+		}
+
+		static bool IsValidAssemblyMetadata (AssemblyMetadata asm)
+		{
+			for (int x = 0; x < Root.Assemblies.Length; ++x) {
+				if (Root.Assemblies [x] == asm)
+					return true;
+			}
+
+			return false;
+		}
+
 		public static void __TestIsBaseClassOf ()
 		{
 			object o1 = new TestA ();
@@ -554,6 +619,60 @@ namespace SharpOS.Korlib.Runtime {
 			io2 = o2 as InternalSystem.Object;
 			io3 = o3 as InternalSystem.Object;
 			io4 = o4 as InternalSystem.Object;
+
+			Testcase.Test (io1.VTable != null,
+				"Runtime", "InternalObject.VTable should never be null (ref io1)");
+			Testcase.Test (io2.VTable != null,
+				"Runtime", "InternalObject.VTable should never be null (ref io2)");
+			Testcase.Test (io3.VTable != null,
+				"Runtime", "InternalObject.VTable should never be null (ref io3)");
+			Testcase.Test (io4.VTable != null,
+				"Runtime", "InternalObject.VTable should never be null (valuetype io4)");
+
+			Testcase.Test (io1.VTable.Type != null,
+				"Runtime", "InternalObject.VTable.Type should never be null (ref io1)");
+			Testcase.Test (io2.VTable.Type != null,
+				"Runtime", "InternalObject.VTable.Type should never be null (ref io2)");
+			Testcase.Test (io3.VTable.Type != null,
+				"Runtime", "InternalObject.VTable.Type should never be null (ref io3)");
+			Testcase.Test (io4.VTable.Type != null,
+				"Runtime", "InternalObject.VTable.Type should never be null (valuetype io4)");
+
+			Testcase.Test (io1.VTable.Type.Assembly != null,
+				"Runtime", "InternalObject.VTable.Type.Assembly should never be null (ref io1)");
+			Testcase.Test (io2.VTable.Type.Assembly != null,
+				"Runtime", "InternalObject.VTable.Type.Assembly should never be null (ref io2)");
+			Testcase.Test (io3.VTable.Type.Assembly != null,
+				"Runtime", "InternalObject.VTable.Type.Assembly should never be null (ref io3)");
+			Testcase.Test (io4.VTable.Type.Assembly != null,
+				"Runtime", "InternalObject.VTable.Type.Assembly should never be null (valuetype io4)");
+
+			Testcase.Test (IsValidAssemblyMetadata (io1.VTable.Type.Assembly),
+				"Runtime", "InternalObject.VTable.Type.Assembly is listed in the metadata root (ref io1)");
+			Testcase.Test (IsValidAssemblyMetadata (io2.VTable.Type.Assembly),
+				"Runtime", "InternalObject.VTable.Type.Assembly is listed in the metadata root (ref io2)");
+			Testcase.Test (IsValidAssemblyMetadata (io3.VTable.Type.Assembly),
+				"Runtime", "InternalObject.VTable.Type.Assembly is listed in the metadata root (ref io3)");
+			Testcase.Test (IsValidAssemblyMetadata (io4.VTable.Type.Assembly),
+				"Runtime", "InternalObject.VTable.Type.Assembly is listed in the metadata root (valuetype io4)");
+
+			Testcase.Test (io1.VTable.Type.MetadataToken != 0,
+				"Runtime", "InternalObject.VTable.Type.MetadataToken should never be 0x0 (ref io1)");
+			Testcase.Test (io2.VTable.Type.MetadataToken != 0,
+				"Runtime", "InternalObject.VTable.Type.MetadataToken should never be 0x0 (ref io2)");
+			Testcase.Test (io3.VTable.Type.MetadataToken != 0,
+				"Runtime", "InternalObject.VTable.Type.MetadataToken should never be 0x0 (ref io3)");
+			Testcase.Test (io4.VTable.Type.MetadataToken != 0,
+				"Runtime", "InternalObject.VTable.Type.MetadataToken should never be 0x0 (valuetype io4)");
+
+			Testcase.Test (HasValidMetadataToken (io1.VTable.Type.Assembly, io1.VTable.Type.MetadataToken),
+				"Runtime", "InternalObject.VTable.Type has valid metadata token (ref io1)");
+			Testcase.Test (HasValidMetadataToken (io2.VTable.Type.Assembly, io2.VTable.Type.MetadataToken),
+				"Runtime", "InternalObject.VTable.Type has valid metadata token (ref io2)");
+			Testcase.Test (HasValidMetadataToken (io3.VTable.Type.Assembly, io3.VTable.Type.MetadataToken),
+				"Runtime", "InternalObject.VTable.Type has valid metadata token (ref io3)");
+			Testcase.Test (HasValidMetadataToken (io4.VTable.Type.Assembly, io4.VTable.Type.MetadataToken),
+				"Runtime", "InternalObject.VTable.Type has valid metadata token (valuetype io4)");
 
 			Testcase.Test (Runtime.IsBaseClassOf (io2.VTable.Type, io1.VTable.Type),
 				"Runtime", "IsBaseClassOf (new TestB (), new TestA ())");
@@ -654,15 +773,25 @@ namespace SharpOS.Korlib.Runtime {
 		public static unsafe bool IsBaseClassOf (TypeInfo type, CString8 *baseNS, CString8 *baseType)
 		{
 			AssemblyMetadata assembly;
+			AssemblyMetadata baseAsm;
 			uint token;
 			TypeRefRow row;
+			TypeDefRow def;
 
-			row = GetTypeRef (type.Assembly, "System", "Object", out token);
+			row = GetTypeRef (baseNS, baseType, out baseAsm, out token);
 
-			Diagnostics.Assert (row == null,
-				"Runtime.IsBaseClassOf(): could not locate TypeRef");
+			if (row != null) {
+				return IsBaseClassOf (type.Assembly, type.MetadataToken, baseAsm, token);
+			} else {
+				def = GetType (baseNS, baseType, out baseAsm, out token);
 
-			return IsBaseClassOf (type.Assembly, type.MetadataToken, type.Assembly, token);
+				Diagnostics.Assert (def != null,
+					"Runtime.IsBaseClasOf(): couldn't find TypeRef/Def for named type");
+
+				return IsBaseClassOf (type.Assembly, type.MetadataToken, baseAsm, token);
+			}
+
+			return false;
 		}
 
 		public static bool IsBaseClassOf (TypeInfo type, TypeInfo baseType)
@@ -678,6 +807,7 @@ namespace SharpOS.Korlib.Runtime {
 			AssemblyMetadata interimAssembly;
 			bool result = false;
 			TypeDefRow lastInterimDef = null;
+
 
 			MetadataToken.Decode (type, out typeTokType, out typeRID);
 			MetadataToken.Decode (baseType, out baseTokType, out baseRID);
@@ -711,8 +841,8 @@ namespace SharpOS.Korlib.Runtime {
 				// that the involved tokens are TypeRefs, and if the interimRID == baseRID then we have reached
 				// the base type we want.
 
-				if (baseDef == interimDef == null && interimTokType == baseTokType == TokenType.TypeRef &&
-				    interimAssembly == baseAsm && baseRID == interimRID)
+				if (baseDef == null && interimDef == null && interimTokType == TokenType.TypeRef &&
+				    baseTokType == TokenType.TypeRef && interimAssembly == baseAsm && baseRID == interimRID)
 					return true;
 
 				Diagnostics.Assert (interimDef != null,

@@ -1339,6 +1339,10 @@ namespace SharpOS.AOT.X86 {
 
 			this.AddObjectFields (this.engine.VTableClass.TypeFullName);
 
+			if (_class.ClassDefinition.Name == "TestD") {
+				Console.WriteLine ("vtable.type -> {0}", typeInfoLabel);
+			}
+
 			// Type Info Field
 			this.ADDRESSOF (typeInfoLabel);
 
@@ -1426,8 +1430,8 @@ namespace SharpOS.AOT.X86 {
 				// Type Info AssemblyMetadata
 				this.ADDRESSOF (_class.ClassDefinition.Module.Assembly.Name + " MetadataRoot");
 
-				if (_class.ClassDefinition.Name == "TestA")
-					Console.WriteLine ("TestA ******: {0}",
+				if (_class.ClassDefinition.Name == "TestD")
+					Console.WriteLine ("TestD ******: {0}",
 						_class.ClassDefinition.MetadataToken.ToUInt ().ToString ("x"));
 
 				// Type Info Metadata token
