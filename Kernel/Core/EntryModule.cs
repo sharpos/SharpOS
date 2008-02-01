@@ -107,6 +107,9 @@ namespace SharpOS.Kernel {
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
 
+			StageMessage("Scheduler setup...");
+			Scheduler.Setup();
+
 			StageMessage ("Device setup...");
 			ADC.Architecture.DeviceManager.Setup ();
 
@@ -127,10 +130,7 @@ namespace SharpOS.Kernel {
 
 			//StageMessage("Floppy Disk Controller setup...");
 			//FloppyDiskController.Setup();
-
-			StageMessage("Scheduler setup...");
-			Scheduler.Setup();
-
+			
 			//StageMessage("Ext2FS FileSystem setup...");
 			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
 
@@ -156,7 +156,7 @@ namespace SharpOS.Kernel {
 			Runtime.__RunTests ();
 #endif
 
-			Multiboot.WriteMultibootInfo();
+			//Multiboot.WriteMultibootInfo();
 
 			StageMessage ("Shell setup...");
 			SharpOS.Kernel.Shell.Prompter.Setup ();

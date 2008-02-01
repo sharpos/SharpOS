@@ -14,6 +14,7 @@ using SharpOS.AOT.IR;
 
 namespace SharpOS.Kernel.ADC.X86 {
 	public static unsafe class Scheduler {
+		
 		// Sigh.. we really need to get vtables & memory management working...
 		private static IDT.ISRData* ThreadMemory = (IDT.ISRData*) Stubs.StaticAlloc ((uint) (/*sizeof(IDT.ISRData)*/(19 * 4) * EntryModule.MaxThreads));
 		private static bool* ThreadMemoryUsed = (bool*) Stubs.StaticAlloc (1 * EntryModule.MaxThreads);
@@ -27,6 +28,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		public static unsafe void* CreateThread (uint function_address)
 		{
 			for (int i = 0; i < EntryModule.MaxThreads; i++) {
+				
 				if (ThreadMemoryUsed [i] == false) {
 					ThreadMemoryUsed [i] = true;
 
