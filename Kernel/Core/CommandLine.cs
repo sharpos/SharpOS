@@ -16,12 +16,13 @@ using SharpOS.Kernel.Foundation;
 
 namespace SharpOS.Kernel {
 	public unsafe class CommandLine {
-		public static void Setup (Multiboot.Info* mbInfo)
+		public static void Setup ()
 		{
-			if ((mbInfo->Flags & (1 << 2)) != 0) {
-				commandLine = (CString8*) mbInfo->CmdLine;
+			commandLine = Multiboot.CommandLine;
+			if (commandLine == null)
+				length = 0;
+			else
 				length = commandLine->Length;
-			}
 		}
 
 		static CString8* commandLine = null;

@@ -19,37 +19,56 @@ namespace SharpOS.Kernel.ADC {
 			Diagnostics.Error ("Unimplemented - Setup");
 		}
 
+		[AOTAttr.ADCStub]
+		public static unsafe void* CreateThread (uint address)
+		{
+			Diagnostics.Error ("Unimplemented - CreateThread");
+			return null;
+		}
+
 		private static int position = -1;
 		private static void** ThreadScheduled = (void**) Stubs.StaticAlloc ((uint) (4 * EntryModule.MaxThreads));
 
 		public static void DumpThreads ()
 		{
 			Barrier.Enter();
-			for (int i = 0; i < EntryModule.MaxThreads; i++) {
-				if (ThreadScheduled [i] == null)
-					continue;
+			try
+			{
+				for (int i = 0; i < EntryModule.MaxThreads; i++)
+				{
+					if (ThreadScheduled[i] == null)
+						continue;
 
-				TextMode.Write ("Thread");
-				TextMode.Write (i);
-				TextMode.WriteLine ();
+					TextMode.Write("Thread");
+					TextMode.Write(i);
+					TextMode.WriteLine();
+				}
+				TextMode.WriteLine();
 			}
-			TextMode.WriteLine ();
-			Barrier.Exit();
+			finally
+			{
+				Barrier.Exit();
+			}
 		}
 
 		public static bool ScheduleThread (void* newThread)
 		{
 			Barrier.Enter();
-			for (int i = 0; i < EntryModule.MaxThreads; i++) {
-				if (ThreadScheduled [i] != null)
-					continue;
+			try
+			{
+				for (int i = 0; i < EntryModule.MaxThreads; i++)
+				{
+					if (ThreadScheduled[i] != null)
+						continue;
 
-				ThreadScheduled [i] = newThread;
-
-				Barrier.Exit();
-				return true;
+					ThreadScheduled[i] = newThread;
+					return true;
+				}
 			}
-			Barrier.Exit();
+			finally
+			{
+				Barrier.Exit();
+			}
 			return false;
 		}
 
@@ -74,13 +93,6 @@ namespace SharpOS.Kernel.ADC {
 			}
 
 			return currentThread;
-		}
-
-		[AOTAttr.ADCStub]
-		public static unsafe void* CreateThread (uint address)
-		{
-			Diagnostics.Error ("Unimplemented - CreateThread");
-			return null;
 		}
 	}
 }

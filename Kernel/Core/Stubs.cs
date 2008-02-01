@@ -73,7 +73,7 @@ namespace SharpOS.Kernel {
 		}
 
 		[SharpOS.AOT.Attributes.ObjectToPointer]
-		public unsafe static void *GetObjectFromPointer (object obj)
+		public unsafe static void *GetPointerFromObject (object obj)
 		{
 			return null;
 		}

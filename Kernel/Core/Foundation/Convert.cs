@@ -106,7 +106,7 @@ namespace SharpOS.Kernel.Foundation {
 			uint temp;
 			bool negative = false;
 
-			if (value < 0) {
+			if (value < 0 && !hex) {
 				count++;
 				uvalue = (uint) -value;
 				negative = true;

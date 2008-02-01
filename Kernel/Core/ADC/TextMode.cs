@@ -321,6 +321,25 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		/// <summary>
+		/// Writes an Int32 to the screen, either in decimal or
+		/// hexadecimal format.
+		/// </summary>
+		public unsafe static void Write (int value, bool hex, int minSize)
+		{
+			byte* buffer = stackalloc byte [32];
+			int length;
+
+			length = Convert.ToString (value, hex, buffer, 32, 0);
+
+			if (length < minSize)
+				for (int x = 0; x < minSize - length; ++x)
+					WriteChar ((byte)('0'));
+
+			for (int x = 0; x < length; ++x)
+				WriteChar (buffer [x]);
+		}
+
+		/// <summary>
 		/// Writes an bool to the screen
 		/// <param name="value">boolean value to write</param>
 		/// </summary>

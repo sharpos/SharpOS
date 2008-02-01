@@ -26,7 +26,6 @@ namespace SharpOS.Kernel {
 
 		static bool stayInLoop = true;
 		static KernelStage kernelStage = KernelStage.Init;
-		static Multiboot.Info* multibootInfo = null;
 
 		// [SharpOS.AOT.Attributes.AddressOf ("SharpOS.Kernel.dll AssemblyRow#0")]
 		// static AssemblyRow assemblyRow;
@@ -89,19 +88,21 @@ namespace SharpOS.Kernel {
 			// Write the banner
 			DisplayBanner ();
 
-			StageMessage ("Multiboot setup...");
-			Multiboot.Info* multibootInfo = Multiboot.LoadMultibootInfo (magic, pointer, kernelStart, kernelEnd);
-			if (multibootInfo == null) {
+			StageMessage ("Multiboot setup...");			
+			if (!Multiboot.Setup (magic, pointer, kernelStart, kernelEnd))
+			{
 				StageError ("Error: multiboot loader required!");
 				return;
 			}
-
+			
 			StageMessage ("Commandline setup...");
-			CommandLine.Setup (multibootInfo);
+			CommandLine.Setup ();
 
 			StageMessage ("PageAllocator setup...");
-			PageAllocator.Setup ((byte*) kernelStart, kernelEnd - kernelStart,
-				multibootInfo->MemUpper + 1000);
+			PageAllocator.Setup (
+				Multiboot.KernelAddress, 
+				Multiboot.KernelSize,
+				Multiboot.UpperMemorySize + 1000);
 
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
@@ -111,9 +112,9 @@ namespace SharpOS.Kernel {
 
 			StageMessage ("Clock setup...");
 			Clock.Setup ();
-
-			StageMessage ("PCIController setup...");
-			PCIController.Setup ();
+		
+			//StageMessage ("Serial setup...");
+			//Serial.Setup ();	// .. is also setup in Architecture?
 
 			StageMessage ("Keymap setup...");
 			KeyMap.Setup ();
@@ -121,20 +122,20 @@ namespace SharpOS.Kernel {
 			StageMessage ("Keyboard setup...");
 			Keyboard.Setup ();
 
+			StageMessage ("PCIController setup...");
+			PCIController.Setup ();
+
 			//StageMessage("Floppy Disk Controller setup...");
 			//FloppyDiskController.Setup();
 
 			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
 
-			StageMessage ("Serial setup...");
-			Serial.Setup ();
+			//StageMessage("Ext2FS FileSystem setup...");
+			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
 
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();
-
-			//StageMessage("Ext2FS FileSystem setup...");
-			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
 
 			TextMode.SaveAttributes ();
 			TextMode.SetAttributes (TextColor.LightGreen, TextColor.Black);
@@ -154,6 +155,8 @@ namespace SharpOS.Kernel {
 			InternalSystem.String.__RunTests ();
 			Runtime.__RunTests ();
 #endif
+
+			Multiboot.WriteMultibootInfo();
 
 			StageMessage ("Shell setup...");
 			SharpOS.Kernel.Shell.Prompter.Setup ();
