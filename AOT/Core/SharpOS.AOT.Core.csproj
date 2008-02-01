@@ -93,6 +93,7 @@
     <Compile Include="Attributes\ITableAttribute.cs" />
     <Compile Include="Attributes\NakedAttribute.cs" />
     <Compile Include="Attributes\IncludeAttribute.cs" />
+    <Compile Include="Attributes\ObjectToPointerAttribute.cs" />
     <Compile Include="Attributes\TypeInfoAttribute.cs" />
     <Compile Include="Attributes\KernelMainAttribute.cs" />
     <Compile Include="Attributes\LabelAddressAttribute.cs" />
