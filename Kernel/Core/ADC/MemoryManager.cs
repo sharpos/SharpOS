@@ -47,6 +47,7 @@ namespace SharpOS.Kernel.ADC {
 
 		public static unsafe void* Allocate (uint allocate_size)
 		{
+			Kernel.Diagnostics.Assert (firstNode != null, "MemoryManager.Allocate(uint): Unable to allocate because the MemoryManager has not been initialized");
 			Header* currentNode = firstNode;
 
 			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
