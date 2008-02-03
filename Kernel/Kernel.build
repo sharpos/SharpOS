@@ -16,6 +16,7 @@
 	<property name="disk-images-dir" value="${path::combine(data-dir, 'DiskImages')}" />
 	<property name="distro-dir" value="${path::combine(prefix, 'distro')}" />
 	<property name="common-dir" value="${path::combine(distro-dir, 'common')}" />
+	<property name="vpc-dir" value="${path::combine(distro-dir, 'virtualpc')}" />
 	<property name="qemu-dir" value="${path::combine(distro-dir, 'qemu')}" />
 	<property name="qemu-bin" value="${path::combine(qemu-dir, 'qemu.exe')}" />
 
@@ -34,11 +35,12 @@
 		<exec program="${path::combine(prefix, 'sharpos-aot.exe')}" 
 			commandline="-v -c:${arch} ${aot-options} ${path::combine(prefix, 'SharpOS.Kernel.dll')}" />
 			
-		<echo message="Update the disk image..." />
+		<echo message="Update the disk image and create virtual hard disk..." />
 		<delete file="${path::combine(common-dir,'SharpOS.img')}" failonerror="false" />
+		<delete file="${path::combine(vpc-dir,'hd1.vhd')}" failonerror="false" />
 		<copy file="${path::combine(disk-images-dir, 'TemplateDisk.img')}" tofile="${path::combine(common-dir, 'SharpOS.img')}" overwrite="true" />
 		<exec program="${path::combine(prefix, 'disk-image-updater.exe')}"
-			commandline="-m -i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
+			commandline="-m -i ${path::combine(prefix, 'SharpOS.Kernel.bin')} -o ${path::combine(common-dir, 'SharpOS.img')} -vhd ${path::combine(vpc-dir, 'hd1.vhd')}" />
 	</target>
 
 	<target name="aot-test">
