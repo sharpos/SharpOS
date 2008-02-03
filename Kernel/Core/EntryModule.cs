@@ -95,6 +95,9 @@ namespace SharpOS.Kernel {
 				return;
 			}
 			
+			kernelStartLoc = (void*)kernelStart;
+			kernelEndLoc = (void*)kernelEnd;
+
 			StageMessage ("Commandline setup...");
 			CommandLine.Setup ();
 
@@ -146,12 +149,15 @@ namespace SharpOS.Kernel {
 
 #if KERNEL_TESTS
 			// Testcases
-			TextMode.WriteLine ("Run tests");
+			Serial.WriteLine ("Failed AOT Tests:");
+			SharpOS.Kernel.Tests.Wrapper.Run ();
+			Serial.WriteLine ();
+			Serial.WriteLine ("Kernel Tests:");
+			MemoryManager.__RunTests ();
 			ByteString.__RunTests ();
 			StringBuilder.__RunTests ();
 			CString8.__RunTests ();
 			PString8.__RunTests ();
-			SharpOS.Kernel.Tests.Wrapper.Run ();
 			InternalSystem.String.__RunTests ();
 			Runtime.__RunTests ();
 #endif
@@ -194,6 +200,15 @@ namespace SharpOS.Kernel {
 
 		#endregion
 		#region Kernel properties
+
+		static void *kernelStartLoc = null;
+		static void *kernelEndLoc = null;
+
+		public unsafe static void GetKernelLocation (out void *start, out void *end)
+		{
+			start = kernelStartLoc;
+			end = kernelEndLoc;
+		}
 
 		/// <summary>
 		/// Sets the operational stage reported by the kernel.
