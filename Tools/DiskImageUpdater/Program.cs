@@ -14,8 +14,9 @@ using System.Text;
 using System.IO;
 using System.Runtime.InteropServices;
 using Mono.GetOptions;
+using Ext2;
 
-namespace Ext2 {
+namespace DiskImageUpdater {
 	public class UpdaterOptions : Options {
 		public UpdaterOptions (string [] args)
 			:
@@ -32,6 +33,9 @@ namespace Ext2 {
 
 		[Option ("Has MBR", 'm', "has-mbr")]
 		public bool HasMBR = false;
+
+		[Option ("Create a MS Virtual Hard Drive file", 'v', "vhd")]
+		public string OutputVHD = string.Empty;
 	}
 
 	class Program {
@@ -66,6 +70,19 @@ namespace Ext2 {
 				} catch (FileNotFoundException exception) {
 					Console.WriteLine (string.Format ("Could not find '{0}'.", exception.FileName));
 					return 1;
+				} catch (Exception exception) {
+					Console.WriteLine (exception.Message);
+					return 1;
+				}
+			}
+
+			if (opts.OutputVHD!=string.Empty)
+			{
+				try {
+					MsVhd.CreateFromImage (opts.DiskImg, opts.OutputVHD);
+
+					Console.WriteLine (string.Format ("'{0}' virtual disk has been created.", opts.OutputVHD));
+
 				} catch (Exception exception) {
 					Console.WriteLine (exception.Message);
 					return 1;
