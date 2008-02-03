@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -24,7 +24,7 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
 	/// <summary>
-	/// 
+	///
 	/// </summary>
 	public class Class : IEnumerable<Method> {
 		/// <summary>
@@ -87,15 +87,14 @@ namespace SharpOS.AOT.IR {
 						this.isClass = true;
 
 						this.internalType = Operands.InternalType.O;
-					}
-					
-					if (typeDefinition.IsInterface) {
+					} else if (typeDefinition.IsInterface) {
 						this.isInterface = true;
+						this.internalType = Operands.InternalType.O;
 					}
 
 					if (this.TypeFullName != Mono.Cecil.Constants.Object && !this.isInterface)
 						this._base = this.engine.GetClass (typeDefinition.BaseType);
-					
+
 					// initialize base class before marking virtual methods
 					if (this._base != null)
 						this._base.Setup (step);
@@ -249,7 +248,7 @@ namespace SharpOS.AOT.IR {
 				return isInterface;
 			}
 		}
-		
+
 		private bool hasExplicitLayout = false;
 
 		/// <summary>
@@ -479,7 +478,7 @@ namespace SharpOS.AOT.IR {
 				foreach (CustomAttribute attribute in typeDefinition.CustomAttributes) {
 					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
 						continue;
-					
+
 					return attribute.ConstructorParameters [0].ToString () + "." + type.Name;
 				}
 			} else if (type is FieldReference) {
@@ -488,7 +487,7 @@ namespace SharpOS.AOT.IR {
 				foreach (CustomAttribute attribute in typeDefinition.DeclaringType.CustomAttributes) {
 					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
 						continue;
-					
+
 					return attribute.ConstructorParameters [0].ToString () + "." + type.DeclaringType.Name;
 				}
 
@@ -645,7 +644,7 @@ namespace SharpOS.AOT.IR {
 					throw new NotImplementedEngineException ();
 
 				this.size = result;
-				
+
 				return result;
 			}
 		}
@@ -710,12 +709,12 @@ namespace SharpOS.AOT.IR {
 
 			if (interfaceMethodsEntries [key] == null)
 				interfaceMethodsEntries [key] = new List<Method> ();
-	
+
 			interfaceMethodsEntries[key].Add (method);
 		}
-		
+
 		/// <summary>
-		/// Marks all methods with correct IMT numbers if they are interface implementation 
+		/// Marks all methods with correct IMT numbers if they are interface implementation
 		/// </summary>
 		/// <returns></returns>
 		private void MarkInterfaceMethods ()
