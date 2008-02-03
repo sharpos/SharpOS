@@ -546,8 +546,52 @@ namespace SharpOS.Korlib.Runtime {
 			Serial.WriteLine ();
 		}
 
-		public static void __RunTests ()
+		[AddressOf ("SharpOS.Korlib.Runtime.TestD TypeInfo")]
+		public static TypeInfo testd;
+
+		[AddressOf ("SharpOS.Korlib.Runtime.TestD VTable")]
+		public static VTable testdvt;
+
+		public unsafe static void __RunTests ()
 		{
+			byte *kernelStart, kernelEnd;
+			byte *ptr;
+
+			{
+				void *ks, ke;
+
+				EntryModule.GetKernelLocation (out ks, out ke);
+
+				kernelStart = (byte*) ks;
+				kernelEnd = (byte*) ke;
+			}
+
+			ptr = (byte*)GetPointerFromObject (testdvt);
+
+			if (testd.Assembly == null)
+				Serial.WriteLine ("*** testd.Assembly == null");
+			else
+				Serial.WriteLine ("*** testd.Assembly != null");
+
+			if (testd.MetadataToken == 0)
+				Serial.WriteLine ("*** testd.MetadataToken == 0");
+			else
+				Serial.WriteLine ("*** testd.MetadataToken != 0");
+
+			if (HasValidMetadataToken (testd.Assembly, testd.MetadataToken))
+				Serial.WriteLine ("*** testd.MetadataToken is valid");
+			else
+				Serial.WriteLine ("*** testd.MetadataToken is NOT valid");
+
+			if (testdvt.Type == testd)
+				Serial.WriteLine ("*** testdvt.Type == testd");
+			else
+				Serial.WriteLine ("*** testdvt.Type != testd");
+
+			if (ptr >= kernelEnd)
+				Serial.WriteLine ("ERROR");
+			else
+				Serial.WriteLine ("Location OK");
 			__TestObjectConversion ();
 			__TestIsBaseClassOf ();
 		}
@@ -619,6 +663,11 @@ namespace SharpOS.Korlib.Runtime {
 			io2 = o2 as InternalSystem.Object;
 			io3 = o3 as InternalSystem.Object;
 			io4 = o4 as InternalSystem.Object;
+
+			Testcase.Test (testdvt == io4.VTable,
+				"Runtime", "Bad pointer in object for VTable (valuetype");
+			Testcase.Test (testdvt.Type == io4.VTable.Type,
+				"Runtime", "Bad pointer in vtable for TypeInfo (valuetype");
 
 			Testcase.Test (io1.VTable != null,
 				"Runtime", "InternalObject.VTable should never be null (ref io1)");
