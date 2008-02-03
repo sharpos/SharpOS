@@ -21,6 +21,9 @@ using Mono.Cecil.Metadata;
 
 
 namespace SharpOS.AOT.IR {
+	/// <summary>
+	/// 
+	/// </summary>
 	public interface IAssembly {
 		/// <summary>
 		/// Encodes the specified engine.

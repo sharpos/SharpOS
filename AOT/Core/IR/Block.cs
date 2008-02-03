@@ -277,7 +277,7 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		bool isTryEnd = false;
+		bool isTryLast = false;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is try end.
@@ -285,15 +285,15 @@ namespace SharpOS.AOT.IR {
 		/// <value>
 		/// 	<c>true</c> if this instance is try end; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsTryEnd
+		public bool IsTryLast
 		{
 			get
 			{
-				return isTryEnd;
+				return isTryLast;
 			}
 			set
 			{
-				isTryEnd = value;
+				isTryLast = value;
 			}
 		}
 
@@ -317,7 +317,7 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		bool isFilterEnd = false;
+		bool isFilterLast = false;
 
 		/// <summary>
 		/// Gets or sets a value indicating whether this instance is filter end.
@@ -325,15 +325,15 @@ namespace SharpOS.AOT.IR {
 		/// <value>
 		/// 	<c>true</c> if this instance is filter end; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsFilterEnd
+		public bool IsFilterLast
 		{
 			get
 			{
-				return isFilterEnd;
+				return isFilterLast;
 			}
 			set
 			{
-				isFilterEnd = value;
+				isFilterLast = value;
 			}
 		}
 

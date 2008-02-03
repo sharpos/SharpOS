@@ -2354,7 +2354,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 			string typeName = instruction.Type.ToString ();
-			uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
+			uint size = (uint) this.method.Engine.GetTypeSize (typeName);
 
 			this.assembly.PUSH (R32.ECX);
 			this.assembly.PUSH (R32.EDI);
@@ -2370,7 +2370,7 @@ namespace SharpOS.AOT.X86 {
 
 			this.assembly.CLD ();
 			this.assembly.REP ();
-			this.assembly.STOSD ();
+			this.assembly.STOSB ();
 
 			this.assembly.POP (R32.EDI);
 			this.assembly.POP (R32.ECX);
@@ -2894,7 +2894,7 @@ namespace SharpOS.AOT.X86 {
 
 		private void Leave (IR.Instructions.Leave instruction)
 		{
-			if (instruction.Block.IsTryEnd)
+			if (instruction.Block.IsTryLast)
 				this.assembly.CALL (this.GetLabel (instruction.Block.Outs [1]));
 
 			this.assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));

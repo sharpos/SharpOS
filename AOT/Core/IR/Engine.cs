@@ -242,6 +242,34 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		Class methodBoundaryClass = null;
+
+		/// <summary>
+		/// Gets the method boundary class.
+		/// </summary>
+		/// <value>The method boundary class.</value>
+		public Class MethodBoundaryClass
+		{
+			get
+			{
+				return this.methodBoundaryClass;
+			}
+		}
+
+		Class exceptionHandlingClauseClass = null;
+
+		/// <summary>
+		/// Gets the exception handling clause.
+		/// </summary>
+		/// <value>The exception handling clause.</value>
+		public Class ExceptionHandlingClauseClass
+		{
+			get
+			{
+				return this.exceptionHandlingClauseClass;
+			}
+		}
+
 		Class vtableClass = null;
 
 		/// <summary>
@@ -1029,6 +1057,7 @@ namespace SharpOS.AOT.IR {
 							throw new EngineException ("More than one class was tagged as TypeInfo Class.");
 
 						this.typeInfoClass = _class;
+
 					} else if (customAttribute.Constructor.DeclaringType.FullName ==
 							typeof (SharpOS.AOT.Attributes.ITableAttribute).FullName) {
 
@@ -1036,6 +1065,22 @@ namespace SharpOS.AOT.IR {
 							throw new EngineException ("More than one class was tagged as ITable Class.");
 
 						this.itableClass = _class;
+
+					} else if (customAttribute.Constructor.DeclaringType.FullName ==
+							typeof (SharpOS.AOT.Attributes.MethodBoundaryAttribute).FullName) {
+
+						if (this.methodBoundaryClass != null)
+							throw new EngineException ("More than one class was tagged as MethodBoundary Class.");
+
+						this.methodBoundaryClass = _class;
+
+					} else if (customAttribute.Constructor.DeclaringType.FullName ==
+							typeof (SharpOS.AOT.Attributes.ExceptionHandlingClauseAttribute).FullName) {
+
+						if (this.exceptionHandlingClauseClass != null)
+							throw new EngineException ("More than one class was tagged as ExceptionHandlingClause Class.");
+
+						this.exceptionHandlingClauseClass = _class;
 					}
 				}
 
@@ -1059,6 +1104,12 @@ namespace SharpOS.AOT.IR {
 
 			if (this.itableClass == null)
 				throw new EngineException ("No ITable Class defined.");
+
+			if (this.methodBoundaryClass == null)
+				throw new EngineException ("No MethodBoundary Class defined.");
+
+			if (this.exceptionHandlingClauseClass == null)
+				throw new EngineException ("No ExceptionHandlingClause Class defined.");
 
 			// This block of code needs the vtableClass to be set
 			foreach (Class _class in this.classes) {

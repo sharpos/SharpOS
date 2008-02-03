@@ -163,8 +163,10 @@
     <Compile Include="KernelStage.cs" />
     <Compile Include="KernelTestsWrapper.cs" />
     <Compile Include="KeyMap.cs" />
+    <Compile Include="Korlib\Runtime\ExceptionHandlingClause.cs" />
     <Compile Include="Korlib\Runtime\ITable.cs" />
     <Compile Include="Korlib\Runtime\MetadataToken.cs" />
+    <Compile Include="Korlib\Runtime\MethodBoundary.cs" />
     <Compile Include="Korlib\Runtime\Runtime.cs" />
     <Compile Include="Korlib\Runtime\TokenType.cs" />
     <Compile Include="Korlib\Runtime\TypeInfo.cs" />

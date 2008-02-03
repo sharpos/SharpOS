@@ -73,17 +73,27 @@ namespace SharpOS.AOT.X86 {
 		internal const string HELPER_LSAR = "LSAR";
 		internal const string HELPER_LMUL = "LMUL";
 
-		const string IMT_LABEL = "{0} IMTstub{1}";
-		const string IMT_RANGE_LABEL = "{0} IMTstub{1} {2}_{3}";
-
 		#region RUNTIME
-		const string ITABLE_LABEL = "{0} ITable";
-		const string VTABLE_LABEL = "{0} VTable";
-		const string TYPE_INFO_LABEL = "{0} TypeInfo";
+		internal const string IMT_LABEL = "{0} IMTstub{1}";
+		internal const string IMT_RANGE_LABEL = "{0} IMTstub{1} {2}_{3}";
+		internal const string ITABLE_LABEL = "{0} ITable";
+		internal const string VTABLE_LABEL = "{0} VTable";
+		internal const string TYPE_INFO_LABEL = "{0} TypeInfo";
+		internal const string EXCEPTION_HANDLING_CLAUSE_LABEL = "{0} ExceptionHandlingClause {1}";
+		internal const string EXCEPTION_HANDLING_CLAUSE_ARRAY_LABEL = "{0} ExceptionHandlingClause ARRAY";
+		internal const string METHOD_BLOCK_LABEL = "{0} {1}";
+		internal const string METHOD_BOUNDARIES = "MethodBoundaries";
+		internal const string METHOD_BOUNDARY_LABEL = "{0} MethodBoundary";
+		internal const string METHOD_BEGIN = "{0} MethodBegin";
+		internal const string METHOD_END = "{0} MethodEnd";
 		#endregion
 
 		Engine engine;
 
+		/// <summary>
+		/// Gets the engine.
+		/// </summary>
+		/// <value>The engine.</value>
 		public Engine Engine
 		{
 			get
@@ -1128,21 +1138,45 @@ namespace SharpOS.AOT.X86 {
 			return string.Format (VTABLE_LABEL, value);
 		}
 
+		/// <summary>
+		/// Gets the I table label.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public string GetITableLabel (string value)
 		{
 			return string.Format (ITABLE_LABEL, value);
 		}
 
+		/// <summary>
+		/// Gets the I table stub label.
+		/// </summary>
+		/// <param name="_class">The _class.</param>
+		/// <param name="key">The key.</param>
+		/// <returns></returns>
 		public string GetITableStubLabel (Class _class, int key)
 		{
 			return string.Format (IMT_LABEL, _class, key);
 		}
 
+		/// <summary>
+		/// Gets the I table stub part label.
+		/// </summary>
+		/// <param name="_class">The _class.</param>
+		/// <param name="key">The key.</param>
+		/// <param name="fromMethod">From method.</param>
+		/// <param name="toMethod">To method.</param>
+		/// <returns></returns>
 		public string GetITableStubPartLabel (Class _class, int key, int fromMethod, int toMethod)
 		{
 			return string.Format (IMT_RANGE_LABEL, _class, key, fromMethod, toMethod);
 		}
 
+		/// <summary>
+		/// Gets the type info label.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		/// <returns></returns>
 		public string GetTypeInfoLabel (string value)
 		{
 			return string.Format (TYPE_INFO_LABEL, value);
@@ -1162,6 +1196,113 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
+		/// Adds the exception handling clauses.
+		/// </summary>
+		/// <param name="method">The method.</param>
+		private void AddExceptionHandlingClauses (Method method)
+		{
+			if (method.Exceptions.Count == 0)
+				return;
+
+			for (int i = 0; i < method.Exceptions.Count; i++) {
+				ExceptionHandlingClause exception = method.Exceptions [0];
+
+				string label = string.Format (EXCEPTION_HANDLING_CLAUSE_LABEL, method.MethodFullName, i);
+
+				this.LABEL (label);
+
+				this.AddObjectFields (this.engine.ExceptionHandlingClauseClass.TypeFullName);
+
+				if (exception.Class != null)
+					this.GetTypeInfoLabel (exception.Class.TypeFullName);
+				else
+					this.DATA (0U);
+				
+				this.DATA ((ushort) exception.Type);
+
+				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.TryBegin.Index));
+				
+				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.TryEnd.Index));
+
+				if (exception.FilterBegin != null)
+					this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.FilterBegin.Index));
+				else
+					this.DATA (0U);
+
+				if (exception.FilterEnd != null)
+					this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.FilterEnd.Index));
+				else
+					this.DATA (0U);
+
+				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.HandlerBegin.Index));
+				
+				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.HandlerEnd.Index));
+			}
+
+			this.LABEL (string.Format (EXCEPTION_HANDLING_CLAUSE_ARRAY_LABEL, method.MethodFullName));
+
+			this.AddArrayFields (method.Exceptions.Count);
+
+			for (int i = 0; i < method.Exceptions.Count; i++) {
+				ExceptionHandlingClause exception = method.Exceptions [0];
+
+				string label = string.Format (EXCEPTION_HANDLING_CLAUSE_LABEL, method.MethodFullName, i);
+
+				this.ADDRESSOF (label);
+			}
+		}
+
+		/// <summary>
+		/// Adds the method boundaries.
+		/// </summary>
+		private void AddMethodBoundaries ()
+		{
+			int entries = 0;
+
+			for (int step = 0; step < 2; step++) {
+				if (step == 1) {
+					this.LABEL (METHOD_BOUNDARIES);
+					this.AddArrayFields (entries);
+				}
+
+				foreach (Class _class in engine) {
+					if (_class.IsInternal || _class.IsInterface)
+						continue;
+
+					foreach (Method method in _class) {
+						if (method.CILInstructionsCount == 0)
+							continue;
+
+						string label = string.Format (METHOD_BOUNDARY_LABEL, method.MethodFullName);
+
+						if (step == 0) {
+							this.AddExceptionHandlingClauses (method);
+
+							this.LABEL (label);
+
+							this.AddObjectFields (this.engine.MethodBoundaryClass.TypeFullName);
+
+							this.ADDRESSOF (this.AddString (method.MethodFullName));
+
+							this.ADDRESSOF (string.Format (Assembly.METHOD_BEGIN, method.MethodFullName));
+
+							this.ADDRESSOF (string.Format (Assembly.METHOD_END, method.MethodFullName));
+
+							if (method.Exceptions.Count != 0)
+								this.ADDRESSOF (string.Format (EXCEPTION_HANDLING_CLAUSE_ARRAY_LABEL, method.MethodFullName));
+							else
+								this.DATA (0U);
+
+							entries++;
+
+						} else
+							this.ADDRESSOF (label);
+					}
+				}
+			}
+		}
+
+		/// <summary>
 		/// Adds the data.
 		/// </summary>
 		private void AddData ()
@@ -1172,6 +1313,8 @@ namespace SharpOS.AOT.X86 {
 			this.LABEL (START_DATA);
 
 			this.AddMetadata ();
+
+			this.AddMethodBoundaries ();
 
 			foreach (Class _class in engine) {
 				if (_class.IsInternal)

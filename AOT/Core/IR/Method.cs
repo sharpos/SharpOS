@@ -37,7 +37,7 @@ namespace SharpOS.AOT.IR {
 		/// Gets the exceptions.
 		/// </summary>
 		/// <value>The exceptions.</value>
-		private List<ExceptionHandlingClause> Exceptions
+		public List<ExceptionHandlingClause> Exceptions
 		{
 			get
 			{
@@ -398,23 +398,31 @@ namespace SharpOS.AOT.IR {
 				clause.Type = (SharpOS.AOT.Metadata.ExceptionHandlerType) exceptionHandler.Type;
 
 				Block tryBegin = null;
+				Block tryLast = null;
 				Block tryEnd = null;
 				Block filterBegin = null;
+				Block filterLast = null;
 				Block filterEnd = null;
 				Block handlerBegin = null;
+				Block handlerLast = null;
 				Block handlerEnd = null;
 
 				foreach (Block block in this.blocks) {
 					if (block.CIL.Count == 0)
 						continue;
 
-					SetEHStartEnd (ref tryBegin, ref tryEnd, exceptionHandler.TryStart, exceptionHandler.TryEnd, block);
-					SetEHStartEnd (ref filterBegin, ref filterEnd, exceptionHandler.FilterStart, exceptionHandler.FilterEnd, block);
-					SetEHStartEnd (ref handlerBegin, ref handlerEnd, exceptionHandler.HandlerStart, exceptionHandler.HandlerEnd, block);
+					SetEHStartEnd (ref tryBegin, ref tryLast, ref tryEnd, exceptionHandler.TryStart, exceptionHandler.TryEnd, block);
+					SetEHStartEnd (ref filterBegin, ref filterLast, ref filterEnd, exceptionHandler.FilterStart, exceptionHandler.FilterEnd, block);
+					SetEHStartEnd (ref handlerBegin, ref handlerLast, ref handlerEnd, exceptionHandler.HandlerStart, exceptionHandler.HandlerEnd, block);
 				}
 
-				if (tryEnd != null)
-					tryEnd.IsTryEnd = true;
+
+				if (tryLast != null)
+					tryLast.IsTryLast = true;
+
+				if (filterLast != null)
+					filterLast.IsFilterLast = true;
+
 
 				if (handlerBegin != null
 						&& exceptionHandler.Type != ExceptionHandlerType.Catch
@@ -426,8 +434,6 @@ namespace SharpOS.AOT.IR {
 				if (filterBegin != null)
 					filterBegin.IsFinallyFilterFaultStart = true;
 
-				if (filterEnd != null)
-					filterEnd.IsFilterEnd = true;
 
 				clause.TryBegin = tryBegin;
 				clause.TryEnd = tryEnd;
@@ -451,22 +457,26 @@ namespace SharpOS.AOT.IR {
 		/// <param name="exceptionStart">The exception start.</param>
 		/// <param name="exceptionEnd">The exception end.</param>
 		/// <param name="block">The block.</param>
-		private void SetEHStartEnd (ref Block start, ref Block end, Mono.Cecil.Cil.Instruction exceptionStart, Mono.Cecil.Cil.Instruction exceptionEnd, Block block)
+		private void SetEHStartEnd (ref Block start, ref Block last, ref Block end, Mono.Cecil.Cil.Instruction exceptionStart, Mono.Cecil.Cil.Instruction exceptionEnd, Block block)
 		{
 			if (exceptionStart == null || exceptionEnd == null)
 				return;
 
-			if (block.StartOffset >= exceptionEnd.Offset)
-				return;
-
-			if (block.StartOffset >= exceptionStart.Offset) {
+			if (block.StartOffset >= exceptionStart.Offset
+					&& block.EndOffset < exceptionEnd.Offset) {
 				if (start == null)
 					start = block;
 
-				end = block;
+				last = block;
 			}
 
-			if (block.EndOffset >= exceptionEnd.Offset)
+			if (start != null && end == null && block.StartOffset >= exceptionEnd.Offset)
+				end = block;
+
+			if ((block.EndOffset >= exceptionEnd.Offset
+						&& block.StartOffset < exceptionEnd.Offset)
+					|| (block.EndOffset >= exceptionStart.Offset
+						&& block.StartOffset < exceptionStart.Offset))
 				throw new EngineException (string.Format ("The blocks have not been built correctly in '{0}'.", this.MethodFullName));
 		}
 

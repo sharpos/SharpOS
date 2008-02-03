@@ -7,7 +7,7 @@
     <ProjectGuid>{7C0A6DF4-B2B8-4CD9-A073-EE834B4246F8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>SharpOS.AOT.Core</RootNamespace>
+    <RootNamespace>SharpOS.AOT</RootNamespace>
     <AssemblyName>SharpOS.AOT.Core</AssemblyName>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
@@ -32,7 +32,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\..\build\SharpOS.AOT.Core.XML</DocumentationFile>
+    <DocumentationFile>..\..\build\SharpOS.AOT.Core.xml</DocumentationFile>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <NoStdLib>false</NoStdLib>
   </PropertyGroup>
@@ -82,7 +82,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="*.cs" />
+    <Compile Include="AssemblyInfo.cs" />
     <Compile Include="Attributes\ADCInterfaceAttribute.cs" />
     <Compile Include="Attributes\ADCLayerAttribute.cs" />
     <Compile Include="Attributes\ADCStubAttribute.cs" />
@@ -90,6 +90,8 @@
     <Compile Include="Attributes\AllocAttribute.cs" />
     <Compile Include="Attributes\AllocObjectAttribute.cs" />
     <Compile Include="Attributes\AddressOfAttribute.cs" />
+    <Compile Include="Attributes\ExceptionHandlingClauseAttribute.cs" />
+    <Compile Include="Attributes\MethodBoundaryAttribute.cs" />
     <Compile Include="Attributes\ITableAttribute.cs" />
     <Compile Include="Attributes\NakedAttribute.cs" />
     <Compile Include="Attributes\IncludeAttribute.cs" />
@@ -103,6 +105,7 @@
     <Compile Include="Attributes\StringAttribute.cs" />
     <Compile Include="Attributes\TargetNamespaceAttribute.cs" />
     <Compile Include="Attributes\VTableAttribute.cs" />
+    <Compile Include="COFF.cs" />
     <Compile Include="IR\Block.cs" />
     <Compile Include="IR\Class.cs" />
     <Compile Include="IR\Dump.cs" />
@@ -110,7 +113,7 @@
     <Compile Include="IR\EngineException.cs" />
     <Compile Include="IR\EngineOptions.cs" />
     <Compile Include="IR\ExceptionHandlingClause.cs" />
-    <Compile Include="IR\IAssembly.cs" />
+    <Compile Include="IAssembly.cs" />
     <Compile Include="IR\Instructions\Add.cs" />
     <Compile Include="IR\Instructions\Branch.cs" />
     <Compile Include="IR\Instructions\ConditionCheck.cs" />

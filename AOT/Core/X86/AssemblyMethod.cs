@@ -64,6 +64,8 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.AddSymbol (new COFF.Label (Assembly.KERNEL_MAIN));
 			}
 
+			assembly.LABEL (string.Format (Assembly.METHOD_BEGIN, fullname));
+
 			this.assembly.AddSymbol (new COFF.Function (fullname));
 
 			assembly.LABEL (fullname);
@@ -97,7 +99,7 @@ namespace SharpOS.AOT.X86 {
 				assembly.SUB (R32.ESP, (UInt32) (method.StackSize * this.assembly.IntSize));
 
 			foreach (Block block in method) {
-				assembly.LABEL (fullname + " " + block.Index.ToString ());
+				assembly.LABEL (string.Format (Assembly.METHOD_BLOCK_LABEL, fullname, block.Index.ToString ()));
 
 				if (block.IsFinallyFilterFaultStart)
 						this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.ESP);
@@ -297,6 +299,8 @@ namespace SharpOS.AOT.X86 {
 				assembly.POP (R32.EBP);
 				assembly.RET ();
 			}
+
+			assembly.LABEL (string.Format (Assembly.METHOD_END, fullname));
 
 			return true;
 		}
