@@ -1,9 +1,9 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
 //	Sander van Rossen <sander.vanrossen@gmail.com>
-//	Ásgeir Halldórsson <asgeir.halldorsson@gmail.com>
+//	ï¿½sgeir Halldï¿½rsson <asgeir.halldorsson@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
@@ -67,9 +67,11 @@ namespace SharpOS.Kernel.ADC {
 
 			currentNode->Free = false;
 
-			if (memoryLeft > (uint) sizeof (Header)) {//If there is enough room to squeeze in a new node after this one, then do it
+			if (memoryLeft > (uint) sizeof (Header)) {
+				//If there is enough room to squeeze in a new node after this one, then do it
+
 				currentNode->Size = allocate_size;
-				uint nextPtr = (uint) currentNode + currentNode->Size + (uint) sizeof (Header);
+				void *nextPtr = (byte*)currentNode + currentNode->Size + sizeof (Header);
 
 				Header* nextNode = (Header*) nextPtr;
 				nextNode->Free = true;
@@ -77,7 +79,8 @@ namespace SharpOS.Kernel.ADC {
 				nextNode->Previous = currentNode;
 				nextNode->Next = null;
 
-				if (currentNode->Next != null) {// There are more nodes in list so injection is required					
+				if (currentNode->Next != null) {
+					// There are more nodes in list so injection is required
 					Header* tmpNext = currentNode->Next;
 
 					nextNode->Next = tmpNext;
@@ -139,6 +142,22 @@ namespace SharpOS.Kernel.ADC {
 			ADC.TextMode.WriteLine ();
 		}
 
+		private static unsafe void DumpNodeSerial (string msg, Header* node)
+		{
+			Serial.Write (msg);
+			Serial.Write (", Current node: ");
+			Serial.Write ((int) node);
+			Serial.Write (", Next node: ");
+			Serial.Write ((int) node->Next);
+			Serial.Write (", Size: ");
+			Serial.Write ((int) node->Size);
+			Serial.Write (", IsFree: ");
+			Serial.Write ((node->Free ? "true" : "false"));
+			Serial.Write (", TotalAlloc: ");
+			Serial.Write ((int) allocated);
+			Serial.WriteLine ();
+		}
+
 		public static void Dump ()
 		{
 			ADC.TextMode.WriteLine ("Memory dump: ");
@@ -152,6 +171,238 @@ namespace SharpOS.Kernel.ADC {
 			}
 
 			ADC.TextMode.WriteLine ();
+		}
+
+		public static void DumpSerial ()
+		{
+			Serial.WriteLine ("Memory dump: ");
+			Header* currentNode = firstNode;
+
+			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
+			while (currentNode != null) {
+				DumpNodeSerial ("MemoryManager", currentNode);
+
+				currentNode = currentNode->Next;
+			}
+
+			Serial.WriteLine ();
+		}
+
+		public static void __RunTests ()
+		{
+			//__ExclusivityTest ();
+			//__StressTest ();
+			//TextMode.WriteLine ("Memory tests completed.");
+		}
+
+		public const int ExclusivityTestLimit = 50;
+		public const int ExclusivityTestBlockSize = 4096;
+		public const int MaxStressAllocSize = 256;
+		public const int StressAllocLimit = 1000;
+
+		public static void __StressTest ()
+		{
+			int num = 1;
+			byte** ptrs = stackalloc byte*[StressAllocLimit];
+			int failures = 0;
+			int exclusiveFailures = 0;
+			byte *kstart, kend;
+
+			{
+				void *ks, ke;
+				EntryModule.GetKernelLocation (out ks, out ke);
+				kstart = (byte*)ks;
+				kend = (byte*)ke;
+			}
+
+			Serial.WriteLine ("Memory Management: Stress Test:");
+
+			Serial.Write (" - Allocating ", StressAllocLimit);
+			Serial.Write (" buffers");
+
+			for (int x = 0; x < StressAllocLimit; ++x) {
+				ptrs [x] = (byte*)MemoryManager.Allocate ((uint)num);
+
+				for (int y = 0; y < num; ++y)
+					ptrs [x][y] = (byte)(num - 1);
+
+				if (num + 1 >= 256)
+					num = 1;
+				else
+					++num;
+			}
+
+			Serial.WriteLine (" - Checking allocations...");
+			// Check the allocations for the correct number.
+			num = 1;
+
+			for (int x = 0; x < StressAllocLimit; ++x) {
+				byte *alloc = ptrs [x];
+				int oldFail = exclusiveFailures;
+
+				for (int y = 0; y < num; ++y) {
+					if (alloc[y] != (byte)(num - 1)) {
+						++failures;
+						break;
+					}
+				}
+
+				if (alloc <= kend) {
+					Serial.Write (" - Allocation #", x);
+					Serial.Write (" is not exclusive: ");
+					Serial.Write (" overlaps with kernel!");
+					Serial.WriteLine ();
+					++exclusiveFailures;
+					continue;
+				}
+
+				// Test that the entry is also mutually exclusive from the others.
+
+				for (int y = 0; y < StressAllocLimit; ++y) {
+					byte *xa, ya;
+					bool fail = false;
+
+					if (x == y)
+						continue;
+
+					xa = alloc;
+					ya = ptrs [y];
+
+					if (ya > xa && ya < xa + num) {
+						Serial.Write (" - Allocation #", x);
+						Serial.Write (" is not exclusive: ");
+						Serial.Write ("Overlap with alloc #", y);
+						Serial.WriteLine ();
+						fail = true;
+					} else if (xa == ya) {
+						Serial.Write (" - Allocation #", x);
+						Serial.Write (" is not exclusive: ");
+						Serial.Write ("Same as alloc #", y);
+						Serial.WriteLine ();
+						fail  =  true;
+					}
+
+					/*
+					if (ya > xa && ya <= xa + ExclusivityTestBlockSize)
+						fail = true;
+					else if (xa > ya && xa <= ya + ExclusivityTestBlockSize)
+						fail = true;
+					else if (xa == ya)
+						fail  =  true;
+					else if (xa <= kend)
+						fail = true;
+					*/
+
+					if (fail) {
+						exclusiveFailures++;
+						break;
+					}
+				}
+
+				if (oldFail == exclusiveFailures) {
+					Serial.Write (" - Allocation #", x);
+					Serial.WriteLine (" is correct");
+				}
+
+				if (num + 1 >= 256)
+					num = 1;
+				else
+					++num;
+			}
+
+			Serial.Write (" - Failures: ", failures * 100 / StressAllocLimit);
+			Serial.WriteLine ("%");
+			Serial.Write (" - Exclusivity Failures: ",
+				exclusiveFailures * 100 / StressAllocLimit);
+			Serial.WriteLine ("%");
+
+			// Deallocate
+
+			for (int x = 0; x < StressAllocLimit; ++x) {
+				MemoryManager.Free (ptrs [x]);
+			}
+		}
+
+		public static void __ExclusivityTest ()
+		{
+			byte** ptrs = stackalloc byte*[ExclusivityTestLimit];
+			int exclusiveFailures = 0;
+			byte *kstart, kend;
+
+			{
+				void *ks, ke;
+				EntryModule.GetKernelLocation (out ks, out ke);
+				kstart = (byte*)ks;
+				kend = (byte*)ke;
+			}
+
+			Serial.WriteLine ("Memory Management: Exclusivity Test:");
+			// Make our allocations
+
+			for (int x = 0; x < ExclusivityTestLimit; ++x) {
+				ptrs [x] = (byte*)MemoryManager.Allocate (ExclusivityTestBlockSize);
+			}
+
+			// Test that each entry is mutually exclusive
+
+			for (int x = 0; x < ExclusivityTestLimit; ++x) {
+				bool fail = false;
+
+				if (ptrs [x] <= kend) {
+					Serial.Write ("Allocation #", x);
+					Serial.Write (" is not exclusive: ");
+					Serial.Write (" overlaps with kernel!");
+					fail = true;
+				}
+
+				for (int y = 0; !fail && y < ExclusivityTestLimit; ++y) {
+					byte *xa, ya;
+
+					if (x == y)
+						continue;
+
+					xa = ptrs [x];
+					ya = ptrs [y];
+
+					if (ya > xa && ya <= xa + ExclusivityTestBlockSize) {
+						Serial.Write (" - Allocation #", x);
+						Serial.Write (" is not exclusive: ");
+						Serial.Write ("Overlap with alloc #", y);
+						fail = true;
+					} else if (xa > ya && xa <= ya + ExclusivityTestBlockSize) {
+						Serial.Write (" - (inv) Allocation #", x);
+						Serial.Write (" is not exclusive: ");
+						Serial.Write ("Overlap with alloc #", y);
+						fail = true;
+					} else if (xa == ya) {
+						Serial.Write ("Allocation #", x);
+						Serial.Write (" is not exclusive: ");
+						Serial.Write ("Same as alloc #", y);
+						fail  =  true;
+					}
+
+					/*
+					if (xa > ya && xa + ExclusivityTestBlockSize < ya)
+						fail = true;
+					else if (ya > xa && ya + ExclusivityTestBlockSize < xa)
+						fail = true;
+					else if (xa == ya)
+						fail  =  true;
+					*/
+				}
+
+				if (fail)
+					exclusiveFailures++;
+			}
+
+			Serial.Write (" - Failures: ", exclusiveFailures * 100 / ExclusivityTestLimit);
+			Serial.WriteLine ("%");
+
+			// Deallocate
+
+			for (int x = 0; x < ExclusivityTestLimit; ++x) {
+				MemoryManager.Free (ptrs [x]);
+			}
 		}
 	}
 }
