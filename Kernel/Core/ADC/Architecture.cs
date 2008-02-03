@@ -67,7 +67,7 @@ namespace SharpOS.Kernel.ADC {
 		
 		#region Processors
 		[AOTAttr.ADCStub]
-		public static int ProcessorCount ()
+		public static int GetProcessorCount ()
 		{
 			return 0;
 		}

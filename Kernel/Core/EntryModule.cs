@@ -6,6 +6,7 @@
 //	Sander van Rossen <sander.vanrossen@gmail.com>
 //	William Lahti <xfurious@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
+//	Cédric Rousseau <cedrou@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -170,7 +171,18 @@ namespace SharpOS.Kernel {
 
 			SetKernelStage (KernelStage.Diagnostics);
 
-			while (stayInLoop);
+			// Infinite loop used to halt the processors
+			//FIXME We must know on each processor the current thread runs on. 
+			//      Halt all other procs, then halt the current one.
+			IProcessor[] procs = Architecture.GetProcessors ();
+			int procCount = Architecture.GetProcessorCount();
+			while (stayInLoop)
+			{
+				for (int i=0; i < procCount; i++)
+				{
+					procs [i].Halt ();
+				}
+			}
 		}
 
 		public static void DisplayBanner ()

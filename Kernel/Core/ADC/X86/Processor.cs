@@ -4,6 +4,7 @@
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
+//	Cédric Rousseau <cedrou@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -374,6 +375,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 		private uint					id				= 0;
 		public override uint			ID				{ get { return id; } }
 		#endregion
+
+		public override void Halt ()
+		{
+			Asm.STI ();
+			Asm.HLT ();
+		}
 	}
 }
 

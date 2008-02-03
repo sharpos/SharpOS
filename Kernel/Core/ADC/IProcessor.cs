@@ -4,6 +4,7 @@
 // Authors:
 //	William Lahti <xfurious@gmail.com>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
+//	Cédric Rousseau <cedrou@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -35,5 +36,7 @@ namespace SharpOS.Kernel.ADC {
 		public abstract CString8*		ModelName		{ get; }
 		
 		public abstract ProcessorFeature[] Features		{ get; }
+
+		public abstract void Halt ();
 	}
 }
