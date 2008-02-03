@@ -37,6 +37,7 @@ namespace SharpOS.AOT.X86 {
 		const string END_STACK = "END_STACK";
 		const string THE_END = "THE_END";
 		const string KERNEL_ENTRY_POINT = "KERNEL_ENTRY_POINT";
+		const string KERNEL_ENTRY_POINT_END = "KERNEL_ENTRY_POINT_END";
 
 		const string MULTIBOOT_HEADER_ADDRESS = "MULTIBOOT_HEADER_ADDRESS";
 		const string MULTIBOOT_LOAD_END_ADDRESS = "MULTIBOOT_LOAD_END_ADDRESS";
@@ -1126,6 +1127,8 @@ namespace SharpOS.AOT.X86 {
 
 			// Just hang
 			this.HLT ();
+
+			this.LABEL (KERNEL_ENTRY_POINT_END);
 		}
 
 		/// <summary>
@@ -1213,13 +1216,13 @@ namespace SharpOS.AOT.X86 {
 
 				this.AddObjectFields (this.engine.ExceptionHandlingClauseClass.TypeFullName);
 
+				this.DATA ((uint) exception.Type);
+
 				if (exception.Class != null)
-					this.GetTypeInfoLabel (exception.Class.TypeFullName);
+					this.ADDRESSOF (this.GetTypeInfoLabel (exception.Class.TypeFullName));
 				else
 					this.DATA (0U);
 				
-				this.DATA ((ushort) exception.Type);
-
 				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.TryBegin.Index));
 				
 				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.TryEnd.Index));
@@ -1257,12 +1260,24 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		private void AddMethodBoundaries ()
 		{
-			int entries = 0;
+			string entryPointLabel = this.GetFreeResourceLabel;
 
+			this.LABEL (entryPointLabel);
+			this.AddObjectFields (this.engine.MethodBoundaryClass.TypeFullName);
+			this.ADDRESSOF (this.AddString (KERNEL_ENTRY_POINT));
+			this.ADDRESSOF (KERNEL_ENTRY_POINT);
+			this.ADDRESSOF (KERNEL_ENTRY_POINT_END);
+			this.DATA (0U); // No exceptions defined so no array
+
+			int entries = 1;
+
+			// 1st step emits the method boundaries and their exceptions
+			// 2nd step emits the array containing all method boundaries
 			for (int step = 0; step < 2; step++) {
 				if (step == 1) {
 					this.LABEL (METHOD_BOUNDARIES);
 					this.AddArrayFields (entries);
+					this.ADDRESSOF (entryPointLabel);
 				}
 
 				foreach (Class _class in engine) {

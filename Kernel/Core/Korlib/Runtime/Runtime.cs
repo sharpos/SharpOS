@@ -38,6 +38,9 @@ namespace SharpOS.Korlib.Runtime {
 		[AddressOf ("MetadataRoot")]
 		private static MetadataRoot Root;
 
+		[AddressOf ("MethodBoundaries")]
+		private static MethodBoundary [] MethodBoundaries;
+
 		public unsafe static AssemblyMetadata [] GetAssemblyMetadata ()
 		{
 			return Root.Assemblies;
@@ -592,8 +595,50 @@ namespace SharpOS.Korlib.Runtime {
 				Serial.WriteLine ("ERROR");
 			else
 				Serial.WriteLine ("Location OK");
+			
+			__TestMethodBoundaries ();
 			__TestObjectConversion ();
 			__TestIsBaseClassOf ();
+		}
+
+		private static void __TestMethodBoundaries ()
+		{
+			Testcase.Test (MethodBoundaries.Length > 0, "Runtime", "MethodBoundaries.Length should be greater than 0");
+
+			for (int i = 0; i < MethodBoundaries.Length; i++)
+				PrintMethodBoundary (MethodBoundaries [i]);
+			
+		}
+
+		private static void PrintMethodBoundary (MethodBoundary methodBoundary)
+		{
+			Serial.Write ("MethodBoundary: ");
+			Serial.WriteLine (methodBoundary.Name);
+
+			if (methodBoundary.ExceptionHandlingClauses != null) {
+				Serial.Write ("\tExceptions: ");
+				Serial.WriteNumber (methodBoundary.ExceptionHandlingClauses.Length, false);
+				Serial.WriteLine ();
+
+				for (int i = 0; i < methodBoundary.ExceptionHandlingClauses.Length; i++)
+					PrintExceptionHandlingClauses (methodBoundary.ExceptionHandlingClauses [i]);
+			}
+		}
+
+		private static void PrintExceptionHandlingClauses (ExceptionHandlingClause exceptionHandlingClause)
+		{
+			Serial.Write ("\t\tType: ");
+			Serial.WriteNumber ((int) exceptionHandlingClause.ExceptionType, true);
+			Serial.WriteLine ();
+
+			if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch) {
+				Testcase.Test (exceptionHandlingClause.TypeInfo != null, "Runtime", "exceptionHandlingClause.TypeInfo != null");
+
+				if (exceptionHandlingClause.TypeInfo != null) {
+					Serial.Write ("\t\tCatch Type: ");
+					Serial.WriteLine (exceptionHandlingClause.TypeInfo.Name);
+				}
+			}
 		}
 
 		public static unsafe void __TestObjectConversion ()

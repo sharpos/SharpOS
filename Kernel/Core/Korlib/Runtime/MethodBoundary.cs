@@ -17,6 +17,6 @@ namespace SharpOS.Korlib.Runtime {
 		public string Name;
 		public void* Begin;
 		public void* End;
-		ExceptionHandlingClause [] ExceptionHandlingClauses;
+		public ExceptionHandlingClause [] ExceptionHandlingClauses;
 	}
 }
