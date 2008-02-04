@@ -39,7 +39,7 @@ namespace SharpOS.Korlib.Runtime {
 		private static MetadataRoot Root;
 
 		[AddressOf ("MethodBoundaries")]
-		private static MethodBoundary [] MethodBoundaries;
+		internal static MethodBoundary [] MethodBoundaries;
 
 		public unsafe static AssemblyMetadata [] GetAssemblyMetadata ()
 		{
@@ -607,7 +607,19 @@ namespace SharpOS.Korlib.Runtime {
 
 			for (int i = 0; i < MethodBoundaries.Length; i++)
 				PrintMethodBoundary (MethodBoundaries [i]);
-			
+
+			MethodBoundary [] callingStack = MemoryUtil.GetCallingStack ();
+
+			Testcase.Test (callingStack != null, "Runtime", "callingStack != null");
+
+			for (int i = 0; i < callingStack.Length; i++) {
+				Serial.Write ("\tCalled Method: ");
+
+				if (callingStack [i] == null)
+					Serial.WriteLine ("<empty>");
+				else
+					Serial.WriteLine (callingStack [i].Name);
+			}
 		}
 
 		private static void PrintMethodBoundary (MethodBoundary methodBoundary)

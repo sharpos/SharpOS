@@ -10,6 +10,7 @@
 
 using System;
 using AOTAttr = SharpOS.AOT.Attributes;
+using SharpOS.Korlib.Runtime;
 
 namespace SharpOS.Kernel.ADC {
 	public static class MemoryUtil {
@@ -17,6 +18,14 @@ namespace SharpOS.Kernel.ADC {
 		public unsafe static void Call (void* functionPointer, void* pointeredParameter)
 		{
 			Diagnostics.Error ("Unimplemented - MemoryUtil.Call");
+		}
+
+		[AOTAttr.ADCStub]
+		internal unsafe static MethodBoundary [] GetCallingStack ()
+		{
+			Diagnostics.Error ("Unimplemented - MemoryUtil.GetCallingStack");
+
+			return null;
 		}
 	}
 }

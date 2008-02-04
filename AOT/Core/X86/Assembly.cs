@@ -1098,6 +1098,11 @@ namespace SharpOS.AOT.X86 {
 
 			this.MOV (R32.ESP, END_STACK);
 
+			this.XOR (R32.EBP, R32.EBP);
+			this.PUSH (R32.EBP);
+			this.PUSH (R32.EBP);
+			this.MOV (R32.EBP, R32.ESP);
+
 			this.PUSH (0);
 			this.POPF ();
 
@@ -1126,6 +1131,7 @@ namespace SharpOS.AOT.X86 {
 			this.CALL (KERNEL_MAIN);
 
 			// Just hang
+			this.CLI ();
 			this.HLT ();
 
 			this.LABEL (KERNEL_ENTRY_POINT_END);
