@@ -13,7 +13,7 @@ using SharpOS.Korlib.Runtime;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public class Exception {
+	public class Exception: InternalSystem.Object {
 		public Exception ()
 		{
 		}

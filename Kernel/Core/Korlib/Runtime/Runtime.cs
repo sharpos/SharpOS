@@ -614,11 +614,16 @@ namespace SharpOS.Korlib.Runtime {
 
 			Testcase.Test (callingStack != null, "Runtime", "callingStack != null");
 
+			PrintCallingStack (callingStack);
+		}
+
+		private unsafe static void PrintCallingStack (StackFrame [] callingStack)
+		{
 			for (int i = 0; i < callingStack.Length; i++) {
 				Serial.Write ("\tCalled Method: ");
 
 				Serial.WriteNumber ((int) callingStack [i].IP, true);
-				
+
 				Serial.Write (" ");
 
 				if (callingStack [i] == null)
@@ -626,11 +631,6 @@ namespace SharpOS.Korlib.Runtime {
 				else
 					Serial.WriteLine (callingStack [i].MethodBoundary.Name);
 			}
-		}
-
-		private static void PrintCallingStack (StackFrame callingStack)
-		{
-
 		}
 
 		private static void PrintMethodBoundary (MethodBoundary methodBoundary)
@@ -838,11 +838,14 @@ namespace SharpOS.Korlib.Runtime {
 		{
 			StackFrame [] callingStack = ExceptionHandling.GetCallingStack ();
 
-			for (int i = 1; i < callingStack.Length; i++) {
+			PrintCallingStack (callingStack);
+
+			for (int i = 2; i < callingStack.Length; i++) {
 				ExceptionHandlingClause handler = null;
+				MethodBoundary methodBoundary = callingStack [i].MethodBoundary;
 
 				for (int j = 0; j < callingStack [i].MethodBoundary.ExceptionHandlingClauses.Length; j++) {
-					ExceptionHandlingClause exceptionHandlingClause  = callingStack [i].MethodBoundary.ExceptionHandlingClauses [j];
+					ExceptionHandlingClause exceptionHandlingClause  = methodBoundary.ExceptionHandlingClauses [j];
 
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Finally)
 						continue;
@@ -854,12 +857,17 @@ namespace SharpOS.Korlib.Runtime {
 							|| callingStack [i].IP >= exceptionHandlingClause.TryEnd)
 						continue;
 
+
 					Serial.WriteLine (exception.VTable.Type.Name);
-					Serial.WriteLine (exceptionHandlingClause.TypeInfo.VTable.Type.Name);
-					Serial.WriteNumber ((int) Runtime.GetPointerFromObject (exceptionHandlingClause), true);
+					Serial.WriteNumber ((int) exception.VTable.Type.MetadataToken, true);
 					Serial.WriteLine ();
 
-					if (!Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo.VTable.Type))
+					Serial.WriteLine (exceptionHandlingClause.TypeInfo.Name);
+					Serial.WriteNumber ((int) exceptionHandlingClause.TypeInfo.MetadataToken, true);
+					Serial.WriteLine ();
+					
+
+					if (!Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo))
 						Serial.WriteLine ("ZZZZZZ wrong handler type");
 
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch
@@ -867,6 +875,8 @@ namespace SharpOS.Korlib.Runtime {
 						continue;
 
 					Serial.WriteLine ("XXXXXX Got a handler");
+
+					handler = exceptionHandlingClause;
 				}
 			}
 		}
@@ -906,13 +916,6 @@ namespace SharpOS.Korlib.Runtime {
 
 			InternalSystem.Object _object = GetObjectFromPointer (result);
 			_object.VTable = vtable;
-
-			// TODO set the rank, rank data and initialize the data
-
-			/*InternalSystem.Array _array = _object as InternalSystem.Array;
-			_array.Rank = 1;
-			_array.FirstEntry.LowerBound = 0;
-			_array.FirstEntry.Length = count;*/
 
 			return _object;
 		}
