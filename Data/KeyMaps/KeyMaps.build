@@ -17,21 +17,51 @@
 	<property name="prefix" value="../../build/KeyMaps" />
 	<property name="compiler" value="../../build/key-compiler.exe" />
 
+	<target name="*" if="${string::ends-with(target::get-current-target(), '.skm')}">
+		<uptodate property="keymap.uptodate">
+			<sourcefiles>
+				<include name="${compiler}" />
+				<include name="${target::get-current-target()}" />
+			</sourcefiles>
+			<targetfiles>
+				<include name="${prefix}/${path::get-file-name-without-extension(target::get-current-target())}.bin" />
+			</targetfiles>
+		</uptodate>
+		<exec
+			program="${compiler}"
+			commandline="${target::get-current-target()} -o:${prefix}/${path::get-file-name-without-extension(target::get-current-target())}.bin"
+			unless="${keymap.uptodate}"
+			/>
+	</target>
+
 	<target name="build">
 		<echo message="Building Key compiler" />
 		<mkdir dir="${prefix}" />
 		<nant buildfile="../../Tools/KeyCompiler/KeyCompiler.build" />
-		<exec program="${compiler}" commandline="US.skm -o:${prefix}/US.bin" />
-		<exec program="${compiler}" commandline="UK.skm -o:${prefix}/UK.bin" />
-		<exec program="${compiler}" commandline="US-Dvorak-ANSI.skm -o:${prefix}/US-Dvorak-ANSI.bin" />
-		<exec program="${compiler}" commandline="US-Dvorak-Classic.skm -o:${prefix}/US-Dvorak-Classic.bin" />
-		<exec program="${compiler}" commandline="DE.skm -o:${prefix}/DE.bin" />
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="*.skm" />
+				</items>
+			</in>
+			<do>
+				<call target="${filename}" />
+			</do>
+		</foreach>
 	</target>
 
 	<target name="clean">
-		<delete file="${prefix}/US.bin" failonerror="false" />
-		<delete file="${prefix}/UK.bin" failonerror="false" />
-		<delete file="${prefix}/US-Dvorak-ANSI.bin" failonerror="false" />
+		<foreach item="File" property="filename">
+			<in>
+				<items>
+					<include name="${prefix}/*.bin" />
+				</items>
+			</in>
+			<do>
+				<delete file="${filename}" failonerror="false" />
+			</do>
+		</foreach>
+
 		<delete dir="${prefix}" />
 	</target>
 </project>
