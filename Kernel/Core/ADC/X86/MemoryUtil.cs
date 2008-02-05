@@ -186,62 +186,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 					Asm.CALL(function);
 				}
 		*/
-
-		private const string GET_IP = "GET_IP";
-
-		internal unsafe static MethodBoundary [] GetCallingStack ()
-		{
-			uint bp, ip, count = 0;
-			MethodBoundary [] methodBoundaries = null;
-
-			// 1st step: count the stack frames
-			// 2nd step: create the array and find the method boundary for every stack frame
-			for (int step = 0; step < 2; step++) {
-				// Get the current IP
-				Asm.CALL (GET_IP);
-				Asm.LABEL (GET_IP);
-				Asm.POP (R32.EAX);
-				Asm.MOV (&ip, R32.EAX);
-
-				// Get the current BP
-				Asm.MOV (&bp, R32.EBP);
-
-				if (step == 1)
-					methodBoundaries = new MethodBoundary [count];
-
-				count = 0;
-
-				do {
-					if (step == 1) {
-						MethodBoundary entry = null;
-
-						for (int i = 0; i < Runtime.MethodBoundaries.Length; i++) {
-							if (ip >= (uint) Runtime.MethodBoundaries [i].Begin
-									&& ip < (uint) Runtime.MethodBoundaries [i].End) {
-								entry = Runtime.MethodBoundaries [i];
-								break;
-							}
-						}
-
-						methodBoundaries [count] = entry;
-					}
-
-					count++;
-
-					// Get the next IP
-					Asm.MOV (R32.EBX, &bp);
-					Asm.MOV (R32.EAX, new DWordMemory (null, R32.EBX, null, 0, 4));
-					Asm.MOV (&ip, R32.EAX);
-
-					// Get the next BP
-					Asm.MOV (R32.EAX, new DWordMemory (null, R32.EBX, null, 0));
-					Asm.MOV (&bp, R32.EAX);
-
-				} while (bp != 0);
-			}
-
-			return methodBoundaries;
-		}
 		#endregion
 	}
 }

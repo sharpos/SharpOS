@@ -284,6 +284,9 @@ namespace SharpOS.AOT.X86 {
 					else if (instruction is IR.Instructions.Break)
 						this.Break (instruction as IR.Instructions.Break);
 
+					else if (instruction is IR.Instructions.Throw)
+						this.Throw (instruction as IR.Instructions.Throw);
+
 					else
 						throw new EngineException ("'" + instruction + "' is not supported.");
 				}

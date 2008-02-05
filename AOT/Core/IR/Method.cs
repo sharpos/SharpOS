@@ -417,7 +417,7 @@ namespace SharpOS.AOT.IR {
 				}
 
 
-				if (tryLast != null)
+				if (tryLast != null && exceptionHandler.Type == ExceptionHandlerType.Finally)
 					tryLast.IsTryLast = true;
 
 				if (filterLast != null)
@@ -2348,6 +2348,37 @@ namespace SharpOS.AOT.IR {
 							|| definition.Parameters.Count != 1
 							|| definition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName)
 						throw new EngineException (string.Format ("'{0}' is not a valid AllocObject method", this.methodDefinition.ToString ()));
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is throw.
+		/// </summary>
+		/// <value><c>true</c> if this instance is throw; otherwise, <c>false</c>.</value>
+		public bool IsThrow
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute customAttribute in definition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.ThrowAttribute).ToString ())
+						continue;
+
+					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Void
+							|| !definition.IsStatic
+							|| definition.Parameters.Count != 1
+							|| Class.GetTypeFullName (definition.Parameters [0].ParameterType) != Mono.Cecil.Constants.Object)
+						throw new EngineException (string.Format ("'{0}' is not a valid Throw method", this.methodDefinition.ToString ()));
 
 					return true;
 				}

@@ -601,25 +601,36 @@ namespace SharpOS.Korlib.Runtime {
 			__TestIsBaseClassOf ();
 		}
 
-		private static void __TestMethodBoundaries ()
+		private unsafe static void __TestMethodBoundaries ()
 		{
 			Testcase.Test (MethodBoundaries.Length > 0, "Runtime", "MethodBoundaries.Length should be greater than 0");
 
+#if false
 			for (int i = 0; i < MethodBoundaries.Length; i++)
 				PrintMethodBoundary (MethodBoundaries [i]);
+#endif
 
-			MethodBoundary [] callingStack = MemoryUtil.GetCallingStack ();
+			StackFrame [] callingStack = ExceptionHandling.GetCallingStack ();
 
 			Testcase.Test (callingStack != null, "Runtime", "callingStack != null");
 
 			for (int i = 0; i < callingStack.Length; i++) {
 				Serial.Write ("\tCalled Method: ");
 
+				Serial.WriteNumber ((int) callingStack [i].IP, true);
+				
+				Serial.Write (" ");
+
 				if (callingStack [i] == null)
 					Serial.WriteLine ("<empty>");
 				else
-					Serial.WriteLine (callingStack [i].Name);
+					Serial.WriteLine (callingStack [i].MethodBoundary.Name);
 			}
+		}
+
+		private static void PrintCallingStack (StackFrame callingStack)
+		{
+
 		}
 
 		private static void PrintMethodBoundary (MethodBoundary methodBoundary)
@@ -820,6 +831,44 @@ namespace SharpOS.Korlib.Runtime {
 		public static TypeDefRow GetObjectType (object obj)
 		{
 			return GetType (GetTypeInfo (obj));
+		}
+
+		[SharpOS.AOT.Attributes.Throw]
+		internal static unsafe void Throw (InternalSystem.Object exception)
+		{
+			StackFrame [] callingStack = ExceptionHandling.GetCallingStack ();
+
+			for (int i = 1; i < callingStack.Length; i++) {
+				ExceptionHandlingClause handler = null;
+
+				for (int j = 0; j < callingStack [i].MethodBoundary.ExceptionHandlingClauses.Length; j++) {
+					ExceptionHandlingClause exceptionHandlingClause  = callingStack [i].MethodBoundary.ExceptionHandlingClauses [j];
+
+					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Finally)
+						continue;
+
+					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Fault)
+						continue;
+
+					if (callingStack [i].IP < exceptionHandlingClause.TryBegin
+							|| callingStack [i].IP >= exceptionHandlingClause.TryEnd)
+						continue;
+
+					Serial.WriteLine (exception.VTable.Type.Name);
+					Serial.WriteLine (exceptionHandlingClause.TypeInfo.VTable.Type.Name);
+					Serial.WriteNumber ((int) Runtime.GetPointerFromObject (exceptionHandlingClause), true);
+					Serial.WriteLine ();
+
+					if (!Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo.VTable.Type))
+						Serial.WriteLine ("ZZZZZZ wrong handler type");
+
+					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch
+							&& !Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo.VTable.Type))
+						continue;
+
+					Serial.WriteLine ("XXXXXX Got a handler");
+				}
+			}
 		}
 
 		[SharpOS.AOT.Attributes.AllocObject]

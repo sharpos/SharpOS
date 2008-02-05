@@ -1,0 +1,31 @@
+//
+// (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
+//
+// Authors:
+//	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//
+// Licensed under the terms of the GNU GPL v3,
+//  with Classpath Linking Exception for Libraries
+//
+
+using System;
+using AOTAttr = SharpOS.AOT.Attributes;
+using SharpOS.Korlib.Runtime;
+
+namespace SharpOS.Kernel.ADC {
+	internal unsafe class StackFrame {
+		public void* IP;
+		public void* BP;
+		public MethodBoundary MethodBoundary;
+	}
+
+	public static class ExceptionHandling {
+		[AOTAttr.ADCStub]
+		internal unsafe static StackFrame [] GetCallingStack ()
+		{
+			Diagnostics.Error ("Unimplemented - MemoryUtil.GetCallingStack");
+
+			return null;
+		}
+	}
+}

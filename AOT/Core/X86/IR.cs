@@ -2264,7 +2264,7 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Method.Class.TypeFullName));
 				this.assembly.PUSH (R32.EAX);
 				this.assembly.CALL (this.assembly.Engine.AllocObject.AssemblyLabel);
-				assembly.ADD (R32.ESP, 4);
+				this.assembly.ADD (R32.ESP, 4);
 
 				IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 
@@ -2915,6 +2915,24 @@ namespace SharpOS.AOT.X86 {
 		private void Break (IR.Instructions.Break instruction)
 		{
 			// Does nothing, perhaps emit a label?
+		}
+
+		private void Throw (IR.Instructions.Throw instruction)
+		{
+			if (instruction.Use.Length == 1) {
+				IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+
+				if (value.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+			} else
+				this.assembly.XOR (R32.EAX, R32.EAX);
+
+			this.assembly.PUSH (R32.EAX);
+			this.assembly.CALL (this.assembly.Engine.Throw.AssemblyLabel);
+			this.assembly.ADD (R32.ESP, 4);
 		}
 	}
 }

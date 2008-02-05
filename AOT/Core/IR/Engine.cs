@@ -359,6 +359,20 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		Method _throw = null;
+
+		/// <summary>
+		/// Gets the throw.
+		/// </summary>
+		/// <value>The throw.</value>
+		public Method Throw
+		{
+			get
+			{
+				return this._throw;
+			}
+		}
+
 		/// <summary>
 		/// Changes the Status property of the Engine.
 		/// </summary>
@@ -1125,6 +1139,12 @@ namespace SharpOS.AOT.IR {
 							throw new EngineException ("More than one method was tagged as AllocSZArray Method.");
 
 						this.allocArray = _method;
+
+					} else if (_method.IsThrow) {
+						if (this._throw != null)
+							throw new EngineException ("More than one method was tagged as Throw Method.");
+
+						this._throw = _method;
 					}
 				}
 			}
@@ -1134,6 +1154,9 @@ namespace SharpOS.AOT.IR {
 
 			if (this.allocArray == null)
 				throw new EngineException ("No AllocSZArray Method defined.");
+
+			if (this._throw == null)
+				throw new EngineException ("No Throw Method defined.");
 		}
 
 		/// <summary>

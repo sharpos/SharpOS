@@ -19,13 +19,5 @@ namespace SharpOS.Kernel.ADC {
 		{
 			Diagnostics.Error ("Unimplemented - MemoryUtil.Call");
 		}
-
-		[AOTAttr.ADCStub]
-		internal unsafe static MethodBoundary [] GetCallingStack ()
-		{
-			Diagnostics.Error ("Unimplemented - MemoryUtil.GetCallingStack");
-
-			return null;
-		}
 	}
 }

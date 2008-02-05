@@ -33,12 +33,18 @@ namespace SharpOS.Kernel.Tests.CS {
 			try {
 				result = 0;
 
-				// throw new Exception ();
+				ThrowException ();
+
 			} catch (System.Exception exception) {
 				result = 1;
 			}
 
 			return result;			
+		}
+
+		private static void ThrowException ()
+		{
+			throw new System.Exception ();
 		}
 #else
 		public static uint CMPExceptionHandling ()
