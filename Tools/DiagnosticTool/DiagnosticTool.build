@@ -1,0 +1,38 @@
+<?xml version="1.0"?>
+
+<!--
+        *  (C) 2007 Cedric Rousseau <cedrou [at] gmail [dot] com>
+        *
+        *  Licensed under the terms of the GNU GPL License version 2.
+        *
+-->
+
+<project name="DiagnosticTool" default="build">
+	<property name="debug" value="false" readonly="false" overwrite="false" />
+	<property name="prefix" value="../../build" overwrite="false" />
+	
+	<target name="build">
+		<echo message="Building DiagnosticTool" />
+		
+		<copy file="../../References/Mono.Posix.dll" todir="${prefix}" />
+		
+		<csc target="exe" output="${path::combine(prefix, 'DiagnosticTool.exe')}" debug="${debug}" unsafe="true">
+			<references>
+				<include name="System.Windows.Forms" asis="true" />
+				<include name="System.Drawing" asis="true" />
+				<include name="${path::combine(prefix, 'Mono.Posix.dll')}" />
+				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
+			</references>
+			<sources>
+				<include name="*.cs" />
+			</sources>
+		</csc>
+	</target>
+	
+	<target name="clean">
+		<delete file="${path::combine(prefix, 'DiagnosticTool.exe')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'DiagnosticTool.xml')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'DiagnosticTool.mdb')}" failonerror="false" />
+		<delete file="${path::combine(prefix, 'DiagnosticTool.pdb')}" failonerror="false" />
+	</target>
+</project>
