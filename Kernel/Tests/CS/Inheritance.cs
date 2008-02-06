@@ -1,4 +1,4 @@
-﻿//
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -122,6 +122,26 @@ namespace SharpOS.Kernel.Tests.CS {
 		public static uint CMPCallShadowedMemberFromBase ()
 		{
 			if ((new SubClass () as Base).Get58shadowWith69 () == 58)
+				return 1;
+
+			return 0;
+		}
+
+		public static uint CMPIsInst ()
+		{
+			object o1 = new SubClass ();
+
+			if ((o1 as Base) != null)
+				return 1;
+
+			return 0;
+		}
+
+		public static uint CMPTypeSafeIsInst ()
+		{
+			object o1 = new Base ();
+
+			if ((o1 as SubClass) == null)
 				return 1;
 
 			return 0;

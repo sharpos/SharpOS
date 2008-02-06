@@ -595,7 +595,7 @@ namespace SharpOS.Korlib.Runtime {
 				Serial.WriteLine ("ERROR");
 			else
 				Serial.WriteLine ("Location OK");
-			
+
 			__TestMethodBoundaries ();
 			__TestObjectConversion ();
 			__TestIsBaseClassOf ();
@@ -723,7 +723,6 @@ namespace SharpOS.Korlib.Runtime {
 			object o2 = new TestB ();
 			object o3 = new TestC ();
 			object o4 = new TestD ();
-
 			InternalSystem.Object io1, io2, io3, io4;
 			uint ui = 1109;
 
@@ -801,6 +800,11 @@ namespace SharpOS.Korlib.Runtime {
 				"Runtime", "IsBaseClassOf (new TestC (), new TestA ())");
 			//Testcase.Test (Runtime.IsBaseClassOf (io4.VTable.Type, "System", "ValueType") == false,
 			//	"Runtime", "IsBaseClassOf (new TestD (), ('System.ValueType'))");
+
+			Runtime.Free (o1);
+			Runtime.Free (o2);
+			Runtime.Free (o3);
+			//Runtime.Free (o4);
 		}
 
 		public static TypeDefRow GetType (TypeInfo type)
@@ -831,6 +835,15 @@ namespace SharpOS.Korlib.Runtime {
 		public static TypeDefRow GetObjectType (object obj)
 		{
 			return GetType (GetTypeInfo (obj));
+		}
+
+		[SharpOS.AOT.Attributes.IsInst]
+		internal static unsafe object IsInst (InternalSystem.Object obj, TypeInfo type)
+		{
+			if (IsBaseClassOf (obj.VTable.Type, type))
+				return obj;
+			else
+				return null;
 		}
 
 		[SharpOS.AOT.Attributes.Throw]
@@ -952,8 +965,20 @@ namespace SharpOS.Korlib.Runtime {
 			return false;
 		}
 
-		public static bool IsBaseClassOf (TypeInfo type, TypeInfo baseType)
+		public static unsafe bool IsBaseClassOf (TypeInfo type, TypeInfo baseType)
 		{
+			byte *systemObject = Stubs.CString ("System.Object");
+
+			// Special case for System.Object
+
+			if (ByteString.Compare (systemObject, baseType.Name) == 0)
+				return true;
+
+			// If the type infos are the same, then the result is true
+
+			if (type == baseType)
+				return true;
+
 			return IsBaseClassOf (type.Assembly, type.MetadataToken, baseType.Assembly, baseType.MetadataToken);
 		}
 
@@ -966,6 +991,8 @@ namespace SharpOS.Korlib.Runtime {
 			bool result = false;
 			TypeDefRow lastInterimDef = null;
 
+			if (typeAsm == baseAsm && type == baseType)
+				return true;
 
 			MetadataToken.Decode (type, out typeTokType, out typeRID);
 			MetadataToken.Decode (baseType, out baseTokType, out baseRID);
