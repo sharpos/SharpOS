@@ -909,7 +909,7 @@ namespace SharpOS.Korlib.Runtime {
 			if (handler == null)
 				Diagnostics.Panic ("No exception handler found");
 
-			exception.CurrentStackFrame = i;
+			exception.CurrentStackFrame = i - 1;
 
 			Serial.WriteLine ("Calling the found handler");
 			
@@ -917,6 +917,7 @@ namespace SharpOS.Korlib.Runtime {
 			Serial.WriteNumber ((int) exception.CurrentStackFrame, false);
 			Serial.WriteLine ();
 
+			ExceptionHandling.CallHandler (exception, handler);
 		}
 
 		[SharpOS.AOT.Attributes.AllocObject]
