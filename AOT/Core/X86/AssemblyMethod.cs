@@ -102,7 +102,21 @@ namespace SharpOS.AOT.X86 {
 				assembly.LABEL (string.Format (Assembly.METHOD_BLOCK_LABEL, fullname, block.Index.ToString ()));
 
 				if (block.IsFinallyFilterFaultStart)
-						this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.ESP);
+					this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.ESP);
+
+				// TODO find a more elegant way to set the exception when calling the handler?
+				if (block.IsCatchBegin
+						&& block.InstructionsCount > 0
+						&& block [0] is IR.Instructions.Stloc) {
+					this.assembly.POP (R32.EAX);
+
+					IR.Operands.Register exception = block [0].Use [0] as IR.Operands.Register;
+
+					if (exception.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (exception.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (exception)), R32.EAX);
+				}
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {
 					assembly.COMMENT (instruction.ToString ());

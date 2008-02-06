@@ -99,6 +99,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			// Just dump the address of the caller
 			Asm.POP (R32.EAX);
 
+			// We push the exception address on the stack
+			Asm.PUSH (R32.EDX);
+
 			// Push target address of the handler
 			Asm.PUSH (R32.ECX);
 			Asm.RET ();

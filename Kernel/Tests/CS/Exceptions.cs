@@ -11,6 +11,23 @@
 //#define EXCEPTION_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
+	public class TestException: System.Exception {
+		public TestException (uint result)
+		{
+			this.result = result;
+		}
+
+		private uint result;
+
+		public uint Result
+		{
+			get
+			{
+				return this.result;
+			}
+		}
+	}
+
 	public class Exceptions {
 #if !EXCEPTION_NOT_SUPPORTED
 		public static uint CMPFinally ()
@@ -42,9 +59,33 @@ namespace SharpOS.Kernel.Tests.CS {
 			return result;			
 		}
 
+		public static uint CMPCatch2 ()
+		{
+			uint result;
+
+			try {
+				result = 0;
+
+				ThrowTestException ();
+
+			} catch (TestException exception) {
+				result = exception.Result;
+
+			} catch (System.Exception exception) {
+				result = 2;
+			}
+
+			return result;
+		}
+
 		private static void ThrowException ()
 		{
 			throw new System.Exception ();
+		}
+
+		private static void ThrowTestException ()
+		{
+			throw new TestException (1);
 		}
 #else
 		public static uint CMPExceptionHandling ()
