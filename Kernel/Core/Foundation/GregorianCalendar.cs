@@ -3,6 +3,7 @@
 //
 // Authors:
 //	William Lahti <xfurious@gmail.com>
+//	Sebastian Öberg <sebastian.oberg@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -178,11 +179,42 @@ namespace SharpOS.Kernel.Foundation {
 
 		public static bool debug = false;
 
-		public unsafe static int GetDayOfWeek (Time *time)
+		public unsafe static int GetDayOfWeek(Time* time)
 		{
-			// TODO
+			int dayOfWeek = time->Year + (time->Year / 4);
+			dayOfWeek -= time->Year / 100;
+			dayOfWeek += time->Year / 400;
+			dayOfWeek += time->Day;
+			dayOfWeek += GetMonthPseudoNumber((uint)time->Month, (uint)time->Year);
+			dayOfWeek = dayOfWeek % 7;
 
-			return 1;
+			return dayOfWeek;
+		}
+
+		public unsafe static int GetMonthPseudoNumber(uint month, uint year)
+		{
+			switch (month) {
+				case 1: if (IsLeapYear(year))
+						return 6;
+					else
+						return 0;
+				case 2: if (IsLeapYear(year))
+						return 2;
+					else
+						return 3;
+				case 3: return 3;
+				case 4: return 6;
+				case 5: return 1;
+				case 6: return 4;
+				case 7: return 6;
+				case 8: return 2;
+				case 9: return 5;
+				case 10: return 0;
+				case 11: return 3;
+				case 12: return 5;
+			}
+
+			return 0;
 		}
 
 		public unsafe static void DecodeTimestamp (ulong timestamp, Time *out_time)
