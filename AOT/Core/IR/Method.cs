@@ -2377,7 +2377,7 @@ namespace SharpOS.AOT.IR {
 					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Void
 							|| !definition.IsStatic
 							|| definition.Parameters.Count != 1
-							|| Class.GetTypeFullName (definition.Parameters [0].ParameterType) != Mono.Cecil.Constants.Object)
+							|| Class.GetTypeFullName (definition.Parameters [0].ParameterType) != "System.Exception")
 						throw new EngineException (string.Format ("'{0}' is not a valid Throw method", this.methodDefinition.ToString ()));
 
 					return true;

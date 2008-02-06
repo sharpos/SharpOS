@@ -8,6 +8,8 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+#define DEBUG_EXCEPTION_HANDLING
+
 using System.Runtime.InteropServices;
 using SharpOS.AOT.Metadata;
 using SharpOS.AOT.Attributes;
@@ -847,17 +849,24 @@ namespace SharpOS.Korlib.Runtime {
 		}
 
 		[SharpOS.AOT.Attributes.Throw]
-		internal static unsafe void Throw (InternalSystem.Object exception)
+		internal static unsafe void Throw (InternalSystem.Exception exception)
 		{
-			StackFrame [] callingStack = ExceptionHandling.GetCallingStack ();
+			if (exception.CallingStack == null) {
+				exception.CurrentStackFrame = 2;
+				exception.CallingStack = ExceptionHandling.GetCallingStack ();
+			}
 
-			PrintCallingStack (callingStack);
+#if DEBUG_EXCEPTION_HANDLING
+			PrintCallingStack (exception.CallingStack);
+#endif
 
-			for (int i = 2; i < callingStack.Length; i++) {
-				ExceptionHandlingClause handler = null;
-				MethodBoundary methodBoundary = callingStack [i].MethodBoundary;
+			ExceptionHandlingClause handler = null;
+			int i = exception.CurrentStackFrame;
 
-				for (int j = 0; j < callingStack [i].MethodBoundary.ExceptionHandlingClauses.Length; j++) {
+			for (; i < exception.CallingStack.Length && handler == null; i++) {
+				MethodBoundary methodBoundary = exception.CallingStack [i].MethodBoundary;
+
+				for (int j = 0; j < exception.CallingStack [i].MethodBoundary.ExceptionHandlingClauses.Length; j++) {
 					ExceptionHandlingClause exceptionHandlingClause  = methodBoundary.ExceptionHandlingClauses [j];
 
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Finally)
@@ -866,11 +875,11 @@ namespace SharpOS.Korlib.Runtime {
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Fault)
 						continue;
 
-					if (callingStack [i].IP < exceptionHandlingClause.TryBegin
-							|| callingStack [i].IP >= exceptionHandlingClause.TryEnd)
+					if (exception.CallingStack [i].IP < exceptionHandlingClause.TryBegin
+							|| exception.CallingStack [i].IP >= exceptionHandlingClause.TryEnd)
 						continue;
 
-
+#if DEBUG_EXCEPTION_HANDLING
 					Serial.WriteLine (exception.VTable.Type.Name);
 					Serial.WriteNumber ((int) exception.VTable.Type.MetadataToken, true);
 					Serial.WriteLine ();
@@ -878,17 +887,36 @@ namespace SharpOS.Korlib.Runtime {
 					Serial.WriteLine (exceptionHandlingClause.TypeInfo.Name);
 					Serial.WriteNumber ((int) exceptionHandlingClause.TypeInfo.MetadataToken, true);
 					Serial.WriteLine ();
+#endif
 
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch
 							&& !Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo)) {
 						continue;
 					}
 
-					Serial.WriteLine ("XXXXXX Got a handler");
+					if (handler == null)
+						handler = exceptionHandlingClause;
 
-					handler = exceptionHandlingClause;
+					else if ((handler.TryBegin < exceptionHandlingClause.TryBegin
+								&& handler.TryEnd >= exceptionHandlingClause.TryEnd)
+							|| (handler.TryBegin < exceptionHandlingClause.TryBegin
+								&& handler.TryEnd >= exceptionHandlingClause.TryEnd))
+						handler = exceptionHandlingClause;
 				}
 			}
+
+			// TODO this should check out if the error occured in a thread or a process
+			if (handler == null)
+				Diagnostics.Panic ("No exception handler found");
+
+			exception.CurrentStackFrame = i;
+
+			Serial.WriteLine ("Calling the found handler");
+			
+			Serial.Write ("Frame: #");
+			Serial.WriteNumber ((int) exception.CurrentStackFrame, false);
+			Serial.WriteLine ();
+
 		}
 
 		[SharpOS.AOT.Attributes.AllocObject]

@@ -10,10 +10,14 @@
 
 using SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
+using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
 	public class Exception: InternalSystem.Object {
+		internal StackFrame [] CallingStack = null;
+		internal int CurrentStackFrame = 0;
+
 		public Exception ()
 		{
 		}
