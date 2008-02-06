@@ -878,14 +878,11 @@ namespace SharpOS.Korlib.Runtime {
 					Serial.WriteLine (exceptionHandlingClause.TypeInfo.Name);
 					Serial.WriteNumber ((int) exceptionHandlingClause.TypeInfo.MetadataToken, true);
 					Serial.WriteLine ();
-					
-
-					if (!Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo))
-						Serial.WriteLine ("ZZZZZZ wrong handler type");
 
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch
-							&& !Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo.VTable.Type))
+							&& !Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo)) {
 						continue;
+					}
 
 					Serial.WriteLine ("XXXXXX Got a handler");
 
