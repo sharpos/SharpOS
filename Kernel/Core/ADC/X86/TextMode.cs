@@ -360,8 +360,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 				fill_dst = 0;
 			}
 
-			videoMemory.Move(move_src, move_dst, move_count);
-			videoMemory.Fill(fill, fill_dst, fill_count);
+      videoMemory.Move((uint)videoMemory.address + move_src, (uint)videoMemory.address + move_dst, move_count);
+      videoMemory.Fill((uint)videoMemory.address + fill, (uint)videoMemory.address + fill_dst, fill_count);
 		}
 
 		public static void ScrollPageWrite (int value)
@@ -384,7 +384,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			SetCursor (x, y);
 		}
 
-		/// <summary>
+    /// <summary>
 		/// Scrolls the text on the screen
 		/// </summary>
 		/// <param name="value">Positive value is down, negative is up</param>
