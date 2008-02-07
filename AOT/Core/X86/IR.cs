@@ -1382,7 +1382,8 @@ namespace SharpOS.AOT.X86 {
 					break;
 
 				default:
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("The conversion from " + value.InternalType +
+						" to " + instruction.ConvertType + " is not yet supported.");
 				}
 
 				break;
@@ -1402,7 +1403,8 @@ namespace SharpOS.AOT.X86 {
 
 					break;
 				default:
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("The conversion from " + value.InternalType +
+						" to " + instruction.ConvertType + " is not yet supported.");
 				}
 
 				break;
