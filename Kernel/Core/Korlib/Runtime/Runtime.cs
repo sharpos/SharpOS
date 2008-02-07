@@ -864,13 +864,16 @@ namespace SharpOS.Korlib.Runtime {
 		[SharpOS.AOT.Attributes.Throw]
 		internal static unsafe void Throw (InternalSystem.Exception exception)
 		{
-			Serial.WriteLine ("enter throw");
+			Serial.WriteLine ("xxx enter throw");
 			if (exception.CallingStack == null) {
+
+				Serial.WriteLine ("xxx Get the list");
+
 				exception.CurrentStackFrame = 2;
 				exception.CallingStack = ExceptionHandling.GetCallingStack ();
 			}
 
-			Serial.WriteLine ("printcall");
+			Serial.WriteLine ("xxx printcall");
 
 #if DEBUG_EXCEPTION_HANDLING
 			PrintCallingStack (exception.CallingStack);

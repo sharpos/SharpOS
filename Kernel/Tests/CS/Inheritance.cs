@@ -149,8 +149,6 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPCastClass ()
 		{
-			/* TODO: why does this hang?
-
 			object o1 = new SubClass ();
 			uint result = 1;
 
@@ -161,15 +159,10 @@ namespace SharpOS.Kernel.Tests.CS {
 			}
 
 			return result;
-			*/
-
-			return 0;
 		}
 
 		public static uint CMPTypeSafeCastClass ()
 		{
-			/* TODO: why does this hang?
-
 			object o1 = new Base ();
 			uint result = 0;
 
@@ -180,9 +173,6 @@ namespace SharpOS.Kernel.Tests.CS {
 			}
 
 			return result;
-			*/
-
-			return 0;
 		}
 	}
 }

@@ -95,6 +95,9 @@ namespace SharpOS.Kernel.ADC {
 
 			Diagnostics.Assert (retPtr != 0, "MemoryManager.Allocate(uint): Allocation failed");
 
+			// TODO X86.MemoryUtil.MemSet should not be called directly
+			SharpOS.Kernel.ADC.X86.MemoryUtil.MemSet (0, retPtr, allocate_size);
+
 			return (void*) retPtr;
 		}
 
