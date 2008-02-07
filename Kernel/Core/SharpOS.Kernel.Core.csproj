@@ -182,9 +182,11 @@
     <Compile Include="Korlib\System\Int16.cs" />
     <Compile Include="Korlib\System\Int32.cs" />
     <Compile Include="Korlib\System\Int64.cs" />
+    <Compile Include="Korlib\System\InvalidCastException.cs" />
     <Compile Include="Korlib\System\Object.cs" />
     <Compile Include="Korlib\System\SByte.cs" />
     <Compile Include="Korlib\System\String.cs" />
+    <Compile Include="Korlib\System\SystemException.cs" />
     <Compile Include="Korlib\System\UInt16.cs" />
     <Compile Include="Korlib\System\UInt32.cs" />
     <Compile Include="Korlib\System\UInt64.cs" />

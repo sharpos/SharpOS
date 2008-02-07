@@ -90,6 +90,7 @@
     <Compile Include="Attributes\AllocAttribute.cs" />
     <Compile Include="Attributes\AllocObjectAttribute.cs" />
     <Compile Include="Attributes\AddressOfAttribute.cs" />
+    <Compile Include="Attributes\CastClassAttribute.cs" />
     <Compile Include="Attributes\IsInstAttribute.cs" />
     <Compile Include="Attributes\ThrowAttribute.cs" />
     <Compile Include="Attributes\ExceptionHandlingClauseAttribute.cs" />
@@ -118,6 +119,7 @@
     <Compile Include="IAssembly.cs" />
     <Compile Include="IR\Instructions\Add.cs" />
     <Compile Include="IR\Instructions\Branch.cs" />
+    <Compile Include="IR\Instructions\Castclass.cs" />
     <Compile Include="IR\Instructions\ConditionCheck.cs" />
     <Compile Include="IR\Instructions\Convert.cs" />
     <Compile Include="IR\Instructions\And.cs" />
