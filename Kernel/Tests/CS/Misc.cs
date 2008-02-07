@@ -163,18 +163,18 @@ namespace SharpOS.Kernel.Tests.CS {
 			public void c5test(int i) {}
 			public static C c;
 		}
-		//public static void c5helper (bool a)
-		//{
-		//	C.c.c5test(a?1:2);
-		//}
+		
+		public static void c5helper (bool a)
+		{
+			C.c.c5test(a?1:2);
+		}
 
 		public static uint CMPPhiIndexBug ()
 		{
-		//	C.c = new C();
-		//	c5helper(true);
-		//	C.c = null;
-		//	return 1;
-			return 0;
+			C.c = new C();
+			c5helper(true);
+			C.c = null;
+			return 1;
 		}
 	}
 }

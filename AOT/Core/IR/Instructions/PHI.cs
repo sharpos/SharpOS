@@ -37,9 +37,9 @@ namespace SharpOS.AOT.IR.Instructions {
 		public override void Process (Method method)
 		{
 			InternalType type = this.use [0].InternalType;
-			int index = (this.def as Register).Index;
+			int index = (this.use [0] as Register).Index;
 
-			for (int i = 0; i < this.use.Length; i++) {
+			for (int i = 1; i < this.use.Length; i++) {
 				if (type != this.use [i].InternalType)
 					throw new EngineException (string.Format ("The PHI operands have not the same type. ({0})", method.MethodFullName));
 
