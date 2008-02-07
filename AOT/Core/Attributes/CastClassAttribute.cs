@@ -14,9 +14,9 @@ using SharpOS.AOT;
 
 namespace SharpOS.AOT.Attributes {
 	/// <summary>
-	/// Used to mark the method that is responsible for implementing the `isinst' instruction.
+	/// Used to mark the method that is responsible for implementing the `castclass' instruction.
 	/// </summary>
 	[AttributeUsage (AttributeTargets.Method)]
-	public sealed class IsInstAttribute : Attribute {
+	public sealed class CastClassAttribute : Attribute {
 	}
 }

@@ -2420,6 +2420,38 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
+		/// Gets a value indicating whether this instance is the implementation of `castclass'.
+		/// </summary>
+		/// <value><c>true</c> if this instance is isinst; otherwise, <c>false</c>.</value>
+		public bool IsCastClass
+		{
+			get
+			{
+				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+
+				if (definition == null
+						|| definition.CustomAttributes.Count == 0)
+					return false;
+
+				foreach (CustomAttribute customAttribute in definition.CustomAttributes) {
+					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.CastClassAttribute).ToString ())
+						continue;
+
+					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+							|| !definition.IsStatic
+							|| definition.Parameters.Count != 2
+							|| Class.GetTypeFullName (definition.Parameters [0].ParameterType) != Mono.Cecil.Constants.Object
+							|| Class.GetTypeFullName (definition.Parameters [1].ParameterType) != this.engine.TypeInfoClass.TypeFullName)
+						throw new EngineException (string.Format ("'{0}' is not a valid IsInst method", this.methodDefinition.ToString ()));
+
+					return true;
+				}
+
+				return false;
+			}
+		}
+
+		/// <summary>
 		/// Gets a value indicating whether this instance is alloc SZ array.
 		/// </summary>
 		/// <value>

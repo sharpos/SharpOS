@@ -373,7 +373,7 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		public Method isBaseClassOf = null;
+		Method isBaseClassOf = null;
 
 		/// <summary>
 		/// Gets the IsBaseClassOf method in the kernel.
@@ -383,6 +383,16 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				return this.isBaseClassOf;
+			}
+		}
+
+		Method castClass = null;
+
+		public Method CastClass
+		{
+			get
+			{
+				return this.castClass;
 			}
 		}
 
@@ -1160,9 +1170,14 @@ namespace SharpOS.AOT.IR {
 						this._throw = _method;
 					} else if (_method.IsIsInst) {
 						if (this.isBaseClassOf != null)
-							throw new EngineException ("More than one method was tagged as IsBaseClassOf Method.");
+							throw new EngineException ("More than one method was tagged as IsInst Method.");
 
 						this.isBaseClassOf = _method;
+					} else if (_method.IsCastClass) {
+						if (this.castClass != null)
+							throw new EngineException ("More than one method was tagged as CastClass method");
+
+						this.castClass = _method;
 					}
 				}
 			}

@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -405,7 +405,7 @@ namespace SharpOS.AOT.IR {
 		public void Visit (BlockVisitor visitor)
 		{
 			// TODO
-			/*foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.instructions) 
+			/*foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this.instructions)
 				instruction.VisitBlock (visitor);
 
 			visitor (this);*/
@@ -509,7 +509,7 @@ namespace SharpOS.AOT.IR {
 				if (instruction is Call
 						&& this.method.IsConstructor
 						&& this.method.Class.TypeFullName == Mono.Cecil.Constants.Object
-						&& (instruction as Call).Method.Class.TypeFullName == Mono.Cecil.Constants.Object) 
+						&& (instruction as Call).Method.Class.TypeFullName == Mono.Cecil.Constants.Object)
 					instruction = null;
 
 				if (instruction != null)
@@ -692,7 +692,7 @@ namespace SharpOS.AOT.IR {
 
 			return p.ToString ();
 		}
-		
+
 		/*
 		/// <summary>
 		/// Updates the index.
@@ -705,7 +705,7 @@ namespace SharpOS.AOT.IR {
 				instruction.Index = index++;
 			};
 
-			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this) 
+			foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in this)
 				instruction.VisitInstruction (visitor);
 		}*/
 
@@ -736,7 +736,7 @@ namespace SharpOS.AOT.IR {
 			p.PopElement ();	// block
 
 #if false // TODO: convert to XML dump?
-			
+
 			foreach (Instruction instruction in this.cil) {
 				string operand = string.Empty;
 
@@ -746,7 +746,7 @@ namespace SharpOS.AOT.IR {
 
 					} else if (instruction.Operand is Instruction[]) {
 						foreach (Instruction instruction2 in (instruction.Operand as Instruction[])) {
-							if (operand.Length > 0) 
+							if (operand.Length > 0)
 								operand += " ";
 
 							operand += instruction2.Offset.ToString();
@@ -754,7 +754,7 @@ namespace SharpOS.AOT.IR {
 
 						operand = "(" + operand + ")";
 
-					} else 
+					} else
 						operand = instruction.Operand.ToString();
 				}
 
@@ -2274,6 +2274,16 @@ namespace SharpOS.AOT.IR {
 			return new Isinst (this.method.Engine.GetClass (typeReference), result, value);
 		}
 
+		private SharpOS.AOT.IR.Instructions.Instruction Castclass (Mono.Cecil.Cil.Instruction cilInstruction)
+		{
+			TypeReference typeReference = cilInstruction.Operand as TypeReference;
+
+			Register value = this.GetRegister ();
+			Register result = this.SetRegister ();
+
+			return new Castclass (this.method.Engine.GetClass (typeReference), result, value);
+		}
+
 		private SharpOS.AOT.IR.Instructions.Instruction Break (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			return new Break ();
@@ -2295,11 +2305,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Cpobj (Mono.Cecil.Cil.Instruction cilInstruction)
-		{
-			throw new NotImplementedEngineException ();
-		}
-
-		private SharpOS.AOT.IR.Instructions.Instruction Castclass (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			throw new NotImplementedEngineException ();
 		}

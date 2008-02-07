@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -69,7 +69,7 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.AddSymbol (new COFF.Function (fullname));
 
 			assembly.LABEL (fullname);
-			
+
 			if (this.method.IsAbstract)
 				return true;
 
@@ -85,8 +85,8 @@ namespace SharpOS.AOT.X86 {
 			} else {
 				assembly.MOV (R32.EAX, R32.EBP);
 				assembly.MOV (R32.EBP, R32.ESP);
-				
-				// the value stands for the above PUSH instructions 
+
+				// the value stands for the above PUSH instructions
 				// after saving the ESP register and we set it to 0
 				// as nothing got saved
 				this.reservedStackSlots = 0;
@@ -285,6 +285,9 @@ namespace SharpOS.AOT.X86 {
 
 					else if (instruction is IR.Instructions.Isinst)
 						this.Isinst (instruction as IR.Instructions.Isinst);
+
+					else if (instruction is IR.Instructions.Castclass)
+						this.Castclass (instruction as IR.Instructions.Castclass);
 
 					else if (instruction is IR.Instructions.Leave)
 						this.Leave (instruction as IR.Instructions.Leave);
@@ -499,7 +502,7 @@ namespace SharpOS.AOT.X86 {
 
 				case InternalType.I8:
 					Memory memory = this.GetAddress (identifier);
-					
+
 					DWordMemory high = new DWordMemory (memory);
 					high.DisplacementDelta = 4;
 					assembly.PUSH (new DWordMemory (high));

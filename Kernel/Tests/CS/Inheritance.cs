@@ -146,5 +146,43 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
+
+		public static uint CMPCastClass ()
+		{
+			/* TODO: why does this hang?
+
+			object o1 = new SubClass ();
+			uint result = 1;
+
+			try {
+				Base b = (Base)o1;
+			} catch (System.InvalidCastException e) {
+				result = 0;
+			}
+
+			return result;
+			*/
+
+			return 0;
+		}
+
+		public static uint CMPTypeSafeCastClass ()
+		{
+			/* TODO: why does this hang?
+
+			object o1 = new Base ();
+			uint result = 0;
+
+			try {
+				SubClass b = (SubClass)o1;
+			} catch (System.InvalidCastException e) {
+				result = 1;
+			}
+
+			return result;
+			*/
+
+			return 0;
+		}
 	}
 }

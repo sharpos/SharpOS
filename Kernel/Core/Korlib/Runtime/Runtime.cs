@@ -621,7 +621,9 @@ namespace SharpOS.Korlib.Runtime {
 
 		private unsafe static void PrintCallingStack (StackFrame [] callingStack)
 		{
+			Serial.WriteLine ("enter printcall, length: ", callingStack.Length);
 			for (int i = 0; i < callingStack.Length; i++) {
+				Serial.WriteLine ("loop");
 				Serial.Write ("\tCalled Method: ");
 
 				Serial.WriteNumber ((int) callingStack [i].IP, true);
@@ -633,6 +635,7 @@ namespace SharpOS.Korlib.Runtime {
 				else
 					Serial.WriteLine (callingStack [i].MethodBoundary.Name);
 			}
+			Serial.WriteLine ("exit printcall");
 		}
 
 		private static void PrintMethodBoundary (MethodBoundary methodBoundary)
@@ -848,13 +851,25 @@ namespace SharpOS.Korlib.Runtime {
 				return null;
 		}
 
+		[SharpOS.AOT.Attributes.CastClass]
+		internal static unsafe object CastClass (InternalSystem.Object obj, TypeInfo type)
+		{
+			if (IsBaseClassOf (obj.VTable.Type, type))
+				return obj;
+			else
+				throw new System.InvalidCastException ();
+		}
+
 		[SharpOS.AOT.Attributes.Throw]
 		internal static unsafe void Throw (InternalSystem.Exception exception)
 		{
+			Serial.WriteLine ("enter throw");
 			if (exception.CallingStack == null) {
 				exception.CurrentStackFrame = 2;
 				exception.CallingStack = ExceptionHandling.GetCallingStack ();
 			}
+
+			Serial.WriteLine ("printcall");
 
 #if DEBUG_EXCEPTION_HANDLING
 			PrintCallingStack (exception.CallingStack);
@@ -912,7 +927,7 @@ namespace SharpOS.Korlib.Runtime {
 			exception.CurrentStackFrame = i - 1;
 
 			Serial.WriteLine ("Calling the found handler");
-			
+
 			Serial.Write ("Frame: #");
 			Serial.WriteNumber ((int) exception.CurrentStackFrame, false);
 			Serial.WriteLine ();

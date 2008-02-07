@@ -2897,6 +2897,29 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
 
+		private void Castclass (IR.Instructions.Castclass instruction)
+		{
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+			this.assembly.MOV (R32.EAX, this.assembly.GetTypeInfoLabel (instruction.Type.TypeFullName));
+			this.assembly.PUSH (R32.EAX);
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.PUSH (R32.EAX);
+			this.assembly.CALL (this.assembly.Engine.CastClass.AssemblyLabel);
+			this.assembly.ADD (R32.ESP, 8);
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+			else
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+		}
+
 		private void Leave (IR.Instructions.Leave instruction)
 		{
 			if (instruction.Block.IsTryLast)
