@@ -858,7 +858,7 @@ namespace SharpOS.Korlib.Runtime {
 		[SharpOS.AOT.Attributes.OverflowHandler]
 		internal static unsafe void OverflowHandler ()
 		{
-			throw new SystemOverflowException ();
+			throw new System.OverflowException ();
 		}
 
 		[SharpOS.AOT.Attributes.Throw]
