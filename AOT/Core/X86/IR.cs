@@ -1402,6 +1402,39 @@ namespace SharpOS.AOT.X86 {
 						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
 					break;
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_Ovf_I:
+					string exceptLabel = this.assembly.GetCMPLabel;
+					string okLabel = this.assembly.GetCMPLabel;
+					DWordMemory upper =
+						new DWordMemory (this.GetAddress (value));
+
+					upper.DisplacementDelta = 4;
+
+					// Check if it will overflow
+
+					this.assembly.MOV (R32.EAX, upper);
+					this.assembly.CMP (R32.EAX, 0);
+					this.assembly.JNE (exceptLabel);
+
+					// Handle the conversion
+
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+
+					this.assembly.JMP (okLabel);
+
+					// Conversion overflows, throw exception.
+
+					this.assembly.LABEL (exceptLabel);
+					this.assembly.CALL (this.assembly.Engine.OverflowHandler.AssemblyLabel);
+
+					this.assembly.LABEL (okLabel);
+
+					break;
 				default:
 					throw new NotImplementedEngineException ("The conversion from " + value.InternalType +
 						" to " + instruction.ConvertType + " is not yet supported.");

@@ -396,6 +396,16 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		Method overflowHandler = null;
+
+		public Method OverflowHandler
+		{
+			get
+			{
+				return this.overflowHandler;
+			}
+		}
+
 		/// <summary>
 		/// Changes the Status property of the Engine.
 		/// </summary>
@@ -1178,6 +1188,11 @@ namespace SharpOS.AOT.IR {
 							throw new EngineException ("More than one method was tagged as CastClass method");
 
 						this.castClass = _method;
+					} else if (_method.IsOverflowHandler) {
+						if (this.overflowHandler != null)
+							throw new EngineException ("More than one method was tagged as OverflowHandler method");
+
+						this.overflowHandler = _method;
 					}
 				}
 			}

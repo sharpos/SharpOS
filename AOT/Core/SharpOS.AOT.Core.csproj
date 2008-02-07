@@ -108,6 +108,7 @@
     <Compile Include="Attributes\StringAttribute.cs" />
     <Compile Include="Attributes\TargetNamespaceAttribute.cs" />
     <Compile Include="Attributes\VTableAttribute.cs" />
+    <Compile Include="Attributes\OverflowAttribute.cs" />
     <Compile Include="COFF.cs" />
     <Compile Include="IR\Block.cs" />
     <Compile Include="IR\Class.cs" />

@@ -38,7 +38,7 @@ namespace SharpOS.Korlib.Runtime {
 	internal class Runtime {
 
 		[AddressOf ("MetadataRoot")]
-		private static MetadataRoot Root;
+		internal static MetadataRoot Root;
 
 		[AddressOf ("MethodBoundaries")]
 		internal static MethodBoundary [] MethodBoundaries;
@@ -79,6 +79,14 @@ namespace SharpOS.Korlib.Runtime {
 		public static unsafe TypeDefRow ResolveTypeRef (AssemblyMetadata assembly, TypeRefRow row,
 			out AssemblyMetadata destAssembly)
 		{
+			uint token;
+
+			return ResolveTypeRef (assembly, row, out destAssembly, out token);
+		}
+
+		public static unsafe TypeDefRow ResolveTypeRef (AssemblyMetadata assembly, TypeRefRow row,
+			out AssemblyMetadata destAssembly, out uint typeDefToken)
+		{
 			CString8 *typeName = GetString (assembly, row.Name);
 			CString8 *typeNamespace = GetString (assembly, row.Namespace);
 			TokenType resScopeType;
@@ -97,6 +105,7 @@ namespace SharpOS.Korlib.Runtime {
 				"Runtime.ResolveTypeRef(): resolution scope token is of an invalid type");
 
 			destAssembly = null;
+			typeDefToken = 0;
 
 			if (resScopeType == TokenType.Assembly || resScopeType == TokenType.Module || resScopeType == TokenType.ModuleRef) {
 				Diagnostics.Assert (resScopeRID == 0,
@@ -245,29 +254,6 @@ namespace SharpOS.Korlib.Runtime {
 			return null;
 		}
 
-		public static TypeDefRow GetType (MetadataToken token, out AssemblyMetadata dest)
-		{
-			dest = null;
-
-			for (int x = 0; x < Root.Assemblies.Length; ++x) {
-				AssemblyMetadata def;
-				TypeDefRow result = GetType (Root.Assemblies [x], token.Type, token.RID, out def);
-
-				if (result != null) {
-					return result;
-					dest = def;
-				}
-			}
-
-			return null;
-		}
-
-		public static TypeDefRow GetType (MetadataToken token)
-		{
-			AssemblyMetadata dest;
-			return GetType (token, out dest);
-		}
-
 		public static TypeDefRow GetType (AssemblyMetadata assembly, MetadataToken token, out AssemblyMetadata dest)
 		{
 			return GetType (assembly, token.Type, token.RID, out dest);
@@ -288,6 +274,14 @@ namespace SharpOS.Korlib.Runtime {
 		public static TypeDefRow GetType (AssemblyMetadata assembly, TokenType type, uint rid,
 			out AssemblyMetadata destAssembly)
 		{
+			uint token;
+
+			return GetType (assembly, type, rid, out destAssembly, out token);
+		}
+
+		public static TypeDefRow GetType (AssemblyMetadata assembly, TokenType type, uint rid,
+			out AssemblyMetadata destAssembly, out uint typeDefToken)
+		{
 			Diagnostics.Assert (type == TokenType.TypeRef || type == TokenType.TypeDef,
 				"Runtime.GetType(): token type must be either TypeRef or TypeDef");
 
@@ -296,11 +290,12 @@ namespace SharpOS.Korlib.Runtime {
 					"Runtime.GetType(): token out of range for TypeDef table");
 
 				destAssembly = assembly;
+				typeDefToken = rid;
 				return assembly.TypeDef [rid - 1];
 			} else {
 				TypeRefRow row = assembly.TypeRef [rid - 1];
 
-				return ResolveTypeRef (assembly, row, out destAssembly);
+				return ResolveTypeRef (assembly, row, out destAssembly, out typeDefToken);
 			}
 		}
 
@@ -858,6 +853,12 @@ namespace SharpOS.Korlib.Runtime {
 				return obj;
 			else
 				throw new System.InvalidCastException ();
+		}
+
+		[SharpOS.AOT.Attributes.OverflowHandler]
+		internal static unsafe void OverflowHandler ()
+		{
+			throw new SystemOverflowException ();
 		}
 
 		[SharpOS.AOT.Attributes.Throw]
