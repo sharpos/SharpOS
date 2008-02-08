@@ -45,42 +45,24 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Client.cs" />
     <Compile Include="INamedPipe.cs" />
-    <Compile Include="MainWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MainWindow.Designer.cs">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-    </Compile>
-    <Compile Include="MemoryView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MemoryView.Designer.cs">
-      <DependentUpon>MemoryView.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Program.cs" />
     <Compile Include="AssemblyInfo.cs" />
+    <Compile Include="UnitTestsView.Designer.cs" />
     <Compile Include="UnitTestsView.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UnitTestsView.Designer.cs">
-      <DependentUpon>UnitTestsView.cs</DependentUpon>
+    <Compile Include="MemoryView.Designer.cs" />
+    <Compile Include="MemoryView.cs">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="UnixNamedPipe.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="MainWindow.Designer.cs" />
+    <Compile Include="MainWindow.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="WindowsNamedPipe.cs" />
-    <EmbeddedResource Include="MainWindow.resx">
-      <DependentUpon>MainWindow.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="MemoryView.resx">
-      <DependentUpon>MemoryView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
-    <EmbeddedResource Include="UnitTestsView.resx">
-      <DependentUpon>UnitTestsView.cs</DependentUpon>
-      <SubType>Designer</SubType>
-    </EmbeddedResource>
+    <Compile Include="Client.cs" />
+    <Compile Include="UnixNamedPipe.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

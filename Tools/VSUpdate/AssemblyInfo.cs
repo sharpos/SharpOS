@@ -6,11 +6,11 @@ using System.Runtime.InteropServices;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle ("VSUpdate")]
-[assembly: AssemblyDescription ("")]
+[assembly: AssemblyDescription ("It updates the .csproj files by scanning the project directory and adding their .cs files.")]
 [assembly: AssemblyConfiguration ("")]
-[assembly: AssemblyCompany ("Nutex")]
-[assembly: AssemblyProduct ("VSUpdate")]
-[assembly: AssemblyCopyright ("Copyright © Nutex 2008")]
+[assembly: AssemblyCompany ("The SharpOS Project (http://sharpos.org/)")]
+[assembly: AssemblyProduct ("SharpOS VS Update")]
+[assembly: AssemblyCopyright ("Copyright © 2007, The SharpOS Project")]
 [assembly: AssemblyTrademark ("")]
 [assembly: AssemblyCulture ("")]
 

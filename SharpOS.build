@@ -52,6 +52,16 @@
 			target="run" />
 	</target>
 	
+	<target name="vsupdate">
+		<echo message="Updating VS files..." />
+		<nant buildfile="./Tools/VSUpdate/VSUpdate.build"/>
+
+		<property name="prefix" value="build" overwrite="true" />
+		
+		<exec program="${path::combine(prefix, 'VSUpdate.exe')}"
+			commandline="." />
+	</target>
+	
 	<target name="clean">
 		<nant buildfile="./Tools/Tools.build" target="clean" />
 		<nant buildfile="./AOT/AOT.build" target="clean" />

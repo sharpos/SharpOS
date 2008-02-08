@@ -10,6 +10,7 @@
 
 using System;
 using System.Text;
+using System.Collections.Generic;
 using System.IO;
 using System.Xml;
 
@@ -54,7 +55,52 @@ namespace VSUpdate {
 
 			xmlDocument.Load (fileInfo.FullName);
 
-			
+			Console.WriteLine (string.Format ("Updating: {0}", fileInfo.FullName));
+
+			string xmlns = "";
+
+			if (xmlDocument.DocumentElement.NamespaceURI != "") {
+				xmlns = xmlDocument.DocumentElement.GetAttribute ("xmlns");
+				xmlDocument.DocumentElement.SetAttribute ("xmlns", "");
+				xmlDocument.LoadXml (xmlDocument.OuterXml);
+			}
+
+			XmlNodeList xmlNodeList = xmlDocument.SelectNodes("/Project/ItemGroup/Compile");
+
+			if (xmlNodeList.Count == 0)
+				return;
+
+			XmlNode itemGroup = xmlNodeList [0].ParentNode;
+
+			List<string> files = new List<string> ();
+
+			GetFiles (fileInfo.DirectoryName.Length, fileInfo.Directory, files);
+
+			itemGroup.RemoveAll ();
+
+			foreach (string value in files) {
+				XmlAttribute attribute = xmlDocument.CreateAttribute ("Include");
+				attribute.Value = value;
+
+				XmlNode node = xmlDocument.CreateElement ("Compile");
+				node.Attributes.Append (attribute);
+
+				itemGroup.AppendChild (node);
+			}
+
+			if (xmlns.Length > 0)
+				xmlDocument.DocumentElement.SetAttribute ("xmlns", xmlns);
+
+			xmlDocument.Save (fileInfo.FullName);
 		}
+
+		private static void GetFiles (int stripPrefix, DirectoryInfo directoryInfo, List<string> files)
+		{
+			foreach (DirectoryInfo _entry in directoryInfo.GetDirectories ())
+				GetFiles (stripPrefix, _entry, files);
+
+			foreach (FileInfo _entry in directoryInfo.GetFiles ("*.cs"))
+				files.Add (_entry.FullName.Substring (stripPrefix + 1));
+		}	
 	}
 }
