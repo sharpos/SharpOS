@@ -17,9 +17,9 @@ using System.Collections.Generic;
 
 namespace SharpOS.Tools.DiagnosticTool {
 	public class WindowsNamedPipe : INamedPipe {
-		public WindowsNamedPipe ()
+		public WindowsNamedPipe (string name)
 		{
-			path = @"\\.\pipe\SharpOS";
+			path = name;
 		}
 
 		private IntPtr pipeHandle;
@@ -115,14 +115,6 @@ namespace SharpOS.Tools.DiagnosticTool {
 				{
 					return Client.Status.Error;
 				}
-			}
-
-			while (true)
-			{
-				byte[] read = new byte[1];
-				uint count = 1;
-				Read (read, ref count);
-				if (read [0] == 0xAC) break;
 			}
 
 			return Client.Status.Success;

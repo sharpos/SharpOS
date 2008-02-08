@@ -18,10 +18,9 @@ using System.IO;
 
 namespace SharpOS.Tools.DiagnosticTool {
 	public class UnixNamedPipe : INamedPipe {
-		public UnixNamedPipe ()
+		public UnixNamedPipe (string name)
 		{
-			path = Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal),
-				".sharpos-fifo");
+      path = name;
 		}
 
 		string path;

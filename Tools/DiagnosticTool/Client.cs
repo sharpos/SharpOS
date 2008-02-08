@@ -14,33 +14,47 @@ using System.Runtime.InteropServices;
 using System.Threading;
 using System.Collections.Generic;
 using System.IO;
+using System.Collections;
 
 namespace SharpOS.Tools.DiagnosticTool {
-	public class Client {
-		public Client ()
+	public class Client
+  {
+    #region Construction 
+
+    public Client ()
 		{
-			if (Environment.OSVersion.Platform == PlatformID.Unix)
-				pipe = new UnixNamedPipe ();
-			else
-				pipe = new WindowsNamedPipe ();
+      if (Environment.OSVersion.Platform == PlatformID.Unix)
+      {
+        pipeControl = new UnixNamedPipe(Path.Combine (Environment.GetFolderPath (Environment.SpecialFolder.Personal), ".sharpos-control-fifo"));
+        pipeLog = new UnixNamedPipe(Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.Personal), ".sharpos-log-fifo"));
+      }
+      else
+      {
+        pipeLog = new WindowsNamedPipe(@"\\.\pipe\SharpOS-Log");
+        pipeControl = new WindowsNamedPipe(@"\\.\pipe\SharpOS-Control");
+      }
 
 			if (Program.Options.SaveFilename != null) {
 				using (StreamWriter sw = new StreamWriter (Program.Options.SaveFilename)) {
-					sw.Write (pipe.FileName);
-				}
+          sw.Write (pipeControl.FileName);
+          sw.Write (pipeLog.FileName);
+        }
 			}
-		}
+    }
 
-		#region Private fields
+    #endregion
 
-		private INamedPipe pipe = null;
+    #region Private fields
+
+    private INamedPipe pipeLog = null;
+    private INamedPipe pipeControl = null;
 
 		#endregion
 
 		#region Statistics
 
-		public uint BytesWritten { get { return pipe.BytesWritten; } }
-		public uint BytesRead { get { return pipe.BytesRead; } }
+		public uint BytesWritten { get { return pipeControl.BytesWritten; } }
+    public uint BytesRead { get { return pipeControl.BytesRead; } }
 
 		#endregion
 
@@ -59,19 +73,60 @@ namespace SharpOS.Tools.DiagnosticTool {
 
 		public Status Open ()
 		{
-			return pipe.Open ();
+      while (pipeLog.Open () != Client.Status.Success)
+      {
+        Thread.Sleep (100);
+      }
+      collectLogThread = new Thread (new ThreadStart (CollectLog));
+      collectLogThread.Start ();
+
+
+      while (pipeControl.Open () != Client.Status.Success)
+      {
+        Thread.Sleep (100);
+      }
+
+      byte[] read = new byte[1];
+      uint count = 1;
+      while (read[0] != 0xAC)
+      {
+        pipeControl.Read (read, ref count);
+        Thread.Sleep (100);
+      }
+
+      return Status.Success;
 		}
 
 		public void Close ()
 		{
-			pipe.Close ();
-		}
+      if (pipeControl != null) pipeControl.Close ();
+      if (pipeLog != null) pipeLog.Close ();
+    }
 
 		#endregion
 
-		#region Helpers
+    #region Log
 
-		/// <summary>
+    private Thread collectLogThread;
+    private Queue<byte> logQueue = new Queue<byte> ();
+
+    private void CollectLog ()
+    {
+      byte[] read = new byte[1];
+      uint count = 1;
+      while (pipeLog.Read (read, ref count) == Client.Status.Success)
+      {
+        logQueue.Enqueue (read[0]);
+      }
+    }
+
+		public Queue<byte> LogQueue { get { return logQueue; } }
+
+    #endregion
+
+    #region Helpers
+
+    /// <summary>
 		/// Empty the pipe to remove any garbage
 		/// </summary>
 		/// <returns></returns>
@@ -83,7 +138,7 @@ namespace SharpOS.Tools.DiagnosticTool {
 			// Empty the pipe
 
 			MainWindow.InvokeLog ("Emptying pipe...");
-			while (Read (read, ref count) != Status.Error && count==256);
+			while (ReadCommand (read, ref count) != Status.Error && count==256);
 
 			return Status.Success;
 		}
@@ -103,7 +158,7 @@ namespace SharpOS.Tools.DiagnosticTool {
 		/// <returns></returns>
 		public Status Ack ()
 		{
-			return Write (0xAC);
+			return WriteCommand (0xAC);
 		}
 
 		/// <summary>
@@ -114,7 +169,7 @@ namespace SharpOS.Tools.DiagnosticTool {
 		{
 			Wait (200);
 			Empty ();
-			return Write (0xAD);
+			return WriteCommand (0xAD);
 		}
 
 		/// <summary>
@@ -125,32 +180,32 @@ namespace SharpOS.Tools.DiagnosticTool {
 		{
 			Wait (200);
 			Empty ();
-			return Write (0xAE);
+			return WriteCommand (0xAE);
 		}
 
 		#endregion
 
 		#region Write data
 
-		private Status Write (params byte [] buffer)
+		private Status WriteCommand (params byte [] buffer)
 		{
-			return pipe.Write (buffer);
+      return pipeControl.Write (buffer);
 		}
 
 		#endregion
 
 		#region Read data
 
-		private Status Read (byte [] buffer, ref uint count)
+		private Status ReadCommand (byte [] buffer, ref uint count)
 		{
-			return pipe.Read (buffer, ref count);
+      return pipeControl.Read (buffer , ref count);
 		}
 
 		// Read a result message consisting of a size N coded on two bytes (LittleEndian) and N bytes.
 		// If an error occurs while reading, returns Status.Error
 		// If the read is incomplete, wait for a lapse, empty the pipe, send RESEND and restart the complete read.
 		// This could be optimized...
-		private Status Read (out byte [] buffer)
+		private Status ReadCommand (out byte [] buffer)
 		{
 			Status s;
 			byte[] localBuffer = null;
@@ -161,7 +216,7 @@ namespace SharpOS.Tools.DiagnosticTool {
 				// Read the size of data to read
 				uint count = 0;
 				byte[] numReadWritten = new byte [2];
-				s = Read (numReadWritten, ref count);
+				s = ReadCommand (numReadWritten, ref count);
 				if (s == Status.Error)
 					return Status.Error;
 
@@ -178,7 +233,7 @@ namespace SharpOS.Tools.DiagnosticTool {
 #if LOG_IO
 				MainWindow.InvokeLog ("---- Requesting " + msgLength + " bytes");
 #endif
-				s = Read (localBuffer, ref count);
+				s = ReadCommand (localBuffer, ref count);
 #if LOG_IO
 				MainWindow.InvokeLog ("---- Received " + count + " bytes");
 #endif
@@ -209,13 +264,13 @@ namespace SharpOS.Tools.DiagnosticTool {
 
 			// Send a connection message to SharpOS.
 			MainWindow.InvokeLog ("Try to connect...");
-			if (Write (0x00) != Status.Success)
+			if (WriteCommand (0x00) != Status.Success)
 			{
 				return Status.Error;
 			}
 
 			byte[] read;
-			if (Read (out read) != Status.Success)
+			if (ReadCommand (out read) != Status.Success)
 			{
 				return Status.Error;
 			}
@@ -233,14 +288,14 @@ namespace SharpOS.Tools.DiagnosticTool {
 			result = string.Empty;
 
 			MainWindow.InvokeLog ("Send test command...");
-			if (Write (0x01) != Status.Success)
+			if (WriteCommand (0x01) != Status.Success)
 			{
 				MainWindow.InvokeLog ("Send failed");
 				return Status.Error;
 			}
 
 			byte [] read;
-			if (Read (out read) != Status.Success)
+			if (ReadCommand (out read) != Status.Success)
 			{
 				MainWindow.InvokeLog ("Receive failed");
 				return Status.Error;
@@ -253,7 +308,7 @@ namespace SharpOS.Tools.DiagnosticTool {
 		public Status fn02_MemoryDump (uint address, out byte [] result, System.ComponentModel.BackgroundWorker bgw)
 		{
 			MainWindow.InvokeLog ("Start memory dump command...");
-			Status s = Write (0x02, (byte)(address & 0xFF), (byte)((address >> 8) & 0xFF), (byte)((address >> 16) & 0xFF), (byte)((address >> 24) & 0xFF));
+			Status s = WriteCommand (0x02, (byte)(address & 0xFF), (byte)((address >> 8) & 0xFF), (byte)((address >> 16) & 0xFF), (byte)((address >> 24) & 0xFF));
 			if (s != Status.Success)
 			{
 				result = null;
@@ -268,7 +323,7 @@ namespace SharpOS.Tools.DiagnosticTool {
 				bgw.ReportProgress ((100 * i) / 16);
 
 				byte[] read;
-				if (Read (out read) != Status.Success)
+				if (ReadCommand (out read) != Status.Success)
 					break;
 
 				Array.Copy (read, 0, result, currentOffset, read.Length);
@@ -296,12 +351,12 @@ namespace SharpOS.Tools.DiagnosticTool {
 		public Status fn03_UnitTests (UnitTests ut, System.ComponentModel.BackgroundWorker bgw)
 		{
 			MainWindow.InvokeLog ("Start unit tests command...");
-			Status s = Write (0x03);
+			Status s = WriteCommand (0x03);
 			if (s != Status.Success)
 				return s;
 
 			byte[] read;
-			if (Read (out read) != Status.Success)
+			if (ReadCommand (out read) != Status.Success)
 				return Status.Error;
 
 			int count = 0;
@@ -321,15 +376,15 @@ namespace SharpOS.Tools.DiagnosticTool {
 				bgw.ReportProgress ((100 * i) / count);
 
 				UnitTestDataItem item = new UnitTestDataItem ();
-				if (Read (out read) != Status.Success)
+				if (ReadCommand (out read) != Status.Success)
 					continue;
 				item.Source = System.Text.Encoding.ASCII.GetString (read);
 
-				if (Read (out read) != Status.Success)
+				if (ReadCommand (out read) != Status.Success)
 					continue;
 				item.Name = System.Text.Encoding.ASCII.GetString (read);
 
-				if (Read (out read) != Status.Success)
+				if (ReadCommand (out read) != Status.Success)
 					continue;
 				item.Result = (read [0] != 0);
 
