@@ -45,7 +45,7 @@
 				</items>
 			</in>
 			<do>
-				<call target="${filename}" />
+				<call target="${path::get-file-name(filename)}" />
 			</do>
 		</foreach>
 	</target>
