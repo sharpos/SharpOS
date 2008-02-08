@@ -115,8 +115,8 @@ namespace SharpOS.Kernel {
 			StageMessage ("Serial I/O setup...");
 			Serial.Setup ();
 
-      //StageMessage("Diagnostic Tool setup...");
-      //DiagnosticTool.Server.Setup();
+      StageMessage("Diagnostic Tool setup...");
+      DiagnosticTool.Server.Setup();
 
 			StageMessage("Scheduler setup...");
 			Scheduler.Setup();

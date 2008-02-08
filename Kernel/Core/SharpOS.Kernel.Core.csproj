@@ -140,6 +140,7 @@
     <Compile Include="CommandLine.cs" />
     <Compile Include="Console.cs" />
     <Compile Include="Diagnostics.cs" />
+    <Compile Include="DiagnosticTool\Server.cs" />
     <Compile Include="EntryModule.cs" />
     <Compile Include="EventRegisterStatus.cs" />
     <Compile Include="FileSystem\Block.cs" />
