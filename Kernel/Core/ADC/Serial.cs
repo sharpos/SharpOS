@@ -28,7 +28,7 @@ namespace SharpOS.Kernel.ADC {
 		public static SerialPort COM4 { [AOTAttr.ADCStub]get { return null; }}
 	}
 
-	public abstract class SerialPort {
+	public unsafe abstract class SerialPort {
 
 		#region Write family
 
