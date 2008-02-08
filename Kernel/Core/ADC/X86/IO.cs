@@ -559,35 +559,41 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//03DF CRT/CPU page register (PCjr only)
 			#endregion
 
-            #region 03E8-03EF - serial port, same as 02E8, 02F8 and 03F8
+            #region 03F8-03FF - serial port, same as 02E8, 02F8 and 03F8
             /// <summary>
-            /// Port 0x03F8
+            /// W: Transmitter holding buffer
+						/// R: Receiver buffer
             /// </summary>
             UART_Transmit_Receive_Buffer = 0x03F8,
             /// <summary>
-            /// Port 0x03F9
+            /// R/W: Interrupt enable buffer
             /// </summary>
             UART_Interrupt_Enable_Register = 0x03F9,
             /// <summary>
-            /// Port 0x03FA
+            /// R: Interrupt identification register
+						/// W: FIFO control register
             /// </summary>
             UART_Interrupt_Identification_Register = 0x03FA,
             /// <summary>
-            /// Port 0x03FB
+            /// R/W: Line control register
             /// </summary>
             UART_Line_Control_Register = 0x03FB,
             /// <summary>
-            /// Port 0x03FC
+            /// R/W: Modem control register
             /// </summary>
             UART_Modem_Control_Register = 0x03FC,
             /// <summary>
-            /// Port 0x03FD
+            /// R: Line status register
             /// </summary>
             UART_Line_Status_Register = 0x03FD,
             /// <summary>
-            /// Port 0x03FE
+            /// R: Modem status register
             /// </summary>
             UART_Modem_Status_Register = 0x03FE,
+            /// <summary>
+            /// R/W: Scratch register
+            /// </summary>
+            UART_Scratch_Register = 0x03FF,
             #endregion
 
 			#region 03F0-03F7 - Primary Floppy Disk Controller (PFC)

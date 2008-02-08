@@ -29,7 +29,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 			PIC.Setup ();		// Programmable Interrupt Controller
 			IDT.Setup ();		// Interrupt Descriptor table
 			PIT.Setup ();		// Periodic Interrupt Timer
-			Serial.Setup ();	// Setup serial I/O			
+			// Disabled because it needs MemoryManager [cedrou]
+			//Serial.Setup ();	// Setup serial I/O			
 		}
 		#endregion
 

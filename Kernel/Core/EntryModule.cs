@@ -111,6 +111,13 @@ namespace SharpOS.Kernel {
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
 
+      // Must be done after MemoryManager setup.
+			StageMessage ("Serial I/O setup...");
+			Serial.Setup ();
+
+      //StageMessage("Diagnostic Tool setup...");
+      //DiagnosticTool.Server.Setup();
+
 			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
 
@@ -150,10 +157,10 @@ namespace SharpOS.Kernel {
 
 #if KERNEL_TESTS
 			// Testcases
-			Serial.WriteLine ("Failed AOT Tests:");
+			Serial.COM1.WriteLine ("Failed AOT Tests:");
 			SharpOS.Kernel.Tests.Wrapper.Run ();
-			Serial.WriteLine ();
-			Serial.WriteLine ("Kernel Tests:");
+			Serial.COM1.WriteLine ();
+			Serial.COM1.WriteLine ("Kernel Tests:");
 			MemoryManager.__RunTests ();
 			ByteString.__RunTests ();
 			StringBuilder.__RunTests ();

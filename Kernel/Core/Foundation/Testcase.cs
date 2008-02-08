@@ -147,17 +147,17 @@ namespace SharpOS.Kernel.Foundation {
 			CString8 *nameStr = CString8.Copy (name);
 
 			if (PrintTestcases) {
-				Serial.Write (sourceStr);
-				Serial.Write (": ");
-				Serial.Write (nameStr);
-				Serial.Write (" ... ");
+				Serial.COM1.Write (sourceStr);
+				Serial.COM1.Write (": ");
+				Serial.COM1.Write (nameStr);
+				Serial.COM1.Write (" ... ");
 
 				TextMode.SaveAttributes ();
 
 				if (result) {
-					Serial.WriteLine ("PASS");
+					Serial.COM1.WriteLine ("PASS");
 				} else {
-					Serial.WriteLine ("FAIL");
+					Serial.COM1.WriteLine ("FAIL");
 				}
 
 				TextMode.RestoreAttributes ();
