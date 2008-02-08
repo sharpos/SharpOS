@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{6259C0C2-414C-11DC-8314-0800200C9A66}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -88,6 +88,6 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>$(TargetDir)\KernelTestsWrapperGen.exe</PreBuildEvent>
+    <PreBuildEvent>..\build\KernelTestsWrapperGen.exe</PreBuildEvent>
   </PropertyGroup>
 </Project>

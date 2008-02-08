@@ -244,15 +244,15 @@
   </Target>
   -->
   <PropertyGroup>
-    <PreBuildEvent>$(TargetDir)\KernelTestsWrapperGen.exe
-$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\DE.skm -o:"$(SolutionDir)\build\KeyMaps\DE.bin"
-$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US.skm -o:"$(SolutionDir)\build\KeyMaps\US.bin"
-$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\UK.skm -o:"$(SolutionDir)\build\KeyMaps\UK.bin"
-$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US-Dvorak-ANSI.skm -o:"$(SolutionDir)\build\KeyMaps\US-Dvorak-ANSI.bin"
-$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ $(SolutionDir)\Data\KeyMaps\US-Dvorak-Classic.skm -o:"$(SolutionDir)\build\KeyMaps\US-Dvorak-Classic.bin"
-$(TargetDir)\key-compiler.exe -D:.\..\Data\KeyMaps\ -ar -o:"$(TargetDir)\Temp\BuiltinKeymaps.ska" "@$(ProjectDir)\Config\BuiltinKeymaps.cfg"</PreBuildEvent>
-    <PostBuildEvent>$(TargetDir)\SharpOS-AOT.exe -d:tests.dump -text-dump -v -o $(TargetDir)\SharpOS.Kernel.bin $(TargetDir)\SharpOS.Kernel.dll $(TargetDir)\SharpOS.Kernel.Tests.CS.dll $(TargetDir)\SharpOS.Kernel.Tests.IL.dll
-copy $(TargetDir)\..\Data\DiskImages\TemplateDisk.img $(TargetDir)\distro\common\SharpOS.img
-$(TargetDir)\disk-image-updater.exe -m -i $(TargetDir)\SharpOS.Kernel.bin -o $(TargetDir)\distro\common\SharpOS.img -vhd $(TargetDir)\distro\VirtualPC\hd1.vhd</PostBuildEvent>
+    <PreBuildEvent>..\build\KernelTestsWrapperGen.exe
+..\build\key-compiler.exe -D:.\..\Data\KeyMaps\ "$(SolutionDir)\Data\KeyMaps\DE.skm" -o:"$(SolutionDir)\build\KeyMaps\DE.bin"
+..\build\key-compiler.exe -D:.\..\Data\KeyMaps\ "$(SolutionDir)\Data\KeyMaps\US.skm" -o:"$(SolutionDir)\build\KeyMaps\US.bin"
+..\build\key-compiler.exe -D:.\..\Data\KeyMaps\ "$(SolutionDir)\Data\KeyMaps\UK.skm" -o:"$(SolutionDir)\build\KeyMaps\UK.bin"
+..\build\key-compiler.exe -D:.\..\Data\KeyMaps\ "$(SolutionDir)\Data\KeyMaps\US-Dvorak-ANSI.skm" -o:"$(SolutionDir)\build\KeyMaps\US-Dvorak-ANSI.bin"
+..\build\key-compiler.exe -D:.\..\Data\KeyMaps\ "$(SolutionDir)\Data\KeyMaps\US-Dvorak-Classic.skm" -o:"$(SolutionDir)\build\KeyMaps\US-Dvorak-Classic.bin"
+..\build\key-compiler.exe -D:.\..\Data\KeyMaps\ -ar -o:"$(TargetDir)\Temp\BuiltinKeymaps.ska" "@$(ProjectDir)\Config\BuiltinKeymaps.cfg"</PreBuildEvent>
+    <PostBuildEvent>..\build\SharpOS-AOT.exe -d:tests.dump -text-dump -v -o ..\build\SharpOS.Kernel.bin ..\build\SharpOS.Kernel.dll ..\build\SharpOS.Kernel.Tests.CS.dll ..\build\SharpOS.Kernel.Tests.IL.dll
+copy ..\build\..\Data\DiskImages\TemplateDisk.img ..\build\distro\common\SharpOS.img
+..\build\disk-image-updater.exe -m -i ..\build\SharpOS.Kernel.bin -o ..\build\distro\common\SharpOS.img -vhd ..\build\distro\VirtualPC\hd1.vhd</PostBuildEvent>
   </PropertyGroup>
 </Project>

@@ -204,37 +204,49 @@ namespace KernelTestsWrapperGen {
 
 		private static int CompileIL (string ilasm, string buildPath)
 		{
-			string fileList;
+			List<string> files = new List<string> ();
 
-			if (!ContinueCompileIL (buildPath, out fileList)) {
+			if (!ContinueCompileIL (buildPath, files)) {
 				Console.WriteLine ("Skipped.");
 				return 0;
 			}
 
-			string ilDLL = Path.Combine (buildPath, IL_DLL);
+			string outputFile = '"' + Path.Combine (buildPath, IL_DLL) + '"';
+			string fileList = "";
+
+			foreach (string filename in files)
+				fileList += " " + '"' + filename + '"';
 
 			ProcessStartInfo startInfo = new ProcessStartInfo ();
 			startInfo.FileName = ilasm;
-			startInfo.Arguments = "/dll /quiet /debug /nologo /output=" + ilDLL + " " + fileList;
+			startInfo.Arguments = " /dll /quiet /debug /nologo /output=" + outputFile + fileList;
 			startInfo.RedirectStandardOutput = true;
 			startInfo.RedirectStandardError = true;
 			startInfo.UseShellExecute = false;
 
-			Process process = Process.Start (startInfo);
+			try {
+				Process process = Process.Start (startInfo);
 
-			string output = process.StandardOutput.ReadToEnd ();
-			string error = process.StandardError.ReadToEnd ();
+				string output = process.StandardOutput.ReadToEnd ();
+				string error = process.StandardError.ReadToEnd ();
 
-			process.WaitForExit ();
+				process.WaitForExit ();
 
-			Console.WriteLine (output);
-			Console.WriteLine (error);
+				Console.WriteLine (output);
+				Console.WriteLine (error);
 
-			Console.WriteLine ("Done.");
-			return process.ExitCode;
+				Console.WriteLine ("Done.");
+
+				return process.ExitCode;
+
+			} catch (Exception exception) {
+				Console.WriteLine ("Failed: " + exception.Message);
+			}
+
+			return -1;
 		}
 
-		private static bool ContinueCompileIL (string buildPath, out string files)
+		private static bool ContinueCompileIL (string buildPath, List<string> files)
 		{
 			bool result = false;
 
@@ -251,18 +263,12 @@ namespace KernelTestsWrapperGen {
 
 			FileInfo [] fileList = directoryInfo.GetFiles ("*.il");
 
-			StringBuilder stringBuilder = new StringBuilder ();
-
 			foreach (FileInfo file in fileList) {
-				if (!result
-						&& file.LastWriteTime > ilDllFileInfo.LastWriteTime)
+				if (!result && file.LastWriteTime > ilDllFileInfo.LastWriteTime)
 					result = true;
-
-				stringBuilder.Append (" ");
-				stringBuilder.Append (file.FullName);
+				
+				files.Add (file.FullName);
 			}
-
-			files = stringBuilder.ToString ();
 
 			return result;
 		}
