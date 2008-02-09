@@ -617,9 +617,13 @@ namespace SharpOS.Korlib.Runtime {
 		private unsafe static void PrintCallingStack (StackFrame [] callingStack)
 		{
 			for (int i = 0; i < callingStack.Length; i++) {
-				Serial.COM1.Write ("\tCalled Method: ");
+				Serial.COM1.Write ("\tCalled Method: IP=");
 
 				Serial.COM1.WriteNumber ((int) callingStack [i].IP, true);
+
+				Serial.COM1.Write (" BP=");
+
+				Serial.COM1.WriteNumber ((int) callingStack [i].BP, true);
 
 				Serial.COM1.Write (" ");
 

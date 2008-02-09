@@ -24,7 +24,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 
 		[SharpOS.AOT.Attributes.Label (DIVIDE_ERROR)]
-		static unsafe void KeyboardHandler (IDT.ISRData data)
+		static unsafe void DivideByZeroHandler (IDT.ISRData data)
 		{
 			throw new System.DivideByZeroException ();
 		}

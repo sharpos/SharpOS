@@ -92,11 +92,15 @@ namespace SharpOS.AOT.X86 {
 				this.reservedStackSlots = 0;
 			}
 
-			if (this.method.HasExceptionHandling)
-				this.reservedStackSlots++;
+			int stackSize = method.StackSize;
 
-			if (method.StackSize > 0)
-				assembly.SUB (R32.ESP, (UInt32) (method.StackSize * this.assembly.IntSize));
+			if (this.method.HasExceptionHandling) {
+				this.reservedStackSlots++;
+				stackSize++;
+			}
+
+			if (stackSize > 0)
+				assembly.SUB (R32.ESP, (UInt32) (stackSize * this.assembly.IntSize));
 
 			foreach (Block block in method) {
 				assembly.LABEL (string.Format (Assembly.METHOD_BLOCK_LABEL, fullname, block.Index.ToString ()));
