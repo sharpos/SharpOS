@@ -481,6 +481,7 @@ namespace SharpOS.AOT.IR {
 
 					return attribute.ConstructorParameters [0].ToString () + "." + type.Name;
 				}
+
 			} else if (type is FieldReference) {
 				FieldReference typeDefinition = type as FieldReference;
 
@@ -492,6 +493,16 @@ namespace SharpOS.AOT.IR {
 				}
 
 				return typeDefinition.DeclaringType.FullName;
+
+			} else if (type is TypeSpecification) {
+				TypeSpecification typeSpecification = type as TypeSpecification;
+
+				foreach (CustomAttribute attribute in typeSpecification.ElementType.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
+						continue;
+
+					return attribute.ConstructorParameters [0].ToString () + "." + typeSpecification.Name;
+				}
 			}
 
 			return type.ToString ();
