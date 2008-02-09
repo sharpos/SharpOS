@@ -94,6 +94,25 @@ namespace SharpOS.Kernel.Tests.CS {
 			return result;
 		}
 
+		public static uint CMPCatchDivideError ()
+		{
+			uint result;
+
+			try {
+				result = 0;
+
+				DivideByZero (0);
+
+			} catch (System.DivideByZeroException exception) {
+				result = 1;
+
+			} catch {
+				result = 2;
+			}
+
+			return result;
+		}
+
 		private static void ThrowException ()
 		{
 			throw new System.Exception ();
@@ -102,6 +121,11 @@ namespace SharpOS.Kernel.Tests.CS {
 		private static void ThrowTestException ()
 		{
 			throw new TestException (1);
+		}
+
+		private static int DivideByZero (int value)
+		{
+			return 1 / value;
 		}
 #else
 		public static uint CMPExceptionHandling ()

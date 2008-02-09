@@ -861,6 +861,8 @@ namespace SharpOS.Korlib.Runtime {
 		[SharpOS.AOT.Attributes.Throw]
 		internal static unsafe void Throw (InternalSystem.Exception exception)
 		{
+			// TODO check the exception's type to make sure it is an exception
+
 			if (exception.CallingStack == null) {
 				exception.CurrentStackFrame = 2;
 				exception.CallingStack = ExceptionHandling.GetCallingStack ();

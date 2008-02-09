@@ -104,18 +104,23 @@ namespace SharpOS.AOT.X86 {
 				if (block.IsFinallyFilterFaultStart)
 					this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.ESP);
 
-				// TODO find a more elegant way to set the exception when calling the handler?
-				if (block.IsCatchBegin
-						&& block.InstructionsCount > 0
-						&& block [0] is IR.Instructions.Stloc) {
+				if (block.IsCatchBegin) {
 					this.assembly.POP (R32.EAX);
 
-					IR.Operands.Register exception = block [0].Use [0] as IR.Operands.Register;
+					// Save the reference to the exception so that it is used later when rethrowing
+					this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.EAX);
 
-					if (exception.IsRegisterSet)
-						this.assembly.MOV (Assembly.GetRegister (exception.Register), R32.EAX);
-					else
-						this.assembly.MOV (new DWordMemory (this.GetAddress (exception)), R32.EAX);
+					// TODO find a more elegant way to set the exception when calling the handler?
+					if (block.InstructionsCount > 0
+							&& block [0] is IR.Instructions.Stloc) {
+
+						IR.Operands.Register exception = block [0].Use [0] as IR.Operands.Register;
+
+						if (exception.IsRegisterSet)
+							this.assembly.MOV (Assembly.GetRegister (exception.Register), R32.EAX);
+						else
+							this.assembly.MOV (new DWordMemory (this.GetAddress (exception)), R32.EAX);
+					}
 				}
 
 				foreach (SharpOS.AOT.IR.Instructions.Instruction instruction in block) {

@@ -16,6 +16,18 @@ using SharpOS.Korlib.Runtime;
 namespace SharpOS.Kernel.ADC.X86 {
 	public static class ExceptionHandling	{
 		private const string GET_IP = "GET_IP";
+		private const string DIVIDE_ERROR = "DIVIDE_ERROR";
+
+		public static void Setup ()
+		{
+			IDT.RegisterIRQ (IDT.Interrupt.DivideError, Stubs.GetFunctionPointer (DIVIDE_ERROR));
+		}
+
+		[SharpOS.AOT.Attributes.Label (DIVIDE_ERROR)]
+		static unsafe void KeyboardHandler (IDT.ISRData data)
+		{
+			throw new System.DivideByZeroException ();
+		}
 
 		internal unsafe static StackFrame [] GetCallingStack ()
 		{

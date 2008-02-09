@@ -2957,6 +2957,7 @@ namespace SharpOS.AOT.X86 {
 
 		private void Leave (IR.Instructions.Leave instruction)
 		{
+			// This makes sure that the the finally handler gets called
 			if (instruction.Block.IsTryLast)
 				this.assembly.CALL (this.GetLabel (instruction.Block.Outs [1]));
 
@@ -2990,8 +2991,9 @@ namespace SharpOS.AOT.X86 {
 				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-			} else
-				this.assembly.XOR (R32.EAX, R32.EAX);
+			} else 
+				// This is for when rethrowing an exception
+				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize));
 
 			this.assembly.PUSH (R32.EAX);
 			this.assembly.CALL (this.assembly.Engine.Throw.AssemblyLabel);

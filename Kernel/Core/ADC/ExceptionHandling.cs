@@ -21,6 +21,11 @@ namespace SharpOS.Kernel.ADC {
 
 	public static class ExceptionHandling {
 		[AOTAttr.ADCStub]
+		public static void Setup ()
+		{
+		}
+
+		[AOTAttr.ADCStub]
 		internal unsafe static StackFrame [] GetCallingStack ()
 		{
 			Diagnostics.Error ("Unimplemented - ExceptionHandling.GetCallingStack");

@@ -111,12 +111,15 @@ namespace SharpOS.Kernel {
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
 
-      // Must be done after MemoryManager setup.
+			// Must be done after MemoryManager setup.
+			StageMessage ("Runtime setup...");
+			ExceptionHandling.Setup ();
+
 			StageMessage ("Serial I/O setup...");
 			Serial.Setup ();
 
-      StageMessage("Diagnostic Tool setup...");
-      DiagnosticTool.Server.Setup();
+			StageMessage("Diagnostic Tool setup...");
+			DiagnosticTool.Server.Setup();
 
 			StageMessage("Scheduler setup...");
 			Scheduler.Setup();
