@@ -1130,13 +1130,6 @@ namespace SharpOS.AOT.IR {
 						this.exceptionHandlingClauseClass = _class;
 					}
 				}
-
-				// assigning interface method uids
-				if (_class.IsInterface) {
-					foreach (Method _method in _class.VirtualMethods) {
-						_method.AssignInterfaceMethodNumber();
-					}
-				}
 			}
 
 			// 2nd Step Post Processing

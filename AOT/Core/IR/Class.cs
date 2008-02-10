@@ -89,6 +89,7 @@ namespace SharpOS.AOT.IR {
 						this.internalType = Operands.InternalType.O;
 					} else if (typeDefinition.IsInterface) {
 						this.isInterface = true;
+
 						this.internalType = Operands.InternalType.O;
 					}
 
@@ -104,7 +105,10 @@ namespace SharpOS.AOT.IR {
 						this.engine.GetClass(interfaceRef).Setup (step);
 					}
 
-					this.MarkInterfaceMethods ();
+					if (this.IsInterface)
+						this.AssignInterfaceMethodNumbers();
+					else
+						this.MarkInterfaceMethods ();
 					this.AddVirtualMethods (this.virtualMethods);
 
 				} else if (step == 1) {
@@ -713,6 +717,8 @@ namespace SharpOS.AOT.IR {
 		private List<Method>[] interfaceMethodsEntries = null;
 
 		private void AddMethodToIMT (Method method) {
+			if (method.InterfaceMethodNumber == -1)
+				throw new EngineException("Can't add "+method+" to IMT - Method number == -1");
 			if (interfaceMethodsEntries == null)
 				interfaceMethodsEntries = new List<Method>[Method.IMTSize];
 
@@ -752,6 +758,20 @@ namespace SharpOS.AOT.IR {
 				}
 				// or it's not interface method
 			}
+		}
+
+		/// <summary>
+		/// Assigns all methods a number for IMT
+		/// </summary>
+		/// <returns></returns>
+		private void AssignInterfaceMethodNumbers ()
+		{
+			if (!this.IsInterface)
+				return;
+
+			methods.ForEach(delegate (Method _method) {
+				_method.AssignInterfaceMethodNumber();
+			});
 		}
 	}
 }
