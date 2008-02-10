@@ -86,7 +86,7 @@ namespace SharpOS.AOT.X86 {
 				assembly.MOV (R32.EAX, R32.EBP);
 				assembly.MOV (R32.EBP, R32.ESP);
 
-				// the value stands for the above PUSH instructions
+				// The value stands for the above PUSH instructions
 				// after saving the ESP register and we set it to 0
 				// as nothing got saved
 				this.reservedStackSlots = 0;

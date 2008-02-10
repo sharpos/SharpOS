@@ -23,8 +23,8 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Endfilter"/> class.
 		/// </summary>
-		public Endfilter ()
-			: base ("Endfilter", null, null)
+		public Endfilter (Register value)
+			: base ("Endfilter", null, new Operand [] { value })
 		{
 		}
 	}

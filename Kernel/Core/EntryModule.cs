@@ -127,12 +127,9 @@ namespace SharpOS.Kernel {
 			StageMessage ("Device setup...");
 			ADC.Architecture.DeviceManager.Setup ();
 
-			StageMessage ("Clock setup...");
+			//StageMessage ("Clock setup...");
 			Clock.Setup ();
 		
-			//StageMessage ("Serial setup...");
-			//Serial.Setup ();	// .. is also setup in Architecture?
-
 			StageMessage ("Keymap setup...");
 			KeyMap.Setup ();
 

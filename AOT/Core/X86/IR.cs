@@ -2973,7 +2973,14 @@ namespace SharpOS.AOT.X86 {
 
 		private void Endfilter (IR.Instructions.Endfilter instruction)
 		{
-			throw new NotImplementedEngineException ();
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.RET ();
 		}
 
 		private void Break (IR.Instructions.Break instruction)

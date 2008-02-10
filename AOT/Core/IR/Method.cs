@@ -412,7 +412,7 @@ namespace SharpOS.AOT.IR {
 						continue;
 
 					SetEHStartEnd (ref tryBegin, ref tryLast, ref tryEnd, exceptionHandler.TryStart, exceptionHandler.TryEnd, block);
-					SetEHStartEnd (ref filterBegin, ref filterLast, ref filterEnd, exceptionHandler.FilterStart, exceptionHandler.FilterEnd, block);
+					SetEHStartEnd (ref filterBegin, ref filterLast, ref filterEnd, exceptionHandler.FilterStart, exceptionHandler.HandlerStart /*FilterEnd*/, block);
 					SetEHStartEnd (ref handlerBegin, ref handlerLast, ref handlerEnd, exceptionHandler.HandlerStart, exceptionHandler.HandlerEnd, block);
 				}
 
@@ -428,7 +428,8 @@ namespace SharpOS.AOT.IR {
 						&& exceptionHandler.Type != ExceptionHandlerType.Catch
 						&& exceptionHandler.Type != ExceptionHandlerType.Filter)
 					handlerBegin.IsFinallyFilterFaultStart = true;
-				else
+				
+				else if (exceptionHandler.Type == ExceptionHandlerType.Catch)
 					handlerBegin.IsCatchBegin = true;
 
 				if (filterBegin != null)
@@ -514,7 +515,7 @@ namespace SharpOS.AOT.IR {
 				this.AddInstructionOffset (offsets, exceptionHandler.TryStart);
 				this.AddInstructionOffset (offsets, exceptionHandler.TryEnd);
 				this.AddInstructionOffset (offsets, exceptionHandler.FilterStart);
-				this.AddInstructionOffset (offsets, exceptionHandler.FilterEnd);
+				//this.AddInstructionOffset (offsets, exceptionHandler.FilterEnd);
 				this.AddInstructionOffset (offsets, exceptionHandler.HandlerStart);
 				this.AddInstructionOffset (offsets, exceptionHandler.HandlerEnd);
 			}

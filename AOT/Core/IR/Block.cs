@@ -1340,7 +1340,9 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Endfilter (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			return new Endfilter ();
+			Register value = this.GetRegister ();
+
+			return new Endfilter (value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Throw (Mono.Cecil.Cil.Instruction cilInstruction)
