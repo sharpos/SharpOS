@@ -55,7 +55,7 @@
 
 		.method public hidebysig static uint32 CMPDontRunFilter() cil managed
 		{
-			.maxstack 1
+			.maxstack 2
 			.locals init (uint32 result)
 			
 			.try
@@ -79,10 +79,10 @@
 			ldloc.0
 			ret 
 		} 
-/*
+
 		.method public hidebysig static uint32 CMPFilter() cil managed
 		{
-			.maxstack 1
+			.maxstack 2
 			.locals init (uint32 result)
 			
 			.try
@@ -109,7 +109,7 @@
 			ldloc.0
 			ret 
 		} 
-*/
+
 		.method public static void ThrowException()
 		{
 			ldc.i4.1

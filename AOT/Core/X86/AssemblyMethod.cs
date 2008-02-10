@@ -38,6 +38,29 @@ namespace SharpOS.AOT.X86 {
 
 		public int reservedStackSlots = 3;
 
+		/// <summary>
+		/// Gets the exception handling SP slot.
+		/// </summary>
+		/// <returns></returns>
+		private DWordMemory GetExceptionHandlingSPSlot
+		{
+			get
+			{
+				return new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize);
+			}
+		}
+
+		/// <summary>
+		/// Gets the exception handling exception object slot.
+		/// </summary>
+		/// <returns></returns>
+		private DWordMemory GetExceptionHandlingExceptionObjectSlot
+		{
+			get
+			{
+				return new DWordMemory (null, R32.EBP, null, 0, -(this.reservedStackSlots + 1) * this.assembly.IntSize);
+			}
+		}
 
 		/// <summary>
 		/// Gets the assembly code.
@@ -95,8 +118,8 @@ namespace SharpOS.AOT.X86 {
 			int stackSize = method.StackSize;
 
 			if (this.method.HasExceptionHandling) {
-				this.reservedStackSlots++;
-				stackSize++;
+				this.reservedStackSlots += 2;
+				stackSize += 2;
 			}
 
 			if (stackSize > 0)
@@ -105,14 +128,15 @@ namespace SharpOS.AOT.X86 {
 			foreach (Block block in method) {
 				assembly.LABEL (string.Format (Assembly.METHOD_BLOCK_LABEL, fullname, block.Index.ToString ()));
 
-				if (block.IsFinallyFilterFaultStart)
-					this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.ESP);
+				if (block.IsFinallyBegin
+						|| block.IsFilterBegin
+						|| block.IsFaultBegin)
+					this.assembly.MOV (this.GetExceptionHandlingSPSlot, R32.ESP);
 
-				if (block.IsCatchBegin) {
-					this.assembly.POP (R32.EAX);
-
+				if (block.IsFilterBegin
+						|| block.IsCatchBegin) {
 					// Save the reference to the exception so that it is used later when rethrowing
-					this.assembly.MOV (new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize), R32.EAX);
+					this.assembly.MOV (this.GetExceptionHandlingExceptionObjectSlot, R32.EAX);
 
 					// TODO find a more elegant way to set the exception when calling the handler?
 					if (block.InstructionsCount > 0

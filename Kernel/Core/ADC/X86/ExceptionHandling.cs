@@ -111,12 +111,89 @@ namespace SharpOS.Kernel.ADC.X86 {
 			// Just dump the address of the caller
 			Asm.POP (R32.EAX);
 
-			// We push the exception address on the stack
-			Asm.PUSH (R32.EDX);
+			// Assign EAX the address of the exception object
+			Asm.MOV (R32.EAX, R32.EDX);
 
 			// Push target address of the handler
 			Asm.PUSH (R32.ECX);
 			Asm.RET ();
+		}
+
+		internal unsafe static void CallFinallyFault (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler)
+		{
+			int calleeIndex = exception.CurrentStackFrame - 1;
+			uint calleeBP = (uint) exception.CallingStack [calleeIndex].BP;
+			uint targetIP = (uint) handler.HandlerBegin;
+			uint exceptionAddress = (uint) Runtime.GetPointerFromObject (exception);
+
+			// The address (EDX) will be then used in the handler
+			Asm.MOV (R32.EDX, &exceptionAddress);
+
+			// Set the address where it will jump to handle the exception
+			Asm.MOV (R32.ECX, &targetIP);
+
+			// This is very dependent of the way the AOT generates the prolog of the method
+			Asm.MOV (R32.EAX, &calleeBP);
+			Asm.SUB (R32.EAX, 12);
+			Asm.MOV (R32.ESP, R32.EAX);
+			Asm.POP (R32.EDI);
+			Asm.POP (R32.ESI);
+			Asm.POP (R32.EBX);
+			Asm.POP (R32.EBP);
+
+			// Just dump the address of the caller
+			Asm.POP (R32.EAX);
+
+			// Assign EAX the address of the exception object
+			Asm.MOV (R32.EAX, R32.EDX);
+
+			// Push target address of the handler
+			Asm.PUSH (R32.ECX);
+			Asm.RET ();
+		}
+
+		internal unsafe static uint CallFilter (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler)
+		{
+			int calleeIndex = exception.CurrentStackFrame - 1;
+			uint calleeBP = (uint) exception.CallingStack [calleeIndex].BP;
+			uint targetIP = (uint) handler.FilterBegin;
+			uint exceptionAddress = (uint) Runtime.GetPointerFromObject (exception);
+			uint result = 0;
+
+			// The address (EDX) will be then used in the handler
+			Asm.MOV (R32.EDX, &exceptionAddress);
+
+			// Set the address where it will jump to handle the exception
+			Asm.MOV (R32.ECX, &targetIP);
+
+			// This is very dependent of the way the AOT generates the prolog of the method
+			Asm.MOV (R32.EAX, &calleeBP);
+
+			Asm.PUSH (R32.EBP);
+			Asm.PUSH (R32.EBX);
+			Asm.PUSH (R32.ESI);
+			Asm.PUSH (R32.EDI);
+
+			Asm.MOV (R32.EBP, new DWordMemory (null, R32.EAX, null, 0, 0));
+			Asm.MOV (R32.EBX, new DWordMemory (null, R32.EAX, null, 0, -4));
+			Asm.MOV (R32.ESI, new DWordMemory (null, R32.EAX, null, 0, -8));
+			Asm.MOV (R32.EDI, new DWordMemory (null, R32.EAX, null, 0, -12));
+
+			// Assign EAX the address of the exception object
+			Asm.MOV (R32.EAX, R32.EDX);
+
+			// Push target address of the handler
+			Asm.CALL (R32.ECX);
+
+			Asm.POP (R32.EDI);
+			Asm.POP (R32.ESI);
+			Asm.POP (R32.EBX);
+			Asm.POP (R32.EBP);
+
+			// Get the result of the filter
+			Asm.MOV (&result, R32.EAX);
+
+			return result;
 		}
 	}
 }

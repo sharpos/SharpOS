@@ -420,20 +420,27 @@ namespace SharpOS.AOT.IR {
 				if (tryLast != null && exceptionHandler.Type == ExceptionHandlerType.Finally)
 					tryLast.IsTryLast = true;
 
-				if (filterLast != null)
-					filterLast.IsFilterLast = true;
+				if (handlerLast != null)
+					handlerLast.IsCatchLast = true;
 
 
-				if (handlerBegin != null
-						&& exceptionHandler.Type != ExceptionHandlerType.Catch
-						&& exceptionHandler.Type != ExceptionHandlerType.Filter)
-					handlerBegin.IsFinallyFilterFaultStart = true;
-				
-				else if (exceptionHandler.Type == ExceptionHandlerType.Catch)
-					handlerBegin.IsCatchBegin = true;
+				if (handlerBegin != null) {
+					if (exceptionHandler.Type == ExceptionHandlerType.Catch)
+						handlerBegin.IsCatchBegin = true;
+
+					else if (exceptionHandler.Type == ExceptionHandlerType.Filter)
+						handlerBegin.IsCatchBegin = true;
+
+					else if (exceptionHandler.Type == ExceptionHandlerType.Fault)
+						handlerBegin.IsFaultBegin = true;
+
+					else if (exceptionHandler.Type == ExceptionHandlerType.Finally)
+						handlerBegin.IsFinallyBegin = true;
+				}
+
 
 				if (filterBegin != null)
-					filterBegin.IsFinallyFilterFaultStart = true;
+					filterBegin.IsFilterBegin = true;
 
 
 				clause.TryBegin = tryBegin;

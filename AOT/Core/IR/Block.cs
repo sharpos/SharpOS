@@ -277,6 +277,26 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		bool isCatchLast = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is catch last.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is catch last; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsCatchLast
+		{
+			get
+			{
+				return this.isCatchLast;
+			}
+			set
+			{
+				this.isCatchLast = value;
+			}
+		}
+
 		bool isTryLast = false;
 
 		/// <summary>
@@ -297,43 +317,63 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		bool isFinallyFilterFaultStart = false;
+		bool isFinallyBegin = false;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this instance is finally filter fault start.
+		/// Gets or sets a value indicating whether this instance is finally begin.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if this instance is finally filter fault start; otherwise, <c>false</c>.
+		/// 	<c>true</c> if this instance is finally begin; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsFinallyFilterFaultStart
+		public bool IsFinallyBegin
 		{
 			get
 			{
-				return isFinallyFilterFaultStart;
+				return this.isFinallyBegin;
 			}
 			set
 			{
-				isFinallyFilterFaultStart = value;
+				this.isFinallyBegin = value;
 			}
 		}
 
-		bool isFilterLast = false;
+		bool isFilterBegin = false;
 
 		/// <summary>
-		/// Gets or sets a value indicating whether this instance is filter end.
+		/// Gets or sets a value indicating whether this instance is filter begin.
 		/// </summary>
 		/// <value>
-		/// 	<c>true</c> if this instance is filter end; otherwise, <c>false</c>.
+		/// 	<c>true</c> if this instance is filter begin; otherwise, <c>false</c>.
 		/// </value>
-		public bool IsFilterLast
+		public bool IsFilterBegin
 		{
 			get
 			{
-				return isFilterLast;
+				return this.isFilterBegin;
 			}
 			set
 			{
-				isFilterLast = value;
+				this.isFilterBegin = value;
+			}
+		}
+
+		bool isFaultBegin = false;
+
+		/// <summary>
+		/// Gets or sets a value indicating whether this instance is fault begin.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is fault begin; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsFaultBegin
+		{
+			get
+			{
+				return this.isFaultBegin;
+			}
+			set
+			{
+				this.isFaultBegin = value;
 			}
 		}
 
@@ -349,11 +389,11 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				return isCatchBegin;
+				return this.isCatchBegin;
 			}
 			set
 			{
-				isCatchBegin = value;
+				this.isCatchBegin = value;
 			}
 		}
 
@@ -476,27 +516,35 @@ namespace SharpOS.AOT.IR {
 
 			bool found = false;
 
-			// We get the number of stack values from one of the blocks that has been processed and lead to the current one.
-			foreach (Block _in in this.ins)
-				if (_in.converted) {
-					found = true;
+			if (!this.IsCatchBegin
+					&& !this.IsFaultBegin
+					&& !this.IsFilterBegin
+					&& !this.IsFinallyBegin) {
+				// We get the number of stack values from one of the blocks that has been processed and lead to the current one.
+				foreach (Block _in in this.ins) {
+					if (_in.converted) {
+						found = true;
 
-					for (int i = 0; i < _in.stack.Count; i++) {
-						Register [] operands = new Register [this.ins.Count];
+						for (int i = 0; i < _in.stack.Count; i++) {
+							Register [] operands = new Register [this.ins.Count];
 
-						Register result = this.SetRegister ();
+							Register result = this.SetRegister ();
 
-						PHI phi = new PHI (result, operands);
+							PHI phi = new PHI (result, operands);
 
-						this.instructions.Add (phi);
+							this.instructions.Add (phi);
+						}
 					}
 				}
+			} else
+				found = true;
 
 			// Throw an error if none of the blocks that lead to this one has been previously processed
 			if (!found && this.ins.Count > 0 && this.index > 0)
 				throw new EngineException ("The conversion from CIL in '" + this.method.MethodFullName + "' for block #'" + this.index + "' failed.");
 
-			if (this.IsCatchBegin) {
+			if (this.IsCatchBegin
+					|| this.IsFilterBegin) {
 				Register exception = this.SetRegister ();
 				exception.InternalType = InternalType.O;
 				exception.Parent = new Instructions.Ldnull (exception);
@@ -517,6 +565,10 @@ namespace SharpOS.AOT.IR {
 			}
 
 			this.converted = true;
+
+			// When leaving a try or catch block the stack should be empty.
+			if (this.IsCatchLast)
+				this.stack.Clear ();
 
 			if (this.outs.Count == 0 && this.stack.Count > 0)
 				throw new EngineException (string.Format ("The stack is not empty when leaving in '{0}'", this.method.MethodFullName));

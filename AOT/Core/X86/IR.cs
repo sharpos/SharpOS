@@ -2966,7 +2966,7 @@ namespace SharpOS.AOT.X86 {
 
 		private void Endfinally (IR.Instructions.Endfinally instruction)
 		{
-			this.assembly.MOV (R32.ESP, new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize));
+			this.assembly.MOV (R32.ESP, this.GetExceptionHandlingSPSlot);
 
 			this.assembly.RET ();
 		}
@@ -2979,6 +2979,8 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
 			else
 				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+			this.assembly.MOV (R32.ESP, this.GetExceptionHandlingSPSlot);
 
 			this.assembly.RET ();
 		}
@@ -3000,7 +3002,7 @@ namespace SharpOS.AOT.X86 {
 
 			} else 
 				// This is for when rethrowing an exception
-				this.assembly.MOV (R32.EAX, new DWordMemory (null, R32.EBP, null, 0, -this.reservedStackSlots * this.assembly.IntSize));
+				this.assembly.MOV (R32.EAX, this.GetExceptionHandlingExceptionObjectSlot);
 
 			this.assembly.PUSH (R32.EAX);
 			this.assembly.CALL (this.assembly.Engine.Throw.AssemblyLabel);

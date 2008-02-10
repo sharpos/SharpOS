@@ -896,13 +896,15 @@ namespace SharpOS.Korlib.Runtime {
 						continue;
 
 #if DEBUG_EXCEPTION_HANDLING
-					Serial.COM1.WriteLine (exception.VTable.Type.Name);
-					Serial.COM1.WriteNumber ((int) exception.VTable.Type.MetadataToken, true);
-					Serial.COM1.WriteLine ();
+					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch) {
+						Serial.COM1.WriteLine (exception.VTable.Type.Name);
+						Serial.COM1.WriteNumber ((int) exception.VTable.Type.MetadataToken, true);
+						Serial.COM1.WriteLine ();
 
-					Serial.COM1.WriteLine (exceptionHandlingClause.TypeInfo.Name);
-					Serial.COM1.WriteNumber ((int) exceptionHandlingClause.TypeInfo.MetadataToken, true);
-					Serial.COM1.WriteLine ();
+						Serial.COM1.WriteLine (exceptionHandlingClause.TypeInfo.Name);
+						Serial.COM1.WriteNumber ((int) exceptionHandlingClause.TypeInfo.MetadataToken, true);
+						Serial.COM1.WriteLine ();
+					}
 #endif
 
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch
@@ -926,6 +928,13 @@ namespace SharpOS.Korlib.Runtime {
 				Diagnostics.Panic ("No exception handler found");
 
 			exception.CurrentStackFrame = i - 1;
+
+			if (handler.ExceptionType == ExceptionHandlerType.Filter) {
+				if (ExceptionHandling.CallFilter (exception, handler) == 1)
+					Serial.COM1.WriteLine ("FILTER OK");
+				else
+					Serial.COM1.WriteLine ("FILTER FAILED");
+			}
 
 			Serial.COM1.WriteLine ("Calling the found handler");
 
