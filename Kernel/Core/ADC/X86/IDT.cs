@@ -175,6 +175,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region ISRData struct
 		[StructLayout (LayoutKind.Sequential)]
 		public struct ISRData {
+			public uint FrameBP;
+			public uint FrameIP;
 			public uint SS;
 			public uint FS;
 			public uint GS;
@@ -1945,14 +1947,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (Seg.GS, R16.AX);
 
 			// Push the fake stack frame data
-			//Asm.PUSH (new DWordMemory (null, R32.ESP, null, 0, 15 * 4));
-			//Asm.PUSH (R32.EBP);
-			//Asm.MOV (R32.EBP, R32.ESP);
+			Asm.PUSH (new DWordMemory (null, R32.ESP, null, 0, 15 * 4));
+			Asm.PUSH (R32.EBP);
+			Asm.MOV (R32.EBP, R32.ESP);
 
 			// Get the index of the interrupt and read the address of the handler
 			// 15 is the position on the stack
-			//Asm.MOVZX (R32.EAX, new ByteMemory (null, R32.ESP, null, 0, 15 * 4));
-			Asm.MOVZX (R32.EAX, new ByteMemory (null, R32.ESP, null, 0, 13 * 4));
+			Asm.MOVZX (R32.EAX, new ByteMemory (null, R32.ESP, null, 0, 15 * 4));
 			Asm.SHL (R32.EAX, 2);
 			Asm.MOV (R32.EDX, IDT_TABLE);
 			Asm.MOV (R32.EAX, new DWordMemory (null, R32.EAX, R32.EDX, 0, 0));
@@ -1961,8 +1962,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.CALL (IRQ_CLEAN_UP);
 
 			// Clean the fake stack frame data
-			//Asm.POP (R32.EAX);
-			//Asm.POP (R32.EAX);
+			Asm.POP (R32.EAX);
+			Asm.POP (R32.EAX);
 
 			Asm.POP (Seg.SS);
 			Asm.POP (Seg.FS);
