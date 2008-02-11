@@ -17,9 +17,20 @@ namespace InternalSystem {
 	public class Exception: InternalSystem.Object {
 		internal StackFrame [] CallingStack = null;
 		internal int CurrentStackFrame = 0;
+		private string message;
 
-		public Exception ()
+		public Exception ():
+			this ("An exception was thrown.")
 		{
+		}
+
+		public Exception (string message)
+		{
+			this.message = message;
+		}
+
+		public virtual string Message {
+			get { return message; }
 		}
 	}
 }

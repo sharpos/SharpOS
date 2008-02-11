@@ -44,6 +44,8 @@ namespace SharpOS.Kernel {
 		/// <summary>
 		public unsafe static void Panic (string msg, KernelStage stage, KernelError code)
 		{
+			TextMode.Write ("Panic: ");
+			TextMode.WriteLine (msg);
 #if false
 			PString8* buf = PString8.Wrap (intermediateStringBuffer, MaxMessageLength);
 

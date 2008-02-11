@@ -20,19 +20,16 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		[Label (lblExecute)]
 		public static void Execute (CommandExecutionContext* context)
 		{
-			SharpOS.Kernel.Foundation.Time *time = stackalloc SharpOS.Kernel.Foundation.Time [1];
+			SharpOS.Kernel.Foundation.Time time = new SharpOS.Kernel.Foundation.Time ();
 			byte *rawbuf = stackalloc byte [50];
 			PString8 *pstr = PString8.Wrap (rawbuf, 50);
 
-			SharpOS.Kernel.Foundation.Time.Allocate (time);
-
 			if (context->parameters->Compare ("--hw") == 0)
-				RTC.Read (out time->Year, out time->Month, out time->Day, out time->Hour,
-					out time->Minute, out time->Second);
+				Clock.GetHardwareTime (time);
 			else
 				Clock.GetCurrentTime (time);
 
-			time->ToString (pstr);
+			time.ToString (pstr);
 			TextMode.WriteLine (pstr);
 		}
 

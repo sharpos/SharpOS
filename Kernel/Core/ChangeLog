@@ -1,3 +1,15 @@
+2008-02-11  William Lahti  <xfurious@gmail.com>
+	* Improved unhandled exception message to match .NET
+	* Added a number of exception types like the ArgumentException family,
+	NotSupportedException and NotImplementedException.
+	* Foundation/Time.cs: Time is now a class
+	* Foundation/ICalendar.cs: interface for calendars to support
+	* Foundation/CalendarManager.cs: handles instantiating and mapping
+	  calendars.
+	* Foundation/GregorianCalendar.cs: implements ICalendar
+	* Clock.cs: uses the new Time and Calendar changes.
+	* Diagnostics.cs: Panic now prints the error
+
 2008-01-15  William Lahti  <xfurious@gmail.com>
 	* Korlib/System/Char.cs: added
 	* Korlib/System/String.cs: testcases use Testcase.Test

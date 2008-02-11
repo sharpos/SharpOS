@@ -10,17 +10,18 @@
 
 using SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
+using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public class SystemException : InternalSystem.Exception {
-		public SystemException (string message):
-			base (message)
+	public class NotSupportedException : InternalSystem.SystemException {
+		public NotSupportedException ():
+			this ("Operation is not supported.")
 		{
 		}
 
-		public SystemException ():
-			base ("A system exception has occurred.")
+		public NotSupportedException (string message):
+			base (message)
 		{
 		}
 	}

@@ -10,17 +10,18 @@
 
 using SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
+using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public class SystemException : InternalSystem.Exception {
-		public SystemException (string message):
-			base (message)
+	public class ArgumentNullException: InternalSystem.ArgumentException {
+		public ArgumentNullException ():
+			this ("Argument cannot be null.")
 		{
 		}
 
-		public SystemException ():
-			base ("A system exception has occurred.")
+		public ArgumentNullException (string message):
+			base (message)
 		{
 		}
 	}

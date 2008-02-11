@@ -18,13 +18,14 @@ using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.Foundation;
+using SharpOS.Korlib.Runtime;
 using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.Foundation {
 	public unsafe class Clock {
 		private const string CLOCK_HANDLER = "CLOCK_HANDLER";
 		static ulong bootTime = 0;
-		static Time *currentTime = (Time*) Stubs.StaticAlloc (64);
+		static Time currentTime = null;
 		//static int secondChunks = 0;
 		static ulong nanoSeconds = 0;
 		static int sinceHardwareSync = 0;
@@ -51,7 +52,7 @@ namespace SharpOS.Kernel.Foundation {
 			get {
 				return systemTimezone;
 			} set {
-				ulong time = currentTime->Ticks;
+				ulong time = currentTime.Ticks;
 
 				if (systemTimezone != 0)
 					time = SharpOS.Kernel.Foundation.Timezone.GetUTC (time);
@@ -59,8 +60,8 @@ namespace SharpOS.Kernel.Foundation {
 				if (value != 0)
 					time = SharpOS.Kernel.Foundation.Timezone.Localize (time, value);
 
-				currentTime->Set (time);
-				currentTime->CurrentTimezone = value;
+				currentTime.Set (time);
+				currentTime.CurrentTimezone = value;
 				systemTimezone = value;
 			}
 		}
@@ -75,21 +76,26 @@ namespace SharpOS.Kernel.Foundation {
 		/// Retrieves the current hardware time. If this is not possible,
 		/// this method returns false.
 		/// </summary>
-		public static unsafe bool GetHardwareTime (Time *time)
+		public static bool GetHardwareTime (Time time)
 		{
 			bool result = false;
 			ulong ct = 0;
 
-			Time.Allocate (time);
-			time->Calendar = Calendar;
+			if (time == null)
+				throw new ArgumentNullException ("time");
 
-			result = RTC.Read (out time->Year, out time->Month, out time->Day, out time->Hour,
-					out time->Minute, out time->Second);
-			ct = time->Ticks;
+			time.Calendar = CalendarManager.GetCalendar (Calendar);
+
+			result = RTC.Read (out time.Year, out time.Month, out time.Day, out time.Hour,
+					out time.Minute, out time.Second);
+			time.DayOfWeek = time.Calendar.GetDayOfWeek (time);
+			time.Calendar.AddStrings (time);
+
+			ct = time.Ticks;
 
 			if (HardwareIsUTC && Timezone != 0) {
 				ct = SharpOS.Kernel.Foundation.Timezone.Localize (ct, Timezone);
-				time->Set (ct);
+				time.Set (ct);
 			}
 
 			return result;
@@ -101,10 +107,13 @@ namespace SharpOS.Kernel.Foundation {
 		/// </summary>
 		public static unsafe ulong GetHardwareTimestamp ()
 		{
-			Time *time = stackalloc Time [1];
+			Time time = new Time ();
 
-			return (GetHardwareTime (time) ? time->Ticks : 0);
-			//return time->Ticks;
+			try {
+				return (GetHardwareTime (time) ? time.Ticks : 0);
+			} finally {
+				Runtime.Free (time);
+			}
 		}
 
 		/// <summary>
@@ -119,11 +128,12 @@ namespace SharpOS.Kernel.Foundation {
 		/// </summary>
 		public static unsafe void Setup ()
 		{
-			Time *time = null;
-			EventRegisterStatus st;
+			Time time = null;
+			EventRegisterStatus st = EventRegisterStatus.Success;
 
 			// Read the hardware time
 
+			currentTime = new Time ();
 			GetHardwareTime (currentTime);
 			bootTime = GetCurrentTimestamp ();
 
@@ -131,26 +141,25 @@ namespace SharpOS.Kernel.Foundation {
 
 			st = Timer.RegisterTimerEvent (Stubs.GetFunctionPointer (CLOCK_HANDLER));
 
-			if (st != EventRegisterStatus.Success) {
+			if (st != EventRegisterStatus.Success)
 				Diagnostics.Error ("Failed to register clock handler");
-			}
 
 			// Debug
 
 			time = currentTime;
 
 			TextMode.Write ("Current time: ");
-			TextMode.Write (time->Year);
+			TextMode.Write (time.Year);
 			TextMode.Write ("/");
-			TextMode.Write (time->Month);
+			TextMode.Write (time.Month);
 			TextMode.Write ("/");
-			TextMode.Write (time->Day);
+			TextMode.Write (time.Day);
 			TextMode.Write (" ");
-			TextMode.Write (time->Hour);
+			TextMode.Write (time.Hour);
 			TextMode.Write (":");
-			TextMode.Write (time->Minute);
+			TextMode.Write (time.Minute);
 			TextMode.Write (":");
-			TextMode.Write (time->Second);
+			TextMode.Write (time.Second);
 			TextMode.WriteLine ();
 
 		}
@@ -162,7 +171,7 @@ namespace SharpOS.Kernel.Foundation {
 		static unsafe void UpdateClock (uint ticks)
 		{
 			if (secondChunk == Timer.GetFrequency ()) {
-				currentTime->AddSeconds (1);
+				currentTime.AddSeconds (1);
 				secondChunk = 0;
 				sinceHardwareSync += 1;
 
@@ -187,45 +196,64 @@ namespace SharpOS.Kernel.Foundation {
 			nanoSeconds = nanoSeconds + 10000000L;
 		}
 
-		public unsafe static Time *GetCurrentTime ()
+		public unsafe static Time GetCurrentTime ()
 		{
-			Time *time = (Time*)MemoryManager.Allocate ((uint)sizeof (Time));
+			Time time = new Time ();
 			GetCurrentTime (time);
 			return time;
 		}
 
 		public unsafe static void Write ()
 		{
-			Time *time = null;
+			Time time = null;
 
 			time = Clock.GetCurrentTime ();
-			time->Write ();
+			time.Write ();
 
-			MemoryManager.Free (time);
+			Runtime.Free (time);
 		}
 
 		/// <summary>
 		/// Retrieves the current system clock  time.
 		/// </summary>
-		public unsafe static void GetCurrentTime (Time *time)
+		public unsafe static void GetCurrentTime (Time time)
 		{
-			time->Set (currentTime);
+			if (currentTime == null)
+				throw new Exception ("Clock has not been setup yet");
+			if (time == null)
+				throw new ArgumentNullException ("time");
+
+			time.Set (currentTime);
 		}
 
 		public unsafe static ulong GetCurrentTimestamp ()
 		{
-			Time *time = stackalloc Time [1];
-			Time.Allocate (time);
+			Time time;
+
+			if (currentTime == null)
+				throw new Exception ("Clock has not been setup yet");
+
+			time = new Time ();
 			GetCurrentTime (time);
-			return time->Ticks;
+
+			try {
+				return time.Ticks;
+			} finally {
+				Runtime.Free (time);
+			}
 		}
 
 		/// <summary>
 		/// Retrieves the system boot time.
 		/// </summary>
-		public unsafe static void GetBootTime (Time *time)
+		public unsafe static void GetBootTime (Time time)
 		{
-			time->Set (bootTime);
+			if (currentTime == null)
+				throw new Exception ("Clock has not been setup yet");
+			if (time == null)
+				throw new ArgumentNullException ("time");
+
+			time.Set (bootTime);
 		}
 
 

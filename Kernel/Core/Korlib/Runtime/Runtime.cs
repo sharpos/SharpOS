@@ -8,7 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-#define DEBUG_EXCEPTION_HANDLING
+//#define DEBUG_EXCEPTION_HANDLING
 
 using System.Runtime.InteropServices;
 using SharpOS.AOT.Metadata;
@@ -616,21 +616,37 @@ namespace SharpOS.Korlib.Runtime {
 
 		private unsafe static void PrintCallingStack (StackFrame [] callingStack)
 		{
-			for (int i = 0; i < callingStack.Length; i++) {
-				Serial.COM1.Write ("\tCalled Method: IP=");
+			for (int i = 2; i < callingStack.Length; i++) {
+				Serial.COM1.Write (" at ");
 
-				Serial.COM1.WriteNumber ((int) callingStack [i].IP, true);
+				if (callingStack [i] == null) {
+					Serial.COM1.WriteLine ("(unknown)");
+				} else {
+					Serial.COM1.Write (callingStack [i].MethodBoundary.Name);
+					Serial.COM1.Write (" [IP=0x");
+					Serial.COM1.WriteNumber ((int) callingStack [i].IP, true);
+					Serial.COM1.Write (", BP=0x");
+					Serial.COM1.WriteNumber ((int) callingStack [i].BP, true);
+					Serial.COM1.WriteLine ("]");
+				}
+			}
+		}
 
-				Serial.COM1.Write (" BP=");
+		private unsafe static void PrintCallingStackToScreen (StackFrame [] callingStack)
+		{
+			for (int i = 2; i < callingStack.Length; i++) {
+				TextMode.Write (" at ");
 
-				Serial.COM1.WriteNumber ((int) callingStack [i].BP, true);
-
-				Serial.COM1.Write (" ");
-
-				if (callingStack [i] == null)
-					Serial.COM1.WriteLine ("<empty>");
-				else
-					Serial.COM1.WriteLine (callingStack [i].MethodBoundary.Name);
+				if (callingStack [i] == null) {
+					TextMode.WriteLine ("(unknown)");
+				} else {
+					TextMode.Write (callingStack [i].MethodBoundary.Name);
+					TextMode.Write (" [IP=0x");
+					TextMode.WriteNumber ((int) callingStack [i].IP, true);
+					TextMode.Write (", BP=0x");
+					TextMode.WriteNumber ((int) callingStack [i].BP, true);
+					TextMode.WriteLine ("]");
+				}
 			}
 		}
 
@@ -924,8 +940,21 @@ namespace SharpOS.Korlib.Runtime {
 			}
 
 			// TODO this should check out if the error occured in a thread or a process
-			if (handler == null)
+			if (handler == null) {
+				TextMode.Write ("Unhandled exception: ");
+				TextMode.Write (exception.VTable.Type.Name);
+				TextMode.Write (": ");
+				TextMode.WriteLine (exception.Message);
+				PrintCallingStackToScreen (exception.CallingStack);
+
+				Serial.COM1.Write ("Unhandled exception: ");
+				Serial.COM1.Write (exception.VTable.Type.Name);
+				Serial.COM1.Write (": ");
+				Serial.COM1.WriteLine (exception.Message);
+				PrintCallingStack (exception.CallingStack);
+
 				Diagnostics.Panic ("No exception handler found");
+			}
 
 			exception.CurrentStackFrame = i - 1;
 

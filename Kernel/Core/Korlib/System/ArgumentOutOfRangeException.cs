@@ -10,17 +10,18 @@
 
 using SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
+using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public class SystemException : InternalSystem.Exception {
-		public SystemException (string message):
-			base (message)
+	public class ArgumentOutOfRangeException: InternalSystem.ArgumentException {
+		public ArgumentOutOfRangeException ():
+			this ("Argument is out of range.")
 		{
 		}
 
-		public SystemException ():
-			base ("A system exception has occurred.")
+		public ArgumentOutOfRangeException (string message):
+			base (message)
 		{
 		}
 	}

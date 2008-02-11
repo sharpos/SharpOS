@@ -26,21 +26,40 @@ namespace SharpOS.Kernel.Foundation {
 	/// A universal calendar entry. This can describe a date in any
 	/// supported calendar type.
 	/// </summary>
-	public unsafe struct Time {
-		public CalendarType Calendar;
-		public int Year;
-		public int Month;
-		public byte *MonthString;
-		public int Day;
-		public int Hour;
-		public int Minute;
-		public int Second;
-		public int Millisecond;
-		public int Nanosecond;
-		public int DayOfWeek;
-		public byte *DayOfWeekString;
-		public SByte CurrentTimezone;
-		public byte *TimezoneString;
+	public class Time {
+		public Time (ulong timestamp):
+			this (timestamp, CalendarManager.GetCalendar (CalendarType.Gregorian))
+		{
+		}
+
+		public Time (ulong timestamp, ICalendar calendar)
+		{
+			if (calendar == null)
+				throw new ArgumentNullException ("calendar");
+
+			this.Calendar = calendar;
+			this.Calendar.DecodeTimestamp (timestamp, this);
+		}
+
+		public Time ():
+			this (0)
+		{
+		}
+
+		public ICalendar Calendar = null;
+		public int Year = 0;
+		public int Month = 0;
+		public string MonthString = null;
+		public int Day = 0;
+		public int Hour = 0;
+		public int Minute = 0;
+		public int Second = 0;
+		public int Millisecond = 0;
+		public int Nanosecond = 0;
+		public int DayOfWeek = 0;
+		public string DayOfWeekString = null;
+		public SByte CurrentTimezone = 0;
+		public string TimezoneString = null;
 
 		/// <summary>
 		/// Calculates the UTC timestamp of this Time structure, using the appropriate Calendar
@@ -48,126 +67,44 @@ namespace SharpOS.Kernel.Foundation {
 		/// </summary>
 		public ulong Ticks {
 			get {
-				switch (Calendar) {
-					case CalendarType.Gregorian:
-						fixed (Time *me = &this)
-							return Timezone.GetUTC (
-								GregorianCalendar.EncodeTimestamp (me));
-					default:
-						Diagnostics.Error ("Time::Ticks: Calendar not supported");
-						break;
-				}
+				if (this.Calendar == null)
+					throw new Exception ("Calendar is null");
 
-				return 0;
+				return Timezone.GetUTC (Calendar.EncodeTimestamp (this));
 			}
 		}
 
 		public ulong LocalTimestamp {
 			get {
-				switch (Calendar) {
-					case CalendarType.Gregorian:
-						fixed (Time *me = &this)
-							return GregorianCalendar.EncodeTimestamp (me);
-					default:
-						Diagnostics.Error ("Time::Ticks: Calendar not supported");
-						break;
-				}
+				Diagnostics.Assert (this.Calendar != null,
+					"Time.LocalTimestamp: Calendar is null");
 
-				return 0;
+				return Calendar.EncodeTimestamp (this);
 			}
 		}
 
-		public Time *Copy ()
+		public unsafe Time Clone ()
 		{
-			return Copy (null);
+			Time newTime = new Time ();
+
+			newTime.Year = this.Year;
+			newTime.Month = this.Month;
+			newTime.MonthString = this.MonthString;
+			newTime.Day = this.Day;
+			newTime.Hour = this.Hour;
+			newTime.Minute = this.Minute;
+			newTime.Second = this.Second;
+			newTime.Millisecond = this.Millisecond;
+			newTime.Nanosecond = this.Nanosecond;
+			newTime.DayOfWeek = this.DayOfWeek;
+			newTime.DayOfWeekString = this.DayOfWeekString;
+			newTime.CurrentTimezone = this.CurrentTimezone;
+			newTime.TimezoneString = this.TimezoneString;
+
+			return newTime;
 		}
 
-		/// <summary>
-		/// Allocates a copy of the current Time structure using kernel memory management.
-		/// </summary>
-		public Time *Copy (Time *dest)
-		{
-			Time *time = dest;
-
-			if (time == null)
-				time = (Time*)MemoryManager.Allocate ((uint)sizeof (Time));
-
-			time->Year = Year;
-			time->Month = Month;
-			time->Day = Day;
-			time->Hour = Hour;
-			time->Minute = Minute;
-			time->Second = Second;
-			time->Millisecond = Millisecond;
-			time->Nanosecond = Nanosecond;
-			time->MonthString = MonthString;
-			time->DayOfWeekString = DayOfWeekString;
-			time->CurrentTimezone = CurrentTimezone;
-			time->Calendar = Calendar;
-
-			return time;
-		}
-
-		/// <summary>
-		/// Allocates and zeroes a Time structure using kernel memory management.
-		/// </summary>
-		public static Time *Allocate (Time *buf)
-		{
-			Time *time = buf;
-
-			if (time == null)
-				time = (Time*)MemoryManager.Allocate ((uint)sizeof (Time));
-
-			time->Year = time->Month = time->Day = time->Hour = 1;
-			time->Minute = time->Second = time->Millisecond = time->Nanosecond = 0;
-			time->DayOfWeek = 1;
-			time->Calendar = CalendarType.Gregorian;
-			time->CurrentTimezone = Clock.Timezone;
-			time->MonthString = null;
-			time->DayOfWeekString = null;
-
-			return time;
-		}
-
-		public static Time *Allocate ()
-		{
-			return Allocate (null);
-		}
-
-		/// <summary>
-		/// Constructs a Time structure representing the given timestamp in the default (Gregorian)
-		/// calendar.
-		/// </summary>
-		public static Time *Create (ulong timestamp)
-		{
-			return Create (timestamp, CalendarType.Gregorian);
-		}
-
-		/// <summary>
-		/// Constructs a Time structure representing the given timestamp in the given
-		/// calendar.
-		/// </summary>
-		public static Time *Create (ulong timestamp, CalendarType calendar)
-		{
-			Time *time = Allocate (null);
-
-			timestamp = Timezone.Localize (timestamp);
-
-			switch (calendar) {
-				case CalendarType.Gregorian:
-					GregorianCalendar.DecodeTimestamp (timestamp, time);
-					break;
-				default:
-					Diagnostics.Error ("Time::Create(): Calendar not supported");
-					MemoryManager.Free (time);
-					time = null;
-					break;
-			}
-
-			return time;
-		}
-
-		public void Write ()
+		public unsafe void Write ()
 		{
 			if (DayOfWeekString != null) {
 				TextMode.Write (DayOfWeekString);
@@ -224,52 +161,40 @@ namespace SharpOS.Kernel.Foundation {
 			}
 		}
 
-		public unsafe void AddSeconds (int seconds)
+		public void AddSeconds (int seconds)
 		{
-			fixed (Time *time = &this) {
-				switch (Calendar) {
-				case CalendarType.Gregorian:
-					GregorianCalendar.AddSeconds (time, seconds);
-					break;
-				default:
-					Diagnostics.Error ("Time.AddSeconds(): unsupported calendar");
-					break;
-				}
-			}
+			this.Calendar.AddSeconds (this, seconds);
 		}
 
 		public unsafe void Set (ulong timestamp)
 		{
-			fixed (Time *me = &this) {
-				switch (Calendar) {
-				case CalendarType.Gregorian:
-					GregorianCalendar.DecodeTimestamp (timestamp, me);
-					break;
-				default:
-					Diagnostics.Error ("Time.Set(): unsupported calendar");
-					break;
-				}
-			}
+			Calendar.DecodeTimestamp (timestamp, this);
 		}
 
-		public unsafe void Set (Time *other)
+		public unsafe void Set (Time other)
 		{
-			Year = other->Year;
-			Month = other->Month;
-			MonthString = other->MonthString;
-			Day = other->Day;
-			DayOfWeekString = other->DayOfWeekString;
-			DayOfWeek = other->DayOfWeek;
-			Hour = other->Hour;
-			Minute = other->Minute;
-			Second = other->Second;
-			Millisecond = other->Millisecond;
-			Nanosecond = other->Nanosecond;
-			CurrentTimezone = other->CurrentTimezone;
+			if (other == null)
+				throw new ArgumentNullException ("other");
+
+			this.Year = other.Year;
+			this.Month = other.Month;
+			this.MonthString = other.MonthString;
+			this.Day = other.Day;
+			this.DayOfWeekString = other.DayOfWeekString;
+			this.DayOfWeek = other.DayOfWeek;
+			this.Hour = other.Hour;
+			this.Minute = other.Minute;
+			this.Second = other.Second;
+			this.Millisecond = other.Millisecond;
+			this.Nanosecond = other.Nanosecond;
+			this.CurrentTimezone = other.CurrentTimezone;
 		}
 
-		public void ToString (PString8 *str)
+		public unsafe void ToString (PString8 *str)
 		{
+			if (str == null)
+				throw new ArgumentNullException ("str");
+
 			if (DayOfWeekString != null) {
 				str->Concat (DayOfWeekString);
 				str->Concat (" ");
@@ -325,6 +250,22 @@ namespace SharpOS.Kernel.Foundation {
 			}
 		}
 
+		public unsafe CString8 *GetTimeString ()
+		{
+			Foundation.StringBuilder* sb = Foundation.StringBuilder.CREATE ();
+
+			sb->AppendNumber (this.Hour);
+			sb->Append (":");
+			sb->AppendNumber (this.Minute);
+			sb->Append (":");
+			sb->AppendNumber (this.Second);
+
+			try {
+				return sb->buffer;
+			} finally {
+				MemoryManager.Free (sb);
+			}
+		}
 	}
 }
 

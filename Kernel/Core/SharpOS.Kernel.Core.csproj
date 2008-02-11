@@ -146,6 +146,8 @@
     <Compile Include="Foundation\Convert.cs" />
     <Compile Include="Foundation\GregorianCalendar.cs" />
     <Compile Include="Foundation\Testcase.cs" />
+    <Compile Include="Foundation\ICalendar.cs" />
+    <Compile Include="Foundation\CalendarManager.cs" />
     <Compile Include="FileSystem\GroupDescriptor.cs" />
     <Compile Include="FileSystem\DirectoryFileFormat.cs" />
     <Compile Include="FileSystem\INode.cs" />
@@ -199,6 +201,10 @@
     <Compile Include="Korlib\System\SystemException.cs" />
     <Compile Include="Korlib\System\OverflowException.cs" />
     <Compile Include="Korlib\System\ArithmeticException.cs" />
+    <Compile Include="Korlib\System\ArgumentException.cs" />
+    <Compile Include="Korlib\System\ArgumentNullException.cs" />
+    <Compile Include="Korlib\System\NotSupportedException.cs" />
+    <Compile Include="Korlib\System\NotImplementedException.cs" />
     <Compile Include="Korlib\System\ValueType.cs" />
     <Compile Include="Korlib\System\Enum.cs" />
     <Compile Include="Korlib\System\UInt64.cs" />
