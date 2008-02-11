@@ -1,4 +1,4 @@
-﻿//
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -43,6 +43,24 @@ namespace SharpOS.Kernel.Tests.CS {
 			return result;
 		}
 
+		public static uint CMPFinally2 ()
+		{
+			uint result = 0;
+
+			try {
+				ThrowException2 (ref result);
+			} catch {
+				++result;
+			}
+
+			if (result == 2)
+				result = 1;
+			else
+				result = 0;
+
+			return result;
+		}
+
 		public static uint CMPCatch ()
 		{
 			uint result;
@@ -56,7 +74,7 @@ namespace SharpOS.Kernel.Tests.CS {
 				result = 1;
 			}
 
-			return result;			
+			return result;
 		}
 
 		public static uint CMPCatch2 ()
@@ -113,9 +131,118 @@ namespace SharpOS.Kernel.Tests.CS {
 			return result;
 		}
 
+		public static uint CMPTryCatchFinally1 ()
+		{
+			uint result = 0;
+
+			try {
+				ThrowException ();
+			} catch {
+				++result;
+			} finally {
+				++result;
+			}
+
+			if (result == 2)
+				result = 1;
+			else
+				result = 0;
+
+			return result;
+		}
+
+		public static uint CMPTryCatchFinally2 ()
+		{
+			uint result = 0;
+
+			try {
+				result = 1;
+			} catch {
+				--result;
+			} finally {
+				++result;
+			}
+
+			if (result == 2)
+				result = 1;
+			else
+				result = 0;
+
+			return result;
+		}
+
+		public static uint CMPTryCatchFinally3 ()
+		{
+			uint result = 0;
+
+			try {
+				ThrowTestException ();
+			} catch (TestException) {
+				++result;
+			} finally {
+				++result;
+			}
+
+			if (result == 2)
+				result = 1;
+			else
+				result = 0;
+
+			return result;
+		}
+
+		public static uint CMPTryCatchFinally4 ()
+		{
+			uint result = 0;
+
+			try {
+				ThrowTestException ();
+			} catch (TestException) {
+				++result;
+			} finally {
+				++result;
+			}
+
+			if (result == 2)
+				result = 1;
+			else
+				result = 0;
+
+			return result;
+		}
+
+		public static uint CMPTryCatchFinally5 ()
+		{
+			uint result = 0;
+
+			try {
+				ThrowException2 (ref result);
+			} catch {
+				++result;
+			} finally {
+				++result;
+			}
+
+			if (result == 3)
+				result = 1;
+			else
+				result = 0;
+
+			return result;
+		}
+
 		private static void ThrowException ()
 		{
 			throw new System.Exception ();
+		}
+
+		private static void ThrowException2 (ref uint result)
+		{
+			try {
+				ThrowException ();
+			} finally {
+				++result;
+			}
 		}
 
 		private static void ThrowTestException ()
@@ -132,6 +259,6 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			return 0;
 		}
-#endif	
+#endif
 	}
 }
