@@ -32,6 +32,7 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		private static Header* firstNode = null;
+		private static Header* lastFreeNode = null;
 
 		public static unsafe void Setup ()
 		{
@@ -40,15 +41,18 @@ namespace SharpOS.Kernel.ADC {
 
 			firstNode = (Header*) memoryStart;
 			firstNode->Previous = null;
-			firstNode->Next = null;
+			firstNode->Next = firstNode;
 			firstNode->Size = memoryEnd - memoryStart - (uint) sizeof (Header);
 			firstNode->Free = true;
+
+			lastFreeNode = firstNode;
 		}
 
 		public static unsafe void* Allocate (uint allocate_size)
 		{
 			Kernel.Diagnostics.Assert (firstNode != null, "MemoryManager.Allocate(uint): Unable to allocate because the MemoryManager has not been initialized");
-			Header* currentNode = firstNode;
+
+			Header* currentNode = lastFreeNode;
 
 			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
 			while (currentNode != null) {
@@ -57,6 +61,10 @@ namespace SharpOS.Kernel.ADC {
 				}
 
 				currentNode = currentNode->Next;
+				if (currentNode == lastFreeNode) {
+					currentNode = null;
+					break;
+				}
 			}
 
 			Diagnostics.Assert (currentNode != null, "MemoryManager.Allocate(uint): Unable to allocate memory; no sufficiently sized nodes available");
@@ -79,16 +87,22 @@ namespace SharpOS.Kernel.ADC {
 				nextNode->Previous = currentNode;
 				nextNode->Next = null;
 
-				if (currentNode->Next != null) {
-					// There are more nodes in list so injection is required
-					Header* tmpNext = currentNode->Next;
+				// Do not link firstNode's Previous link to the end of the list
 
-					nextNode->Next = tmpNext;
-					tmpNext->Previous = nextNode;
-				}
+				if (currentNode->Next != firstNode)
+					currentNode->Next->Previous = nextNode;
 
-				currentNode->Next = (Header*) nextPtr;
+				nextNode->Next = currentNode->Next;
+				currentNode->Next = nextNode;
 			}
+
+			// Check to see if the next node is free, larger in size than lastFreeNode, and is also
+			// lower in range than lastFreeNode.  If all these are true, set lastFreeNode to the next
+			// node.
+
+			if (currentNode->Next->Free == true && currentNode->Next->Size > lastFreeNode->Size &&
+			    currentNode->Next < lastFreeNode)
+				lastFreeNode = currentNode->Next;
 
 			uint retPtr = (uint) currentNode + (uint) sizeof (Header);
 			allocated += (ulong) currentNode->Size;
@@ -110,9 +124,11 @@ namespace SharpOS.Kernel.ADC {
 			freeHeader->Free = true;
 
 			Header* currentNode = freeHeader;
+
 			//Scan forward for the last consecutive free node
-			while (currentNode->Next != null && currentNode->Next->Free)
+			while (currentNode->Next != firstNode && currentNode->Next->Free)
 				currentNode = currentNode->Next;
+
 			//Now scan backwards and consolidate free nodes
 			while (currentNode->Previous != null && currentNode->Previous->Free) {
 				Header* previous = currentNode->Previous;
@@ -126,8 +142,11 @@ namespace SharpOS.Kernel.ADC {
 
 				currentNode = currentNode->Previous;
 			}
-		}
 
+			if (currentNode->Next->Free == true && currentNode->Next->Size > lastFreeNode->Size &&
+			    currentNode->Next < lastFreeNode)
+				lastFreeNode = currentNode;
+		}
 
 		private static unsafe void DumpNode (string msg, Header* node)
 		{
@@ -193,8 +212,8 @@ namespace SharpOS.Kernel.ADC {
 
 		public static void __RunTests ()
 		{
-			//__ExclusivityTest ();
-			//__StressTest ();
+			__ExclusivityTest ();
+			__StressTest ();
 			//TextMode.WriteLine ("Memory tests completed.");
 		}
 
