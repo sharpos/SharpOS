@@ -1108,10 +1108,34 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		private void NullCheck (R32Type reg)
+		{
+			string okLabel = this.assembly.GetCMPLabel;
+
+			this.assembly.CMP (reg, 0);
+			this.assembly.JNE (okLabel);
+			this.assembly.CALL (this.assembly.Engine.NullReferenceHandler.AssemblyLabel);
+
+			this.assembly.LABEL (okLabel);
+		}
+
 		private void Ldfld (IR.Instructions.Ldfld instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.FieldOperand field = instruction.Use [0] as IR.Operands.FieldOperand;
+
+			// Check for null
+
+			if (field.Instance != null) {
+				IR.Operands.Register identifier = field.Instance as IR.Operands.Register;
+
+				if (identifier.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (identifier.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (identifier)));
+
+				NullCheck (R32.EAX);
+			}
 
 			this.Load (assignee, field.InternalType, this.GetAddress (field));
 		}
@@ -1127,7 +1151,21 @@ namespace SharpOS.AOT.X86 {
 		private void Ldflda (IR.Instructions.Ldflda instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
-			Memory memory = new Memory (this.GetAddress (instruction.Use [0] as FieldOperand));
+			IR.Operands.FieldOperand field = instruction.Use [0] as IR.Operands.FieldOperand;
+			Memory memory = new Memory (this.GetAddress (field));
+
+			// Check for null
+
+			if (field.Instance != null) {
+				IR.Operands.Register identifier = field.Instance as IR.Operands.Register;
+
+				if (identifier.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (identifier.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (identifier)));
+
+				NullCheck (R32.EAX);
+			}
 
 			if (assignee.IsRegisterSet) {
 				this.assembly.LEA (Assembly.GetRegister (assignee.Register), memory);
@@ -1403,6 +1441,7 @@ namespace SharpOS.AOT.X86 {
 
 					break;
 				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_Ovf_I:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_Ovf_I4:
 					string exceptLabel = this.assembly.GetCMPLabel;
 					string okLabel = this.assembly.GetCMPLabel;
 					DWordMemory upper =
@@ -2360,6 +2399,13 @@ namespace SharpOS.AOT.X86 {
 			string typeName = assignee.Type.ToString ();
 			uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
 
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+			NullCheck (R32.EAX);
+
 			this.assembly.PUSH (R32.ECX);
 			this.assembly.PUSH (R32.ESI);
 			this.assembly.PUSH (R32.EDI);
@@ -3000,7 +3046,7 @@ namespace SharpOS.AOT.X86 {
 				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
 
-			} else 
+			} else
 				// This is for when rethrowing an exception
 				this.assembly.MOV (R32.EAX, this.GetExceptionHandlingExceptionObjectSlot);
 

@@ -1,3 +1,4 @@
+﻿
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -35,6 +36,9 @@
     <DocumentationFile>..\..\build\SharpOS.AOT.Core.xml</DocumentationFile>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <NoStdLib>false</NoStdLib>
+    <OutputType>Library</OutputType>
+    <AssemblyName>SharpOS.AOT.Core</AssemblyName>
+    <RootNamespace>SharpOS.AOT</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -47,6 +51,10 @@
     <DocumentationFile>..\..\build\SharpOS.AOT.Core.XML</DocumentationFile>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <NoStdLib>false</NoStdLib>
+    <OutputType>Library</OutputType>
+    <AssemblyName>SharpOS.AOT.Core</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>SharpOS.AOT</RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug Test|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -60,6 +68,12 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
+    <OutputType>Library</OutputType>
+    <AssemblyName>SharpOS.AOT.Core</AssemblyName>
+    <RootNamespace>SharpOS.AOT</RootNamespace>
+    <Optimize>true</Optimize>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release Test|AnyCPU' ">
     <OutputPath>bin\Release Test\</OutputPath>
@@ -71,9 +85,16 @@
     <CodeAnalysisUseTypeNameInSuppression>true</CodeAnalysisUseTypeNameInSuppression>
     <CodeAnalysisModuleSuppressionsFile>GlobalSuppressions.cs</CodeAnalysisModuleSuppressionsFile>
     <ErrorReport>prompt</ErrorReport>
+    <OutputType>Library</OutputType>
+    <AssemblyName>SharpOS.AOT.Core</AssemblyName>
+    <DebugSymbols>true</DebugSymbols>
+    <RootNamespace>SharpOS.AOT</RootNamespace>
+    <Optimize>true</Optimize>
+    <CheckForOverflowUnderflow>true</CheckForOverflowUnderflow>
+    <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Cecil, Version=0.6.0.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756">
+    <Reference Include="Mono.Cecil">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\..\References\Mono.Cecil.dll</HintPath>
     </Reference>
@@ -151,6 +172,7 @@
     <Compile Include="Attributes\ADCStubAttribute.cs" />
     <Compile Include="Attributes\KernelMainAttribute.cs" />
     <Compile Include="Attributes\LabelAddressAttribute.cs" />
+    <Compile Include="Attributes\NullReferenceHandlerAttribute.cs" />
     <Compile Include="IR\Operands\Operand.cs" />
     <Compile Include="IR\Operands\Constant.cs" />
     <Compile Include="IR\Operands\IntConstant.cs" />
@@ -246,8 +268,6 @@
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="COFF.cs" />
     <Compile Include="IAssembly.cs" />
-  </ItemGroup>
-  <ItemGroup>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include="Microsoft.Net.Framework.2.0">

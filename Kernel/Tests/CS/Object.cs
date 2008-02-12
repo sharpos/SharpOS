@@ -37,6 +37,22 @@ namespace SharpOS.Kernel.Tests.CS {
 			}
 		}
 
+		public static uint CMPFieldNullReference ()
+		{
+			Point point = null;
+
+			try {
+				if (point.x == 3)
+					return 3;
+			} catch (System.NullReferenceException) {
+				return 1;
+			} catch {
+				return 2;
+			}
+
+			return 0;
+		}
+
 		public static uint CMPCreateObject ()
 		{
 			Point point = new Point (100, 200);

@@ -1,3 +1,8 @@
+2008-02-12  William Lahti  <xfurious@gmail.com>
+	* Added NullReferenceException to korlib
+	* Added NullReferenceHandler to runtime
+	* Added testcase for null-checking in ldfld
+
 2008-02-11  William Lahti  <xfurious@gmail.com>
 	* Improved unhandled exception message to match .NET
 	* Added a number of exception types like the ArgumentException family,

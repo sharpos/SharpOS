@@ -1,3 +1,6 @@
+2008-02-12  William Lahti <xfurious@gmail.com>
+	* X86/IR.cs: implemented null checking for ldfld and ldflda
+
 2007-08-02  William Lahti <xfurious@gmail.com>
 	* X86/Assembly.cs: moved AddResources() call inside the data section
 	(before DATA_END label).

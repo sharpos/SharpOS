@@ -282,6 +282,12 @@ namespace SharpOS.Korlib.Runtime {
 		public static TypeDefRow GetType (AssemblyMetadata assembly, TokenType type, uint rid,
 			out AssemblyMetadata destAssembly, out uint typeDefToken)
 		{
+			if (type != TokenType.TypeRef && type != TokenType.TypeDef) {
+				Serial.COM1.Write ("Token type: ");
+				Serial.COM1.WriteLine (MetadataToken.GetTokenTypeString (type));
+				throw new System.Exception ("token type must be either TypeRef or TypeDef");
+			}
+
 			Diagnostics.Assert (type == TokenType.TypeRef || type == TokenType.TypeDef,
 				"Runtime.GetType(): token type must be either TypeRef or TypeDef");
 
@@ -857,7 +863,7 @@ namespace SharpOS.Korlib.Runtime {
 		[SharpOS.AOT.Attributes.IsInst]
 		internal static unsafe object IsInst (InternalSystem.Object obj, TypeInfo type)
 		{
-			if (IsBaseClassOf (obj.VTable.Type, type))
+			if (obj != null && IsBaseClassOf (obj.VTable.Type, type))
 				return obj;
 			else
 				return null;
@@ -866,7 +872,7 @@ namespace SharpOS.Korlib.Runtime {
 		[SharpOS.AOT.Attributes.CastClass]
 		internal static unsafe object CastClass (InternalSystem.Object obj, TypeInfo type)
 		{
-			if (IsBaseClassOf (obj.VTable.Type, type))
+			if (obj != null && IsBaseClassOf (obj.VTable.Type, type))
 				return obj;
 			else
 				throw new System.InvalidCastException ();
@@ -876,6 +882,12 @@ namespace SharpOS.Korlib.Runtime {
 		internal static unsafe void OverflowHandler ()
 		{
 			throw new System.OverflowException ();
+		}
+
+		[SharpOS.AOT.Attributes.NullReferenceHandler]
+		internal static unsafe void NullReferenceHandler ()
+		{
+			throw new System.NullReferenceException ();
 		}
 
 		[SharpOS.AOT.Attributes.Throw]
@@ -1048,6 +1060,7 @@ namespace SharpOS.Korlib.Runtime {
 		public static unsafe bool IsBaseClassOf (TypeInfo type, TypeInfo baseType)
 		{
 			byte *systemObject = Stubs.CString ("System.Object");
+			CString8 *str = null;
 
 			// Special case for System.Object
 
@@ -1055,6 +1068,19 @@ namespace SharpOS.Korlib.Runtime {
 				return true;
 
 			// If the type infos are the same, then the result is true
+
+			Serial.COM1.Write ("type: 0x");
+			Serial.COM1.Write ((int)type.MetadataToken, true);
+			Serial.COM1.Write (" '");
+			Serial.COM1.Write (type.Name);
+			Serial.COM1.WriteLine ("'");
+
+
+			Serial.COM1.WriteLine ("basetype: 0x");
+			Serial.COM1.Write ((int)baseType.MetadataToken, true);
+			Serial.COM1.Write (" '");
+			Serial.COM1.WriteLine (baseType.Name);
+			Serial.COM1.WriteLine ("'");
 
 			if (type == baseType)
 				return true;

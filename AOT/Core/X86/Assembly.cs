@@ -1228,9 +1228,9 @@ namespace SharpOS.AOT.X86 {
 					this.ADDRESSOF (this.GetTypeInfoLabel (exception.Class.TypeFullName));
 				else
 					this.DATA (0U);
-				
+
 				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.TryBegin.Index));
-				
+
 				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.TryEnd.Index));
 
 				if (exception.FilterBegin != null)
@@ -1244,7 +1244,7 @@ namespace SharpOS.AOT.X86 {
 					this.DATA (0U);
 
 				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.HandlerBegin.Index));
-				
+
 				this.ADDRESSOF (string.Format (METHOD_BLOCK_LABEL, method.MethodFullName, exception.HandlerEnd.Index));
 			}
 
@@ -1350,6 +1350,9 @@ namespace SharpOS.AOT.X86 {
 					AddITableFields (_class);
 
 				string typeInfoLabel = AddTypeInfoFields (_class);
+
+				if (typeInfoLabel == "InternalSystem.String[] TypeInfo")
+					Console.WriteLine ("type: " + typeInfoLabel);
 
 				AddVTableFields (_class, typeInfoLabel);
 

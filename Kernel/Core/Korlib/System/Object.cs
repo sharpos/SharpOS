@@ -20,10 +20,23 @@ namespace InternalSystem {
 		public Object ()
 		{
 		}
-		
+
 		public virtual string ToString()
 		{
 			return this.VTable.Type.Name;
+		}
+
+		public virtual int GetHashCode ()
+		{
+			return 0; // TODO
+		}
+
+		public unsafe virtual bool Equals (object o)
+		{
+			void *p1 = Runtime.GetPointerFromObject (this);
+			void *p2 = Runtime.GetPointerFromObject (o);
+
+			return p1 == p2;
 		}
 	}
 }

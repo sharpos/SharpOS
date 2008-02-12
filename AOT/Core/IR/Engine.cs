@@ -406,6 +406,16 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		Method nullReferenceHandler = null;
+
+		public Method NullReferenceHandler
+		{
+			get
+			{
+				return this.nullReferenceHandler;
+			}
+		}
+
 		/// <summary>
 		/// Changes the Status property of the Engine.
 		/// </summary>
@@ -975,6 +985,37 @@ namespace SharpOS.AOT.IR {
 			return false;
 		}
 
+		Dictionary <string,TypeMerge> typeMerges = new Dictionary<string,	TypeMerge> ();
+
+		class TypeMerge {
+			public TypeMerge ()
+			{
+			}
+
+			private List<Class> classes = new List<Class>();
+
+			public void Add (Class c)
+			{
+				classes.Add (c);
+			}
+
+			public Class Merge ()
+			{
+				Class principal;
+
+				if (classes.Count == 0)
+					throw new Exception ("No classes listed in merge operation");
+				if (classes.Count == 1)
+					return classes [0];
+
+				principal = classes [0];
+
+
+				// Merge in methods
+				return null; // TODO
+			}
+		}
+
 		/// <summary>
 		/// Generates the IR.
 		/// </summary>
@@ -1032,8 +1073,21 @@ namespace SharpOS.AOT.IR {
 
 				Class _class = new Class (this, type);
 
-				if (this.classesDictionary.ContainsKey (_class.TypeFullName))
-					throw new NotImplementedEngineException ("Already contains " + _class.TypeFullName);
+				if (this.classesDictionary.ContainsKey (_class.TypeFullName)) {
+					TypeMerge merge;
+
+					// Save the class group for merging.
+
+					if (this.typeMerges.ContainsKey (_class.TypeFullName))
+						merge = this.typeMerges [_class.TypeFullName];
+					else {
+						merge = new TypeMerge ();
+						merge.Add (this.classesDictionary [_class.TypeFullName]);
+						this.typeMerges [_class.TypeFullName] = merge;
+					}
+
+					merge.Add (_class);
+				}
 
 				this.classes.Add (_class);
 				this.classesDictionary [_class.TypeFullName] = _class;
@@ -1186,6 +1240,11 @@ namespace SharpOS.AOT.IR {
 							throw new EngineException ("More than one method was tagged as OverflowHandler method");
 
 						this.overflowHandler = _method;
+					} else if (_method.IsNullReferenceHandler) {
+						if (this.nullReferenceHandler != null)
+							throw new EngineException ("More than one method was tagged as NullReferenceHandler method");
+
+						this.nullReferenceHandler = _method;
 					}
 				}
 			}

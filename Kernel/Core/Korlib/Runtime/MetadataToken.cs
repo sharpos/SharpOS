@@ -43,62 +43,62 @@ namespace SharpOS.Korlib.Runtime {
 			return (uint)type | rid;
 		}
 
-		public static unsafe CString8 *GetTokenTypeString (TokenType type)
+		public static unsafe string GetTokenTypeString (TokenType type)
 		{
 			switch (type) {
 			case TokenType.Module:
-				return (CString8*)Stubs.CString ("Module");
+				return "Module";
 			case TokenType.TypeRef:
-				return (CString8*)Stubs.CString ("TypeRef");
+				return "TypeRef";
 			case TokenType.TypeDef:
-				return (CString8*)Stubs.CString ("TypeDef");
+				return "TypeDef";
 			case TokenType.Field:
-				return (CString8*)Stubs.CString ("Field");
+				return "Field";
 			case TokenType.Method:
-				return (CString8*)Stubs.CString ("Method");
+				return "Method";
 			case TokenType.Param:
-				return (CString8*)Stubs.CString ("Param");
+				return "Param";
 			case TokenType.InterfaceImpl:
-				return (CString8*)Stubs.CString ("InterfaceImpl");
+				return "InterfaceImpl";
 			case TokenType.MemberRef:
-				return (CString8*)Stubs.CString ("MemberRef");
+				return "MemberRef";
 			case TokenType.CustomAttribute:
-				return (CString8*)Stubs.CString ("CustomAttribute");
+				return "CustomAttribute";
 			case TokenType.Permission:
-				return (CString8*)Stubs.CString ("Permission");
+				return "Permission";
 			case TokenType.Signature:
-				return (CString8*)Stubs.CString ("Signature");
+				return "Signature";
 			case TokenType.Event:
-				return (CString8*)Stubs.CString ("Event");
+				return "Event";
 			case TokenType.Property:
-				return (CString8*)Stubs.CString ("Property");
+				return "Property";
 			case TokenType.ModuleRef:
-				return (CString8*)Stubs.CString ("ModuleRef");
+				return "ModuleRef";
 			case TokenType.TypeSpec:
-				return (CString8*)Stubs.CString ("TypeSpec");
+				return "TypeSpec";
 			case TokenType.Assembly:
-				return (CString8*)Stubs.CString ("Assembly");
+				return "Assembly";
 			case TokenType.AssemblyRef:
-				return (CString8*)Stubs.CString ("AssemblyRef");
+				return "AssemblyRef";
 			case TokenType.File:
-				return (CString8*)Stubs.CString ("File");
+				return "File";
 			case TokenType.ExportedType:
-				return (CString8*)Stubs.CString ("ExportedType");
+				return "ExportedType";
 			case TokenType.ManifestResource:
-				return (CString8*)Stubs.CString ("ManifestResource");
+				return "ManifestResource";
 			case TokenType.GenericParam:
-				return (CString8*)Stubs.CString ("GenericParam");
+				return "GenericParam";
 			case TokenType.MethodSpec:
-				return (CString8*)Stubs.CString ("MethodSpec");
+				return "MethodSpec";
 			case TokenType.String:
-				return (CString8*)Stubs.CString ("String");
+				return "String";
 			case TokenType.Name:
-				return (CString8*)Stubs.CString ("Name");
+				return "Name";
 			case TokenType.BaseType:
-				return (CString8*)Stubs.CString ("BaseType");
+				return "BaseType";
 			}
 
-			return (CString8*)Stubs.CString ("Unknown");
+			return "Unknown";
 		}
 
 		public uint ToUInt ()
