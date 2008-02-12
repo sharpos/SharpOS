@@ -41,6 +41,20 @@ namespace SharpOS.AOT.X86 {
 			}
 
 			// TODO add support for call/callvirt/calli/jmp and for tail.
+
+			// Perform a null check for non-static methods
+
+			if (!(call.Method.MethodDefinition as Mono.Cecil.MethodDefinition).IsStatic) {
+				IR.Operands.Register identifier = call.Use [0] as IR.Operands.Register;
+
+				if (identifier.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (identifier.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (identifier)));
+
+				NullCheck (R32.EAX);
+			}
+
 			PushCallParameters (call);
 
 			IR.Operands.Register assignee = call.Def as IR.Operands.Register;
