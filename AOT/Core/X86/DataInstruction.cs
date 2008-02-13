@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -20,9 +20,9 @@ using Mono.Cecil.Metadata;
 namespace SharpOS.AOT.X86 {
 	internal class DataInstruction : Instruction {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="DataInstruction"/> class.
+		/// <see cref="DataInstruction"/> represents a data value encoded into the output image.
 		/// </summary>
-		/// <param name="indent">if set to <c>true</c> [indent].</param>
+		/// <param name="indent">if set to <c>true</c>, the data instruction is indented in the ASM dump</param>
 		/// <param name="label">The label.</param>
 		/// <param name="reference">The reference.</param>
 		/// <param name="name">The name.</param>

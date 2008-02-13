@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -19,7 +19,8 @@ using Mono.Cecil.Metadata;
 namespace SharpOS.AOT.X86 {
 	internal class LabelInstruction : Instruction {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="LabelInstruction"/> class.
+		/// <see cref="LabelInstruction"/> represents a label in the output encoding, which may be used to represent
+		/// a particular offset in the resulting image file.
 		/// </summary>
 		/// <param name="label">The label.</param>
 		public LabelInstruction (string label)

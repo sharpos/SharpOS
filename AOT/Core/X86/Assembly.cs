@@ -92,9 +92,9 @@ namespace SharpOS.AOT.X86 {
 		Engine engine;
 
 		/// <summary>
-		/// Gets the engine.
+		/// Gets the IR Engine instance which is overseeing this encoding phase.
 		/// </summary>
-		/// <value>The engine.</value>
+		/// <value>The Engine instance.</value>
 		public Engine Engine
 		{
 			get

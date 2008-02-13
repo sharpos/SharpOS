@@ -22,6 +22,9 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.X86 {
 	internal partial class AssemblyMethod {
+		/// <summary>
+		/// Encodes the IL 'call', 'calli', and 'callvirt' instructions
+		/// </summary>
 		private void Call (SharpOS.AOT.IR.Instructions.Call call)
 		{
 			if (call.IsSpecialCase) {
@@ -141,6 +144,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Pushes each method parameter onto the x86 stack, in reverse order. This includes the 'this' pointer
+		/// if appropriate.
+		/// </summary>
 		private void PushCallParameters (SharpOS.AOT.IR.Instructions.CallInstruction call)
 		{
 			for (int i = 0; i < call.Use.Length; i++) {
@@ -150,6 +157,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Removes each method parameter from the x86 stack, including the 'this' pointer if appropriate.
+		/// </summary>
 		private void PopCallParameters (SharpOS.AOT.IR.Instructions.CallInstruction call)
 		{
 			uint result = 0;
@@ -173,7 +183,8 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines whether the given call is marked with a StringAttribute.
+		/// Determines whether the given call instruction references the AOT stub for retrieving the UTF-7
+		/// encoded string equivalent for a string constant, and emits code for handling it.
 		/// </summary>
 		/// <param name="call">The call operand.</param>
 		/// <returns>
@@ -206,7 +217,8 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines whether the given call is marked with an AllocAttribute.
+		/// Determines whether the given call instruction references the AOT stub for static allocation,
+		/// and handles it if so.
 		/// </summary>
 		/// <param name="call">The call.</param>
 		/// <returns>
@@ -239,8 +251,8 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines if the method being called in <paramref name="call" /> is
-		/// marked with a LabelledAllocAttribute.
+		/// Determines if the call instruction references the AOT stub for labelled static allocation,
+		/// and handles it if so.
 		/// </summary>
 		/// <param name="call">The call operand.</param>
 		/// <returns>
@@ -275,7 +287,8 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines whether the method being called is marked with LabelAddressAttribute.
+		/// Determines whether the call instruction references the AOT stub for retrieving the address of
+		/// a given label, and handles it if so.
 		/// </summary>
 		/// <param name="call">The call.</param>
 		/// <returns>
@@ -306,7 +319,8 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Determines whether [is kernel object from pointer] [the specified call].
+		/// Determines whether the call instruction references the AOT stub for converting between object
+		/// and pointer, and handles it if so.
 		/// </summary>
 		/// <param name="call">The call.</param>
 		/// <returns>
@@ -333,6 +347,10 @@ namespace SharpOS.AOT.X86 {
 			return true;
 		}
 
+		/// <summary>
+		/// Checks whether the call instruction references a builtin feature of the AOT and handles
+		/// it if so.
+		/// </summary>
 		private void HandleBuiltIns (SharpOS.AOT.IR.Instructions.Call call)
 		{
 			if (!this.IsKernelString (call)
@@ -343,6 +361,12 @@ namespace SharpOS.AOT.X86 {
 				throw new EngineException (string.Format ("Unknown Built-In '{0}'. ({1})", call.ToString (), this.method.MethodFullName));
 		}
 
+		/// <summary>
+		/// Creates an instance of the Memory class which has been used in the kernel to interact with the Asm stubs.
+		/// In the example "Asm.MOV (R32.EAX, new Memory (...))", the AOT emulates the instantiation of the Memory
+		/// parameter at compile-time, instead of literally translating the 'newobj' and constructor calls into the
+		/// encoded result.
+		/// </summary>
 		private Memory GetAssemblyStubMemoryAddress (IR.Instructions.Newobj call)
 		{
 			if (call.Use.Length == 1) {
@@ -515,7 +539,7 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// This handles the Asm.XXX calls.
+		/// Handles call instructions which reference the Asm.XXX stubs provided by the AOT.
 		/// </summary>
 		/// <param name="block">The block.</param>
 		/// <param name="instruction">The instruction.</param>
@@ -584,7 +608,7 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Handles the return.
+		/// Implements the 'ret' IL instruction.
 		/// </summary>
 		/// <param name="block">The block.</param>
 		/// <param name="instruction">The instruction.</param>
@@ -693,6 +717,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'ldc.*' family of IL instructions.
+		/// </summary>
 		private void Ldc (IR.Instructions.Ldc instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -727,6 +754,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the ldind.* family of instructions
+		/// </summary>
 		private void Ldind (IR.Instructions.Ldind instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -827,6 +857,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Common implementation for IL instructions which load a value onto the IL evaluation stack.
+		/// </summary>
 		private void Load (IR.Operands.Register assignee, InternalType sourceType, Memory memory)
 		{
 			switch (sourceType) {
@@ -952,6 +985,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Common implementations which pop a value from the IL evaluation stack and save it in another means
+		/// of storage (such as stloc, stind, starg).
+		/// </summary>
 		private void Save (string typeName, InternalType destinationType, Memory memory, IR.Operands.Register value)
 		{
 			switch (destinationType) {
@@ -1076,6 +1113,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'ldloc' IL instruction.
+		/// </summary>
 		private void Ldloc (IR.Instructions.Ldloc instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1084,6 +1124,9 @@ namespace SharpOS.AOT.X86 {
 			this.Load (assignee, local.InternalType, this.GetAddress (local));
 		}
 
+		/// <summary>
+		/// Implements the 'ldloca' IL instruction.
+		/// </summary>
 		private void Ldloca (IR.Instructions.Ldloca instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1099,6 +1142,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'ldarg' IL instruction.
+		/// </summary>
 		private void Ldarg (IR.Instructions.Ldarg instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1107,6 +1153,9 @@ namespace SharpOS.AOT.X86 {
 			this.Load (assignee, argument.InternalType, this.GetAddress (argument));
 		}
 
+		/// <summary>
+		/// Implements the 'ldarga' IL instruction.
+		/// </summary>
 		private void Ldarga (IR.Instructions.Ldarga instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1122,6 +1171,13 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Utility used to implement null reference checking for the 'ldfld' family of instructions
+		/// as well as for the implementation of 'call' for non-static methods. The method will
+		/// encode a call to the runtime's null reference handler (marked with
+		/// SharpOS.AOT.Attributes.NullReferenceHandlerAttribute), which is executed if the value
+		/// in the 32-bit x86 register <paramref name="reg" /> is zero (null).
+		/// </summary>
 		private void NullCheck (R32Type reg)
 		{
 			string okLabel = this.assembly.GetCMPLabel;
@@ -1133,6 +1189,10 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.LABEL (okLabel);
 		}
 
+		/// <summary>
+		/// Implements the 'ldfld' IL instruction, which pushes the value of the given field onto
+		/// the IL evaluation stack.
+		/// </summary>
 		private void Ldfld (IR.Instructions.Ldfld instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1154,6 +1214,10 @@ namespace SharpOS.AOT.X86 {
 			this.Load (assignee, field.InternalType, this.GetAddress (field));
 		}
 
+		/// <summary>
+		/// Implements the 'ldsfld' IL instruction, which pushes the value of the given static field onto
+		/// the IL evaluation stack.
+		/// </summary>
 		private void Ldsfld (IR.Instructions.Ldsfld instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1162,6 +1226,10 @@ namespace SharpOS.AOT.X86 {
 			this.Load (assignee, field.InternalType, this.GetAddress (field));
 		}
 
+		/// <summary>
+		/// Implements the 'ldflda' IL instruction, which pushes the address of the given instance field onto
+		/// the IL evaluation stack.
+		/// </summary>
 		private void Ldflda (IR.Instructions.Ldflda instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1191,6 +1259,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'ldsflda' IL instruction, which pushes the address of the given static field onto
+		/// the IL evaluation stack.
+		/// </summary>
 		private void Ldsflda (IR.Instructions.Ldsflda instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1206,6 +1278,11 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'localloc' IL instruction, which allocates a buffer from the local dynamic memory
+		/// pool. The semantics of localloc as presented in the ECMA-335 spec allow it to be implemented using
+		/// the x86 stack, as the memory it allocates will be freed when the method returns.
+		/// </summary>
 		private void Localloc (IR.Instructions.Localloc instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1225,6 +1302,9 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.ESP);
 		}
 
+		/// <summary>
+		/// Implements the 'ldstr' IL instruction, which loads a string constant onto the IL evaluation stack.
+		/// </summary>
 		private void Ldstr (IR.Instructions.Ldstr instruction)
 		{
 			// TODO it should create an object and copy the string data to that object
@@ -1243,6 +1323,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'ldnull' IL instruction, which loads a null pointer onto the IL evaluation stack.
+		/// </summary>
 		private void Ldnull (IR.Instructions.Ldnull instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1254,6 +1337,10 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), 0);
 		}
 
+		/// <summary>
+		/// Implements the 'stloc' IL instruction, which pops a value from the IL evaluation stack and into
+		/// the given local variable.
+		/// </summary>
 		private void Stloc (IR.Instructions.Stloc instruction)
 		{
 			IR.Operands.Local assignee = instruction.Def as IR.Operands.Local;
@@ -1262,6 +1349,10 @@ namespace SharpOS.AOT.X86 {
 			this.Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
+		/// <summary>
+		/// Implements the 'starg' IL instruction, which pops a value from the IL evaluation stack and into
+		/// the given method argument.
+		/// </summary>
 		private void Starg (IR.Instructions.Starg instruction)
 		{
 			IR.Operands.Argument assignee = instruction.Def as IR.Operands.Argument;
@@ -1270,6 +1361,10 @@ namespace SharpOS.AOT.X86 {
 			this.Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
+		/// <summary>
+		/// Implements the 'stind' IL instruction, which pops a value from the IL evaluation stack and into
+		/// the given memory location.
+		/// </summary>
 		private void Stind (IR.Instructions.Stind instruction)
 		{
 			IR.Operands.Register address = instruction.Use [0] as IR.Operands.Register;
@@ -1342,14 +1437,35 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'stfld' instruction, which pops a value from the IL evaluation stack and stores it
+		/// in the given field of an object instance.
+		/// </summary>
 		private void Stfld (IR.Instructions.Stfld instruction)
 		{
 			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
 			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
 
+			// Check for null
+
+			if (assignee.Instance != null) {
+				IR.Operands.Register identifier = assignee.Instance as IR.Operands.Register;
+
+				if (identifier.IsRegisterSet)
+					this.assembly.MOV (R32.EAX, Assembly.GetRegister (identifier.Register));
+				else
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (identifier)));
+
+				NullCheck (R32.EAX);
+			}
+
 			this.Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
+		/// <summary>
+		/// Implements the 'stsfld' instruction, which pops a value from the IL evaluation stack and stores it
+		/// in the type's given static field.
+		/// </summary>
 		private void Stsfld (IR.Instructions.Stsfld instruction)
 		{
 			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
@@ -1358,6 +1474,9 @@ namespace SharpOS.AOT.X86 {
 			this.Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
+		/// <summary>
+		/// Implements the 'conv' family of IL instructions, which handle conversions between primitive data types.
+		/// </summary>
 		private void Convert (IR.Instructions.Convert instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1500,11 +1619,17 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the IL 'jmp' instruction,
+		/// </summary>
 		private void Jump (IR.Instructions.Jump instruction)
 		{
 			assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));
 		}
 
+		/// <summary>
+		/// Implements the 'branch' family of IL instructions.
+		/// </summary>
 		private void Branch (IR.Instructions.Branch instruction)
 		{
 			string okLabel = this.GetLabel (instruction.Block.Outs [0]);
@@ -1560,6 +1685,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'brtrue' and 'brfalse' instructions.
+		/// </summary>
 		private void SimpleBranch (IR.Instructions.SimpleBranch instruction)
 		{
 			string label = this.GetLabel (instruction.Block.Outs [0]);
@@ -1583,6 +1711,9 @@ namespace SharpOS.AOT.X86 {
 				throw new NotImplementedEngineException ();
 		}
 
+		/// <summary>
+		///
+		/// </summary>
 		private void ConditionCheck (IR.Instructions.ConditionCheck instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1656,6 +1787,9 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.ECX);
 		}
 
+		/// <summary>
+		/// Implements the 'dup' IR instruction, which duplicates the top value on the evaluation stack.
+		/// </summary>
 		private void Dup (IR.Instructions.Dup instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1701,6 +1835,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'add' IL instruction, which pops two values from the evaluation stack,
+		/// adds them together, and then pushes the result.
+		/// </summary>
 		private void Add (IR.Instructions.Add instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1756,6 +1894,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'sub' IL instruction, which pops two values from the evaluation stack,
+		/// subtracts the first from the second, and pushes the result.
+		/// </summary>
 		private void Sub (IR.Instructions.Sub instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1811,6 +1953,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'mul' IL instruction, which pops two values, multiplies them, and pushes
+		/// the result.
+		/// </summary>
 		private void Mul (IR.Instructions.Mul instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1873,6 +2019,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'div' IL instruction, which pops two values from the evaluation stack,
+		/// divides the first by the second, and pushes the result.
+		/// </summary>
 		private void Div (IR.Instructions.Div instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1916,6 +2066,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'rem' IL instruction, which pops two values from the evaluation stack,
+		/// divides the first by the second, and pushes the remainder.
+		/// </summary>
 		private void Rem (IR.Instructions.Rem instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -1959,6 +2113,9 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'neg' IL instruction, which negates the value at the top of the stack.
+		/// </summary>
 		private void Neg (IR.Instructions.Neg instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2003,6 +2160,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'shl' IL instruction, which pops two values, left-bitshifts the first by the
+		/// amount defined by the second, and pushes the result back onto the evaluation stack.
+		/// </summary>
 		private void Shl (IR.Instructions.Shl instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2060,6 +2221,11 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'shr' IL instruction, which pops two values from the stack,
+		/// right-bit-shifts the first by the amount defined in the second, and pushes
+		/// the result.
+		/// </summary>
 		private void Shr (IR.Instructions.Shr instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2134,6 +2300,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'and' IL instruction, which performs a bit-wise AND operation on
+		/// the top two values of the evaluation stack, and replaces them with the result.
+		/// </summary>
 		private void And (IR.Instructions.And instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2183,6 +2353,11 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'or' IL instruction, which performs a bitwise OR operation
+		/// on the top two values of the evaluation stack and replaces them with the
+		/// result.
+		/// </summary>
 		private void Or (IR.Instructions.Or instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2232,6 +2407,11 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'xor' IL instruction, which performs a bitwise exclusive-OR
+		/// operation on the top two values of the evaluation stack and replaces them
+		/// with the result.
+		/// </summary>
 		private void Xor (IR.Instructions.Xor instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2281,6 +2461,10 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'not' IL instruction, which replaces the top stack value with
+		/// it's bitwise complement.
+		/// </summary>
 		private void Not (IR.Instructions.Not instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2324,11 +2508,18 @@ namespace SharpOS.AOT.X86 {
 			}
 		}
 
+		/// <summary>
+		/// Implements the 'pop' IL instruction, which removes the top value from the stack.
+		/// </summary>
 		private void Pop (IR.Instructions.Pop instruction)
 		{
 			// Do nothing.
 		}
 
+		/// <summary>
+		/// Implements the 'newobj' IL instruction, which instantiates an object of the given type,
+		/// and calls the desired constructor method.
+		/// </summary>
 		private void Newobj (IR.Instructions.Newobj instruction)
 		{
 			if (instruction.Method.Class.IsValueType) {
@@ -2372,6 +2563,10 @@ namespace SharpOS.AOT.X86 {
 				throw new NotImplementedEngineException ();
 		}
 
+		/// <summary>
+		/// Implements the 'stobj' instruction, which stores a value from the evaluation stack to
+		/// a particular address.
+		/// </summary>
 		private void Stobj (IR.Instructions.Stobj instruction)
 		{
 			IR.Operands.Register assignee = instruction.Use [0] as IR.Operands.Register;
@@ -2406,6 +2601,10 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.POP (R32.ECX);
 		}
 
+		/// <summary>
+		/// Implements the 'ldobj' instruction, which loads a value from an address onto the
+		/// evaluation stack.
+		/// </summary>
 		private void Ldobj (IR.Instructions.Ldobj instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2445,6 +2644,10 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.POP (R32.ECX);
 		}
 
+		/// <summary>
+		/// Implements the 'initobj' instruction, which initializes the fields of an objet
+		/// at a particular address, based on the type provided as an operand.
+		/// </summary>
 		private void Initobj (IR.Instructions.Initobj instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
@@ -2471,6 +2674,10 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.POP (R32.ECX);
 		}
 
+		/// <summary>
+		/// Implements the 'sizeof' IL instruction, which pushes the size of a type onto the
+		/// IL evaluation stack.
+		/// </summary>
 		private void SizeOf (IR.Instructions.SizeOf instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
@@ -2483,6 +2690,9 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), size);
 		}
 
+		/// <summary>
+		/// Implements the 'switch' IL instruction.
+		/// </summary>
 		private void Switch (IR.Instructions.Switch instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
@@ -2501,6 +2711,9 @@ namespace SharpOS.AOT.X86 {
 			assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));
 		}
 
+		/// <summary>
+		/// Implements the 'box' IL instruction, which creates a wrapper object for a value type.
+		/// </summary>
 		private void Box (IR.Instructions.Box instruction)
 		{
 			this.assembly.MOV (R32.EAX, this.assembly.GetVTableLabel (instruction.Type.TypeFullName));
@@ -2539,6 +2752,10 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.POP (R32.ECX);
 		}
 
+		/// <summary>
+		/// Implements the 'unbox' IL instruction, which retrieves the pointer to the value inside of
+		/// the boxed object.
+		/// </summary>
 		private void Unbox (IR.Instructions.Unbox instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
@@ -2557,6 +2774,10 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
 
+		/// <summary>
+		/// Implements the 'unboxany' IL instruction, which copies the value in the boxed object onto
+		/// the evaluation stack.
+		/// </summary>
 		private void UnboxAny (IR.Instructions.UnboxAny instruction)
 		{
 			if (instruction.Type.ClassDefinition.IsValueType) {
@@ -2606,6 +2827,9 @@ namespace SharpOS.AOT.X86 {
 		private const int ARRAY_BASE_SIZE = ARRAY_BOUND_OFFSET + ARRAY_BOUND_SIZE;
 		private const int ARRAY_FIRST_BOUND_LENGTH_OFFSET = ARRAY_BOUND_OFFSET + ARRAY_BOUND_LENGTH_OFFSET;
 
+		/// <summary>
+		/// Implements the 'newarr' IL instruction, which creates a new single-dimension zero-based array (SZArray).
+		/// </summary>
 		private void Newarr (IR.Instructions.Newarr instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
@@ -2646,6 +2870,11 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.MOV (new DWordMemory (null, R32.EAX, null, 0, objectSize + ARRAY_FIRST_BOUND_LENGTH_OFFSET), R32.ECX);
 		}
 
+		/// <summary>
+		/// Implements the 'stelem' IL instruction, which pops three values from the stack: the
+		/// pointer to the array, the index of the element, and the value to place there. It
+		/// places the value in the given element of the array.
+		/// </summary>
 		private void Stelem (IR.Instructions.Stelem instruction)
 		{
 			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
@@ -2685,6 +2914,10 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.LABEL (labelOk);
 		}
 
+		/// <summary>
+		/// Implements the 'ldelem' IL instruction, which retrieves an element value of an array
+		/// and places it on the evaluation stack.
+		/// </summary>
 		private void Ldelem (IR.Instructions.Ldelem instruction)
 		{
 			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
@@ -2724,6 +2957,9 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.LABEL (labelOk);
 		}
 
+		/// <summary>
+		/// Implements the 'ldlen' IL instruction, which places the length of an array on the stack.
+		/// </summary>
 		private void Ldlen (IR.Instructions.Ldlen instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
@@ -2744,6 +2980,10 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
 
+		/// <summary>
+		/// Replaces calls to the Get/Set methods of multidimensional array types with inline
+		/// implementations.
+		/// </summary>
 		private void ArrayCalls (IR.Instructions.Call call)
 		{
 			if (call.Method.Name.Equals ("Set"))
@@ -2756,6 +2996,10 @@ namespace SharpOS.AOT.X86 {
 				throw new NotImplementedEngineException ();
 		}
 
+		/// <summary>
+		/// Implements the constructor behavior for 'newobj' instructions that instantiate
+		/// multidimensional arrays.
+		/// </summary>
 		private void ArrayMultidimensionalCtor (IR.Instructions.Newobj instruction)
 		{
 			string constructorType = "[" + "".PadLeft (instruction.Use.Length - 1, ',') + "]";
@@ -2825,6 +3069,9 @@ namespace SharpOS.AOT.X86 {
 
 		}
 
+		/// <summary>
+		/// Emits code inline which replaces calls to the Set method of multidimensional arrays.
+		/// </summary>
 		private void ArrayMultidimensionalSet (IR.Instructions.Call instruction)
 		{
 			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
@@ -2896,6 +3143,9 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.LABEL (labelOk);
 		}
 
+		/// <summary>
+		/// Emits code inline which replaces a call to the Get method of a multidimensional array.
+		/// </summary>
 		private void ArrayMultidimensionalGet (IR.Instructions.Call instruction)
 		{
 			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
@@ -2969,6 +3219,10 @@ namespace SharpOS.AOT.X86 {
 
 		#endregion
 
+		/// <summary>
+		/// Implements the 'isinst' IL instruction, which checks if an object is inherited from a given
+		/// type. The type checking part of this instruction is delegated to the kernel's runtime.
+		/// </summary>
 		private void Isinst (IR.Instructions.Isinst instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
@@ -2992,6 +3246,11 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
 
+		/// <summary>
+		/// Implements the 'castclass' IL instruction, which checks if an object inherits from a given
+		/// type. If it does not, an InvalidCastException is thrown. The type checking part of this
+		/// instruction is delegated to the kernel's runtime.
+		/// </summary>
 		private void Castclass (IR.Instructions.Castclass instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
@@ -3015,6 +3274,9 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 		}
 
+		/// <summary>
+		/// Implements the 'leave' IL instruction.
+		/// </summary>
 		private void Leave (IR.Instructions.Leave instruction)
 		{
 			// This makes sure that the the finally handler gets called
@@ -3024,6 +3286,9 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.JMP (this.GetLabel (instruction.Block.Outs [0]));
 		}
 
+		/// <summary>
+		/// Implements the 'endfinally' IL instruction.
+		/// </summary>
 		private void Endfinally (IR.Instructions.Endfinally instruction)
 		{
 			this.assembly.MOV (R32.ESP, this.GetExceptionHandlingSPSlot);
@@ -3031,6 +3296,9 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.RET ();
 		}
 
+		/// <summary>
+		/// Implements the 'endfilter' IL instruction.
+		/// </summary>
 		private void Endfilter (IR.Instructions.Endfilter instruction)
 		{
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
@@ -3045,11 +3313,18 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.RET ();
 		}
 
+		/// <summary>
+		/// Implements the 'break' IL instruction.
+		/// </summary>
 		private void Break (IR.Instructions.Break instruction)
 		{
 			// Does nothing, perhaps emit a label?
 		}
 
+		/// <summary>
+		/// Implements the 'throw' IL instruction, which throws an exception. The bulk of the
+		/// work performed by this instruction is delegated to the kernel's runtime.
+		/// </summary>
 		private void Throw (IR.Instructions.Throw instruction)
 		{
 			if (instruction.Use.Length == 1) {

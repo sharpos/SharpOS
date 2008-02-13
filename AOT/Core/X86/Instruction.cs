@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -19,7 +19,9 @@ using Mono.Cecil.Metadata;
 namespace SharpOS.AOT.X86 {
 	public class Instruction {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="Instruction"/> class.
+		/// Initializes a new instance of the <see cref="Instruction"/> class, which represents an x86
+		/// instruction which is to be encoded in the output file. The raw instruction emitting methods
+		/// found in Instructions.cs create an instance of this class to represent each individual instruction.
 		/// </summary>
 		/// <param name="indent">if set to <c>true</c> [indent].</param>
 		/// <param name="label">The label.</param>
@@ -50,7 +52,7 @@ namespace SharpOS.AOT.X86 {
 		private string [] encoding = null;
 
 		/// <summary>
-		/// Gets the encoding.
+		/// Gets the values of the individual bytes which represent the binary encoding for this kind of instruction.
 		/// </summary>
 		/// <value>The encoding.</value>
 		public string [] Encoding
@@ -62,7 +64,8 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Sets the specified instruction.
+		/// Changes the encoding of this instruction to that of the given instruction. This method
+		/// only changes the kind of instruction which is emitted, but not any arguments.
 		/// </summary>
 		/// <param name="instruction">The instruction.</param>
 		public void Set (Instruction instruction)

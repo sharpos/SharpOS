@@ -14,7 +14,8 @@ using SharpOS.AOT.IR;
 namespace SharpOS.AOT.X86 {
 	public partial class Assembly {
 		/// <summary>
-		/// Gets the assembly instruction.
+		/// Emits an x86 instruction (represented by an SharpOS.X86.Instruction object) for the given
+		/// 'Asm' stub call instruction.
 		/// </summary>
 		/// <param name="method">The method.</param>
 		/// <param name="operands">The operands.</param>

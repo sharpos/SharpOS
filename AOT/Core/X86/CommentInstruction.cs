@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -19,7 +19,8 @@ using Mono.Cecil.Metadata;
 namespace SharpOS.AOT.X86 {
 	internal class CommentInstruction : Instruction {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="CommentInstruction"/> class.
+		/// <see cref="CommentInstruction"/> represents an assembler comment, which is ignored when
+		/// encoding the output, but included when using the AOT's assembler dump feature.
 		/// </summary>
 		/// <param name="value">The Comment.</param>
 		public CommentInstruction (string value)

@@ -1,4 +1,4 @@
-// 
+//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -19,7 +19,8 @@ using Mono.Cecil.Metadata;
 namespace SharpOS.AOT.X86 {
 	internal class AlignInstruction : Instruction {
 		/// <summary>
-		/// Initializes a new instance of the <see cref="AlignInstruction"/> class.
+		/// <see cref="AlignInstruction"/> causes the AOT to burn a few bytes so that the address of the following
+		/// data will align to the desired boundaries. The resulting offset will be a multiple of <paramref name="value" />.
 		/// </summary>
 		/// <param name="value">The value.</param>
 		public AlignInstruction (UInt32 value)
