@@ -1002,17 +1002,126 @@ namespace SharpOS.AOT.IR {
 			public Class Merge ()
 			{
 				Class principal;
+				string errorPrefix;
 
 				if (classes.Count == 0)
 					throw new Exception ("No classes listed in merge operation");
 				if (classes.Count == 1)
 					return classes [0];
 
-				principal = classes [0];
+				// TODO: more advanced methods of deciding the 'principal' type.
 
+				principal = classes [0];
+				errorPrefix = string.Format ("During merging of type '{0}': ", principal.TypeFullName);
 
 				// Merge in methods
-				return null; // TODO
+
+				for (int x = 0; x < classes.Count; ++x) {
+					if (classes [x] == principal)
+						continue;
+
+					// ensure that the principal class and the class being merged
+					// have compatible fields.
+
+					if (principal.Fields.Count < classes [x].Fields.Count) {
+						throw new EngineException (errorPrefix +
+							"principal type has less fields than merged type");
+					}
+
+					for (int y = 0; y < classes [x].Fields.Count; ++y) {
+						Field princeField = principal.Fields [y];
+						Field field = classes [x].Fields [y];
+
+						if (princeField.Offset != field.Offset) {
+							throw new EngineException (errorPrefix + string.Format (
+								"field {0} does not have a consistent offset " +
+								"(principal: {1}, merged: {2})",
+								field.Name,
+								princeField.Offset,
+								field.Offset));
+						}
+
+						if (princeField.Type.TypeFullName != field.Type.TypeFullName) {
+							throw new EngineException (errorPrefix + string.Format (
+								"field {0} does not have a consistent type " +
+								"(principal: {1}, merged: {2})",
+								field.Name,
+								princeField.Type.TypeFullName,
+								field.Type.TypeFullName));
+						}
+					}
+
+					// Add the methods of the merged type to the principal type, provided there
+					// is no pre-existing implementation.
+
+					foreach (Method method in classes [x]) {
+						bool include = true;
+						foreach (Method princeMethod in principal) {
+							if (princeMethod.ToString () == method.ToString ()) {
+								include = false;
+								break;
+							}
+						}
+
+						principal.Add (method);
+					}
+				}
+
+				return principal; // TODO
+			}
+		}
+
+		private void CalculateDependencies (TypeReference typeRef, List <string> deps)
+		{
+			string [] ignoredDeps = new string [] {
+				"System.Object",
+				"System.Type",
+				"System.Reflection.Assembly"
+			};
+
+			if (Array.IndexOf (ignoredDeps, typeRef.FullName) != -1)
+				return;
+
+			if (deps.Contains (typeRef.FullName))
+				return;
+			else
+				deps.Add (typeRef.FullName);
+
+			TypeDefinition type = typeRef as TypeDefinition;
+
+			if (type == null)
+				return;
+
+			// Fields
+			foreach (FieldDefinition field in type.Fields)
+				CalculateDependencies (field.FieldType, deps);
+
+			// Interfaces
+			foreach (TypeReference iface in type.Interfaces) {
+				CalculateDependencies (iface, deps);
+			}
+
+			// Methods
+			foreach (MethodDefinition method in type.Methods) {
+				CalculateDependencies (method.ReturnType.ReturnType, deps);
+
+				foreach (ParameterDefinition parm in method.Parameters) {
+					CalculateDependencies (parm.ParameterType, deps);
+				}
+
+				// Instructions
+
+				if (method.Body == null)
+					continue;
+
+				foreach (Mono.Cecil.Cil.Instruction inst in method.Body.Instructions) {
+					TypeReference typeref = inst.Operand as TypeReference;
+
+					if (typeref == null)
+						continue;
+
+					CalculateDependencies (typeref, deps);
+				}
 			}
 		}
 
@@ -1024,9 +1133,27 @@ namespace SharpOS.AOT.IR {
 		/// <param name="library">The library.</param>
 		private void GenerateIR (string assemblyFile, bool skip, AssemblyDefinition library)
 		{
+			bool isCorlib = false;
+			string [] corTypes = new string [] {
+				"System.IO.FileAccess",
+			};
+			List <string> corDependencies = new List <string> ();
+
 			Dump.Element (library, assemblyFile);
 			Message (1, "Generating IR for assembly types...");
 			SetStatus (Status.IRGeneration);
+
+			isCorlib = (library.Name.Name == "mscorlib");
+
+			if (isCorlib) {
+				List <string> newDependencies = new List <string> ();
+				foreach (TypeDefinition type in library.MainModule.Types) {
+					if (Array.IndexOf (corTypes, type.FullName) >= 0) {
+						// Scan for dependencies
+						CalculateDependencies (type, corDependencies);
+					}
+				}
+			}
 
 			// We first add the data (Classes and Methods)
 			foreach (TypeDefinition type in library.MainModule.Types) {
@@ -1067,6 +1194,23 @@ namespace SharpOS.AOT.IR {
 					Dump.IgnoreMember (type.Name, ignoreReason);
 
 					continue;
+				}
+
+				// Only process the corlib types we can currently handle.
+
+				if (isCorlib) {
+					bool isCorType = (Array.IndexOf (corTypes, type.FullName) >= 0);
+					bool isCorDep = false;
+
+					if (!isCorType)
+						isCorDep = corDependencies.Contains (type.FullName);
+
+					if (!isCorType && !isCorDep)
+						continue;
+
+					if (isCorDep)
+						Console.WriteLine ("Processing mscorlib dependency `{0}'",
+							type.FullName);
 				}
 
 				Dump.Element (type);
@@ -1137,6 +1281,16 @@ namespace SharpOS.AOT.IR {
 		private void PostIRProcessing ()
 		{
 			List<Class> temp = new List<Class> (this.classes);
+
+			// Perform merging operations
+
+			if (this.typeMerges.Count > 0)
+				Console.WriteLine ("Merging duplicate types...");
+
+			foreach (KeyValuePair <string,TypeMerge> job in this.typeMerges)
+				this.classesDictionary [job.Key] = job.Value.Merge ();
+
+			this.typeMerges.Clear ();
 
 			// Post processing
 			foreach (Class _class in temp) {
