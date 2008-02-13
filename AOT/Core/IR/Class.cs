@@ -737,6 +737,9 @@ namespace SharpOS.AOT.IR {
 		private void MarkInterfaceMethods ()
 		{
 			foreach (Method method in this.methods) {
+				if (!method.IsNewSlot)
+					continue;
+				
 				// was implementation explicit?
 				MethodDefinition methodDef = method.MethodDefinition as MethodDefinition;
 				if (methodDef.Overrides.Count > 0) {
