@@ -21,62 +21,6 @@ namespace SharpOS.Kernel.Tests.CS {
 			void Key1_4();
 			void Key2_0();
 		}
-/*
-		private unsafe interface ICalendar {
-			byte *GetDayOfWeekString (uint dayOfWeek);
-			byte *GetMonthString (uint month);
-			void AddSeconds (Time time, int seconds);
-			bool IsLeapYear (uint year);
-			uint GetYearDays (uint year);
-			ulong EncodeTimestamp (Time time);
-			int GetDayOfWeek (Time time);
-			void DecodeTimestamp (ulong timestamp, Time out_time);
-		}
-
-		private unsafe class Calendar : ICalendar {
-			public Calendar ()
-			{
-			}
-
-			public byte *GetDayOfWeekString (uint dayOfWeek)
-			{
-				return null;
-			}
-
-			public byte *GetMonthString (uint month)
-			{
-				return null;
-			}
-
-			public void AddSeconds (Time time, int seconds)
-			{
-			}
-
-			public bool IsLeapYear (uint year)
-			{
-				return false;
-			}
-
-			public uint GetYearDays (uint year)
-			{
-				return 0;
-			}
-
-			public ulong EncodeTimestamp (Time time)
-			{
-				return 0;
-			}
-
-			public int GetDayOfWeek (Time time)
-			{
-				return 0;
-			}
-
-			public void DecodeTimestamp (ulong timestamp, Time out_time)
-			{
-			}
-		}
-*/
 
 		private interface Iface2 {
 			int GetNumber ();
@@ -168,6 +112,23 @@ namespace SharpOS.Kernel.Tests.CS {
 			}
 		}
 
+		private class Class4 : Iface2 {
+			public Class4 ()
+			{
+			}
+
+			public int GetNumber ()
+			{
+				return 72;
+			}
+
+			int Iface2.GetNumber ()
+			{
+				return 69;
+			}
+		}
+
+
 		public static uint CMPBasic ()
 		{
 			Iface2 c = new Class1 ();
@@ -177,13 +138,26 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
-/*
-		public static uint CMPCalendar ()
-		{
-			ICalendar c = new Calendar ();
 
-			return 1;
-		}*/
+		public static uint CMPExplicitImplementation ()
+		{
+			Iface2 c = new Class4 ();
+
+			if (c.GetNumber () == 69)
+				return 1;
+
+			return 0;
+		}
+
+		public static uint CMPExplicitImplementation2 ()
+		{
+			Class4 c = new Class4 ();
+
+			if (c.GetNumber () == 72)
+				return 1;
+
+			return 0;
+		}
 
 		public unsafe static uint CMPPointerMethod ()
 		{
