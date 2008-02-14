@@ -1,5 +1,4 @@
-﻿
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -33,7 +32,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-    <DocumentationFile>..\..\build\SharpOS.AOT.Core.xml</DocumentationFile>
+    <DocumentationFile>
+    </DocumentationFile>
     <CheckForOverflowUnderflow>false</CheckForOverflowUnderflow>
     <NoStdLib>false</NoStdLib>
     <OutputType>Library</OutputType>
@@ -109,9 +109,9 @@
     <Compile Include="X86\R32.cs" />
     <Compile Include="X86\FP.cs" />
     <Compile Include="X86\TimesInstruction.cs" />
-    <Compile Include="X86\Instruction.cs" />
+    <Compile Include="X86\AlignInstruction.cs" />
     <Compile Include="X86\Asm.cs" />
-    <Compile Include="X86\CommentInstruction.cs" />
+    <Compile Include="X86\LabelInstruction.cs" />
     <Compile Include="X86\Register.cs" />
     <Compile Include="X86\ByteMemory.cs" />
     <Compile Include="X86\ByteDataInstruction.cs" />
@@ -124,9 +124,10 @@
     <Compile Include="X86\Seg.cs" />
     <Compile Include="X86\R8.cs" />
     <Compile Include="X86\FPType.cs" />
-    <Compile Include="X86\DataInstruction.cs" />
+    <Compile Include="X86\Assembly.cs" />
+    <Compile Include="X86\AssemblyMethod.cs" />
     <Compile Include="X86\DWordMemory.cs" />
-    <Compile Include="X86\LabelInstruction.cs" />
+    <Compile Include="X86\Engine.cs" />
     <Compile Include="X86\R16Type.cs" />
     <Compile Include="X86\OrgInstruction.cs" />
     <Compile Include="X86\CR.cs" />
@@ -134,18 +135,17 @@
     <Compile Include="X86\OffsetInstruction.cs" />
     <Compile Include="X86\R32Type.cs" />
     <Compile Include="X86\R8Type.cs" />
-    <Compile Include="X86\Engine.cs" />
     <Compile Include="X86\Metadata.cs" />
     <Compile Include="X86\TRType.cs" />
     <Compile Include="X86\TWordMemory.cs" />
     <Compile Include="X86\WordDataInstruction.cs" />
-    <Compile Include="X86\AlignInstruction.cs" />
+    <Compile Include="X86\CommentInstruction.cs" />
     <Compile Include="X86\Memory.cs" />
     <Compile Include="X86\DWordDataInstruction.cs" />
     <Compile Include="X86\AddressOf.cs" />
     <Compile Include="X86\QWordMemory.cs" />
-    <Compile Include="X86\Assembly.cs" />
-    <Compile Include="X86\AssemblyMethod.cs" />
+    <Compile Include="X86\DataInstruction.cs" />
+    <Compile Include="X86\Instruction.cs" />
     <Compile Include="Attributes\AllocArrayAttribute.cs" />
     <Compile Include="Attributes\TypeInfoAttribute.cs" />
     <Compile Include="Attributes\TargetNamespaceAttribute.cs" />
@@ -165,6 +165,7 @@
     <Compile Include="Attributes\CastClassAttribute.cs" />
     <Compile Include="Attributes\IsInstAttribute.cs" />
     <Compile Include="Attributes\OverflowAttribute.cs" />
+    <Compile Include="Attributes\NullReferenceHandlerAttribute.cs" />
     <Compile Include="Attributes\ADCInterfaceAttribute.cs" />
     <Compile Include="Attributes\AllocAttribute.cs" />
     <Compile Include="Attributes\LabelledAllocAttribute.cs" />
@@ -172,11 +173,9 @@
     <Compile Include="Attributes\ADCStubAttribute.cs" />
     <Compile Include="Attributes\KernelMainAttribute.cs" />
     <Compile Include="Attributes\LabelAddressAttribute.cs" />
-    <Compile Include="Attributes\NullReferenceHandlerAttribute.cs" />
     <Compile Include="IR\Operands\Operand.cs" />
     <Compile Include="IR\Operands\Constant.cs" />
     <Compile Include="IR\Operands\IntConstant.cs" />
-    <Compile Include="IR\Operands\InternalType.cs" />
     <Compile Include="IR\Operands\NullConstant.cs" />
     <Compile Include="IR\Operands\LongConstant.cs" />
     <Compile Include="IR\Operands\FloatConstant.cs" />
@@ -188,6 +187,7 @@
     <Compile Include="IR\Operands\Local.cs" />
     <Compile Include="IR\Operands\Argument.cs" />
     <Compile Include="IR\Operands\Field.cs" />
+    <Compile Include="IR\Operands\InternalType.cs" />
     <Compile Include="IR\Operands\FieldOperand.cs" />
     <Compile Include="IR\Instructions\Castclass.cs" />
     <Compile Include="IR\Instructions\Throw.cs" />
@@ -242,6 +242,7 @@
     <Compile Include="IR\Instructions\Newarr.cs" />
     <Compile Include="IR\Instructions\Isinst.cs" />
     <Compile Include="IR\Instructions\Break.cs" />
+    <Compile Include="IR\Instructions\Endfilter.cs" />
     <Compile Include="IR\Instructions\Div.cs" />
     <Compile Include="IR\Instructions\Rem.cs" />
     <Compile Include="IR\Instructions\Neg.cs" />
@@ -255,15 +256,14 @@
     <Compile Include="IR\Instructions\Jump.cs" />
     <Compile Include="IR\Instructions\Leave.cs" />
     <Compile Include="IR\Instructions\Endfinally.cs" />
-    <Compile Include="IR\Instructions\Endfilter.cs" />
+    <Compile Include="IR\Class.cs" />
     <Compile Include="IR\Block.cs" />
-    <Compile Include="IR\Method.cs" />
+    <Compile Include="IR\Engine.cs" />
     <Compile Include="IR\ExceptionHandlingClause.cs" />
     <Compile Include="IR\EngineOptions.cs" />
     <Compile Include="IR\Dump.cs" />
     <Compile Include="IR\EngineException.cs" />
-    <Compile Include="IR\Engine.cs" />
-    <Compile Include="IR\Class.cs" />
+    <Compile Include="IR\Method.cs" />
     <Compile Include="Metadata\ModuleMetadata.cs" />
     <Compile Include="AssemblyInfo.cs" />
     <Compile Include="COFF.cs" />

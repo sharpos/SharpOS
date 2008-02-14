@@ -14,6 +14,8 @@ using SharpOS.Kernel.ADC;
 namespace InternalSystem {
 	[TargetNamespace ("System")]
 	public struct SByte {
+#pragma warning disable 649
 		internal sbyte Value;
+#pragma warning restore 649
 	}
 }

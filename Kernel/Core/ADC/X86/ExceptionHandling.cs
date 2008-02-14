@@ -26,7 +26,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (DIVIDE_ERROR)]
 		static unsafe void DivideByZeroHandler (IDT.ISRData data)
 		{
-			throw new System.DivideByZeroException ();
+			SharpOS.Korlib.Runtime.Runtime.Throw (new InternalSystem.DivideByZeroException (), 4);
 		}
 
 		internal unsafe static StackFrame [] GetCallingStack ()
@@ -63,10 +63,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 							}
 						}
 
-						stackFrame [count] = new StackFrame ();
-						stackFrame [count].IP = (void*) ip;
-						stackFrame [count].BP = (void*) bp;
-						stackFrame [count].MethodBoundary = entry;
+						stackFrame [count] = new StackFrame ((void*) ip, (void*) bp, entry);
 					}
 
 					count++;
@@ -123,7 +120,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			int calleeIndex = exception.CurrentStackFrame - 1;
 			uint calleeBP = (uint) exception.CallingStack [calleeIndex].BP;
-			uint targetIP = (uint) handler.FilterBegin;
+			uint targetIP = (uint) handler.HandlerBegin;
 
 			// Set the address where it will jump to handle the exception
 			Asm.MOV (R32.ECX, &targetIP);

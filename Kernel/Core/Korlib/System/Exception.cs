@@ -16,6 +16,7 @@ namespace InternalSystem {
 	[TargetNamespace ("System")]
 	public class Exception: InternalSystem.Object {
 		internal StackFrame [] CallingStack = null;
+		internal int IgnoreStackFramesCount = 0;
 		internal int CurrentStackFrame = 0;
 		private string message;
 

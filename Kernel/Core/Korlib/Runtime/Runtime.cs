@@ -8,7 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-//#define DEBUG_EXCEPTION_HANDLING
+#define DEBUG_EXCEPTION_HANDLING
 
 using System.Runtime.InteropServices;
 using SharpOS.AOT.Metadata;
@@ -36,12 +36,13 @@ namespace SharpOS.Korlib.Runtime {
 	}
 
 	internal class Runtime {
-
+#pragma warning disable 649
 		[AddressOf ("MetadataRoot")]
 		internal static MetadataRoot Root;
 
 		[AddressOf ("MethodBoundaries")]
 		internal static MethodBoundary [] MethodBoundaries;
+#pragma warning restore 649
 
 		public unsafe static AssemblyMetadata [] GetAssemblyMetadata ()
 		{
@@ -552,11 +553,13 @@ namespace SharpOS.Korlib.Runtime {
 			Serial.COM1.WriteLine ();
 		}
 
+#pragma warning disable 649
 		[AddressOf ("SharpOS.Korlib.Runtime.TestD TypeInfo")]
 		public static TypeInfo testd;
 
 		[AddressOf ("SharpOS.Korlib.Runtime.TestD VTable")]
 		public static VTable testdvt;
+#pragma warning restore 649
 
 		public unsafe static void __RunTests ()
 		{
@@ -617,12 +620,15 @@ namespace SharpOS.Korlib.Runtime {
 
 			Testcase.Test (callingStack != null, "Runtime", "callingStack != null");
 
-			PrintCallingStack (callingStack);
+			PrintCallingStack (0, callingStack);
 		}
 
-		private unsafe static void PrintCallingStack (StackFrame [] callingStack)
+		private unsafe static void PrintCallingStack (int skipFrames, StackFrame [] callingStack)
 		{
-			for (int i = 2; i < callingStack.Length; i++) {
+			Serial.COM1.WriteLine ("=============================================================");
+			Serial.COM1.WriteLine ("Stack Trace:");
+
+			for (int i = skipFrames; i < callingStack.Length; i++) {
 				Serial.COM1.Write (" at ");
 
 				if (callingStack [i] == null) {
@@ -648,9 +654,9 @@ namespace SharpOS.Korlib.Runtime {
 				} else {
 					TextMode.Write (callingStack [i].MethodBoundary.Name);
 					TextMode.Write (" [IP=0x");
-					TextMode.WriteNumber ((int) callingStack [i].IP, true);
+					TextMode.Write ((int) callingStack [i].IP, true);
 					TextMode.Write (", BP=0x");
-					TextMode.WriteNumber ((int) callingStack [i].BP, true);
+					TextMode.Write ((int) callingStack [i].BP, true);
 					TextMode.WriteLine ("]");
 				}
 			}
@@ -690,7 +696,6 @@ namespace SharpOS.Korlib.Runtime {
 		public static unsafe void __TestObjectConversion ()
 		{
 			TestA o1 = new TestA ();
-			bool result = false;
 			void *ptr = GetPointerFromObject (o1);
 			object o2;
 
@@ -747,7 +752,6 @@ namespace SharpOS.Korlib.Runtime {
 			object o3 = new TestC ();
 			object o4 = new TestD ();
 			InternalSystem.Object io1, io2, io3, io4;
-			uint ui = 1109;
 
 			io1 = o1 as InternalSystem.Object;
 			io2 = o2 as InternalSystem.Object;
@@ -874,44 +878,159 @@ namespace SharpOS.Korlib.Runtime {
 		{
 			if (obj != null && IsBaseClassOf (obj.VTable.Type, type))
 				return obj;
-			else
-				throw new System.InvalidCastException ();
+			
+			Throw (new InternalSystem.InvalidCastException (), 3);
+
+			// It doesn't come so far
+			return null;
 		}
 
 		[SharpOS.AOT.Attributes.OverflowHandler]
 		internal static unsafe void OverflowHandler ()
 		{
-			throw new System.OverflowException ();
+			Throw (new InternalSystem.OverflowException (), 3);
 		}
 
 		[SharpOS.AOT.Attributes.NullReferenceHandler]
 		internal static unsafe void NullReferenceHandler ()
 		{
-			throw new System.NullReferenceException ();
+			Throw (new InternalSystem.NullReferenceException (), 3);
 		}
 
 		[SharpOS.AOT.Attributes.Throw]
 		internal static unsafe void Throw (InternalSystem.Exception exception)
 		{
+			Throw (exception, 3);
+		}
+		
+		internal static unsafe void Throw (InternalSystem.Exception exception, int skipFrames)
+		{
 			// TODO check the exception's type to make sure it is an exception
 
 			if (exception.CallingStack == null) {
-				exception.CurrentStackFrame = 2;
 				exception.CallingStack = ExceptionHandling.GetCallingStack ();
+				exception.IgnoreStackFramesCount = skipFrames;
+				exception.CurrentStackFrame = 0;
 			}
 
 #if DEBUG_EXCEPTION_HANDLING
-			PrintCallingStack (exception.CallingStack);
+			PrintCallingStack (exception.IgnoreStackFramesCount, exception.CallingStack);
+#endif
+			while (true) {
+				bool getNewHandler = false;
+				int start;
+				int end;
+
+				GetExceptionHandler (exception, out start, out end);
+
+				for (int i = start; i < end && !getNewHandler; i++) {
+					int candidates;
+
+					do {
+						int clauseIndex = 0;
+						candidates = 0;
+						MethodBoundary methodBoundary = exception.CallingStack [i].MethodBoundary;
+						ExceptionHandlingClause handler = null;
+
+						for (int j = 0; j < exception.CallingStack [i].MethodBoundary.ExceptionHandlingClauses.Length; j++) {
+							ExceptionHandlingClause exceptionHandlingClause = methodBoundary.ExceptionHandlingClauses [j];
+
+							if (exception.CallingStack [i].IgnoreMethodBoundaryClause [j])
+								continue;
+
+							if (exception.CallingStack [i].IP < exceptionHandlingClause.TryBegin
+									|| exception.CallingStack [i].IP >= exceptionHandlingClause.TryEnd)
+								continue;
+
+							if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch
+									&& !Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo))
+								continue;
+
+							if (handler == null) {
+								clauseIndex = j;
+								handler = exceptionHandlingClause;
+
+							} else {
+								if ((exceptionHandlingClause.TryBegin >= handler.TryBegin
+											&& exceptionHandlingClause.TryEnd < handler.TryEnd)
+										|| (exceptionHandlingClause.TryBegin >= handler.TryBegin
+											&& exceptionHandlingClause.TryEnd < handler.TryEnd)) {
+									clauseIndex = j;
+									handler = exceptionHandlingClause;
+								}
+
+								candidates++;
+							}
+						}
+
+						getNewHandler = CallHandler (exception, getNewHandler, handler, i, clauseIndex);
+
+					} while (candidates != 0 && !getNewHandler);
+				}
+			}
+		}
+
+		/// <summary>
+		/// Calls the handler.
+		/// </summary>
+		/// <param name="exception">The exception.</param>
+		/// <param name="getNewHandler">if set to <c>true</c> [get new handler].</param>
+		/// <param name="handler">The handler.</param>
+		/// <param name="i">The i.</param>
+		/// <param name="clauseIndex">Index of the clause.</param>
+		/// <returns></returns>
+		private unsafe static bool CallHandler (InternalSystem.Exception exception, bool getNewHandler, ExceptionHandlingClause handler, int i, int clauseIndex)
+		{
+			if (handler != null) {
+#if DEBUG_EXCEPTION_HANDLING
+				Serial.COM1.Write ("Calling the found handler from Frame: #");
+				Serial.COM1.WriteNumber ((int) (i - exception.IgnoreStackFramesCount), false);
+				Serial.COM1.Write ("/Clause: #");
+				Serial.COM1.WriteNumber ((int) clauseIndex, false);
+				Serial.COM1.WriteLine ();
 #endif
 
+				exception.CallingStack [i].IgnoreMethodBoundaryClause [clauseIndex] = true;
+
+				if (handler.ExceptionType == ExceptionHandlerType.Finally
+						|| handler.ExceptionType == ExceptionHandlerType.Fault) {
+					ExceptionHandling.CallFinallyFault (exception, handler);
+
+				} else if (handler.ExceptionType == ExceptionHandlerType.Filter) {
+					// If it is a filter and it fails look for the next Exception Handler
+					if (ExceptionHandling.CallFilter (exception, handler) == 0)
+						getNewHandler = true;
+
+					else
+						ExceptionHandling.CallHandler (exception, handler);
+
+				} else if (handler.ExceptionType == ExceptionHandlerType.Catch)
+					ExceptionHandling.CallHandler (exception, handler);
+			}
+
+			return getNewHandler;
+		}
+
+		/// <summary>
+		/// Gets the exception handler.
+		/// </summary>
+		/// <param name="exception">The exception.</param>
+		/// <param name="start">The start.</param>
+		/// <param name="end">The end.</param>
+		private unsafe static void GetExceptionHandler (InternalSystem.Exception exception, out int start, out int end)
+		{
 			ExceptionHandlingClause handler = null;
 			int i = exception.CurrentStackFrame;
 
+			// In the first pass we just look for a possible Exception Handler
 			for (; i < exception.CallingStack.Length && handler == null; i++) {
 				MethodBoundary methodBoundary = exception.CallingStack [i].MethodBoundary;
 
 				for (int j = 0; j < exception.CallingStack [i].MethodBoundary.ExceptionHandlingClauses.Length; j++) {
-					ExceptionHandlingClause exceptionHandlingClause  = methodBoundary.ExceptionHandlingClauses [j];
+					ExceptionHandlingClause exceptionHandlingClause = methodBoundary.ExceptionHandlingClauses [j];
+
+					if (exception.CallingStack [i].IgnoreMethodBoundaryClause [j])
+						continue;
 
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Finally)
 						continue;
@@ -923,30 +1042,17 @@ namespace SharpOS.Korlib.Runtime {
 							|| exception.CallingStack [i].IP >= exceptionHandlingClause.TryEnd)
 						continue;
 
-#if DEBUG_EXCEPTION_HANDLING
-					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch) {
-						Serial.COM1.WriteLine (exception.VTable.Type.Name);
-						Serial.COM1.WriteNumber ((int) exception.VTable.Type.MetadataToken, true);
-						Serial.COM1.WriteLine ();
-
-						Serial.COM1.WriteLine (exceptionHandlingClause.TypeInfo.Name);
-						Serial.COM1.WriteNumber ((int) exceptionHandlingClause.TypeInfo.MetadataToken, true);
-						Serial.COM1.WriteLine ();
-					}
-#endif
-
 					if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch
-							&& !Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo)) {
+							&& !Runtime.IsBaseClassOf (exception.VTable.Type, exceptionHandlingClause.TypeInfo))
 						continue;
-					}
 
 					if (handler == null)
 						handler = exceptionHandlingClause;
 
-					else if ((handler.TryBegin < exceptionHandlingClause.TryBegin
-								&& handler.TryEnd >= exceptionHandlingClause.TryEnd)
-							|| (handler.TryBegin < exceptionHandlingClause.TryBegin
-								&& handler.TryEnd >= exceptionHandlingClause.TryEnd))
+					else if ((exceptionHandlingClause.TryBegin >= handler.TryBegin
+								&& exceptionHandlingClause.TryEnd < handler.TryEnd)
+							|| (exceptionHandlingClause.TryBegin >= handler.TryBegin
+								&& exceptionHandlingClause.TryEnd < handler.TryEnd))
 						handler = exceptionHandlingClause;
 				}
 			}
@@ -963,27 +1069,14 @@ namespace SharpOS.Korlib.Runtime {
 				Serial.COM1.Write (exception.VTable.Type.Name);
 				Serial.COM1.Write (": ");
 				Serial.COM1.WriteLine (exception.Message);
-				PrintCallingStack (exception.CallingStack);
+				PrintCallingStack (exception.IgnoreStackFramesCount, exception.CallingStack);
 
 				Diagnostics.Panic ("No exception handler found");
 			}
 
+			start = exception.CurrentStackFrame;
+			end = i;
 			exception.CurrentStackFrame = i - 1;
-
-			if (handler.ExceptionType == ExceptionHandlerType.Filter) {
-				if (ExceptionHandling.CallFilter (exception, handler) == 1)
-					Serial.COM1.WriteLine ("FILTER OK");
-				else
-					Serial.COM1.WriteLine ("FILTER FAILED");
-			}
-
-			Serial.COM1.WriteLine ("Calling the found handler");
-
-			Serial.COM1.Write ("Frame: #");
-			Serial.COM1.WriteNumber ((int) exception.CurrentStackFrame, false);
-			Serial.COM1.WriteLine ();
-
-			ExceptionHandling.CallHandler (exception, handler);
 		}
 
 		[SharpOS.AOT.Attributes.AllocObject]
@@ -1035,7 +1128,6 @@ namespace SharpOS.Korlib.Runtime {
 
 		public static unsafe bool IsBaseClassOf (TypeInfo type, CString8 *baseNS, CString8 *baseType)
 		{
-			AssemblyMetadata assembly;
 			AssemblyMetadata baseAsm;
 			uint token;
 			TypeRefRow row;
@@ -1053,8 +1145,6 @@ namespace SharpOS.Korlib.Runtime {
 
 				return IsBaseClassOf (type.Assembly, type.MetadataToken, baseAsm, token);
 			}
-
-			return false;
 		}
 
 		public static unsafe bool IsBaseClassOf (TypeInfo type, TypeInfo baseType)
@@ -1076,10 +1166,10 @@ namespace SharpOS.Korlib.Runtime {
 			Serial.COM1.WriteLine ("'");
 
 
-			Serial.COM1.WriteLine ("basetype: 0x");
+			Serial.COM1.Write ("basetype: 0x");
 			Serial.COM1.Write ((int)baseType.MetadataToken, true);
 			Serial.COM1.Write (" '");
-			Serial.COM1.WriteLine (baseType.Name);
+			Serial.COM1.Write (baseType.Name);
 			Serial.COM1.WriteLine ("'");
 
 			if (type == baseType)
@@ -1094,7 +1184,6 @@ namespace SharpOS.Korlib.Runtime {
 			uint typeRID, baseRID, interimRID;
 			TypeDefRow typeDef, baseDef, interimDef;
 			AssemblyMetadata interimAssembly;
-			bool result = false;
 			TypeDefRow lastInterimDef = null;
 
 			if (typeAsm == baseAsm && type == baseType)
@@ -1116,9 +1205,6 @@ namespace SharpOS.Korlib.Runtime {
 			MetadataToken.Decode (typeDef.Extends, out interimTokType, out interimRID);
 
 			while (true) {
-				int nameLen;
-				int nsLen;
-
 				// If we've hit Object then the two types are unrelated
 
 				if (IsTypeSystemObject (interimAssembly, interimTokType, interimRID))
@@ -1149,8 +1235,6 @@ namespace SharpOS.Korlib.Runtime {
 
 				MetadataToken.Decode (interimDef.Extends, out interimTokType, out interimRID);
 			}
-
-			return false;
 		}
 	}
 }

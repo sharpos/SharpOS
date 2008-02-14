@@ -3327,7 +3327,7 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		private void Throw (IR.Instructions.Throw instruction)
 		{
-			if (instruction.Use.Length == 1) {
+			if (instruction.Use != null && instruction.Use.Length == 1) {
 				IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
 				if (value.IsRegisterSet)

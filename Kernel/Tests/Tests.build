@@ -38,18 +38,6 @@
 		<echo message="Generating Wrapper files..." />
 		<exec program="${path::combine (prefix, 'KernelTestsWrapperGen.exe')}" />
 		
-		<!--
-		<csc target="library" unsafe="true" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')}">
-			<references>
-				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
-				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}" />
-				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
-			</references>
-			<sources>
-				<include name="*.cs" />
-			</sources>
-		</csc>
-		
 		<csc target="library" unsafe="true" output="${path::combine(prefix, 'SharpOS.Kernel.Tests.NUnit.dll')}">
 			<references>
 				<include name="${path::combine(prefix, 'nunit.framework.dll')}" />
@@ -61,14 +49,6 @@
 				<include name="NUnit/*.cs" />
 			</sources>
 		</csc>
-		
-		<echo message="AOT compiling testcases..." />
-		<exec program="${path::combine (prefix, 'sharpos-aot.exe')}" 
-		  commandline="-v -o:${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')} ${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')} ${path::combine(prefix, 'korlib.dll')}" />
-		<copy file="../../Data/DiskImages/TemplateDisk.img" tofile="${path::combine(common-dir, 'SharpOS.img')}" />
-		<exec program="${path::combine (prefix, 'disk-image-updater.exe')}"
-		  commandline="-m -i ${path::combine(prefix, 'SharpOS.AOT.Kernel.Tests.bin')} -o ${path::combine(common-dir, 'SharpOS.img')}" />
-		-->
 	</target>
 	
 	<target name="clean">

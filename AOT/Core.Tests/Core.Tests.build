@@ -13,7 +13,7 @@
 	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../../build" />
 	
-	<target name="build">
+	<target name="test">
 		<echo message="Building SharpOS AOT Test Cases compiler" />
 		
 		<mkdir dir="${prefix}" />

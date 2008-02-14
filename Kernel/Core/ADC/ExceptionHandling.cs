@@ -13,11 +13,29 @@ using AOTAttr = SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
 
 namespace SharpOS.Kernel.ADC {
+#pragma warning disable 649
 	internal unsafe class StackFrame {
 		public void* IP;
 		public void* BP;
+		public bool [] IgnoreMethodBoundaryClause;
 		public MethodBoundary MethodBoundary;
+
+		public StackFrame (void* ip, void* bp, MethodBoundary methodBoundary)
+		{
+			this.IP = ip;
+			this.BP = bp;
+			this.MethodBoundary = methodBoundary;
+
+			if (methodBoundary.ExceptionHandlingClauses != null) {
+				this.IgnoreMethodBoundaryClause = new bool [methodBoundary.ExceptionHandlingClauses.Length];
+
+				for (int i = 0; i < this.IgnoreMethodBoundaryClause.Length; i++)
+					this.IgnoreMethodBoundaryClause [i] = false;
+			} else
+				this.IgnoreMethodBoundaryClause = new bool [0];
+		}
 	}
+#pragma warning restore 649
 
 	public static class ExceptionHandling {
 		[AOTAttr.ADCStub]

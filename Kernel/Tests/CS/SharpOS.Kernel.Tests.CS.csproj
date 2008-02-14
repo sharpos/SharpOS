@@ -63,17 +63,17 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Exceptions.cs" />
     <Compile Include="Abstract.cs" />
-    <Compile Include="Object.cs" />
     <Compile Include="Misc.cs" />
     <Compile Include="Arguments.cs" />
     <Compile Include="String.cs" />
-    <Compile Include="Exceptions.cs" />
+    <Compile Include="Interface.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="BooleanOrderOfOperations.cs" />
     <Compile Include="OrderOfOperations.cs" />
     <Compile Include="Struct.cs" />
-    <Compile Include="Interface.cs" />
+    <Compile Include="Object.cs" />
     <Compile Include="Array.cs" />
     <Compile Include="Inheritance.cs" />
     <Compile Include="Boolean.cs" />

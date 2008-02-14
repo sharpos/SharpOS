@@ -23,7 +23,7 @@ namespace SharpOS.Korlib.Runtime {
 		public FieldMetadata (AssemblyMetadata assembly, FieldRow row):
 			base (assembly)
 		{
-			this.fieldRow = fieldRow;
+			this.fieldRow = row; //fieldRow;
 			this.signature = new FieldSignature (assembly, row);
 		}
 

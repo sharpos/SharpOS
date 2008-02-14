@@ -21,6 +21,7 @@ namespace InternalSystem {
 		{
 		}
 
+#pragma warning disable 114
 		public virtual string ToString()
 		{
 			return this.VTable.Type.Name;
@@ -38,5 +39,6 @@ namespace InternalSystem {
 
 			return p1 == p2;
 		}
+#pragma warning restore 114
 	}
 }

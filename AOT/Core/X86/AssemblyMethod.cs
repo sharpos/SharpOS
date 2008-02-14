@@ -58,7 +58,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			get
 			{
-				return new DWordMemory (null, R32.EBP, null, 0, -(this.reservedStackSlots + 1) * this.assembly.IntSize);
+				return new DWordMemory (null, R32.EBP, null, 0, -(this.reservedStackSlots - 1) * this.assembly.IntSize);
 			}
 		}
 

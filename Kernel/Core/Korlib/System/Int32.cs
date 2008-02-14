@@ -14,6 +14,8 @@ using SharpOS.Kernel.ADC;
 namespace InternalSystem {
 	[TargetNamespace ("System")]
 	public struct Int32 {
+#pragma warning disable 649
 		internal int Value;
+#pragma warning restore 649
 	}
 }

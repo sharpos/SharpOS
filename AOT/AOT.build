@@ -15,7 +15,7 @@
 	</target>
 
 	<target name="test" depends="build">
-		<nant buildfile="./Core.Tests/Core.Tests.build" />
+		<nant buildfile="./Core.Tests/Core.Tests.build" target="test" />
 	</target>
 
 	<target name="clean">

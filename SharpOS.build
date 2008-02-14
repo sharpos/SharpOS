@@ -27,7 +27,7 @@
 	<target name="test" depends="copy">
 		<echo message="Running integrity tests..." />
 		<nant buildfile="./Tools/Tools.build"/>
-		<nant buildfile="./AOT/AOT.build"/>
+		<nant buildfile="./AOT/AOT.build" target="test" />
 		<nant buildfile="./Data/Data.build"/>
 		<nant buildfile="./Kernel/Kernel.build" target="test" />
 	</target>

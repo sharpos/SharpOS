@@ -233,7 +233,6 @@ namespace SharpOS.Kernel.Foundation {
 			dayOfWeek  = dayOfWeek % 7;
 
 			return dayOfWeek;
-			return 1;
 		}
 
 		public void DecodeTimestamp (ulong timestamp, Time out_time)

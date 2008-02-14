@@ -14,6 +14,8 @@ using SharpOS.Kernel.ADC;
 namespace InternalSystem {
 	[TargetNamespace ("System")]
 	public struct UInt64 {
+#pragma warning disable 649
 		internal ulong Value;
+#pragma warning restore 649
 	}
 }
