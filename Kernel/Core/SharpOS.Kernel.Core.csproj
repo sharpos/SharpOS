@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1BDA3EE0-BC5F-4C4A-986C-31730A8EFADC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -156,7 +156,9 @@
     <Compile Include="FileSystem\Ext2FS.cs" />
     <Compile Include="FileSystem\FileSystem.cs" />
     <Compile Include="DiagnosticTool\Server.cs" />
+    <Compile Include="Korlib\System\ArgumentOutOfRangeException.cs" />
     <Compile Include="Korlib\System\DivideByZeroException.cs" />
+    <Compile Include="Korlib\System\NullReferenceException.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Cls.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Egg.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Stage.cs" />
