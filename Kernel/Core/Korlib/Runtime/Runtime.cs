@@ -907,8 +907,10 @@ namespace SharpOS.Korlib.Runtime {
 		{
 			// TODO check the exception's type to make sure it is an exception
 
+			StackFrame [] stackFrames = ExceptionHandling.GetCallingStack ();
+
 			if (exception.CallingStack == null) {
-				exception.CallingStack = ExceptionHandling.GetCallingStack ();
+				exception.CallingStack = stackFrames;
 				exception.IgnoreStackFramesCount = skipFrames;
 				exception.CurrentStackFrame = 0;
 			}
@@ -963,7 +965,7 @@ namespace SharpOS.Korlib.Runtime {
 							}
 						}
 
-						getNewHandler = CallHandler (exception, getNewHandler, handler, i, clauseIndex);
+						getNewHandler = CallHandler (exception, getNewHandler, handler, i, clauseIndex, stackFrames [i - 1].BP);
 
 					} while (candidates != 0 && !getNewHandler);
 				}
@@ -979,7 +981,7 @@ namespace SharpOS.Korlib.Runtime {
 		/// <param name="i">The i.</param>
 		/// <param name="clauseIndex">Index of the clause.</param>
 		/// <returns></returns>
-		private unsafe static bool CallHandler (InternalSystem.Exception exception, bool getNewHandler, ExceptionHandlingClause handler, int i, int clauseIndex)
+		private unsafe static bool CallHandler (InternalSystem.Exception exception, bool getNewHandler, ExceptionHandlingClause handler, int i, int clauseIndex, void* callerBP)
 		{
 			if (handler != null) {
 #if DEBUG_EXCEPTION_HANDLING
@@ -994,18 +996,18 @@ namespace SharpOS.Korlib.Runtime {
 
 				if (handler.ExceptionType == ExceptionHandlerType.Finally
 						|| handler.ExceptionType == ExceptionHandlerType.Fault) {
-					ExceptionHandling.CallFinallyFault (exception, handler);
+					ExceptionHandling.CallFinallyFault (exception, handler, callerBP);
 
 				} else if (handler.ExceptionType == ExceptionHandlerType.Filter) {
 					// If it is a filter and it fails look for the next Exception Handler
-					if (ExceptionHandling.CallFilter (exception, handler) == 0)
+					if (ExceptionHandling.CallFilter (exception, handler, callerBP) == 0)
 						getNewHandler = true;
 
 					else
-						ExceptionHandling.CallHandler (exception, handler);
+						ExceptionHandling.CallHandler (exception, handler, callerBP);
 
 				} else if (handler.ExceptionType == ExceptionHandlerType.Catch)
-					ExceptionHandling.CallHandler (exception, handler);
+					ExceptionHandling.CallHandler (exception, handler, callerBP);
 			}
 
 			return getNewHandler;

@@ -83,10 +83,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return stackFrame;
 		}
 
-		internal unsafe static void CallHandler (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler)
+		internal unsafe static void CallHandler (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler, void* callerBP)
 		{
-			int calleeIndex = exception.CurrentStackFrame - 1;
-			uint calleeBP = (uint) exception.CallingStack [calleeIndex].BP;
+			uint _callerBP = (uint) callerBP;
 			uint targetIP = (uint) handler.HandlerBegin;
 			uint exceptionAddress = (uint) Runtime.GetPointerFromObject (exception);
 
@@ -97,7 +96,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (R32.ECX, &targetIP);
 
 			// This is very dependent of the way the AOT generates the prolog of the method
-			Asm.MOV (R32.EAX, &calleeBP);
+			Asm.MOV (R32.EAX, &_callerBP);
 			Asm.SUB (R32.EAX, 12);
 			Asm.MOV (R32.ESP, R32.EAX);
 			Asm.POP (R32.EDI);
@@ -116,17 +115,16 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.RET ();
 		}
 
-		internal unsafe static void CallFinallyFault (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler)
+		internal unsafe static void CallFinallyFault (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler, void* callerBP)
 		{
-			int calleeIndex = exception.CurrentStackFrame - 1;
-			uint calleeBP = (uint) exception.CallingStack [calleeIndex].BP;
+			uint _callerBP = (uint) callerBP;
 			uint targetIP = (uint) handler.HandlerBegin;
 
 			// Set the address where it will jump to handle the exception
 			Asm.MOV (R32.ECX, &targetIP);
 
 			// This is very dependent of the way the AOT generates the prolog of the method
-			Asm.MOV (R32.EAX, &calleeBP);
+			Asm.MOV (R32.EAX, &_callerBP);
 
 			Asm.PUSH (R32.EBP);
 			Asm.PUSH (R32.EBX);
@@ -147,10 +145,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.POP (R32.EBP);
 		}
 
-		internal unsafe static uint CallFilter (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler)
+		internal unsafe static uint CallFilter (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler, void* callerBP)
 		{
-			int calleeIndex = exception.CurrentStackFrame - 1;
-			uint calleeBP = (uint) exception.CallingStack [calleeIndex].BP;
+			uint _callerBP = (uint) callerBP;
 			uint targetIP = (uint) handler.FilterBegin;
 			uint exceptionAddress = (uint) Runtime.GetPointerFromObject (exception);
 			uint result = 0;
@@ -162,7 +159,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (R32.ECX, &targetIP);
 
 			// This is very dependent of the way the AOT generates the prolog of the method
-			Asm.MOV (R32.EAX, &calleeBP);
+			Asm.MOV (R32.EAX, &_callerBP);
 
 			Asm.PUSH (R32.EBP);
 			Asm.PUSH (R32.EBX);

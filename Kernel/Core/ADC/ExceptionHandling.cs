@@ -52,19 +52,19 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		[AOTAttr.ADCStub]
-		internal unsafe static void CallHandler (InternalSystem.Exception exception, ExceptionHandlingClause handler)
+		internal unsafe static void CallHandler (InternalSystem.Exception exception, ExceptionHandlingClause handler, void* callerBP)
 		{
 			Diagnostics.Error ("Unimplemented - ExceptionHandling.CallHandler");
 		}
 		
 		[AOTAttr.ADCStub]
-		internal unsafe static void CallFinallyFault (InternalSystem.Exception exception, ExceptionHandlingClause handler)
+		internal unsafe static void CallFinallyFault (InternalSystem.Exception exception, ExceptionHandlingClause handler, void* callerBP)
 		{
 			Diagnostics.Error ("Unimplemented - ExceptionHandling.CallFinallyFault");
 		}
 		
 		[AOTAttr.ADCStub]
-		internal unsafe static uint CallFilter (InternalSystem.Exception exception, ExceptionHandlingClause handler)
+		internal unsafe static uint CallFilter (InternalSystem.Exception exception, ExceptionHandlingClause handler, void* callerBP)
 		{
 			Diagnostics.Error ("Unimplemented - ExceptionHandling.CallFilter");
 

@@ -79,11 +79,9 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPCatch2 ()
 		{
-			uint result;
+			uint result = 0;
 
-			try {
-				result = 0;
-
+			/*try {
 				ThrowTestException ();
 
 			} catch (TestException exception) {
@@ -91,7 +89,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			} catch (System.Exception exception) {
 				result = 2;
-			}
+			}*/
 
 			return result;
 		}
@@ -235,7 +233,7 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			uint result = 0;
 
-			/*try {
+			try {
 				try {
 					result++;
 
@@ -244,11 +242,11 @@ namespace SharpOS.Kernel.Tests.CS {
 				} catch {
 					result++;
 
-					throw;
+					//throw;
 				}
 			} catch {
 				result++;
-			}*/
+			}
 
 			if (result == 3)
 				result = 1;

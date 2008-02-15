@@ -1214,7 +1214,7 @@ namespace SharpOS.AOT.X86 {
 				return;
 
 			for (int i = 0; i < method.Exceptions.Count; i++) {
-				ExceptionHandlingClause exception = method.Exceptions [0];
+				ExceptionHandlingClause exception = method.Exceptions [i];
 
 				string label = string.Format (EXCEPTION_HANDLING_CLAUSE_LABEL, method.MethodFullName, i);
 
