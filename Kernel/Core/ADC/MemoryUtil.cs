@@ -32,21 +32,25 @@ namespace SharpOS.Kernel.ADC {
 		[AOTAttr.ADCStub]
 		public static uint BitCount(byte value)
 		{
+			return 0;
 		}
 
 		[AOTAttr.ADCStub]
 		public static uint BitCount(ushort value)
 		{
+			return 0;
 		}
 
 		[AOTAttr.ADCStub]
 		public static uint BitCount(uint value)
 		{
+			return 0;
 		}
 
 		[AOTAttr.ADCStub]
 		public static uint BitCount(ulong value)
 		{
+			return 0;
 		}
 
 		[AOTAttr.ADCStub]
