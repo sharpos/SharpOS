@@ -25,10 +25,10 @@ namespace SharpOS.Kernel.ADC {
 
 		[StructLayout (LayoutKind.Sequential)]
 		private struct Header {
-			public Header* Next;
 			public Header* Previous;
+			public Header* Next;
 			public uint Size;
-			public bool Free;
+			public uint Free;
 		}
 
 		private static Header* firstNode = null;
@@ -43,7 +43,7 @@ namespace SharpOS.Kernel.ADC {
 			firstNode->Previous = null;
 			firstNode->Next = firstNode;
 			firstNode->Size = memoryEnd - memoryStart - (uint) sizeof (Header);
-			firstNode->Free = true;
+			firstNode->Free = 1;
 
 			lastFreeNode = firstNode;
 		}
@@ -56,7 +56,7 @@ namespace SharpOS.Kernel.ADC {
 
 			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
 			while (currentNode != null) {
-				if (currentNode->Free && currentNode->Size >= allocate_size) {
+				if (currentNode->Free == 1 && currentNode->Size >= allocate_size) {
 					break;
 				}
 
@@ -73,7 +73,7 @@ namespace SharpOS.Kernel.ADC {
 
 			uint memoryLeft = currentNode->Size - allocate_size;
 
-			currentNode->Free = false;
+			currentNode->Free = 0;
 
 			if (memoryLeft > (uint) sizeof (Header)) {
 				//If there is enough room to squeeze in a new node after this one, then do it
@@ -82,7 +82,7 @@ namespace SharpOS.Kernel.ADC {
 				void *nextPtr = (byte*)currentNode + currentNode->Size + sizeof (Header);
 
 				Header* nextNode = (Header*) nextPtr;
-				nextNode->Free = true;
+				nextNode->Free = 1;
 				nextNode->Size = memoryLeft - (uint) sizeof (Header);
 				nextNode->Previous = currentNode;
 				nextNode->Next = null;
@@ -100,7 +100,7 @@ namespace SharpOS.Kernel.ADC {
 			// lower in range than lastFreeNode.  If all these are true, set lastFreeNode to the next
 			// node.
 
-			if (currentNode->Next->Free == true && currentNode->Next->Size > lastFreeNode->Size &&
+			if (currentNode->Next->Free == 1 && currentNode->Next->Size > lastFreeNode->Size &&
 			    currentNode->Next < lastFreeNode)
 				lastFreeNode = currentNode->Next;
 
@@ -121,16 +121,16 @@ namespace SharpOS.Kernel.ADC {
 			uint memoryHeaderPointer = (uint) memory - (uint) sizeof (Header);
 			Header* freeHeader = (Header*) memoryHeaderPointer;
 
-			freeHeader->Free = true;
+			freeHeader->Free = 1;
 
 			Header* currentNode = freeHeader;
 
 			//Scan forward for the last consecutive free node
-			while (currentNode->Next != firstNode && currentNode->Next->Free)
+			while (currentNode->Next != firstNode && currentNode->Next->Free == 1)
 				currentNode = currentNode->Next;
 
 			//Now scan backwards and consolidate free nodes
-			while (currentNode->Previous != null && currentNode->Previous->Free) {
+			while (currentNode->Previous != null && currentNode->Previous->Free == 1) {
 				Header* previous = currentNode->Previous;
 				previous->Size = currentNode->Size + (uint) sizeof (Header);
 				if (currentNode->Next != null) {
@@ -143,7 +143,7 @@ namespace SharpOS.Kernel.ADC {
 				currentNode = currentNode->Previous;
 			}
 
-			if (currentNode->Next->Free == true && currentNode->Next->Size > lastFreeNode->Size &&
+			if (currentNode->Next->Free == 1 && currentNode->Next->Size > lastFreeNode->Size &&
 			    currentNode->Next < lastFreeNode)
 				lastFreeNode = currentNode;
 		}
@@ -158,7 +158,7 @@ namespace SharpOS.Kernel.ADC {
 			ADC.TextMode.Write (", Size: ");
 			ADC.TextMode.Write ((int) node->Size);
 			ADC.TextMode.Write (", IsFree: ");
-			ADC.TextMode.Write (node->Free);
+			ADC.TextMode.Write ((int) node->Free, false);
 			ADC.TextMode.Write (", TotalAlloc: ");
 			ADC.TextMode.Write ((int) allocated);
 			ADC.TextMode.WriteLine ();
@@ -174,7 +174,7 @@ namespace SharpOS.Kernel.ADC {
 			Serial.COM1.Write (", Size: ");
 			Serial.COM1.Write ((int) node->Size);
 			Serial.COM1.Write (", IsFree: ");
-			Serial.COM1.Write ((node->Free ? "true" : "false"));
+			Serial.COM1.Write ((node->Free == 1 ? "true" : "false"));
 			Serial.COM1.Write (", TotalAlloc: ");
 			Serial.COM1.Write ((int) allocated);
 			Serial.COM1.WriteLine ();
@@ -213,7 +213,7 @@ namespace SharpOS.Kernel.ADC {
 		public static void __RunTests ()
 		{
 			__ExclusivityTest ();
-			__StressTest ();
+			//__StressTest ();
 			//TextMode.WriteLine ("Memory tests completed.");
 		}
 

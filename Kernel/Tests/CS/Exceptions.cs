@@ -242,7 +242,7 @@ namespace SharpOS.Kernel.Tests.CS {
 				} catch {
 					result++;
 
-					//throw;
+					throw;
 				}
 			} catch {
 				result++;

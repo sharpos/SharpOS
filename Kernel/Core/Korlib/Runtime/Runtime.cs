@@ -912,11 +912,12 @@ namespace SharpOS.Korlib.Runtime {
 			if (exception.CallingStack == null) {
 				exception.CallingStack = stackFrames;
 				exception.IgnoreStackFramesCount = skipFrames;
-				exception.CurrentStackFrame = 0;
+				exception.CurrentStackFrame = skipFrames;
 			}
 
 #if DEBUG_EXCEPTION_HANDLING
 			PrintCallingStack (exception.IgnoreStackFramesCount, exception.CallingStack);
+			PrintCallingStack (0, stackFrames);
 #endif
 			while (true) {
 				bool getNewHandler = false;
@@ -965,7 +966,8 @@ namespace SharpOS.Korlib.Runtime {
 							}
 						}
 
-						getNewHandler = CallHandler (exception, getNewHandler, handler, i, clauseIndex, stackFrames [i - 1].BP);
+						void* bp = stackFrames [stackFrames.Length - (exception.CallingStack.Length - i + 1)].BP;
+						getNewHandler = CallHandler (exception, getNewHandler, handler, i, clauseIndex, bp);
 
 					} while (candidates != 0 && !getNewHandler);
 				}
@@ -980,6 +982,7 @@ namespace SharpOS.Korlib.Runtime {
 		/// <param name="handler">The handler.</param>
 		/// <param name="i">The i.</param>
 		/// <param name="clauseIndex">Index of the clause.</param>
+		/// <param name="callerBP">The caller BP.</param>
 		/// <returns></returns>
 		private unsafe static bool CallHandler (InternalSystem.Exception exception, bool getNewHandler, ExceptionHandlingClause handler, int i, int clauseIndex, void* callerBP)
 		{
