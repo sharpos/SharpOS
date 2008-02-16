@@ -1051,6 +1051,21 @@ namespace SharpOS.AOT.IR {
 						}
 					}
 
+					// Merge implemented interfaces information
+
+					foreach (TypeReference typeRef in (classes [x].ClassDefinition as TypeDefinition).Interfaces) {
+						bool found = false;
+						foreach (TypeReference pRef in (principal.ClassDefinition as TypeDefinition).Interfaces) {
+							if (typeRef == pRef) {
+								found = true;
+								break;
+							}
+						}
+						
+						if (!found)
+							(principal.ClassDefinition as TypeDefinition).Interfaces.Add(typeRef);
+					}
+
 					// Add the methods of the merged type to the principal type, provided there
 					// is no pre-existing implementation.
 
