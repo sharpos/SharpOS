@@ -1104,8 +1104,19 @@ namespace SharpOS.AOT.IR {
 
 			TypeDefinition type = typeRef as TypeDefinition;
 
-			if (type == null)
+			if (type == null) {
+				TypeSpecification spec = typeRef as TypeSpecification;
+				
+				if (spec != null) {
+					// Array elements
+					CalculateDependencies (spec.ElementType, deps);
+				}
 				return;
+			}
+
+			// Base type
+			if (type.BaseType != null)
+				CalculateDependencies (type.BaseType, deps);
 
 			// Fields
 			foreach (FieldDefinition field in type.Fields)
