@@ -53,6 +53,10 @@ namespace SharpOS.Kernel.ADC {
 			Kernel.Diagnostics.Assert (firstNode != null, "MemoryManager.Allocate(uint): Unable to allocate because the MemoryManager has not been initialized");
 
 			Header* currentNode = lastFreeNode;
+			
+			// Allign the block to 4? or 8?
+			if (allocate_size % 4 != 0)
+				allocate_size = ((allocate_size / 4) + 1) * 4;
 
 			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
 			while (currentNode != null) {
