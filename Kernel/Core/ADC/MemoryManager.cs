@@ -190,11 +190,11 @@ namespace SharpOS.Kernel.ADC {
 			Header* currentNode = firstNode;
 
 			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
-			while (currentNode != null) {
+			do {
 				DumpNode ("MemoryManager", currentNode);
 
 				currentNode = currentNode->Next;
-			}
+			} while (currentNode != firstNode);
 
 			ADC.TextMode.WriteLine ();
 		}
