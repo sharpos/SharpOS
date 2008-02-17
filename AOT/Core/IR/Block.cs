@@ -2048,9 +2048,10 @@ namespace SharpOS.AOT.IR {
 
 		private void CallHandling (Mono.Cecil.Cil.Instruction cilInstruction, out Method method, out Register result, out Operand [] operands)
 		{
-			Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
-			MethodDefinition def = this.Method.Engine.GetCILDefinition (call);
 			result = null;
+			Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
+			method = this.method.Engine.GetMethod (call);
+			MethodDefinition def = method.MethodDefinition as MethodDefinition; // this.Method.Engine.GetCILDefinition (call);
 
 			if (def != null) {
 				foreach (CustomAttribute attr in def.CustomAttributes) {
