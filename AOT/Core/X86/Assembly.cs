@@ -554,7 +554,8 @@ namespace SharpOS.AOT.X86 {
 		/// <param name="value">The value.</param>
 		public void COMMENT (string value)
 		{
-			this.instructions.Add (new CommentInstruction (value));
+			if (this.engine.Options.AsmDump)
+				this.instructions.Add (new CommentInstruction (value));
 		}
 
 		/// <summary>
