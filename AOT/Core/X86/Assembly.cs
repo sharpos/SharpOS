@@ -1514,7 +1514,10 @@ namespace SharpOS.AOT.X86 {
 			this.ADDRESSOF (typeInfoLabel);
 
 			// VTable Size Field
-			this.DATA ((uint) _class.Size);
+			if (_class.IsValueType)
+				this.DATA ((uint) (_class.Size + engine.ObjectSize));
+			else
+				this.DATA ((uint) _class.Size);
 
 			// ITable pointer
 			if (_class.ImplementsInterfaces)
