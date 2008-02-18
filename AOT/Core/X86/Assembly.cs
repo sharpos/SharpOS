@@ -1352,8 +1352,8 @@ namespace SharpOS.AOT.X86 {
 
 				string typeInfoLabel = AddTypeInfoFields (_class);
 
-				if (typeInfoLabel == "InternalSystem.String[] TypeInfo")
-					Console.WriteLine ("type: " + typeInfoLabel);
+				/*if (typeInfoLabel == "InternalSystem.String[] TypeInfo")
+					Console.WriteLine ("type: " + typeInfoLabel);*/
 
 				AddVTableFields (_class, typeInfoLabel);
 
@@ -1507,9 +1507,9 @@ namespace SharpOS.AOT.X86 {
 
 			this.AddObjectFields (this.engine.VTableClass.TypeFullName);
 
-			if (_class.ClassDefinition.Name == "TestD") {
+			/*if (_class.ClassDefinition.Name == "TestD") {
 				Console.WriteLine ("vtable.type -> {0}", typeInfoLabel);
-			}
+			}*/
 
 			// Type Info Field
 			this.ADDRESSOF (typeInfoLabel);
@@ -1601,9 +1601,9 @@ namespace SharpOS.AOT.X86 {
 				// Type Info AssemblyMetadata
 				this.ADDRESSOF (_class.ClassDefinition.Module.Assembly.Name + " MetadataRoot");
 
-				if (_class.ClassDefinition.Name == "TestD")
+				/*if (_class.ClassDefinition.Name == "TestD")
 					Console.WriteLine ("TestD ******: {0}",
-						_class.ClassDefinition.MetadataToken.ToUInt ().ToString ("x"));
+						_class.ClassDefinition.MetadataToken.ToUInt ().ToString ("x"));*/
 
 				// Type Info Metadata token
 				this.DATA (_class.ClassDefinition.MetadataToken.ToUInt ());
