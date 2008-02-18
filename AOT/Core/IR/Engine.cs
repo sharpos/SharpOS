@@ -1742,6 +1742,63 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Operands.InternalType GetInternalType (string type)
 		{
+			switch (type) {
+			case "System.IntPtr":
+			case "System.UIntPtr":
+				return Operands.InternalType.I;
+
+			case "void":
+			case "System.Void":
+				return Operands.InternalType.NotSet;
+
+			case "System.Boolean":
+			case "bool":
+			case "System.Byte":
+				return Operands.InternalType.U1;
+			case "System.SByte":
+				return Operands.InternalType.I1;
+
+			case "char":
+			case "System.Char":
+			case "ushort":
+			case "System.UInt16":
+				return Operands.InternalType.U2;
+			case "short":
+			case "System.Int16":
+				return Operands.InternalType.I2;
+
+			case "uint":
+			case "System.UInt32":
+				return Operands.InternalType.U4;
+			case "int":
+			case "System.Int32":
+				return Operands.InternalType.I4;
+
+			case "long":
+			case "System.Int64":
+				return Operands.InternalType.I8;
+			case "ulong":
+			case "System.UInt64":
+				return Operands.InternalType.U8;
+
+			case "float":
+			case "System.Single":
+				return Operands.InternalType.R4;
+
+			case "double":
+			case "System.Double":
+				return Operands.InternalType.R8;
+
+			case "string":
+			case "System.String":
+			case "object":
+			case "System.Object":
+				return Operands.InternalType.O;
+
+			case "System.TypedReference":
+				return Operands.InternalType.TypedReference;
+			}
+
 			if (type.EndsWith ("*"))
 				return Operands.InternalType.U;
 			else if (type.EndsWith ("&"))
@@ -1752,80 +1809,6 @@ namespace SharpOS.AOT.IR {
 				return Operands.InternalType.Array;
 			else if (type.EndsWith ("[]"))
 				return Operands.InternalType.SZArray;
-
-			else if (type.Equals ("System.IntPtr"))
-				return Operands.InternalType.I;
-			else if (type.Equals ("System.UIntPtr"))
-				return Operands.InternalType.I;
-
-			else if (type.Equals ("void"))
-				return Operands.InternalType.NotSet;
-			else if (type.Equals ("System.Void"))
-				return Operands.InternalType.NotSet;
-
-			else if (type.Equals ("System.Boolean"))
-				return Operands.InternalType.U1;
-			else if (type.Equals ("bool"))
-				return Operands.InternalType.U1;
-
-			else if (type.Equals ("System.Byte"))
-				return Operands.InternalType.U1;
-			else if (type.Equals ("System.SByte"))
-				return Operands.InternalType.I1;
-
-			else if (type.Equals ("char"))
-				return Operands.InternalType.U2;
-			else if (type.Equals ("System.Char"))
-				return Operands.InternalType.U2;
-			else if (type.Equals ("short"))
-				return Operands.InternalType.I2;
-			else if (type.Equals ("ushort"))
-				return Operands.InternalType.U2;
-			else if (type.Equals ("System.UInt16"))
-				return Operands.InternalType.U2;
-			else if (type.Equals ("System.Int16"))
-				return Operands.InternalType.I2;
-
-			else if (type.Equals ("int"))
-				return Operands.InternalType.I4;
-			else if (type.Equals ("uint"))
-				return Operands.InternalType.U4;
-			else if (type.Equals ("System.UInt32"))
-				return Operands.InternalType.U4;
-			else if (type.Equals ("System.Int32"))
-				return Operands.InternalType.I4;
-
-			else if (type.Equals ("long"))
-				return Operands.InternalType.I8;
-			else if (type.Equals ("ulong"))
-				return Operands.InternalType.U8;
-			else if (type.Equals ("System.UInt64"))
-				return Operands.InternalType.U8;
-			else if (type.Equals ("System.Int64"))
-				return Operands.InternalType.I8;
-
-			else if (type.Equals ("float"))
-				return Operands.InternalType.R4;
-			else if (type.Equals ("System.Single"))
-				return Operands.InternalType.R4;
-
-			else if (type.Equals ("double"))
-				return Operands.InternalType.R8;
-			else if (type.Equals ("System.Double"))
-				return Operands.InternalType.R8;
-
-			else if (type.Equals ("string"))
-				return Operands.InternalType.O;
-			else if (type.Equals ("System.String"))
-				return Operands.InternalType.O;
-
-			else if (type.Equals ("object"))
-				return Operands.InternalType.O;
-			else if (type.Equals ("System.Object"))
-				return Operands.InternalType.O;
-
-			else if (type.Equals ("System.TypedReference"))
-				return Operands.InternalType.TypedReference;
 
 			else if (this.Assembly != null && this.Assembly.IsRegister (type))
 				return this.Assembly.GetRegisterSizeType (type);
