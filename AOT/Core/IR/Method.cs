@@ -683,47 +683,42 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Preorders this instance.
+		/// Produces list of traversed blocks from current instance, preorder style
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Ordered list of blocks</returns>
 		private List<Block> Preorder ()
 		{
-			List<Block> list = new List<Block> ();
-			List<Block> visited = new List<Block> ();
+			List<Block> list = new List<Block> (this.blocks.Count);
 
-			Preorder (visited, list, this.blocks [0]);
+			Preorder (list, this.blocks [0]);
 
 			return list;
 		}
 
 		/// <summary>
-		/// Preorders the specified visited.
+		/// Recursively visit graph (preorder style), starting at current block.
 		/// </summary>
-		/// <param name="visited">The visited.</param>
-		/// <param name="list">The list.</param>
-		/// <param name="current">The current.</param>
-		private void Preorder (List<Block> visited, List<Block> list, Block current)
+		/// <param name="list">List used to write down order.</param>
+		/// <param name="current">Currently visited node.</param>
+		private void Preorder (List<Block> list, Block current)
 		{
-			if (!visited.Contains (current)) {
-				visited.Add (current);
+			list.Add (current);
 
-				list.Add (current);
-
-				for (int i = 0; i < current.Outs.Count; i++)
-					Preorder (visited, list, current.Outs [i]);
-			}
+			for (int i = 0; i < current.Outs.Count; i++)
+				if (!list.Contains (current.Outs [i]))
+					Preorder (list, current.Outs [i]);
 
 			return;
 		}
 
 		/// <summary>
-		/// Postorders this instance.
+		/// Produces list of traversed blocks from current instance, postorder style
 		/// </summary>
-		/// <returns></returns>
+		/// <returns>Ordered list of blocks</returns>
 		private List<Block> Postorder ()
 		{
-			List<Block> list = new List<Block> ();
-			List<Block> visited = new List<Block> ();
+			List<Block> list = new List<Block> (this.blocks.Count);
+			List<Block> visited = new List<Block> (this.blocks.Count);
 
 			Postorder (visited, list, this.blocks [0]);
 
@@ -731,25 +726,45 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Postorders the specified visited.
+		/// Recursively visit graph (postorder style), starting at current block.
 		/// </summary>
-		/// <param name="visited">The visited.</param>
-		/// <param name="list">The list.</param>
-		/// <param name="current">The current.</param>
+		/// <param name="visited">Already visited blocks list.</param>
+		/// <param name="list">List used to write down order.</param>
+		/// <param name="current">Currently visited node.</param>
 		private void Postorder (List<Block> visited, List<Block> list, Block current)
 		{
-			if (!visited.Contains (current)) {
-				visited.Add (current);
+			visited.Add (current);
 
-				for (int i = 0; i < current.Outs.Count; i++)
+			for (int i = 0; i < current.Outs.Count; i++)
+				if (!visited.Contains (current.Outs [i]))
 					Postorder (visited, list, current.Outs [i]);
 
-				list.Add (current);
-			}
+			list.Add (current);
 
 			return;
 		}
 
+		/// <summary>
+		/// Produces list of traversed blocks from current instance, reverse postorder style
+		/// </summary>
+		/// <returns>Ordered list of blocks</returns>
+		private List<Block> ReversePostorder ()
+		{
+			List<Block> list = new List<Block> (this.blocks.Count);
+
+			list.Add (this.blocks [0]);
+
+			for (int i = 0; i < list.Count; i++) {
+				List<Block> outs = list[i].Outs;
+				for (int o = 0; o < outs.Count; o++)
+					if (!list.Contains (outs [o]))
+						list.Insert(i+1, outs [o]);
+			}
+
+			return list;
+		}
+
+		/* previous version left - just in case
 		/// <summary>
 		/// Reverses the postorder.
 		/// </summary>
@@ -799,6 +814,7 @@ namespace SharpOS.AOT.IR {
 
 			return;
 		}
+		*/
 
 		/// <summary>
 		/// Computes the block dominators.
