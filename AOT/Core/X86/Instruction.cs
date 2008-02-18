@@ -328,63 +328,56 @@ namespace SharpOS.AOT.X86 {
 			for (; i < this.encoding.Length; i++) {
 				string token = this.encoding [i].ToUpper ();
 
-				if (token.Equals ("O16") || token.Equals ("O32")) {
-					if ((bits32 && token == "O16")
-							|| (!bits32 && token == "O32"))
+				switch(token) {
+				case "O16":
+					if (bits32)
 						binaryWriter.Write ((byte) 0x66);
-
-				} else if (token.Equals ("A16") || token.Equals ("A32")) {
-					if ((bits32 && token == "A16")
-							|| (!bits32 && token == "A32"))
+					break;
+				case "O32":
+					if (!bits32)
+						binaryWriter.Write ((byte) 0x66);
+					break;
+				case "A16":
+					if (bits32)
 						binaryWriter.Write ((byte) 0x67);
-
-				} else if (token.Length == 2
-						&& hex.IndexOf (token [0]) != -1
-						&& hex.IndexOf (token [1]) != -1) {
-					byte value = (byte) (hex.IndexOf (token [0]) * 16 + hex.IndexOf (token [1]));
-
-					binaryWriter.Write (value);
-
-				} else if (token == "RW/RD") {
+					break;
+				case "A32":
+					if (!bits32)
+						binaryWriter.Write ((byte) 0x67);
+					break;
+				case "RW/RD":
 					if (bits32)
 						binaryWriter.Write ((UInt32) ((UInt32) ((UInt32 []) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 4));
 
 					else
 						binaryWriter.Write ((UInt16) ((UInt16) ((UInt32 []) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 2));
-
-				} else if (token == "OW/OD") {
+					break;
+				case "OW/OD":
 					if (bits32)
 						binaryWriter.Write ((UInt32) ((UInt32) ((UInt32 []) this.value) [valueIndex++]));
 
 					else
 						binaryWriter.Write ((UInt16) ((UInt16) ((UInt32 []) this.value) [valueIndex++]));
-
-				} else if (token == "IB") {
+					break;
+				case "IB":
 					binaryWriter.Write ((byte) ((UInt32 []) this.value) [valueIndex++]);
-
-				} else if (token == "IW") {
+					break;
+				case "IW":
 					binaryWriter.Write ((UInt16) ((UInt32 []) this.value) [valueIndex++]);
-
-				} else if (token == "ID") {
+					break;
+				case "ID":
 					binaryWriter.Write ((UInt32) ((UInt32 []) this.value) [valueIndex++]);
-
-				} else if (token == "RB") {
+					break;
+				case "RB":
 					binaryWriter.Write ((byte) ((byte) ((UInt32 []) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 1));
-
-				} else if (token == "RW") {
+					break;
+				case "RW":
 					binaryWriter.Write ((UInt16) ((UInt16) ((UInt32 []) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 2));
-
-				} else if (token == "RD") {
+					break;
+				case "RD":
 					binaryWriter.Write ((UInt32) ((UInt32) ((UInt32 []) this.value) [valueIndex++] - binaryWriter.BaseStream.Length - 4));
-
-				} else if (token.EndsWith ("+R")) {
-					token = token.Substring (0, token.Length - 2);
-
-					byte value = (byte) (hex.IndexOf (token [0]) * 16 + hex.IndexOf (token [1]));
-
-					binaryWriter.Write ((byte) (value + this.register.Index));
-
-				} else if (token.Equals ("/R")) {
+					break;
+				case "/R":
 					if (this.register != null && this.rmRegister != null) {
 						byte value = (byte) (0xC0 + this.register.Index * 8 + this.rmRegister.Index);
 
@@ -398,42 +391,56 @@ namespace SharpOS.AOT.X86 {
 
 						binaryWriter.Write (value);
 					}
+					break;
+				default:
+					if (token.Length == 2
+						&& hex.IndexOf (token [0]) != -1
+						&& hex.IndexOf (token [1]) != -1) {
+						byte value = (byte) (hex.IndexOf (token [0]) * 16 + hex.IndexOf (token [1]));
 
-				} else if (token.StartsWith ("/")) {
-					token = token.Substring (1);
+						binaryWriter.Write (value);
+					} else if (token.EndsWith ("+R")) {
+						token = token.Substring (0, token.Length - 2);
 
-					if (this.value != null) {
-						if (this.register != null || this.rmRegister != null) {
-							byte value = (byte) (0xC0 + byte.Parse (token) * 8);
+						byte value = (byte) (hex.IndexOf (token [0]) * 16 + hex.IndexOf (token [1]));
 
-							if (this.register != null) {
-								value += this.register.Index;
+						binaryWriter.Write ((byte) (value + this.register.Index));
+					} else if (token[0] == '/') {
+						token = token.Substring (1);
 
-							} else if (this.rmRegister != null) {
-								value += this.rmRegister.Index;
+						if (this.value != null) {
+							if (this.register != null || this.rmRegister != null) {
+								byte value = (byte) (0xC0 + byte.Parse (token) * 8);
+
+								if (this.register != null) {
+									value += this.register.Index;
+								} else if (this.rmRegister != null) {
+									value += this.rmRegister.Index;
+								}
+
+								binaryWriter.Write (value);
+
+							} else if (this.rmMemory != null) {
+								this.rmMemory.Encode (bits32, byte.Parse (token), binaryWriter);
 							}
-
-							binaryWriter.Write (value);
 
 						} else if (this.rmMemory != null) {
 							this.rmMemory.Encode (bits32, byte.Parse (token), binaryWriter);
+
+						} else if (this.rmRegister != null) {
+							byte value = (byte) (0xC0 + byte.Parse (token) * 8);
+
+							value += this.rmRegister.Index;
+
+							binaryWriter.Write (value);
+
+						} else {
+							byte value = (byte) (0xC0 + byte.Parse (token) * 8);
+
+							binaryWriter.Write (value);
 						}
-
-					} else if (this.rmMemory != null) {
-						this.rmMemory.Encode (bits32, byte.Parse (token), binaryWriter);
-
-					} else if (this.rmRegister != null) {
-						byte value = (byte) (0xC0 + byte.Parse (token) * 8);
-
-						value += this.rmRegister.Index;
-
-						binaryWriter.Write (value);
-
-					} else {
-						byte value = (byte) (0xC0 + byte.Parse (token) * 8);
-
-						binaryWriter.Write (value);
 					}
+					break;
 				}
 			}
 
