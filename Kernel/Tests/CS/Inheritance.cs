@@ -154,7 +154,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			try {
 				Base b = (Base)o1;
-			} catch (System.InvalidCastException e) {
+			} catch (System.InvalidCastException) {
 				result = 0;
 			}
 
@@ -168,7 +168,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			try {
 				SubClass b = (SubClass)o1;
-			} catch (System.InvalidCastException e) {
+			} catch (System.InvalidCastException) {
 				result = 1;
 			}
 

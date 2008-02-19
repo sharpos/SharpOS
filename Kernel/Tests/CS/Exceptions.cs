@@ -70,7 +70,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 				ThrowException ();
 
-			} catch (System.Exception exception) {
+			} catch (System.Exception) {
 				result = 1;
 			}
 
@@ -119,7 +119,7 @@ namespace SharpOS.Kernel.Tests.CS {
 
 				DivideByZero (0);
 
-			} catch (System.DivideByZeroException exception) {
+			} catch (System.DivideByZeroException) {
 				result = 1;
 
 			} catch {

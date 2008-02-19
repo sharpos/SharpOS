@@ -1008,10 +1008,8 @@ namespace SharpOS.AOT.IR {
 					// Add the methods of the merged type to the principal type, provided there
 					// is no pre-existing implementation.
 					foreach (Method method in classes [x]) {
-						bool include = true;
 						foreach (Method princeMethod in principal) {
 							if (princeMethod.ToString () == method.ToString ()) {
-								include = false;
 								break;
 							}
 						}
@@ -1121,7 +1119,6 @@ namespace SharpOS.AOT.IR {
 
 			// We first add the data (Classes and Methods)
 			foreach (TypeDefinition type in library.MainModule.Types) {
-				bool includeAOTCoreClass = false;
 				bool isAOTCore = library.MainModule.Name == System.Reflection.MethodBase.GetCurrentMethod ().Module.ToString ();
 
 				if (isAOTCore && this.IncludeAOTCoreClass (type))

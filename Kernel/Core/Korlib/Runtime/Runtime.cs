@@ -18,7 +18,7 @@ using SharpOS.Kernel.Foundation;
 using SharpOS.Kernel.ADC;
 
 namespace SharpOS.Korlib.Runtime {
-
+#pragma warning disable 649
 	class TestA {
 		public byte Member1;
 	}
@@ -34,6 +34,7 @@ namespace SharpOS.Korlib.Runtime {
 	struct TestD {
 		public byte Member1;
 	}
+#pragma warning restore 649
 
 	internal class Runtime {
 #pragma warning disable 649

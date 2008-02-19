@@ -470,8 +470,6 @@ namespace SharpOS.AOT.IR {
 		/// <param name="sect">The sect.</param>
 		public void Section (DumpSection sect)
 		{
-			bool addPrefix = true;
-
 			switch (sect) {
 			case DumpSection.Root:
 				this.PushElement ("aot-dump");

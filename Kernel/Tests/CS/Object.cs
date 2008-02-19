@@ -49,8 +49,6 @@ namespace SharpOS.Kernel.Tests.CS {
 			} catch {
 				return 2;
 			}
-
-			return 0;
 		}
 
 		public static uint CMPMethodNullReference ()
@@ -65,8 +63,6 @@ namespace SharpOS.Kernel.Tests.CS {
 			} catch {
 				return 2;
 			}
-
-			return 0;
 		}
 
 		public static uint CMPCreateObject ()
