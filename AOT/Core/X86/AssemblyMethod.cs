@@ -704,8 +704,7 @@ namespace SharpOS.AOT.X86 {
 			int result = 2; // EIP (of the caller) + EBP
 
 			// If the return type is a value type then it will get the address for the buffer where the result is saved
-			if (this.method.MethodDefinition.ReturnType.ReturnType is TypeDefinition
-					&& (this.method.MethodDefinition.ReturnType.ReturnType as TypeDefinition).IsValueType)
+			if (this.method.IsReturnTypeBigValueType)
 				result++;
 
 			foreach (ParameterDefinition parameter in this.method.MethodDefinition.Parameters) {

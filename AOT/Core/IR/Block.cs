@@ -1409,7 +1409,7 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ret (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			if (this.method.MethodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Void))
+			if (this.method.ReturnType.TypeFullName.Equals (Mono.Cecil.Constants.Void))
 				return new Return ();
 
 			return new Return (this.GetRegister ());
@@ -2074,7 +2074,7 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < operands.Length; i++)
 				operands [operands.Length - 1 - i] = this.GetRegister ();
 
-			if (call.ReturnType.ReturnType.FullName != Constants.Void)
+			if (method.ReturnType.TypeFullName != Constants.Void)
 				result = this.SetRegister ();
 		}
 

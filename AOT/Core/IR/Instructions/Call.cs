@@ -40,8 +40,8 @@ namespace SharpOS.AOT.IR.Instructions {
 		public override void Process (Method method)
 		{
 			if (this.def != null) {
-				this.def.InternalType = this.AdjustRegisterInternalType (method.Engine.GetInternalType (Class.GetTypeFullName (this.method.MethodDefinition.ReturnType.ReturnType)));
-				this.def.Type = method.Engine.GetClass (this.method.MethodDefinition.ReturnType.ReturnType);
+				this.def.InternalType = this.AdjustRegisterInternalType (this.method.ReturnType.InternalType);
+				this.def.Type = this.method.ReturnType;
 			}
 		}
 	}

@@ -1072,7 +1072,6 @@ namespace SharpOS.AOT.IR {
 				}
 
 				// Instructions
-
 				if (method.Body == null)
 					continue;
 

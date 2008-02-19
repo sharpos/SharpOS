@@ -61,9 +61,8 @@ namespace SharpOS.AOT.X86 {
 			PushCallParameters (call);
 
 			IR.Operands.Register assignee = call.Def as IR.Operands.Register;
-			TypeDefinition returnType = call.Method.ReturnType.ReturnType as TypeDefinition;
 
-			if (returnType != null && returnType.IsValueType) {
+			if (call.Method.IsReturnTypeBigValueType) {
 				this.assembly.LEA (R32.EAX, this.GetAddress (assignee));
 				this.assembly.PUSH (R32.EAX);
 			}
@@ -170,12 +169,10 @@ namespace SharpOS.AOT.X86 {
 			if (call.Method.HasThis)
 				result += 4;
 
-			TypeDefinition returnType = call.Method.ReturnType.ReturnType as TypeDefinition;
-
 			// In case the return type is a structure in that case the last parameter that is pushed on the stack
 			// is the address to the memory where the result gets copied, and that address has to be pulled from
 			// the stack.
-			if (returnType != null && returnType.IsValueType)
+			if (call.Method.IsReturnTypeBigValueType)
 				result += 4;
 
 			if (result > 0)
@@ -643,9 +640,7 @@ namespace SharpOS.AOT.X86 {
 					break;
 
 				case InternalType.ValueType:
-					TypeDefinition returnType = instruction.Block.Method.MethodDefinition.ReturnType.ReturnType as TypeDefinition;
-
-					int size = this.method.Engine.GetTypeSize (returnType.FullName, 4) / 4;
+					int size = this.method.Engine.GetTypeSize (instruction.Block.Method.ReturnType.TypeFullName, 4) / 4;
 
 					this.assembly.PUSH (R32.ECX);
 					this.assembly.PUSH (R32.ESI);

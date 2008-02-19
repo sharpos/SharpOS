@@ -141,15 +141,37 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		private Class returnType = null;
+
 		/// <summary>
 		/// Gets the type of the return.
 		/// </summary>
 		/// <value>The type of the return.</value>
-		public MethodReturnType ReturnType
+		public Class ReturnType
 		{
 			get
 			{
-				return this.methodDefinition.ReturnType;
+				if (returnType == null)
+					this.returnType = this.GetClass (this.methodDefinition.ReturnType.ReturnType);
+
+				return this.returnType;
+			}
+		}
+
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is return type big value type.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is return type big value type; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsReturnTypeBigValueType
+		{
+			get
+			{
+				TypeDefinition returnType = this.methodDefinition.ReturnType.ReturnType as TypeDefinition;
+
+				return returnType != null && returnType.IsValueType;
 			}
 		}
 
@@ -2194,8 +2216,8 @@ namespace SharpOS.AOT.IR {
 			{
 				return this.Name.Equals ("Main")
 						&& this.methodDefinition.Parameters.Count == 0
-						&& (this.methodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Int32)
-							|| this.methodDefinition.ReturnType.ReturnType.FullName.Equals (Mono.Cecil.Constants.Void));
+						&& (this.ReturnType.TypeFullName.Equals (Mono.Cecil.Constants.Int32)
+							|| this.ReturnType.TypeFullName.Equals (Mono.Cecil.Constants.Void));
 			}
 		}
 
@@ -2245,7 +2267,7 @@ namespace SharpOS.AOT.IR {
 					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString ()))
 						continue;
 
-					if (!(Class.GetTypeFullName (definition.ReturnType.ReturnType).Equals ("System.Object")
+					if (!(this.ReturnType.TypeFullName.Equals ("System.Object")
 							&& definition.Parameters.Count == 1
 							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.Void*")))
 						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.PointerToObjectAttribute).ToString () + "' method.");
@@ -2278,7 +2300,7 @@ namespace SharpOS.AOT.IR {
 					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.ObjectToPointerAttribute).ToString ()))
 						continue;
 
-					if (!(Class.GetTypeFullName (definition.ReturnType.ReturnType).Equals ("System.Void*")
+					if (!(this.ReturnType.TypeFullName.Equals ("System.Void*")
 							&& definition.Parameters.Count == 1
 							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.Object")))
 						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.ObjectToPointerAttribute).ToString () + "' method.");
@@ -2311,7 +2333,7 @@ namespace SharpOS.AOT.IR {
 					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString ()))
 						continue;
 
-					if (!(definition.ReturnType.ReturnType.FullName.Equals ("System.UInt32")
+					if (!(this.ReturnType.TypeFullName.Equals ("System.UInt32")
 							&& definition.Parameters.Count == 1
 							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.String")))
 						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.LabelAddressAttribute).ToString () + "' method.");
@@ -2343,7 +2365,7 @@ namespace SharpOS.AOT.IR {
 					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.LabelledAllocAttribute).ToString ()))
 						continue;
 
-					if (!(definition.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+					if (!(this.ReturnType.TypeFullName.Equals ("System.Byte*")
 							&& definition.Parameters.Count == 2
 							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.String")
 							&& definition.Parameters [1].ParameterType.FullName.Equals ("System.UInt32")))
@@ -2376,7 +2398,7 @@ namespace SharpOS.AOT.IR {
 					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString ()))
 						continue;
 
-					if (!(definition.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+					if (!(this.ReturnType.TypeFullName.Equals ("System.Byte*")
 							&& definition.Parameters.Count == 1
 							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.UInt32")))
 						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no '" + typeof (SharpOS.AOT.Attributes.AllocAttribute).ToString () + "' method.");
@@ -2408,7 +2430,7 @@ namespace SharpOS.AOT.IR {
 					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.StringAttribute).ToString ()))
 						continue;
 
-					if (!(definition.ReturnType.ReturnType.FullName.Equals ("System.Byte*")
+					if (!(this.ReturnType.TypeFullName.Equals ("System.Byte*")
 							&& definition.Parameters.Count == 1
 							&& definition.Parameters [0].ParameterType.FullName.Equals ("System.String")))
 						throw new EngineException ("'" + this._class.TypeFullName + "." + this.Name + "' is no 'String' method.");
@@ -2440,7 +2462,7 @@ namespace SharpOS.AOT.IR {
 					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocObjectAttribute).ToString ())
 						continue;
 
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+					if (this.ReturnType.TypeFullName != Mono.Cecil.Constants.Object
 							|| !definition.IsStatic
 							|| definition.Parameters.Count != 1
 							|| definition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName)
@@ -2471,7 +2493,7 @@ namespace SharpOS.AOT.IR {
 					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.ThrowAttribute).ToString ())
 						continue;
 
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Void
+					if (this.ReturnType.TypeFullName != Mono.Cecil.Constants.Void
 							|| !definition.IsStatic
 							|| definition.Parameters.Count != 1
 							|| Class.GetTypeFullName (definition.Parameters [0].ParameterType) != "System.Exception")
@@ -2502,7 +2524,7 @@ namespace SharpOS.AOT.IR {
 					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.IsInstAttribute).ToString ())
 						continue;
 
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+					if (this.ReturnType.TypeFullName != Mono.Cecil.Constants.Object
 							|| !definition.IsStatic
 							|| definition.Parameters.Count != 2
 							|| Class.GetTypeFullName (definition.Parameters [0].ParameterType) != Mono.Cecil.Constants.Object
@@ -2534,7 +2556,7 @@ namespace SharpOS.AOT.IR {
 					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.CastClassAttribute).ToString ())
 						continue;
 
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+					if (this.ReturnType.TypeFullName != Mono.Cecil.Constants.Object
 							|| !definition.IsStatic
 							|| definition.Parameters.Count != 2
 							|| Class.GetTypeFullName (definition.Parameters [0].ParameterType) != Mono.Cecil.Constants.Object
@@ -2567,7 +2589,7 @@ namespace SharpOS.AOT.IR {
 					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.OverflowHandlerAttribute).ToString ())
 						continue;
 
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Void
+					if (this.ReturnType.TypeFullName != Mono.Cecil.Constants.Void
 							|| !definition.IsStatic
 							|| definition.Parameters.Count != 0)
 						throw new EngineException (string.Format ("'{0}' is not a valid OverflowHandler method", this.methodDefinition.ToString ()));
@@ -2598,7 +2620,7 @@ namespace SharpOS.AOT.IR {
 					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.NullReferenceHandlerAttribute).ToString ())
 						continue;
 
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Void
+					if (this.ReturnType.TypeFullName != Mono.Cecil.Constants.Void
 							|| !definition.IsStatic
 							|| definition.Parameters.Count != 0)
 						throw new EngineException (string.Format ("'{0}' is not a valid NullReferenceHandler method", this.methodDefinition.ToString ()));
@@ -2630,7 +2652,7 @@ namespace SharpOS.AOT.IR {
 					if (customAttribute.Constructor.DeclaringType.FullName != typeof (SharpOS.AOT.Attributes.AllocArrayAttribute).ToString ())
 						continue;
 
-					if (Class.GetTypeFullName (methodDefinition.ReturnType.ReturnType) != Mono.Cecil.Constants.Object
+					if (this.ReturnType.TypeFullName != Mono.Cecil.Constants.Object
 							|| !definition.IsStatic
 							|| definition.Parameters.Count != 2
 							|| definition.Parameters [0].ParameterType.FullName != this.engine.VTableClass.TypeFullName
