@@ -1452,8 +1452,22 @@ namespace SharpOS.AOT.X86 {
 		{
 			this.LABEL (name);
 			this.AddArrayFields (arr.Length);
-			foreach (byte b in arr)
-				this.DATA (b);
+
+			int len = arr.Length;
+			int i = 0;
+			while (len >= 4) {
+				this.DATA ((uint) arr[i] | ((uint) arr[i+1] << 8) | ((uint) arr[i+2] << 16) | ((uint) arr[i+3] << 24));
+				i+=4;
+				len-=4;
+			}
+			while (i < arr.Length) {
+				this.DATA (arr[i]);
+				i++;
+			}
+
+			// previous implementation - above should do the same
+			//foreach (byte b in arr)
+			//	this.DATA (b);
 		}
 
 		internal void StaticArray (string name, uint[] arr)
