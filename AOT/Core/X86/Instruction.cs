@@ -291,6 +291,57 @@ namespace SharpOS.AOT.X86 {
 			return stringBuilder.ToString ();
 		}
 
+		class BlackholeStream : Stream {
+			long position = 0;
+			
+			public override long Position {
+				get { return position; }
+				set { position = value; }
+			}
+			
+			public override void Write (byte[] buffer, int offset, int count)
+			{
+				position += count;
+			}
+
+			public override bool CanRead {
+				get { return false; }
+			}
+
+			public override bool CanWrite {
+				get { return true; }
+			}
+
+			public override bool CanSeek {
+				get { return false; }
+			}
+
+			public override long Length {
+				get { return position; }
+			}
+
+			public override void Flush ()
+			{
+				return;
+			}
+
+			public override long Seek (long offset, SeekOrigin origin)
+			{
+				throw new NotImplementedException ();
+			}
+
+			public override int Read (byte[] buffer, int offset, int count)
+			{
+				throw new NotImplementedException ();
+			}
+
+			public override void SetLength (long value)
+			{
+				throw new NotImplementedException ();
+			}
+
+		}
+
 		/// <summary>
 		/// Sizes the specified bits32.
 		/// </summary>
@@ -298,13 +349,15 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public UInt32 Size (bool bits32)
 		{
-			MemoryStream memoryStream = new MemoryStream ();
-			BinaryWriter binaryWriter = new BinaryWriter (memoryStream);
+			BlackholeStream bs = new BlackholeStream();
+			BinaryWriter binaryWriter = new BinaryWriter (bs);
 
 			this.Encode (bits32, binaryWriter);
 
-			return (UInt32) memoryStream.Length;
+			return (UInt32) bs.Length;
 		}
+
+		const string hexChars = "0123456789ABCDEF"; 
 
 		/// <summary>
 		/// Encodes the specified bits32.
@@ -322,8 +375,6 @@ namespace SharpOS.AOT.X86 {
 
 			if (this.rmMemory != null && this.rmMemory.Segment != null)
 				binaryWriter.Write (this.rmMemory.Segment.Value);
-
-			string hex = "0123456789ABCDEF";
 
 			for (; i < this.encoding.Length; i++) {
 				string token = this.encoding [i].ToUpper ();
@@ -393,16 +444,17 @@ namespace SharpOS.AOT.X86 {
 					}
 					break;
 				default:
+					int ha, hb;
 					if (token.Length == 2
-						&& hex.IndexOf (token [0]) != -1
-						&& hex.IndexOf (token [1]) != -1) {
-						byte value = (byte) (hex.IndexOf (token [0]) * 16 + hex.IndexOf (token [1]));
+						&& (ha = hexChars.IndexOf (token [0])) != -1
+						&& (hb = hexChars.IndexOf (token [1])) != -1) {
+						byte value = (byte) (ha * 16 + hb);
 
 						binaryWriter.Write (value);
 					} else if (token.EndsWith ("+R")) {
 						token = token.Substring (0, token.Length - 2);
 
-						byte value = (byte) (hex.IndexOf (token [0]) * 16 + hex.IndexOf (token [1]));
+						byte value = (byte) (hexChars.IndexOf (token [0]) * 16 + hexChars.IndexOf (token [1]));
 
 						binaryWriter.Write ((byte) (value + this.register.Index));
 					} else if (token[0] == '/') {
