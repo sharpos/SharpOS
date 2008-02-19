@@ -50,6 +50,8 @@ namespace SharpOS.AOT.X86 {
 
 				binaryWriter.Write (System.Text.Encoding.Unicode.GetBytes (value));
 
+			} else if (this.value is UInt16) {
+				binaryWriter.Write ((UInt16) this.Value);
 			} else
 				base.Encode (bits32, binaryWriter);
 

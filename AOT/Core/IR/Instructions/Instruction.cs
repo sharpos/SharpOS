@@ -223,35 +223,37 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// </returns>
 		public override string ToString ()
 		{
-			string result = "";
+			StringBuilder result = new StringBuilder();
 
 			if (this.ignore)
-				result += "\t";
+				result.Append ('\t');
 
 			if (this.isSpecialCase)
-				result += ">";
+				result.Append ('>');
 
-			result += this.name;
+			result.Append (this.name);
 
-			result += "(";
+			result.Append ('(');
 
-			if (this.def != null)
-				result += this.def.ToString () + " <= ";
+			if (this.def != null) {
+				result.Append (this.def.ToString ());
+				result.Append (" <= ");
+			}
 
 			if (this.use != null) {
 				for (int i = 0; i < this.use.Length; i++) {
 					if (i > 0)
-						result += ", ";
+						result.Append (", ");
 
 					if (this.use [i] != null)
-						result += this.use [i].ToString ();
+						result.Append (this.use [i].ToString ());
 				}
 			}
 
-			result += ")";
+			result.Append (')');
 
 
-			return result;
+			return result.ToString ();
 		}
 
 		/// <summary>

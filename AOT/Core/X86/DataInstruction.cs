@@ -45,24 +45,8 @@ namespace SharpOS.AOT.X86 {
 		/// <returns></returns>
 		public override bool Encode (bool bits32, BinaryWriter binaryWriter)
 		{
-			if (this.Value is string) {
-				string value = (string) this.Value;
-
-				binaryWriter.Write (value.ToCharArray ());
-
-			} else if (this.Value is byte) {
-				binaryWriter.Write ((byte) this.Value);
-
-			} else if (this.Value is UInt16) {
-				binaryWriter.Write ((UInt16) this.Value);
-
-			} else if (this.Value is UInt32) {
-				binaryWriter.Write ((UInt32) this.Value);
-
-			} else
-				throw new EngineException ("Wrong data type.");
-
-			return true;
+			// all calls to Encode are handled by specialized methods overriding this one
+			throw new EngineException ("Wrong data type.");
 		}
 	}
 }

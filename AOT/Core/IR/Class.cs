@@ -613,6 +613,21 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets the size of boxed valuetype or standard object size.
+		/// </summary>
+		/// <value>The size.</value>
+		public int ObjectSize
+		{
+			get
+			{
+				if (IsValueType)
+					return this.Size + engine.ObjectSize;
+				else
+					return this.Size;
+			}
+		}
+
 		private int size = -1;
 
 		/// <summary>

@@ -70,12 +70,16 @@ namespace SharpOS.AOT.IR.Operands {
 		/// <returns></returns>
 		public override string ToString ()
 		{
-			string suffix = "";
+			if (this.phi == null)
+				return base.ToString ();
+			else {
+				StringBuilder sb = new StringBuilder (base.ToString ());
+				sb.Append ("{");
+				sb.Append (this.phi);
+				sb.Append ("}");
 
-			if (this.phi != null)
-				suffix = "{" + this.phi + "}";
-
-			return base.ToString () + suffix;
+				return sb.ToString ();
+			}
 		}
 	}
 }

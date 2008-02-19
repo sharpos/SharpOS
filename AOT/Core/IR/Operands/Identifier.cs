@@ -164,12 +164,15 @@ namespace SharpOS.AOT.IR.Operands {
 		/// </returns>
 		public override string ToString ()
 		{
-			string result = this.ID;
+			if (this.InternalType == InternalType.NotSet)
+				return this.ID;
+			else {
+				StringBuilder sb = new StringBuilder (this.ID);
+				sb.Append("__");
+				sb.Append(this.internalType.ToString());
 
-			if (this.InternalType != InternalType.NotSet)
-				result += "__" + this.InternalType.ToString ();
-
-			return result;
+				return sb.ToString();
+			}
 		}
 
 		/// <summary>

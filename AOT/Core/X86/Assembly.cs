@@ -503,6 +503,24 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
+		/// DATAs the specified value.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		public void DATA (byte[] value)
+		{
+			this.instructions.Add (new BlobDataInstruction (value));
+		}
+
+		/// <summary>
+		/// DATAs the specified value.
+		/// </summary>
+		/// <param name="value">The value.</param>
+		public void DATA (UInt32[] value)
+		{
+			this.instructions.Add (new BlobDataInstruction (value));
+		}
+
+		/// <summary>
 		/// OFFSETs the specified value.
 		/// </summary>
 		/// <param name="value">The value.</param>
@@ -1459,29 +1477,15 @@ namespace SharpOS.AOT.X86 {
 			this.LABEL (name);
 			this.AddArrayFields (arr.Length);
 
-			int len = arr.Length;
-			int i = 0;
-			while (len >= 4) {
-				this.DATA ((uint) arr[i] | ((uint) arr[i+1] << 8) | ((uint) arr[i+2] << 16) | ((uint) arr[i+3] << 24));
-				i+=4;
-				len-=4;
-			}
-			while (i < arr.Length) {
-				this.DATA (arr[i]);
-				i++;
-			}
-
-			// previous implementation - above should do the same
-			//foreach (byte b in arr)
-			//	this.DATA (b);
+			this.DATA (arr);
 		}
 
 		internal void StaticArray (string name, uint[] arr)
 		{
 			this.LABEL (name);
 			this.AddArrayFields (arr.Length);
-			foreach (uint u in arr)
-				this.DATA (u);
+
+			this.DATA (arr);
 		}
 
 		private void AddMetadata ()
@@ -1535,10 +1539,7 @@ namespace SharpOS.AOT.X86 {
 			this.ADDRESSOF (typeInfoLabel);
 
 			// VTable Size Field
-			if (_class.IsValueType)
-				this.DATA ((uint) (_class.Size + engine.ObjectSize));
-			else
-				this.DATA ((uint) _class.Size);
+			this.DATA ((uint) _class.ObjectSize);
 
 			// ITable pointer
 			if (_class.ImplementsInterfaces)

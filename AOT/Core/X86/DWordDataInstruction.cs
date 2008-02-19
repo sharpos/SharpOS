@@ -27,6 +27,12 @@ namespace SharpOS.AOT.X86 {
 		{
 		}
 
+		public override bool Encode (bool bits32, BinaryWriter binaryWriter)
+		{
+			binaryWriter.Write ((UInt32) this.Value);
+			return true;
+		}
+
 		public override string Parameters
 		{
 			get
