@@ -127,6 +127,8 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		private GenericInstanceMethod genericInstanceMethod = null;
+
 		/// <summary>
 		/// Gets the name.
 		/// </summary>
@@ -200,6 +202,14 @@ namespace SharpOS.AOT.IR {
 			this.engine = engine;
 			this._class = _class;
 			this.methodDefinition = methodDefinition;
+		}
+
+		public Method (Engine engine, Class _class, MethodReference methodDefinition, GenericInstanceMethod genericInstanceMethod)
+		{
+			this.engine = engine;
+			this._class = _class;
+			this.methodDefinition = methodDefinition;
+			this.genericInstanceMethod = genericInstanceMethod;
 		}
 
 		/// <summary>
@@ -1273,6 +1283,9 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
+				if (this.genericInstanceMethod != null)
+					return Method.GetLabel (this.genericInstanceMethod);
+
 				return Method.GetLabel (this.methodDefinition);
 			}
 		}
@@ -1296,6 +1309,21 @@ namespace SharpOS.AOT.IR {
 			}
 
 			result.Append (value + "." + method.Name);
+
+			if (method is GenericInstanceMethod) {
+				GenericInstanceMethod genericInstanceMethod = method as GenericInstanceMethod;
+
+				result.Append ("<");
+
+				for (int i = 0; i < genericInstanceMethod.GenericArguments.Count; i++) {
+					if (i > 0)
+						result.Append (",");
+
+					result.Append (genericInstanceMethod.GenericArguments [i].FullName);
+				}
+
+				result.Append (">");
+			}
 
 			result.Append ("(");
 
@@ -1322,6 +1350,21 @@ namespace SharpOS.AOT.IR {
 			StringBuilder result = new StringBuilder ();
 
 			result.Append (method.Name);
+
+			if (method is GenericInstanceMethod) {
+				GenericInstanceMethod genericInstanceMethod = method as GenericInstanceMethod;
+
+				result.Append ("<");
+
+				for (int i = 0; i < genericInstanceMethod.GenericArguments.Count; i++) {
+					if (i > 0)
+						result.Append (",");
+
+					result.Append (genericInstanceMethod.GenericArguments [i].FullName);
+				}
+
+				result.Append (">");
+			}
 
 			result.Append ("(");
 
@@ -1799,6 +1842,31 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
+		/// Gets the class.
+		/// </summary>
+		/// <param name="type">The type.</param>
+		/// <returns></returns>
+		private Class GetClass (TypeReference type)
+		{
+			if (type is GenericParameter) {
+				GenericParameter genericParameter = type as GenericParameter;
+
+				int i = 0;
+				for (; i < genericParameter.Owner.GenericParameters.Count; i++) {
+					if (genericParameter.Owner.GenericParameters [i].FullName == genericParameter.FullName)
+						break;
+				}
+
+				System.Diagnostics.Debug.Assert (i < genericParameter.Owner.GenericParameters.Count);
+				System.Diagnostics.Debug.Assert (this.genericInstanceMethod != null);
+
+				type = this.genericInstanceMethod.GenericArguments [i];
+			}
+
+			return this.engine.GetClass (type);
+		}
+
+		/// <summary>
 		/// Pres the process.
 		/// </summary>
 		private void PreProcess ()
@@ -1806,7 +1874,7 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.CIL.Variables.Count; i++) {
 				TypeReference typeReference = this.CIL.Variables [i].VariableType;
 
-				Class _class = this.engine.GetClass (typeReference);
+				Class _class = this.GetClass (typeReference);
 				InternalType internalType = this.Engine.GetInternalType (_class.TypeFullName);
 
 				Local local = new Local (i, _class, internalType);
@@ -1817,7 +1885,7 @@ namespace SharpOS.AOT.IR {
 			if (this.methodDefinition.HasThis) {
 				TypeReference typeReference = this.methodDefinition.DeclaringType;
 
-				Class _class = this.engine.GetClass (typeReference);
+				Class _class = this.GetClass (typeReference);
 				InternalType internalType = InternalType.M;
 
 				Argument argument = new Argument (0, _class, internalType);
@@ -1830,7 +1898,7 @@ namespace SharpOS.AOT.IR {
 			for (int i = 0; i < this.methodDefinition.Parameters.Count; i++) {
 				TypeReference typeReference = this.methodDefinition.Parameters [i].ParameterType;
 
-				Class _class = this.engine.GetClass (typeReference);
+				Class _class = this.GetClass (typeReference);
 				InternalType internalType = this.engine.GetInternalType (_class.TypeFullName);
 
 				Argument argument = new Argument (delta + i, _class, internalType);
@@ -1844,6 +1912,9 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		public void Process ()
 		{
+			if (this.IsGenericType)
+				return;
+
 			if (this.skipProcessing)
 				return;
 
@@ -1946,7 +2017,7 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				return IR.Method.GetLabel (this.methodDefinition);
+				return this.MethodFullName;
 			}
 		}
 
@@ -1958,6 +2029,9 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
+				if (this.genericInstanceMethod != null)
+					return IR.Method.GetID (this.genericInstanceMethod);
+
 				return IR.Method.GetID (this.methodDefinition);
 			}
 		}
@@ -2082,11 +2156,10 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				MethodDefinition definition = this.methodDefinition as MethodDefinition;
+				MethodBody methodBody = this.CIL;
 
-				if (definition != null
-						&& definition.Body != null)
-					return definition.Body.Instructions.Count;
+				if (methodBody != null)
+					return methodBody.Instructions.Count;
 
 				return 0;
 			}
@@ -2628,6 +2701,12 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+		/// <summary>
+		/// Gets a value indicating whether this instance has exception handling.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance has exception handling; otherwise, <c>false</c>.
+		/// </value>
 		public bool HasExceptionHandling
 		{
 			get
@@ -2638,6 +2717,28 @@ namespace SharpOS.AOT.IR {
 					return false;
 
 				return definition.Body.ExceptionHandlers.Count != 0;
+			}
+		}
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is CCTOR.
+		/// </summary>
+		/// <value><c>true</c> if this instance is CCTOR; otherwise, <c>false</c>.</value>
+		public bool IsCCTOR
+		{
+			get
+			{
+				return this.MethodFullName.IndexOf (".cctor") != -1;
+			}
+		}
+
+		public bool IsGenericType
+		{
+			get
+			{
+				return this.methodDefinition.GenericParameters != null
+						&& this.methodDefinition.GenericParameters.Count > 0
+						&& this.genericInstanceMethod == null;
 			}
 		}
 	}

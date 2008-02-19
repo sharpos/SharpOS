@@ -607,63 +607,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Finds the MethodDefinition that matches the method reference
-		/// <paramref name="call" />. This method searches through the list
-		/// of assemblies provided by the 'Assemblies' option in
-		/// <see cref="EngineOptions" />.
-		/// </summary>
-		public MethodDefinition GetCILDefinition (Mono.Cecil.MethodReference call)
-		{
-			// TODO: work on performance
-
-			foreach (AssemblyDefinition assem in assemblies) {
-				foreach (ModuleDefinition mod in assem.Modules) {
-					foreach (TypeDefinition type in mod.Types) {
-						if (type.FullName == call.DeclaringType.FullName) {
-							foreach (MethodDefinition def in type.Methods) {
-								bool badParams = false;
-
-								if (def.Name != call.Name)
-									continue;
-
-								if (def.ReturnType.ReturnType != call.ReturnType.ReturnType)
-									continue;
-
-								if (def.Parameters.Count != call.Parameters.Count)
-									continue;
-
-								for (int x = 0; x < def.Parameters.Count; ++x) {
-									ParameterDefinition callPrm, defPrm;
-
-									callPrm = call.Parameters [x];
-									defPrm = def.Parameters [x];
-
-									if (callPrm.ParameterType.FullName !=
-										defPrm.ParameterType.FullName) {
-										badParams = true;
-										break;
-									}
-
-									if (callPrm.Attributes != defPrm.Attributes) {
-										badParams = true;
-										break;
-									}
-								}
-
-								if (badParams)
-									continue;
-
-								return def;
-							}
-						}
-					}
-				}
-			}
-
-			return null;
-		}
-
-		/// <summary>
 		/// Creates the correct IAssembly object corresponding to
 		/// the CPU architecture chosen by the 'CPU' option of
 		/// <see cref="EngineOptions" />, then runs the AOT compiler
@@ -1010,19 +953,16 @@ namespace SharpOS.AOT.IR {
 					return classes [0];
 
 				// TODO: more advanced methods of deciding the 'principal' type.
-
 				principal = classes [0];
 				errorPrefix = string.Format ("During merging of type '{0}': ", principal.TypeFullName);
 
 				// Merge in methods
-
 				for (int x = 0; x < classes.Count; ++x) {
 					if (classes [x] == principal)
 						continue;
 
 					// ensure that the principal class and the class being merged
 					// have compatible fields.
-
 					if (principal.Fields.Count < classes [x].Fields.Count) {
 						throw new EngineException (errorPrefix +
 							"principal type has less fields than merged type");
@@ -1052,7 +992,6 @@ namespace SharpOS.AOT.IR {
 					}
 
 					// Merge implemented interfaces information
-
 					foreach (TypeReference typeRef in (classes [x].ClassDefinition as TypeDefinition).Interfaces) {
 						bool found = false;
 						foreach (TypeReference pRef in (principal.ClassDefinition as TypeDefinition).Interfaces) {
@@ -1068,7 +1007,6 @@ namespace SharpOS.AOT.IR {
 
 					// Add the methods of the merged type to the principal type, provided there
 					// is no pre-existing implementation.
-
 					foreach (Method method in classes [x]) {
 						bool include = true;
 						foreach (Method princeMethod in principal) {
@@ -1247,7 +1185,6 @@ namespace SharpOS.AOT.IR {
 					TypeMerge merge;
 
 					// Save the class group for merging.
-
 					if (this.typeMerges.ContainsKey (_class.TypeFullName))
 						merge = this.typeMerges [_class.TypeFullName];
 					else {
@@ -1309,7 +1246,6 @@ namespace SharpOS.AOT.IR {
 			List<Class> temp = new List<Class> (this.classes);
 
 			// Perform merging operations
-
 			if (this.typeMerges.Count > 0)
 				Console.WriteLine ("Merging duplicate types...");
 
@@ -1521,9 +1457,12 @@ namespace SharpOS.AOT.IR {
 			List<Class> _classes = new List<Class> (this.classes);
 
 			foreach (Class _class in _classes) {
-				if (_class.IsSpecialType)
+				if (_class.IsGenericType)
 					continue;
 
+				if (_class.IsSpecialType)
+					continue;
+				
 				List<string> defNames = new List<string> ();
 
 				this.currentModule = _class.ClassDefinition.Module;
@@ -1547,6 +1486,7 @@ namespace SharpOS.AOT.IR {
 					if (defNames.Contains (_method.MethodFullName))
 						throw new EngineException ("Already compiled this method: " +
 							_method.MethodFullName);
+
 					defNames.Add (_method.MethodFullName);
 					this.currentMethod = _method.MethodDefinition;
 

@@ -1121,8 +1121,11 @@ namespace SharpOS.AOT.X86 {
 			this.PUSH (R32.EAX);
 
 			foreach (Class _class in engine) {
+				if (_class.IsGenericType)
+					continue;
+
 				foreach (Method method in _class) {
-					if (method.MethodFullName.IndexOf (".cctor") == -1)
+					if (!method.IsCCTOR)
 						continue;
 
 					this.CALL (method.MethodFullName);
@@ -1288,10 +1291,13 @@ namespace SharpOS.AOT.X86 {
 				}
 
 				foreach (Class _class in engine) {
-					if (_class.IsInternal || _class.IsInterface)
+					if (_class.IsInternal || _class.IsInterface || _class.IsGenericType)
 						continue;
 
 					foreach (Method method in _class) {
+						if (method.IsGenericType)
+							continue;
+
 						if (method.CILInstructionsCount == 0)
 							continue;
 
@@ -1742,10 +1748,16 @@ namespace SharpOS.AOT.X86 {
 				if (_class.IsInterface)
 					continue;
 
+				if (_class.IsGenericType)
+					continue;
+
 				GenerateIMTHelpers(_class);
 
+				if (_class.IsInternal)
+					continue;
+
 				foreach (Method method in _class) {
-					if (_class.IsInternal)
+					if (method.IsGenericType)
 						continue;
 
 					this.engine.Dump.MethodEncode (method);

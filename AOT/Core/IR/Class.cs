@@ -63,6 +63,10 @@ namespace SharpOS.AOT.IR {
 				TypeDefinition typeDefinition = this.classDefinition as TypeDefinition;
 
 				if (step == 0) {
+					if (typeDefinition.GenericParameters != null 
+							&& typeDefinition.GenericParameters.Count > 0)
+						this.isGenericType = true;
+
 					this.hasExplicitLayout = (typeDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0;
 
 					if (typeDefinition.IsEnum) {
@@ -87,6 +91,7 @@ namespace SharpOS.AOT.IR {
 						this.isClass = true;
 
 						this.internalType = Operands.InternalType.O;
+
 					} else if (typeDefinition.IsInterface) {
 						this.isInterface = true;
 
@@ -109,10 +114,11 @@ namespace SharpOS.AOT.IR {
 						this.AssignInterfaceMethodNumbers();
 					else
 						this.MarkInterfaceMethods ();
+
 					this.AddVirtualMethods (this.virtualMethods);
 
 				} else if (step == 1) {
-					if (!this.isInternal || (this.isInternal && !this.engine.Assembly.IgnoreTypeContent (this.TypeFullName))) {
+					if (!this.isGenericType && (!this.isInternal || (this.isInternal && !this.engine.Assembly.IgnoreTypeContent (this.TypeFullName)))) {
 						foreach (FieldDefinition field in typeDefinition.Fields) {
 							Class _class = this.engine.GetClass (field.FieldType);
 							InternalType _internalType = this.engine.GetInternalType (_class.TypeFullName);
@@ -196,6 +202,22 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				return isValueType;
+			}
+		}
+
+		private bool isGenericType = false;
+
+		/// <summary>
+		/// Gets a value indicating whether this instance is generic type.
+		/// </summary>
+		/// <value>
+		/// 	<c>true</c> if this instance is generic type; otherwise, <c>false</c>.
+		/// </value>
+		public bool IsGenericType
+		{
+			get
+			{
+				return isGenericType;
 			}
 		}
 
@@ -331,6 +353,22 @@ namespace SharpOS.AOT.IR {
 				this.Add (method);
 
 				return method;
+			}
+
+			if (methodReference is GenericInstanceMethod) {
+				GenericInstanceMethod genericInstanceMethod = methodReference as GenericInstanceMethod;
+
+				value = Method.GetLabel (genericInstanceMethod.ElementMethod);
+
+				if (this.methodsDictionary.ContainsKey (value)) {
+					Method method = new Method (this.engine, this, this.methodsDictionary [value].MethodDefinition, genericInstanceMethod);
+
+					method.Process ();
+
+					this.Add (method);
+
+					return method;
+				}
 			}
 
 			throw new EngineException (string.Format ("Method '{0}' not found.", value));
