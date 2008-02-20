@@ -723,6 +723,20 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return value;
 		}
 		#endregion
+		
+		#region ReadSByte
+		public unsafe static sbyte ReadSByte (Port port)
+		{
+			sbyte value = 0;
+
+			Asm.XOR (R32.EAX, R32.EAX);
+			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.IN_AL__DX ();
+			Asm.MOV ((byte*)&value, R8.AL);
+
+			return value;
+		}
+		#endregion
 
 		#region ReadUInt16
 		public unsafe static ushort ReadUInt16 (Port port)
@@ -757,6 +771,15 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			Asm.MOV (R16.DX, (ushort*) &port);
 			Asm.MOV (R8.AL, &value);
+			Asm.OUT_DX__AL ();
+		}
+		#endregion
+
+		#region WriteSByte
+		public unsafe static void WriteSByte (Port port, sbyte value)
+		{
+			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.MOV (R8.AL, (byte*)&value);
 			Asm.OUT_DX__AL ();
 		}
 		#endregion

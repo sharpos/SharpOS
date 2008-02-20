@@ -17,9 +17,9 @@ namespace SharpOS.Kernel.ADC {
 	// TODO: ...eventually use generics?
 	// TODO: use stubs for fill/move functions
 	// TODO: do bound checks on fill/move functions
-	public unsafe struct MemoryMap {
+	public unsafe struct MemoryBlock {
 
-		internal MemoryMap(uint _address, uint _length)
+		internal MemoryBlock(uint _address, uint _length)
 		{
 			length = _length;
 			address = (byte*)_address;

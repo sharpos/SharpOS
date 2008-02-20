@@ -24,22 +24,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 	///  the Industry Standard Architecture (ISA) bus.
 	/// </summary>
 	/// <TODO>LPCBusDriver should use implementations of LPCDevice/LPCDriver class internally</TODO>
-	public class LPCBusDriver : IDriver	{
+	public class LPCBusDriver : GenericDriver	{
 
 		// LPC devices
 		//    FloppyDiskControllers
 		//    FloppyDiskDrives
-		//    PS/2 Keyboard
-		//    PS/2 Mouse
 		//    Parallel ports
 		//    Serial ports
-		#region IsInitialized
-		private bool isInitialized = false;
-		public override bool IsInitialized
-		{
-			get { return isInitialized; }
-		}
-		#endregion
 
 		#region Initialize
 		public override bool Initialize(IDevice device, IHardwareResourceManager manager)
@@ -56,7 +47,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		public override bool GetSubDevices(out IDevice[] subDevices)
 		{
-			subDevices = null;
+			subDevices = new IDevice[] {
+			};
 			return false;
 		}
 		#endregion

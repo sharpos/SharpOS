@@ -23,15 +23,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 	///		computer motherboard. 
 	/// </summary>
 	/// <TODO>PCIBusDriver should use implementations of PCIDevice/PCIDriver class internally</TODO>
-	public class PCIBusDriver : IDriver	{
-
-		#region IsInitialized
-		private bool isInitialized = false;
-		public override bool IsInitialized
-		{
-			get { return isInitialized; }
-		}
-		#endregion
+	public class PCIBusDriver : GenericDriver	{
 
 		#region Initialize
 		public override bool Initialize(IDevice device, IHardwareResourceManager manager)

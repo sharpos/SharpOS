@@ -9,8 +9,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SharpOS.Kernel.ADC.X86 {
 
@@ -22,6 +20,27 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region (Root) Devices
 		private IDevice[]	rootDevices = new IDevice[]
 		{
+			new GenericDevice(
+				"Keyboard",
+				"Unknown",
+				"PS/2 Keyboard",
+				new KeyboardDriver()
+			),
+			
+			/*
+			new GenericDevice(
+				"RTC",
+				"Unknown",
+				"Real Time Clock",
+				new RTCDriver()
+			),
+			new GenericDevice(
+				"UART",
+				"Unknown",
+				"UART Serial Port",
+				new UARTDriver()
+			),
+			*/
 			new GenericDevice(
 				"LPC", 
 				"Intel", 

@@ -9,8 +9,6 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace SharpOS.Kernel.ADC.X86 {
 
@@ -35,10 +33,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 		}
 
-		public static MemoryMap RequestMemoryMap(uint address, uint length)
+		public static MemoryBlock RequestMemoryBuffer(uint address, uint length)
 		{
-			return new MemoryMap(address, length);
+			return new MemoryBlock(address, length);
 		}
 
+		public static IOStream Request8bitIOStream(IO.Port port)
+		{
+			return new IOStream8bit(port);
+		}
 	}
 }

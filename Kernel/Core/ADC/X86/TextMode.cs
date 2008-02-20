@@ -34,7 +34,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		// Hardware
 		static IO.Port CRT_index_register;
 		static IO.Port CRT_data_register;
-		static MemoryMap videoMemory;
+		static MemoryBlock videoMemory;
 		static int bytePerChar = 1;
 		static bool colorMode = false;
 		static bool haveBuffer = false;
