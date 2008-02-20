@@ -105,5 +105,22 @@ namespace SharpOS.Kernel.Tests.CS {
 			else
 				return 0;
 		}
+/*
+		/// <summary>
+		/// ulong -> byte
+		/// </summary>
+		public static uint CMPULong2Byte ()
+		{
+			ulong lvalue = 100;
+			byte  bvalue = 0;
+
+			bvalue = (byte) lvalue;
+
+			if (bvalue == 100)
+				return 1;
+			else
+				return 0;
+		}
+*/
 	}
 }

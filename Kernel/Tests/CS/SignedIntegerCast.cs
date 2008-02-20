@@ -105,5 +105,22 @@ namespace SharpOS.Kernel.Tests.CS {
 			else
 				return 0;
 		}
+/*
+		/// <summary>
+		/// long -> sbyte
+		/// </summary>
+		public static uint CMPLong2SByte ()
+		{
+			long  lvalue = 100;
+			sbyte bvalue = 0;
+
+			bvalue = (sbyte) lvalue;
+
+			if (bvalue == 100)
+				return 1;
+			else
+				return 0;
+		}
+*/
 	}
 }
