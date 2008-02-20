@@ -103,6 +103,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="X86\BlobDataInstruction.cs" />
     <Compile Include="X86\DR.cs" />
     <Compile Include="X86\IR.cs" />
     <Compile Include="X86\TR.cs" />
