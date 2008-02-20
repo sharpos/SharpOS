@@ -46,9 +46,8 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 				}
 			}
 
-			while (rec != null) {
+			while ((rec = SharpOS.Kernel.Foundation.Testcase.GetTest (id)) != null) {
 				TextMode.SaveAttributes ();
-				rec = SharpOS.Kernel.Foundation.Testcase.GetTest (id);
 
 				if (onlyFail && rec->Result != false) {
 					++id;
@@ -113,7 +112,8 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 				++id;
 			}
 
-			MemoryManager.Free (source);
+			if (source != null)
+				MemoryManager.Free (source);
 		}
 
 		[Label (lblGetHelp)]
