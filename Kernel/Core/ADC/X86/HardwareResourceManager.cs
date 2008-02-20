@@ -38,9 +38,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return new MemoryBlock(address, length);
 		}
 
-		public static IOStream Request8bitIOStream(IO.Port port)
+		public static IOPortStream Request8bitIOStream(IO.Port port)
 		{
-			return new IOStream8bit(port);
+			return new IOPortStream8bit(port);
 		}
 	}
 }

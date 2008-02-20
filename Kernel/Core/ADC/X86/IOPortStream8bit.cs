@@ -14,10 +14,10 @@ using System.Text;
 
 namespace SharpOS.Kernel.ADC.X86 {
 
-	public class IOStream8bit : IOStream {
+	public class IOPortStream8bit : IOPortStream {
 
 		#region Constructor
-		internal IOStream8bit(IO.Port _port) 
+		internal IOPortStream8bit(IO.Port _port) 
 			: base(_port)
 		{
 		}

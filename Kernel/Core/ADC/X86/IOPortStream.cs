@@ -14,9 +14,9 @@ using System.Text;
 
 namespace SharpOS.Kernel.ADC.X86 {
 
-	public abstract class IOStream {
+	public abstract class IOPortStream {
 		
-		protected IOStream(IO.Port _port)
+		protected IOPortStream(IO.Port _port)
 		{
 			port = _port;
 		}
