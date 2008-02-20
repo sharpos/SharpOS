@@ -25,9 +25,20 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// </summary>
 		/// <param name="result">The result.</param>
 		/// <param name="value">The value.</param>
-		public Ldftn (Register result, TokenConstant value)
-			: base ("Ldftn", result, new Operand [] { value })
+		public Ldftn (Register result, Method value)
+			: base ("Ldftn", result, new Operand [] { new TokenConstant(value.ToString()) })
 		{
+			this.method = value;
+		}
+
+		protected Method method;
+
+		public Method Method
+		{
+			get
+			{
+				return this.method;
+			}
 		}
 
 		/// <summary>

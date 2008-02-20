@@ -196,6 +196,9 @@ namespace SharpOS.AOT.X86 {
 					else if (instruction is IR.Instructions.Ldsflda)
 						this.Ldsflda (instruction as IR.Instructions.Ldsflda);
 
+					else if (instruction is IR.Instructions.Ldftn)
+						this.Ldftn (instruction as IR.Instructions.Ldftn);
+
 					else if (instruction is IR.Instructions.Localloc)
 						this.Localloc (instruction as IR.Instructions.Localloc);
 

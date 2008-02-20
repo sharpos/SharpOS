@@ -1530,11 +1530,12 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldftn (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			TokenConstant value = new TokenConstant ((cilInstruction.Operand as Mono.Cecil.MethodReference).ToString ());
+			Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
+			Method method = this.method.Engine.GetMethod (call);
 
 			Register assignee = this.SetRegister ();
 
-			return new Ldftn (assignee, value);
+			return new Ldftn (assignee, method);
 		}
 
 		#region Ldc

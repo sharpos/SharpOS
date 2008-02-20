@@ -1312,6 +1312,23 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
+		/// Implements the 'ldftn' IL instruction, which loads a pointer to function onto the IL evaluation stack.
+		/// </summary>
+		private void Ldftn (IR.Instructions.Ldftn instruction)
+		{
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+			DWordMemory address = new DWordMemory (instruction.Method.AssemblyLabel);
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), address);
+
+			else {
+				assembly.MOV (R32.EAX, address);
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+			}
+		}
+
+		/// <summary>
 		/// Implements the 'ldnull' IL instruction, which loads a null pointer onto the IL evaluation stack.
 		/// </summary>
 		private void Ldnull (IR.Instructions.Ldnull instruction)
