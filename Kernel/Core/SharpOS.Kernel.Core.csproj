@@ -78,10 +78,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ADC\IOPortStream.cs" />
     <Compile Include="ADC\MemoryBlock.cs" />
-    <Compile Include="ADC\X86\IOStream8bit.cs" />
+    <Compile Include="ADC\X86\IOPortStream8bit.cs" />
     <Compile Include="ADC\X86\GenericDriver.cs" />
-    <Compile Include="ADC\X86\IOStream.cs" />
     <Compile Include="ADC\X86\KeyboardDriver.cs" />
     <Compile Include="ADC\X86\RTCDriver.cs" />
     <Compile Include="ADC\X86\Scheduler.cs" />

@@ -148,16 +148,16 @@ namespace SharpOS.Kernel.ADC.X86 {
 					return;
 				else if (message == KeyboardMessages.Unknown1) // This was the cause of the caps issue.
 					return;
-                                else if (message == KeyboardMessages.Unknown2) // This was the cause of the caps issue in qemu.
-                                {
-                                        capsLock = capsLock ^ capsLockReleased;
-                                        capsLockReleased = true;
-                                        return;
-                                } else {
-                                        TextMode.WriteByte ((byte) message);
-                                        //Diagnostics.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
-                                        return;
-                                }
+                else if (message == KeyboardMessages.Unknown2) // This was the cause of the caps issue in qemu.
+                {
+                    capsLock = capsLock ^ capsLockReleased;
+                    capsLockReleased = true;
+                    return;
+                } else {
+                    TextMode.WriteByte ((byte) message);
+                    //Diagnostics.Error ("ADC.X86.Keyboard.SendCommand(): unhandled message");
+                    return;
+                }
 
 			} while (message != KeyboardMessages.Acknowledge);
 		}

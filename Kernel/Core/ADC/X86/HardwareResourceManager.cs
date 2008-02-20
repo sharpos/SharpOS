@@ -23,9 +23,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 	/// need to work around it
 	/// </todo>
 	/// <todo>
-	/// How to abstract away all the different types of hardware resources yet
-	/// keep as much as possible platform independent.. 
-	/// maybe have an interface for each different type of hardware resource?
+	/// We need to have some sort of context so that when a driver is cleaned up, 
+	/// we can find back the resources it requested.
 	/// </todo>
 	internal unsafe class HardwareResourceManager : IHardwareResourceManager {
 		
@@ -33,14 +32,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 		}
 
-		public static MemoryBlock RequestMemoryBuffer(uint address, uint length)
+		public override MemoryBlock RequestMemoryBuffer(uint address, uint length)
 		{
 			return new MemoryBlock(address, length);
 		}
 
-		public static IOPortStream Request8bitIOStream(IO.Port port)
+		public override IOPortStream Request8bitIOPort(ushort port)
 		{
-			return new IOPortStream8bit(port);
+			return new IOPortStream8bit((IO.Port)port);
 		}
 	}
 }

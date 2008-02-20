@@ -12,16 +12,9 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS.Kernel.ADC.X86 {
+namespace SharpOS.Kernel.ADC {
 
 	public abstract class IOPortStream {
-		
-		protected IOPortStream(IO.Port _port)
-		{
-			port = _port;
-		}
-		
-		protected IO.Port	port;
 		
 		public abstract sbyte	ReadSByte();
 		public abstract byte	ReadByte();

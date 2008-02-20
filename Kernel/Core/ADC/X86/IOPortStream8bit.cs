@@ -18,9 +18,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		#region Constructor
 		internal IOPortStream8bit(IO.Port _port) 
-			: base(_port)
 		{
+			port = _port;
 		}
+		#endregion
+		
+		#region Port
+		protected IO.Port	port;
 		#endregion
 
 		#region Read
