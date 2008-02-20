@@ -43,10 +43,9 @@ namespace SharpOS.AOT.X86 {
 				return;
 			}
 
-			// TODO add support for call/callvirt/calli/jmp and for tail.
+			// TODO add support for call/callvirt/calli/jmp and for tail./constrained.
 
 			// Perform a null check for non-static methods
-
 			if (!(call.Method.MethodDefinition as Mono.Cecil.MethodDefinition).IsStatic) {
 				IR.Operands.Register identifier = call.Use [0] as IR.Operands.Register;
 
@@ -163,17 +162,14 @@ namespace SharpOS.AOT.X86 {
 		{
 			uint result = 0;
 
-			foreach (ParameterDefinition parameter in call.Method.Parameters)
-				result += (uint) this.method.Engine.GetTypeSize (Class.GetTypeFullName (parameter.ParameterType), 4);
-
-			if (call.Method.HasThis)
-				result += 4;
+			foreach (Argument argument in call.Method.Arguments)
+				result += (uint) this.method.Engine.GetOperandSize (argument, this.assembly.IntSize);
 
 			// In case the return type is a structure in that case the last parameter that is pushed on the stack
 			// is the address to the memory where the result gets copied, and that address has to be pulled from
 			// the stack.
 			if (call.Method.IsReturnTypeBigValueType)
-				result += 4;
+				result += (uint) this.assembly.IntSize;
 
 			if (result > 0)
 				assembly.ADD (R32.ESP, result);
@@ -445,7 +441,7 @@ namespace SharpOS.AOT.X86 {
 				}
 
 			} else if (call.Use.Length == 4) {
-				if (call.Method.Parameters [1].ParameterType.FullName.IndexOf ("16") != -1) {
+				if (call.Method.Arguments [1].TypeFullName.IndexOf ("16") != -1) {
 					SegType segment = Seg.GetByID (Operand.GetNonRegister (call.Use [0], typeof (FieldOperand)));
 					R16Type _base = R16.GetByID (Operand.GetNonRegister (call.Use [1], typeof (FieldOperand)));
 					R16Type index = R16.GetByID (Operand.GetNonRegister (call.Use [2], typeof (FieldOperand)));
@@ -543,10 +539,10 @@ namespace SharpOS.AOT.X86 {
 		private void HandleAssemblyStub (SharpOS.AOT.IR.Instructions.Call call)
 		{
 			string parameterTypes = string.Empty;
-			object [] operands = new object [call.Method.Parameters.Count];
+			object [] operands = new object [call.Method.Arguments.Count];
 
-			for (int i = 0; i < call.Method.Parameters.Count; i++) {
-				ParameterDefinition parameter = call.Method.Parameters [i];
+			for (int i = 0; i < call.Method.Arguments.Count; i++) {
+				Argument argument = call.Method.Arguments [i];
 
 				if (parameterTypes.Length > 0)
 					parameterTypes += " ";
@@ -569,22 +565,6 @@ namespace SharpOS.AOT.X86 {
 					parameterTypes += memory.GetType ().Name;
 					operands [i] = memory;
 
-				} else if (parameter.ParameterType is PointerType) {
-					if (operand is SharpOS.AOT.IR.Operands.Identifier) {
-						IR.Operands.Identifier identifier = operand as SharpOS.AOT.IR.Operands.Identifier;
-
-						if (identifier.IsRegisterSet) {
-							Register register = Assembly.GetRegister (identifier.Register);
-							parameterTypes += register.GetType ().Name;
-							operands [i] = register;
-
-						} else {
-							Memory memory = this.GetMemory (identifier);
-							parameterTypes += memory.GetType ().Name;
-							operands [i] = memory;
-						}
-					}
-
 				} else if (operand is FieldOperand) {
 					FieldOperand field = operand as FieldOperand;
 					MemberReference memberReference = field.Field.FieldDefinition;
@@ -592,9 +572,22 @@ namespace SharpOS.AOT.X86 {
 					operands [i] = memberReference.Name;
 
 				} else if (operand is Constant) {
-					parameterTypes += parameter.ParameterType.Name;
+					parameterTypes += argument.TypeName;
 					operands [i] = operand;
 
+				} else if (operand is SharpOS.AOT.IR.Operands.Identifier) {
+					IR.Operands.Identifier identifier = operand as SharpOS.AOT.IR.Operands.Identifier;
+
+					if (identifier.IsRegisterSet) {
+						Register register = Assembly.GetRegister (identifier.Register);
+						parameterTypes += register.GetType ().Name;
+						operands [i] = register;
+
+					} else {
+						Memory memory = this.GetMemory (identifier);
+						parameterTypes += memory.GetType ().Name;
+						operands [i] = memory;
+					}
 				} else
 					throw new EngineException (string.Format ("Could not process '{0}'. ({1})", call.ToString (), this.method.MethodFullName));
 			}

@@ -26,7 +26,7 @@ namespace SharpOS.AOT.IR {
 	/// <summary>
 	///
 	/// </summary>
-	public class Class : IEnumerable<Method> {
+	public class Class {
 		/// <summary>
 		/// Initializes a new instance of the <see cref="Class"/> class.
 		/// </summary>
@@ -363,6 +363,7 @@ namespace SharpOS.AOT.IR {
 				if (this.methodsDictionary.ContainsKey (value)) {
 					Method method = new Method (this.engine, this, this.methodsDictionary [value].MethodDefinition, genericInstanceMethod);
 
+					method.Setup ();
 					method.Process ();
 
 					this.Add (method);
@@ -380,10 +381,8 @@ namespace SharpOS.AOT.IR {
 		/// Gets the engine.
 		/// </summary>
 		/// <value>The engine.</value>
-		public Engine Engine
-		{
-			get
-			{
+		public Engine Engine {
+			get {
 				return engine;
 			}
 		}
@@ -394,10 +393,8 @@ namespace SharpOS.AOT.IR {
 		/// Gets the class definition.
 		/// </summary>
 		/// <value>The class definition.</value>
-		public TypeReference ClassDefinition
-		{
-			get
-			{
+		public TypeReference ClassDefinition {
+			get {
 				return this.classDefinition;
 			}
 		}
@@ -406,11 +403,19 @@ namespace SharpOS.AOT.IR {
 		/// Gets the full name of the type.
 		/// </summary>
 		/// <value>The full name of the type.</value>
-		public string TypeFullName
-		{
-			get
-			{
+		public string TypeFullName {
+			get {
 				return Class.GetTypeFullName (this.classDefinition);
+			}
+		}
+
+		/// <summary>
+		/// Gets the name of the type.
+		/// </summary>
+		/// <value>The name of the type.</value>
+		public string TypeName {
+			get {
+				return this.classDefinition.Name;
 			}
 		}
 
@@ -431,27 +436,10 @@ namespace SharpOS.AOT.IR {
 		private List<Method> methods = new List<Method> ();
 		private Dictionary<string, Method> methodsDictionary = new Dictionary<string, Method> ();
 
-		/// <summary>
-		/// Returns an enumerator that iterates through the collection.
-		/// </summary>
-		/// <returns>
-		/// A <see cref="T:System.Collections.Generic.IEnumerator`1"></see> that can be used to iterate through the collection.
-		/// </returns>
-		IEnumerator<Method> IEnumerable<Method>.GetEnumerator ()
-		{
-			foreach (Method method in this.methods)
-				yield return method;
-		}
-
-		/// <summary>
-		/// Returns an enumerator that iterates through a collection.
-		/// </summary>
-		/// <returns>
-		/// An <see cref="T:System.Collections.IEnumerator"></see> object that can be used to iterate through the collection.
-		/// </returns>
-		IEnumerator IEnumerable.GetEnumerator ()
-		{
-			return ((IEnumerable<Method>) this).GetEnumerator ();
+		public List<Method> Methods {
+			get {
+				return this.methods;
+			}
 		}
 
 		/// <summary>

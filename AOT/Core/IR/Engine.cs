@@ -1007,8 +1007,8 @@ namespace SharpOS.AOT.IR {
 
 					// Add the methods of the merged type to the principal type, provided there
 					// is no pre-existing implementation.
-					foreach (Method method in classes [x]) {
-						foreach (Method princeMethod in principal) {
+					foreach (Method method in classes [x].Methods) {
+						foreach (Method princeMethod in principal.Methods) {
 							if (princeMethod.ToString () == method.ToString ()) {
 								break;
 							}
@@ -1319,7 +1319,9 @@ namespace SharpOS.AOT.IR {
 
 			// This block of code needs the vtableClass to be set
 			foreach (Class _class in this.classes) {
-				foreach (Method _method in _class) {
+				for (int i = 0; i < _class.Methods.Count; i++ ) {
+					Method _method = _class.Methods [i];
+
 					if (_method.IsAllocObject) {
 						if (this.allocObject != null)
 							throw new EngineException ("More than one method was tagged as AllocObject Method.");
@@ -1450,9 +1452,22 @@ namespace SharpOS.AOT.IR {
 			Method markedEntryPoint = null;
 			Method mainEntryPoint = null;
 
-			List<Class> _classes = new List<Class> (this.classes);
+			for (int i = 0; i < this.classes.Count; i++) {
+				Class _class = this.classes [i];
 
-			foreach (Class _class in _classes) {
+				if (_class.IsGenericType)
+					continue;
+
+				if (_class.IsSpecialType)
+					continue;
+
+				for (int j = 0; j < _class.Methods.Count; j++)
+					_class.Methods [j].Setup ();
+			}
+
+			for (int j = 0; j < this.classes.Count; j++) {
+				Class _class = this.classes [j];
+
 				if (_class.IsGenericType)
 					continue;
 
@@ -1464,7 +1479,9 @@ namespace SharpOS.AOT.IR {
 				this.currentModule = _class.ClassDefinition.Module;
 				this.currentType = _class.ClassDefinition as TypeDefinition;
 
-				foreach (Method _method in _class) {
+				for (int i = 0; i < _class.Methods.Count; i++ ) {
+					Method _method = _class.Methods [i];
+
 					if (_method.IsMarkedMain) {
 						if (markedEntryPoint != null)
 							throw new EngineException ("More than one Marked Entry Point found.");
@@ -1527,7 +1544,7 @@ namespace SharpOS.AOT.IR {
 			foreach (Class _class in this.classes) {
 				classes++;
 
-				foreach (Method _method in _class) {
+				foreach (Method _method in _class.Methods) {
 					methods++;
 
 					ilInstructions += _method.CILInstructionsCount;
@@ -1564,6 +1581,23 @@ namespace SharpOS.AOT.IR {
 		IEnumerator IEnumerable.GetEnumerator ()
 		{
 			return ((IEnumerable<Class>) this).GetEnumerator ();
+		}
+
+		/// <summary>
+		/// Gets the size of the operand.
+		/// </summary>
+		/// <param name="operand">The operand.</param>
+		/// <param name="align">The align.</param>
+		/// <returns></returns>
+		public int GetOperandSize (Operand operand, int align)
+		{
+			if (operand.InternalType == InternalType.NotSet)
+				throw new EngineException (string.Format ("{0} has no internal type.", operand.ToString ()));
+
+			if (operand.InternalType == InternalType.ValueType)
+				return GetTypeSize (operand.Type.TypeFullName, align);
+
+			return GetTypeSize (operand.InternalType, align);
 		}
 
 		/// <summary>

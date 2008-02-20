@@ -184,5 +184,11 @@ namespace SharpOS.AOT.IR.Operands {
 				return this.Type.TypeFullName;
 			}
 		}
+
+		public string TypeName {
+			get {
+				return this.Type.TypeName;
+			}
+		}
 	}
 }

@@ -176,18 +176,6 @@ namespace SharpOS.AOT.IR {
 		}
 
 		/// <summary>
-		/// Gets the parameters.
-		/// </summary>
-		/// <value>The parameters.</value>
-		public ParameterDefinitionCollection Parameters
-		{
-			get
-			{
-				return this.methodDefinition.Parameters;
-			}
-		}
-
-		/// <summary>
 		/// Gets a value indicating whether this instance has this.
 		/// </summary>
 		/// <value><c>true</c> if this instance has this; otherwise, <c>false</c>.</value>
@@ -226,12 +214,27 @@ namespace SharpOS.AOT.IR {
 			this.methodDefinition = methodDefinition;
 		}
 
+		/// <summary>
+		/// Initializes a new instance of the <see cref="Method"/> class.
+		/// </summary>
+		/// <param name="engine">The engine.</param>
+		/// <param name="_class">The _class.</param>
+		/// <param name="methodDefinition">The method definition.</param>
+		/// <param name="genericInstanceMethod">The generic instance method.</param>
 		public Method (Engine engine, Class _class, MethodReference methodDefinition, GenericInstanceMethod genericInstanceMethod)
 		{
 			this.engine = engine;
 			this._class = _class;
 			this.methodDefinition = methodDefinition;
 			this.genericInstanceMethod = genericInstanceMethod;
+		}
+
+		/// <summary>
+		/// Setups this instance.
+		/// </summary>
+		public void Setup ()
+		{
+			this.PreProcess ();
 		}
 
 		/// <summary>
@@ -290,6 +293,14 @@ namespace SharpOS.AOT.IR {
 		}
 
 		List<Argument> arguments = new List<Argument> ();
+
+		public List<Argument> Arguments
+		{
+			get
+			{
+				return this.arguments;
+			}
+		}
 
 		/// <summary>
 		/// Gets an Argument object that represents the numbered method
@@ -1893,16 +1904,8 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		private void PreProcess ()
 		{
-			for (int i = 0; i < this.CIL.Variables.Count; i++) {
-				TypeReference typeReference = this.CIL.Variables [i].VariableType;
-
-				Class _class = this.GetClass (typeReference);
-				InternalType internalType = this.Engine.GetInternalType (_class.TypeFullName);
-
-				Local local = new Local (i, _class, internalType);
-
-				this.locals.Add (local);
-			}
+			if (this.IsGenericType)
+				return;
 
 			if (this.methodDefinition.HasThis) {
 				TypeReference typeReference = this.methodDefinition.DeclaringType;
@@ -1927,13 +1930,34 @@ namespace SharpOS.AOT.IR {
 
 				this.arguments.Add (argument);
 			}
+			
+			MethodBody cil = this.CIL;
+			
+			if (cil == null)
+				return;
+
+			for (int i = 0; i < cil.Variables.Count; i++) {
+				TypeReference typeReference = cil.Variables [i].VariableType;
+
+				Class _class = this.GetClass (typeReference);
+				InternalType internalType = this.Engine.GetInternalType (_class.TypeFullName);
+
+				Local local = new Local (i, _class, internalType);
+
+				this.locals.Add (local);
+			}
 		}
+
+		public bool processed = false;
 
 		/// <summary>
 		/// Processes this instance.
 		/// </summary>
 		public void Process ()
 		{
+			if (this.processed)
+				return;
+
 			if (this.IsGenericType)
 				return;
 
@@ -1946,7 +1970,7 @@ namespace SharpOS.AOT.IR {
 			if (this.CIL == null)
 				return;
 
-			this.PreProcess ();
+			//this.PreProcess ();
 
 			this.BuildBlocks ();
 
@@ -1991,6 +2015,8 @@ namespace SharpOS.AOT.IR {
 
 			if (this.engine.Options.Dump)
 				this.engine.Dump.PopElement ();	// method
+
+			this.processed = true;
 		}
 
 		private List<Block> blocks;

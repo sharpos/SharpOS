@@ -1142,7 +1142,7 @@ namespace SharpOS.AOT.X86 {
 				if (_class.IsGenericType)
 					continue;
 
-				foreach (Method method in _class) {
+				foreach (Method method in _class.Methods) {
 					if (!method.IsCCTOR)
 						continue;
 
@@ -1312,7 +1312,7 @@ namespace SharpOS.AOT.X86 {
 					if (_class.IsInternal || _class.IsInterface || _class.IsGenericType)
 						continue;
 
-					foreach (Method method in _class) {
+					foreach (Method method in _class.Methods) {
 						if (method.IsGenericType)
 							continue;
 
@@ -1757,7 +1757,7 @@ namespace SharpOS.AOT.X86 {
 				if (_class.IsInternal)
 					continue;
 
-				foreach (Method method in _class) {
+				foreach (Method method in _class.Methods) {
 					if (method.IsGenericType)
 						continue;
 
