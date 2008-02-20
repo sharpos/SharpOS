@@ -114,6 +114,7 @@
     <Compile Include="X86\LabelInstruction.cs" />
     <Compile Include="X86\Register.cs" />
     <Compile Include="X86\ByteMemory.cs" />
+    <Compile Include="X86\BlobDataInstruction.cs" />
     <Compile Include="X86\ByteDataInstruction.cs" />
     <Compile Include="X86\Bits32Instruction.cs" />
     <Compile Include="X86\Instructions.cs" />
