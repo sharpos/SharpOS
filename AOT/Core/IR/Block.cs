@@ -2052,7 +2052,7 @@ namespace SharpOS.AOT.IR {
 			result = null;
 			Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
 			method = this.method.Engine.GetMethod (call);
-			MethodDefinition def = method.MethodDefinition as MethodDefinition; // this.Method.Engine.GetCILDefinition (call);
+			MethodDefinition def = method.MethodDefinition as MethodDefinition;
 
 			if (def != null) {
 				foreach (CustomAttribute attr in def.CustomAttributes) {
@@ -2066,11 +2066,7 @@ namespace SharpOS.AOT.IR {
 
 			method = this.method.Engine.GetMethod (call);
 
-			if (call.HasThis)
-				operands = new Operand [call.Parameters.Count + 1];
-
-			else
-				operands = new Operand [call.Parameters.Count];
+			operands = new Operand [method.Arguments.Count];
 
 			for (int i = 0; i < operands.Length; i++)
 				operands [operands.Length - 1 - i] = this.GetRegister ();

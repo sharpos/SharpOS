@@ -8,7 +8,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-#define GENERICS_NOT_SUPPORTED
+//#define GENERICS_NOT_SUPPORTED
 
 namespace SharpOS.Kernel.Tests.CS {
 	public class Generics {
@@ -43,7 +43,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			return second;
 		}
 
-		public uint CMPGenericMethod ()
+		public unsafe static uint CMPGenericMethod ()
 		{
 			return Generics.If<uint> (false, 0, 1);
 		}

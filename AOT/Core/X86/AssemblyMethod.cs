@@ -710,11 +710,11 @@ namespace SharpOS.AOT.X86 {
 			if (this.method.IsReturnTypeBigValueType)
 				result++;
 
-			foreach (ParameterDefinition parameter in this.method.MethodDefinition.Parameters) {
+			foreach (Argument argument in this.method.Arguments) {
 				if (i++ == index)
 					break;
 
-				result += this.method.Engine.GetTypeSize (Class.GetTypeFullName (parameter.ParameterType), 4) >> 2;
+				result += this.method.Engine.GetOperandSize (argument, 4) >> 2;
 			}
 
 			return result;

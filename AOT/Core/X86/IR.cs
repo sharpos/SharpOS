@@ -1317,13 +1317,12 @@ namespace SharpOS.AOT.X86 {
 		private void Ldftn (IR.Instructions.Ldftn instruction)
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
-			DWordMemory address = new DWordMemory (instruction.Method.AssemblyLabel);
 
 			if (assignee.IsRegisterSet)
-				this.assembly.MOV (Assembly.GetRegister (assignee.Register), address);
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), instruction.Method.AssemblyLabel);
 
 			else {
-				assembly.MOV (R32.EAX, address);
+				assembly.MOV (R32.EAX, instruction.Method.AssemblyLabel);
 				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 			}
 		}

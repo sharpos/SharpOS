@@ -348,6 +348,9 @@ namespace SharpOS.AOT.IR {
 
 			if (this.isSpecialType) {
 				Method method = new Method (this.engine, this, methodReference);
+				
+				method.Setup ();
+
 				method.SkipProcessing = true;
 
 				this.Add (method);
@@ -358,21 +361,59 @@ namespace SharpOS.AOT.IR {
 			if (methodReference is GenericInstanceMethod) {
 				GenericInstanceMethod genericInstanceMethod = methodReference as GenericInstanceMethod;
 
-				value = Method.GetLabel (genericInstanceMethod.ElementMethod);
+				methodReference = this.GetGenericMethod (genericInstanceMethod);
 
-				if (this.methodsDictionary.ContainsKey (value)) {
-					Method method = new Method (this.engine, this, this.methodsDictionary [value].MethodDefinition, genericInstanceMethod);
+				Method method = new Method (this.engine, this, methodReference, genericInstanceMethod);
 
-					method.Setup ();
-					method.Process ();
+				method.Setup ();
 
-					this.Add (method);
+				method.Process ();
 
-					return method;
-				}
+				this.Add (method);
+
+				return method;
 			}
 
 			throw new EngineException (string.Format ("Method '{0}' not found.", value));
+		}
+
+		private MethodReference GetGenericMethod (GenericInstanceMethod genericInstanceMethod)
+		{
+			string value = Method.GetLabel (genericInstanceMethod);
+
+			if (this.methodsDictionary.ContainsKey (value))
+				return this.methodsDictionary [value].MethodDefinition;
+
+			foreach (Method method in this.methods) {
+				if (!method.IsGenericType)
+					continue;
+
+				if (method.Name != genericInstanceMethod.Name)
+					continue;
+
+				if (method.MethodDefinition.Parameters.Count != genericInstanceMethod.Parameters.Count)
+					continue;
+
+				bool ok = true;
+
+				for (int i = 0; i < method.MethodDefinition.Parameters.Count; i++) {
+					if (method.MethodDefinition.Parameters [i].ParameterType != genericInstanceMethod.Parameters [i].ParameterType) {
+						if (!(method.MethodDefinition.Parameters [i].ParameterType is GenericParameter)
+								|| !(genericInstanceMethod.Parameters [i].ParameterType is GenericParameter)) {
+							ok = false;
+							break;
+						}
+					}
+				}
+
+				if (ok) {
+					this.methodsDictionary [value] = method;
+
+					return method.MethodDefinition;
+				}
+			}
+
+			throw new EngineException (string.Format ("Method '{0}' not found.", genericInstanceMethod.ToString ()));
 		}
 
 		private Engine engine = null;
