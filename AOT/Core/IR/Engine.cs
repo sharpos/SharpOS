@@ -718,18 +718,6 @@ namespace SharpOS.AOT.IR {
 			throw new EngineException ("'" + field.Field.FieldDefinition.ToString () + "' has not been found.");
 		}
 
-		/*internal int GetSystemArrayLengthOffset ()
-		{
-			Class _class = this.ArrayClass;
-
-			Field firstEntry = _class.GetFieldByName ("FirstEntry");
-
-			int result = _class.GetFieldOffset ("FirstEntry");
-			result += firstEntry.Type.GetFieldOffset ("Length");
-
-			return result;
-		}*/
-
 		/// <summary>
 		/// Gets the field.
 		/// </summary>
@@ -794,7 +782,17 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		private Class AddSpecialType (TypeReference type)
 		{
-			Class _class = new Class (this, type);
+			Class _class;
+
+			if (type is GenericInstanceType) {
+				GenericInstanceType genericInstanceType = type as GenericInstanceType;
+
+				_class = new Class (this, genericInstanceType.ElementType, genericInstanceType);
+				_class.AddMethods ();
+				_class.SetupMethods ();
+
+			}  else
+				_class = new Class (this, type);
 
 			this.classes.Add (_class);
 			this.classesDictionary [_class.TypeFullName] = _class;
@@ -814,13 +812,6 @@ namespace SharpOS.AOT.IR {
 			Class _class = this.GetClass (method.DeclaringType);
 
 			return _class.GetMethodByName (method);
-
-			/*string typeFullName = Class.GetTypeFullName (method.DeclaringType);
-
-			if (this.classesDictionary.ContainsKey (typeFullName))
-				return this.classesDictionary [typeFullName].GetMethodByName (method);
-
-			throw new EngineException (string.Format ("Method '{0}' not found.", method.ToString ()));*/
 		}
 
 		/// <summary>
@@ -840,7 +831,6 @@ namespace SharpOS.AOT.IR {
 				throw new ArgumentNullException ("asm");
 
 			// Decide the dump type and start the processor
-
 			if (this.options.ConsoleDump)
 				dumpType |= (byte) DumpType.Console;
 
@@ -859,6 +849,7 @@ namespace SharpOS.AOT.IR {
 			string aotCorePath = System.Reflection.MethodBase.GetCurrentMethod ().Module.Assembly.Location;
 			bool found = false;
 
+			// Look for the AOT.Core assembly in the list of provided Assemblies to process
 			foreach (string assemblyFile in options.Assemblies) {
 				if (assemblyFile == aotCorePath) {
 					found = true;
@@ -866,6 +857,7 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
+			// If AOT.Core was not included, append it to the list of Assemblies
 			if (!found) {
 				List<string> array = new List<string> (options.Assemblies);
 				array.Add (aotCorePath);
@@ -1157,7 +1149,6 @@ namespace SharpOS.AOT.IR {
 				}
 
 				// Only process the corlib types we can currently handle.
-
 				if (isCorlib) {
 					bool isCorType = (Array.IndexOf (corTypes, type.FullName) >= 0);
 					bool isCorDep = false;
@@ -1204,31 +1195,7 @@ namespace SharpOS.AOT.IR {
 						continue;
 				}
 
-				foreach (MethodDefinition entry in type.Constructors) {
-					Method method = new Method (this, _class, entry);
-
-					if (isAOTCore && this.asm.IsMemoryAddress (type.FullName))
-						method.SkipProcessing = true;
-
-					_class.Add (method);
-				}
-
-				// We don't need the methods of the registers or memory addresses
-				if (isAOTCore && !this.asm.IsInstruction (type.FullName))
-					continue;
-
-				foreach (MethodDefinition entry in type.Methods) {
-					if (entry.ImplAttributes != MethodImplAttributes.Managed) {
-						Dump.IgnoreMember (entry.Name,
-								"Method is unmanaged");
-
-						continue;
-					}
-
-					Method method = new Method (this, _class, entry);
-
-					_class.Add (method);
-				}
+				_class.AddMethods (isAOTCore);
 			}
 
 			Dump.PopElement ();
@@ -1452,18 +1419,8 @@ namespace SharpOS.AOT.IR {
 			Method markedEntryPoint = null;
 			Method mainEntryPoint = null;
 
-			for (int i = 0; i < this.classes.Count; i++) {
-				Class _class = this.classes [i];
-
-				if (_class.IsGenericType)
-					continue;
-
-				if (_class.IsSpecialType)
-					continue;
-
-				for (int j = 0; j < _class.Methods.Count; j++)
-					_class.Methods [j].Setup ();
-			}
+			for (int i = 0; i < this.classes.Count; i++)
+				this.classes [i].SetupMethods ();
 
 			for (int j = 0; j < this.classes.Count; j++) {
 				Class _class = this.classes [j];
@@ -1474,13 +1431,13 @@ namespace SharpOS.AOT.IR {
 				if (_class.IsSpecialType)
 					continue;
 				
-				List<string> defNames = new List<string> ();
-
 				this.currentModule = _class.ClassDefinition.Module;
 				this.currentType = _class.ClassDefinition as TypeDefinition;
 
 				for (int i = 0; i < _class.Methods.Count; i++ ) {
 					Method _method = _class.Methods [i];
+					
+					this.currentMethod = _method.MethodDefinition;
 
 					if (_method.IsMarkedMain) {
 						if (markedEntryPoint != null)
@@ -1496,13 +1453,6 @@ namespace SharpOS.AOT.IR {
 						mainEntryPoint = _method;
 					}
 
-					if (defNames.Contains (_method.MethodFullName))
-						throw new EngineException ("Already compiled this method: " +
-							_method.MethodFullName);
-
-					defNames.Add (_method.MethodFullName);
-					this.currentMethod = _method.MethodDefinition;
-
 					if (this.options.DumpFilter.Length > 0
 							&& _method.ToString ().IndexOf (this.options.DumpFilter) == -1) {
 
@@ -1514,10 +1464,9 @@ namespace SharpOS.AOT.IR {
 						Dump.Enabled = true;
 					} else
 						_method.Process ();
-
-					this.currentMethod = null;
 				}
 
+				this.currentMethod = null;
 				this.currentModule = null;
 				this.currentType = null;
 			}
@@ -1621,9 +1570,9 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns></returns>
-		public int GetFieldSize (string type)
+		public int GetFieldSize (Field field)
 		{
-			return this.GetTypeSize (type, 0);
+			return this.GetOperandSize (field, 0);
 		}
 
 		/// <summary>
@@ -1799,7 +1748,3 @@ namespace SharpOS.AOT.IR {
 		}
 	}
 }
-
-
-
-

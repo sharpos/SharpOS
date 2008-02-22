@@ -47,6 +47,20 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			return Generics.If<uint> (false, 0, 1);
 		}
+
+		private static GenericType<uint> GetGenericTypeData ()
+		{
+			GenericType<uint> result = new GenericType<uint> ();
+
+			result.Value = 1;
+
+			return result;
+		}
+
+		public unsafe static uint CMPGenericType ()
+		{
+			return GetGenericTypeData ().Value;
+		}
 #else
 		public static uint CMPGenerics ()
 		{

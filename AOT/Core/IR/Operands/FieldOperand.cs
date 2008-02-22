@@ -69,14 +69,16 @@ namespace SharpOS.AOT.IR.Operands {
 		/// </returns>
 		public override string ToString ()
 		{
-			string result = "";
+			StringBuilder stringBuilder = new StringBuilder ();
 
-			if (this.instance != null)
-				result += this.instance.ToString () + "->";
+			if (this.instance != null) {
+				stringBuilder.Append (this.instance.ToString ());
+				stringBuilder.Append ("->");
+			}
 
-			result += this.field.FieldDefinition.ToString ();
+			stringBuilder.Append (this.field.ToString ());
 
-			return result;
+			return stringBuilder.ToString ();
 		}
 
 		Operand instance = null;

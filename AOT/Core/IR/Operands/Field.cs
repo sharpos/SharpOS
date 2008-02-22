@@ -23,12 +23,15 @@ namespace SharpOS.AOT.IR.Operands {
 		/// Initializes a new instance of the <see cref="Field"/> class.
 		/// </summary>
 		/// <param name="fieldDefinition">The field definition.</param>
-		public Field (FieldDefinition fieldDefinition, Class type, InternalType internalType)
+		public Field (FieldDefinition fieldDefinition, Class type, Class _class, InternalType internalType)
 		{
 			this.type = type;
 			this.internalType = internalType;
 			this.fieldDefinition = fieldDefinition;
+			this._class = _class;
 		}
+
+		Class _class;
 
 		FieldDefinition fieldDefinition;
 
@@ -106,6 +109,19 @@ namespace SharpOS.AOT.IR.Operands {
 
 				return string.Empty;
 			}
+		}
+
+		public override string ToString ()
+		{
+			StringBuilder stringBuilder = new StringBuilder ();
+
+			stringBuilder.Append (this.type.TypeFullName);
+			stringBuilder.Append (" ");
+			stringBuilder.Append (this._class.TypeFullName);
+			stringBuilder.Append ("::");
+			stringBuilder.Append (this.fieldDefinition.Name);
+
+			return stringBuilder.ToString ();
 		}
 	}
 }

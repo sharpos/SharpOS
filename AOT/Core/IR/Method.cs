@@ -229,12 +229,19 @@ namespace SharpOS.AOT.IR {
 			this.genericInstanceMethod = genericInstanceMethod;
 		}
 
+		bool setup = false;
+
 		/// <summary>
 		/// Setups this instance.
 		/// </summary>
 		public void Setup ()
 		{
+			if (this.setup)
+				return;
+
 			this.PreProcess ();
+
+			this.setup = true;
 		}
 
 		/// <summary>
@@ -1317,9 +1324,9 @@ namespace SharpOS.AOT.IR {
 			get
 			{
 				if (this.genericInstanceMethod != null)
-					return Method.GetLabel (this.genericInstanceMethod);
+					return Method.GetLabel (this._class, this.genericInstanceMethod);
 
-				return Method.GetLabel (this.methodDefinition);
+				return Method.GetLabel (this._class, this.methodDefinition);
 			}
 		}
 
@@ -1330,15 +1337,32 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public static string GetLabel (Mono.Cecil.MethodReference method)
 		{
+			return GetLabel (null, method);
+		}
+
+		/// <summary>
+		/// Gets the label.
+		/// </summary>
+		/// <param name="_class">The _class.</param>
+		/// <param name="method">The method.</param>
+		/// <returns></returns>
+		public static string GetLabel (Class _class, Mono.Cecil.MethodReference method)
+		{
 			StringBuilder result = new StringBuilder ();
+			string value;
 
-			string value = method.DeclaringType.FullName;
+			if (_class != null)
+				value = _class.TypeFullName;
 
-			foreach (CustomAttribute attribute in method.DeclaringType.CustomAttributes) {
-				if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
-					continue;
+			else {
+				value = method.DeclaringType.FullName;
 
-				value = attribute.ConstructorParameters [0].ToString () + "." + method.DeclaringType.Name;
+				foreach (CustomAttribute attribute in method.DeclaringType.CustomAttributes) {
+					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
+						continue;
+
+					value = attribute.ConstructorParameters [0].ToString () + "." + method.DeclaringType.Name;
+				}
 			}
 
 			result.Append (value + "." + method.Name);
@@ -1881,7 +1905,8 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		private Class GetClass (TypeReference type)
 		{
-			if (type is GenericParameter) {
+			if (type is GenericParameter
+					&& this.genericInstanceMethod != null) {
 				GenericParameter genericParameter = type as GenericParameter;
 
 				int i = 0;
@@ -1890,13 +1915,13 @@ namespace SharpOS.AOT.IR {
 						break;
 				}
 
-				System.Diagnostics.Debug.Assert (i < genericParameter.Owner.GenericParameters.Count);
-				System.Diagnostics.Debug.Assert (this.genericInstanceMethod != null);
+				if (i >= genericParameter.Owner.GenericParameters.Count)
+					throw new EngineException (string.Format ("Type '{0}' was not found in the method '{1}'.", type.ToString (), this.MethodFullName));
 
 				type = this.genericInstanceMethod.GenericArguments [i];
 			}
 
-			return this.engine.GetClass (type);
+			return this._class.GetClass (type);
 		}
 
 		/// <summary>

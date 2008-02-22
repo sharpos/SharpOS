@@ -1407,7 +1407,7 @@ namespace SharpOS.AOT.X86 {
 
 					else {
 						// TODO refactor this
-						switch (engine.GetInternalType (field.FieldDefinition.FieldType.FullName)) {
+						switch (field.InternalType) {
 							case InternalType.I1:
 							case InternalType.U1:
 								this.DATA ((byte) 0);

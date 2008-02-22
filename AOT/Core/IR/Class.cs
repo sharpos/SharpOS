@@ -38,6 +38,13 @@ namespace SharpOS.AOT.IR {
 			this.classDefinition = classDefinition;
 		}
 
+		public Class (Engine engine, TypeReference classDefinition, GenericInstanceType genericInstanceType)
+		{
+			this.engine = engine;
+			this.classDefinition = classDefinition;
+			this.genericInstanceType = genericInstanceType;
+		}
+
 		private int setupStep = -1;
 
 		/// <summary>
@@ -99,7 +106,7 @@ namespace SharpOS.AOT.IR {
 					}
 
 					if (this.TypeFullName != Mono.Cecil.Constants.Object && !this.isInterface)
-						this._base = this.engine.GetClass (typeDefinition.BaseType);
+						this._base = this.GetClass (typeDefinition.BaseType);
 
 					// initialize base class before marking virtual methods
 					if (this._base != null)
@@ -107,7 +114,7 @@ namespace SharpOS.AOT.IR {
 
 					// initialize base interfaces before marking interface methods
 					foreach (TypeReference interfaceRef in (this.ClassDefinition as TypeDefinition).Interfaces) {
-						this.engine.GetClass(interfaceRef).Setup (step);
+						this.GetClass(interfaceRef).Setup (step);
 					}
 
 					if (this.IsInterface)
@@ -118,12 +125,12 @@ namespace SharpOS.AOT.IR {
 					this.AddVirtualMethods (this.virtualMethods);
 
 				} else if (step == 1) {
-					if (!this.isGenericType && (!this.isInternal || (this.isInternal && !this.engine.Assembly.IgnoreTypeContent (this.TypeFullName)))) {
+					if (!this.IsGenericType && (!this.isInternal || (this.isInternal && !this.engine.Assembly.IgnoreTypeContent (this.TypeFullName)))) {
 						foreach (FieldDefinition field in typeDefinition.Fields) {
-							Class _class = this.engine.GetClass (field.FieldType);
+							Class _class = this.GetClass (field.FieldType);
 							InternalType _internalType = this.engine.GetInternalType (_class.TypeFullName);
 
-							Field _field = new Field (field, _class, _internalType);
+							Field _field = new Field (field, _class, this, _internalType);
 
 							fields.Add (_field);
 							fieldsDictionary [field.Name] = _field;
@@ -153,6 +160,58 @@ namespace SharpOS.AOT.IR {
 
 			} else
 				throw new NotImplementedEngineException ();
+		}
+
+		public void AddMethods ()
+		{
+			AddMethods (false);
+		}
+
+		public void AddMethods (bool isAOTCore)
+		{
+			bool constructorsSkipProcessing = isAOTCore && this.engine.Assembly.IsMemoryAddress (this.classDefinition.FullName);
+
+			TypeDefinition type = this.classDefinition as TypeDefinition;
+
+			if (type == null)
+				return;
+
+			foreach (MethodDefinition entry in type.Constructors) {
+				Method method = new Method (this.engine, this, entry);
+
+				method.SkipProcessing = constructorsSkipProcessing;
+
+				this.Add (method);
+			}
+
+			// We don't need the methods of the registers or memory addresses
+			if (isAOTCore && !this.engine.Assembly.IsInstruction (this.classDefinition.FullName))
+				return;
+
+			foreach (MethodDefinition entry in type.Methods) {
+				if (entry.ImplAttributes != MethodImplAttributes.Managed) {
+					this.engine.Dump.IgnoreMember (entry.Name,
+							"Method is unmanaged");
+
+					continue;
+				}
+
+				Method method = new Method (this.engine, this, entry);
+
+				this.Add (method);
+			}
+		}
+
+		public void SetupMethods ()
+		{
+			if (this.IsGenericType)
+				return;
+
+			if (this.IsSpecialType)
+				return;
+
+			for (int j = 0; j < this.methods.Count; j++)
+				this.methods [j].Setup ();
 		}
 
 		private Class specialTypeElement = null;
@@ -217,7 +276,8 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				return isGenericType;
+				return isGenericType
+						&& this.genericInstanceType == null;
 			}
 		}
 
@@ -416,6 +476,37 @@ namespace SharpOS.AOT.IR {
 			throw new EngineException (string.Format ("Method '{0}' not found.", genericInstanceMethod.ToString ()));
 		}
 
+		internal Class GetClass (TypeReference type)
+		{
+			if (type is GenericParameter
+					&& this.genericInstanceType != null) {
+				GenericParameter genericParameter = type as GenericParameter;
+
+				int i = 0;
+				for (; i < genericParameter.Owner.GenericParameters.Count; i++) {
+					if (genericParameter.Owner.GenericParameters [i].FullName == genericParameter.FullName)
+						break;
+				}
+
+				if (i >= genericParameter.Owner.GenericParameters.Count)
+					throw new EngineException (string.Format ("Type '{0}' was not found in the method '{1}'.", type.ToString (), this.TypeFullName));
+
+				type = this.genericInstanceType.GenericArguments [i];
+			}
+
+			return this.engine.GetClass (type);		
+		}
+
+		internal Field GetField (FieldReference fieldReference)
+		{
+			if (fieldReference.DeclaringType is GenericInstanceType
+					&& (fieldReference.DeclaringType as TypeSpecification).ElementType == this.classDefinition) {
+				return this.GetFieldByName (fieldReference.Name);
+			}
+
+			return this.engine.GetField (fieldReference);
+		}
+
 		private Engine engine = null;
 
 		/// <summary>
@@ -427,6 +518,8 @@ namespace SharpOS.AOT.IR {
 				return engine;
 			}
 		}
+
+		private GenericInstanceType genericInstanceType = null;
 
 		private TypeReference classDefinition = null;
 
@@ -446,6 +539,9 @@ namespace SharpOS.AOT.IR {
 		/// <value>The full name of the type.</value>
 		public string TypeFullName {
 			get {
+				if (this.genericInstanceType != null)
+					return Class.GetTypeFullName (this.genericInstanceType);
+
 				return Class.GetTypeFullName (this.classDefinition);
 			}
 		}
@@ -456,6 +552,9 @@ namespace SharpOS.AOT.IR {
 		/// <value>The name of the type.</value>
 		public string TypeName {
 			get {
+				if (this.genericInstanceType != null)
+					return this.genericInstanceType.Name;
+
 				return this.classDefinition.Name;
 			}
 		}
@@ -491,6 +590,9 @@ namespace SharpOS.AOT.IR {
 		/// </returns>
 		public override string ToString ()
 		{
+			if (this.genericInstanceType != null)
+				return this.genericInstanceType.FullName;
+
 			if (this.classDefinition != null)
 				return this.classDefinition.FullName;
 
@@ -535,7 +637,7 @@ namespace SharpOS.AOT.IR {
 					break;
 				}
 
-				result += this.engine.GetFieldSize (field.FieldDefinition.FieldType.FullName);
+				result += this.engine.GetFieldSize (field);
 			}
 
 			return result;
@@ -721,7 +823,7 @@ namespace SharpOS.AOT.IR {
 							if (field.IsStatic)
 								continue;
 
-							result += this.engine.GetFieldSize (field.FieldDefinition.FieldType.FullName);
+							result += this.engine.GetFieldSize (field);
 						}
 					}
 
