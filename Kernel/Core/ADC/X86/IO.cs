@@ -332,12 +332,19 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			#endregion
 
-            #region 03F2-03F5 - Floppy Disk Controller
+            #region 03F2-03F5 - Primary Floppy Disk Controller
             FDC_DORPort                         = 0x03F2,
             FDC_StatusPort                      = 0x03F4,
             FDC_CommandPort                     = 0x03F4,
             FDC_DataPort                        = 0x03F5,
             #endregion
+
+			#region 0372-0375 - Secondary Floppy Disk Controller
+			SDC_DORPort = 0x0372,
+			SDC_StatusPort = 0x0374,
+			SDC_CommandPort = 0x0374,
+			SDC_DataPort = 0x0375,
+			#endregion
 
             #region 0070-007F - CMOS RAM / Real Time Clock
             RTC_CommandPort						= 0x0070,
@@ -701,6 +708,113 @@ namespace SharpOS.Kernel.ADC.X86 {
 			PFC_digital_input					= 0x03F7,	// read-only
 			PFC_configuration_control_register			= 0x03F7,	// write-only
 			#endregion
+
+			#region 03F0-03F7 - Secondary Floppy Disk Controller (SFC)
+			SFC_status_A = 0x0370,	// r	diskette controller status A (PS/2 model 30)
+			//				 			 			 			 		bit 7	 interrupt pending
+			//				 			 			 			 		bit 6	 -DRV2	second drive installed
+			//				 			 			 			 		bit 5	 step
+			//				 			 			 			 		bit 4	 -track 0
+			//				 			 			 			 		bit 3	 head 1 select
+			//				 			 			 			 		bit 2	 -index
+			//				 			 			 			 		bit 1	 -write protect
+			//				 			 			 			 		bit 0	 +direction
+			SFC_status_B = 0x0371,	// r	diskette controller status B (PS/2)
+			//															bit 7-6 =1 reserved
+			//															bit 5 drive select (0=A:, 1=B:)
+			//															bit 4 write data
+			//															bit 3 read data
+			//															bit 2 write enable
+			//															bit 1 motor enable 1
+			//															bit 0 motor enable 0
+			SFC_control_port = 0x0372,	// w	diskette controller DOR (Digital Output Register)
+			//															bit 7-6 reserved on PS/2
+			//															bit 7 = 1 drive 3 motor enable
+			//															bit 6 = 1 drive 2 motor enable
+			//															bit 5 = 1 drive 1 motor enable
+			//															bit 4 = 1 drive 0 motor enable
+			//															bit 3 = 1 diskette DMA enable (reserved PS/2)
+			//															bit 2 = 1 FDC enable (controller reset)
+			//																  = 0 hold FDC at reset
+			//															bit 1-0 drive select (0=A 1=B ..)
+			SFC_tape_drive = 0x0373,
+			//															bit 7-2 reserved, tri-state
+			//															bit 1-0 tape select
+			//																= 00 none, drive 0 cannot be a tape drive.
+			//																= 01 drive1
+			//																= 10 drive2
+			//																= 11 drive3
+			SFC_status_register = 0x0374,	// r	diskette controller main status register
+			//															bit 7 = 1 RQM data register is ready
+			//																	0 no access is permitted
+			//															bit 6 = 1 transfer is from controller to system
+			//																	0 transfer is from system to controller
+			//															bit 5 = 1 non-DMA mode
+			//															bit 4 = 1 diskette controller is busy
+			//															bit 3 = 1 drive 3 busy (reserved on PS/2)
+			//															bit 2 = 1 drive 2 busy (reserved on PS/2)
+			//															bit 1 = 1 drive 1 busy (= drive is in seek mode)
+			//															bit 0 = 1 drive 0 busy (= drive is in seek mode)
+			//															Note:	in non-DMA mode, all data transfers occur through
+			//																	port 03F5h and the status registers (bit 5 here
+			//																	indicates data read/write rather than than
+			//																	command/status read/write)
+			SFC_data_rate_Select_register = 0x0374,	// w	diskette controller data rate select register
+			//															bit 7 = 1 S/W reset
+			//															bit 6 = 1 power down
+			//															bit 5 = 0 reserved
+			//															bit 4-2 write precompensation, 000 default
+			//															bit 1-0 data rate select
+			//																= 00 500 Kb/s (MFM)
+			//																= 01 300 Kb/s (MFM)
+			//																= 10 250 Kb/s (MFM)
+			//																= 11 1 Mb/s (MFM)
+			SFC_data_FIFO = 0x0375,	// r	diskette command/data register 0 (ST0)
+			//															bit 7-6 last command status
+			//																= 00 command terminated successfully
+			//																= 01 command terminated abnormally
+			//																= 10 invalid command
+			//																= 11 terminated abnormally by change in ready signal
+			//															bit 5 = 1 seek completed
+			//															bit 4 = 1 equipment check occurred after error
+			//															bit 3 = 1 not ready
+			//															bit 2 = 1 head number at interrupt
+			//															bit 1-0 = 1 unit select (0=A 1=B .. )
+			//																(on PS/2 01=A 10=B)
+			//
+			//														status register 1 (ST1)
+			//															bit 7 end of cylinder; sector# greater then sectors/track
+			//															bit 6 = 0
+			//															bit 5 = 1 CRC error in ID or data field
+			//															bit 4 = 1 overrun
+			//															bit 3 = 0
+			//															bit 2 = 1 sector ID not found
+			//															bit 1 = 1 write protect detected during write
+			//															bit 0 = 1 ID address mark not found
+			//
+			//														status register 2 (ST2)
+			//															bit 7 = 0
+			//															bit 6 = 1 deleted Data Address Mark detected
+			//															bit 5 = 1 CRC error in data
+			//															bit 4 = 1 wrong cylinder detected
+			//															bit 3 = 1 scan command equal condition satisfied
+			//															bit 2 = 1 scan command failed, sector not found
+			//															bit 1 = 1 bad cylinder, ID not found
+			//															bit 0 = 1 missing Data Address Mark
+			//
+			//														status register 3 (ST3)
+			//															bit 7 fault status signal
+			//															bit 6 write protect status
+			//															bit 5 ready status
+			//															bit 4 track zero status
+			//															bit 3 two sided status signal
+			//															bit 2 side select (head select)
+			//															bit 1-0 unit select (0=A 1=B .. )
+			SFC_controller_data = 0x0376,	// w	diskette command register..
+			SFC_digital_input = 0x0377,	// read-only
+			SFC_configuration_control_register = 0x0377,	// write-only
+			#endregion
+
             //03F8-03FF - serial port (8250,8251,16450,16550)
 
             #region PCI Config
