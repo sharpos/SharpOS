@@ -78,16 +78,14 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Drivers\IOPortStream.cs" />
-    <Compile Include="Drivers\MemoryBlock.cs" />
     <Compile Include="ADC\X86\IOPortStream8bit.cs" />
     <Compile Include="ADC\X86\GenericDriver.cs" />
     <Compile Include="ADC\X86\KeyboardDriver.cs" />
+    <Compile Include="ADC\X86\LPCBusDriver.cs" />
+    <Compile Include="ADC\X86\PCIBusDriver.cs" />
     <Compile Include="ADC\X86\RTCDriver.cs" />
     <Compile Include="ADC\X86\Scheduler.cs" />
     <Compile Include="ADC\X86\IO.cs" />
-    <Compile Include="ADC\X86\PCIBusDriver.cs" />
-    <Compile Include="ADC\X86\LPCBusDriver.cs" />
     <Compile Include="ADC\X86\Serial.cs" />
     <Compile Include="ADC\X86\HardwareResourceManager.cs" />
     <Compile Include="ADC\X86\Processor.cs" />
@@ -131,14 +129,16 @@
     <Compile Include="ADC\FloppyDiskController.cs" />
     <Compile Include="ADC\Timer.cs" />
     <Compile Include="ADC\DriverManager.cs" />
-    <Compile Include="Drivers\IDeviceManager.cs" />
-    <Compile Include="Drivers\IDriver.cs" />
-    <Compile Include="Drivers\IDevice.cs" />
-    <Compile Include="Drivers\IHardwareResourceManager.cs" />
     <Compile Include="ADC\Scheduler.cs" />
     <Compile Include="ADC\TextMode.cs" />
     <Compile Include="ADC\Architecture.cs" />
     <Compile Include="ADC\IProcessor.cs" />
+    <Compile Include="DriverSystem\IDevice.cs" />
+    <Compile Include="DriverSystem\IDeviceManager.cs" />
+    <Compile Include="DriverSystem\IDriver.cs" />
+    <Compile Include="DriverSystem\IHardwareResourceManager.cs" />
+    <Compile Include="DriverSystem\HardwareResources\IOPortStream.cs" />
+    <Compile Include="DriverSystem\HardwareResources\MemoryBlock.cs" />
     <Compile Include="Foundation\BinaryTool.cs" />
     <Compile Include="Foundation\CalendarType.cs" />
     <Compile Include="Foundation\StringBuilder.cs" />
@@ -256,7 +256,7 @@
     <None Include="Config\BuiltinKeyMaps.cfg" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Drivers\HardwareResources\" />
+    <Folder Include="DriverSystem\Drivers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
