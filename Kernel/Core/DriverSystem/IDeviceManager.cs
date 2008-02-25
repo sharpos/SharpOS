@@ -12,13 +12,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS.Kernel.ADC
+namespace SharpOS.Kernel.DriverSystem
 {
-	// TODO: turn this into an interface eventually, untill then pretend it's an interface..
-	public abstract class IDeviceManager {
+	public interface IDeviceManager {
 
-		public abstract IDevice[]	Devices { get; }
+		IDevice[]	Devices { get; }
 
-		public abstract void		Setup();
+		void		Setup();
 	}
 }

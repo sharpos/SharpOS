@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS.Kernel.ADC {
+namespace SharpOS.Kernel.DriverSystem {
 
 	// TODO: ...eventually use generics?
 	// TODO: use stubs for fill/move functions

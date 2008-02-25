@@ -11,7 +11,7 @@
 
 using System;
 
-namespace SharpOS.Kernel.ADC.X86
+namespace SharpOS.Kernel.DriverSystem
 {
 	public abstract class GenericDriver : IDriver {
 		#region IsInitialized

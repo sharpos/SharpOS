@@ -10,7 +10,7 @@
 
 using System;
 
-namespace SharpOS.Kernel.ADC.X86
+namespace SharpOS.Kernel.DriverSystem
 {
 	public class RTCDriver : GenericDriver {
 

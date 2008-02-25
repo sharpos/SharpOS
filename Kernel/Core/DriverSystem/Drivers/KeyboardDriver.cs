@@ -11,7 +11,7 @@
 
 using System;
 
-namespace SharpOS.Kernel.ADC.X86 {
+namespace SharpOS.Kernel.DriverSystem {
 	public class KeyboardDriver : GenericDriver {
 
 		private IOPortStream ControllerCommands;
@@ -20,8 +20,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region Initialize
 		public override bool Initialize(IDevice device, IHardwareResourceManager manager)
 		{
-			ControllerCommands	= manager.Request8bitIOPort((ushort)IO.Port.KB_controller_commands);
-			DataPort			= manager.Request8bitIOPort((ushort)IO.Port.KB_data_port);
+			ControllerCommands	= manager.Request8bitIOPort((ushort)0x0064);//IO.Port.KB_controller_commands
+			DataPort			= manager.Request8bitIOPort((ushort)0x0060);//IO.Port.KB_data_port
 			
 			return (isInitialized = false);
 		}

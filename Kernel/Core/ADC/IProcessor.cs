@@ -22,21 +22,20 @@ namespace SharpOS.Kernel.ADC {
 		public string FeatureName;
 	}
 
-	// TODO: turn this into an interface eventually, untill then pretend it's an interface..
-	public unsafe abstract class IProcessor {
-		public abstract uint			ID				{ get; }
+	public unsafe interface IProcessor {
+		uint			ID				{ get; }
 
-		public abstract uint			Index			{ get; }
+		uint			Index			{ get; }
 		
-		public abstract ProcessorType	ArchType		{ get; }
+		ProcessorType	ArchType		{ get; }
 		
-		public abstract CString8*		VendorName		{ get; }
-		public abstract CString8*		BrandName		{ get; }
-		public abstract CString8*		FamilyName		{ get; }
-		public abstract CString8*		ModelName		{ get; }
+		CString8*		VendorName		{ get; }
+		CString8*		BrandName		{ get; }
+		CString8*		FamilyName		{ get; }
+		CString8*		ModelName		{ get; }
 		
-		public abstract ProcessorFeature[] Features		{ get; }
+		ProcessorFeature[] Features		{ get; }
 
-		public abstract void Halt ();
+		void			Halt			();
 	}
 }

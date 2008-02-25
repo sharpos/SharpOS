@@ -12,28 +12,28 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS.Kernel.ADC {
+namespace SharpOS.Kernel.DriverSystem {
 
-	public abstract class IOPortStream {
+	public interface IOPortStream {
 		
-		public abstract sbyte	ReadSByte();
-		public abstract byte	ReadByte();
-		public abstract Int16	ReadInt16();
-		public abstract UInt16	ReadUInt16();
-		public abstract Int32	ReadInt32();
-		public abstract UInt32	ReadUInt32();
-		public abstract Int64	ReadInt64();
-		public abstract UInt64	ReadUInt64();
+		sbyte	ReadSByte();
+		byte	ReadByte();
+		Int16	ReadInt16();
+		UInt16	ReadUInt16();
+		Int32	ReadInt32();
+		UInt32	ReadUInt32();
+		Int64	ReadInt64();
+		UInt64	ReadUInt64();
 
-		public abstract void Write(sbyte value);
-		public abstract void Write(byte value);
-		public abstract void Write(Int16 value);
-		public abstract void Write(UInt16 value);
-		public abstract void Write(Int32 value);
-		public abstract void Write(UInt32 value);
-		public abstract void Write(Int64 value);
-		public abstract void Write(UInt64 value);
-		public abstract void Write(byte[] buffer);
+		void	Write(sbyte value);
+		void	Write(byte value);
+		void	Write(Int16 value);
+		void	Write(UInt16 value);
+		void	Write(Int32 value);
+		void	Write(UInt32 value);
+		void	Write(Int64 value);
+		void	Write(UInt64 value);
+		void	Write(byte[] buffer);
 
 	}
 }

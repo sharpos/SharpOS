@@ -10,6 +10,7 @@
 //
 
 using SharpOS.AOT;
+using SharpOS.Kernel.DriverSystem;
 using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.ADC {

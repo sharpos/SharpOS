@@ -336,47 +336,47 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 
 		#region ArchType
-		private ProcessorType			archType		= ProcessorType.Unknown;		
-		public override ProcessorType	ArchType		{ get { return archType; } }
+		private ProcessorType	archType		= ProcessorType.Unknown;		
+		public ProcessorType	ArchType		{ get { return archType; } }
 		#endregion
 		
 		#region VendorType
-		private CString8*				vendorName		= null;
-		public override CString8*		VendorName		{ get { return vendorName; } }
+		private CString8*		vendorName		= null;
+		public CString8*		VendorName		{ get { return vendorName; } }
 		#endregion
 		
 		#region BrandName
-		private CString8*				brandName		= null;
-		public override CString8*		BrandName		{ get { return brandName; } }
+		private CString8*		brandName		= null;
+		public CString8*		BrandName		{ get { return brandName; } }
 		#endregion
 		
 		#region FamilyName
-		private CString8*				familyName		= null;
-		public override CString8*		FamilyName		{ get { return familyName; } }
+		private CString8*		familyName		= null;
+		public CString8*		FamilyName		{ get { return familyName; } }
 		#endregion
 		
 		#region ModelName
-		private CString8*				modelName		= null;
-		public override CString8*		ModelName		{ get { return modelName; } }
+		private CString8*		modelName		= null;
+		public CString8*		ModelName		{ get { return modelName; } }
 		#endregion
 		
 		#region Features
 		private ProcessorFeatureFlags	featureFlags;
 		private ProcessorFeature[]		features		= null;
-		public override ProcessorFeature[] Features		{ get { return features; } }
+		public ProcessorFeature[]		Features		{ get { return features; } }
 		#endregion
 				
 		#region Index
-		private uint					index			= 0;
-		public override uint			Index			{ get { return index; } }
+		private uint			index			= 0;
+		public uint				Index			{ get { return index; } }
 		#endregion
 		
 		#region ID
-		private uint					id				= 0;
-		public override uint			ID				{ get { return id; } }
+		private uint			id				= 0;
+		public uint				ID				{ get { return id; } }
 		#endregion
 
-		public override void Halt ()
+		public void Halt ()
 		{
 			Asm.STI ();
 			Asm.HLT ();

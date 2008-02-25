@@ -9,6 +9,7 @@
 //
 
 using System;
+using SharpOS.Kernel.DriverSystem;
 
 namespace SharpOS.Kernel.ADC.X86 {
 
@@ -28,18 +29,18 @@ namespace SharpOS.Kernel.ADC.X86 {
 	/// </todo>	
 	/// <TODO> add support for dma </TODO>
 	/// <TODO> add support for interrupts </TODO>
-	internal unsafe class HardwareResourceManager : IHardwareResourceManager {
+	internal class HardwareResourceManager : IHardwareResourceManager {
 		
 		public void Setup()
 		{
 		}
 
-		public override MemoryBlock RequestMemoryBuffer(uint address, uint length)
+		public MemoryBlock RequestMemoryBuffer(uint address, uint length)
 		{
 			return new MemoryBlock(address, length);
 		}
 
-		public override IOPortStream Request8bitIOPort(ushort port)
+		public IOPortStream Request8bitIOPort(ushort port)
 		{
 			return new IOPortStream8bit((IO.Port)port);
 		}

@@ -12,12 +12,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS.Kernel.ADC {
+namespace SharpOS.Kernel.DriverSystem {
 
 	// NOTE: implemented in X86/HardwareResourceManager
-	// TODO: turn this into an interface eventually, untill then pretend it's an interface..
-	public abstract class IHardwareResourceManager {
-		public abstract MemoryBlock		RequestMemoryBuffer	(uint address, uint length);
-		public abstract	IOPortStream	Request8bitIOPort	(ushort port);
+	public interface IHardwareResourceManager {
+		MemoryBlock		RequestMemoryBuffer	(uint address, uint length);
+		IOPortStream	Request8bitIOPort	(ushort port);
 	}
 }

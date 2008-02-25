@@ -16,7 +16,7 @@ using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
-namespace SharpOS.Kernel.ADC.X86 {
+namespace SharpOS.Kernel.DriverSystem {
 
 	/// <summary>
 	/// Low Pin Count bus

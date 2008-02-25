@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS.Kernel.ADC.X86 {
+namespace SharpOS.Kernel.DriverSystem {
 
 	/// <summary>
 	/// Generic Device
@@ -69,7 +69,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		#region Driver
 		private IDriver driver;
-		public override IDriver Driver
+		public virtual IDriver Driver
 		{
 			get { return driver; }
 			set 
@@ -82,27 +82,27 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		#region Signature
 		private string signature;
-		public override string Signature { get { return signature; } }
+		public virtual string Signature { get { return signature; } }
 		#endregion
 		
 		#region Vendor
 		private string vendor;
-		public override string Vendor { get { return vendor; } }
+		public virtual string Vendor { get { return vendor; } }
 		#endregion
 		
 		#region Signature
 		private string name;
-		public override string Name { get { return name; } }
+		public virtual string Name { get { return name; } }
 		#endregion
 		
 		#region Signature
 		private string category;
-		public override string Category { get { return category; } }
+		public virtual string Category { get { return category; } }
 		#endregion
 
 		#region Enabled
 		private bool			enabled = false;
-		public override bool	Enabled
+		public virtual bool		Enabled
 		{
 			get
 			{

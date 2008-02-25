@@ -12,7 +12,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace SharpOS.Kernel.ADC
+namespace SharpOS.Kernel.DriverSystem
 {
 	// TODO: need mechanism to remember device / driver settings
 	// TODO: need mechanism to reclaim resources when driver is unloaded / crashes

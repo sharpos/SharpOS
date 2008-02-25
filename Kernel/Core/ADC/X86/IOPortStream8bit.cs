@@ -9,8 +9,7 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpOS.Kernel.DriverSystem;
 
 namespace SharpOS.Kernel.ADC.X86 {
 
@@ -30,21 +29,21 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region Read
 
 		#region ReadSByte
-		public override sbyte	ReadSByte()
+		public sbyte	ReadSByte()
 		{
 			return IO.ReadSByte(port);
 		}
 		#endregion
 		
 		#region ReadByte
-		public override byte	ReadByte()
+		public byte	ReadByte()
 		{
 			return IO.ReadByte(port);
 		}
 		#endregion
 		
 		#region ReadInt16
-		public override Int16	ReadInt16()
+		public Int16	ReadInt16()
 		{
 			byte	value0 = IO.ReadByte(port);
 			byte	value1 = IO.ReadByte(port);
@@ -59,7 +58,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region ReadUInt16
-		public override UInt16	ReadUInt16()
+		public UInt16	ReadUInt16()
 		{
 			byte	value0 = IO.ReadByte(port);
 			byte	value1 = IO.ReadByte(port);
@@ -71,7 +70,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region ReadInt32
-		public override Int32	ReadInt32()
+		public Int32	ReadInt32()
 		{
 			byte	value0 = IO.ReadByte(port);
 			byte	value1 = IO.ReadByte(port);
@@ -90,7 +89,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region ReadUInt32
-		public override UInt32	ReadUInt32()
+		public UInt32	ReadUInt32()
 		{
 			byte	value0 = IO.ReadByte(port);
 			byte	value1 = IO.ReadByte(port);
@@ -106,7 +105,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region ReadInt64
-		public override Int64	ReadInt64()
+		public Int64	ReadInt64()
 		{
 			byte	value0 = IO.ReadByte(port);
 			byte	value1 = IO.ReadByte(port);
@@ -133,7 +132,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region ReadUInt64
-		public override UInt64	ReadUInt64()
+		public UInt64	ReadUInt64()
 		{
 			byte	value0 = IO.ReadByte(port);
 			byte	value1 = IO.ReadByte(port);
@@ -161,21 +160,21 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region Write
 		
 		#region Write SByte
-		public override void Write(sbyte value)
+		public void Write(sbyte value)
 		{
 			IO.WriteSByte(port, value);
 		}
 		#endregion
 		
 		#region Write Byte
-		public override void Write(byte value)
+		public void Write(byte value)
 		{
 			IO.WriteByte(port, value);
 		}
 		#endregion
 		
 		#region Write Int16
-		public override void Write(Int16 value)
+		public void Write(Int16 value)
 		{
 			unchecked
 			{
@@ -186,7 +185,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region Write UInt16
-		public override void Write(UInt16 value)
+		public void Write(UInt16 value)
 		{
 			IO.WriteByte(port, (byte)((value      ) & 255));
 			IO.WriteByte(port, (byte)((value >>  8) & 255));
@@ -194,7 +193,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region Write Int32
-		public override void Write(Int32 value)
+		public void Write(Int32 value)
 		{
 			unchecked
 			{
@@ -207,7 +206,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region Write UInt32
-		public override void Write(UInt32 value)
+		public void Write(UInt32 value)
 		{
 			IO.WriteByte(port, (byte)((value      ) & 255));
 			IO.WriteByte(port, (byte)((value >>  8) & 255));
@@ -217,7 +216,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region Write Int64
-		public override void Write(Int64 value)
+		public void Write(Int64 value)
 		{
 			unchecked
 			{
@@ -235,7 +234,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region Write UInt64
-		public override void Write(UInt64 value)
+		public void Write(UInt64 value)
 		{
 			//TODO: remove double cast (byte)(int) when direct case from ulong to byte works
 			IO.WriteByte(port, (byte)(int)((value      ) & 255));
@@ -250,7 +249,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 		
 		#region Write byte[]
-		public override void Write(byte[] buffer)
+		public void Write(byte[] buffer)
 		{
 			foreach(Byte value in buffer)
 				IO.WriteByte(port, value);

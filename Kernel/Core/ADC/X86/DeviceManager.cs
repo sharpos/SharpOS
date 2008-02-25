@@ -9,6 +9,7 @@
 //
 
 using System;
+using SharpOS.Kernel.DriverSystem;
 
 namespace SharpOS.Kernel.ADC.X86 {
 
@@ -92,11 +93,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 				new SATABusDriver()),
 			*/
 		};
-		public override IDevice[]	Devices { get { return rootDevices; } }
+		public IDevice[]	Devices { get { return rootDevices; } }
 		#endregion
 
 		#region Setup
-		public override void Setup()
+		public void Setup()
 		{
 			InitializeDevices(rootDevices);
 		}
