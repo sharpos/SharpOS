@@ -76,6 +76,12 @@ namespace SharpOS.Kernel {
 				return true;
 			case (byte) '\r':
 				return true;
+			case (byte) '\v':
+				return true;
+			case (byte) '\f':
+				return true;
+			case (byte) '\t':
+				return true;
 			default:
 				return false;
 			}
