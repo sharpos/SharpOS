@@ -78,8 +78,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ADC\IOPortStream.cs" />
-    <Compile Include="ADC\MemoryBlock.cs" />
+    <Compile Include="Drivers\IOPortStream.cs" />
+    <Compile Include="Drivers\MemoryBlock.cs" />
     <Compile Include="ADC\X86\IOPortStream8bit.cs" />
     <Compile Include="ADC\X86\GenericDriver.cs" />
     <Compile Include="ADC\X86\KeyboardDriver.cs" />
@@ -131,10 +131,10 @@
     <Compile Include="ADC\FloppyDiskController.cs" />
     <Compile Include="ADC\Timer.cs" />
     <Compile Include="ADC\DriverManager.cs" />
-    <Compile Include="ADC\IDeviceManager.cs" />
-    <Compile Include="ADC\IDriver.cs" />
-    <Compile Include="ADC\IDevice.cs" />
-    <Compile Include="ADC\IHardwareResourceManager.cs" />
+    <Compile Include="Drivers\IDeviceManager.cs" />
+    <Compile Include="Drivers\IDriver.cs" />
+    <Compile Include="Drivers\IDevice.cs" />
+    <Compile Include="Drivers\IHardwareResourceManager.cs" />
     <Compile Include="ADC\Scheduler.cs" />
     <Compile Include="ADC\TextMode.cs" />
     <Compile Include="ADC\Architecture.cs" />
@@ -254,6 +254,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\BuiltinKeyMaps.cfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Drivers\HardwareResources\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

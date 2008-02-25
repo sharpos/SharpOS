@@ -11,8 +11,7 @@
 
 using System;
 
-namespace SharpOS.Kernel.ADC.X86
-{
+namespace SharpOS.Kernel.ADC.X86 {
 	public class KeyboardDriver : GenericDriver {
 
 		private IOPortStream ControllerCommands;

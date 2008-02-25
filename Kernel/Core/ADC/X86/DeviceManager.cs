@@ -106,33 +106,39 @@ namespace SharpOS.Kernel.ADC.X86 {
 			// ..initialize root devices
 			for (int i = 0; i < devices.Length; i++)
 			{
-				//try {
-								
 				if (devices[i] == null || // just in case...
 					devices[i].Driver == null)
 					continue;
 
-				devices[i].Driver.Initialize(devices[i], Architecture.ResourceManager);
-
-				//catch { .. disable device & reclaim driver resources (if any) .. }
+				try
+				{
+					devices[i].Driver.Initialize(devices[i], Architecture.ResourceManager);
+				}
+				catch
+				{
+					// .. disable device & reclaim driver resources (if any) .. 
+				}
 			}
 
 			// ..initialize child devices
 			for (int i = 0; i < devices.Length; i++)
-			{ 
-				//try {
-								
+			{ 								
 				if (devices[i] == null || // just in case...
 					devices[i].Driver == null ||
 					!devices[i].Driver.IsInitialized ||
 					!devices[i].Driver.HasSubDevices)
 					continue;
 
-				IDevice[] childDevices;
-				if (devices[i].Driver.GetSubDevices(out childDevices))
-					InitializeDevices(childDevices);
-				
-				//catch { .. disable device & reclaim driver resources (if any) .. }
+				try
+				{
+					IDevice[] childDevices;
+					if (devices[i].Driver.GetSubDevices(out childDevices))
+						InitializeDevices(childDevices);
+				}
+				catch 
+				{ 
+					// .. disable device & reclaim driver resources (if any) .. 
+				}
 			}
 		}
 		#endregion

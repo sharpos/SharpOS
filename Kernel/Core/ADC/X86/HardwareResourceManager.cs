@@ -25,7 +25,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 	/// <todo>
 	/// We need to have some sort of context so that when a driver is cleaned up, 
 	/// we can find back the resources it requested.
-	/// </todo>
+	/// </todo>	
+	/// <TODO> add support for dma </TODO>
+	/// <TODO> add support for interrupts </TODO>
 	internal unsafe class HardwareResourceManager : IHardwareResourceManager {
 		
 		public void Setup()
