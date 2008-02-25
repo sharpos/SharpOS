@@ -83,7 +83,6 @@
     <Compile Include="DriverSystem\GenericDriver.cs" />
     <Compile Include="DriverSystem\Drivers\KeyboardDriver.cs" />
     <Compile Include="DriverSystem\Drivers\LPCBusDriver.cs" />
-    <Compile Include="DriverSystem\Drivers\PCIBusDriver.cs" />
     <Compile Include="DriverSystem\Drivers\RTCDriver.cs" />
     <Compile Include="ADC\X86\Scheduler.cs" />
     <Compile Include="ADC\X86\IO.cs" />
