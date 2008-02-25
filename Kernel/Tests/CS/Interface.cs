@@ -130,30 +130,22 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		/*
 		public interface BaseInterface {
-			bool		TestFunction	(out int[] someValues);
+			void		TestFunction	();
 		}
 
-		public abstract class BaseAbstract : BaseInterface {			
-			public virtual bool TestFunction(out int[] someValues)
-			{
-				someValues = null;
-				return false;
-			}
+		public abstract class BaseAbstract : BaseInterface {
+			public virtual void TestFunction() {}
 		}
 		
-		public class ResultClass : BaseAbstract {			
-		}
+		public class ResultClass : BaseAbstract {}
 		
-
 		public static uint CMPInterfaceAbstractOut ()
 		{
 			ResultClass instance = new ResultClass();
-			int[] someValues = null;
-			instance.TestFunction(out someValues);
-
+			instance.TestFunction();
 			return 1;
 		}
-		 */
+		*/
 
 		public static uint CMPBasic ()
 		{
