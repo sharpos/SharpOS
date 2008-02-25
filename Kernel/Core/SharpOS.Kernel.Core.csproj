@@ -79,11 +79,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADC\X86\IOPortStream8bit.cs" />
-    <Compile Include="ADC\X86\GenericDriver.cs" />
-    <Compile Include="ADC\X86\KeyboardDriver.cs" />
-    <Compile Include="ADC\X86\LPCBusDriver.cs" />
-    <Compile Include="ADC\X86\PCIBusDriver.cs" />
-    <Compile Include="ADC\X86\RTCDriver.cs" />
+    <Compile Include="DriverSystem\Drivers\PCIBusDriver.cs" />
+    <Compile Include="DriverSystem\GenericDriver.cs" />
+    <Compile Include="DriverSystem\Drivers\KeyboardDriver.cs" />
+    <Compile Include="DriverSystem\Drivers\LPCBusDriver.cs" />
+    <Compile Include="DriverSystem\Drivers\PCIBusDriver.cs" />
+    <Compile Include="DriverSystem\Drivers\RTCDriver.cs" />
     <Compile Include="ADC\X86\Scheduler.cs" />
     <Compile Include="ADC\X86\IO.cs" />
     <Compile Include="ADC\X86\Serial.cs" />
@@ -111,7 +112,7 @@
     <Compile Include="ADC\X86\PIT.cs" />
     <Compile Include="ADC\X86\IDT.cs" />
     <Compile Include="ADC\X86\DeviceManager.cs" />
-    <Compile Include="ADC\X86\GenericDevice.cs" />
+    <Compile Include="DriverSystem\GenericDevice.cs" />
     <Compile Include="ADC\ExceptionHandling.cs" />
     <Compile Include="ADC\MemoryUtil.cs" />
     <Compile Include="ADC\Serial.cs" />
@@ -254,9 +255,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\BuiltinKeyMaps.cfg" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="DriverSystem\Drivers\" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
