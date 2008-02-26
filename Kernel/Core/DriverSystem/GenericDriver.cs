@@ -22,7 +22,7 @@ namespace SharpOS.Kernel.DriverSystem
 		}
 		#endregion
 
-		//public abstract bool Initialize(IDevice device, IHardwareResourceManager manager);
+		//public abstract bool Initialize(IDevice device, IDriverContext context);
 
 		#region HasSubDevices
 		public override bool HasSubDevices

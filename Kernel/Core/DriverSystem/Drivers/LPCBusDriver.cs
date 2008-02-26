@@ -33,7 +33,7 @@ namespace SharpOS.Kernel.DriverSystem {
 		//    Serial ports
 
 		#region Initialize
-		public override bool Initialize(IDevice device, IHardwareResourceManager manager)
+		public override bool Initialize(IDriverContext context)
 		{
 			return (isInitialized = false);
 		}

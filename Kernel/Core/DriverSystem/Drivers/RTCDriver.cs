@@ -15,7 +15,7 @@ namespace SharpOS.Kernel.DriverSystem
 	public class RTCDriver : GenericDriver {
 
 		#region Initialize
-		public override bool  Initialize(IDevice device, IHardwareResourceManager manager)
+		public override bool  Initialize(IDriverContext context)
 		{
 			return (isInitialized = false);
 		}

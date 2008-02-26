@@ -107,7 +107,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			get 
 			{
 				if (deviceManager == null)
-					deviceManager = new DeviceManager();
+					deviceManager = new DeviceManager(ResourceManager);
 				return deviceManager; 
 			}
 		}

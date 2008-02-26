@@ -19,15 +19,15 @@ namespace SharpOS.Kernel.DriverSystem
 	public interface IDevice {
 
 		/// <summary>Gets or sets the driver attached to the current device</summary>
-		IDriver		Driver			{ get; set; }
+		IDriver			Driver			{ get; set; }
 		
 		/// <summary>Enables or disables a device</summary>
-		bool		Enabled			{ get; set; }
+		bool			Enabled			{ get; set; }
 
 		// TODO: this should be put in attributes eventually:
-		String		Signature		{ get; }
-		String		Vendor			{ get; }
-		String		Name			{ get; }
-		String		Category		{ get; }
+		String			Signature		{ get; }
+		String			Vendor			{ get; }
+		String			Name			{ get; }
+		String			Category		{ get; }
 	}
 }

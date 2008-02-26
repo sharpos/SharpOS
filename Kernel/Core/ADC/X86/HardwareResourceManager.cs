@@ -29,20 +29,105 @@ namespace SharpOS.Kernel.ADC.X86 {
 	/// </todo>	
 	/// <TODO> add support for dma </TODO>
 	/// <TODO> add support for interrupts </TODO>
+	/// <TODO> keep track of which resources are used and which ones are available </TODO>
 	internal class HardwareResourceManager : IHardwareResourceManager {
 		
 		public void Setup()
 		{
 		}
 
-		public MemoryBlock RequestMemoryBuffer(uint address, uint length)
+		private sealed class DriverContext : IDriverContext
 		{
+			public DriverContext(HardwareResourceManager _manager, IDevice _device)
+			{
+				if (_manager == null)
+					throw new ArgumentNullException("manager");
+				manager = _manager;
+				device = _device;
+			}
+
+			/*
+			~DriverContext()
+			{
+				Release();
+			}*/
+
+			private HardwareResourceManager manager;
+
+			private IDevice					device;
+			public IDevice					Device { get { return device; } }
+
+			private DriverFlags				flags;
+			public DriverFlags				Flags { get { return flags; } }
+			
+			private bool					isReleased = false;
+			public bool						IsReleased { get { return isReleased; } }
+			
+			public void Release()
+			{
+				if (isReleased)
+					return;
+				try { manager.Release(this); }
+				finally { isReleased = true; }
+			}
+			
+			// TODO: this should eventually be done trough attributes
+			public void Initialize(DriverFlags _flags)
+			{
+				flags = _flags;
+			}
+
+			public MemoryBlock CreateMemoryBuffer(uint address, uint length)
+			{
+				return manager.CreateMemoryBuffer(this, address, length);
+			}
+
+			public IOPortStream CreateIOPortStream(ushort port)
+			{
+				return manager.CreateIOPortStream(this, port);
+			}
+		}
+
+
+		
+		public IDriverContext		CreateDriverContext(IDevice device)
+		{
+			return new DriverContext(this, device);
+		}
+
+		internal void				Release(IDriverContext context)
+		{
+			if (context == null)
+				throw new ArgumentNullException("context");
+			if (context.IsReleased)
+				throw new InvalidOperationException("Context has already been released.");
+		}
+
+		internal MemoryBlock		CreateMemoryBuffer(IDriverContext context, uint address, uint length)
+		{
+			if (context == null)
+				throw new ArgumentNullException("context");
+			if (context.IsReleased)
+				throw new InvalidOperationException("Context was used after it was released.");
+
 			return new MemoryBlock(address, length);
 		}
 
-		public IOPortStream Request8bitIOPort(ushort port)
+		internal IOPortStream		CreateIOPortStream(IDriverContext context, ushort port)
 		{
-			return new IOPortStream8bit((IO.Port)port);
+			if (context == null)
+				throw new ArgumentNullException("context");
+			if (context.IsReleased)
+				throw new InvalidOperationException("Context was used after it was released.");
+
+			switch ((DriverFlags)(context.Flags & DriverFlags.IOStreamMask))
+			{
+				default:
+				case DriverFlags.IOStream8Bit:	return new IOPortStream8bit((IO.Port)port);
+				case DriverFlags.IOStream16Bit:	throw new NotImplementedException();
+				case DriverFlags.IOStream32Bit:	throw new NotImplementedException();
+				case DriverFlags.IOStream64Bit:	throw new NotImplementedException();
+			}
 		}
 	}
 }

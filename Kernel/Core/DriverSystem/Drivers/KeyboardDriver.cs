@@ -18,10 +18,12 @@ namespace SharpOS.Kernel.DriverSystem {
 		private IOPortStream DataPort;
 
 		#region Initialize
-		public override bool Initialize(IDevice device, IHardwareResourceManager manager)
+		public override bool Initialize(IDriverContext context)
 		{
-			ControllerCommands	= manager.Request8bitIOPort((ushort)0x0064);//IO.Port.KB_controller_commands
-			DataPort			= manager.Request8bitIOPort((ushort)0x0060);//IO.Port.KB_data_port
+			context.Initialize(DriverFlags.IOStream8Bit);
+
+			ControllerCommands	= context.CreateIOPortStream((ushort)0x0064);//IO.Port.KB_controller_commands
+			DataPort			= context.CreateIOPortStream((ushort)0x0060);//IO.Port.KB_data_port
 			
 			return (isInitialized = false);
 		}

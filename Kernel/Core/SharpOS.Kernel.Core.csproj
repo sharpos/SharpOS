@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADC\X86\IOPortStream8bit.cs" />
+    <Compile Include="DriverSystem\DriverFlags.cs" />
     <Compile Include="DriverSystem\Drivers\PCIBusDriver.cs" />
     <Compile Include="DriverSystem\GenericDriver.cs" />
     <Compile Include="DriverSystem\Drivers\KeyboardDriver.cs" />
@@ -136,6 +137,7 @@
     <Compile Include="DriverSystem\IDevice.cs" />
     <Compile Include="DriverSystem\IDeviceManager.cs" />
     <Compile Include="DriverSystem\IDriver.cs" />
+    <Compile Include="DriverSystem\IDriverContext.cs" />
     <Compile Include="DriverSystem\IHardwareResourceManager.cs" />
     <Compile Include="DriverSystem\HardwareResources\IOPortStream.cs" />
     <Compile Include="DriverSystem\HardwareResources\MemoryBlock.cs" />
@@ -162,6 +164,7 @@
     <Compile Include="FileSystem\FileSystem.cs" />
     <Compile Include="DiagnosticTool\Server.cs" />
     <Compile Include="Korlib\System\ArgumentOutOfRangeException.cs" />
+    <Compile Include="Korlib\System\InvalidOperationException.cs" />
     <Compile Include="Korlib\System\DivideByZeroException.cs" />
     <Compile Include="Korlib\System\NullReferenceException.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Cls.cs" />

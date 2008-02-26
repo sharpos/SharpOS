@@ -16,8 +16,17 @@ namespace SharpOS.Kernel.ADC.X86 {
 	// TODO: would be nice to be able to use List<IDevice> internally ...
 	// TODO: eventually need events to notify subscribers when 
 	//		devices have been changed/added/removed
+	// TODO: ability to register root devices
+	// TODO: drivers should be found trough drivermanager.
 	public class DeviceManager : IDeviceManager	{
-		
+
+		public DeviceManager(IHardwareResourceManager _manager)
+		{
+			manager = _manager;
+		}
+
+		private IHardwareResourceManager manager;
+
 		#region (Root) Devices
 		private IDevice[]	rootDevices = new IDevice[]
 		{
@@ -102,44 +111,100 @@ namespace SharpOS.Kernel.ADC.X86 {
 			InitializeDevices(rootDevices);
 		}
 
+		internal bool InitializeDriver(IDevice device, IDriver driver)
+		{
+			if (driver == null)
+				throw new ArgumentNullException("driver");
+
+			IDriverContext context = null;
+			try
+			{
+				context = manager.CreateDriverContext(device);
+				if (driver.Initialize(context))
+				{
+					// eventually use a dictionary in the device manager instead
+					driver.DriverContext = context;
+					return true;
+				}
+			}
+			catch { }
+			if (context != null)
+				context.Release();
+			return false;
+		}
+
 		internal void InitializeDevices(IDevice[] devices)
 		{
-			// ..initialize root devices
+			if (devices == null)
+				throw new ArgumentNullException("devices");
+
+			// ..initialize devices
 			for (int i = 0; i < devices.Length; i++)
 			{
-				if (devices[i] == null || // just in case...
-					devices[i].Driver == null)
+				IDevice device = devices[i];
+				if (device == null || // just in case...
+					(	
+						// *should* never happen.. 
+						device.Driver != null &&
+						device.Driver.IsInitialized
+					))
 					continue;
 
-				try
+				device.Enabled = false;
+				if (device.Driver != null)
 				{
-					devices[i].Driver.Initialize(devices[i], Architecture.ResourceManager);
+					if (InitializeDriver(device, device.Driver))
+					{
+						device.Enabled = true;
+						continue;
+					} else
+						device.Driver = null;
 				}
-				catch
+
+				IDriver[] foundDrivers = DriverManager.Find(device);
+				for (int j = 0; j < foundDrivers.Length; j++)
 				{
-					// .. disable device & reclaim driver resources (if any) .. 
+					IDriver driver = foundDrivers[j];					
+					if (InitializeDriver(device, driver))
+					{
+						device.Driver = driver;
+						device.Enabled = true;
+						break;
+					}
 				}
 			}
 
 			// ..initialize child devices
 			for (int i = 0; i < devices.Length; i++)
-			{ 								
-				if (devices[i] == null || // just in case...
-					devices[i].Driver == null ||
-					!devices[i].Driver.IsInitialized ||
-					!devices[i].Driver.HasSubDevices)
+			{
+				IDevice device = devices[i];
+				if (device == null || // just in case...
+					device.Driver == null ||
+					!device.Enabled ||
+					!device.Driver.IsInitialized ||
+					!device.Driver.HasSubDevices)
 					continue;
 
 				try
 				{
 					IDevice[] childDevices;
-					if (devices[i].Driver.GetSubDevices(out childDevices))
+					if (device.Driver.GetSubDevices(out childDevices))
+					{
 						InitializeDevices(childDevices);
+						continue;
+					}
 				}
-				catch 
-				{ 
-					// .. disable device & reclaim driver resources (if any) .. 
-				}
+				catch
+				{
+					if (device.Driver != null &&
+						device.Driver.DriverContext != null)
+					{
+						device.Driver.DriverContext.Release();
+						device.Driver.DriverContext = null;
+					}
+					device.Driver = null;
+					device.Enabled = false;
+				}			
 			}
 		}
 		#endregion
