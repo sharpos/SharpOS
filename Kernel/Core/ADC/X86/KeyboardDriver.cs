@@ -10,6 +10,7 @@
 //
 
 using System;
+using SharpOS.Kernel.DriverSystem;
 
 namespace SharpOS.Kernel.ADC.X86 {
 	public class KeyboardDriver : GenericDriver {

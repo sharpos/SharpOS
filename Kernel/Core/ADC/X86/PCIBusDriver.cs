@@ -15,6 +15,7 @@ using System.Runtime.InteropServices;
 using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
+using SharpOS.Kernel.DriverSystem;
 
 namespace SharpOS.Kernel.ADC.X86 {
 	/// <summary>

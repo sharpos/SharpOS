@@ -5,6 +5,7 @@
 //	Sander van Rossen <sander.vanrossen@gmail.com>
 //	�sgeir Halld�rsson <asgeir.halldorsson@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
+//	Ziliang Guo <drakekaizer666@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -83,7 +84,7 @@ namespace SharpOS.Kernel.ADC {
 				//If there is enough room to squeeze in a new node after this one, then do it
 
 				currentNode->Size = allocate_size;
-				void *nextPtr = (byte*)currentNode + currentNode->Size + sizeof (Header);
+				void *nextPtr = (byte*)currentNode + currentNode->Size + (uint)sizeof (Header);
 
 				Header* nextNode = (Header*) nextPtr;
 				nextNode->Free = 1;
@@ -114,9 +115,124 @@ namespace SharpOS.Kernel.ADC {
 			Diagnostics.Assert (retPtr != 0, "MemoryManager.Allocate(uint): Allocation failed");
 
 			// TODO X86.MemoryUtil.MemSet should not be called directly
-			SharpOS.Kernel.ADC.X86.MemoryUtil.MemSet (0, retPtr, allocate_size);
+            // Hopefully this change works
+            SharpOS.Kernel.ADC.MemoryUtil.MemSet(0, retPtr, allocate_size);
+			//SharpOS.Kernel.ADC.X86.MemoryUtil.MemSet (0, retPtr, allocate_size);
 
 			return (void*) retPtr;
+		}
+
+        public static unsafe void* Reallocate(void* stptr, uint allocate_size)
+		{
+			uint memoryHeaderPointer = (uint)stptr - (uint)sizeof(Header);
+			Header* oldBlock = (Header*)memoryHeaderPointer;
+			// neededSize is the amount of additional space needed to enlarge the original block
+			uint neededSize = allocate_size - oldBlock->Size;
+
+			Header* retPtr = null;
+			void* nextPtr = null;
+
+			/*
+			 * If the node after our current block is free and is large enough
+			 * to accommodate the new allocated size, we will simply extend the
+			 * current node into its space.  In this case, we return the same
+			 * pointer that was given to use, since the location of the block
+			 * does not change.
+			 */
+			if (oldBlock->Next->Free == 1 && oldBlock->Next->Previous != null && oldBlock->Next->Size >= neededSize) {
+				Header* nextBlock = oldBlock->Next;
+				oldBlock->Size = allocate_size;
+				oldBlock->Next = nextBlock->Next;
+				uint memoryLeft = oldBlock->Next->Size - allocate_size;
+
+				/*
+				 * Squeeze in another node if there's space.
+				 */ 
+				if (memoryLeft > (uint)sizeof(Header)) {
+					nextPtr = (byte*)oldBlock + oldBlock->Size + (uint)sizeof(Header);
+					Header* nextNode = (Header*)nextPtr;
+					nextNode->Size = memoryLeft - (uint)sizeof(Header);
+					nextNode->Next = oldBlock->Next;
+					nextNode->Free = 1;
+					if (nextNode->Next->Previous != null)
+						nextNode->Next->Previous = nextNode;
+					nextNode->Previous = oldBlock;
+					oldBlock->Next = nextNode;
+				}
+				else if (oldBlock->Next->Previous != null)
+					oldBlock->Next->Previous = oldBlock;
+
+				return stptr;
+			}
+
+			/*
+			 * If the block before our current position is free, then some
+			 * specialized handling needs to be done.  We need to check
+			 * whether we need to extend into the current block, which requires
+			 * care in not overwriting the Header information too early and
+			 * creatinng and possibly consolidating a new free node.  Or there
+			 * is sufficient space in the previous node to move everything
+			 * over, in which case we need to check if any space left over
+			 * needs to be consolidated with the newly freed current node.
+			 */
+			if (oldBlock->Previous != null && oldBlock->Previous->Free == 1) {
+				if (oldBlock->Previous->Size >= allocate_size) {
+					Header* prevBlock = oldBlock->Previous;
+					nextPtr = (byte*)prevBlock + (uint)sizeof(Header);
+					prevBlock->Free = 0;
+					SharpOS.Kernel.ADC.MemoryUtil.MemCopy((uint)stptr, (uint)nextPtr, oldBlock->Size);
+					uint over = prevBlock->Size - allocate_size;
+					if (over > 0) {
+						uint hold = (uint)nextPtr + prevBlock->Size;
+						Header* newFree = (Header*)hold;
+						SharpOS.Kernel.ADC.MemoryUtil.MemCopy((uint)oldBlock, hold, (uint)sizeof(Header));
+						newFree->Size += over;
+						Free((void*)((byte*)newFree + (uint)sizeof(Header)));
+						prevBlock->Next = newFree;
+					}
+					else
+						Free(stptr);
+					
+					return nextPtr;
+				}
+				if (oldBlock->Previous->Size >= neededSize) {
+					Header* prevBlock = oldBlock->Previous;
+					prevBlock->Free = 0;
+					prevBlock->Next = oldBlock->Next;
+					prevBlock->Size = allocate_size;
+					uint over = oldBlock->Size + prevBlock->Size - allocate_size;
+
+					SharpOS.Kernel.ADC.MemoryUtil.MemCopy((uint)stptr, ((uint)prevBlock + (uint)sizeof(Header)), oldBlock->Size);
+
+					prevBlock->Size = allocate_size;
+					if (over > (uint)sizeof(Header)) {
+						nextPtr = (byte*)prevBlock + prevBlock->Size + (uint)sizeof(Header);
+						Header* nextNode = (Header*)nextPtr;
+						nextNode->Free = 1;
+						nextNode->Size = over - (uint)sizeof(Header);
+						nextNode->Previous = prevBlock;
+						nextNode->Next = prevBlock->Next;
+						if (nextNode->Next->Previous != null)
+							nextNode->Next->Previous = nextNode;
+						prevBlock->Next = nextNode;
+
+						Free(nextNode + 1);
+					}
+					else if (prevBlock->Next->Previous != null) {
+						prevBlock->Next->Previous = prevBlock;
+					}
+
+					return (void*)((byte*)prevBlock + (uint)sizeof(Header));
+				}
+			}
+
+			nextPtr = Allocate(allocate_size);
+			SharpOS.Kernel.ADC.MemoryUtil.MemCopy((uint)stptr, (uint)nextPtr, oldBlock->Size);
+			Free(stptr);
+
+            Diagnostics.Assert(nextPtr != null, "MemoryManager.Allocate(uint): Allocation failed");
+
+			return nextPtr;
 		}
 
 		//TODO: maybe use a hash table to find a memory block faster?
@@ -129,26 +245,28 @@ namespace SharpOS.Kernel.ADC {
 
 			Header* currentNode = freeHeader;
 
+			uint left = (uint)memory + currentNode->Size;
+            if (left < (uint)currentNode->Next)
+				currentNode->Size += (uint)currentNode->Next - left;
+			else if (left < memoryEnd)
+				currentNode->Size += memoryEnd - left;
+            
+
 			//Scan forward for the last consecutive free node
-			while (currentNode->Next != firstNode && currentNode->Next->Free == 1)
-				currentNode = currentNode->Next;
+			if (currentNode->Next != firstNode && currentNode->Next->Free == 1)
+				currentNode->Size += currentNode->Next->Size + (uint)sizeof(Header);
 
 			//Now scan backwards and consolidate free nodes
-			while (currentNode->Previous != null && currentNode->Previous->Free == 1) {
+            if (currentNode->Previous != null && currentNode->Previous->Free == 1) {
 				Header* previous = currentNode->Previous;
-				previous->Size = currentNode->Size + (uint) sizeof (Header);
-				if (currentNode->Next != null) {
-					previous->Next = currentNode->Next;
-					currentNode->Next->Previous = previous;
-				} else {
-					previous->Next = null;
-				}
+				previous->Size = currentNode->Size + (uint)sizeof(Header);
+				previous->Next = currentNode->Next;
+				currentNode->Next->Previous = previous;
 
 				currentNode = currentNode->Previous;
 			}
 
-			if (currentNode->Next->Free == 1 && currentNode->Next->Size > lastFreeNode->Size &&
-			    currentNode->Next < lastFreeNode)
+			if (currentNode->Size > lastFreeNode->Size && currentNode < lastFreeNode)
 				lastFreeNode = currentNode;
 		}
 
