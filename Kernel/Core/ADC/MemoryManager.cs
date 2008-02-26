@@ -254,7 +254,10 @@ namespace SharpOS.Kernel.ADC {
 
 			//Scan forward for the last consecutive free node
 			if (currentNode->Next != firstNode && currentNode->Next->Free == 1)
+			{
 				currentNode->Size += currentNode->Next->Size + (uint)sizeof(Header);
+				currentNode->Next = currentNode->Next->Next;
+			}
 
 			//Now scan backwards and consolidate free nodes
             if (currentNode->Previous != null && currentNode->Previous->Free == 1) {
