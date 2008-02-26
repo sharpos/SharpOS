@@ -128,7 +128,7 @@
     <Compile Include="ADC\RTC.cs" />
     <Compile Include="ADC\FloppyDiskController.cs" />
     <Compile Include="ADC\Timer.cs" />
-    <Compile Include="ADC\DriverManager.cs" />
+    <Compile Include="DriverSystem\DriverManager.cs" />
     <Compile Include="ADC\Scheduler.cs" />
     <Compile Include="ADC\TextMode.cs" />
     <Compile Include="ADC\Architecture.cs" />
