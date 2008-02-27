@@ -76,11 +76,12 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return result;
 		}
-
+		*/
 		public unsafe static uint CMPGenericType2 ()
 		{
-			return GetGenericType2Data ().test.Value;
-		}*/
+			//return GetGenericType2Data ().test.Value;
+			return 0;
+		}
 
 
 #else

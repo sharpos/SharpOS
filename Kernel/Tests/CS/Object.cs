@@ -87,8 +87,8 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPDefaultToString ()
 		{
-//			if (new object().ToString() == "System.Object")
-//				return 1;
+			if (new object().ToString() == "System.Object")
+				return 1;
 
 			return 0;
 		}

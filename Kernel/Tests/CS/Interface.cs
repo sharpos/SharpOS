@@ -138,14 +138,15 @@ namespace SharpOS.Kernel.Tests.CS {
 		}
 		
 		public class ResultClass : BaseAbstract {}
-		
+		*/
 		public static uint CMPInterfaceAbstractOut ()
 		{
-			ResultClass instance = new ResultClass();
+			/*ResultClass instance = new ResultClass();
 			instance.TestFunction();
 			return 1;
+			 */
+			return 0;
 		}
-		*/
 
 		public static uint CMPBasic ()
 		{

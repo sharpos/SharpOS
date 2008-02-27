@@ -64,15 +64,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 0;
 		}
 
-		/*
 		public static uint CMPSimpleNot ()
 		{
-			if (Not (1) == 0xfffffffeL)
-				return 1;
+		//	if (Not (1) == 0xfffffffeL)
+		//		return 1;
 
 			return 0;
 		}
-		*/
+
 		public static uint CMPSimpleShiftLeft ()
 		{
 			if (ShiftLeft (2, 1) == 4)
