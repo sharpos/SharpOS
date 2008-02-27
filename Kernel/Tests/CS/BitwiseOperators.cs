@@ -66,8 +66,8 @@ namespace SharpOS.Kernel.Tests.CS {
 
 		public static uint CMPSimpleNot ()
 		{
-		//	if (Not (1) == 0xfffffffeL)
-		//		return 1;
+			if (Not (1) == 0xfffffffeL)
+				return 1;
 
 			return 0;
 		}

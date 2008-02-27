@@ -95,6 +95,14 @@ namespace SharpOS.Kernel.Tests.CS {
 			return 0;
 		}
 
+		public static uint CMPSimpleDivide64 ()
+		{
+			if (Divide (10L, 5L) == 2L)
+				return 1;
+
+			return 0;
+		}
+
 		public static uint CMPSimpleSubtract64 ()
 		{
 			if (Subtract (2L, 1L) == 1L)

@@ -128,7 +128,6 @@ namespace SharpOS.Kernel.Tests.CS {
 			}
 		}
 
-		/*
 		public interface BaseInterface {
 			void		TestFunction	();
 		}
@@ -138,7 +137,7 @@ namespace SharpOS.Kernel.Tests.CS {
 		}
 		
 		public class ResultClass : BaseAbstract {}
-		*/
+		
 		public static uint CMPInterfaceAbstractOut ()
 		{
 			/*ResultClass instance = new ResultClass();
