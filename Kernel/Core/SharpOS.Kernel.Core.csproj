@@ -164,6 +164,7 @@
     <Compile Include="FileSystem\FileSystem.cs" />
     <Compile Include="DiagnosticTool\Server.cs" />
     <Compile Include="Korlib\System\ArgumentOutOfRangeException.cs" />
+    <Compile Include="Korlib\System\Collections\ArrayList.cs" />
     <Compile Include="Korlib\System\Collections\Generic\ICollection.cs" />
     <Compile Include="Korlib\System\Collections\Generic\IEnumerable.cs" />
     <Compile Include="Korlib\System\Collections\Generic\IEnumerator.cs" />
@@ -173,6 +174,8 @@
     <Compile Include="Korlib\System\Collections\IEnumerable.cs" />
     <Compile Include="Korlib\System\Collections\IEnumerator.cs" />
     <Compile Include="Korlib\System\Collections\IList.cs" />
+    <Compile Include="Korlib\System\OutOfMemoryException.cs" />
+    <Compile Include="Korlib\System\ICloneable.cs" />
     <Compile Include="Korlib\System\IDisposable.cs" />
     <Compile Include="Korlib\System\InvalidOperationException.cs" />
     <Compile Include="Korlib\System\DivideByZeroException.cs" />

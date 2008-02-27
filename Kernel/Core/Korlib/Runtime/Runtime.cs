@@ -577,7 +577,6 @@ namespace SharpOS.Korlib.Runtime {
 			}
 
 			ptr = (byte*)GetPointerFromObject (testdvt);
-
 			if (testd.Assembly == null)
 				Serial.COM1.WriteLine ("*** testd.Assembly == null");
 			else
@@ -606,6 +605,7 @@ namespace SharpOS.Korlib.Runtime {
 			__TestMethodBoundaries ();
 			__TestObjectConversion ();
 			__TestIsBaseClassOf ();
+			
 		}
 
 		private unsafe static void __TestMethodBoundaries ()
@@ -715,7 +715,7 @@ namespace SharpOS.Korlib.Runtime {
 			Testcase.Test (o1.Member1 == 6, "Runtime",
 				"Object conversion (modify member via second reference, member check)");
 
-			Free (o1);
+			Runtime.Free (o1);
 		}
 
 		static bool HasValidMetadataToken (AssemblyMetadata assembly, uint token)
@@ -832,7 +832,7 @@ namespace SharpOS.Korlib.Runtime {
 			Runtime.Free (o1);
 			Runtime.Free (o2);
 			Runtime.Free (o3);
-			//Runtime.Free (o4);
+			Runtime.Free (o4);
 		}
 
 		public static TypeDefRow GetType (TypeInfo type)

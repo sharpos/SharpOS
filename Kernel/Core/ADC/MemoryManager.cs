@@ -74,7 +74,11 @@ namespace SharpOS.Kernel.ADC {
 
 			Diagnostics.Assert (currentNode != null, "MemoryManager.Allocate(uint): Unable to allocate memory; no sufficiently sized nodes available");
 			if (currentNode == null)
-				return null;
+			{
+				// ... how lucky do you feel?
+				throw new System.OutOfMemoryException("MemoryManager.Allocate(uint): Could not allocate memory");
+				//return null;
+			}
 
 			uint memoryLeft = currentNode->Size - allocate_size;
 
@@ -113,6 +117,12 @@ namespace SharpOS.Kernel.ADC {
 			allocated += (ulong) currentNode->Size;
 
 			Diagnostics.Assert (retPtr != 0, "MemoryManager.Allocate(uint): Allocation failed");
+			if (retPtr == 0)
+			{
+				// ... how lucky do you feel?
+				throw new System.OutOfMemoryException("MemoryManager.Allocate(uint): Could not allocate memory");
+				//return null;
+			}
 
 			// TODO X86.MemoryUtil.MemSet should not be called directly
             // Hopefully this change works
@@ -241,22 +251,36 @@ namespace SharpOS.Kernel.ADC {
 			uint memoryHeaderPointer = (uint) memory - (uint) sizeof (Header);
 			Header* freeHeader = (Header*) memoryHeaderPointer;
 
+			if (freeHeader->Next->Previous != freeHeader ||
+				freeHeader->Previous->Next != freeHeader)
+				throw new System.InvalidOperationException("Trying to free invalid pointer");
+
+
 			freeHeader->Free = 1;
 
 			Header* currentNode = freeHeader;
 
-			uint left = (uint)memory + currentNode->Size;
-            if (left < (uint)currentNode->Next)
-				currentNode->Size += (uint)currentNode->Next - left;
-			else if (left < memoryEnd)
-				currentNode->Size += memoryEnd - left;
-            
+
+			// I fixed this piece of code, 
+			//	but i'm not sure how usefull it realy is in the first place... 
+			//	can someone explain? (logicalerror)
+			uint startOfBlock	= (uint)memory;
+			uint endOfBlock		= startOfBlock + currentNode->Size;
+			if (currentNode->Next != firstNode && 
+				endOfBlock < (uint)currentNode->Next)
+				currentNode->Size = (uint)currentNode->Next - startOfBlock;
+			else 
+			if (currentNode->Next == firstNode && 
+				endOfBlock < memoryEnd)
+				currentNode->Size = memoryEnd - startOfBlock;
+
 
 			//Scan forward for the last consecutive free node
 			if (currentNode->Next != firstNode && currentNode->Next->Free == 1)
 			{
 				currentNode->Size += currentNode->Next->Size + (uint)sizeof(Header);
 				currentNode->Next = currentNode->Next->Next;
+				currentNode->Next->Previous = currentNode;
 			}
 
 			//Now scan backwards and consolidate free nodes
@@ -268,8 +292,11 @@ namespace SharpOS.Kernel.ADC {
 
 				currentNode = currentNode->Previous;
 			}
+			
 
-			if (currentNode->Size > lastFreeNode->Size && currentNode < lastFreeNode)
+
+			if (currentNode->Size > lastFreeNode->Size && 
+				currentNode < lastFreeNode)
 				lastFreeNode = currentNode;
 		}
 

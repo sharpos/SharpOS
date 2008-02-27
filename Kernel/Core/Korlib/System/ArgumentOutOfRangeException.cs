@@ -20,7 +20,12 @@ namespace InternalSystem {
 		{
 		}
 
-		public ArgumentOutOfRangeException (string message):
+		public ArgumentOutOfRangeException (string paramName):
+			base (paramName)
+		{
+		}
+
+		public ArgumentOutOfRangeException (string paramName, string message):
 			base (message)
 		{
 		}

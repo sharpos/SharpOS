@@ -83,7 +83,7 @@ namespace InternalSystem.Collections.Generic {
 		private unsafe void SetCapacity(int value)
 		{
 			if (internalCapacity < internalCount)
-				throw new System.ArgumentOutOfRangeException(
+				throw new System.ArgumentOutOfRangeException("value",
 					"internalCapacity is set to a value that is than internalCount.");
 
 			if (value != 0)
@@ -107,7 +107,10 @@ namespace InternalSystem.Collections.Generic {
 				MemoryManager.Free (Stubs.GetPointerFromObject (oldArray));
 			} else
 			{
-				internalArray = new T[internalCapacity];
+				if (internalCapacity > 0)
+					internalArray = new T[internalCapacity];
+				else
+					internalArray = null;
 				internalCount = 0;
 			}
 		}
@@ -148,7 +151,7 @@ namespace InternalSystem.Collections.Generic {
 			set
 			{
 				if (internalCapacity < Count)
-					throw new System.ArgumentOutOfRangeException(
+					throw new System.ArgumentOutOfRangeException("Capacity",
 						"List<T>.Capacity is set to a value that is than List<T>.Count.");
 				SetCapacity(value);
 			} 
@@ -473,7 +476,7 @@ namespace InternalSystem.Collections.Generic {
 		/// The object to locate in the System.Collections.Generic.List&lt;T&gt;. The value
 		/// can be null for reference types.
 		/// </param>
-		/// <param name="index">
+		/// <param name="startIndex">
 		/// The zero-based starting index of the search.
 		/// </param>
 		/// <returns>
@@ -482,14 +485,14 @@ namespace InternalSystem.Collections.Generic {
 		/// to the last element, if found; otherwise, –1.
 		/// </returns>
 		/// <exception cref="System.ArgumentOutOfRangeException">
-		/// index is outside the range of valid indexes for the System.Collections.Generic.List&lt;T&gt;.
+		/// startIndex is outside the range of valid indexes for the System.Collections.Generic.List&lt;T&gt;.
 		/// </exception>
-		public int IndexOf(T item, int index)
+		public int IndexOf(T item, int startIndex)
 		{
-			if (index < 0 || index >= Count)
-				throw new System.ArgumentOutOfRangeException("index", "index is outside the range of valid indexes for the List<T>.");
+			if (startIndex < 0 || startIndex >= Count)
+				throw new System.ArgumentOutOfRangeException("startIndex", "startIndex is outside the range of valid indexes for the List<T>.");
 			
-			for (int i = index; i < internalCount; i++)
+			for (int i = startIndex; i < internalCount; i++)
 			{
 				if (item.Equals(internalArray[i]))
 					return i;
@@ -506,7 +509,7 @@ namespace InternalSystem.Collections.Generic {
 		/// The object to locate in the System.Collections.Generic.List&lt;T&gt;. The value
 		/// can be null for reference types.
 		/// </param>
-		/// <param name="index">
+		/// <param name="startIndex">
 		/// The zero-based starting index of the search.
 		/// </param>
 		/// <param name="count">
@@ -518,23 +521,23 @@ namespace InternalSystem.Collections.Generic {
 		/// contains count number of elements, if found; otherwise, –1.
 		/// </returns>
 		/// <exception cref="System.ArgumentOutOfRangeException">
-		/// index is outside the range of valid indexes for the System.Collections.Generic.List&lt;T&gt;.-or-count
-		/// is less than 0.-or-index and count do not specify a valid section in the
+		/// startIndex is outside the range of valid indexes for the System.Collections.Generic.List&lt;T&gt;.-or-count
+		/// is less than 0.-or-startIndex and count do not specify a valid section in the
 		/// System.Collections.Generic.List&lt;T&gt;.
 		/// </exception>
-		public int IndexOf(T item, int index, int count)
+		public int IndexOf(T item, int startIndex, int count)
 		{
-			if (index < 0 || index >= Count)
-				throw new System.ArgumentOutOfRangeException("index", 
-					"index is outside the range of valid indexes for the List<T>.");
+			if (startIndex < 0 || startIndex >= Count)
+				throw new System.ArgumentOutOfRangeException("startIndex", 
+					"startIndex is outside the range of valid indexes for the List<T>.");
 			if (count < 0)
 				throw new System.ArgumentOutOfRangeException("count", 
 					"count is less than 0.");
-			if (index + count > Count)
-				throw new System.ArgumentOutOfRangeException("index", 
-					"index and count do not specify a valid section in the List<T>.");
+			if (startIndex + count > Count)
+				throw new System.ArgumentOutOfRangeException("startIndex", 
+					"startIndex and count do not specify a valid section in the List<T>.");
 			
-			for (int i = index; i < index + count; i++)
+			for (int i = startIndex; i < startIndex + count; i++)
 			{
 				if (item.Equals(internalArray[i]))
 					return i;
@@ -626,7 +629,7 @@ namespace InternalSystem.Collections.Generic {
 		/// The object to locate in the System.Collections.Generic.List&lt;T&gt;. The value
 		/// can be null for reference types.
 		/// </param>
-		/// <param name="index">
+		/// <param name="startIndex">
 		/// The zero-based starting index of the backward search.
 		/// </param>
 		/// <returns>
@@ -635,15 +638,15 @@ namespace InternalSystem.Collections.Generic {
 		/// to index, if found; otherwise, –1.
 		/// </returns>
 		/// <exception cref="System.ArgumentOutOfRangeException">
-		/// index is outside the range of valid indexes for the System.Collections.Generic.List&lt;T&gt;.
+		/// startIndex is outside the range of valid indexes for the System.Collections.Generic.List&lt;T&gt;.
 		/// </exception>
-		public int LastIndexOf(T item, int index)
+		public int LastIndexOf(T item, int startIndex)
 		{
-			if (index < 0 || index >= Count)
-				throw new System.ArgumentOutOfRangeException("index", 
-					"index is outside the range of valid indexes for the List<T>.");
+			if (startIndex < 0 || startIndex >= Count)
+				throw new System.ArgumentOutOfRangeException("startIndex", 
+					"startIndex is outside the range of valid indexes for the List<T>.");
 
-			throw new System.NotImplementedException("List<T>.LastIndexOf(T item, int index) is not implemented");
+			throw new System.NotImplementedException("List<T>.LastIndexOf(T item, int startIndex) is not implemented");
 		}
 		
 		/// <summary>
@@ -656,7 +659,7 @@ namespace InternalSystem.Collections.Generic {
 		/// The object to locate in the System.Collections.Generic.List&lt;T&gt;. The value
 		/// can be null for reference types.
 		/// </param>
-		/// <param name="index">
+		/// <param name="startIndex">
 		/// The zero-based starting index of the backward search.
 		/// </param>
 		/// <param name="count">
@@ -668,23 +671,23 @@ namespace InternalSystem.Collections.Generic {
 		/// and ends at index, if found; otherwise, –1.
 		/// </returns>
 		/// <exception cref="System.ArgumentOutOfRangeException">
-		/// index is outside the range of valid indexes for the System.Collections.Generic.List&lt;T&gt;.-or-count
-		/// is less than 0.-or-index and count do not specify a valid section in the
+		/// startIndex is outside the range of valid indexes for the System.Collections.Generic.List&lt;T&gt;.-or-count
+		/// is less than 0.-or-startIndex and count do not specify a valid section in the
 		/// System.Collections.Generic.List&lt;T&gt;.
 		/// </exception>
-		public int LastIndexOf(T item, int index, int count)
+		public int LastIndexOf(T item, int startIndex, int count)
 		{
-			if (index < 0 || index >= Count)
-				throw new System.ArgumentOutOfRangeException("index", 
-					"index is outside the range of valid indexes for the List<T>.");
+			if (startIndex < 0 || startIndex >= Count)
+				throw new System.ArgumentOutOfRangeException("startIndex", 
+					"startIndex is outside the range of valid indexes for the List<T>.");
 			if (count < 0)
 				throw new System.ArgumentOutOfRangeException("count", 
 					"count is less than 0.");
-			if (index + count > Count)
-				throw new System.ArgumentOutOfRangeException("index", 
-					"index and count do not specify a valid section in the List<T>.");
+			if (startIndex + count > Count)
+				throw new System.ArgumentOutOfRangeException("startIndex", 
+					"startIndex and count do not specify a valid section in the List<T>.");
 
-			throw new System.NotImplementedException("List<T>.LastIndexOf(T item, int index, int count) is not implemented");
+			throw new System.NotImplementedException("List<T>.LastIndexOf(T item, int startIndex, int count) is not implemented");
 		}
 		
 		/// <summary>
