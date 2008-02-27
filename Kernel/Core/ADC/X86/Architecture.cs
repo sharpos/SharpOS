@@ -130,5 +130,98 @@ namespace SharpOS.Kernel.ADC.X86 {
 			}
 		}
 		#endregion
+
+
+		// .. temporarily put here untill we have a beter mechanism to determine 
+		// which root devices are available (=platform specific)
+		#region RootDevices
+		private static IDevice[] rootDevices = null;
+
+		public static IDevice[] RootDevices
+		{
+			get
+			{
+				if (rootDevices == null)
+				{
+					// oh kill me now..
+					rootDevices = new IDevice[]
+					{
+						new GenericDevice(
+							"Keyboard",
+							"Unknown",
+							"PS/2 Keyboard",
+							new KeyboardDriver()
+						),
+						
+						/*
+						new GenericDevice(
+							"RTC",
+							"Unknown",
+							"Real Time Clock",
+							new RTCDriver()
+						),
+						new GenericDevice(
+							"UART",
+							"Unknown",
+							"UART Serial Port",
+							new UARTDriver()
+						),
+						*/
+						new GenericDevice(
+							"LPC", 
+							"Intel", 
+							"Low Pin Count Bus", 
+							new LPCBusDriver()),
+
+						new GenericDevice(
+							"PCI", 
+							"PCI Special Interest Group", 
+							"Peripheral Component Interconnect", 
+							new PCIBusDriver()),
+
+						/*
+						new GenericDevice(
+							"AGP", 
+							"Intel", 
+							"Accelerated Graphics Port", 
+							new AGPBusDriver()),
+						
+						new GenericDevice(
+							"USB", 
+							"USB Implementers Forum", 
+							"Universal Serial Bus", 
+							new USBBusDriver()),
+						
+						new GenericDevice(
+							"SCSI", 
+							"Unknown", 
+							"Small Computer System Interface", 
+							new SCSIBusDriver()),
+						
+						new GenericDevice(
+							"IEEE 1394", 
+							"Institute of Electrical and Electronics Engineers", 
+							"FireWire", 
+							new FireWireBusDriver()),
+						
+						// formerly known as ATA
+						new GenericDevice(
+							"PATA", 
+							"Western Digital", 
+							"Parallel Advanced Technology Attachment", 
+							new PATABusDriver()),
+						
+						new GenericDevice(
+							"SATA", 
+							"Serial ATA International Organization", 
+							"Serial Advanced Technology Attachment", 
+							new SATABusDriver()),
+						*/
+					};
+				}
+				return rootDevices;
+			}
+		}
+		#endregion
 	}
 }

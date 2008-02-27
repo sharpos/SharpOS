@@ -9,110 +9,49 @@
 //
 
 using System;
-using SharpOS.Kernel.DriverSystem;
+using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Kernel.ADC.X86 {
+namespace SharpOS.Kernel.DriverSystem {
 
 	// TODO: would be nice to be able to use List<IDevice> internally ...
 	// TODO: eventually need events to notify subscribers when 
 	//		devices have been changed/added/removed
 	// TODO: ability to register root devices
-	// TODO: drivers should be found trough drivermanager.
 	public class DeviceManager : IDeviceManager	{
 
+		#region Constructor
 		public DeviceManager(IHardwareResourceManager _manager)
 		{
 			manager = _manager;
 		}
+		#endregion
 
+		#region HardwareResourceManager
 		private IHardwareResourceManager manager;
+		#endregion
 
-		#region (Root) Devices
-		private IDevice[]	rootDevices = new IDevice[]
+		#region Devices
+		public IDevice[]	Devices 
 		{
-			new GenericDevice(
-				"Keyboard",
-				"Unknown",
-				"PS/2 Keyboard",
-				new KeyboardDriver()
-			),
-			
-			/*
-			new GenericDevice(
-				"RTC",
-				"Unknown",
-				"Real Time Clock",
-				new RTCDriver()
-			),
-			new GenericDevice(
-				"UART",
-				"Unknown",
-				"UART Serial Port",
-				new UARTDriver()
-			),
-			*/
-			new GenericDevice(
-				"LPC", 
-				"Intel", 
-				"Low Pin Count Bus", 
-				new LPCBusDriver()),
-
-			new GenericDevice(
-				"PCI", 
-				"PCI Special Interest Group", 
-				"Peripheral Component Interconnect", 
-				new PCIBusDriver()),
-
-			/*
-			new GenericDevice(
-				"AGP", 
-				"Intel", 
-				"Accelerated Graphics Port", 
-				new AGPBusDriver()),
-			
-			new GenericDevice(
-				"USB", 
-				"USB Implementers Forum", 
-				"Universal Serial Bus", 
-				new USBBusDriver()),
-			
-			new GenericDevice(
-				"SCSI", 
-				"Unknown", 
-				"Small Computer System Interface", 
-				new SCSIBusDriver()),
-			
-			new GenericDevice(
-				"IEEE 1394", 
-				"Institute of Electrical and Electronics Engineers", 
-				"FireWire", 
-				new FireWireBusDriver()),
-			
-			// formerly known as ATA
-			new GenericDevice(
-				"PATA", 
-				"Western Digital", 
-				"Parallel Advanced Technology Attachment", 
-				new PATABusDriver()),
-			
-			new GenericDevice(
-				"SATA", 
-				"Serial ATA International Organization", 
-				"Serial Advanced Technology Attachment", 
-				new SATABusDriver()),
-			*/
-		};
-		public IDevice[]	Devices { get { return rootDevices; } }
+			get
+			{
+				return Architecture.RootDevices;
+			}
+		}
 		#endregion
 
 		#region Setup
 		public void Setup()
 		{
-			InitializeDevices(rootDevices);
+			InitializeDevices(Architecture.RootDevices);
 		}
-
+		#endregion
+		
+		#region InitializeDriver (internal)
 		internal bool InitializeDriver(IDevice device, IDriver driver)
 		{
+			if (device == null)
+				throw new ArgumentNullException("device");
 			if (driver == null)
 				throw new ArgumentNullException("driver");
 
@@ -132,7 +71,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 				context.Release();
 			return false;
 		}
-
+		#endregion
+		
+		#region InitializeDevices (internal)
 		internal void InitializeDevices(IDevice[] devices)
 		{
 			if (devices == null)

@@ -79,6 +79,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ADC\X86\IOPortStream8bit.cs" />
+    <Compile Include="DriverSystem\DeviceManager.cs" />
     <Compile Include="DriverSystem\DriverFlags.cs" />
     <Compile Include="DriverSystem\Drivers\PCIBusDriver.cs" />
     <Compile Include="DriverSystem\GenericDriver.cs" />
@@ -111,7 +112,6 @@
     <Compile Include="ADC\X86\Timer.cs" />
     <Compile Include="ADC\X86\PIT.cs" />
     <Compile Include="ADC\X86\IDT.cs" />
-    <Compile Include="ADC\X86\DeviceManager.cs" />
     <Compile Include="DriverSystem\GenericDevice.cs" />
     <Compile Include="ADC\ExceptionHandling.cs" />
     <Compile Include="ADC\MemoryUtil.cs" />
@@ -164,6 +164,16 @@
     <Compile Include="FileSystem\FileSystem.cs" />
     <Compile Include="DiagnosticTool\Server.cs" />
     <Compile Include="Korlib\System\ArgumentOutOfRangeException.cs" />
+    <Compile Include="Korlib\System\Collections\Generic\ICollection.cs" />
+    <Compile Include="Korlib\System\Collections\Generic\IEnumerable.cs" />
+    <Compile Include="Korlib\System\Collections\Generic\IEnumerator.cs" />
+    <Compile Include="Korlib\System\Collections\Generic\IList.cs" />
+    <Compile Include="Korlib\System\Collections\Generic\List.cs" />
+    <Compile Include="Korlib\System\Collections\ICollection.cs" />
+    <Compile Include="Korlib\System\Collections\IEnumerable.cs" />
+    <Compile Include="Korlib\System\Collections\IEnumerator.cs" />
+    <Compile Include="Korlib\System\Collections\IList.cs" />
+    <Compile Include="Korlib\System\IDisposable.cs" />
     <Compile Include="Korlib\System\InvalidOperationException.cs" />
     <Compile Include="Korlib\System\DivideByZeroException.cs" />
     <Compile Include="Korlib\System\NullReferenceException.cs" />

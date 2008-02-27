@@ -52,6 +52,12 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return 0;
 		}
+		
+		[AOTAttr.ADCStub]
+		public static uint NextPowerOf2(uint x)
+		{
+			return 0;
+		}
 
 		[AOTAttr.ADCStub]
 		public unsafe static void MemCopy(uint src, uint dst, uint count)

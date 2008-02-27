@@ -35,6 +35,11 @@ namespace SharpOS.Kernel.Tests.CS {
 			}
 		}
 
+		private class GenericType2<Type>
+		{
+			public GenericType<Type> test = new GenericType<Type>();
+		}
+
 		private static Type If<Type> (bool condition, Type first, Type second)
 		{
 			if (condition)
@@ -61,6 +66,23 @@ namespace SharpOS.Kernel.Tests.CS {
 		{
 			return GetGenericTypeData ().Value;
 		}
+
+		/*
+		private static GenericType2<uint> GetGenericType2Data ()
+		{
+			GenericType2<uint> result = new GenericType2<uint> ();
+
+			result.test.Value = 1;
+
+			return result;
+		}
+
+		public unsafe static uint CMPGenericType2 ()
+		{
+			return GetGenericType2Data ().test.Value;
+		}*/
+
+
 #else
 		public static uint CMPGenerics ()
 		{

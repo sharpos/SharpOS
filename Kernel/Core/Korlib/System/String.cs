@@ -39,7 +39,10 @@ namespace InternalSystem {
 
 		private unsafe char GetChar (int index)
 		{
-			// TODO range checking
+			if (index < 0)
+				throw new System.ArgumentOutOfRangeException("index is less than zero.");
+			if (index >= this.length)
+				throw new System.ArgumentOutOfRangeException("index specifies a position that is not within this string.");
 
 			fixed (char* p = &this.firstChar) {
 				return p [index];

@@ -87,5 +87,15 @@ namespace SharpOS.Kernel.ADC {
 			get { return null; }
 		}
 		#endregion
+		
+		// .. temporarily put here untill we have a beter mechanism to determine 
+		// which root devices are available (=platform specific)
+		#region RootDevices		
+		public static IDevice[] RootDevices
+		{
+			[AOTAttr.ADCStub]
+			get { return null; }
+		}
+		#endregion
 	}
 }

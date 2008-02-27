@@ -19,6 +19,7 @@ using SharpOS.Kernel.Foundation;
 using SharpOS.Kernel.Memory;
 using SharpOS.Korlib.Runtime;
 using SharpOS.AOT.Metadata;
+using System.Collections.Generic;
 
 namespace SharpOS.Kernel {
 

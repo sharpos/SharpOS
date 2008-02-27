@@ -1,4 +1,4 @@
-//
+﻿//
 // (C) 2006-2007 The SharpOS Project Team (http://www.sharpos.org)
 //
 // Authors:
@@ -12,16 +12,16 @@ using SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
 
 namespace InternalSystem {
+	/// <summary>
+	/// Defines a method to release allocated resources.
+	/// </summary>
 	[TargetNamespace ("System")]
-	public class InvalidOperationException: InternalSystem.SystemException {
-		public InvalidOperationException () :
-			base ("The requested operation cannot be performed.")
-		{
-		}
-
-		public InvalidOperationException (string message):
-			base (message)
-		{
-		}
+	public interface IDisposable
+	{
+		/// <summary>
+		/// Performs application-defined tasks associated with freeing, releasing, or
+		/// resetting unmanaged resources.
+		/// </summary>
+		void Dispose();
 	}
 }
