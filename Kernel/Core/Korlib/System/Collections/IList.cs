@@ -19,7 +19,9 @@ namespace InternalSystem.Collections {
 	/// by index.
 	/// </summary>
 	[TargetNamespace ("System.Collections")]
-	public interface IList : ICollection, IEnumerable
+	public interface IList : 
+		System.Collections.ICollection, 
+		System.Collections.IEnumerable
 	{
 		/// <summary>
 		/// Gets a value indicating whether the System.Collections.IList has a fixed

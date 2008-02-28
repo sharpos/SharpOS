@@ -220,15 +220,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			unchecked
 			{
-				//TODO: remove double cast (byte)(int) when direct case from ulong to byte works
-				IO.WriteByte(port, (byte)(int)(((UInt64)value      ) & 255));
-				IO.WriteByte(port, (byte)(int)(((UInt64)value >>  8) & 255));
-				IO.WriteByte(port, (byte)(int)(((UInt64)value >> 16) & 255));
-				IO.WriteByte(port, (byte)(int)(((UInt64)value >> 24) & 255));
-				IO.WriteByte(port, (byte)(int)(((UInt64)value >> 32) & 255));
-				IO.WriteByte(port, (byte)(int)(((UInt64)value >> 40) & 255));
-				IO.WriteByte(port, (byte)(int)(((UInt64)value >> 48) & 255));
-				IO.WriteByte(port, (byte)(int)(((UInt64)value >> 56) & 255));
+				IO.WriteByte(port, (byte)(((UInt64)value      ) & 255));
+				IO.WriteByte(port, (byte)(((UInt64)value >>  8) & 255));
+				IO.WriteByte(port, (byte)(((UInt64)value >> 16) & 255));
+				IO.WriteByte(port, (byte)(((UInt64)value >> 24) & 255));
+				IO.WriteByte(port, (byte)(((UInt64)value >> 32) & 255));
+				IO.WriteByte(port, (byte)(((UInt64)value >> 40) & 255));
+				IO.WriteByte(port, (byte)(((UInt64)value >> 48) & 255));
+				IO.WriteByte(port, (byte)(((UInt64)value >> 56) & 255));
 			}
 		}
 		#endregion
@@ -236,15 +235,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region Write UInt64
 		public void Write(UInt64 value)
 		{
-			//TODO: remove double cast (byte)(int) when direct case from ulong to byte works
-			IO.WriteByte(port, (byte)(int)((value      ) & 255));
-			IO.WriteByte(port, (byte)(int)((value >>  8) & 255));
-			IO.WriteByte(port, (byte)(int)((value >> 16) & 255));
-			IO.WriteByte(port, (byte)(int)((value >> 24) & 255));
-			IO.WriteByte(port, (byte)(int)((value >> 32) & 255));
-			IO.WriteByte(port, (byte)(int)((value >> 40) & 255));
-			IO.WriteByte(port, (byte)(int)((value >> 48) & 255));
-			IO.WriteByte(port, (byte)(int)((value >> 56) & 255));
+			IO.WriteByte(port, (byte)((value      ) & 255));
+			IO.WriteByte(port, (byte)((value >>  8) & 255));
+			IO.WriteByte(port, (byte)((value >> 16) & 255));
+			IO.WriteByte(port, (byte)((value >> 24) & 255));
+			IO.WriteByte(port, (byte)((value >> 32) & 255));
+			IO.WriteByte(port, (byte)((value >> 40) & 255));
+			IO.WriteByte(port, (byte)((value >> 48) & 255));
+			IO.WriteByte(port, (byte)((value >> 56) & 255));
 		}
 		#endregion
 		

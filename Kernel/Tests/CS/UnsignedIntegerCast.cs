@@ -111,7 +111,7 @@ namespace SharpOS.Kernel.Tests.CS {
 		/// </summary>
 		public static uint CMPULong2Byte ()
 		{
-/*			ulong lvalue = 100;
+			ulong lvalue = 100;
 			byte  bvalue = 0;
 
 			bvalue = (byte) lvalue;
@@ -119,7 +119,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			if (bvalue == 100)
 				return 1;
 			else
-*/				return 0;
+				return 0;
 		}
 
 	}

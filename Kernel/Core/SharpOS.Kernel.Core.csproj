@@ -164,6 +164,7 @@
     <Compile Include="FileSystem\FileSystem.cs" />
     <Compile Include="DiagnosticTool\Server.cs" />
     <Compile Include="Korlib\System\ArgumentOutOfRangeException.cs" />
+    <Compile Include="Korlib\System\CharEnumerator.cs" />
     <Compile Include="Korlib\System\Collections\ArrayList.cs" />
     <Compile Include="Korlib\System\Collections\Generic\ICollection.cs" />
     <Compile Include="Korlib\System\Collections\Generic\IEnumerable.cs" />

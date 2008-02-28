@@ -19,7 +19,8 @@ namespace InternalSystem.Collections {
 	/// collections.
 	/// </summary>
 	[TargetNamespace ("System.Collections")]
-	public interface ICollection : System.Collections.IEnumerable
+	public interface ICollection : 
+		System.Collections.IEnumerable
 	{
 		/// <summary>
 		/// Gets the number of elements contained in the System.Collections.ICollection.

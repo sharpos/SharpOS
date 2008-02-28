@@ -21,7 +21,10 @@ namespace InternalSystem.Collections.Generic {
 	/// The type of elements in the list.
 	/// </typeparam>
 	[TargetNamespace ("System.Collections.Generic")]
-	public interface IList<T> : ICollection<T>, IEnumerable<T>, IEnumerable
+	public interface IList<T> : 
+		//System.Collections.Generic.ICollection<T>, 
+		//System.Collections.Generic.IEnumerable<T>, 
+		System.Collections.IEnumerable
 	{
 		/// <summary>
 		/// Gets or sets the element at the specified index.

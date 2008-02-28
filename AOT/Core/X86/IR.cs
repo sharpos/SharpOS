@@ -1577,6 +1577,19 @@ namespace SharpOS.AOT.X86 {
 						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
 
 					break;
+
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_I1:
+				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_U1:
+					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (value)));
+
+					this.assembly.AND (R32.EAX, (uint) 0xFF);
+
+					if (assignee.IsRegisterSet)
+						this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
+					else
+						this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EAX);
+					break;
+
 				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_Ovf_I:
 				case SharpOS.AOT.IR.Instructions.Convert.Type.Conv_Ovf_I4:
 					string exceptLabel = this.assembly.GetCMPLabel;

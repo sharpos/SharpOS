@@ -21,7 +21,9 @@ namespace InternalSystem.Collections.Generic {
 	/// The type of objects to enumerate.
 	/// </typeparam>
 	[TargetNamespace ("System.Collections.Generic")]
-	public interface IEnumerator<T> : System.IDisposable, System.Collections.IEnumerator
+	public interface IEnumerator<T> : 
+		System.IDisposable, 
+		System.Collections.IEnumerator
 	{
 		/// <summary>
 		/// Gets the element in the collection at the current position of the enumerator.

@@ -16,7 +16,10 @@ using SharpOS.Kernel.Foundation;
 namespace InternalSystem {
 	[StructLayout (LayoutKind.Sequential)]
 	[TargetNamespace ("System")]
-	public class String : InternalSystem.Object {
+	public class String : 
+		InternalSystem.Object, 
+		System.Collections.IEnumerable 
+	{
 		private int length;
 		private char firstChar;
 
@@ -90,6 +93,11 @@ namespace InternalSystem {
 		public static bool operator != (InternalSystem.String a, InternalSystem.String b)
 		{
 			return !(a == b);
+		}
+
+		public System.Collections.IEnumerator GetEnumerator()
+		{
+			return new CharEnumerator(this);
 		}
 	}
 }

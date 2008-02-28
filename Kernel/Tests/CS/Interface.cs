@@ -129,21 +129,23 @@ namespace SharpOS.Kernel.Tests.CS {
 		}
 
 		public interface BaseInterface {
-			void		TestFunction	();
+			int		TestFunction	();
 		}
 
-		public abstract class BaseAbstract : BaseInterface {
-			public virtual void TestFunction() {}
+		public class BaseInterfaceImplementation : BaseInterface {
+			public int TestFunction() { return 10; }
 		}
 		
-		public class ResultClass : BaseAbstract {}
+		public class InheritedClass : BaseInterfaceImplementation {}
 		
-		public static uint CMPInterfaceAbstractOut ()
+		public static uint CMPInterfaceImplementationInherited ()
 		{
-			/*ResultClass instance = new ResultClass();
-			instance.TestFunction();
-			return 1;
-			 */
+			InheritedClass instance = new InheritedClass();
+			/*
+			// hangs kernel, no error message...
+			if (instance.TestFunction() == 10)
+				return 1;
+			*/
 			return 0;
 		}
 
@@ -247,6 +249,23 @@ namespace SharpOS.Kernel.Tests.CS {
 			if ((new Class2 () as Iface2).GetNumber() == 69)
 			        return 1;
 
+			return 0;
+		}
+		
+		private const string TEST_STRING = "TST\u2665";
+		public static uint CMPUseIEnumeratorInterface ()
+		{
+			System.Collections.IEnumerator	OperandEnum = TEST_STRING.GetEnumerator( );
+			/*
+			// this causes a "not implemented" exception in the AOT compiler
+			while (OperandEnum.MoveNext())
+			{
+				// this doesn't cause any problems
+				if ((char)OperandEnum.Current != TEST_STRING [i++])
+					return 0;
+			}
+			return 1;
+			*/
 			return 0;
 		}
 	}

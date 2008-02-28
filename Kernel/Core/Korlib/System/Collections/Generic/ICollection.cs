@@ -21,7 +21,9 @@ namespace InternalSystem.Collections.Generic {
 	/// The type of the elements in the collection.
 	/// </typeparam>
 	[TargetNamespace ("System.Collections.Generic")]
-	public interface ICollection<T> : IEnumerable<T>, IEnumerable
+	public interface ICollection<T> : 
+		//System.Collections.Generic.IEnumerable<T>, 
+		System.Collections.IEnumerable
 	{
 		/// <summary>
 		/// Gets the number of elements contained in the System.Collections.Generic.ICollection&lt;T&gt;.

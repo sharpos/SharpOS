@@ -22,7 +22,8 @@ namespace InternalSystem.Collections.Generic {
 	/// The type of objects to enumerate.
 	/// </typeparam>
 	[TargetNamespace ("System.Collections.Generic")]
-	public interface IEnumerable<T> : IEnumerable
+	public interface IEnumerable<T> : 
+		System.Collections.IEnumerable
 	{
 		/// <summary>
 		/// Returns an enumerator that iterates through the collection.
