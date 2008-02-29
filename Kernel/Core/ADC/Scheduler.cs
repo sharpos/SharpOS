@@ -29,7 +29,6 @@ namespace SharpOS.Kernel.ADC {
 		private static bool enabled = false;
 		public static bool Enabled { get { return enabled; } set { enabled = value; } }
 
-		private static int position = -1;
 		private static void** ThreadScheduled = (void**) Stubs.StaticAlloc ((uint) (4 * EntryModule.MaxThreads));
 
 		public static void DumpThreads ()
@@ -75,6 +74,7 @@ namespace SharpOS.Kernel.ADC {
 			return false;
 		}
 
+		private static int position = -1;
 		public static void* GetNextThread (void* currentThread)
 		{
 			// do scheduling here...
@@ -82,20 +82,24 @@ namespace SharpOS.Kernel.ADC {
 			if (enabled && ThreadScheduled [0] != null) {
 				// for now, just return the current thread ...
 				if (position != -1) {
-					ThreadScheduled [position] = currentThread;
+					UpdateThread(ThreadScheduled [position], currentThread);
 				}
 
 				position++;
 				if (position >= EntryModule.MaxThreads ||
 					ThreadScheduled [position] == null)
 					position = 0;
-
-				TextMode.Write (position);
 				
 				currentThread = ThreadScheduled [position];
 			}
 
 			return currentThread;
+		}
+		
+		[AOTAttr.ADCStub]
+		private static unsafe void UpdateThread(void* thread, void* currentThread)
+		{
+			Diagnostics.Error ("Unimplemented - CreateThread");
 		}
 	}
 }

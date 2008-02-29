@@ -78,5 +78,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 			}
 			return null;
 		}
+
+		private static unsafe void UpdateThread(void* thread, void* currentThread)
+		{
+			IDT.ISRData* threadData			= (IDT.ISRData*)thread;
+			IDT.ISRData* currentThreadData	= (IDT.ISRData*)currentThread;
+
+			threadData->Stack = currentThreadData->Stack;
+		}
 	}
 }
