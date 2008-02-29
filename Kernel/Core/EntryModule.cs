@@ -170,6 +170,14 @@ namespace SharpOS.Kernel {
 			InternalSystem.String.__RunTests ();
 			Runtime.__RunTests ();
 #endif
+			/*
+			void* thread = Scheduler.CreateThread(Stubs.GetFunctionPointer ("TEST"));
+			void* thread2 = Scheduler.CreateThread(Stubs.GetFunctionPointer ("TEST2"));
+
+			Scheduler.ScheduleThread(thread);			
+			Scheduler.ScheduleThread(thread2);
+			Scheduler.Enabled = true;
+			*/
 
 			//Multiboot.WriteMultibootInfo();
 
@@ -190,6 +198,40 @@ namespace SharpOS.Kernel {
 				{
 					procs [i].Halt ();
 				}
+			}
+		}
+		
+		[SharpOS.AOT.Attributes.Label ("TEST")]
+		public static void Test()
+		{
+			int counter = 0;
+			bool stayInLoop = true;
+			while (stayInLoop)
+			{
+				//if (counter < 10000 && (counter % 100) == 0)
+				{
+					Barrier.Enter();
+					TextMode.Write(".");
+					Barrier.Exit();
+				}
+				counter++;
+			}
+		}
+		
+		[SharpOS.AOT.Attributes.Label ("TEST2")]
+		public static void Test2()
+		{
+			int counter = 0;
+			bool stayInLoop = true;
+			while (stayInLoop)
+			{
+				//if (counter < 10000 && (counter % 100) == 0)
+				{
+					Barrier.Enter();
+					TextMode.Write("+");
+					Barrier.Exit();
+				}
+				counter++;
 			}
 		}
 

@@ -123,8 +123,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 				MemoryUtil.Call(timerEvent[x], ticks);
 			}
 
+			uint irq = data.Stack->IrqIndex;
+
 			// run scheduler here..
 			data = *((IDT.ISRData*) ADC.Scheduler.GetNextThread ((void*) &data));
+
+			data.Stack->IrqIndex = irq;
 		}
 		#endregion
 	}

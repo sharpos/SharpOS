@@ -194,8 +194,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 			public uint		EDI;
 			public uint		ESI;
 			public uint		EBP;
-			public uint		_ESP;
-			public uint		_EBX;
+			public uint		ESP;
+			public uint		EBX;
 			public uint		EDX;
 			public uint		ECX;
 			public uint		EAX;	
@@ -203,16 +203,10 @@ namespace SharpOS.Kernel.ADC.X86 {
 			public uint		FS;
 			public uint		GS;
 			public uint		ES;
-			public uint		DS;			
-			// ...above should be pushed on the new stack, not the old stack!
-
-			public uint		ESP;
-			public uint		EBX;
-			// ...above could be prevented if we could write to a static field using assembly
-
+			public uint		DS;
 			public uint		IrqIndex;
 			public uint		Error;
-			// ...above should also be pushed on new stack
+			// ...above should be pushed on the new stack, not the old stack!
 
 			public uint		EIP;
 			public uint		CS;
@@ -2210,10 +2204,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			Asm.LABEL ("ISRDispatcher");
 			
-			Asm.PUSH (R32.EBX);
-			Asm.PUSH (R32.ESP);
-
-
 			Asm.PUSH (Seg.DS);
 			Asm.PUSH (Seg.ES);
 			Asm.PUSH (Seg.GS);
@@ -2244,13 +2234,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 			
 
 			// Push the fake stack frame data
-			Asm.PUSH (new DWordMemory (null, R32.EBX, null, 0, 17 * 4));	// get EIP from old stack
-			Asm.PUSH (R32.EBP);	
+			//	get EIP from old stack:
+			Asm.PUSH (new DWordMemory (null, R32.EBX, null, 0, 15 * 4));	// FrameIP
+			Asm.PUSH (R32.EBP);												// FrameBP
 			Asm.MOV (R32.EBP, R32.ESP);
 
 			// Get the index of the interrupt and read the address of the handler
 			// 15 is the position on the old stack
-			Asm.MOVZX (R32.EAX, new ByteMemory (null, R32.EBX, null, 0, 15 * 4));
+			Asm.MOVZX (R32.EAX, new ByteMemory (null, R32.EBX, null, 0, 13 * 4));
 			Asm.SHL (R32.EAX, 2);
 			Asm.MOV (R32.EDX, IDT_TABLE);
 			Asm.MOV (R32.EAX, new DWordMemory (null, R32.EAX, R32.EDX, 0, 0));
@@ -2273,9 +2264,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.POP (Seg.GS);
 			Asm.POP (Seg.ES);
 			Asm.POP (Seg.DS);
-			
-			Asm.POP (R32.ESP);
-			Asm.POP (R32.EBX);
 
 			Asm.ADD (R32.ESP, 0x08);
 			Asm.STI ();

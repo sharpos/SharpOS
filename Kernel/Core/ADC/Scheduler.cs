@@ -26,6 +26,9 @@ namespace SharpOS.Kernel.ADC {
 			return null;
 		}
 
+		private static bool enabled = false;
+		public static bool Enabled { get { return enabled; } set { enabled = value; } }
+
 		private static int position = -1;
 		private static void** ThreadScheduled = (void**) Stubs.StaticAlloc ((uint) (4 * EntryModule.MaxThreads));
 
@@ -76,7 +79,7 @@ namespace SharpOS.Kernel.ADC {
 		{
 			// do scheduling here...
 
-			if (ThreadScheduled [0] != null) {
+			if (enabled && ThreadScheduled [0] != null) {
 				// for now, just return the current thread ...
 				if (position != -1) {
 					ThreadScheduled [position] = currentThread;
@@ -88,7 +91,7 @@ namespace SharpOS.Kernel.ADC {
 					position = 0;
 
 				TextMode.Write (position);
-
+				
 				currentThread = ThreadScheduled [position];
 			}
 

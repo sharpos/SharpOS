@@ -53,15 +53,17 @@ namespace SharpOS.Kernel.ADC.X86 {
 					ThreadMemory [i].Stack->DS = GDT.DataSelector;
 					ThreadMemory [i].Stack->SS = GDT.DataSelector;
 					ThreadMemory [i].Stack->CS = GDT.CodeSelector;
+					
+					ThreadMemory [i].FrameIP =
 					ThreadMemory [i].Stack->EIP = function_address;
-					ThreadMemory [i].Stack->ESP = ((uint)ThreadStack) + (uint)(i * STACK_SIZE) + (uint)STACK_SIZE;	// stack pointer
+
+					ThreadMemory [i].FrameBP = 0;
+
+					ThreadMemory [i].Stack->UserESP =
+					ThreadMemory [i].Stack->EBP = 
+					ThreadMemory [i].Stack->ESP = (uint)ThreadStack[i];	// stack pointer
 
 					ThreadMemory [i].Stack->EFlags = 0x00000202;
-					
-					// set up stack etc.
-					//ThreadMemory[i].SS	= (uint)ss;				// stack segment
-					//ThreadMemory[i].CS	= (uint)cs;				// code segment
-					//ThreadMemory[i].EBP	= ...;					// no need to set?
 
 					// |------| start of stack memory
 					// |      |
