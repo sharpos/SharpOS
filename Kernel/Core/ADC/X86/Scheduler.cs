@@ -14,13 +14,20 @@ using SharpOS.AOT.IR;
 
 namespace SharpOS.Kernel.ADC.X86 {
 	public static unsafe class Scheduler {
-		
+	
+		const uint STACK_SIZE		= 8192;
+
 		// Sigh.. we really need to get vtables & memory management working...
-		private static IDT.ISRData* ThreadMemory = (IDT.ISRData*) Stubs.StaticAlloc ((uint) (/*sizeof(IDT.ISRData)*/(19 * 4) * EntryModule.MaxThreads));
-		private static bool* ThreadMemoryUsed = (bool*) Stubs.StaticAlloc (1 * EntryModule.MaxThreads);
+		private static IDT.ISRData* ThreadMemory		= null;
+		private static IDT.Stack**	ThreadStack			= null;
+		private static bool*		ThreadMemoryUsed	= null;
 
 		public static unsafe void Setup ()
 		{
+			ThreadMemory		= (IDT.ISRData*) MemoryManager.Allocate ((uint) (IDT.ISRData.SizeOf * EntryModule.MaxThreads));
+			ThreadMemoryUsed	= (bool*) MemoryManager.Allocate (1 * EntryModule.MaxThreads);
+			ThreadStack			= (IDT.Stack**) MemoryManager.Allocate (4 * EntryModule.MaxThreads);
+
 			for (int i = 0; i < EntryModule.MaxThreads; i++)
 				ThreadMemoryUsed [i] = false;
 		}
@@ -34,23 +41,27 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 					MemoryUtil.MemSet32 (0, (uint) (void*) &(ThreadMemory [i]), (uint) (sizeof (IDT.ISRData) / 4));
 
-					// ... temp code
-					ThreadMemory [i].FS = GDT.DataSelector;
-					ThreadMemory [i].GS = GDT.DataSelector;
-					ThreadMemory [i].ES = GDT.DataSelector;
-					ThreadMemory [i].DS = GDT.DataSelector;
-					ThreadMemory [i].SS = GDT.DataSelector;
-					ThreadMemory [i].CS = GDT.CodeSelector;
-					ThreadMemory [i].EIP = function_address;
 
-					ThreadMemory [i].EFlags = 0x00000202;
+					if (ThreadStack[i] == null)
+						ThreadStack[i] = (IDT.Stack*)MemoryManager.Allocate(STACK_SIZE);
+
+					// ... temp code
+					ThreadMemory [i].Stack = ThreadStack[i];
+					ThreadMemory [i].Stack->FS = GDT.DataSelector;
+					ThreadMemory [i].Stack->GS = GDT.DataSelector;
+					ThreadMemory [i].Stack->ES = GDT.DataSelector;
+					ThreadMemory [i].Stack->DS = GDT.DataSelector;
+					ThreadMemory [i].Stack->SS = GDT.DataSelector;
+					ThreadMemory [i].Stack->CS = GDT.CodeSelector;
+					ThreadMemory [i].Stack->EIP = function_address;
+					ThreadMemory [i].Stack->ESP = ((uint)ThreadStack) + (uint)(i * STACK_SIZE) + (uint)STACK_SIZE;	// stack pointer
+
+					ThreadMemory [i].Stack->EFlags = 0x00000202;
+					
 					// set up stack etc.
 					//ThreadMemory[i].SS	= (uint)ss;				// stack segment
-					//ThreadMemory[i].ESP	= stack + stacksize;	// stack pointer
-					//ThreadMemory[i].EBP	= ...;					// no need to set?
-
 					//ThreadMemory[i].CS	= (uint)cs;				// code segment
-					//ThreadMemory[i].EIP	= function_address;		// instruction pointer
+					//ThreadMemory[i].EBP	= ...;					// no need to set?
 
 					// |------| start of stack memory
 					// |      |
@@ -59,7 +70,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 					// | DATA |  = BSP
 					// | DATA |
 					// |------| end of stack memory
-
+					
 					return (void*) &ThreadMemory [i];
 				}
 			}

@@ -26,6 +26,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 	/// the correct response to interrupts and exceptions.
 	/// </summary>
 	public unsafe class IDT {
+		private const uint		STACK_SIZE		= 8192;
+		private static uint		IDT_Stack_Top	= ((uint) Stubs.StaticAlloc (STACK_SIZE + 4)) + STACK_SIZE;
+		
 		#region Interrupt list
 		public enum Interrupt {
 			// CPU Exceptions
@@ -172,31 +175,50 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 		#endregion
 
+
 		#region ISRData struct
 		[StructLayout (LayoutKind.Sequential)]
 		public struct ISRData {
-			public uint FrameBP;
-			public uint FrameIP;
-			public uint SS;
-			public uint FS;
-			public uint GS;
-			public uint ES;
-			public uint DS;
-			public uint EDI;
-			public uint ESI;
-			public uint EBP;
-			public uint ESP;
-			public uint EBX;
-			public uint EDX;
-			public uint ECX;
-			public uint EAX;
-			public uint IrqIndex;
-			public uint Error;
-			public uint EIP;
-			public uint CS;
-			public uint EFlags;
-			public uint UserESP;
+			public const int SizeOf = 3 * 4;
+			
+			public uint		FrameBP;
+			public uint		FrameIP;
+			public Stack*	Stack;	
 		}
+		#endregion
+
+		#region Stack
+		[StructLayout (LayoutKind.Sequential)]
+		public struct Stack {
+	
+			public uint		EDI;
+			public uint		ESI;
+			public uint		EBP;
+			public uint		_ESP;
+			public uint		_EBX;
+			public uint		EDX;
+			public uint		ECX;
+			public uint		EAX;	
+			public uint		SS;
+			public uint		FS;
+			public uint		GS;
+			public uint		ES;
+			public uint		DS;			
+			// ...above should be pushed on the new stack, not the old stack!
+
+			public uint		ESP;
+			public uint		EBX;
+			// ...above could be prevented if we could write to a static field using assembly
+
+			public uint		IrqIndex;
+			public uint		Error;
+			// ...above should also be pushed on new stack
+
+			public uint		EIP;
+			public uint		CS;
+			public uint		EFlags;
+			public uint		UserESP;
+		};
 		#endregion
 
 		#region Setup
@@ -238,7 +260,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (IRQ_CLEAN_UP)]
 		private static unsafe void IRQCleanUp (ISRData data)
 		{
-			PIC.SendEndOfInterrupt ((byte) data.IrqIndex);
+			PIC.SendEndOfInterrupt ((byte) data.Stack->IrqIndex);
 		}
 		#endregion
 
@@ -256,7 +278,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.POP (R32.EAX);
 
 			// FIXME: If I dont call Write function the variables in align and map get offset or something
-			ADC.TextMode.Write ("");
+			//ADC.TextMode.Write ("");
 
 			//ADC.TextMode.Write("");
 			//ADC.TextMode.WriteLine("Page fault invoked!.\n");
@@ -265,7 +287,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			ADC.TextMode.Write("Page: ");
 			ADC.TextMode.Write((int)cr2);
 			ADC.TextMode.Write(", EIP: ");
-			ADC.TextMode.Write((int)data.EIP);
+			ADC.TextMode.Write((int)data.Stack->EIP);
 			ADC.TextMode.WriteLine();
 			*/
 
@@ -291,8 +313,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			Diagnostics.SetErrorTextAttributes ();
 			ADC.TextMode.WriteLine ("Error: The default ISR handler was invoked!.\n");
-			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.IrqIndex);
-			switch ((Interrupt) data.IrqIndex) {
+			ADC.TextMode.WriteLine ("Interrupt=0x", (int) data.Stack->IrqIndex);
+			switch ((Interrupt) data.Stack->IrqIndex) {
 			case Interrupt.DivideError:
 				ADC.TextMode.WriteLine ("          Divide Error");
 				break;
@@ -354,28 +376,28 @@ namespace SharpOS.Kernel.ADC.X86 {
 			ADC.TextMode.Write ("  CR2=0x", (int) cr2);
 			ADC.TextMode.WriteLine ();
 
-			ADC.TextMode.Write ("  EIP=0x", (int) data.EIP);
+			ADC.TextMode.Write ("  EIP=0x", (int) data.Stack->EIP);
 			ADC.TextMode.WriteLine ();
 
-			ADC.TextMode.Write ("  EAX=0x", (int) data.EAX);
-			ADC.TextMode.Write ("  ECX=0x", (int) data.ECX);
-			ADC.TextMode.Write ("  EDX=0x", (int) data.EDX);
-			ADC.TextMode.Write ("  EBX=0x", (int) data.EBX);
+			ADC.TextMode.Write ("  EAX=0x", (int) data.Stack->EAX);
+			ADC.TextMode.Write ("  ECX=0x", (int) data.Stack->ECX);
+			ADC.TextMode.Write ("  EDX=0x", (int) data.Stack->EDX);
+			ADC.TextMode.Write ("  EBX=0x", (int) data.Stack->EBX);
 			ADC.TextMode.WriteLine ();
 
 
-			ADC.TextMode.Write ("  ESP=0x", (int) data.ESP);
-			ADC.TextMode.Write ("  EBP=0x", (int) data.EBP);
-			ADC.TextMode.Write ("  ESI=0x", (int) data.ESI);
-			ADC.TextMode.Write ("  EDI=0x", (int) data.EDI);
+			ADC.TextMode.Write ("  ESP=0x", (int) data.Stack->ESP);
+			ADC.TextMode.Write ("  EBP=0x", (int) data.Stack->EBP);
+			ADC.TextMode.Write ("  ESI=0x", (int) data.Stack->ESI);
+			ADC.TextMode.Write ("  EDI=0x", (int) data.Stack->EDI);
 			ADC.TextMode.WriteLine ();
 
-			ADC.TextMode.Write ("   DS=0x", (int) data.DS);
-			ADC.TextMode.Write ("   ES=0x", (int) data.ES);
-			ADC.TextMode.Write ("   FS=0x", (int) data.FS);
-			ADC.TextMode.Write ("   GS=0x", (int) data.GS);
-			ADC.TextMode.Write ("   SS=0x", (int) data.SS);
-			ADC.TextMode.Write ("   CS=0x", (int) data.CS);
+			ADC.TextMode.Write ("   DS=0x", (int) data.Stack->DS);
+			ADC.TextMode.Write ("   ES=0x", (int) data.Stack->ES);
+			ADC.TextMode.Write ("   FS=0x", (int) data.Stack->FS);
+			ADC.TextMode.Write ("   GS=0x", (int) data.Stack->GS);
+			ADC.TextMode.Write ("   SS=0x", (int) data.Stack->SS);
+			ADC.TextMode.Write ("   CS=0x", (int) data.Stack->CS);
 			ADC.TextMode.WriteLine ();
 
 			Asm.CLI ();
@@ -656,1288 +678,1562 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			#region ISR Dispatchers
 			Asm.LABEL ("ISR_0");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 0);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_1");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 1);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_2");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 2);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_3");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 3);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_4");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 4);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_5");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 5);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_6");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 6);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_7");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 7);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_8");
+			Asm.CLI ();
 			Asm.PUSH ((uint) 8);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_9");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 9);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_10");
+			Asm.CLI ();
 			Asm.PUSH ((uint) 10);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_11");
+			Asm.CLI ();
 			Asm.PUSH ((uint) 11);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_12");
+			Asm.CLI ();
 			Asm.PUSH ((uint) 12);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_13");
+			Asm.CLI ();
 			Asm.PUSH ((uint) 13);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_14");
+			Asm.CLI ();
 			Asm.PUSH ((uint) 14);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_15");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 15);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_16");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 16);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_17");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 17);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_18");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 18);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_19");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 19);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_20");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 20);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_21");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 21);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_22");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 22);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_23");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 23);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_24");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 24);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_25");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 25);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_26");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 26);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_27");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 27);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_28");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 28);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_29");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 29);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_30");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 30);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_31");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 31);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_32");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 32);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_33");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 33);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_34");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 34);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_35");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 35);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_36");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 36);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_37");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 37);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_38");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 38);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_39");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 39);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_40");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 40);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_41");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 41);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_42");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 42);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_43");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 43);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_44");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 44);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_45");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 45);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_46");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 46);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_47");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 47);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_48");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 48);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_49");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 49);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_50");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 50);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_51");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 51);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_52");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 52);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_53");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 53);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_54");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 54);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_55");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 55);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_56");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 56);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_57");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 57);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_58");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 58);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_59");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 59);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_60");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 60);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_61");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 61);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_62");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 62);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_63");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 63);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_64");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 64);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_65");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 65);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_66");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 66);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_67");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 67);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_68");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 68);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_69");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 69);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_70");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 70);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_71");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 71);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_72");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 72);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_73");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 73);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_74");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 74);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_75");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 75);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_76");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 76);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_77");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 77);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_78");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 78);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_79");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 79);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_80");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 80);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_81");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 81);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_82");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 82);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_83");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 83);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_84");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 84);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_85");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 85);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_86");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 86);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_87");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 87);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_88");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 88);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_89");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 89);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_90");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 90);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_91");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 91);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_92");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 92);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_93");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 93);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_94");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 94);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_95");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 95);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_96");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 96);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_97");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 97);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_98");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 98);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_99");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 99);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_100");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 100);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_101");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 101);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_102");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 102);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_103");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 103);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_104");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 104);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_105");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 105);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_106");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 106);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_107");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 107);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_108");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 108);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_109");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 109);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_110");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 110);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_111");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 111);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_112");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 112);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_113");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 113);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_114");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 114);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_115");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 115);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_116");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 116);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_117");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 117);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_118");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 118);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_119");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 119);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_120");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 120);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_121");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 121);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_122");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 122);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_123");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 123);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_124");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 124);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_125");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 125);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_126");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 126);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_127");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 127);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_128");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 128);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_129");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 129);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_130");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 130);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_131");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 131);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_132");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 132);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_133");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 133);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_134");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 134);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_135");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 135);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_136");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 136);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_137");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 137);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_138");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 138);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_139");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 139);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_140");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 140);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_141");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 141);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_142");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 142);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_143");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 143);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_144");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 144);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_145");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 145);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_146");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 146);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_147");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 147);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_148");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 148);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_149");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 149);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_150");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 150);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_151");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 151);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_152");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 152);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_153");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 153);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_154");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 154);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_155");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 155);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_156");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 156);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_157");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 157);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_158");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 158);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_159");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 159);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_160");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 160);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_161");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 161);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_162");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 162);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_163");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 163);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_164");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 164);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_165");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 165);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_166");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 166);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_167");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 167);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_168");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 168);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_169");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 169);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_170");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 170);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_171");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 171);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_172");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 172);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_173");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 173);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_174");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 174);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_175");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 175);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_176");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 176);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_177");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 177);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_178");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 178);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_179");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 179);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_180");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 180);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_181");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 181);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_182");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 182);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_183");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 183);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_184");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 184);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_185");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 185);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_186");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 186);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_187");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 187);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_188");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 188);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_189");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 189);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_190");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 190);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_191");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 191);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_192");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 192);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_193");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 193);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_194");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 194);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_195");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 195);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_196");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 196);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_197");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 197);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_198");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 198);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_199");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 199);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_200");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 200);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_201");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 201);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_202");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 202);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_203");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 203);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_204");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 204);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_205");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 205);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_206");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 206);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_207");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 207);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_208");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 208);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_209");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 209);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_210");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 210);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_211");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 211);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_212");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 212);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_213");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 213);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_214");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 214);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_215");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 215);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_216");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 216);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_217");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 217);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_218");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 218);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_219");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 219);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_220");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 220);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_221");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 221);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_222");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 222);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_223");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 223);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_224");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 224);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_225");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 225);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_226");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 226);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_227");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 227);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_228");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 228);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_229");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 229);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_230");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 230);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_231");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 231);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_232");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 232);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_233");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 233);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_234");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 234);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_235");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 235);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_236");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 236);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_237");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 237);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_238");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 238);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_239");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 239);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_240");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 240);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_241");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 241);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_242");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 242);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_243");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 243);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_244");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 244);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_245");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 245);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_246");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 246);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_247");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 247);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_248");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 248);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_249");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 249);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_250");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 250);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_251");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 251);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_252");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 252);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_253");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 253);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_254");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 254);
 			Asm.JMP ("ISRDispatcher");
 
 			Asm.LABEL ("ISR_255");
+			Asm.CLI ();
 			Asm.PUSH ((byte) 0);
 			Asm.PUSH ((uint) 255);
 			Asm.JMP ("ISRDispatcher");
 			#endregion
 
 			Asm.LABEL ("ISRDispatcher");
-			Asm.CLI ();
-			Asm.PUSHAD ();
+			
+			Asm.PUSH (R32.EBX);
+			Asm.PUSH (R32.ESP);
+
+
 			Asm.PUSH (Seg.DS);
 			Asm.PUSH (Seg.ES);
 			Asm.PUSH (Seg.GS);
 			Asm.PUSH (Seg.FS);
 			Asm.PUSH (Seg.SS);
+
+			Asm.PUSHAD ();
+			
+			
+			// If we where able to store ESP in a static field, we wouldn't have to use EBX,
+			//	which makes it easier to put this before all the pushes (and not polute EBX)
+			Asm.MOV (R32.EBX, R32.ESP);
+
+			// Set new stack, it would be better if could do this before all the pushes above!
+			uint temp = IDT_Stack_Top; // hack!
+			Asm.MOV (R32.ESP, &temp);
+			
+			// Push old stack pointer on new stack
+			Asm.PUSH (R32.EBX);	// ISRData*
+
 
 			// Not necessary yet but perhaps in the future
 			Asm.MOV (R16.AX, GDT.DataSelector);
@@ -1945,32 +2241,42 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (Seg.ES, R16.AX);
 			Asm.MOV (Seg.FS, R16.AX);
 			Asm.MOV (Seg.GS, R16.AX);
+			
 
 			// Push the fake stack frame data
-			Asm.PUSH (new DWordMemory (null, R32.ESP, null, 0, 15 * 4));
-			Asm.PUSH (R32.EBP);
+			Asm.PUSH (new DWordMemory (null, R32.EBX, null, 0, 17 * 4));	// get EIP from old stack
+			Asm.PUSH (R32.EBP);	
 			Asm.MOV (R32.EBP, R32.ESP);
 
 			// Get the index of the interrupt and read the address of the handler
-			// 15 is the position on the stack
-			Asm.MOVZX (R32.EAX, new ByteMemory (null, R32.ESP, null, 0, 15 * 4));
+			// 15 is the position on the old stack
+			Asm.MOVZX (R32.EAX, new ByteMemory (null, R32.EBX, null, 0, 15 * 4));
 			Asm.SHL (R32.EAX, 2);
 			Asm.MOV (R32.EDX, IDT_TABLE);
 			Asm.MOV (R32.EAX, new DWordMemory (null, R32.EAX, R32.EDX, 0, 0));
 			Asm.CALL (R32.EAX);
-
+			
 			Asm.CALL (IRQ_CLEAN_UP);
 
 			// Clean the fake stack frame data
-			Asm.POP (R32.EAX);
-			Asm.POP (R32.EAX);
+			Asm.POP (R32.EAX);		// EIP
+			Asm.POP (R32.EAX);		// EBP
 
+			// Clean function parameter
+			Asm.POP (R32.ESP);		// ISRData*
+
+
+			Asm.POPAD ();
+			
 			Asm.POP (Seg.SS);
 			Asm.POP (Seg.FS);
 			Asm.POP (Seg.GS);
 			Asm.POP (Seg.ES);
 			Asm.POP (Seg.DS);
-			Asm.POPAD ();
+			
+			Asm.POP (R32.ESP);
+			Asm.POP (R32.EBX);
+
 			Asm.ADD (R32.ESP, 0x08);
 			Asm.STI ();
 			Asm.IRETD ();
