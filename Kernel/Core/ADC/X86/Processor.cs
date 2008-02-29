@@ -5,6 +5,7 @@
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
 //	Cédric Rousseau <cedrou@gmail.com>
+//  João Manganeli Neto <joao.masterchief@hotmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -216,6 +217,196 @@ namespace SharpOS.Kernel.ADC.X86 {
 			}
 		}
 
+		internal unsafe void SetIntel()
+		{
+			UInt32 eax = 0, ebx = 0, ecx = 0, edx = 0;
+			uint brand, family, model, cpu_signature, cpu_extfamily;
+			Asm.XOR(R32.EAX, R32.EAX);
+			Asm.INC(R32.EAX);
+			Asm.CPUID();
+			Asm.MOV(&eax, R32.EAX);
+			Asm.MOV(&ebx, R32.EBX);
+			Asm.MOV(&edx, R32.EDX);
+			Asm.MOV(&ecx, R32.ECX);
+
+			brand = ebx & 0x0F;
+
+			cpu_signature = (eax);
+
+			family = ((eax >> 8) & 0x0F);// +((eax >> 20) & 0x0F);
+
+			model = ((eax >> 4) & 0x0F);// | ((eax >> 12) & 0x0F);
+
+			cpu_extfamily = ((eax >> 20) & 0x0F);
+
+			switch (family)
+			{
+				case 0x4:
+					familyName = CString8.Copy("Intel Family 486");
+					break;
+				case 0x5:
+					familyName = CString8.Copy("Intel Family 586");
+					break;
+				case 0x6:
+					familyName = CString8.Copy("Intel Family 686");
+					break;
+				case 0x7:
+					familyName = CString8.Copy("Intel Family Itanium");
+					break;
+				case 0xF:
+					familyName = CString8.Copy("Intel Family Extended");
+					break;
+				default:
+					familyName = CString8.Copy("Unknown Intel Family");
+					break;
+			}
+
+
+			switch (brand)
+			{
+				case 0x00:
+					brandName = CString8.Copy("brand ID not supported");
+					switch (family)
+					{
+						case 0x4:
+							modelName = CString8.Copy("Intel 486");
+							break;
+						case 0x5:
+							modelName = CString8.Copy("Intel 586");
+							break;
+						case 0x6:
+							switch (model)
+							{
+								case 0x1:
+									modelName = CString8.Copy("Intel Pentium Pro");
+									break;
+								case 0x3:
+									modelName = CString8.Copy("Intel Pentium II");
+									break;
+								case 0x5:
+								case 0x6:
+									modelName = CString8.Copy("Intel Celeron");
+									break;
+								case 0x7:
+								case 0x8:
+								case 0xA:
+								case 0xB:
+									modelName = CString8.Copy("Intel Pentium III");
+									break;
+								case 0x9:
+								case 0xD:
+									modelName = CString8.Copy("Intel Pentium M");
+									break;
+								default:
+									modelName = CString8.Copy("Unknown Intel P6 Family");
+									break;
+							}
+							break;
+						case 0x7:
+							modelName = CString8.Copy("Intel Itanium");
+							break;
+						case 0xF:
+							switch (cpu_extfamily)
+							{
+								case 0x0:
+									modelName = CString8.Copy("Intel Pentium 4");
+									break;
+								case 0x1:
+									modelName = CString8.Copy("Intel Itanium 2");
+									break;
+							}
+							break;
+						default:
+							modelName = CString8.Copy("Unknown Intel Model");
+							break;
+					}
+					break;
+				case 0x01:
+				case 0x0A:
+				case 0x14:
+					brandName = CString8.Copy("Intel Celeron");
+					modelName = CString8.Copy("Intel Celeron");
+					break;
+				case 0x02:
+				case 0x04:
+					brandName = CString8.Copy("Pentium III");
+					modelName = CString8.Copy("Pentium III");
+					break;
+				case 0x03:
+					if (cpu_signature == 0x6B1)
+					{
+						brandName = CString8.Copy("Intel Celeron");
+						modelName = CString8.Copy("Intel Celeron");
+					}
+					else
+					{
+						brandName = CString8.Copy("Intel Pentium III Xeon");
+						modelName = CString8.Copy("Intel Pentium III Xeon");
+					}
+					break;
+				case 0x05:
+					brandName = CString8.Copy("Mobile Intel Pentium III-M");
+					modelName = CString8.Copy("Mobile Intel Pentium III-M");
+					break;
+				case 0x07:
+				case 0x0F:
+				case 0x13:
+				case 0x17:
+					brandName = CString8.Copy("Mobile Intel Celeron");
+					modelName = CString8.Copy("Mobile Intel Pentium III-M");
+					break;
+				case 0x08:
+				case 0x09:
+					brandName = CString8.Copy("Intel Pentium 4");
+					modelName = CString8.Copy("Intel Pentium 4");
+					break;
+				case 0x0B:
+					brandName = CString8.Copy("Intel Xeon");
+					modelName = CString8.Copy("Intel Xeon");
+					break;
+				case 0x0C:
+					brandName = CString8.Copy("Intel Xeon MP");
+					modelName = CString8.Copy("Intel Xeon MP");
+					break;
+				case 0x0E:
+					if (cpu_signature == 0xF13)
+					{
+						brandName = CString8.Copy("Intel Xeon");
+						modelName = CString8.Copy("Intel Xeon");
+					}
+					else
+					{
+						brandName = CString8.Copy("Mobile Intel Pentium 4");
+						modelName = CString8.Copy("Mobile Intel Pentium 4");
+					}
+					break;
+				case 0x12:
+					brandName = CString8.Copy("Intel Celeron M");
+					modelName = CString8.Copy("Intel Celeron M");
+					break;
+				case 0x16:
+					brandName = CString8.Copy("Intel Pentium M");
+					modelName = CString8.Copy("Intel Pentium M");
+					break;
+				case 0x15:
+				case 0x11:
+					brandName = CString8.Copy("Mobile Intel");
+					modelName = CString8.Copy("Mobile Intel");
+					break;
+				default:
+					brandName = CString8.Copy("Unknown Intel");
+					modelName = CString8.Copy("Unknown Intel");
+					break;
+			}
+		}
+		
+		internal unsafe void SetAMD()
+		{
+			brandName	= GetBrandName();
+			familyName	= CString8.Copy("Not implemented yet");
+			modelName	= CString8.Copy("Not implemented yet");
+		}
+
 		internal unsafe static bool HaveCPUID()
 		{
 			byte result = 0;
@@ -260,17 +451,27 @@ namespace SharpOS.Kernel.ADC.X86 {
 				
 				textBuffer = StringBuilder.CREATE((uint)(20));
 				vendorName	= GetVendorName ();
-				brandName	= GetBrandName ();
 
+				if (vendorName->Compare("GenuineIntel", 12) == 0)
+				{
+					SetIntel();
+				} else 
+				if (vendorName->Compare("AuthenticAMD", 12) == 0)
+				{
+					SetAMD();
+				} else
+				{
+					brandName = GetBrandName();
+					familyName = CString8.Copy("Not implemented yet");
+					modelName = CString8.Copy("Not implemented yet");
+				}
+				
 				GetProcessorInfo(out stepping, out family, out model, out featureFlags);
 
 				if (0 != (featureFlags & ProcessorFeatureFlags.IA64))
 					archType	= ProcessorType.IA64;
 				else
 					archType	= ProcessorType.IA32;
-							
-				familyName = CString8.Copy("Not implemented yet");
-				modelName = CString8.Copy("Not implemented yet");
 
 				ulong flags = ((ulong)featureFlags) & ((ulong)ProcessorFeatureFlags.ReservedFlagsMask);
 				uint featureCount = MemoryUtil.BitCount(flags);
