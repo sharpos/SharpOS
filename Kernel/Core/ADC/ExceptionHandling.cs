@@ -50,6 +50,12 @@ namespace SharpOS.Kernel.ADC {
 
 			return null;
 		}
+		
+		[AOTAttr.ADCStub]
+		internal unsafe static void DumpCallingStack ()
+		{
+			Diagnostics.Error ("Unimplemented - ExceptionHandling.DumpCallingStack");
+		}
 
 		[AOTAttr.ADCStub]
 		internal unsafe static void CallHandler (InternalSystem.Exception exception, ExceptionHandlingClause handler, void* callerBP)

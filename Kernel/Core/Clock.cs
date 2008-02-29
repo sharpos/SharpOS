@@ -39,6 +39,7 @@ namespace SharpOS.Kernel.Foundation {
 		/// </summary>
 		static int secondChunk = 0;
 		static SByte systemTimezone = 0;
+		static Time internalTime;
 
 		public static bool HardwareIsUTC {
 			get {
@@ -162,6 +163,7 @@ namespace SharpOS.Kernel.Foundation {
 			TextMode.Write (time.Second);
 			TextMode.WriteLine ();
 
+			internalTime = new Time ();
 		}
 
 		/// <summary>
@@ -205,12 +207,15 @@ namespace SharpOS.Kernel.Foundation {
 
 		public unsafe static void Write ()
 		{
-			Time time = null;
+			if (internalTime == null)
+				return;
 
-			time = Clock.GetCurrentTime ();
-			time.Write ();
-
-			Runtime.Free (time);
+			GetCurrentTime(internalTime);
+			internalTime.Write();
+			//Time time = null;
+			//time = Clock.GetCurrentTime ();
+			//time.Write ();
+			//Runtime.Free (time);
 		}
 
 		/// <summary>

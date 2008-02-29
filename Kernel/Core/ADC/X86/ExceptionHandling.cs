@@ -16,6 +16,7 @@ using SharpOS.Korlib.Runtime;
 namespace SharpOS.Kernel.ADC.X86 {
 	public static class ExceptionHandling	{
 		private const string GET_IP = "GET_IP";
+		private const string GET_IP_DUMP = "GET_IP_DUMP";
 		private const string DIVIDE_ERROR = "DIVIDE_ERROR";
 
 		public static void Setup ()
@@ -81,6 +82,60 @@ namespace SharpOS.Kernel.ADC.X86 {
 			}
 
 			return stackFrame;
+		}
+		
+		internal unsafe static void DumpCallingStack ()
+		{
+			bool found;
+			uint bp, ip;
+
+			// Get the current IP
+			Asm.CALL (GET_IP_DUMP);
+			Asm.LABEL (GET_IP_DUMP);
+			Asm.POP (R32.EAX);
+			Asm.MOV (&ip, R32.EAX);
+
+			// Get the current BP
+			Asm.MOV (&bp, R32.EBP);
+
+			do {
+
+				// Get the next IP
+				Asm.MOV (R32.EBX, &bp);
+				Asm.MOV (R32.EAX, new DWordMemory (null, R32.EBX, null, 0, 4));
+				Asm.MOV (&ip, R32.EAX);
+
+				// Get the next BP
+				Asm.MOV (R32.EAX, new DWordMemory (null, R32.EBX, null, 0));
+				Asm.MOV (&bp, R32.EAX);
+
+				found = false;
+				for (int i = 0; i < Runtime.MethodBoundaries.Length; i++) {
+					if (ip >= (uint) Runtime.MethodBoundaries [i].Begin
+							&& ip < (uint) Runtime.MethodBoundaries [i].End) {
+						
+						Serial.COM1.Write (Runtime.MethodBoundaries [i].Name);
+						Serial.COM1.Write (" [IP=0x");
+						Serial.COM1.WriteNumber ((int) ip, true);
+						Serial.COM1.Write (", BP=0x");
+						Serial.COM1.WriteNumber ((int) bp, true);
+						Serial.COM1.WriteLine ("]");
+						found = true;
+						break;
+					}
+				}
+
+				if (!found)
+				{
+					Serial.COM1.WriteLine("(unknown)");
+					Serial.COM1.Write (" [IP=0x");
+					Serial.COM1.WriteNumber ((int) ip, true);
+					Serial.COM1.Write (", BP=0x");
+					Serial.COM1.WriteNumber ((int) bp, true);
+					Serial.COM1.WriteLine ("]");
+				}
+
+			} while (bp != 0);
 		}
 
 		internal unsafe static void CallHandler (InternalSystem.Exception exception, SharpOS.Korlib.Runtime.ExceptionHandlingClause handler, void* callerBP)

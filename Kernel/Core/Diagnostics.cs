@@ -94,9 +94,25 @@ namespace SharpOS.Kernel {
 		public static void Assert (bool cond, string msg)
 		{
 			if (!cond) {
+				Barrier.Enter();
+
 				TextMode.Write ("Assertion Failed: ");
 				TextMode.Write (msg);
+				
+				// how lucky do you feel?
+				Serial.COM1.WriteLine ("");
+				Serial.COM1.WriteLine ("----------------- ");
+				Serial.COM1.WriteLine ("Assertion Failed: ");
+				Serial.COM1.WriteLine (msg);
+				
+				Serial.COM1.WriteLine ("=============================================================");
+				Serial.COM1.WriteLine ("Stack Trace:");
+			
+				ExceptionHandling.DumpCallingStack();
+				
 				Panic (msg);
+				
+				Barrier.Exit();
 			}
 		}
 
