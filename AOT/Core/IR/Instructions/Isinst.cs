@@ -52,7 +52,7 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
-			if (this.type.IsClass) {
+			if (this.type.IsClass || this.type.IsInterface) {
 				this.def.InternalType = InternalType.O;
 				this.def.Type = type;
 
