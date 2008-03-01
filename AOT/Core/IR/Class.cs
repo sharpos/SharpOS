@@ -119,8 +119,11 @@ namespace SharpOS.AOT.IR {
 
 					if (this.IsInterface)
 						this.AssignInterfaceMethodNumbers();
-					else
+					else {
 						this.MarkInterfaceMethods ();
+						if (this._base != null && this._base.ImplementsInterfaces)
+							this.MergeBaseInterfaceMethods ();
+					}
 
 					this.AddVirtualMethods (this.virtualMethods);
 
@@ -917,7 +920,6 @@ namespace SharpOS.AOT.IR {
 		/// <summary>
 		/// Marks all methods with correct IMT numbers if they are interface implementation
 		/// </summary>
-		/// <returns></returns>
 		private void MarkInterfaceMethods ()
 		{
 			foreach (Method method in this.methods) {
@@ -944,6 +946,30 @@ namespace SharpOS.AOT.IR {
 					}
 				}
 				// or it's not interface method
+			}
+		}
+
+		/// <summary>
+		/// Merges all not implemented interface methods from base classes
+		/// </summary>
+		private void MergeBaseInterfaceMethods ()
+		{
+			for (int i = 0; i < Method.IMTSize; i++) {
+				if (_base.interfaceMethodsEntries[i] == null)
+					continue;
+				
+				foreach (Method baseMethod in _base.interfaceMethodsEntries[i]) {
+					bool hasLocalImpl = false;
+				
+					// lookup matching method from current class
+					if (interfaceMethodsEntries != null && interfaceMethodsEntries[i] != null)
+						hasLocalImpl = interfaceMethodsEntries[i].Exists (delegate (Method method) {
+							return method.InterfaceMethodNumber == baseMethod.InterfaceMethodNumber;
+						});
+
+					if (!hasLocalImpl)
+						AddMethodToIMT (baseMethod);
+				}
 			}
 		}
 

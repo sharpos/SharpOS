@@ -129,23 +129,22 @@ namespace SharpOS.Kernel.Tests.CS {
 		}
 
 		public interface BaseInterface {
-			int		TestFunction	();
+			int TestFunction ();
 		}
 
 		public class BaseInterfaceImplementation : BaseInterface {
-			public int TestFunction() { return 10; }
+			public int TestFunction () { return 10; }
 		}
 		
 		public class InheritedClass : BaseInterfaceImplementation {}
 		
 		public static uint CMPInterfaceImplementationInherited ()
 		{
-			InheritedClass instance = new InheritedClass();
-			/*
-			// hangs kernel, no error message...
-			if (instance.TestFunction() == 10)
+			InheritedClass instance = new InheritedClass ();
+
+			if (instance.TestFunction () == 10)
 				return 1;
-			*/
+
 			return 0;
 		}
 
