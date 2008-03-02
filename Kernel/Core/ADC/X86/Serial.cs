@@ -36,12 +36,17 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 			com4 = new SerialPort (4);
 			IDT.RegisterIRQ (IDT.Interrupt.COM4User, Stubs.GetFunctionPointer (COM4_HANDLER));
+
+			initialized = true;
 		}
 
-		public static ADC.SerialPort COM1 { get { return com1; } }
-		public static ADC.SerialPort COM2 { get { return com2; } }
-		public static ADC.SerialPort COM3 { get { return com3; } }
-		public static ADC.SerialPort COM4 { get { return com4; } }
+		private static bool initialized = false;
+		public static bool Initialized { get { return initialized; } }
+
+		public static ADC.SerialPort COM1 { get { if (initialized) return com1; else return null; } }
+		public static ADC.SerialPort COM2 { get { if (initialized) return com2; else return null; } }
+		public static ADC.SerialPort COM3 { get { if (initialized) return com3; else return null; } }
+		public static ADC.SerialPort COM4 { get { if (initialized) return com4; else return null; } }
 
 		#region Interrupts handlers
 
@@ -53,25 +58,29 @@ namespace SharpOS.Kernel.ADC.X86 {
 		[SharpOS.AOT.Attributes.Label (COM1_HANDLER)]
 		unsafe static void COM1Handler (IDT.ISRData data)
 		{
-			com1.OnDataReceived ();
+			if (initialized)
+				com1.OnDataReceived ();
 		}
 
 		[SharpOS.AOT.Attributes.Label (COM2_HANDLER)]
 		unsafe static void COM2Handler (IDT.ISRData data)
 		{
-			com2.OnDataReceived ();
+			if (initialized)
+				com2.OnDataReceived ();
 		}
 
 		[SharpOS.AOT.Attributes.Label (COM3_HANDLER)]
 		unsafe static void COM3Handler (IDT.ISRData data)
 		{
-			com3.OnDataReceived ();
+			if (initialized)
+				com3.OnDataReceived ();
 		}
 
 		[SharpOS.AOT.Attributes.Label (COM4_HANDLER)]
 		unsafe static void COM4Handler (IDT.ISRData data)
 		{
-			com4.OnDataReceived ();
+			if (initialized)
+				com4.OnDataReceived ();
 		}
 
 		#endregion
@@ -223,7 +232,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			// Reset DLAB, Set 8 bits, no parity, one stop bit
 			IO.WriteByte (LCRBase, (byte)(LCR.CS8 | LCR.ST1 | LCR.PNO));
 
-		  // Enable FIFO, clear them, with 14-byte threshold
+			// Enable FIFO, clear them, with 14-byte threshold
 			IO.WriteByte (FCRBase, (byte)(FCR.Enabled |FCR.CLR_RCVR|FCR.CLR_XMIT|FCR.TL14));
 
 			// IRQs enabled, RTS/DSR set

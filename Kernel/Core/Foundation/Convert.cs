@@ -95,8 +95,20 @@ namespace SharpOS.Kernel.Foundation {
 			ADC.MemoryManager.Free ((void*) buffer);
 			return result;
 		}
+		
+		public unsafe static int ToString(uint value, bool hex, byte* buffer,
+							int bufferLen, int offset)
+		{
+			return ToString((int)value, hex, false, buffer, bufferLen, offset);
+		}
 
-		public unsafe static int ToString (int value, bool hex, byte* buffer,
+		public unsafe static int ToString(int value, bool hex, byte* buffer,
+							int bufferLen, int offset)
+		{
+			return ToString(value, hex, true, buffer, bufferLen, offset);
+		}
+
+		private unsafe static int ToString (int value, bool hex, bool signed, byte* buffer,
 						    int bufferLen, int offset)
 		{
 			uint uvalue = (uint) value;
@@ -106,7 +118,7 @@ namespace SharpOS.Kernel.Foundation {
 			uint temp;
 			bool negative = false;
 
-			if (value < 0 && !hex) {
+			if (value < 0 && !hex && signed) {
 				count++;
 				uvalue = (uint) -value;
 				negative = true;

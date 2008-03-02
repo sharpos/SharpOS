@@ -22,6 +22,8 @@ namespace SharpOS.Kernel.ADC {
 		{
 		}
 
+		public static bool Initialized { get { return false; } }
+
 		public static SerialPort COM1 { [AOTAttr.ADCStub]get { return null; }}
 		public static SerialPort COM2 { [AOTAttr.ADCStub]get { return null; }}
 		public static SerialPort COM3 { [AOTAttr.ADCStub]get { return null; }}
@@ -35,7 +37,7 @@ namespace SharpOS.Kernel.ADC {
 		public abstract void Write (byte ch);
 
 		public void Write (string str)
-    {
+		{
 			int strLength = str.Length;
 			for (int x = 0; x < strLength; x++)
 			{
@@ -72,11 +74,49 @@ namespace SharpOS.Kernel.ADC {
 			WriteLine ();
  		}
 
-		public unsafe void WriteNumber (int number, bool hex)
+		public unsafe void WriteNumber (uint number, bool hex)
 		{
+			byte* buffer = stackalloc byte [32];
+			int length;
+
+			length = SharpOS.Kernel.Foundation.Convert.ToString (number, hex, buffer, 32, 0);
+
+			for (int x = 0; x < length; ++x)
+				Write (buffer [x]);
+
+
+			/*
+			// this doesn't play well when you're dumping something trough 
+			//	serial when you ran out of memory...
 			CString8* str = Foundation.Convert.ToString (number, hex);
 			Write (str);
 			ADC.MemoryManager.Free (str);
+			*/
+		}
+
+		public unsafe void WriteNumber (int number, bool hex)
+		{
+			byte* buffer = stackalloc byte [32];
+			int length;
+
+			length = SharpOS.Kernel.Foundation.Convert.ToString (number, hex, buffer, 32, 0);
+
+			for (int x = 0; x < length; ++x)
+				Write (buffer [x]);
+
+
+			/*
+			// this doesn't play well when you're dumping something trough 
+			//	serial when you ran out of memory...
+			CString8* str = Foundation.Convert.ToString (number, hex);
+			Write (str);
+			ADC.MemoryManager.Free (str);
+			*/
+		}
+
+		public unsafe void Write (uint number)
+		{
+			WriteNumber (number, false);
 		}
 
 		public unsafe void Write (int number)

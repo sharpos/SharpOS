@@ -51,17 +51,19 @@ namespace SharpOS.Kernel.ADC {
 
 		public static unsafe void* Allocate (uint allocate_size)
 		{
-			Kernel.Diagnostics.Assert (firstNode != null, "MemoryManager.Allocate(uint): Unable to allocate because the MemoryManager has not been initialized");
+			Kernel.Diagnostics.Assert (firstNode != null, "MemoryManager.Allocate(uint): Unable to allocate because the MemoryManager has not been initialized. ");
+			if (firstNode == null)
+				return null;
 
 			Header* currentNode = lastFreeNode;
 			
 			// Allign the block to 4? or 8?
-			if (allocate_size % 4 != 0)
-				allocate_size = ((allocate_size / 4) + 1) * 4;
+			allocate_size += (8 - (allocate_size & 7));
 
 			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
 			while (currentNode != null) {
-				if (currentNode->Free == 1 && currentNode->Size >= allocate_size) {
+				if (currentNode->Free == 1 && 
+					currentNode->Size >= allocate_size) {
 					break;
 				}
 
@@ -72,11 +74,12 @@ namespace SharpOS.Kernel.ADC {
 				}
 			}
 
-			Diagnostics.Assert (currentNode != null, "MemoryManager.Allocate(uint): Unable to allocate memory; no sufficiently sized nodes available");
 			if (currentNode == null)
 			{
+				DumpSerial();
+				Diagnostics.Assert (false, "MemoryManager.Allocate(uint): Unable to allocate memory; no sufficiently sized nodes available.");
 				// ... how lucky do you feel?
-				throw new System.OutOfMemoryException("MemoryManager.Allocate(uint): Could not allocate memory");
+				throw new System.OutOfMemoryException("MemoryManager.Allocate(uint): Unable to allocate memory; no sufficiently sized nodes available.");
 				//return null;
 			}
 
@@ -103,31 +106,39 @@ namespace SharpOS.Kernel.ADC {
 
 				nextNode->Next = currentNode->Next;
 				currentNode->Next = nextNode;
-			}
+			} else
+				allocate_size = currentNode->Size;
 
 			// Check to see if the next node is free, larger in size than lastFreeNode, and is also
 			// lower in range than lastFreeNode.  If all these are true, set lastFreeNode to the next
 			// node.
 
-			if (currentNode->Next->Free == 1 && currentNode->Next->Size > lastFreeNode->Size &&
+			if (currentNode->Next->Free == 1 && 
+				currentNode->Next->Size > lastFreeNode->Size &&
 			    currentNode->Next < lastFreeNode)
 				lastFreeNode = currentNode->Next;
 
 			uint retPtr = (uint) currentNode + (uint) sizeof (Header);
 			allocated += (ulong) currentNode->Size;
 
-			Diagnostics.Assert (retPtr != 0, "MemoryManager.Allocate(uint): Allocation failed");
+			Diagnostics.Assert (retPtr != 0, "MemoryManager.Allocate(uint): Allocation failed. ");
 			if (retPtr == 0)
 			{
 				// ... how lucky do you feel?
-				throw new System.OutOfMemoryException("MemoryManager.Allocate(uint): Could not allocate memory");
+				throw new System.OutOfMemoryException("MemoryManager.Allocate(uint): Could not allocate memory. ");
 				//return null;
 			}
 
-			// TODO X86.MemoryUtil.MemSet should not be called directly
-            // Hopefully this change works
-            SharpOS.Kernel.ADC.MemoryUtil.MemSet(0, retPtr, allocate_size);
-			//SharpOS.Kernel.ADC.X86.MemoryUtil.MemSet (0, retPtr, allocate_size);
+			SharpOS.Kernel.ADC.MemoryUtil.MemSet(0, retPtr, allocate_size);
+
+			
+			if (currentNode->Next == null ||
+				currentNode->Next->Previous != currentNode ||
+				(currentNode->Previous != null &&
+				currentNode->Previous->Next != currentNode))
+			{
+				Diagnostics.Assert(false, "Allocation corrupted linked list. ");
+			}
 
 			return (void*) retPtr;
 		}
@@ -240,12 +251,16 @@ namespace SharpOS.Kernel.ADC {
 			SharpOS.Kernel.ADC.MemoryUtil.MemCopy((uint)stptr, (uint)nextPtr, oldBlock->Size);
 			Free(stptr);
 
-            Diagnostics.Assert(nextPtr != null, "MemoryManager.Allocate(uint): Allocation failed");
+            Diagnostics.Assert(nextPtr != null, "MemoryManager.Allocate(uint): Allocation failed.");
+			if (nextPtr == null)
+			{
+				throw new OutOfMemoryException("MemoryManager.Allocate(uint): Allocation failed.");
+				return null;
+			}
 
 			return nextPtr;
 		}
 
-		//TODO: maybe use a hash table to find a memory block faster?
 		public static unsafe void Free (void* memory)
 		{
 			uint memoryHeaderPointer = (uint) memory - (uint) sizeof (Header);
@@ -253,8 +268,12 @@ namespace SharpOS.Kernel.ADC {
 
 			if (freeHeader->Next->Previous != freeHeader ||
 				freeHeader->Previous->Next != freeHeader)
-				throw new System.InvalidOperationException("Trying to free invalid pointer");
-
+			{
+				Diagnostics.Assert(false, "Trying to free invalid pointer. ");
+				throw new System.InvalidOperationException("Trying to free invalid pointer. ");
+			}
+			
+			allocated -= (ulong) freeHeader->Size;
 
 			freeHeader->Free = 1;
 
@@ -276,9 +295,11 @@ namespace SharpOS.Kernel.ADC {
 
 
 			//Scan forward for the last consecutive free node
-			if (currentNode->Next != firstNode && currentNode->Next->Free == 1)
+			if (currentNode->Next > currentNode && currentNode->Next->Free == 1)
 			{
-				currentNode->Size += currentNode->Next->Size + (uint)sizeof(Header);
+				currentNode->Size = 
+					((uint)currentNode->Next - (uint)currentNode)/* - (uint)sizeof(Header)*/ +
+					currentNode->Next->Size/* + (uint)sizeof(Header)*/;
 				currentNode->Next = currentNode->Next->Next;
 				currentNode->Next->Previous = currentNode;
 			}
@@ -286,18 +307,26 @@ namespace SharpOS.Kernel.ADC {
 			//Now scan backwards and consolidate free nodes
             if (currentNode->Previous != null && currentNode->Previous->Free == 1) {
 				Header* previous = currentNode->Previous;
-				previous->Size = currentNode->Size + (uint)sizeof(Header);
+				previous->Size = 
+					((uint)currentNode->Next - (uint)currentNode)/* - (uint)sizeof(Header)*/ +
+					currentNode->Size/* + (uint)sizeof(Header)*/;
 				previous->Next = currentNode->Next;
 				currentNode->Next->Previous = previous;
 
 				currentNode = currentNode->Previous;
 			}
-			
-
 
 			if (currentNode->Size > lastFreeNode->Size && 
 				currentNode < lastFreeNode)
 				lastFreeNode = currentNode;
+			
+			if (currentNode->Next == null ||
+				currentNode->Next->Previous != currentNode ||
+				(currentNode->Previous != null &&
+				currentNode->Previous->Next != currentNode))
+			{
+				Diagnostics.Assert(false, "Free corrupted linked list. ");
+			}
 		}
 
 		private static unsafe void DumpNode (string msg, Header* node)
@@ -307,28 +336,38 @@ namespace SharpOS.Kernel.ADC {
 			ADC.TextMode.Write ((int) node);
 			ADC.TextMode.Write (", Next node: ");
 			ADC.TextMode.Write ((int) node->Next);
+			ADC.TextMode.Write (", Prev node: ");
+			ADC.TextMode.Write ((int) node->Previous);
 			ADC.TextMode.Write (", Size: ");
 			ADC.TextMode.Write ((int) node->Size);
 			ADC.TextMode.Write (", IsFree: ");
-			ADC.TextMode.Write ((int) node->Free, false);
+			if (node->Free == 1)
+				ADC.TextMode.Write ("true");
+			else
+				ADC.TextMode.Write ("false");
 			ADC.TextMode.Write (", TotalAlloc: ");
 			ADC.TextMode.Write ((int) allocated);
 			ADC.TextMode.WriteLine ();
 		}
 
-		private static unsafe void DumpNodeSerial (string msg, Header* node)
+		private static unsafe void DumpNodeSerial (Header* node)
 		{
-			Serial.COM1.Write (msg);
-			Serial.COM1.Write (", Current node: ");
-			Serial.COM1.Write ((int) node);
+			if (!Serial.Initialized)
+				return;
+
+			Serial.COM1.Write ("Current node: ");
+			Serial.COM1.Write ((uint) node);
 			Serial.COM1.Write (", Next node: ");
-			Serial.COM1.Write ((int) node->Next);
+			Serial.COM1.Write ((uint) node->Next);
+			Serial.COM1.Write (", Prev node: ");
+			Serial.COM1.Write ((uint) node->Previous);
 			Serial.COM1.Write (", Size: ");
-			Serial.COM1.Write ((int) node->Size);
+			Serial.COM1.Write ((uint) node->Size);
 			Serial.COM1.Write (", IsFree: ");
-			Serial.COM1.Write ((node->Free == 1 ? "true" : "false"));
-			Serial.COM1.Write (", TotalAlloc: ");
-			Serial.COM1.Write ((int) allocated);
+			if (node->Free == 1)
+				Serial.COM1.Write ("true");
+			else
+				Serial.COM1.Write ("false");
 			Serial.COM1.WriteLine ();
 		}
 
@@ -337,7 +376,6 @@ namespace SharpOS.Kernel.ADC {
 			ADC.TextMode.WriteLine ("Memory dump: ");
 			Header* currentNode = firstNode;
 
-			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
 			do {
 				DumpNode ("MemoryManager", currentNode);
 
@@ -349,14 +387,23 @@ namespace SharpOS.Kernel.ADC {
 
 		public static void DumpSerial ()
 		{
+			if (!Serial.Initialized)
+				return;
+						
+			Serial.COM1.WriteLine ("-------------");
 			Serial.COM1.WriteLine ("Memory dump: ");
+			
 			Header* currentNode = firstNode;
+			
+			if (currentNode == null)
+				Serial.COM1.WriteLine ("null");
 
-			// FIXME: Use a free list as this is VERY slow but works, asgeirh 2007-11-16
 			while (currentNode != null) {
-				DumpNodeSerial ("MemoryManager", currentNode);
+				DumpNodeSerial (currentNode);
 
 				currentNode = currentNode->Next;
+				if (currentNode == firstNode)
+					break;
 			}
 
 			Serial.COM1.WriteLine ();
@@ -365,7 +412,8 @@ namespace SharpOS.Kernel.ADC {
 		public static void __RunTests ()
 		{
 			__ExclusivityTest ();
-			//__StressTest ();
+			__StressTest ();
+			DumpSerial();
 			//TextMode.WriteLine ("Memory tests completed.");
 		}
 

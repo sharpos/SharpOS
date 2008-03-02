@@ -86,6 +86,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 		
 		internal unsafe static void DumpCallingStack ()
 		{
+			if (!Serial.Initialized)
+				return;
 			bool found;
 			uint bp, ip;
 
@@ -127,7 +129,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 				if (!found)
 				{
-					Serial.COM1.WriteLine("(unknown)");
+					Serial.COM1.Write ("(unknown)");
 					Serial.COM1.Write (" [IP=0x");
 					Serial.COM1.WriteNumber ((int) ip, true);
 					Serial.COM1.Write (", BP=0x");
