@@ -412,8 +412,8 @@ namespace SharpOS.Kernel.ADC {
 		public static void __RunTests ()
 		{
 			__ExclusivityTest ();
-			__StressTest ();
-			DumpSerial();
+			//__StressTest ();
+			//DumpSerial();
 			//TextMode.WriteLine ("Memory tests completed.");
 		}
 
