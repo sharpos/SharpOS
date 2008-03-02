@@ -250,22 +250,5 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
-		
-		private const string TEST_STRING = "TST\u2665";
-		public static uint CMPUseIEnumeratorInterface ()
-		{
-			System.Collections.IEnumerator	OperandEnum = TEST_STRING.GetEnumerator( );
-			/*
-			// this causes a "not implemented" exception in the AOT compiler
-			while (OperandEnum.MoveNext())
-			{
-				// this doesn't cause any problems
-				if ((char)OperandEnum.Current != TEST_STRING [i++])
-					return 0;
-			}
-			return 1;
-			*/
-			return 0;
-		}
 	}
 }
