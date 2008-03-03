@@ -2217,12 +2217,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 			//	which makes it easier to put this before all the pushes (and not polute EBX)
 			Asm.MOV (R32.EBX, R32.ESP);
 
-			// Set new stack, it would be better if could do this before all the pushes above!
+			// Set new stack, it would be better if we could do this before all the pushes above!
 			uint temp = IDT_Stack_Top; // hack!
 			Asm.MOV (R32.ESP, &temp);
 			
 			// Push old stack pointer on new stack
-			Asm.PUSH (R32.EBX);	// ISRData*
+			Asm.PUSH (R32.EBX);		// ESP / ISRData*
 
 
 			// Not necessary yet but perhaps in the future
@@ -2240,7 +2240,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.MOV (R32.EBP, R32.ESP);
 
 			// Get the index of the interrupt and read the address of the handler
-			// 15 is the position on the old stack
+			// 13 is the position on the old stack
 			Asm.MOVZX (R32.EAX, new ByteMemory (null, R32.EBX, null, 0, 13 * 4));
 			Asm.SHL (R32.EAX, 2);
 			Asm.MOV (R32.EDX, IDT_TABLE);
@@ -2253,8 +2253,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.POP (R32.EAX);		// EIP
 			Asm.POP (R32.EAX);		// EBP
 
-			// Clean function parameter
-			Asm.POP (R32.ESP);		// ISRData*
+			// Clean function parameter + set old stack back
+			Asm.POP (R32.ESP);		// ESP / ISRData*
 
 
 			Asm.POPAD ();

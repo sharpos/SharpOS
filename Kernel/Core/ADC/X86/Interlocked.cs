@@ -57,6 +57,32 @@ namespace SharpOS.Kernel.ADC.X86
 			Asm.MOV(location, R32.EDX);
 			return *location;
 		}
+		
+		public static unsafe uint Exchange(ref uint location, uint value)
+		{
+			fixed (uint* locationPtr = &location)
+			{
+				Asm.MOV(R32.ECX, locationPtr);
+				Asm.MOV(R32.EDX, &value);
+				Asm.LOCK();
+				Asm.XCHG(R32.ECX, R32.EDX);
+				Asm.MOV(locationPtr, R32.EDX);
+				return *locationPtr;
+			}
+		}
+		
+		public static unsafe int Exchange(ref int location, int value)
+		{
+			fixed (int* locationPtr = &location)
+			{
+				Asm.MOV(R32.ECX, (uint*)locationPtr);
+				Asm.MOV(R32.EDX, (uint*)&value);
+				Asm.LOCK();
+				Asm.XCHG(R32.ECX, R32.EDX);
+				Asm.MOV((uint*)locationPtr, R32.EDX);
+				return *locationPtr;
+			}
+		}
 		#endregion
 		
 		#region Increment

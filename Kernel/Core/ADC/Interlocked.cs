@@ -35,6 +35,10 @@ namespace SharpOS.Kernel.ADC
 		#region Exchange
 		[AOTAttr.ADCStub]
 		public static unsafe uint Exchange(uint* location, uint value) { return 0; }
+		[AOTAttr.ADCStub]
+		public static unsafe uint Exchange(ref uint location, uint value) { return 0; }
+		[AOTAttr.ADCStub]
+		public static unsafe int Exchange(ref int location, int value) { return 0; }
 		#endregion
 
 		#region Increment
