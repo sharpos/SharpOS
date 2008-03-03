@@ -12,7 +12,7 @@ using System;
 using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.ADC {
-	public static unsafe class Scheduler {
+	public static unsafe class ThreadManager {
 		[AOTAttr.ADCStub]
 		public static unsafe void Setup ()
 		{
@@ -75,6 +75,7 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		private static int position = -1;
+		//TODO: seperate this from the threadmanager and implement a scheduler interface
 		public static void* GetNextThread (void* currentThread)
 		{
 			// do scheduling here...

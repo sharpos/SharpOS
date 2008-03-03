@@ -78,7 +78,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ADC\SpinLock.cs" />
+    <Compile Include="ADC\Thread.cs" />
+    <Compile Include="ADC\ThreadManager.cs" />
     <Compile Include="ADC\X86\IOPortStream8bit.cs" />
+    <Compile Include="ADC\X86\SpinLock.cs" />
+    <Compile Include="ADC\X86\Thread.cs" />
+    <Compile Include="ADC\X86\ThreadManager.cs" />
     <Compile Include="DriverSystem\DeviceManager.cs" />
     <Compile Include="DriverSystem\DriverFlags.cs" />
     <Compile Include="DriverSystem\Drivers\PCIBusDriver.cs" />
@@ -86,7 +92,6 @@
     <Compile Include="DriverSystem\Drivers\KeyboardDriver.cs" />
     <Compile Include="DriverSystem\Drivers\LPCBusDriver.cs" />
     <Compile Include="DriverSystem\Drivers\RTCDriver.cs" />
-    <Compile Include="ADC\X86\Scheduler.cs" />
     <Compile Include="ADC\X86\IO.cs" />
     <Compile Include="ADC\X86\Serial.cs" />
     <Compile Include="ADC\X86\HardwareResourceManager.cs" />
@@ -130,7 +135,6 @@
     <Compile Include="ADC\FloppyDiskController.cs" />
     <Compile Include="ADC\Timer.cs" />
     <Compile Include="DriverSystem\DriverManager.cs" />
-    <Compile Include="ADC\Scheduler.cs" />
     <Compile Include="ADC\TextMode.cs" />
     <Compile Include="ADC\Architecture.cs" />
     <Compile Include="ADC\IProcessor.cs" />

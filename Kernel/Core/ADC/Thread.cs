@@ -32,12 +32,12 @@ namespace SharpOS.Kernel.ADC {
 		}
 		
         [AOTAttr.ADCStub]
-		public static void BeginCriticalRegion()
+		public static void		BeginCriticalRegion()
 		{
 		}
 		
         [AOTAttr.ADCStub]
-		public static void EndCriticalRegion()
+		public static void		EndCriticalRegion()
 		{
 		}
 	}

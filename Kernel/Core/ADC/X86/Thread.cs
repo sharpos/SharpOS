@@ -41,12 +41,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return address;
 		}
 		
-		public static void BeginCriticalRegion()
+		public static void		BeginCriticalRegion()
 		{
 			// TODO: implement
 		}
 		
-		public static void EndCriticalRegion()
+		public static void		EndCriticalRegion()
 		{
 			// TODO: implement
 		}

@@ -13,8 +13,8 @@ using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
 namespace SharpOS.Kernel.ADC.X86 {
-	public static unsafe class Scheduler {
-	
+	public static unsafe class ThreadManager {
+
 		const uint STACK_SIZE		= 8192;
 
 		// Sigh.. we really need to get vtables & memory management working...
@@ -57,7 +57,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 					ThreadMemory [i].FrameIP =
 					ThreadMemory [i].Stack->EIP = function_address;
 
-					ThreadMemory [i].FrameBP = 0;
+					ThreadMemory [i].FrameBP = 
 
 					ThreadMemory [i].Stack->UserESP =
 					ThreadMemory [i].Stack->EBP = 

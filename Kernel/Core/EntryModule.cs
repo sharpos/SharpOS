@@ -123,7 +123,7 @@ namespace SharpOS.Kernel {
 			DiagnosticTool.Server.Setup();
 
 			StageMessage("Scheduler setup...");
-			Scheduler.Setup();
+			ThreadManager.Setup();
 
 			StageMessage ("Device setup...");
 			ADC.Architecture.DeviceManager.Setup ();
@@ -171,12 +171,12 @@ namespace SharpOS.Kernel {
 			Runtime.__RunTests ();
 #endif
 			/*
-			void* thread = Scheduler.CreateThread(Stubs.GetFunctionPointer ("TEST"));
-			void* thread2 = Scheduler.CreateThread(Stubs.GetFunctionPointer ("TEST2"));
+			void* thread = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST"));
+			void* thread2 = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST2"));
 
-			Scheduler.ScheduleThread(thread);			
-			Scheduler.ScheduleThread(thread2);
-			Scheduler.Enabled = true;
+			ThreadManager.ScheduleThread(thread);			
+			ThreadManager.ScheduleThread(thread2);
+			ThreadManager.Enabled = true;
 			*/
 
 			//Multiboot.WriteMultibootInfo();
@@ -204,34 +204,20 @@ namespace SharpOS.Kernel {
 		[SharpOS.AOT.Attributes.Label ("TEST")]
 		public static void Test()
 		{
-			int counter = 0;
 			bool stayInLoop = true;
 			while (stayInLoop)
 			{
-				//if (counter < 10000 && (counter % 100) == 0)
-				{
-					Barrier.Enter();
-					TextMode.Write(".");
-					Barrier.Exit();
-				}
-				counter++;
+				TextMode.Write(".");
 			}
 		}
 		
 		[SharpOS.AOT.Attributes.Label ("TEST2")]
 		public static void Test2()
 		{
-			int counter = 0;
 			bool stayInLoop = true;
 			while (stayInLoop)
 			{
-				//if (counter < 10000 && (counter % 100) == 0)
-				{
-					Barrier.Enter();
-					TextMode.Write("+");
-					Barrier.Exit();
-				}
-				counter++;
+				TextMode.Write("+");
 			}
 		}
 
