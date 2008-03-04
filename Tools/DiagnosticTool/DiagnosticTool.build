@@ -16,10 +16,8 @@
 		
 		<copy file="../../References/Mono.Posix.dll" todir="${prefix}" />
 		
-		<csc target="exe" output="${path::combine(prefix, 'DiagnosticTool.exe')}" debug="${debug}" unsafe="true">
+		<csc target="winexe" output="${path::combine(prefix, 'DiagnosticTool.exe')}" debug="${debug}" unsafe="true">
 			<references>
-				<include name="System.Windows.Forms" asis="true" />
-				<include name="System.Drawing" asis="true" />
 				<include name="${path::combine(prefix, 'Mono.Posix.dll')}" />
 				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
 			</references>

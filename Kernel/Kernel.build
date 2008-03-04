@@ -19,6 +19,7 @@
 	<property name="vpc-dir" value="${path::combine(distro-dir, 'virtualpc')}" />
 	<property name="qemu-dir" value="${path::combine(distro-dir, 'qemu')}" />
 	<property name="qemu-bin" value="${path::combine(qemu-dir, 'qemu.exe')}" />
+	<property name="diagtool-bin" value="${path::combine(prefix, 'DiagnosticTool.exe')}" />
 
 	<target name="build">
 		<echo message="Building the SharpOS kernel" />
@@ -64,6 +65,16 @@
 		<if test="${platform::is-unix() == false}" >
 			<exec program="${qemu-bin}"
 				commandline="-L ${qemu-dir} -no-kqemu ${path::combine(common-dir, 'SharpOS.img')} -serial file:${path::combine(common-dir, '../../SerialOutput.txt')}" />
+		</if>
+	</target>
+
+	<target name="debug">
+		<if test="${platform::is-unix() == true}" >
+      <echo message="Please update Kernel.build NAnt script..." />
+    </if>
+
+    <if test="${platform::is-unix() == false}" >
+			<exec program="${diagtool-bin}" />
 		</if>
 	</target>
 

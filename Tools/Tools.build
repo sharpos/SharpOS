@@ -15,7 +15,8 @@
 		<nant buildfile="./DiskImageUpdater/DiskImageUpdater.build" />
 		<nant buildfile="./RuntimeCop/RuntimeCop.build" />
 		<nant buildfile="./VSUpdate/VSUpdate.build" />
-	</target>
+    <nant buildfile="./DiagnosticTool/DiagnosticTool.build" />
+  </target>
 
 	<target name="test">
 		<!-- nothing to do yet -->
@@ -27,5 +28,6 @@
 		<nant buildfile="./DiskImageUpdater/DiskImageUpdater.build" target="clean" />
 		<nant buildfile="./RuntimeCop/RuntimeCop.build" target="clean" />
 		<nant buildfile="./VSUpdate/VSUpdate.build" target="clean" />
-	</target>
+    <nant buildfile="./DiagnosticTool/DiagnosticTool.build" target="clean" />
+  </target>
 </project>

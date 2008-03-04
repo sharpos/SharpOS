@@ -52,6 +52,16 @@
 			target="run" />
 	</target>
 	
+	<target name="debug" depends="dist">
+		<nant buildfile="./Kernel/Kernel.build" 
+			target="debug" />
+	</target>
+	
+	<target name="debug-test" depends="dist-test">
+		<nant buildfile="./Kernel/Kernel.build" 
+			target="debug" />
+	</target>
+	
 	<target name="vsupdate">
 		<echo message="Updating VS files..." />
 		<nant buildfile="./Tools/VSUpdate/VSUpdate.build"/>
