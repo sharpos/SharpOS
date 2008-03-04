@@ -4,6 +4,7 @@
 // Authors:
 //	William Lahti <xfurious@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
+//  James Starr <jamesstarr@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries

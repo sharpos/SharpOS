@@ -22,7 +22,11 @@ namespace SharpOS.Kernel.ADC {
 		{
 		}
 
-		public static bool Initialized { get { return false; } }
+		public static bool Initialized 
+		{ 
+			[AOTAttr.ADCStub]
+			get { return false; } 
+		}
 
 		public static SerialPort COM1 { [AOTAttr.ADCStub]get { return null; }}
 		public static SerialPort COM2 { [AOTAttr.ADCStub]get { return null; }}

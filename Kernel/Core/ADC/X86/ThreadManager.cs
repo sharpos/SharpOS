@@ -15,76 +15,59 @@ using SharpOS.AOT.IR;
 namespace SharpOS.Kernel.ADC.X86 {
 	public static unsafe class ThreadManager {
 
-		const uint STACK_SIZE		= 8192;
-
-		// Sigh.. we really need to get vtables & memory management working...
-		private static IDT.ISRData* ThreadMemory		= null;
-		private static IDT.Stack**	ThreadStack			= null;
-		private static bool*		ThreadMemoryUsed	= null;
-
 		public static unsafe void Setup ()
 		{
-			ThreadMemory		= (IDT.ISRData*) MemoryManager.Allocate ((uint) (IDT.ISRData.SizeOf * EntryModule.MaxThreads));
-			ThreadMemoryUsed	= (bool*) MemoryManager.Allocate (1 * EntryModule.MaxThreads);
-			ThreadStack			= (IDT.Stack**) MemoryManager.Allocate (4 * EntryModule.MaxThreads);
-
-			for (int i = 0; i < EntryModule.MaxThreads; i++)
-				ThreadMemoryUsed [i] = false;
 		}
 
-		public static unsafe void* CreateThread (uint function_address)
+		const uint STACK_SIZE		= 64 * 1024;
+		
+		internal static unsafe void* CreateStack(uint function_address)
 		{
-			for (int i = 0; i < EntryModule.MaxThreads; i++) {
-				
-				if (ThreadMemoryUsed [i] == false) {
-					ThreadMemoryUsed [i] = true;
+			IDT.Stack*	stack	= (IDT.Stack*) 
+				(((byte*)MemoryManager.Allocate(STACK_SIZE)) 
+					+ (STACK_SIZE - (uint) sizeof(IDT.Stack)));
 
-					MemoryUtil.MemSet32 (0, (uint) (void*) &(ThreadMemory [i]), (uint) (sizeof (IDT.ISRData) / 4));
+			if (stack == null)
+				return null;
 
+			// ... temp code
+			stack->FS = GDT.DataSelector;
+			stack->GS = GDT.DataSelector;
+			stack->ES = GDT.DataSelector;
+			stack->DS = GDT.DataSelector;
+			stack->SS = GDT.DataSelector;
+			stack->CS = GDT.CodeSelector;
+			
+			stack->EIP = function_address;
 
-					if (ThreadStack[i] == null)
-						ThreadStack[i] = (IDT.Stack*)MemoryManager.Allocate(STACK_SIZE);
+			stack->UserESP =
+			stack->EBP = 
+			stack->ESP = (uint) stack;	// stack pointer
 
-					// ... temp code
-					ThreadMemory [i].Stack = ThreadStack[i];
-					ThreadMemory [i].Stack->FS = GDT.DataSelector;
-					ThreadMemory [i].Stack->GS = GDT.DataSelector;
-					ThreadMemory [i].Stack->ES = GDT.DataSelector;
-					ThreadMemory [i].Stack->DS = GDT.DataSelector;
-					ThreadMemory [i].Stack->SS = GDT.DataSelector;
-					ThreadMemory [i].Stack->CS = GDT.CodeSelector;
-					
-					ThreadMemory [i].FrameIP =
-					ThreadMemory [i].Stack->EIP = function_address;
+			stack->EFlags = 0x00000202;
 
-					ThreadMemory [i].FrameBP = 
-
-					ThreadMemory [i].Stack->UserESP =
-					ThreadMemory [i].Stack->EBP = 
-					ThreadMemory [i].Stack->ESP = (uint)ThreadStack[i];	// stack pointer
-
-					ThreadMemory [i].Stack->EFlags = 0x00000202;
-
-					// |------| start of stack memory
-					// |      |
-					// |      |  = ESP
-					// | DATA |
-					// | DATA |  = BSP
-					// | DATA |
-					// |------| end of stack memory
-					
-					return (void*) &ThreadMemory [i];
-				}
-			}
-			return null;
+			// |------| start of stack memory
+			// |      |
+			// |      |  = ESP
+			// | DATA |
+			// | DATA |  = EBP
+			// | DATA |
+			// |------| end of stack memory
+			
+			return (void*) stack;
 		}
 
-		private static unsafe void UpdateThread(void* thread, void* currentThread)
+		public static SharpOS.Kernel.ADC.Thread CreateThread(uint function_address)
 		{
-			IDT.ISRData* threadData			= (IDT.ISRData*)thread;
-			IDT.ISRData* currentThreadData	= (IDT.ISRData*)currentThread;
+			void* stack = CreateStack(function_address);
+			if (stack == null)
+				return null;
 
-			threadData->Stack = currentThreadData->Stack;
+			SharpOS.Kernel.ADC.Thread newThread = new SharpOS.Kernel.ADC.Thread();
+			newThread.StackPointer		= stack;
+			newThread.StackAddress		= (uint)stack;
+			newThread.FunctionAddress	= function_address;
+			return newThread;
 		}
 	}
 }

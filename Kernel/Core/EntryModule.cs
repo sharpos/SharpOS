@@ -122,20 +122,14 @@ namespace SharpOS.Kernel {
 			StageMessage("Diagnostic Tool setup...");
 			DiagnosticTool.Server.Setup();
 
+			StageMessage ("Clock setup...");
+			Clock.Setup ();
+		
 			StageMessage("Scheduler setup...");
 			ThreadManager.Setup();
 
 			StageMessage ("Device setup...");
 			ADC.Architecture.DeviceManager.Setup ();
-
-			//StageMessage ("Clock setup...");
-			Clock.Setup ();
-		
-			StageMessage ("Keymap setup...");
-			KeyMap.Setup ();
-
-			StageMessage ("Keyboard setup...");
-			Keyboard.Setup ();
 
 			StageMessage ("PCIController setup...");
 			PCIController.Setup ();
@@ -145,6 +139,12 @@ namespace SharpOS.Kernel {
 			
 			//StageMessage("Ext2FS FileSystem setup...");
 			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
+
+			StageMessage ("Keymap setup...");
+			KeyMap.Setup ();
+
+			StageMessage ("Keyboard setup...");
+			Keyboard.Setup ();
 
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();
@@ -170,15 +170,20 @@ namespace SharpOS.Kernel {
 			InternalSystem.String.__RunTests ();
 			Runtime.__RunTests ();
 #endif
+
 			/*
-			void* thread = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST"));
-			void* thread2 = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST2"));
+			Thread thread = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST"));
+			Thread thread2 = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST2"));
 
-			ThreadManager.ScheduleThread(thread);			
-			ThreadManager.ScheduleThread(thread2);
-			ThreadManager.Enabled = true;
+			RoundRobinScheduler scheduler = new RoundRobinScheduler();
+			Dispatcher.Setup(scheduler);
+			Dispatcher.Schedule(thread);
+			Dispatcher.Schedule(thread2);
+
+			scheduler.Dump();			
+			Dispatcher.Start();
 			*/
-
+			
 			//Multiboot.WriteMultibootInfo();
 
 			StageMessage ("Shell setup...");

@@ -78,11 +78,13 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ADC\Dispatcher.cs" />
+    <Compile Include="ADC\IScheduler.cs" />
+    <Compile Include="ADC\RoundRobinScheduler.cs" />
     <Compile Include="ADC\SpinLock.cs" />
     <Compile Include="ADC\Thread.cs" />
     <Compile Include="ADC\ThreadManager.cs" />
     <Compile Include="ADC\X86\IOPortStream8bit.cs" />
-    <Compile Include="ADC\X86\SpinLock.cs" />
     <Compile Include="ADC\X86\Thread.cs" />
     <Compile Include="ADC\X86\ThreadManager.cs" />
     <Compile Include="DriverSystem\DeviceManager.cs" />

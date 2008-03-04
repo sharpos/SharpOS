@@ -14,7 +14,7 @@ using SharpOS.Kernel.Foundation;
 using System;
 
 namespace SharpOS.Kernel.ADC {
-	public sealed class Thread {		
+	public unsafe sealed class Thread {
         [AOTAttr.ADCStub]
 		public static void		Yield() 
 		{
@@ -39,6 +39,26 @@ namespace SharpOS.Kernel.ADC {
         [AOTAttr.ADCStub]
 		public static void		EndCriticalRegion()
 		{
+		}
+
+		private uint stackAddress;
+		internal uint StackAddress { get { return stackAddress; } set { stackAddress = value; } }
+		
+		private void* stackPointer;
+		internal void* StackPointer { get { return stackPointer; } set { stackPointer = value; } }
+		
+		private uint functionAddress;
+		internal uint FunctionAddress { get { return functionAddress; } set { functionAddress = value; } }
+
+		internal void Dump()
+		{
+			TextMode.Write("Thread stack: ");
+			TextMode.Write((int)stackAddress, true);
+			TextMode.Write(" function: ");
+			TextMode.Write((int)functionAddress, true);
+			TextMode.Write(" position: ");
+			TextMode.Write((int)stackPointer, true);
+			TextMode.WriteLine();
 		}
 	}
 }

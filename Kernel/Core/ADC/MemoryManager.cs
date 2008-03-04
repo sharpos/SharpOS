@@ -32,6 +32,8 @@ namespace SharpOS.Kernel.ADC {
 			public uint Free;
 		}
 
+		public static bool LogAllocations = false;
+
 		private static Header* firstNode = null;
 		private static Header* lastFreeNode = null;
 
@@ -121,9 +123,10 @@ namespace SharpOS.Kernel.ADC {
 			uint retPtr = (uint) currentNode + (uint) sizeof (Header);
 			allocated += (ulong) currentNode->Size;
 
-			Diagnostics.Assert (retPtr != 0, "MemoryManager.Allocate(uint): Allocation failed. ");
 			if (retPtr == 0)
 			{
+				DumpSerial();
+				Diagnostics.Assert (false, "MemoryManager.Allocate(uint): Allocation failed. ");
 				// ... how lucky do you feel?
 				throw new System.OutOfMemoryException("MemoryManager.Allocate(uint): Could not allocate memory. ");
 				//return null;
@@ -133,12 +136,17 @@ namespace SharpOS.Kernel.ADC {
 
 			
 			if (currentNode->Next == null ||
+				(currentNode->Next < currentNode && currentNode->Next != firstNode) ||
 				currentNode->Next->Previous != currentNode ||
 				(currentNode->Previous != null &&
 				currentNode->Previous->Next != currentNode))
 			{
+				DumpSerial();
 				Diagnostics.Assert(false, "Allocation corrupted linked list. ");
 			}
+
+			if (LogAllocations)
+				DumpAllocation("Allocation", currentNode);
 
 			return (void*) retPtr;
 		}
@@ -251,9 +259,10 @@ namespace SharpOS.Kernel.ADC {
 			SharpOS.Kernel.ADC.MemoryUtil.MemCopy((uint)stptr, (uint)nextPtr, oldBlock->Size);
 			Free(stptr);
 
-            Diagnostics.Assert(nextPtr != null, "MemoryManager.Allocate(uint): Allocation failed.");
-			if (nextPtr == null)
+            if (nextPtr == null)
 			{
+				DumpSerial();
+				Diagnostics.Assert(false, "MemoryManager.Allocate(uint): Allocation failed.");
 				throw new OutOfMemoryException("MemoryManager.Allocate(uint): Allocation failed.");
 				return null;
 			}
@@ -266,9 +275,13 @@ namespace SharpOS.Kernel.ADC {
 			uint memoryHeaderPointer = (uint) memory - (uint) sizeof (Header);
 			Header* freeHeader = (Header*) memoryHeaderPointer;
 
-			if (freeHeader->Next->Previous != freeHeader ||
-				freeHeader->Previous->Next != freeHeader)
+			if (freeHeader->Next == null ||
+				(freeHeader->Next < freeHeader && freeHeader->Next != firstNode) ||
+				freeHeader->Next->Previous != freeHeader ||
+				(freeHeader->Previous != null &&
+				freeHeader->Previous->Next != freeHeader))
 			{
+				DumpSerial();
 				Diagnostics.Assert(false, "Trying to free invalid pointer. ");
 				throw new System.InvalidOperationException("Trying to free invalid pointer. ");
 			}
@@ -321,12 +334,18 @@ namespace SharpOS.Kernel.ADC {
 				lastFreeNode = currentNode;
 			
 			if (currentNode->Next == null ||
+				(currentNode->Next < currentNode && currentNode->Next != firstNode) ||
 				currentNode->Next->Previous != currentNode ||
 				(currentNode->Previous != null &&
 				currentNode->Previous->Next != currentNode))
 			{
+				DumpSerial();
 				Diagnostics.Assert(false, "Free corrupted linked list. ");
 			}
+			
+
+			if (LogAllocations)
+				DumpAllocation("Free", currentNode);
 		}
 
 		private static unsafe void DumpNode (string msg, Header* node)
@@ -368,6 +387,31 @@ namespace SharpOS.Kernel.ADC {
 				Serial.COM1.Write ("true");
 			else
 				Serial.COM1.Write ("false");
+			Serial.COM1.WriteLine ();
+		}
+
+		private static unsafe void DumpAllocation (string text, Header* node)
+		{
+			if (!Serial.Initialized)
+				return;
+
+			Serial.COM1.WriteLine("--------------");
+			Serial.COM1.Write (text);
+			Serial.COM1.Write (": ");
+			Serial.COM1.Write ((uint) node);
+			Serial.COM1.Write (", Next node: ");
+			Serial.COM1.Write ((uint) node->Next);
+			Serial.COM1.Write (", Prev node: ");
+			Serial.COM1.Write ((uint) node->Previous);
+			Serial.COM1.Write (", Size: ");
+			Serial.COM1.Write ((uint) node->Size);
+			Serial.COM1.Write (", IsFree: ");
+			if (node->Free == 1)
+				Serial.COM1.Write ("true");
+			else
+				Serial.COM1.Write ("false");
+			Serial.COM1.WriteLine("--------------");
+			ExceptionHandling.DumpCallingStack();
 			Serial.COM1.WriteLine ();
 		}
 
