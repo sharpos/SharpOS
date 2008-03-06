@@ -100,12 +100,12 @@ namespace InternalSystem {
 			return new CharEnumerator(this);
 		}
 		
-		public unsafe bool Equals (System.String i)
+		public bool Equals (System.String i)
 		{
 			return ((InternalSystem.String)(object)i) == this;
 		}
 
-		public override unsafe bool Equals (object o)
+		public override bool Equals (object o)
 		{
 			//if (!(o is String))
 			//	return false;

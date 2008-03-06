@@ -24,12 +24,12 @@ namespace InternalSystem {
 		internal char Value;
 #pragma warning restore 649
 		
-		public unsafe bool Equals (System.Char i)
+		public bool Equals (System.Char i)
 		{
 			return i == Value;
 		}
 
-		public override unsafe bool Equals (object o)
+		public override bool Equals (object o)
 		{
 			//if (!(o is Char))
 			//	return false;

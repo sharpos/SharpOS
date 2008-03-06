@@ -24,12 +24,12 @@ namespace InternalSystem {
 		internal uint Value;
 #pragma warning restore 649
 		
-		public unsafe bool Equals (System.UInt32 i)
+		public bool Equals (System.UInt32 i)
 		{
 			return i == Value;
 		}
 
-		public override unsafe bool Equals (object o)
+		public override bool Equals (object o)
 		{
 			//if (!(o is UInt32))
 			//	return false;

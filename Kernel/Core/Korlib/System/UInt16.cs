@@ -24,12 +24,12 @@ namespace InternalSystem {
 		internal ushort Value;
 #pragma warning restore 649
 		
-		public unsafe bool Equals (System.UInt16 i)
+		public bool Equals (System.UInt16 i)
 		{
 			return i == Value;
 		}
 
-		public override unsafe bool Equals (object o)
+		public override bool Equals (object o)
 		{
 			//if (!(o is UInt16))
 			//	return false;
