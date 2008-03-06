@@ -133,6 +133,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 			}
 		}
 		#endregion
+
+		public static uint GetTickCount()
+		{
+			return ticks;
+		}
+
+
 	}
 }
 

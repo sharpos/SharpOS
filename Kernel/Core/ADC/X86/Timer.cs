@@ -28,5 +28,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			return PIT.HZ;
 		}
+
+		public static void Delay(uint milliseconds)
+		{
+			// resolution is only 10 milliseconds
+			uint end = PIT.GetTickCount() + (milliseconds / 10);
+
+			while (PIT.GetTickCount() < end)
+				;
+		}
 	}
 }

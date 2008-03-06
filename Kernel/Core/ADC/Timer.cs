@@ -30,5 +30,10 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return 0;
 		}
+
+		[AOTAttr.ADCStub]
+		public static void Delay(uint milliseconds)
+		{ 
+		}
 	}
 }
