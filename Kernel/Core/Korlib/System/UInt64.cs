@@ -13,9 +13,29 @@ using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public struct UInt64 {
+	public struct UInt64/*:
+		IComparable, 
+		IFormattable, 
+		IConvertible, 
+		IComparable<ulong>, 
+		IEquatable<ulong>*/ 
+	{
 #pragma warning disable 649
 		internal ulong Value;
 #pragma warning restore 649
+		
+		public unsafe bool Equals (System.UInt64 i)
+		{
+			return i == Value;
+		}
+
+		public override unsafe bool Equals (object o)
+		{
+			//if (!(o is UInt64))
+			//	return false;
+
+			UInt64 other = (UInt64)o;
+			return other.Value == Value;
+		}
 	}
 }

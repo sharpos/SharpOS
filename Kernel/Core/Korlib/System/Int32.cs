@@ -13,9 +13,29 @@ using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public struct Int32 {
+	public struct Int32 /*:
+		IComparable, 
+		IFormattable, 
+		IConvertible, 
+		IComparable<int>, 
+		IEquatable<int>*/
+	{
 #pragma warning disable 649
 		internal int Value;
 #pragma warning restore 649
+		
+		public unsafe bool Equals (System.Int32 i)
+		{
+			return i == Value;
+		}
+
+		public override unsafe bool Equals (object o)
+		{
+			//if (!(o is Int32))
+			//	return false;
+
+			Int32 other = (Int32)o;
+			return other.Value == Value;
+		}
 	}
 }

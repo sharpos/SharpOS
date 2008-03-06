@@ -13,9 +13,29 @@ using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public struct SByte {
+	public struct SByte/*:
+		IComparable, 
+		IFormattable, 
+		IConvertible, 
+		IComparable<sbyte>, 
+		IEquatable<sbyte>*/ 
+	{
 #pragma warning disable 649
 		internal sbyte Value;
 #pragma warning restore 649
+		
+		public unsafe bool Equals (System.SByte i)
+		{
+			return i == Value;
+		}
+
+		public override unsafe bool Equals (object o)
+		{
+			//if (!(o is SByte))
+			//	return false;
+
+			SByte other = (SByte)o;
+			return other.Value == Value;
+		}
 	}
 }

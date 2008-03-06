@@ -13,9 +13,29 @@ using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public struct Byte {
+	public struct Byte/*:
+		IComparable, 
+		IFormattable, 
+		IConvertible, 
+		IComparable<byte>, 
+		IEquatable<byte>*/ 
+	{
 #pragma warning disable 649
 		internal byte Value;
 #pragma warning restore 649
+		
+		public unsafe bool Equals (System.Byte i)
+		{
+			return i == Value;
+		}
+
+		public override unsafe bool Equals (object o)
+		{
+			//if (!(o is Byte))
+			//	return false;
+
+			Byte other = (Byte)o;
+			return other.Value == Value;
+		}
 	}
 }

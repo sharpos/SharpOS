@@ -15,7 +15,14 @@ using SharpOS.Kernel.ADC;
 namespace InternalSystem {
 	[StructLayout (LayoutKind.Sequential)]
 	[TargetNamespace ("System")]
-	public abstract class Array: InternalSystem.Object {
+	public abstract class Array : InternalSystem.Object
+		/*
+		ICloneable, 
+		IList, 
+		ICollection, 
+		IEnumerable
+		*/
+	{
 		[StructLayout (LayoutKind.Sequential)]
 		internal struct BoundEntry {
 			internal int LowerBound;

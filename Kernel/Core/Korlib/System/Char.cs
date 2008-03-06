@@ -13,9 +13,29 @@ using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public struct Char {
+	public struct Char/*:
+		IComparable, 
+		IFormattable, 
+		IConvertible, 
+		IComparable<char>, 
+		IEquatable<char>*/ 
+	{
 #pragma warning disable 649
 		internal char Value;
 #pragma warning restore 649
+		
+		public unsafe bool Equals (System.Char i)
+		{
+			return i == Value;
+		}
+
+		public override unsafe bool Equals (object o)
+		{
+			//if (!(o is Char))
+			//	return false;
+
+			Char other = (Char)o;
+			return other.Value == Value;
+		}
 	}
 }

@@ -9,6 +9,7 @@
 //  with Classpath Linking Exception for Libraries
 //
 
+using System;
 namespace SharpOS.Kernel.Tests.CS {
 	public class Inheritance {
 		private class Base {
@@ -122,6 +123,27 @@ namespace SharpOS.Kernel.Tests.CS {
 		public static uint CMPCallShadowedMemberFromBase ()
 		{
 			if ((new SubClass () as Base).Get58shadowWith69 () == 58)
+				return 1;
+
+			return 0;
+		}
+
+		public static uint CMPObjectIsValueType ()
+		{
+			/*
+			Object o1 = 4;
+
+			if (o1 is Int32)
+				return 1;
+			*/
+			return 0;
+		}
+
+		public static uint CMPObjectIsClass ()
+		{
+			object o1 = new SubClass ();
+
+			if (o1 is SubClass)
 				return 1;
 
 			return 0;

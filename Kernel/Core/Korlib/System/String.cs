@@ -99,5 +99,19 @@ namespace InternalSystem {
 		{
 			return new CharEnumerator(this);
 		}
+		
+		public unsafe bool Equals (System.String i)
+		{
+			return ((InternalSystem.String)(object)i) == this;
+		}
+
+		public override unsafe bool Equals (object o)
+		{
+			//if (!(o is String))
+			//	return false;
+
+			String other = (String)o;
+			return other == this;
+		}
 	}
 }

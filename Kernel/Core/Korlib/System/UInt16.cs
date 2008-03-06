@@ -13,9 +13,29 @@ using SharpOS.Kernel.ADC;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
-	public struct UInt16 {
+	public struct UInt16/*:
+		IComparable, 
+		IFormattable, 
+		IConvertible, 
+		IComparable<ushort>, 
+		IEquatable<ushort>*/ 
+	{
 #pragma warning disable 649
 		internal ushort Value;
 #pragma warning restore 649
+		
+		public unsafe bool Equals (System.UInt16 i)
+		{
+			return i == Value;
+		}
+
+		public override unsafe bool Equals (object o)
+		{
+			//if (!(o is UInt16))
+			//	return false;
+
+			UInt16 other = (UInt16)o;
+			return other.Value == Value;
+		}
 	}
 }
