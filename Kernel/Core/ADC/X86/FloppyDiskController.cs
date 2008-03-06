@@ -225,11 +225,11 @@ namespace SharpOS.Kernel.ADC.X86
 			if (!WaitForInterrupt())
 				return;
 
-			DMA.SetupChannel(DMAChannel.Channel2,
-				(byte)(((uint)diskBuffer >> 16) & 0xff),
-				(ushort)(((uint)diskBuffer & 0xffff)),
-				BYTES_PER_TRACK,
-				DMAMode.Read);
+			//DMA.SetupChannel(DMAChannel.Channel2,
+			//	(byte)(((uint)diskBuffer >> 16) & 0xff),
+			//	(ushort)(((uint)diskBuffer & 0xffff)),
+			//	BYTES_PER_TRACK,
+			//	DMAMode.Read);
 				
 			Barrier.Enter();
 			{
