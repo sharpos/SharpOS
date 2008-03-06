@@ -2626,7 +2626,7 @@ namespace SharpOS.AOT.X86 {
 		{
 			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
-			string typeName = assignee.Type.ToString ();
+			string typeName = assignee.Type.TypeFullName;
 			uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4) / 4;
 
 			if (value.IsRegisterSet)
