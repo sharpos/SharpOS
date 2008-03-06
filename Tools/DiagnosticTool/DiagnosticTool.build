@@ -20,6 +20,8 @@
 			<references>
 				<include name="${path::combine(prefix, 'Mono.Posix.dll')}" />
 				<include name="${path::combine(prefix, 'Mono.GetOptions.dll')}" />
+				<include name="System.Drawing.dll" />
+				<include name="System.Windows.Forms.dll" />
 			</references>
 			<sources>
 				<include name="*.cs" />
