@@ -169,12 +169,10 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				string result = "";
-
-				for (int i = 1; i < this.elements.Count; i++)
-					result += "    ";
-
-				return result;
+				int count = this.elements.Count;				
+				if (count == 0)
+					return String.Empty;
+				return new String(' ', (count - 1) * 4);
 			}
 		}
 
