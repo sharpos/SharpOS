@@ -179,6 +179,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 							"Peripheral Component Interconnect", 
 							new PCIBusDriver()),
 
+						new GenericDevice(
+							"Primary FDC",
+							"Unknown",
+							"Primary Floppy Disk Controller",
+							new FloppyDiskDriver()
+						),
+
 						/*
 						new GenericDevice(
 							"AGP", 

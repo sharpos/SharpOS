@@ -337,6 +337,7 @@ namespace SharpOS.Kernel.ADC.X86 {
             FDC_StatusPort                      = 0x03F4,
             FDC_CommandPort                     = 0x03F4,
             FDC_DataPort                        = 0x03F5,
+			FDC_Config							= 0x03F7,
             #endregion
 
 			#region 0372-0375 - Secondary Floppy Disk Controller

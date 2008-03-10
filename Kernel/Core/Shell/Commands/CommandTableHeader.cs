@@ -277,6 +277,8 @@ namespace SharpOS.Kernel.Shell.Commands {
 			header->AddEntry (BuiltIn.Time.CREATE ());
 			header->AddEntry (BuiltIn.Timezone.CREATE ());
 			header->AddEntry (BuiltIn.Testcase.CREATE ());
+			//header->AddEntry(BuiltIn.TestFat.CREATE());
+			//header->AddEntry(BuiltIn.TestFloppy.CREATE());
 
 			return header;
 		}

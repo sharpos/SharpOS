@@ -156,6 +156,13 @@ namespace SharpOS.Kernel {
 			TextMode.WriteLine (msg);
 		}
 
+		public static void Message(string msg, int value)
+		{
+			TextMode.Write(msg);
+			TextMode.Write(value);
+			TextMode.WriteLine();
+		}
+
 		public static void Error (string msg)
 		{
 			TextMode.SaveAttributes ();

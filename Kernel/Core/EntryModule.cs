@@ -122,29 +122,29 @@ namespace SharpOS.Kernel {
 			StageMessage("Diagnostic Tool setup...");
 			DiagnosticTool.Server.Setup();
 
-			StageMessage ("Clock setup...");
-			Clock.Setup ();
-		
 			StageMessage("Scheduler setup...");
 			ThreadManager.Setup();
 
 			StageMessage ("Device setup...");
 			ADC.Architecture.DeviceManager.Setup ();
 
-			StageMessage ("PCIController setup...");
-			PCIController.Setup ();
-
-			//StageMessage("Floppy Disk Controller setup...");
-			//FloppyDiskController.Setup();
-			
-			//StageMessage("Ext2FS FileSystem setup...");
-			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
-
+			//StageMessage ("Clock setup...");
+			Clock.Setup ();
+		
 			StageMessage ("Keymap setup...");
 			KeyMap.Setup ();
 
 			StageMessage ("Keyboard setup...");
 			Keyboard.Setup ();
+
+			StageMessage ("PCIController setup...");
+			PCIController.Setup ();
+
+			StageMessage("Floppy Disk Controller setup...");
+			FloppyDiskController.Setup();
+			
+			//StageMessage("Ext2FS FileSystem setup...");
+			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
 
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();
@@ -170,20 +170,15 @@ namespace SharpOS.Kernel {
 			InternalSystem.String.__RunTests ();
 			Runtime.__RunTests ();
 #endif
-
 			/*
-			Thread thread = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST"));
-			Thread thread2 = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST2"));
+			void* thread = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST"));
+			void* thread2 = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST2"));
 
-			RoundRobinScheduler scheduler = new RoundRobinScheduler();
-			Dispatcher.Setup(scheduler);
-			Dispatcher.Schedule(thread);
-			Dispatcher.Schedule(thread2);
-
-			scheduler.Dump();			
-			Dispatcher.Start();
+			ThreadManager.ScheduleThread(thread);			
+			ThreadManager.ScheduleThread(thread2);
+			ThreadManager.Enabled = true;
 			*/
-			
+
 			//Multiboot.WriteMultibootInfo();
 
 			StageMessage ("Shell setup...");

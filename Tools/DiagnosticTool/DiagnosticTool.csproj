@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{D5642D60-47DE-48FA-8930-16A70D587EDC}</ProjectGuid>
     <OutputType>WinExe</OutputType>
@@ -45,24 +45,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="INamedPipe.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="UnitTestsView.Designer.cs" />
-    <Compile Include="UnitTestsView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="MemoryView.Designer.cs" />
-    <Compile Include="MemoryView.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="Program.cs" />
-    <Compile Include="MainWindow.Designer.cs" />
-    <Compile Include="MainWindow.cs">
-      <SubType>Form</SubType>
-    </Compile>
-    <Compile Include="WindowsNamedPipe.cs" />
     <Compile Include="Client.cs" />
+    <Compile Include="INamedPipe.cs" />
+    <Compile Include="MainWindow.cs" />
+    <Compile Include="MainWindow.Designer.cs" />
+    <Compile Include="MemoryView.cs" />
+    <Compile Include="MemoryView.Designer.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="UnitTestsView.cs" />
+    <Compile Include="UnitTestsView.Designer.cs" />
     <Compile Include="UnixNamedPipe.cs" />
+    <Compile Include="WindowsNamedPipe.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

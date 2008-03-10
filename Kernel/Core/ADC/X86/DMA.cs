@@ -14,6 +14,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Runtime.InteropServices;
 using SharpOS.Kernel;
+using SharpOS.Kernel.Memory;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 
@@ -38,7 +39,7 @@ namespace SharpOS.Kernel.ADC.X86
 
 	public enum DMAChannel : byte
 	{
-		Channel0 = 0, // reserved
+		//Channel0 = 0, // reserved
 		Channel1 = 1,
 		Channel2 = 2,
 		Channel3 = 3
@@ -49,22 +50,53 @@ namespace SharpOS.Kernel.ADC.X86
 		Auto = 0x10,
 		NoAuto = 0x00,
 	}
-	public class DMA
+
+	public unsafe class DMA
 	{
-		public static unsafe bool SetupChannel(DMAChannel channel, void* address, ushort count, DMAMode mode, DMATransferType type, DMAAuto auto)
+		protected static byte* dmaReserve;
+
+		public static unsafe void Setup(byte* free)
 		{
-			uint memaddress = (uint)address;
+			// DMA 1) memory must be under 16M and 2) access must start on 64k boundary 
 
-			if ((memaddress >> 24) != 0)
-				return false; // all DMA must be under 16M			
+			// force align onto 64k boundary 
+			// the trick here is add 64k to last allocation and then mask bit against (64k - 1) value
+			dmaReserve = (byte*)(((uint)free + (64 * 1024)) & ((64 * 1024) - 1));
 
+			if ((((uint)dmaReserve + (64 * 1024 * 3)) >> 24) != 0)
+				Diagnostics.Panic("Can not allocated DMA memory under 16M");
+
+			// Reserve 64K for each channel
+			// DMA channel 0 is reserved - and not used on the x86 platform
+			PageAllocator.ReservePageRange(dmaReserve, 64 * 1024 / ADC.Pager.AtomicPageSize, "dma #1");
+			PageAllocator.ReservePageRange(dmaReserve + (64 * 1024), 64 * 1024 / ADC.Pager.AtomicPageSize, "dma #2");
+			PageAllocator.ReservePageRange(dmaReserve + (2 * 64 * 1024), 64 * 1024 / ADC.Pager.AtomicPageSize, "dma #3");
+		}
+
+		private static void* GetDMATranserAddress(DMAChannel channel)
+		{
+			switch (channel) {
+				case DMAChannel.Channel1:
+					return dmaReserve;
+				case DMAChannel.Channel2:
+					return dmaReserve + (1024 * 64);
+				case DMAChannel.Channel3:
+					return dmaReserve + (1024 * 64 * 2);
+				default:					
+					return null;
+			}
+		}
+
+		public static unsafe bool SetupChannel(DMAChannel channel, uint count, DMAMode mode, DMATransferType type, DMAAuto auto)
+		{
 			IO.Port dma_page;
 			IO.Port dma_address;
 			IO.Port dma_count;
 
+			if (count > (1024 * 64))
+				return false;
+
 			switch (channel) {
-				case DMAChannel.Channel0:
-					return false;	// can't use DMA Channel 0
 				case DMAChannel.Channel1:
 					dma_page = IO.Port.DMA_Channel1Page;
 					dma_address = IO.Port.DMA_Channel1Address;
@@ -85,6 +117,8 @@ namespace SharpOS.Kernel.ADC.X86
 					return false;
 			}
 
+			uint address = (uint) GetDMATranserAddress(channel);
+
 			Barrier.Enter();
 			// Disable DMA Controller
 			IO.WriteByte(IO.Port.DMA_ChannelMaskRegister, (byte)((byte)channel | 4));
@@ -93,9 +127,9 @@ namespace SharpOS.Kernel.ADC.X86
 			IO.WriteByte(IO.Port.DMA_ClearBytePointerFlipFlop, (byte)0xFF);	// reset flip-flop
 
 			// Set Address	
-			IO.WriteByte(dma_address, (byte)(memaddress & 0xFF)); // low byte
-			IO.WriteByte(dma_address, (byte)((memaddress >> 8) & 0xFF)); // high byte
-			IO.WriteByte(dma_page, (byte)((memaddress >> 16) & 0xFF)); // page
+			IO.WriteByte(dma_address, (byte)(address & 0xFF)); // low byte
+			IO.WriteByte(dma_address, (byte)((address >> 8) & 0xFF)); // high byte
+			IO.WriteByte(dma_page, (byte)((address >> 16) & 0xFF)); // page
 
 			// Clear any current transfers
 			IO.WriteByte(IO.Port.DMA_ClearBytePointerFlipFlop, (byte)0xFF);	// reset flip-flop
@@ -114,6 +148,37 @@ namespace SharpOS.Kernel.ADC.X86
 
 			return true;
 		}
+
+		public static bool TransferOut(DMAChannel channel, void* destination, uint count)
+		{
+			if (count > (1024 * 64))
+				return false;
+
+			uint address = (uint)GetDMATranserAddress(channel);
+
+			if (address == 0x00)
+				return false;
+
+			MemoryUtil.MemCopy(address, (uint)destination, count);
+
+			return true;
+		}
+
+		public static bool TransferIn(DMAChannel channel, void* source, uint count)
+		{
+			if (count > (1024 * 64))
+				return false;
+
+			uint address = (uint)GetDMATranserAddress(channel);
+
+			if (address == 0x00)
+				return false;
+
+			MemoryUtil.MemCopy((uint)source, address, count);
+
+			return true;
+		}
+
 
 	}
 }

@@ -18,52 +18,24 @@ using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.ADC
 {
-    public unsafe class FloppyDiskController
-    {
-        [AOTAttr.ADCStub]
-        public static void Setup()
-        {
-        }
-
-        [AOTAttr.ADCStub]
-        public static bool IsInterruptOccurred()
-        {
-            return false;
-        }
-
-        [AOTAttr.ADCStub]
-        public static void SetInterruptOccurred(bool interruptOccurred)
-        {
-        }
-
-        [AOTAttr.ADCStub]
-        public static void TurnOnMotor()
-        {
-        }
-
-        [AOTAttr.ADCStub]
-        public static void TurnOffMotor()
-        {
-        }
-
-        [AOTAttr.ADCStub]
-        public static void SendCommandToFDC(byte data)
-        {
-        }
-
-        [AOTAttr.ADCStub]
-        public static void SetupDMA()
-        {
-        }
-
+	public unsafe class FloppyDiskController
+	{
 		[AOTAttr.ADCStub]
-		public unsafe static void Read(byte* buffer, uint offset, uint length)
+		public static void Setup()
 		{
 		}
 
 		[AOTAttr.ADCStub]
-		public unsafe static void ReadData(byte head, byte track, byte sector)
+		public static bool ReadBlock(uint drive, uint lba, uint count, byte* memory)
 		{
+			return false;
 		}
+
+		[AOTAttr.ADCStub]
+		public static bool WriteBlock(uint drive, uint lba, uint count, byte* memory)
+		{
+			return false;
+		}
+
 	}
 }

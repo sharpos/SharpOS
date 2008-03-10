@@ -62,9 +62,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="X86.Memory32.cs" />
-    <Compile Include="X86.Memory16.cs" />
     <Compile Include="X86.cs" />
+    <Compile Include="X86.Memory16.cs" />
+    <Compile Include="X86.Memory32.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\Core\SharpOS.AOT.Core.csproj">

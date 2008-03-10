@@ -57,16 +57,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="MsVhd.cs" />
-    <Compile Include="Ext2FS.cs" />
-    <Compile Include="Program.cs" />
     <Compile Include="AssemblyInfo.cs" />
-    <Compile Include="GroupDescriptor.cs" />
-    <Compile Include="DirectoryFileFormat.cs" />
-    <Compile Include="INode.cs" />
-    <Compile Include="SuperBlock.cs" />
     <Compile Include="Block.cs" />
+    <Compile Include="DirectoryFileFormat.cs" />
+    <Compile Include="Ext2FS.cs" />
     <Compile Include="FileSystem.cs" />
+    <Compile Include="GroupDescriptor.cs" />
+    <Compile Include="INode.cs" />
+    <Compile Include="MsVhd.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="SuperBlock.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
