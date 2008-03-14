@@ -977,7 +977,7 @@ namespace SharpOS.AOT.X86 {
 		/// Common implementations which pop a value from the IL evaluation stack and save it in another means
 		/// of storage (such as stloc, stind, starg).
 		/// </summary>
-		private void Save (string typeName, InternalType destinationType, Memory memory, IR.Operands.Register value)
+		private void Save (Class _class, InternalType destinationType, Memory memory, IR.Operands.Register value)
 		{
 			switch (destinationType) {
 			case InternalType.I1:
@@ -1057,7 +1057,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			case InternalType.ValueType:
-				uint size = (uint) this.method.Engine.GetTypeSize (typeName, 4);
+				uint size = (uint) this.method.Engine.GetTypeSize (_class.TypeFullName, 4);
 
 				if (size == 4) {
 					if (value.IsRegisterSet)
@@ -1350,7 +1350,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Local assignee = instruction.Def as IR.Operands.Local;
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
-			this.Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			this.Save (assignee.Type, assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		/// <summary>
@@ -1362,7 +1362,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.Argument assignee = instruction.Def as IR.Operands.Argument;
 			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
 
-			this.Save (assignee.Type.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			this.Save (assignee.Type, assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		/// <summary>
@@ -1463,7 +1463,7 @@ namespace SharpOS.AOT.X86 {
 				NullCheck (R32.EAX);
 			}
 
-			this.Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			this.Save (assignee.Field.Type, assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		/// <summary>
@@ -1475,7 +1475,7 @@ namespace SharpOS.AOT.X86 {
 			IR.Operands.FieldOperand assignee = instruction.Use [0] as IR.Operands.FieldOperand;
 			IR.Operands.Register value = instruction.Use [1] as IR.Operands.Register;
 
-			this.Save (assignee.Field.FieldDefinition.ToString (), assignee.InternalType, this.GetAddress (assignee), value);
+			this.Save (assignee.Field.Type, assignee.InternalType, this.GetAddress (assignee), value);
 		}
 
 		/// <summary>
@@ -2921,7 +2921,7 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.MUL (R32.EDX);
 			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, objectSize + ARRAY_BASE_SIZE));
 
-			this.Save (assignee.Type.SpecialTypeElement.TypeFullName, assignee.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0), value);
+			this.Save (assignee.Type.SpecialTypeElement, assignee.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0), value);
 
 			this.assembly.JMP (labelOk);
 			this.assembly.LABEL (labelError);
@@ -3150,7 +3150,7 @@ namespace SharpOS.AOT.X86 {
 			this.assembly.MUL (R32.EDX);
 			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, objectSize + ARRAY_BASE_SIZE + (instruction.Use.Length - 3)*ARRAY_BOUND_SIZE));
 
-			this.Save (assignee.Type.SpecialTypeElement.TypeFullName, assignee.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0), value);
+			this.Save (assignee.Type.SpecialTypeElement, assignee.Type.SpecialTypeElement.InternalType, new DWordMemory (null, R32.EDX, null, 0), value);
 
 			this.assembly.JMP (labelOk);
 			this.assembly.LABEL (labelError);
