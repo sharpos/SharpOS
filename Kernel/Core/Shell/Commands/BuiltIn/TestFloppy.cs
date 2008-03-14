@@ -37,7 +37,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn
 			}
 			catch (Exception e) {
 				TextMode.WriteLine("Exception caught.");
-				TextMode.WriteLine(e.ToString());
+				//TextMode.WriteLine(e.ToString());
 			}
 		}
 
