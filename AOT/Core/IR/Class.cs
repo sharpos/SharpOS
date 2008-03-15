@@ -159,10 +159,10 @@ namespace SharpOS.AOT.IR {
 						this._base.Setup (step);
 
 				} else if (step != 1)
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Can't initialize " + this.TypeFullName + " to step " + step);
 
 			} else
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException (this.TypeFullName + " not supported yet.");
 		}
 
 		public void AddMethods ()
@@ -843,7 +843,7 @@ namespace SharpOS.AOT.IR {
 					result = this.engine.ArrayClass.Size;
 
 				else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Can't retrieve InternalSize for type " + this.TypeFullName);
 
 				this.size = result;
 
