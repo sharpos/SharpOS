@@ -316,6 +316,9 @@ namespace SharpOS.AOT.X86 {
 					else if (instruction is IR.Instructions.Ldelem)
 						this.Ldelem (instruction as IR.Instructions.Ldelem);
 
+					else if (instruction is IR.Instructions.Ldelema)
+						this.Ldelema (instruction as IR.Instructions.Ldelema);
+
 					else if (instruction is IR.Instructions.Ldlen)
 						this.Ldlen (instruction as IR.Instructions.Ldlen);
 

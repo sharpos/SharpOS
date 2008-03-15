@@ -26,6 +26,37 @@ namespace SharpOS.Kernel.Tests.CS {
 			public int value = 0;
 		}
 
+		struct SomeStruct {
+			public SomeStruct (int value)
+			{
+				this.value = value;
+			}
+
+			public int value;
+			
+			public int Value {
+				get {
+					return value;
+				}
+			}
+		}
+
+		/// <summary>
+		/// SomeStruct[] call on element
+		/// </summary>
+		public static uint CMPStructArrayCall ()
+		{
+			SomeStruct [] arr = new SomeStruct [1];
+			int i = 0;
+
+			arr [0] = new SomeStruct (42);
+
+			if (arr [i].Value != 42)
+				return 0;
+
+			return 1;
+		}
+
 		/// <summary>
 		/// int[] read/write
 		/// </summary>

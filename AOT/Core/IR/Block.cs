@@ -2353,7 +2353,14 @@ namespace SharpOS.AOT.IR {
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldelema (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
-			throw new NotImplementedEngineException ();
+			TypeReference typeReference = cilInstruction.Operand as TypeReference;
+
+			Register index = this.GetRegister ();
+			Register arrayRef = this.GetRegister ();
+
+			Register result = this.SetRegister ();
+
+			return new Ldelema (this.method.Engine.GetClass (typeReference), result, index, arrayRef);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Cpobj (Mono.Cecil.Cil.Instruction cilInstruction)

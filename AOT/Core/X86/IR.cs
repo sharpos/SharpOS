@@ -2975,6 +2975,54 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
+		/// Implements the 'ldelema' IL instruction, which retrieves address of element value of an array
+		/// and places it on the evaluation stack.
+		/// </summary>
+		private void Ldelema (IR.Instructions.Ldelema instruction)
+		{
+			string labelError = this.GetLabel (instruction.Block, instruction.Index, 0);
+			string labelOk = this.GetLabel (instruction.Block, instruction.Index, 1);
+
+			IR.Operands.Register value = instruction.Use [0] as IR.Operands.Register;
+			IR.Operands.Register index = instruction.Use [1] as IR.Operands.Register;
+			IR.Operands.Register assignee = instruction.Def as IR.Operands.Register;
+
+			int objectSize = this.assembly.Engine.ObjectSize;
+			int elementSize = value.Type.SpecialTypeElement.ReferenceSize;
+
+			if (value.IsRegisterSet)
+				this.assembly.MOV (R32.ECX, Assembly.GetRegister (value.Register));
+			else
+				this.assembly.MOV (R32.ECX, new DWordMemory (this.GetAddress (value)));
+
+			if (index.IsRegisterSet)
+				this.assembly.MOV (R32.EAX, Assembly.GetRegister (index.Register));
+			else
+				this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (index)));
+
+			// TODO check array type, throw ArrayTypeMismatchException if needed
+			
+			this.assembly.CMP (new DWordMemory (null, R32.ECX, null, 0, objectSize + ARRAY_FIRST_BOUND_LENGTH_OFFSET), R32.EAX);
+			this.assembly.JNA (labelError);
+
+			this.assembly.MOV (R32.EDX, (uint) elementSize);
+			this.assembly.MUL (R32.EDX);
+			this.assembly.LEA (R32.EDX, new DWordMemory (null, R32.ECX, R32.EAX, 0, objectSize + ARRAY_BASE_SIZE));
+
+			if (assignee.IsRegisterSet)
+				this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EDX);
+			else
+				this.assembly.MOV (new DWordMemory (this.GetAddress (assignee)), R32.EDX);
+
+			this.assembly.JMP (labelOk);
+			this.assembly.LABEL (labelError);
+
+			// TODO throw IndexOutOfRangeException
+
+			this.assembly.LABEL (labelOk);
+		}
+
+		/// <summary>
 		/// Implements the 'ldlen' IL instruction, which places the length of an array on the stack.
 		/// </summary>
 		private void Ldlen (IR.Instructions.Ldlen instruction)
