@@ -242,14 +242,9 @@ namespace SharpOS.AOT.X86 {
 		private void PatchSymbolOffsets ()
 		{
 			uint startCode = this.instructions [this.GetLabelIndex (START_CODE)].Offset;
-			uint startData = this.instructions [this.GetLabelIndex (START_DATA)].Offset;
 			for (int i = 0; i < this.symbols.Count; i++) {
-				if (this.symbols [i] is COFF.Static) {
-					uint offset = this.instructions [this.GetLabelIndex ((this.symbols [i] as COFF.Label).Name)].Offset - startData;
-					this.instructions [this.symbols [i].Index].Value = offset;
-
-				} else if (this.symbols [i] is COFF.Label) {
-					uint offset = this.instructions [this.GetLabelIndex ((this.symbols [i] as COFF.Label).Name)].Offset - startCode;
+				if (this.symbols [i] is COFF.Static || this.symbols [i] is COFF.Label) {
+					uint offset = this.instructions [this.GetLabelIndex ((this.symbols [i] as COFF.Label).Name)].Offset + BASE_ADDRESS;
 					this.instructions [this.symbols [i].Index].Value = offset;
 
 				} else
