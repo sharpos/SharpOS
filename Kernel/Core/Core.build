@@ -11,7 +11,9 @@
 	<property name="debug" value="false" readonly="false" overwrite="false" />
 	<property name="prefix" value="../../build" overwrite="true" />
 	<property name="temp-dir" value="${path::combine(prefix, 'Temp')}" />
-	
+	<property name="data-dir" value="../../Data" />
+	<property name="floppy-images-dir" value="${path::combine(data-dir, 'FloppyDiskImage')}" />
+
 	<target name="conf">
 		<!-- nothing yet -->		
 	</target>
@@ -35,8 +37,11 @@
 				<include name="${path::combine(prefix, 'SharpOS.AOT.Core.dll')}" />
 			</references>
 			<resources>
-				<include name="${path::combine(temp-dir, 'BuiltinKeyMaps.ska')}" asis="true" />
+				<include name="${path::combine(floppy-images-dir, 'fat12.img')}" asis="true" />
 			</resources>
+			<resources>
+				<include name="${path::combine(temp-dir, 'BuiltinKeyMaps.ska')}" asis="true" />			</resources>
+
 			<sources>
 				<include name="**/*.cs" />
 			</sources>
@@ -53,6 +58,9 @@
 				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.CS.dll')}" />
 				<include name="${path::combine(prefix, 'SharpOS.Kernel.Tests.IL.dll')}" />
 			</references>
+			<resources>
+				<include name="${path::combine(floppy-images-dir, 'fat12.img')}" asis="true" />
+			</resources>
 			<resources>
 				<include name="${path::combine(temp-dir, 'BuiltinKeyMaps.ska')}" asis="true" />
 			</resources>

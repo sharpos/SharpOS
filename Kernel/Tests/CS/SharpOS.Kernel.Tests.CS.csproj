@@ -72,7 +72,7 @@
     <Compile Include="BooleanOrderOfOperations.cs" />
     <Compile Include="Boxing.cs" />
     <Compile Include="ByteString.cs" />
-    <Compile Include="ConditionalOperator .cs" />
+    <Compile Include="ConditionalOperator.cs" />
     <Compile Include="Delegates.cs" />
     <Compile Include="Enum.cs" />
     <Compile Include="Equals.cs" />

@@ -10,7 +10,8 @@
 
 using System;
 using SharpOS.Korlib.Runtime;
-using SharpOS.Kernel.BlockDevice;
+using SharpOS.Kernel.DriverSystem;
+using SharpOS.Kernel.DriverSystem.Drivers.Block;
 using SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.FileSystem.FAT
@@ -138,7 +139,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 		protected IBlockDevice device;
 		protected uint blocksize;
 
-		public FAT(IBlockDevice blockdevice)
+		public FAT (IBlockDevice blockdevice)
 		{
 			device = blockdevice;
 			blocksize = device.GetBlockSize();
@@ -161,18 +162,18 @@ namespace SharpOS.Kernel.FileSystem.FAT
 		protected uint entriespersector;
 		protected uint firstrootdirectorysector;
 
-		public bool ReadBootSector()
+		public bool ReadBootSector ()
 		{
 			validfat = false;
 
 			if (blocksize != 512)	// only going to work with 512 sector sizes (for now)
 				return false;
 
-			ByteBuffer bootsector = ByteBuffer.Allocate(blocksize);
+			MemoryBlock bootsector = new MemoryBlock(512);
 
-			GenericBlockDevice.DoRequest(device, IORequestType.Read, 0, 1, bootsector);
+			device.ReadBlock(0, 1, bootsector);
 
-			byte bootsignature = ByteBuffer.GetByte(bootsector, BootSector.ExtendedBootSignature);
+			byte bootsignature = bootsector.GetByte(BootSector.ExtendedBootSignature);
 
 			if ((bootsignature != 0x29) && (bootsignature != 0x28))
 				return false;
@@ -180,20 +181,20 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			TextMode.Write("EOM NAME: ");
 
 			for (uint i = 0; i < 8; i++)
-				TextMode.WriteChar(ByteBuffer.GetByte(bootsector, BootSector.EOMName + i));
+				TextMode.WriteChar(bootsector.GetByte(BootSector.EOMName + i));
 
 			TextMode.WriteLine();
 
-			bytespersector = ByteBuffer.GetUShort(bootsector, BootSector.BytesPerSector);
-			sectorspercluster = ByteBuffer.GetByte(bootsector, BootSector.SectorsPerCluster);
-			reservedsectors = ByteBuffer.GetByte(bootsector, BootSector.ReservedSectors);
-			nbrfats = ByteBuffer.GetByte(bootsector, BootSector.FatAllocationTables);
-			rootentries = ByteBuffer.GetUShort(bootsector, BootSector.MaxRootDirEntries);
+			bytespersector = bootsector.GetUShort(BootSector.BytesPerSector);
+			sectorspercluster = bootsector.GetByte(BootSector.SectorsPerCluster);
+			reservedsectors = bootsector.GetByte(BootSector.ReservedSectors);
+			nbrfats = bootsector.GetByte(BootSector.FatAllocationTables);
+			rootentries = bootsector.GetUShort(BootSector.MaxRootDirEntries);
 
-			uint sectorsperfat16 = ByteBuffer.GetUShort(bootsector, BootSector.SectorsPerFAT);
-			uint sectorsperfat32 = ByteBuffer.GetUInt(bootsector, BootSector.FAT32_SectorPerFAT);
-			uint totalsectors16 = ByteBuffer.GetUShort(bootsector, BootSector.TotalSectors);
-			uint totalsectors32 = ByteBuffer.GetUInt(bootsector, BootSector.FAT32_TotalSectors);
+			uint sectorsperfat16 = bootsector.GetUShort(BootSector.SectorsPerFAT);
+			uint sectorsperfat32 = bootsector.GetUInt(BootSector.FAT32_SectorPerFAT);
+			uint totalsectors16 = bootsector.GetUShort(BootSector.TotalSectors);
+			uint totalsectors32 = bootsector.GetUInt(BootSector.FAT32_TotalSectors);
 			uint sectorsperfat = (sectorsperfat16 != 0) ? sectorsperfat16 : sectorsperfat32;
 			uint fatsectors = nbrfats * sectorsperfat;
 
@@ -218,7 +219,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			else
 				type = FatType.FAT32;
 
-			ByteBuffer.Release(bootsector);
+			bootsector.Release();
 
 			if (type == FatType.FAT12) {
 				reserved = 0xFF0;
@@ -255,7 +256,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return validfat;
 		}
 
-		public bool FormatBootSector(FatType type, string volumename)
+		public bool FormatBootSector (FatType type, string volumename)
 		{
 			if (!device.CanWrite())
 				return false;
@@ -285,98 +286,98 @@ namespace SharpOS.Kernel.FileSystem.FAT
 
 			uint sectorsperfat = (val1 + (val2 - 1)) / val2;
 
-			ByteBuffer bootsector = ByteBuffer.Allocate(device.GetBlockSize());
+			MemoryBlock bootsector = new MemoryBlock(512);
 
-			ByteBuffer.SetUInt(bootsector, BootSector.JumpInstruction, 0);
-			ByteBuffer.SetString(bootsector, BootSector.EOMName, "MSWIN4.1");
-			ByteBuffer.SetUShort(bootsector, BootSector.BytesPerSector, (ushort)bytespersector);
-			ByteBuffer.SetByte(bootsector, BootSector.SectorsPerCluster, (byte)sectorspercluster);
-			ByteBuffer.SetUShort(bootsector, BootSector.ReservedSectors, (ushort)reservedsectors);
-			ByteBuffer.SetByte(bootsector, BootSector.FatAllocationTables, nbrfats);
-			ByteBuffer.SetUShort(bootsector, BootSector.MaxRootDirEntries, (ushort)rootentries);
+			bootsector.SetUInt(BootSector.JumpInstruction, 0);
+			bootsector.SetString(BootSector.EOMName, "MSWIN4.1");
+			bootsector.SetUShort(BootSector.BytesPerSector, (ushort)bytespersector);
+			bootsector.SetByte(BootSector.SectorsPerCluster, (byte)sectorspercluster);
+			bootsector.SetUShort(BootSector.ReservedSectors, (ushort)reservedsectors);
+			bootsector.SetByte(BootSector.FatAllocationTables, nbrfats);
+			bootsector.SetUShort(BootSector.MaxRootDirEntries, (ushort)rootentries);
 
 			if (totalsectors > 0xFFFF) {
-				ByteBuffer.SetUShort(bootsector, BootSector.TotalSectors, 0);
-				ByteBuffer.SetUInt(bootsector, BootSector.FAT32_TotalSectors, totalclusters);
+				bootsector.SetUShort(BootSector.TotalSectors, 0);
+				bootsector.SetUInt(BootSector.FAT32_TotalSectors, totalclusters);
 			}
 			else {
-				ByteBuffer.SetUShort(bootsector, BootSector.TotalSectors, (ushort)totalsectors);
-				ByteBuffer.SetUInt(bootsector, BootSector.FAT32_TotalSectors, 0);
+				bootsector.SetUShort(BootSector.TotalSectors, (ushort)totalsectors);
+				bootsector.SetUInt(BootSector.FAT32_TotalSectors, 0);
 			}
 
-			ByteBuffer.SetByte(bootsector, BootSector.MediaDescriptor, 0xF8);
+			bootsector.SetByte(BootSector.MediaDescriptor, 0xF8);
 
 			if (type == FatType.FAT32)
-				ByteBuffer.SetUShort(bootsector, BootSector.SectorsPerFAT, 0);
+				bootsector.SetUShort(BootSector.SectorsPerFAT, 0);
 			else
-				ByteBuffer.SetUShort(bootsector, BootSector.SectorsPerFAT, (ushort)sectorsperfat);
+				bootsector.SetUShort(BootSector.SectorsPerFAT, (ushort)sectorsperfat);
 
-			ByteBuffer.SetUShort(bootsector, BootSector.SectorsPerTrack, 0); ////
-			ByteBuffer.SetUInt(bootsector, BootSector.HiddenSectors, 0);
-			ByteBuffer.SetByte(bootsector, BootSector.PhysicalDriveNbr, 0x80);
-			ByteBuffer.SetByte(bootsector, BootSector.ReservedCurrentHead, 0);
-			ByteBuffer.SetByte(bootsector, BootSector.ExtendedBootSignature, 0x29);
-			ByteBuffer.SetUInt(bootsector, BootSector.IDSerialNumber, 0); ////
-			ByteBuffer.SetString(bootsector, BootSector.VolumeLabel, "            ");  // 12 blank spaces
-			ByteBuffer.SetString(bootsector, BootSector.VolumeLabel, volumename);  // 12 blank spaces
+			bootsector.SetUShort(BootSector.SectorsPerTrack, 0); ////
+			bootsector.SetUInt(BootSector.HiddenSectors, 0);
+			bootsector.SetByte(BootSector.PhysicalDriveNbr, 0x80);
+			bootsector.SetByte(BootSector.ReservedCurrentHead, 0);
+			bootsector.SetByte(BootSector.ExtendedBootSignature, 0x29);
+			bootsector.SetUInt(BootSector.IDSerialNumber, 0); ////
+			bootsector.SetString(BootSector.VolumeLabel, "            ");  // 12 blank spaces
+			bootsector.SetString(BootSector.VolumeLabel, volumename);  // 12 blank spaces
 
 			if (type == FatType.FAT12)
-				ByteBuffer.SetString(bootsector, BootSector.FATType, "FAT12   ");
+				bootsector.SetString(BootSector.FATType, "FAT12   ");
 			else if (type == FatType.FAT16)
-				ByteBuffer.SetString(bootsector, BootSector.FATType, "FAT16   ");
+				bootsector.SetString(BootSector.FATType, "FAT16   ");
 			else // if (type == FatType.FAT32)
-				ByteBuffer.SetString(bootsector, BootSector.FATType, "FAT32   ");
+				bootsector.SetString(BootSector.FATType, "FAT32   ");
 
 			//BootSector.OSBootCode
-			ByteBuffer.SetUShort(bootsector, BootSector.BootSectorSignature, 0x55AA);
+			bootsector.SetUShort(BootSector.BootSectorSignature, 0x55AA);
 
 			if (type == FatType.FAT32) {
-				ByteBuffer.SetUInt(bootsector, BootSector.FAT32_SectorPerFAT, sectorsperfat);
-				ByteBuffer.SetByte(bootsector, BootSector.FAT32_Flags, 0);
-				ByteBuffer.SetUShort(bootsector, BootSector.FAT32_Version, 0);
-				ByteBuffer.SetUInt(bootsector, BootSector.FAT32_ClusterNumberOfRoot, 2);
-				ByteBuffer.SetUShort(bootsector, BootSector.FAT32_SectorFSInformation, 1);
-				ByteBuffer.SetUShort(bootsector, BootSector.FAT32_SecondBootSector, 6);
+				bootsector.SetUInt(BootSector.FAT32_SectorPerFAT, sectorsperfat);
+				bootsector.SetByte(BootSector.FAT32_Flags, 0);
+				bootsector.SetUShort(BootSector.FAT32_Version, 0);
+				bootsector.SetUInt(BootSector.FAT32_ClusterNumberOfRoot, 2);
+				bootsector.SetUShort(BootSector.FAT32_SectorFSInformation, 1);
+				bootsector.SetUShort(BootSector.FAT32_SecondBootSector, 6);
 				//FAT32_Reserved1
-				ByteBuffer.SetByte(bootsector, BootSector.FAT32_PhysicalDriveNbr, 0x80);
-				ByteBuffer.SetByte(bootsector, BootSector.FAT32_Reserved2, 0);
-				ByteBuffer.SetByte(bootsector, BootSector.FAT32_ExtendedBootSignature, 0x29);
-				ByteBuffer.SetUInt(bootsector, BootSector.FAT32_IDSerialNumber, 0); ////
-				ByteBuffer.SetString(bootsector, BootSector.FAT32_VolumeLabel, "            ");  // 12 blank spaces
-				ByteBuffer.SetString(bootsector, BootSector.FAT32_VolumeLabel, volumename);  // 12 blank spaces
-				ByteBuffer.SetString(bootsector, BootSector.FAT32_FATType, "FAT32   ");
+				bootsector.SetByte(BootSector.FAT32_PhysicalDriveNbr, 0x80);
+				bootsector.SetByte(BootSector.FAT32_Reserved2, 0);
+				bootsector.SetByte(BootSector.FAT32_ExtendedBootSignature, 0x29);
+				bootsector.SetUInt(BootSector.FAT32_IDSerialNumber, 0); ////
+				bootsector.SetString(BootSector.FAT32_VolumeLabel, "            ");  // 12 blank spaces
+				bootsector.SetString(BootSector.FAT32_VolumeLabel, volumename);  // 12 blank spaces
+				bootsector.SetString(BootSector.FAT32_FATType, "FAT32   ");
 			}
 
 			// Write Boot Sector
-			GenericBlockDevice.DoRequest(device, IORequestType.Write, 0, 1, bootsector);
+			device.WriteBlock(0, 1, bootsector);
 
 			// Write backup Boot Sector
 			if (type == FatType.FAT32) {
-				GenericBlockDevice.DoRequest(device, IORequestType.Write, 6, 1, bootsector);
+				device.WriteBlock(0, 1, bootsector);
 			}
 
 			// create FSInfo Structure
 			if (type == FatType.FAT32) {
-				ByteBuffer fsinfosector = ByteBuffer.Allocate(device.GetBlockSize());
+				MemoryBlock fsinfosector = new MemoryBlock(512);
 
-				ByteBuffer.SetUInt(fsinfosector, FSInfo.FSI_LeadSignature, 0x41615252);
+				fsinfosector.SetUInt(FSInfo.FSI_LeadSignature, 0x41615252);
 				//FSInfo.FSI_Reserved1
-				ByteBuffer.SetUInt(fsinfosector, FSInfo.FSI_StructureSigature, 0x61417272);
-				ByteBuffer.SetUInt(fsinfosector, FSInfo.FSI_FreeCount, 0xFFFFFFFF);
-				ByteBuffer.SetUInt(fsinfosector, FSInfo.FSI_NextFree, 0xFFFFFFFF);
+				fsinfosector.SetUInt(FSInfo.FSI_StructureSigature, 0x61417272);
+				fsinfosector.SetUInt(FSInfo.FSI_FreeCount, 0xFFFFFFFF);
+				fsinfosector.SetUInt(FSInfo.FSI_NextFree, 0xFFFFFFFF);
 				//FSInfo.FSI_Reserved2
-				ByteBuffer.SetUInt(fsinfosector, FSInfo.FSI_TrailSignature, 0xAA550000);
+				bootsector.SetUInt(FSInfo.FSI_TrailSignature, 0xAA550000);
 
-				GenericBlockDevice.DoRequest(device, IORequestType.Write, 1, 1, fsinfosector);
-				GenericBlockDevice.DoRequest(device, IORequestType.Write, 7, 1, fsinfosector);
+				device.WriteBlock(1, 1, fsinfosector);
+				device.WriteBlock(7, 1, fsinfosector);
 
 				// create 2nd sector
-				ByteBuffer secondsector = ByteBuffer.Allocate(device.GetBlockSize());
+				MemoryBlock secondsector = new MemoryBlock(512);
 
-				ByteBuffer.SetUInt(secondsector, (ushort)FSInfo.FSI_TrailSignature2, 0xAA55);
+				secondsector.SetUInt((ushort)FSInfo.FSI_TrailSignature2, 0xAA55);
 
-				GenericBlockDevice.DoRequest(device, IORequestType.Write, 2, 1, fsinfosector);
-				GenericBlockDevice.DoRequest(device, IORequestType.Write, 8, 1, fsinfosector);
+				device.WriteBlock(2, 1, fsinfosector);
+				device.WriteBlock(8, 1, fsinfosector);
 			}
 
 			// create fats
@@ -385,32 +386,32 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return true;
 		}
 
-		protected bool IsClusterFree(uint cluster)
+		protected bool IsClusterFree (uint cluster)
 		{
 			return ((cluster & fatmask) == 0x00);
 		}
 
-		protected bool IsClusterReserved(uint cluster)
+		protected bool IsClusterReserved (uint cluster)
 		{
 			return (((cluster & fatmask) == 0x00) || ((cluster & fatmask) >= reserved) && ((cluster & fatmask) < bad));
 		}
 
-		protected bool IsClusterBad(uint cluster)
+		protected bool IsClusterBad (uint cluster)
 		{
 			return ((cluster & fatmask) == bad);
 		}
 
-		protected bool IsClusterLast(uint cluster)
+		protected bool IsClusterLast (uint cluster)
 		{
 			return ((cluster & fatmask) >= last);
 		}
 
-		protected bool IsUsed(uint cluster)
+		protected bool IsUsed (uint cluster)
 		{
 			return !((IsClusterLast(cluster)) || (IsClusterBad(cluster)) || (IsClusterFree(cluster)) || (IsClusterReserved(cluster)));
 		}
 
-		protected uint GetClusterBySector(uint sector)
+		protected uint GetClusterBySector (uint sector)
 		{
 			if (sector < dataareastart)
 				return 0;
@@ -418,12 +419,12 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return (sector - dataareastart) / sectorspercluster;
 		}
 
-		protected uint ClusterToFirstSector(uint cluster)
+		protected uint ClusterToFirstSector (uint cluster)
 		{
 			return ((cluster - 2) * sectorspercluster) + firstdatasector;
 		}
 
-		protected uint GetClusterEntryValue(uint cluster)
+		protected uint GetClusterEntryValue (uint cluster)
 		{
 			uint fatoffset = 0;
 
@@ -441,29 +442,30 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			if ((type == FatType.FAT12) && (sectoroffset == bytespersector - 1))
 				nbrsectors = 2;
 
-			ByteBuffer fat = ByteBuffer.Allocate(blocksize);
-			GenericBlockDevice.DoRequest(device, IORequestType.Read, sector, nbrsectors, fat);
+			MemoryBlock fat = new MemoryBlock(512);
+
+			device.ReadBlock(sector, nbrsectors, fat);			
 
 			uint clustervalue;
 
 			if (type == FatType.FAT12) {
-				clustervalue = ByteBuffer.GetUShort(fat, sectoroffset);
+				clustervalue = fat.GetUShort(sectoroffset);
 				if (cluster % 2 == 1)
 					clustervalue = clustervalue >> 4;
 				else
 					clustervalue = clustervalue & 0x0fff;
 			}
 			else if (type == FatType.FAT16)
-				clustervalue = ByteBuffer.GetUShort(fat, sectoroffset);
+				clustervalue = fat.GetUShort(sectoroffset);
 			else //if (type == FatType.FAT32)
-				clustervalue = ByteBuffer.GetUInt(fat, sectoroffset) & 0x0fffffff;
+				clustervalue = fat.GetUInt(sectoroffset) & 0x0fffffff;
 
-			ByteBuffer.Release(fat);
+			fat.Release();
 
 			return clustervalue;
 		}
 
-		public static byte GetSectorsPerClusterByTotalSectors(FatType type, uint sectors)
+		public static byte GetSectorsPerClusterByTotalSectors (FatType type, uint sectors)
 		{
 			switch (type) {
 				case FatType.FAT12: {
@@ -498,13 +500,13 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			}
 		}
 
-		protected char[] ExtractFileName(ByteBuffer directory, uint index)
+		protected char[] ExtractFileName (MemoryBlock directory, uint index)
 		{
 			uint offset = index * 32;
 			char[] name = new char[12];
 
 			for (uint i = 0; i < 8; i++)
-				name[i] = (char)ByteBuffer.GetByte(directory, i + offset + Entry.DOSName);
+				name[i] = (char)directory.GetByte(i + offset + Entry.DOSName);
 
 			int len = 8;
 
@@ -523,7 +525,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			len++;
 
 			for (uint i = 0; i < 3; i++)
-				name[len + i] = (char)ByteBuffer.GetByte(directory, i + offset + Entry.DOSExtension);
+				name[len + i] = (char)directory.GetByte(i + offset + Entry.DOSExtension);
 
 			len = len + 3;
 
@@ -550,21 +552,21 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return fullname;
 		}
 
-		protected OpenFile ExtractFileInformation(ByteBuffer directory, uint index, OpenFile parent)
+		protected OpenFile ExtractFileInformation (MemoryBlock directory, uint index, OpenFile parent)
 		{
 			uint offset = index * 32;
 
-			byte first = ByteBuffer.GetByte(directory, offset + Entry.DOSName);
+			byte first = directory.GetByte(offset + Entry.DOSName);
 
 			if ((first == FileNameAttribute.LastEntry) || (first == FileNameAttribute.Deleted))
 				return null;
 
-			FileAttributes attribute = (FileAttributes)ByteBuffer.GetByte(directory, offset + Entry.FileAttributes);
+			FileAttributes attribute = (FileAttributes)directory.GetByte(offset + Entry.FileAttributes);
 
 			if (attribute == FileAttributes.LongFileName)
 				return null;	// long file names are not supported
 
-			byte second = ByteBuffer.GetByte(directory, offset + Entry.DOSName);
+			byte second = directory.GetByte(offset + Entry.DOSName);
 
 			if ((first == FileNameAttribute.Dot) && (first == FileNameAttribute.Dot))
 				return null;
@@ -580,19 +582,19 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			file.Hidden = ((attribute & FileAttributes.Hidden) == FileAttributes.Hidden);
 			file.Archive = ((attribute & FileAttributes.Archive) == FileAttributes.Archive);
 			file.System = ((attribute & FileAttributes.System) == FileAttributes.System);
-			file.Size = ByteBuffer.GetUInt(directory, offset + Entry.FileSize);
+			file.Size = directory.GetUInt(offset + Entry.FileSize);
 
 			//TODO: build file name name.Trim()+'.'+ext.Trim()
 			//string name = ByteBuffer.GetString(directory, 8, offset + Entry.DOSName);
 			//string ext = ByteBuffer.GetString(directory, 3, offset + Entry.DOSExtension);
 
 			file.Name = ExtractFileName(directory, index);
-			ushort cdate = ByteBuffer.GetUShort(directory, offset + Entry.CreationDate);
-			ushort ctime = ByteBuffer.GetUShort(directory, offset + Entry.CreationTime);
-			ushort mtime = ByteBuffer.GetUShort(directory, offset + Entry.LastModifiedTime);
-			ushort mdate = ByteBuffer.GetUShort(directory, offset + Entry.LastModifiedDate);
-			ushort adate = ByteBuffer.GetUShort(directory, offset + Entry.LastAccessDate);
-			ushort msec = (ushort)(ByteBuffer.GetByte(directory, offset + Entry.CreationTimeFine) * 10);
+			ushort cdate = directory.GetUShort(offset + Entry.CreationDate);
+			ushort ctime = directory.GetUShort(offset + Entry.CreationTime);
+			ushort mtime = directory.GetUShort(offset + Entry.LastModifiedTime);
+			ushort mdate = directory.GetUShort(offset + Entry.LastModifiedDate);
+			ushort adate = directory.GetUShort(offset + Entry.LastAccessDate);
+			ushort msec = (ushort)(directory.GetByte(offset + Entry.CreationTimeFine) * 10);
 
 			file.CreateTime.Year = (ushort)((cdate >> 9) + 1980);
 			file.CreateTime.Month = (ushort)(((cdate >> 5) - 1) & 0x0F);
@@ -615,7 +617,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			file.LastAccessTime.Day = (ushort)(adate & 0x1F);
 
 			file.Directory = parent;
-			file._startdisklocation = ByteBuffer.GetUShort(directory, offset + Entry.FirstCluster);
+			file._startdisklocation = directory.GetUShort(offset + Entry.FirstCluster);
 
 			if (file.Type == FileType.Directory)
 				file._startdisklocation = dataareastart + ((file._startdisklocation - 2) * sectorspercluster);
@@ -626,7 +628,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return file;
 		}
 
-		protected OpenFile GetRootDirectory()
+		protected OpenFile GetRootDirectory ()
 		{
 			OpenFile file = new OpenFile();
 
@@ -667,7 +669,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return file;
 		}
 
-		protected bool Compare(char[] a, char[] b)
+		protected bool Compare (char[] a, char[] b)
 		{
 			if ((a == null) || (b == null))
 				return false;
@@ -682,7 +684,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return true;
 		}
 
-		protected OpenFile FindFile(OpenFile parent, char[] filename)
+		protected OpenFile FindFile (OpenFile parent, char[] filename)
 		{
 			uint activesector = parent._startdisklocation;
 
@@ -692,11 +694,12 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			uint increment = 0;
 
 			for (; ; ) {
-				ByteBuffer directory = ByteBuffer.Allocate(blocksize);
-				GenericBlockDevice.DoRequest(device, IORequestType.Read, activesector, 1, directory);
+				MemoryBlock directory = new MemoryBlock(512);
+
+				device.ReadBlock(activesector, 1, directory);
 
 				for (uint index = 0; index < entriespersector; index++) {
-					byte first = ByteBuffer.GetByte(directory, index * 32 + Entry.DOSName);
+					byte first = directory.GetByte(index * 32 + Entry.DOSName);
 
 					if (first == FileNameAttribute.LastEntry)
 						return null;
@@ -712,7 +715,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 
 				}
 
-				ByteBuffer.Release(directory);
+				directory.Release();
 
 				++increment;
 
@@ -752,7 +755,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			}
 		}
 
-		protected static int FindNextChar(string str, int index, char c)
+		protected static int FindNextChar (string str, int index, char c)
 		{
 			for (int i = index; i < str.Length; i++)
 				if (str[i] == c)
@@ -761,7 +764,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return -1;
 		}
 
-		protected static int FindNextPathSeperator(string path, int index)
+		protected static int FindNextPathSeperator (string path, int index)
 		{
 			for (int i = index; i < path.Length; i++)
 				if ((path[i] == '\\') || (path[i] == '/'))
@@ -770,7 +773,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return -1;
 		}
 
-		protected static int FindAfterDriveLetter(string file)
+		protected static int FindAfterDriveLetter (string file)
 		{
 			int col = FindNextChar(file, 0, ':');
 
@@ -785,7 +788,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return sep + 1;
 		}
 
-		protected static int FindEndPath(int index, string file)
+		protected static int FindEndPath (int index, string file)
 		{
 			int next = FindNextPathSeperator(file, index);
 
@@ -795,7 +798,7 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return next;
 		}
 
-		public OpenFile FindFile(string file)
+		public OpenFile FindFile (string file)
 		{
 			OpenFile cur = GetRootDirectory();
 
@@ -827,10 +830,10 @@ namespace SharpOS.Kernel.FileSystem.FAT
 			return cur;
 		}
 
-		public ByteBuffer LoadFile(OpenFile file)
+		public MemoryBlock LoadFile (OpenFile file)
 		{
-			ByteBuffer data = ByteBuffer.Allocate(file.Size);
-			ByteBuffer sectorbuf = ByteBuffer.Allocate(bytespersector);
+			MemoryBlock data = new MemoryBlock(file.Size);
+			MemoryBlock sectorbuf = new MemoryBlock(bytespersector);
 
 			uint cluster = file._startdisklocation;
 			uint total = file.Size;
@@ -843,14 +846,14 @@ namespace SharpOS.Kernel.FileSystem.FAT
 				uint sector = dataareastart + ((cluster - 2) * sectorspercluster);
 
 				for (int i = 0; i < sectorspercluster; i++) {
-					GenericBlockDevice.DoRequest(device, IORequestType.Read, sector, 1, sectorbuf);
+					device.ReadBlock(sector, 1, sectorbuf);
 
 					sector++;
 
 					if (at + bytespersector < total)
-						ByteBuffer.Copy(sectorbuf, data, 0, at, bytespersector);
+						sectorbuf.CopyTo(data.Offset(at), bytespersector);
 					else
-						ByteBuffer.Copy(sectorbuf, data, 0, at, total - at);
+						sectorbuf.CopyTo(data.Offset(at), total - at);
 
 					at = at + bytespersector;
 				}

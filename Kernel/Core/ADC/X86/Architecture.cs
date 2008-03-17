@@ -14,6 +14,8 @@ using SharpOS.AOT;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 using SharpOS.Kernel.DriverSystem;
+using SharpOS.Kernel.DriverSystem.Drivers.Block;
+//using SharpOS.Kernel.DriverSystem.Character;
 using ADC = SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.ADC.X86 {
@@ -146,12 +148,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 					// oh kill me now..
 					rootDevices = new IDevice[]
 					{
-						new GenericDevice(
-							"Keyboard",
-							"Unknown",
-							"PS/2 Keyboard",
-							new KeyboardDriver()
-						),
+						//new GenericDevice(
+						//    "Keyboard",
+						//    "Unknown",
+						//    "PS/2 Keyboard",
+						//    new KeyboardDriver()
+						//),
 						
 						/*
 						new GenericDevice(
@@ -184,6 +186,20 @@ namespace SharpOS.Kernel.ADC.X86 {
 							"Unknown",
 							"Primary Floppy Disk Controller",
 							new FloppyDiskDriver()
+						),
+						
+						new GenericDevice(
+						    "Kernel Disk",
+						    "Unknown",
+						    "Kernel Disk",
+						    new KernelDiskDriver()
+						),
+
+						new GenericDevice(
+						    "Ram Disk Controller",
+						    "Unknown",
+						    "Ram Disk Controller",
+						    new RamDiskDriver()
 						),
 
 						/*

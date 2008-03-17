@@ -15,9 +15,11 @@ using SharpOS.Kernel.Foundation;
 using System.Runtime.InteropServices;
 using SharpOS.Kernel.ADC;
 
-namespace SharpOS.Kernel.Shell.Commands {
+namespace SharpOS.Kernel.Shell.Commands
+{
 	[StructLayout (LayoutKind.Sequential)]
-	public unsafe struct CommandTableHeader {
+	public unsafe struct CommandTableHeader
+	{
 		public const string inform_USE_HELP_COMMANDS = "Use 'help commands' to get a list of commands.";
 
 		public int count;
@@ -50,41 +52,42 @@ namespace SharpOS.Kernel.Shell.Commands {
 		internal static void DisplayCommandEntryDebug (CommandTableEntry* entry)
 		{
 			const int tempBufferSIZE = 30;
-			byte* tempBuffer = stackalloc byte [tempBufferSIZE];
+			byte* tempBuffer = stackalloc byte[tempBufferSIZE];
 
 			ADC.TextMode.WriteLine ("Dumping CommandTableEntry:");
 			if (entry == null) {
 				ADC.TextMode.Write (" Pointer Address: ");
-				Convert.ToString ((int) entry, true, tempBuffer, tempBufferSIZE, 0);
+				Convert.ToString ((int)entry, true, tempBuffer, tempBufferSIZE, 0);
 				ADC.TextMode.Write (tempBuffer);
 				ADC.TextMode.WriteLine (" (NULL!)");
-			} else {
+			}
+			else {
 				ADC.TextMode.Write (" Pointer Address: ");
-				Convert.ToString ((int) entry, true, tempBuffer, tempBufferSIZE, 0);
+				Convert.ToString ((int)entry, true, tempBuffer, tempBufferSIZE, 0);
 				ADC.TextMode.WriteLine (tempBuffer);
 			}
 
 			ADC.TextMode.Write (" Name: \"");
 			ADC.TextMode.Write (entry->name);
 			ADC.TextMode.Write ("\" @ ");
-			Convert.ToString ((int) entry->name, true, tempBuffer, tempBufferSIZE, 0);
+			Convert.ToString ((int)entry->name, true, tempBuffer, tempBufferSIZE, 0);
 			ADC.TextMode.WriteLine (tempBuffer);
 
 			ADC.TextMode.Write (" Description: \"");
 			ADC.TextMode.Write (entry->shortDescription);
 			ADC.TextMode.Write ("\" @ ");
-			Convert.ToString ((int) entry->shortDescription, true, tempBuffer, tempBufferSIZE, 0);
+			Convert.ToString ((int)entry->shortDescription, true, tempBuffer, tempBufferSIZE, 0);
 			ADC.TextMode.WriteLine (tempBuffer);
 
 			ADC.TextMode.Write (" Execute() @ ");
-			Convert.ToString ((int) entry->func_Execute, true, tempBuffer, tempBufferSIZE, 0);
+			Convert.ToString ((int)entry->func_Execute, true, tempBuffer, tempBufferSIZE, 0);
 			ADC.TextMode.Write (tempBuffer);
 			ADC.TextMode.Write ("; GetHelp() @ ");
-			Convert.ToString ((int) entry->func_GetHelp, true, tempBuffer, tempBufferSIZE, 0);
+			Convert.ToString ((int)entry->func_GetHelp, true, tempBuffer, tempBufferSIZE, 0);
 			ADC.TextMode.WriteLine (tempBuffer);
 
 			ADC.TextMode.Write (" nextEntry @ ");
-			Convert.ToString ((int) entry->nextEntry, true, tempBuffer, tempBufferSIZE, 0);
+			Convert.ToString ((int)entry->nextEntry, true, tempBuffer, tempBufferSIZE, 0);
 			ADC.TextMode.WriteLine (tempBuffer);
 		}
 
@@ -99,11 +102,12 @@ namespace SharpOS.Kernel.Shell.Commands {
 				entry->nextEntry = null;
 				return;
 
-			} else {
+			}
+			else {
 				CommandTableEntry* currentEntry = null;
 				for (currentEntry = firstEntry;
-				    currentEntry->nextEntry != null;
-				    currentEntry = currentEntry->nextEntry) {
+					currentEntry->nextEntry != null;
+					currentEntry = currentEntry->nextEntry) {
 				}
 				currentEntry->nextEntry = entry;
 				entry->nextEntry = null;
@@ -184,7 +188,8 @@ namespace SharpOS.Kernel.Shell.Commands {
 			if (firstSpace < 0) {
 				commandName = trimmedInput;
 				parameters = CString8.CreateEmpty ();
-			} else {
+			}
+			else {
 				commandName = trimmedInput->Substring (0, firstSpace);
 				parameters = trimmedInput->Substring (firstSpace + 1);
 			}
@@ -217,9 +222,9 @@ namespace SharpOS.Kernel.Shell.Commands {
 			Diagnostics.Message("Prompter::HandleLine(CString8*): Getting ready to call command");
 #endif
 			if (!useHelp)
-				ADC.MemoryUtil.Call (command->func_Execute, (void*) commandExecutionContext);
+				ADC.MemoryUtil.Call (command->func_Execute, (void*)commandExecutionContext);
 			else
-				ADC.MemoryUtil.Call (command->func_GetHelp, (void*) commandExecutionContext);
+				ADC.MemoryUtil.Call (command->func_GetHelp, (void*)commandExecutionContext);
 #if Prompter_DebuggingVerbosity
 			Diagnostics.Message("Prompter::HandleLine(CString8*): Done calling command");
 #endif
@@ -253,7 +258,7 @@ namespace SharpOS.Kernel.Shell.Commands {
 
 		public static CommandTableHeader* GenerateDefaultRoot ()
 		{
-			CommandTableHeader* header = (CommandTableHeader*) SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint) sizeof (CommandTableHeader));
+			CommandTableHeader* header = (CommandTableHeader*)SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint)sizeof (CommandTableHeader));
 
 			header->firstEntry = null;
 
@@ -277,8 +282,7 @@ namespace SharpOS.Kernel.Shell.Commands {
 			header->AddEntry (BuiltIn.Time.CREATE ());
 			header->AddEntry (BuiltIn.Timezone.CREATE ());
 			header->AddEntry (BuiltIn.Testcase.CREATE ());
-			//header->AddEntry(BuiltIn.TestFat.CREATE());
-			//header->AddEntry(BuiltIn.TestFloppy.CREATE());
+			header->AddEntry (BuiltIn.ListResources.CREATE ());
 
 			return header;
 		}

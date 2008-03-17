@@ -139,10 +139,7 @@ namespace SharpOS.Kernel {
 
 			StageMessage ("PCIController setup...");
 			PCIController.Setup ();
-
-			StageMessage("Floppy Disk Controller setup...");
-			FloppyDiskController.Setup();
-			
+		
 			//StageMessage("Ext2FS FileSystem setup...");
 			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
 

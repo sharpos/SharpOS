@@ -10,45 +10,35 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Runtime.InteropServices;
 using SharpOS.Kernel;
 using SharpOS.Kernel.Memory;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
+using SharpOS.Kernel.DriverSystem;
 
 namespace SharpOS.Kernel.ADC.X86
 {
 
 	// DMA Mode = MOD1:MOD0:IDEC:AUTO:TRA1:TRA0:SEL1:SEL0
 
-	public enum DMAMode : byte
+	internal struct DMAModeValue
 	{
-		ReadFromMemory = 0x08,	// TRN=10
-		WriteToMemory = 0x04    // TRN=01
+		internal const byte ReadFromMemory = 0x08;	// TRN=10
+		internal const byte WriteToMemory = 0x04;   // TRN=01
 	}
 
-	public enum DMATransferType : byte
+	internal struct DMATransferTypeValue
 	{
-		OnDemand = 0x00,	// MOD=00
-		Single = 0x40,		// MOD=01
-		Block = 0x80,		// MOD=10
-		CascadeMode = 0xC0	// MOD=11
+		internal const byte OnDemand = 0x00;	// MOD=00
+		internal const byte Single = 0x40;		// MOD=01
+		internal const byte Block = 0x80;		// MOD=10
+		internal const byte CascadeMode = 0xC0;	// MOD=11
 	}
 
-	public enum DMAChannel : byte
+	internal struct DMAAutoValue
 	{
-		//Channel0 = 0, // reserved
-		Channel1 = 1,
-		Channel2 = 2,
-		Channel3 = 3
-	}
-
-	public enum DMAAuto : byte
-	{
-		Auto = 0x10,
-		NoAuto = 0x00,
+		internal const byte Auto = 0x10;
+		internal const byte NoAuto = 0x00;
 	}
 
 	public unsafe class DMA
@@ -73,21 +63,23 @@ namespace SharpOS.Kernel.ADC.X86
 			PageAllocator.ReservePageRange(dmaReserve + (2 * 64 * 1024), 64 * 1024 / ADC.Pager.AtomicPageSize, "dma #3");
 		}
 
-		private static void* GetDMATranserAddress(DMAChannel channel)
+		private static byte ToValue(DMATransferType transfertype)
 		{
-			switch (channel) {
-				case DMAChannel.Channel1:
-					return dmaReserve;
-				case DMAChannel.Channel2:
-					return dmaReserve + (1024 * 64);
-				case DMAChannel.Channel3:
-					return dmaReserve + (1024 * 64 * 2);
-				default:					
-					return null;
+			switch (transfertype) {
+				case DMATransferType.OnDemand: return DMATransferTypeValue.OnDemand;
+				case DMATransferType.Block: return DMATransferTypeValue.Block;
+				case DMATransferType.Single: return DMATransferTypeValue.Single;
+				case DMATransferType.CascadeMode: return DMATransferTypeValue.CascadeMode;
+				default: return 0;
 			}
 		}
 
-		public static unsafe bool SetupChannel(DMAChannel channel, uint count, DMAMode mode, DMATransferType type, DMAAuto auto)
+		private static void* GetDMATranserAddress(byte channel)
+		{
+			return dmaReserve + (1024 * 64 * channel);
+		}
+
+		public static unsafe bool SetupChannel(byte channel, uint count, DMAMode mode, DMATransferType type, bool auto)
 		{
 			IO.Port dma_page;
 			IO.Port dma_address;
@@ -97,17 +89,17 @@ namespace SharpOS.Kernel.ADC.X86
 				return false;
 
 			switch (channel) {
-				case DMAChannel.Channel1:
+				case 1:
 					dma_page = IO.Port.DMA_Channel1Page;
 					dma_address = IO.Port.DMA_Channel1Address;
 					dma_count = IO.Port.DMA_Channel1Count;
 					break;
-				case DMAChannel.Channel2:
+				case 2:
 					dma_page = IO.Port.DMA_Channel2Page;
 					dma_address = IO.Port.DMA_Channel2Address;
 					dma_count = IO.Port.DMA_Channel2Count;
 					break;
-				case DMAChannel.Channel3:
+				case 3:
 					dma_page = IO.Port.DMA_Channel3Page;
 					dma_address = IO.Port.DMA_Channel3Address;
 					dma_count = IO.Port.DMA_Channel3Count;
@@ -117,7 +109,7 @@ namespace SharpOS.Kernel.ADC.X86
 					return false;
 			}
 
-			uint address = (uint) GetDMATranserAddress(channel);
+			uint address = (uint)GetDMATranserAddress(channel);
 
 			Barrier.Enter();
 			// Disable DMA Controller
@@ -138,8 +130,11 @@ namespace SharpOS.Kernel.ADC.X86
 			IO.WriteByte(dma_count, (byte)((count - 1) & 0xFF)); // low
 			IO.WriteByte(dma_count, (byte)(((count - 1) >> 8) & 0xFF)); // high
 
+			byte value = (byte)(channel | (auto ? DMAAutoValue.Auto : DMAAutoValue.NoAuto) | ToValue(type));
+			value = (byte)(value | (mode == DMAMode.ReadFromMemory ? DMAModeValue.ReadFromMemory : DMAModeValue.WriteToMemory));
+
 			// Set DMA_Channel to write
-			IO.WriteByte(IO.Port.DMA_ModeRegister, (byte)((((byte)auto | (byte)mode | (byte)type) | (byte)channel)));
+			IO.WriteByte(IO.Port.DMA_ModeRegister, value);
 
 			// Enable DMA Controller
 			IO.WriteByte(IO.Port.DMA_ChannelMaskRegister, (byte)(channel));
@@ -149,7 +144,7 @@ namespace SharpOS.Kernel.ADC.X86
 			return true;
 		}
 
-		public static bool TransferOut(DMAChannel channel, void* destination, uint count)
+		public static bool TransferOut(byte channel, void* destination, uint count)
 		{
 			if (count > (1024 * 64))
 				return false;
@@ -164,7 +159,7 @@ namespace SharpOS.Kernel.ADC.X86
 			return true;
 		}
 
-		public static bool TransferIn(DMAChannel channel, void* source, uint count)
+		public static bool TransferIn(byte channel, void* source, uint count)
 		{
 			if (count > (1024 * 64))
 				return false;
@@ -178,7 +173,6 @@ namespace SharpOS.Kernel.ADC.X86
 
 			return true;
 		}
-
 
 	}
 }

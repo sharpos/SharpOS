@@ -9,29 +9,40 @@
 //
 
 using System;
-using SharpOS.Kernel.BlockDevice;
+using SharpOS.Kernel.DriverSystem.Drivers.Block;
 
 namespace SharpOS.Kernel.FileSystem
 {
-	public class Partition
+	public struct PartitionDescription
 	{
-		private GenericDisk genericdisk;
-		private ushort partitionnbr;
-		private uint startsector;
-		private uint totalsectors;
-		private byte type;
-		private bool bootable;
-		private uint[] guid;	// for Guid Partition Table (GPT)
+		public ushort partitionnbr;
+		public uint startsector;
+		public uint totalsectors;
+		public byte type;
+		public bool bootable;
+		public uint[] guid;	// for Guid Partition Table (GPT)
 
-		public Partition(GenericDisk genericdisk, ushort partitionnbr, uint startsector, uint totalsectors, byte type, bool bootable)
+		public PartitionDescription (ushort partitionnbr, uint startsector, uint totalsectors, byte type, bool bootable)
 		{
-			this.genericdisk = genericdisk;
 			this.partitionnbr = partitionnbr;
 			this.startsector = startsector;
 			this.totalsectors = totalsectors;
 			this.type = type;
 			this.bootable = bootable;
-			this.guid = new uint[4];
+			this.guid = null;
 		}
+	}
+
+	public class Partition
+	{
+		private GenericDisk genericdisk;
+		private PartitionDescription partition;
+
+		public Partition (GenericDisk genericdisk, PartitionDescription partition)
+		{
+			this.genericdisk = genericdisk;
+			this.partition = partition;
+		}
+
 	}
 }

@@ -171,6 +171,10 @@ namespace SharpOS.Kernel.ADC.X86 {
 		{
 			IO.WriteByte(port, value);
 		}
+		public void WriteByte(byte value)
+		{
+			IO.WriteByte(port, value);
+		}
 		#endregion
 		
 		#region Write Int16

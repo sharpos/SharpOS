@@ -822,6 +822,8 @@ namespace SharpOS.Kernel.ADC.X86 {
             PCI_Config_Address = 0x0CF8,
             PCI_Config_Data = 0x0CFC,
             #endregion
+
+			SpeakerPort = 0x61,
         };
 		#endregion
 

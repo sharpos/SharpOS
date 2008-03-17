@@ -9,97 +9,153 @@
 //
 
 using System;
-using SharpOS.Kernel.BlockDevice;
+using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.DriverSystem.Drivers.Block;
 
 namespace SharpOS.Kernel.FileSystem
 {
 	public static class VolumeManager
 	{
-		private const uint InitialBlockDeviceAllocation = 256;
-		private static IBlockDevice[] devices;
-		private static IFileSystem[] filesystems;
-		private static int[] driveletters;
 
-		private static uint volumecount = 0;
-
-		private static object sync;
-
-		public static void Initialize()
+		public struct Volume
 		{
-			devices = new IBlockDevice[InitialBlockDeviceAllocation];
-			filesystems = new IFileSystem[InitialBlockDeviceAllocation];
-			driveletters = new int[26];	// temp. until VFS implemented
-			sync = new object();
-		}
+			public uint VolumeID;
+			public IBlockDevice Device;
+			public IFileSystem Filesystem;
+			public char DriveLetter;
 
-		public static int Mount(IFileSystem filesystem, IBlockDevice device)
-		{
-			return Mount(filesystem, device, ' ');
-		}
-
-		public static int Mount(IFileSystem filesystem, IBlockDevice device, char driveletter)
-		{
-			//lock (sync)
+			public Volume (IBlockDevice device, IFileSystem filesystem)
 			{
-				if (volumecount >= devices.Length)
+				this.VolumeID = VolumeManager.GetUniqueVolumeID ();
+				this.Device = device;
+				this.Filesystem = filesystem;
+				this.DriveLetter = ' ';
+			}
+
+			public Volume (IBlockDevice device, IFileSystem filesystem, char driveletter)
+			{
+				this.VolumeID = VolumeManager.GetUniqueVolumeID ();
+				this.Device = device;
+				this.Filesystem = filesystem;
+				this.DriveLetter = driveletter;
+			}
+		}
+
+		private const uint MaxVolumes = 256;
+
+		private static Volume[] volumes;
+		private static uint volumeCount = 0;
+		private static uint volumeID = 0;
+
+		private static Volume NullVolume;
+
+		private static SpinLock spinLock;
+
+		public static void Initialize ()
+		{
+			volumes = new Volume[MaxVolumes];
+			volumeCount = 0;
+			NullVolume.VolumeID = 0;
+			NullVolume.DriveLetter = ' ';
+		}
+
+		public static uint GetUniqueVolumeID ()
+		{
+			try {
+				spinLock.Enter ();
+
+				return ++volumeID;
+			}
+			finally {
+				spinLock.Exit ();
+			}
+		}
+
+		public static int Mount (IFileSystem filesystem, IBlockDevice device)
+		{
+			return Mount (filesystem, device, ' ');
+		}
+
+		public static int Mount (IFileSystem filesystem, IBlockDevice device, char driveletter)
+		{
+			spinLock.Enter ();
+
+			try {
+				if (volumeCount >= MaxVolumes)
 					return -1;
 
-				if (driveletter != ' ') {
-					int slot = DriveLetterToSlot(driveletter);
+				driveletter = NormalizeDriveLetter (driveletter);
 
-					if (driveletters[slot] == 0)			// using trick
-						return -2; // already used 
+				if (GetVolumeSlotByDriveLetter (driveletter) >= 0)
+					return -2;
 
-					driveletters[slot] = (int)volumecount + 1;	// trick, add one
-				}
+				volumes[volumeCount] = new Volume (device, filesystem, driveletter);
+				volumeCount++;
 
-				devices[volumecount] = device;
-				filesystems[volumecount] = filesystem;
-
-				return (int)++volumecount;
+				return (int)(volumeCount - 1);
+			}
+			finally {
+				spinLock.Exit ();
 			}
 		}
 
-		public static int Unmount(int volumeid)
+		public static int Unmount (int volumeid)
 		{
-			//lock (sync)
-			{
-				if (devices[volumeid] == null)
-					return 0;
+			spinLock.Enter ();
 
-				// todo lock, flush, and if volume then unmount.
-				devices[volumeid] = null;
-				filesystems[volumeid] = null;
+			try {
+				for (int slot = 0; slot < volumeCount; slot++)
+					if (volumes[slot].VolumeID == volumeid) {
+						// if able to unmount safetly
+						//TODO: add check here.
 
-				return 0;
+						volumeCount--;
+						volumes[slot] = volumes[volumeCount];
+
+						return 0;
+					}
+
+				return -1;
+			}
+			finally {
+				spinLock.Exit ();
 			}
 		}
 
-		public static int DriveLetterToSlot(char letter)
+		public static Volume GetByDriveLetter (char driveletter)
 		{
-			if (letter == ' ')
-				return -1;
-			else if (letter >= 'A' || letter <= 'Z')
-				return letter - 'A';
-			else if (letter >= 'a' || letter <= 'z')
-				return letter - 'a';
-			else
-				return -1;
+			driveletter = NormalizeDriveLetter (driveletter);
+
+			for (int slot = 0; slot < volumeCount; slot++)
+				if (volumes[slot].DriveLetter == driveletter)
+					return volumes[slot];
+
+			return NullVolume;
 		}
 
-		public static IFileSystem GetFileSystemByDriveLetter(char driveletter)
+		public static char NormalizeDriveLetter (char driveletter)
 		{
-			int slot = DriveLetterToSlot(driveletter);
+			if ((driveletter >= 'A') || (driveletter >= 'Z'))
+				return driveletter;
 
-			if (slot < 0)
-				return null;
+			if ((driveletter >= 'a') || (driveletter >= 'z'))
+				return (char) ('A' + driveletter - 'A');
 
-			int id = driveletters[slot];
+			return ' ';
+		}
 
-			if (id <= 0)
-				return null;
+		private static int GetVolumeSlotByDriveLetter (char driveletter)
+		{
+			driveletter = NormalizeDriveLetter (driveletter);
 
-			return filesystems[slot - 1];	// reverse trick
+			if (driveletter == ' ')
+				return -1;
+
+			for (int slot = 0; slot < volumeCount; slot++)
+				if (volumes[slot].DriveLetter == driveletter)
+					return slot;
+
+			return -1;
 		}
 	}
 }

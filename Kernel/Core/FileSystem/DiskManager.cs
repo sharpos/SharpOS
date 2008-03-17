@@ -9,19 +9,17 @@
 //
 
 using System;
-using SharpOS.Kernel.BlockDevice;
+using SharpOS.Kernel.DriverSystem.Drivers.Block;
 
 namespace SharpOS.Kernel.FileSystem
 {
 	public static class DiskManager
 	{
 		private static GenericDisk[] disks;
-		private static object sync;
 
 		public static void Initialize()
 		{
 			disks = new GenericDisk[256]; // upto 256 disks
-			sync = new object();
 		}
 
 		public static bool Register(GenericDisk disk)

@@ -20,6 +20,7 @@
 	<property name="qemu-dir" value="${path::combine(distro-dir, 'qemu')}" />
 	<property name="qemu-bin" value="${path::combine(qemu-dir, 'qemu.exe')}" />
 	<property name="diagtool-bin" value="${path::combine(prefix, 'DiagnosticTool.exe')}" />
+	<property name="floppy-images-dir" value="${path::combine(data-dir, 'FloppyDiskImage')}" />
 
 	<target name="build">
 		<echo message="Building the SharpOS kernel" />

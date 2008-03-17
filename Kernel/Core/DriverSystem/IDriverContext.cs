@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Sander van Rossen <sander.vanrossen@gmail.com>
+//  Phil Garcia <phil@thinkedge.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -10,19 +11,23 @@
 
 using System;
 
-namespace SharpOS.Kernel.DriverSystem {
-	
+namespace SharpOS.Kernel.DriverSystem
+{
+
 	public interface IDriverContext
 	{
-		DriverFlags					Flags				{ get; }
+		DriverFlags Flags { get; }
 
-		void						Release				();
-		bool						IsReleased			{ get; }
-		
+		void Release();
+		bool IsReleased { get; }
+
 		// TODO: this should eventually be done trough attributes
-		void						Initialize			(DriverFlags _flags);
+		void Initialize(DriverFlags _flags);
 
-		MemoryBlock					CreateMemoryBuffer	(uint address, uint length);
-		IOPortStream				CreateIOPortStream	(ushort port);
+		MemoryBlock CreateMemoryBuffer(uint address, uint length);
+		IOPortStream CreateIOPortStream(ushort port);
+		DMAChannel CreateDMAChannel(byte channel);
+		IRQHandler CreateIRQHandler (byte irq);
 	}
 }
+

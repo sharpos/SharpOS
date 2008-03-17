@@ -248,6 +248,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 			ISRTable [index] = address;
 			PIC.EnableIRQ (index);
 		}
+
 		#endregion
 
 		#region IRQCleanUp

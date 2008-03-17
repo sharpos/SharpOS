@@ -9,7 +9,7 @@
 //
 
 using System;
-using SharpOS.Kernel.BlockDevice;
+using SharpOS.Kernel.DriverSystem.Drivers.Block;
 
 namespace SharpOS.Kernel.FileSystem
 {

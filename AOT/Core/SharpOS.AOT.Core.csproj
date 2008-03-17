@@ -154,6 +154,7 @@
     <Compile Include="IR\Instructions\Ldarga.cs" />
     <Compile Include="IR\Instructions\Ldc.cs" />
     <Compile Include="IR\Instructions\Ldelem.cs" />
+    <Compile Include="IR\Instructions\Ldelema.cs" />
     <Compile Include="IR\Instructions\Ldfld.cs" />
     <Compile Include="IR\Instructions\Ldflda.cs" />
     <Compile Include="IR\Instructions\Ldftn.cs" />
