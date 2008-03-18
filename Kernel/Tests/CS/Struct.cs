@@ -11,6 +11,7 @@
 namespace SharpOS.Kernel.Tests.CS {
 	public class Struct {
 		private struct Point {
+			//private static readonly int SOME_CONSTANT = 1;
 			public int x, y;
 
 			public Point (int x, int y)
@@ -22,6 +23,12 @@ namespace SharpOS.Kernel.Tests.CS {
 			public int GetSum ()
 			{
 				return this.x + this.y;
+			}
+			
+			static public int GetConstant ()
+			{
+				//return Point.SOME_CONSTANT;
+				return 0;
 			}
 		}
 
@@ -174,6 +181,11 @@ namespace SharpOS.Kernel.Tests.CS {
 				return 0;
 
 			return 1;
+		}
+		
+		public static int CMPPrivateStatic ()
+		{
+			return Point.GetConstant ();
 		}
 	}
 }
