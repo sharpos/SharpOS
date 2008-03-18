@@ -1379,9 +1379,6 @@ namespace SharpOS.AOT.X86 {
 				if (_class.IsEnum)
 					continue;
 
-				if (_class.IsValueType)
-					continue;
-
 				foreach (Field field in _class.Fields) {
 					string fullname = field.FieldDefinition.ToString ();
 

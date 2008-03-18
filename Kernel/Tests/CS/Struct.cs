@@ -11,7 +11,7 @@
 namespace SharpOS.Kernel.Tests.CS {
 	public class Struct {
 		private struct Point {
-			//private static readonly int SOME_CONSTANT = 1;
+			private static readonly int SOME_CONSTANT = 1;
 			public int x, y;
 
 			public Point (int x, int y)
@@ -27,8 +27,7 @@ namespace SharpOS.Kernel.Tests.CS {
 			
 			static public int GetConstant ()
 			{
-				//return Point.SOME_CONSTANT;
-				return 0;
+				return Point.SOME_CONSTANT;
 			}
 		}
 
