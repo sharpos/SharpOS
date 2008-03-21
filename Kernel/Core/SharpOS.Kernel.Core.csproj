@@ -291,6 +291,11 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\..\Data\FloppyDiskImage\fat12.img">
+      <LogicalName>fat12.img</LogicalName>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
     <Content Include="Documents\ADC.txt" />
   </ItemGroup>
   <ItemGroup>
