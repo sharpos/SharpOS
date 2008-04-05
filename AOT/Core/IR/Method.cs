@@ -1330,16 +1330,7 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		/// <summary>
-		/// Gets the label.
-		/// </summary>
-		/// <param name="method">The method.</param>
-		/// <returns></returns>
-		public static string GetLabel (Mono.Cecil.MethodReference method)
-		{
-			return GetLabel (null, method);
-		}
-
+		// TODO Move it to Class.cs as a non-static method
 		/// <summary>
 		/// Gets the label.
 		/// </summary>
@@ -1903,7 +1894,7 @@ namespace SharpOS.AOT.IR {
 		/// </summary>
 		/// <param name="type">The type.</param>
 		/// <returns></returns>
-		private Class GetClass (TypeReference type)
+		internal Class GetClass (TypeReference type)
 		{
 			if (type is GenericParameter
 					&& this.genericInstanceMethod != null) {
@@ -1919,6 +1910,7 @@ namespace SharpOS.AOT.IR {
 					throw new EngineException (string.Format ("Type '{0}' was not found in the method '{1}'.", type.ToString (), this.MethodFullName));
 
 				type = this.genericInstanceMethod.GenericArguments [i];
+
 			}
 
 			return this._class.GetClass (type);

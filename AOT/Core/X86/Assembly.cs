@@ -1361,6 +1361,9 @@ namespace SharpOS.AOT.X86 {
 				if (_class.IsInternal)
 					continue;
 
+				if (_class.IsGenericType)
+					continue;
+
 				if (_class.IsInterface) {
 					AddTypeInfoFields(_class);
 					continue;

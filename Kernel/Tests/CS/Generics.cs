@@ -13,6 +13,17 @@
 namespace SharpOS.Kernel.Tests.CS {
 	public class Generics {
 #if !GENERICS_NOT_SUPPORTED
+		private interface IInterface {
+			void CallMe ();
+		}
+
+		private class BaseClass {
+			public uint CallMeToo ()
+			{
+				return 0xdeadbeef;
+			}
+		}
+
 		private class GenericType<Type> {
 			public static int StaticValue = 0;
 
@@ -32,6 +43,23 @@ namespace SharpOS.Kernel.Tests.CS {
 				{
 					_value = value;
 				}
+			}
+
+			public virtual uint DoSomething (Type value)
+			{
+				return 0;	
+			}
+
+			public void CallMe ()
+			{
+
+			}
+		}
+
+		private class GenericTypeTwo<Type>: GenericType<Type> {
+			public override uint DoSomething (Type value)
+			{
+				return 1;
 			}
 		}
 
@@ -62,12 +90,36 @@ namespace SharpOS.Kernel.Tests.CS {
 			return GetGenericTypeData ().Value;
 		}
 
+		private static GenericTypeTwo<uint> GetGenericTypeTwoData ()
+		{
+			GenericTypeTwo<uint> result = new GenericTypeTwo<uint> ();
+
+			result.Value = 1;
+
+			return result;
+		}
+
+		public unsafe static uint CMPGenericTypeTwo ()
+		{
+			return GetGenericTypeTwoData ().Value;
+		}
+
+
+		public unsafe static uint CMPGenericTypeTwoVirtualMethods ()
+		{
+			/*GenericTypeTwo<uint> result = new GenericTypeTwo<uint> ();
+
+			return result.DoSomething (6);*/
+
+			return 0;
+		}
+
 		private class SubGenericType<Type>
 		{
 			public GenericType<Type> test = new GenericType<Type>();
 		}
 
-		/*
+		
 		private static SubGenericType<uint> GetSubGenericTypeData ()
 		{
 			SubGenericType<uint> result = new SubGenericType<uint> ();
@@ -76,11 +128,10 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return result;
 		}
-		*/
+		
 		public unsafe static uint CMPSubGenericType ()
 		{
-			//return GetSubGenericTypeData ().test.Value;
-			return 0;
+			return GetSubGenericTypeData ().test.Value;
 		}
 
 

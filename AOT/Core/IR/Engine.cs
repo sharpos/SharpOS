@@ -788,30 +788,20 @@ namespace SharpOS.AOT.IR {
 				GenericInstanceType genericInstanceType = type as GenericInstanceType;
 
 				_class = new Class (this, genericInstanceType.ElementType, genericInstanceType);
+				_class.Setup ();
 				_class.AddMethods ();
 				_class.SetupMethods ();
 
-			}  else
+			} else {
 				_class = new Class (this, type);
+				_class.Setup ();
+			}
 
 			this.classes.Add (_class);
 			this.classesDictionary [_class.TypeFullName] = _class;
 
-			_class.Setup ();
 
 			return _class;
-		}
-
-		/// <summary>
-		/// Gets the method.
-		/// </summary>
-		/// <param name="method">The method.</param>
-		/// <returns></returns>
-		public Method GetMethod (MethodReference method)
-		{
-			Class _class = this.GetClass (method.DeclaringType);
-
-			return _class.GetMethodByName (method);
 		}
 
 		/// <summary>

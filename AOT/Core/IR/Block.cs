@@ -1531,7 +1531,7 @@ namespace SharpOS.AOT.IR {
 		private SharpOS.AOT.IR.Instructions.Instruction Ldftn (Mono.Cecil.Cil.Instruction cilInstruction)
 		{
 			Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
-			Method method = this.method.Engine.GetMethod (call);
+			Method method = this.method.GetClass (call.DeclaringType).GetMethodByName (call);
 
 			Register assignee = this.SetRegister ();
 
@@ -1704,7 +1704,7 @@ namespace SharpOS.AOT.IR {
 
 			Register assignee = this.SetRegister ();
 
-			return new Newobj (this.method.Engine.GetMethod (call), assignee, operands);
+			return new Newobj (this.method.GetClass (call.DeclaringType).GetMethodByName (call), assignee, operands);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Ldobj (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -1715,7 +1715,7 @@ namespace SharpOS.AOT.IR {
 
 			Register register = this.SetRegister ();
 
-			return new Ldobj (register, this.method.Engine.GetClass (typeReference), instance);
+			return new Ldobj (register, this.method.GetClass (typeReference), instance);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Stobj (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -2051,7 +2051,7 @@ namespace SharpOS.AOT.IR {
 		{
 			result = null;
 			Mono.Cecil.MethodReference call = (cilInstruction.Operand as Mono.Cecil.MethodReference);
-			method = this.method.Engine.GetMethod (call);
+			method = this.method.GetClass (call.DeclaringType).GetMethodByName (call);
 			MethodDefinition def = method.MethodDefinition as MethodDefinition;
 
 			if (def != null) {
@@ -2064,7 +2064,7 @@ namespace SharpOS.AOT.IR {
 				}
 			}
 
-			method = this.method.Engine.GetMethod (call);
+			method = this.method.GetClass (call.DeclaringType).GetMethodByName (call);
 
 			operands = new Operand [method.Arguments.Count];
 
@@ -2278,7 +2278,7 @@ namespace SharpOS.AOT.IR {
 
 			Register result = this.SetRegister ();
 
-			return new Box (this.method.Engine.GetClass (typeReference), result, value);
+			return new Box (this.method.GetClass (typeReference), result, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Unbox (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -2289,7 +2289,7 @@ namespace SharpOS.AOT.IR {
 
 			Register result = this.SetRegister ();
 
-			return new Unbox (this.method.Engine.GetClass (typeReference), result, value);
+			return new Unbox (this.method.GetClass (typeReference), result, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Unbox_Any (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -2300,7 +2300,7 @@ namespace SharpOS.AOT.IR {
 
 			Register result = this.SetRegister ();
 
-			return new UnboxAny (this.method.Engine.GetClass (typeReference), result, value);
+			return new UnboxAny (this.method.GetClass (typeReference), result, value);
 		}
 		#endregion
 
@@ -2323,7 +2323,7 @@ namespace SharpOS.AOT.IR {
 
 			Register result = this.SetRegister ();
 
-			return new Isinst (this.method.Engine.GetClass (typeReference), result, value);
+			return new Isinst (this.method.GetClass (typeReference), result, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Castclass (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -2333,7 +2333,7 @@ namespace SharpOS.AOT.IR {
 			Register value = this.GetRegister ();
 			Register result = this.SetRegister ();
 
-			return new Castclass (this.method.Engine.GetClass (typeReference), result, value);
+			return new Castclass (this.method.GetClass (typeReference), result, value);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Break (Mono.Cecil.Cil.Instruction cilInstruction)
@@ -2360,7 +2360,7 @@ namespace SharpOS.AOT.IR {
 
 			Register result = this.SetRegister ();
 
-			return new Ldelema (this.method.Engine.GetClass (typeReference), result, index, arrayRef);
+			return new Ldelema (this.method.GetClass (typeReference), result, index, arrayRef);
 		}
 
 		private SharpOS.AOT.IR.Instructions.Instruction Cpobj (Mono.Cecil.Cil.Instruction cilInstruction)

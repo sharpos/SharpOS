@@ -70,8 +70,9 @@ namespace SharpOS.AOT.IR {
 				TypeDefinition typeDefinition = this.classDefinition as TypeDefinition;
 
 				if (step == 0) {
-					if (typeDefinition.GenericParameters != null 
-							&& typeDefinition.GenericParameters.Count > 0)
+					if (typeDefinition.GenericParameters != null
+							&& typeDefinition.GenericParameters.Count > 0
+							&& this.genericInstanceType == null)
 						this.isGenericType = true;
 
 					this.hasExplicitLayout = (typeDefinition.Attributes & TypeAttributes.ExplicitLayout) != 0;
@@ -105,8 +106,24 @@ namespace SharpOS.AOT.IR {
 						this.internalType = Operands.InternalType.O;
 					}
 
-					if (this.TypeFullName != Mono.Cecil.Constants.Object && !this.isInterface)
-						this._base = this.GetClass (typeDefinition.BaseType);
+					if (this.TypeFullName != Mono.Cecil.Constants.Object 
+							&& !this.isInterface
+							&& !this.isGenericType) {
+
+						GenericInstanceType genericBaseType = typeDefinition.BaseType as GenericInstanceType;
+
+						if (this.genericInstanceType != null
+								&& genericBaseType != null
+								&& genericBaseType.GenericArguments [0] is GenericParameter) {
+							GenericInstanceType _genericInstanceType = new GenericInstanceType (genericBaseType.ElementType);
+
+							for (int i = 0; i < genericBaseType.GenericArguments.Count; i++)
+								_genericInstanceType.GenericArguments.Add (this.genericInstanceType.GenericArguments [i]);
+
+							this._base = this.GetClass (_genericInstanceType);
+						} else
+							this._base = this.GetClass (typeDefinition.BaseType);
+					}
 
 					// initialize base class before marking virtual methods
 					if (this._base != null)
@@ -279,8 +296,7 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				return isGenericType
-						&& this.genericInstanceType == null;
+				return isGenericType;
 			}
 		}
 
@@ -404,7 +420,7 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public Method GetMethodByName (MethodReference methodReference)
 		{
-			string value = Method.GetLabel (methodReference);
+			string value = Method.GetLabel (this, methodReference);
 
 			if (this.methodsDictionary.ContainsKey (value))
 				return this.methodsDictionary [value];
@@ -442,7 +458,7 @@ namespace SharpOS.AOT.IR {
 
 		private MethodReference GetGenericMethod (GenericInstanceMethod genericInstanceMethod)
 		{
-			string value = Method.GetLabel (genericInstanceMethod);
+			string value = Method.GetLabel (this, genericInstanceMethod);
 
 			if (this.methodsDictionary.ContainsKey (value))
 				return this.methodsDictionary [value].MethodDefinition;
@@ -495,6 +511,15 @@ namespace SharpOS.AOT.IR {
 					throw new EngineException (string.Format ("Type '{0}' was not found in the method '{1}'.", type.ToString (), this.TypeFullName));
 
 				type = this.genericInstanceType.GenericArguments [i];
+
+			} else if (type is GenericInstanceType
+					&& (type as GenericInstanceType).GenericArguments [0] is GenericParameter) {
+				GenericInstanceType _genericInstanceType = new GenericInstanceType ((type as GenericInstanceType).ElementType);
+
+				for (int i = 0; i < (type as GenericInstanceType).GenericArguments.Count; i++)
+					_genericInstanceType.GenericArguments.Add (this.genericInstanceType.GenericArguments [i]);
+
+				return this.GetClass (_genericInstanceType);
 			}
 
 			return this.engine.GetClass (type);		
@@ -930,7 +955,7 @@ namespace SharpOS.AOT.IR {
 				MethodDefinition methodDef = method.MethodDefinition as MethodDefinition;
 				if (methodDef.Overrides.Count > 0) {
 					foreach (MethodReference origReference in methodDef.Overrides) {
-						Method orig = engine.GetMethod (origReference);
+						Method orig = engine.GetClass (origReference.DeclaringType).GetMethodByName (origReference);
 						method.InterfaceMethodNumber = orig.InterfaceMethodNumber;
 						AddMethodToIMT(method);
 					}
