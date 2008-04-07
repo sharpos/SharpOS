@@ -910,6 +910,7 @@ namespace SharpOS.Korlib.Runtime {
 
 			StackFrame [] stackFrames = ExceptionHandling.GetCallingStack ();
 
+			// It is null if it is a throw and not null if it is a rethrow.
 			if (exception.CallingStack == null) {
 				exception.CallingStack = stackFrames;
 				exception.IgnoreStackFramesCount = skipFrames;
