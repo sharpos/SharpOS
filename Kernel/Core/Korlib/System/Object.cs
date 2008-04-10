@@ -39,6 +39,13 @@ namespace InternalSystem {
 
 			return p1 == p2;
 		}
+		public static unsafe bool ReferenceEquals (object o1, object o2)
+		{
+			void* p1 = Runtime.GetPointerFromObject (o1);
+			void* p2 = Runtime.GetPointerFromObject (o2);
+
+			return p1 == p2;
+		}
 #pragma warning restore 114
 	}
 }

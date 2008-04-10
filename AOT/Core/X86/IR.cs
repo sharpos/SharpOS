@@ -137,7 +137,7 @@ namespace SharpOS.AOT.X86 {
 					break;
 
 				default:
-					throw new NotImplementedEngineException ("Call assignee handling.");
+					throw new NotImplementedEngineException ("Call assignee handling for InternalType." + assignee.InternalType);
 				}
 			}
 		}
@@ -841,7 +841,7 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.U:
 			case InternalType.TypedReference:
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Ldind not supported for InternalType." + instruction.InternalType);
 			}
 		}
 
@@ -969,7 +969,7 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.F:
 			case InternalType.TypedReference:
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Load not supported for InternalType." + sourceType);
 			}
 		}
 
@@ -1097,7 +1097,7 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.M:
 			case InternalType.TypedReference:
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Save not supported for InternalType." + destinationType);
 			}
 		}
 
@@ -1437,7 +1437,7 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.R4:
 			case InternalType.R8:
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Stind not supported for InternalType." + instruction.InternalType);
 			}
 		}
 
@@ -1632,7 +1632,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Convert not supported from value type InternalType." + value.InternalType);
 			}
 		}
 
@@ -1698,7 +1698,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Branch not supported for InternalType." + first.InternalType);
 			}
 		}
 
@@ -1725,7 +1725,7 @@ namespace SharpOS.AOT.X86 {
 				this.assembly.JE (label);
 
 			else
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("SimpleBranch not supported for SimpleBranch.Type." + instruction.SimpleBranchType);
 		}
 
 		/// <summary>
@@ -1742,6 +1742,7 @@ namespace SharpOS.AOT.X86 {
 			string endLabel = assembly.GetCMPLabel;
 
 			switch (first.InternalType) {
+			case InternalType.M:
 			case InternalType.O:
 			case InternalType.I:
 			case InternalType.I4:
@@ -1785,7 +1786,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("ConditionCheck for " + first.InternalType.ToString() + " and " + second.InternalType.ToString());
 			}
 
 			assembly.LABEL (errorLabel);
@@ -1848,7 +1849,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Dup not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -1876,7 +1877,7 @@ namespace SharpOS.AOT.X86 {
 					else
 						this.assembly.ADD (R32.EAX, new DWordMemory (this.GetAddress (second)));
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Add not supported for Add.Type." + instruction.AddType);
 
 				if (assignee.IsRegisterSet)
 					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
@@ -1897,7 +1898,7 @@ namespace SharpOS.AOT.X86 {
 					secondMemory.DisplacementDelta = 4;
 					this.assembly.ADC (R32.EDX, new DWordMemory (secondMemory));
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Add not supported for Add.Type." + instruction.AddType);
 
 				Memory assigneeMemory = this.GetAddress (assignee);
 				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
@@ -1907,7 +1908,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Add not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -1935,7 +1936,7 @@ namespace SharpOS.AOT.X86 {
 					else
 						this.assembly.SUB (R32.EAX, new DWordMemory (this.GetAddress (second)));
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Sub not supported for Sub.Type." + instruction.SubType);
 
 				if (assignee.IsRegisterSet)
 					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
@@ -1956,7 +1957,7 @@ namespace SharpOS.AOT.X86 {
 					secondMemory.DisplacementDelta = 4;
 					this.assembly.SBB (R32.EDX, new DWordMemory (secondMemory));
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Sub not supported for Sub.Type." + instruction.SubType);
 
 				Memory assigneeMemory = this.GetAddress (assignee);
 				this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EAX);
@@ -1966,7 +1967,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Sub not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -1994,7 +1995,7 @@ namespace SharpOS.AOT.X86 {
 					else
 						this.assembly.IMUL (R32.EAX, new DWordMemory (this.GetAddress (second)));
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Mul not supported for Mul.Type." + instruction.MulType);
 
 				if (assignee.IsRegisterSet)
 					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
@@ -2027,12 +2028,12 @@ namespace SharpOS.AOT.X86 {
 					assigneeMemory.DisplacementDelta = 4;
 					this.assembly.MOV (new DWordMemory (assigneeMemory), R32.EDX);
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Mul not supported for Mul.Type." + instruction.MulType);
 
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Mul not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2069,7 +2070,7 @@ namespace SharpOS.AOT.X86 {
 					this.assembly.DIV (R32.ECX);
 
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Div not supported for Div.Type." + instruction.DivType);
 
 				if (assignee.IsRegisterSet)
 					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
@@ -2079,7 +2080,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Div not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2116,7 +2117,7 @@ namespace SharpOS.AOT.X86 {
 					this.assembly.DIV (R32.ECX);
 
 				} else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Rem not supported for Rem.Type." + instruction.RemType);
 
 				if (assignee.IsRegisterSet)
 					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EDX);
@@ -2126,7 +2127,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Rem not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2173,7 +2174,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Neg not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2234,7 +2235,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Shl not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2271,7 +2272,7 @@ namespace SharpOS.AOT.X86 {
 					this.assembly.SHR__CL (R32.EAX);
 
 				else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Shr not supported for Shr.Type." + instruction.ShrType);
 
 				if (assignee.IsRegisterSet)
 					this.assembly.MOV (Assembly.GetRegister (assignee.Register), R32.EAX);
@@ -2301,7 +2302,7 @@ namespace SharpOS.AOT.X86 {
 					this.assembly.CALL (Assembly.HELPER_LSHR);
 
 				else
-					throw new NotImplementedEngineException ();
+					throw new NotImplementedEngineException ("Shr not supported for Shr.Type." + instruction.ShrType);
 
 				this.assembly.ADD (R32.ESP, 12);
 
@@ -2313,7 +2314,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Shr not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2366,7 +2367,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("And not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2420,7 +2421,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Or not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2474,7 +2475,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Xor not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2521,7 +2522,7 @@ namespace SharpOS.AOT.X86 {
 				break;
 
 			default:
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Not not supported for InternalType." + assignee.InternalType);
 			}
 		}
 
@@ -2577,7 +2578,7 @@ namespace SharpOS.AOT.X86 {
 				this.ArrayMultidimensionalCtor (instruction);
 
 			} else
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("Newobj not supported for " + instruction.Method.Class.ToString());
 		}
 
 		/// <summary>
@@ -2831,7 +2832,7 @@ namespace SharpOS.AOT.X86 {
 
 			} else {
 				// TODO check the value if it is a reference or generic
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("UnboxAny not supported for " + instruction.Type.ClassDefinition.ToString());
 			}
 		}
 
@@ -3058,7 +3059,7 @@ namespace SharpOS.AOT.X86 {
 				ArrayMultidimensionalGet (call);
 
 			else
-				throw new NotImplementedEngineException ();
+				throw new NotImplementedEngineException ("ArrayCalls not supported for method name " + call.Method.Name);
 		}
 
 		/// <summary>
