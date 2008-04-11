@@ -572,7 +572,6 @@ namespace SharpOS.AOT.IR {
 				this.AddInstructionOffset (offsets, exceptionHandler.TryStart);
 				this.AddInstructionOffset (offsets, exceptionHandler.TryEnd);
 				this.AddInstructionOffset (offsets, exceptionHandler.FilterStart);
-				//this.AddInstructionOffset (offsets, exceptionHandler.FilterEnd);
 				this.AddInstructionOffset (offsets, exceptionHandler.HandlerStart);
 				this.AddInstructionOffset (offsets, exceptionHandler.HandlerEnd);
 			}
