@@ -61,7 +61,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SharpOS.Kernel.Tests.NUnit.cs" />
   </ItemGroup>
   <ItemGroup>
   </ItemGroup>

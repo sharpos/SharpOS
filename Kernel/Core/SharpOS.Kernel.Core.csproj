@@ -208,6 +208,9 @@
     <Compile Include="Korlib\System\Collections\IEnumerable.cs" />
     <Compile Include="Korlib\System\Collections\IEnumerator.cs" />
     <Compile Include="Korlib\System\Collections\IList.cs" />
+    <Compile Include="Korlib\System\IO\FileAccess.cs" />
+    <Compile Include="Korlib\System\IO\FileShare.cs" />
+    <Compile Include="Korlib\System\IO\Path.cs" />
     <Compile Include="Korlib\System\ArgumentException.cs" />
     <Compile Include="Korlib\System\ArgumentNullException.cs" />
     <Compile Include="Korlib\System\ArgumentOutOfRangeException.cs" />
@@ -277,7 +280,6 @@
     <Compile Include="EventRegisterStatus.cs" />
     <Compile Include="KernelError.cs" />
     <Compile Include="KernelStage.cs" />
-    <Compile Include="KernelTestsWrapper.cs" />
     <Compile Include="KeyMap.cs" />
     <Compile Include="Multiboot.cs" />
     <Compile Include="PageAllocator.cs" />
