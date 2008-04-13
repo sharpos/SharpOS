@@ -1,8 +1,8 @@
-<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>9.0.21022</ProductVersion>
+    <ProductVersion>8.0.50727</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1BDA3EE0-BC5F-4C4A-986C-31730A8EFADC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -272,8 +272,8 @@
     <Compile Include="Shell\Prompter.cs" />
     <Compile Include="Vfs\AccessCheck.cs" />
     <Compile Include="Vfs\AccessMode.cs" />
-    <Compile Include="Vfs\Directory.cs" />
     <Compile Include="Vfs\DirectoryEntry.cs" />
+    <Compile Include="Vfs\DirectoryNode.cs" />
     <Compile Include="Vfs\FileSystemFactory.cs" />
     <Compile Include="Vfs\IDirectory.cs" />
     <Compile Include="Vfs\IFileSystem.cs" />
@@ -283,7 +283,7 @@
     <Compile Include="Vfs\PathResolutionFlags.cs" />
     <Compile Include="Vfs\PathResolver.cs" />
     <Compile Include="Vfs\PathSplitter.cs" />
-    <Compile Include="Vfs\SymbolicLink.cs" />
+    <Compile Include="Vfs\SymbolicLinkNode.cs" />
     <Compile Include="Vfs\VfsNodeType.cs" />
     <Compile Include="Vfs\VirtualFileSystem.cs" />
     <Compile Include="ASCII.cs" />
