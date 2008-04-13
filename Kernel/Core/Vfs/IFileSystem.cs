@@ -10,6 +10,9 @@
 
 namespace SharpOS.Kernel.Vfs {
 	public interface IFileSystem {
+
+        bool IsReadOnly { get; }
+
 		IVfsNode Root { get; }
 	}
 }

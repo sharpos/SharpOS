@@ -18,6 +18,11 @@ namespace SharpOS.Kernel.Vfs {
     public interface IVfsNode {
 
 		#region Properties
+
+        /// <summary>
+        /// Retrieves the filesystem, where the node belongs to.
+        /// </summary>
+        IFileSystem FileSystem { get; }
 		
 		/// <summary>
 		/// Returns the type of the node.
