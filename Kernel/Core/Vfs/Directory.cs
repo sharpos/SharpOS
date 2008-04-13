@@ -22,7 +22,7 @@ namespace SharpOS.Kernel.Vfs
 	/// This class can be inherited if necessary to provide specialized
 	/// directory handling if required.
 	/// </remarks>
-	public class Directory : NodeBase
+	public class DirectoryNode : NodeBase
 	{
 
 		#region Data members
@@ -37,11 +37,11 @@ namespace SharpOS.Kernel.Vfs
 		#region Construction
 
 		/// <summary>
-		/// Initializes a new instance of the Directory object.
+		/// Initializes a new instance of the DirectoryNode object.
 		/// </summary>
-		/// <param name="name">The name of the node.</param>
-		public Directory ()
-			: base (VfsNodeType.Directory)
+		/// <param name="fs">The filesystem, which owns the node.</param>
+		public DirectoryNode (IFileSystem fs)
+			: base (fs, VfsNodeType.Directory)
 		{
 			_nodes = new ArrayList ();
 		}

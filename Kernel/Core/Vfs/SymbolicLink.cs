@@ -12,7 +12,7 @@ using System;
 using System.IO;
 
 namespace SharpOS.Kernel.Vfs {
-	public sealed class SymbolicLink : NodeBase {
+	public sealed class SymbolicLinkNode : NodeBase {
 		#region Data members
 
 		/// <summary>
@@ -24,8 +24,8 @@ namespace SharpOS.Kernel.Vfs {
 
 		#region Construction
 
-		public SymbolicLink (char[] target)
-			: base (VfsNodeType.SymbolicLink)
+		public SymbolicLinkNode (IFileSystem fs, char[] target)
+			: base (fs, VfsNodeType.SymbolicLink)
 		{
 			_target = target;
 		}

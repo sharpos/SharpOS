@@ -26,7 +26,7 @@ namespace SharpOS.Kernel.Vfs {
 		/// <summary>
 		/// The virtual root directory.
 		/// </summary>
-		private static Directory _rootDirectory;
+		private static DirectoryNode _rootDirectory;
 
 		/// <summary>
 		/// Root entry of the virtual file system.
@@ -46,7 +46,7 @@ namespace SharpOS.Kernel.Vfs {
 		/// </summary>
         public static void Setup()
         {
-			_rootDirectory = new Directory();
+			_rootDirectory = new DirectoryNode(null);
 			_rootNode = DirectoryEntry.AllocateRoot(_rootDirectory);
 
 			// FIXME: Add an entry of the virtual file system to /proc/filesystems
@@ -261,6 +261,8 @@ namespace SharpOS.Kernel.Vfs {
 		#endregion // Methods
 
 		#region IFileSystem Members
+
+        bool IFileSystem.IsReadOnly { get { return false; } }
 
 		IVfsNode IFileSystem.Root
 		{

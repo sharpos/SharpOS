@@ -132,7 +132,7 @@ namespace SharpOS.Kernel.Vfs {
 		/// </remarks>
 		private DirectoryEntry Resolve(ref char[] path, PathResolutionFlags flags)
 		{
-			// Directory entry found by stepping through the path
+			// DirectoryNode entry found by stepping through the path
 			DirectoryEntry entry = null;
 
 			// Split the given path to its components
@@ -172,7 +172,7 @@ namespace SharpOS.Kernel.Vfs {
 				entry = null;
 				if (VfsNodeType.SymbolicLink == _currentDirectory.Node.NodeType)
 				{
-					SymbolicLink link = (SymbolicLink)_currentDirectory.Node;
+					SymbolicLinkNode link = (SymbolicLinkNode)_currentDirectory.Node;
 					if (0 != _depth--)
 					{
 						// The symlink stores a relative path, use it for a current relative lookup.
