@@ -1,4 +1,4 @@
-﻿<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" ToolsVersion="3.5">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -168,10 +168,8 @@
     <Compile Include="FileSystem\FAT\FAT.cs" />
     <Compile Include="FileSystem\DiskManager.cs" />
     <Compile Include="FileSystem\GenericDisk.cs" />
-    <Compile Include="FileSystem\IFileSystem.cs" />
     <Compile Include="FileSystem\OpenFile.cs" />
     <Compile Include="FileSystem\Partition.cs" />
-    <Compile Include="FileSystem\VolumeManager.cs" />
     <Compile Include="Foundation\BinaryTool.cs" />
     <Compile Include="Foundation\ByteString.cs" />
     <Compile Include="Foundation\CalendarManager.cs" />
