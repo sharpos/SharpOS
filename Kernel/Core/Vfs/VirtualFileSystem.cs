@@ -273,16 +273,18 @@ namespace SharpOS.Kernel.Vfs {
 
 		#region IFileSystemService Members
 
-		IFileSystem IFileSystemService.MountDevice (string path)
+        object IFileSystemService.SettingsType { get { return null; } }
+
+		IFileSystem IFileSystemService.Mount(char[] path)
 		{
 			// Even though we're a file system, we are not mountable.
 			return null;
 		}
 
-		IFileSystem IFileSystemService.Format()
+		IFileSystem IFileSystemService.Format(char[] path, FSSettings settings)
 		{
 			// We do not support formatting.
-			return null;
+            throw new NotSupportedException();
 		}
 
 		#endregion // IFileSystemService Members

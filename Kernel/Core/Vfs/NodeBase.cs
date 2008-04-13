@@ -61,5 +61,5 @@ namespace SharpOS.Kernel.Vfs {
 		public abstract void Delete();
 
 		#endregion // IVfsNode members
-	}
+    }
 }

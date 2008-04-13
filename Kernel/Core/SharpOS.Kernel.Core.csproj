@@ -273,6 +273,7 @@
     <Compile Include="Vfs\DirectoryEntry.cs" />
     <Compile Include="Vfs\DirectoryNode.cs" />
     <Compile Include="Vfs\FileSystemFactory.cs" />
+    <Compile Include="Vfs\FSSettings.cs" />
     <Compile Include="Vfs\IDirectory.cs" />
     <Compile Include="Vfs\IFileSystem.cs" />
     <Compile Include="Vfs\IFileSystemService.cs" />

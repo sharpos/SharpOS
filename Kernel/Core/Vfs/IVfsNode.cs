@@ -22,7 +22,7 @@ namespace SharpOS.Kernel.Vfs {
         /// <summary>
         /// Retrieves the filesystem, where the node belongs to.
         /// </summary>
-        IFileSystem FileSystem { get; }
+        //IFileSystem FileSystem { get; }
 		
 		/// <summary>
 		/// Returns the type of the node.
