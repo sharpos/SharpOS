@@ -138,7 +138,8 @@ namespace SharpOS.Kernel.Vfs {
 			if (null != entry)
 			{
 				AccessCheck.Perform(entry, AccessMode.Delete, AccessCheckFlags.None);
-				entry.Node.Delete();
+				//entry.Node.Delete();
+                entry.Parent.Node.Delete(entry.Node, entry);
 				entry.Release();
 			}
 		}

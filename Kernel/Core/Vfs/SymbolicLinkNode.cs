@@ -65,10 +65,10 @@ namespace SharpOS.Kernel.Vfs {
 			return null;
 		}
 
-		public override void Delete()
+		public override void Delete(IVfsNode child, DirectoryEntry dentry)
 		{
 			// FIXME: Delete the symbolic link from the filesystem, after all names have been dropped.
-			// throw new NotImplementedException();
+            throw new NotSupportedException();
 		}
 
 		#endregion // IVfsNode Members

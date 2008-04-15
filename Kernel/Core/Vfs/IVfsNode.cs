@@ -22,7 +22,7 @@ namespace SharpOS.Kernel.Vfs {
         /// <summary>
         /// Retrieves the filesystem, where the node belongs to.
         /// </summary>
-        //IFileSystem FileSystem { get; }
+        IFileSystem FileSystem { get; }
 		
 		/// <summary>
 		/// Returns the type of the node.
@@ -73,14 +73,17 @@ namespace SharpOS.Kernel.Vfs {
 		object Open(FileAccess access, FileShare share);
 
 		/// <summary>
-		/// Deletes the object represented by this IVfsNode.
+		/// Called to delete a child from a directory.
 		/// </summary>
 		/// <remarks>
-		/// If a node implementation does not support the Delete operation, it must throw NotSupportedException to prevent removal of the IVfsNode
-		/// from the VFS namespace.
+        /// This function deletes a child IVfsNode from a directory. If child is a directory, it will be empty
+        /// before this call is executed. It is recommended to include a debug sanity check though. If the file
+        /// system needs to know the name of the child to delete, it can retrieve it from <see cref="DirectoryEntry.Name"/>.
 		/// </remarks>
+        /// <param name="child">The IVfsNode interface of the child.</param>
+        /// <param name="dentry">The DirectoryEntry of the child.</param>
 		/// <exception cref="System.NotSupportedException">The object does not support removal this way. There's most likely an object specific API to remove this IVfsNode.</exception>
-		void Delete();
+		void Delete(IVfsNode child, DirectoryEntry dentry);
 
 		#endregion // Methods
 	}

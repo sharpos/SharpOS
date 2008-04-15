@@ -69,7 +69,7 @@ namespace SharpOS.Kernel.Vfs
 			return null;
 		}
 
-		public override void Delete ()
+		public override void Delete (IVfsNode child, DirectoryEntry dentry)
 		{
 			// FIXME: throw new NotImplementedException();
 		}

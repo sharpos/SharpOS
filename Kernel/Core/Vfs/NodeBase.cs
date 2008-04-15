@@ -58,7 +58,7 @@ namespace SharpOS.Kernel.Vfs {
 
 		public abstract object Open(FileAccess access, FileShare sharing);
 
-		public abstract void Delete();
+		public abstract void Delete(IVfsNode child, DirectoryEntry entry);
 
 		#endregion // IVfsNode members
     }
