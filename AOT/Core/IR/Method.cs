@@ -114,7 +114,11 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
+        private GenericInstanceMethod genericInstanceMethod = null;
+
 		private MethodReference methodDefinition = null;
+
+        
 
 		/// <summary>
 		/// Gets the method definition.
@@ -128,7 +132,7 @@ namespace SharpOS.AOT.IR {
 			}
 		}
 
-		private GenericInstanceMethod genericInstanceMethod = null;
+		
 
 		/// <summary>
 		/// Gets the name.
@@ -222,12 +226,35 @@ namespace SharpOS.AOT.IR {
 		/// <param name="_class">The _class.</param>
 		/// <param name="methodDefinition">The method definition.</param>
 		/// <param name="genericInstanceMethod">The generic instance method.</param>
+        /// <refactorNote>
+        ///    <summary>There are two possible sources of information that might overlap.
+        ///    Looking at reducing that overlap.</summary>
+        ///    
+        ///    <note>After looking into cecil, they made a design decision to just extend MethodSpecification by adding
+        ///    the class GenericInstanceMethod and having it inherit MethodSpecification.  This prevents extra fields
+        ///    from being exposed, by MethodSpecification but at the same time, prevents a single class from
+        ///    representing all of the method information present. But becuase they did it this way they are causing
+        ///    branching statements in code that has to deal with both situations, which is thus increasing the code
+        ///    complexity and making this code base less stable.
+        /// 
+        ///    In the future, a tool needs to be created that combines the information from both 
+        ///    Mono.Cecil.MethodSpecification and Mono.Cecil.GenericInstanceMethod, and then
+        ///    using that in this code base.   This would help prevent branching statements from arising
+        ///    in the future.
+        /// 
+        ///    </note>
+        ///    <remarks>This constructor is only being referenced once in the code base as of 4-19-08.</remarks>
+        ///    <references>
+        ///         <reference>Class.cs::GetMethodByName(), line 448</reference>
+        ///    </references>
+        /// </refactorNote>
 		public Method (Engine engine, Class _class, MethodReference methodDefinition, GenericInstanceMethod genericInstanceMethod)
 		{
 			this.engine = engine;
 			this._class = _class;
 			this.methodDefinition = methodDefinition;
 			this.genericInstanceMethod = genericInstanceMethod;
+            
 		}
 
 		bool setup = false;
@@ -1324,7 +1351,10 @@ namespace SharpOS.AOT.IR {
 			get
 			{
                 /// Why do we have two variables representing seemingly the same information?
-
+                /// 
+                /// Answer: Seems to be an issue with Mono.Cecil.  We need to represent information that is present in either the 
+                /// genericInstanceMethod or in methodDefinition, or both.  Becuase of this, we have to include both references and check where the 
+                /// information is coming from to pass the correct reference.
                 if (this.genericInstanceMethod != null)
                 {
                     return Method.GetLabel(this._class, this.genericInstanceMethod);

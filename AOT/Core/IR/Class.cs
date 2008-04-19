@@ -442,6 +442,9 @@ namespace SharpOS.AOT.IR {
 
 				methodReference = this.GetGenericMethod (genericInstanceMethod);
 
+                /// FYI (Adam Stevenson)
+                /// This constructor is being looked at for refactoring, as their are two information streams coming in here that are possibly 
+                /// overlapping in information content.
 				Method method = new Method (this.engine, this, methodReference, genericInstanceMethod);
 
 				method.Setup ();
