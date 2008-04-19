@@ -5,6 +5,7 @@
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	William Lahti <xfurious@gmail.com>
 //	Stanislaw Pitucha <viraptor@gmail.com>
+//  Adam Stevenson <a.l.stevenson@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries

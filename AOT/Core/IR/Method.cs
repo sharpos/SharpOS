@@ -6,6 +6,7 @@
 //	William Lahti <xfurious@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
 //	Stanislaw Pitucha <viraptor@gmail.com>
+//  Adam Stevenson <a.l.stevenson@gmail.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -1322,14 +1323,21 @@ namespace SharpOS.AOT.IR {
 		{
 			get
 			{
-				if (this.genericInstanceMethod != null)
-					return Method.GetLabel (this._class, this.genericInstanceMethod);
+                /// Why do we have two variables representing seemingly the same information?
 
-				return Method.GetLabel (this._class, this.methodDefinition);
+                if (this.genericInstanceMethod != null)
+                {
+                    return Method.GetLabel(this._class, this.genericInstanceMethod);
+                }
+                else
+                {
+                    return Method.GetLabel(this._class, this.methodDefinition);
+                }
 			}
 		}
 
-		// TODO Move it to Class.cs as a non-static method
+		// TODO Move it to Class.cs as a non-static method  there are five references to this method that are going to need to be investigated
+        /// changed.  Oh and why can't this be just incorporated as a member method in this class (Method.cs).
 		/// <summary>
 		/// Gets the label.
 		/// </summary>
@@ -1338,24 +1346,38 @@ namespace SharpOS.AOT.IR {
 		/// <returns></returns>
 		public static string GetLabel (Class _class, Mono.Cecil.MethodReference method)
 		{
-			StringBuilder result = new StringBuilder ();
-			string value;
 
-			if (_class != null)
-				value = _class.TypeFullName;
+			
 
-			else {
-				value = method.DeclaringType.FullName;
+            /// The goal of this method is to generate a name like "ClassName.MethodName".  Right now there are two sources
+            /// for the class name the class object and a compiled method.  
+            /// 
 
-				foreach (CustomAttribute attribute in method.DeclaringType.CustomAttributes) {
-					if (!attribute.Constructor.DeclaringType.FullName.Equals (typeof (SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString ()))
-						continue;
+            StringBuilder result = new StringBuilder();
 
-					value = attribute.ConstructorParameters [0].ToString () + "." + method.DeclaringType.Name;
-				}
-			}
+            /// Stores the name of the class in which the method resides.  This name can come from two sources (as of right now)  See above comments.
+            string className;
 
-			result.Append (value + "." + method.Name);
+            if (_class != null)
+            {
+                /// Get the class name from the passed class object.
+                className = _class.TypeFullName;
+            }
+            else
+            {
+                /// Get the class name from a compiled source using the method reference passed from cecil.
+                className = method.DeclaringType.FullName;
+
+                foreach (CustomAttribute attribute in method.DeclaringType.CustomAttributes)
+                {
+                    if (!attribute.Constructor.DeclaringType.FullName.Equals(typeof(SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString()))
+                        continue;
+
+                    className = attribute.ConstructorParameters[0].ToString() + "." + method.DeclaringType.Name;
+                }
+            }
+
+            result.Append(className + "." + method.Name);
 
 			if (method is GenericInstanceMethod) {
 				GenericInstanceMethod genericInstanceMethod = method as GenericInstanceMethod;
