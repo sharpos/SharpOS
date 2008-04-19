@@ -1100,8 +1100,9 @@ namespace SharpOS.AOT.X86 {
 		}
 
 		/// <summary>
-		/// Adds the entry point.
+		/// Adds the entry point to the kernel during the encoding process.  
 		/// </summary>
+        /// <note>This is currently being called by: </note>
 		private void AddEntryPoint ()
 		{
             /// Set the base address to be 0x00100000
@@ -1138,16 +1139,22 @@ namespace SharpOS.AOT.X86 {
 			// The magic value
 			this.PUSH (R32.EAX);
 
-            /// Initialize all of the static constructors in the code.  
-
-			foreach (Class _class in engine) {
+            /// Initialize all of the static constructors in the code.  Thes are pretty easy to find since all methods
+            /// that are in the kernel are static, as instances of objects are yet to be supported.
+			foreach (Class _class in engine)
+            {
+                
 				if (_class.IsGenericType)
 					continue;
 
-				foreach (Method method in _class.Methods) {
+				foreach (Method method in _class.Methods)
+                {
+                    // All the methods that are constructors are static constructors right now since no instances of objects cna be supported.
 					if (!method.IsCCTOR)
 						continue;
 
+                    /// Add a call instruction to the outputed assembly code.  This method needs a label name that marks the starting address of the 
+                    /// method being called.
 					this.CALL (method.MethodFullName);
 				}
 			}
@@ -1800,13 +1807,13 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
         /// <param name="pFileName">The name of the file to be created.</param>
 		/// <returns></returns>
-		private bool Save (string pFileName)
+		private bool Save (string fileName)
 		{
 			MemoryStream memoryStream = new MemoryStream ();
 
 			this.Encode (memoryStream);
 
-			using (FileStream fileStream = new FileStream (pFileName, FileMode.Create))
+            using (FileStream fileStream = new FileStream(fileName, FileMode.Create))
 				memoryStream.WriteTo (fileStream);
 
 			if (this.engine.Options.AsmDump) {
