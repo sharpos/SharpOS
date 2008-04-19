@@ -1104,21 +1104,26 @@ namespace SharpOS.AOT.X86 {
 		/// </summary>
 		private void AddEntryPoint ()
 		{
+            /// Set the base address to be 0x00100000
 			this.ORG (0x00100000);
 
 			this.AddSymbol (new COFF.Label (KERNEL_ENTRY_POINT));
 
+            /// Sets this location in code to be the KernelEntryPoint
 			this.LABEL (KERNEL_ENTRY_POINT);
 
 			this.MOV (R32.ESP, END_STACK);
 
 			this.XOR (R32.EBP, R32.EBP);
-			this.PUSH (R32.EBP);
-			this.PUSH (R32.EBP);
+			this.PUSH (R32.EBP); // Set the Instruction Pointer to 0 (relative addressing, thus )
+			this.PUSH (R32.EBP); // Base Pointer
 			this.MOV (R32.EBP, R32.ESP);
 
+            /// Push the value of 0 onto the stack and then use it to store the value in the EFFLags register.
 			this.PUSH (0);
 			this.POPF ();
+
+
 
 			// The kernel End
 			this.MOV (R32.ECX, THE_END);
@@ -1127,11 +1132,13 @@ namespace SharpOS.AOT.X86 {
 			// The kernel Start
 			this.PUSH (BASE_ADDRESS);
 
-			// Pointer to the Multiboot Info
+			// Pointer to the Multiboot Info from GRUBLegacy
 			this.PUSH (R32.EBX);
 
 			// The magic value
 			this.PUSH (R32.EAX);
+
+            /// Initialize all of the static constructors in the code.  
 
 			foreach (Class _class in engine) {
 				if (_class.IsGenericType)
@@ -1145,6 +1152,7 @@ namespace SharpOS.AOT.X86 {
 				}
 			}
 
+            /// This corresponds to the method that has the attribute: [SharpOS.AOT.Attributes.KernelMain]
 			this.CALL (KERNEL_MAIN);
 
 			// Just hang
@@ -1790,15 +1798,15 @@ namespace SharpOS.AOT.X86 {
 		/// <summary>
 		/// Saves the specified target.
 		/// </summary>
-		/// <param name="target">The target.</param>
+        /// <param name="pFileName">The name of the file to be created.</param>
 		/// <returns></returns>
-		private bool Save (string target)
+		private bool Save (string pFileName)
 		{
 			MemoryStream memoryStream = new MemoryStream ();
 
 			this.Encode (memoryStream);
 
-			using (FileStream fileStream = new FileStream (target, FileMode.Create))
+			using (FileStream fileStream = new FileStream (pFileName, FileMode.Create))
 				memoryStream.WriteTo (fileStream);
 
 			if (this.engine.Options.AsmDump) {
