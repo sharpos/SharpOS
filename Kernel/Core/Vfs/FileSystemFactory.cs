@@ -18,18 +18,18 @@ namespace SharpOS.Kernel.Vfs {
 			 * Algorithm:
 			 * 
 			 * This function iterates all running file system drivers, which have registered themselves
-			 * beneath the /proc/filesystems and ask them if they can mount this path.
+			 * beneath the /system/filesystems and ask them if they can mount this path.
 			 * 
 			 */
 
 			IFileSystem result = null;
 
-			//System.IO.DirectoryInfo fsFolder = (System.IO.DirectoryInfo)VirtualFileSystem.Open("/proc/filesystems", FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
+			//System.IO.DirectoryInfo fsFolder = (System.IO.DirectoryInfo)VirtualFileSystem.Open("/sys/filesystems", FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
 			//FileInfo[] files = fsFolder.GetFiles();
 			//foreach (FileInfo entry in files)
 			//{
 			//    IFileSystemService fss = VirtualFileSystem.Open(entry.FullName, FileAccess.Read, FileShare.Delete | FileShare.ReadWrite) as IFileSystemService;
-			//    if (null != fss)
+			//    if (fss != null)
 			//    {
 			//        result = fss.MountDevice(path);
 			//        if (null != result)

@@ -24,12 +24,12 @@ namespace SharpOS.Kernel.Vfs {
         /// <summary>
         /// Holds the filesystem of the node.
         /// </summary>
-        private IFileSystem _fs;
+        private IFileSystem fs;
 
 		/// <summary>
 		/// Holds the type of the IVfsNode represented by this instance.
 		/// </summary>
-		private VfsNodeType _type;
+		private VfsNodeType type;
 
 		#endregion // Data members
 
@@ -37,17 +37,17 @@ namespace SharpOS.Kernel.Vfs {
 
 		protected NodeBase(IFileSystem fs, VfsNodeType type)
 		{
-            _fs = fs;
-            _type = type;
+            this.fs = fs;
+            this.type = type;
 		}
 
 		#endregion // Construction
 
 		#region IVfsNode members
 
-        public IFileSystem FileSystem { get { return _fs; } }
+        public IFileSystem FileSystem { get { return fs; } }
 
-		public VfsNodeType NodeType { get { return _type; } }
+		public VfsNodeType NodeType { get { return type; } }
 
 		public abstract IVfsNode Create (char[] name, VfsNodeType type, object settings);
 

@@ -30,7 +30,7 @@ namespace SharpOS.Kernel.Vfs
 		/// <summary>
 		/// Holds all nodes added to the root vfs node.
 		/// </summary>
-		private ArrayList _nodes;
+		private ArrayList nodes;
 
 		#endregion // Data members
 
@@ -43,7 +43,7 @@ namespace SharpOS.Kernel.Vfs
 		public DirectoryNode (IFileSystem fs)
 			: base (fs, VfsNodeType.Directory)
 		{
-			_nodes = new ArrayList ();
+			nodes = new ArrayList ();
 		}
 
 		#endregion // Construction

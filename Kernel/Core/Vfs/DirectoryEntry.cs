@@ -22,7 +22,7 @@ namespace SharpOS.Kernel.Vfs
 		/// Holds the current directory of the current thread.
 		/// </summary>
 		[System.ThreadStatic]
-		private static DirectoryEntry s_currentDirectory = null;
+		private static DirectoryEntry currentDirectory = null;
 
 		#endregion // Static data members
 
@@ -31,12 +31,12 @@ namespace SharpOS.Kernel.Vfs
 		/// <summary>
 		/// References the inode that belongs to this name.
 		/// </summary>
-		private IVfsNode _inode;
+		private IVfsNode inode;
 
 		/// <summary>
 		/// The name of this directory entry.
 		/// </summary>
-		private char[] _name;
+		private char[] name;
 
 		/// <summary>
 		/// Ptr to the parent directory entry. 
@@ -44,12 +44,12 @@ namespace SharpOS.Kernel.Vfs
 		/// <remarks>
 		/// If _parent == this, we're at the root directory entry.
 		/// </remarks>
-		private DirectoryEntry _parent;
+		private DirectoryEntry parent;
 
 		/// <summary>
 		/// Sorted list of child directory entries of this name.
 		/// </summary>
-		private DirectoryEntry _child, _next;
+		private DirectoryEntry child, next;
 
 		#endregion // Data members
 
@@ -67,7 +67,7 @@ namespace SharpOS.Kernel.Vfs
 		{
 			get
 			{
-				return _name;
+				return this.name;
 			}
 		}
 
@@ -75,7 +75,7 @@ namespace SharpOS.Kernel.Vfs
 		{
 			get
 			{
-				return _inode;
+				return inode;
 			}
 		}
 
@@ -83,7 +83,7 @@ namespace SharpOS.Kernel.Vfs
 		{
 			get
 			{
-				return _parent;
+				return parent;
 			}
 		}
 
@@ -98,9 +98,9 @@ namespace SharpOS.Kernel.Vfs
 				int idx = 0, rmin = 0, rmax = _children.Count - 1;
 
 				// Check for common names
-				if (true == name.Equals("."))
+				if (name.Equals("."))
 					return this;
-				if (true == name.Equals(".."))
+				if (name.Equals(".."))
 					return _parent;
 
 				// Iterative binary lookup into the _children list
@@ -126,21 +126,21 @@ namespace SharpOS.Kernel.Vfs
 				// FIXME: Maybe we don't have everything from the inode we're naming. Get all subentries from the inode.
 			 */
 
-			DirectoryEntry e = _child;
-			while ((null != e) && (e._name != name))
-				e = e._next;
+			DirectoryEntry e = child;
+			while ((null != e) && (e.name != name))
+				e = e.next;
 
 			return e;
 		}
 
 		private void Setup (DirectoryEntry parent, char[] name, IVfsNode node)
-		{			
-			if (!Object.ReferenceEquals(this, parent))
-				_parent.InsertChild(this);
+		{
+			if (!Object.ReferenceEquals (this, parent))
+				this.parent.InsertChild (this);
 
-			_parent = parent;
-			_name = name;
-			_inode = node;
+			this.parent = parent;
+			this.name = name;
+			inode = node;
 		}
 
 		/// <summary>
@@ -154,12 +154,12 @@ namespace SharpOS.Kernel.Vfs
 		{
 			// FIXME: Remove the entry from the parent and release it to the
 			// entry cache in the vfs service.
-			if (false == Object.ReferenceEquals(this, Parent))
-				_parent.RemoveChild(this);
+			if (!Object.ReferenceEquals (this, Parent))
+				parent.RemoveChild (this);
 
-			_inode = null;
-			_name = null;
-			_parent = null;
+			inode = null;
+			name = null;
+			parent = null;
 		}
 
 		#endregion // Methods
@@ -177,7 +177,7 @@ namespace SharpOS.Kernel.Vfs
 						{
 							idx = (rmax + rmin) / 2;
 							entry = _children[idx];
-							if (true == child.Name.Equals(entry.Name))
+							if (child.Name.Equals(entry.Name))
 							{
 			#if VFS_NO_EXCEPTIONS
 								throw new InvalidOperationException("Duplicate name.");
@@ -197,24 +197,24 @@ namespace SharpOS.Kernel.Vfs
 						_children.Insert(rmin, child);
 			 */
 			// FIXME: Thread safety
-			child._next = _child;
-			_child = child;
+			child.next = this.child;
+			this.child = child;
 		}
 
 		private void RemoveChild (DirectoryEntry child)
 		{
 			// FIXME: Thread safety
-			if (Object.ReferenceEquals(_child, child)) {
-				_child = child._next;
+			if (Object.ReferenceEquals (this.child, child)) {
+				this.child = child.next;
 			}
 			else {
-				DirectoryEntry e = _child;
-				while (!Object.ReferenceEquals(e._next, child))
-					e = e._next;
-				e._next = child._next;
+				DirectoryEntry e = this.child;
+				while (!Object.ReferenceEquals (e.next, child))
+					e = e.next;
+				e.next = child.next;
 			}
 
-			child._next = null;
+			child.next = null;
 
 			//			_children.Remove(child);
 		}
@@ -227,20 +227,20 @@ namespace SharpOS.Kernel.Vfs
 		{
 			get
 			{
-				if (null == s_currentDirectory) {
+				if (currentDirectory == null) {
 					// FIXME: Use the process root instead of this in order to put processes in a jail.
-					s_currentDirectory = VirtualFileSystem.RootDirectoryEntry;
+					currentDirectory = VirtualFileSystem.RootDirectoryEntry;
 				}
 
-				return s_currentDirectory;
+				return currentDirectory;
 			}
 
 			set
 			{
-				if (null == value)
-					throw new System.ArgumentNullException("value");
+				if (value == null)
+					throw new System.ArgumentNullException ("value");
 
-				s_currentDirectory = value;
+				currentDirectory = value;
 			}
 		}
 
@@ -260,20 +260,20 @@ namespace SharpOS.Kernel.Vfs
 		public static DirectoryEntry Allocate (DirectoryEntry parent, char[] name, IVfsNode node)
 		{
 #if VFS_NO_EXCEPTIONS
-			if (null == parent)
+			if (parent = null)
 				throw new ArgumentNullException(@"parent");
-			if (null == name)
+			if (name = null)
 				throw new ArgumentNullException(@"name");
-			if (null == node)
+			if (node = null)
 				throw new ArgumentNullException(@"node");
-			if (0 == name.Length)
+			if (name.Length == 0)
 				throw new ArgumentException(@"Invalid directory entry name.", @"name");
 			// FIXME: Add precondition check for invalid characters
 			// FIXME: Localize exception messages
 #endif // #if VFS_NO_EXCEPTIONS
 
-			DirectoryEntry d = new DirectoryEntry();
-			d.Setup(parent, name, node);
+			DirectoryEntry d = new DirectoryEntry ();
+			d.Setup (parent, name, node);
 			return d;
 		}
 
@@ -294,11 +294,11 @@ namespace SharpOS.Kernel.Vfs
 		public static DirectoryEntry AllocateRoot (IVfsNode node)
 		{
 #if VFS_NO_EXCEPTIONS
-			if (null == node)
+			if (node = null)
 				throw new ArgumentNullException(@"node");
 #endif // #if VFS_NO_EXCEPTIONS
 
-			DirectoryEntry result = new DirectoryEntry();
+			DirectoryEntry result = new DirectoryEntry ();
 			//result.Setup(result, String.Empty, node);	
 			result.Setup (result, null, node);
 			return result;

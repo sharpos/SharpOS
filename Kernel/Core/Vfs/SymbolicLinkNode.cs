@@ -18,7 +18,7 @@ namespace SharpOS.Kernel.Vfs {
 		/// <summary>
 		/// The target of the symbolic link.
 		/// </summary>
-		private char[] _target;
+		private char[] target;
 
 		#endregion // Data members
 
@@ -27,7 +27,7 @@ namespace SharpOS.Kernel.Vfs {
 		public SymbolicLinkNode (IFileSystem fs, char[] target)
 			: base (fs, VfsNodeType.SymbolicLink)
 		{
-			_target = target;
+			this.target = target;
 		}
 
 		#endregion // Construction
@@ -41,7 +41,7 @@ namespace SharpOS.Kernel.Vfs {
 		{
 			get
 			{
-				return _target;
+				return target;
 			}
 		}
 

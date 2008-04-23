@@ -27,7 +27,7 @@ namespace SharpOS.Kernel.Vfs {
 		/// <summary>
 		/// Array to split paths properly for the local system.
 		/// </summary>
-		//private static readonly char[] s_splitChars = new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
+		//private static readonly char[] splitChars = new char[] { Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar };
 
 		#endregion // Constants
 
@@ -36,17 +36,17 @@ namespace SharpOS.Kernel.Vfs {
 		/// <summary>
 		/// Reference to the root directory of the system.
 		/// </summary>
-		private DirectoryEntry _rootDirectory;
+		private DirectoryEntry rootDirectory;
 
 		/// <summary>
 		/// Reference to the current directory of the system.
 		/// </summary>
-		private DirectoryEntry _currentDirectory;
+		private DirectoryEntry currentDirectory;
 
 		/// <summary>
 		/// Remaining lookup depth for symbolic links.
 		/// </summary>
-		private int _depth;
+		private int depth;
 
 		#endregion // Data members
 
@@ -54,9 +54,9 @@ namespace SharpOS.Kernel.Vfs {
 
 		private PathResolver(DirectoryEntry rootDirectory, DirectoryEntry currentDirectory)
 		{
-			_rootDirectory = rootDirectory;
-			_currentDirectory = currentDirectory;
-			_depth = PathResolver.MAX_SYMLINKS_TO_FOLLOW;
+			this.rootDirectory = rootDirectory;
+			this.currentDirectory = currentDirectory;
+			depth = PathResolver.MAX_SYMLINKS_TO_FOLLOW;
 		}
 
 		#endregion // Construction
@@ -136,7 +136,7 @@ namespace SharpOS.Kernel.Vfs {
 			DirectoryEntry entry = null;
 
 			// Split the given path to its components
-			//String[] dirs = path.Split(s_splitChars);
+			//String[] dirs = path.Split(splitChars);
 			PathSplitter dirs = new PathSplitter (path);
 
 			// Determine the number of path components
@@ -148,7 +148,7 @@ namespace SharpOS.Kernel.Vfs {
 			int index = 0;
 
 			// Perform an access check on the root directory
-			AccessCheck.Perform(_currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
+			AccessCheck.Perform(currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
 
 			// Do not resolve the last name, if we want the parent directory.
 			if (PathResolutionFlags.RetrieveParent == (flags & PathResolutionFlags.RetrieveParent))
@@ -161,19 +161,19 @@ namespace SharpOS.Kernel.Vfs {
 			if (dirs[0].Length == 0)
 			{
 				// Yes, replace the current directory
-				_currentDirectory = _rootDirectory;
+				currentDirectory = rootDirectory;
 				index++;
 			}
 
 			// Iterate over the remaining path components
-			while ((null != _currentDirectory) && (index < max))
+			while ((null != currentDirectory) && (index < max))
 			{
 				item = dirs[index];
 				entry = null;
-				if (VfsNodeType.SymbolicLink == _currentDirectory.Node.NodeType)
+				if (VfsNodeType.SymbolicLink == currentDirectory.Node.NodeType)
 				{
-					SymbolicLinkNode link = (SymbolicLinkNode)_currentDirectory.Node;
-					if (0 != _depth--)
+					SymbolicLinkNode link = (SymbolicLinkNode)currentDirectory.Node;
+					if (0 != depth--)
 					{
 						// The symlink stores a relative path, use it for a current relative lookup.
 						char[] target = link.Target;
@@ -196,15 +196,15 @@ namespace SharpOS.Kernel.Vfs {
 				else
 				{
 					// Pass the lookup to the DirectoryEntry (and ultimately to the inode itself.)
-					entry = _currentDirectory.Lookup(item);
+					entry = currentDirectory.Lookup(item);
 
 					// If lookup in the directory entry failed, ask the real INode to perform the lookup.
 					if (null == entry)
 					{
-						IVfsNode node = _currentDirectory.Node.Lookup(item);
+						IVfsNode node = currentDirectory.Node.Lookup(item);
 						if (null != node)
 						{
-							entry = DirectoryEntry.Allocate(_currentDirectory, item, node);
+							entry = DirectoryEntry.Allocate(currentDirectory, item, node);
 						}
 					}
 				}
@@ -225,13 +225,13 @@ namespace SharpOS.Kernel.Vfs {
 				}
 
 				// Set the current resolution directory
-				_currentDirectory = entry;
+				currentDirectory = entry;
 
 				// Check if the caller has traverse access to the directory
-				AccessCheck.Perform(_currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
+				AccessCheck.Perform(currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
 			}
 
-			return _currentDirectory;
+			return currentDirectory;
 		}
 
 		#endregion // Methods
