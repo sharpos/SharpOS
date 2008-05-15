@@ -29,9 +29,10 @@ using Mono.Cecil.Metadata;
 
 namespace SharpOS.AOT.IR {
 	/// <summary>
-	/// Represents a method in the AOT's intermediate representation.
+	/// Represents a method in the AOT's intermediate representation (IR).
 	/// </summary>
-	public class Method : IEnumerable<Block> {
+	public class Method : IEnumerable<Block>
+    {
 		List<ExceptionHandlingClause> exceptions = new List<ExceptionHandlingClause> ();
 
 		/// <summary>
@@ -1367,7 +1368,8 @@ namespace SharpOS.AOT.IR {
 		}
 
 		// TODO Move it to Class.cs as a non-static method  there are five references to this method that are going to need to be investigated
-        /// changed.  Oh and why can't this be just incorporated as a member method in this class (Method.cs).
+        /// changed.  Oh and why can't this be just incorporated as a member method in this class (Method.cs), or better, into a class framework that
+        /// supports AOT as well as CIL reflection.
 		/// <summary>
 		/// Gets the label.
 		/// </summary>
@@ -1398,25 +1400,47 @@ namespace SharpOS.AOT.IR {
                 /// Get the class name from a compiled source using the method reference passed from cecil.
                 className = method.DeclaringType.FullName;
 
+
                 foreach (CustomAttribute attribute in method.DeclaringType.CustomAttributes)
                 {
+                    /// In an effor to keep the size of the kernel as small as possible (at least this what is
+                    /// persumed), the SharpOS.AOT.Attributes.TargetNamespaceAttribute does not declare a property 
+                    /// called name.  Instead it just has a constructor.  Since the argument of the constructor
+                    /// is static for each instance of the attribute, that argument can be retrieved, which is the
+                    /// namespace that should be used in building the target class.
+                    /// 
+                    /// If the attribute is not there, then 
+
                     if (!attribute.Constructor.DeclaringType.FullName.Equals(typeof(SharpOS.AOT.Attributes.TargetNamespaceAttribute).ToString()))
                         continue;
 
+                    /// Combine the namespace with the string.  
+                    /// 
+                    /// Note the reason for calling this variable className and not FullName is because namespaces are not technically recognized
+                    /// in IL.  Instead, they are considered part of the namespace itself.  
+
                     className = attribute.ConstructorParameters[0].ToString() + "." + method.DeclaringType.Name;
+
+                    /// TODO: 1) Should there not be a break statement here, since there should only be one TargetNamespaceAttribute per class?
                 }
             }
 
+            /// Combine the class name with the method name.
             result.Append(className + "." + method.Name);
 
-			if (method is GenericInstanceMethod) {
+            /// If the method is a generic method, then append the fullname of each argument to the current result.
+			if (method is GenericInstanceMethod)
+            {
 				GenericInstanceMethod genericInstanceMethod = method as GenericInstanceMethod;
 
 				result.Append ("<");
 
-				for (int i = 0; i < genericInstanceMethod.GenericArguments.Count; i++) {
-					if (i > 0)
-						result.Append (",");
+				for (int i = 0; i < genericInstanceMethod.GenericArguments.Count; i++)
+                {
+                    if (i > 0)
+                    {
+                        result.Append(",");
+                    }
 
 					result.Append (genericInstanceMethod.GenericArguments [i].FullName);
 				}
@@ -1425,6 +1449,8 @@ namespace SharpOS.AOT.IR {
 			}
 
 			result.Append ("(");
+
+            /// Need to attach the parameter types, as method names can be overlaoded.  
 
 			for (int i = 0; i < method.Parameters.Count; i++) {
 				if (i != 0)

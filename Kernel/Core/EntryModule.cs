@@ -60,7 +60,7 @@ namespace SharpOS.Kernel {
 
 		/// <summary>
 		/// The kernel entry point. This function is called after static
-		/// constructors and initialization are done.
+        /// constructors and initialization are done (currenly doen by Assembly.cs::AddEntryPoint().
 		/// </summary>
 		/// <param name="magic">
 		/// Magic number of the multiboot loader.
@@ -98,7 +98,7 @@ namespace SharpOS.Kernel {
 			}
 			
 			kernelStartLoc = (void*)kernelStart;
-			kernelEndLoc = (void*)kernelEnd;
+			kern    elEndLoc = (void*)kernelEnd;
 
 			StageMessage ("Commandline setup...");
 			CommandLine.Setup ();

@@ -17,9 +17,11 @@ namespace SharpOS.AOT.Attributes {
 	/// Used to mark a define the real namespace of a class/enum/struct/interface.
 	/// </summary>
 	[AttributeUsage (AttributeTargets.Class | AttributeTargets.Struct | AttributeTargets.Enum | AttributeTargets.Interface)]
-	public sealed class TargetNamespaceAttribute : Attribute {
+	public sealed class TargetNamespaceAttribute : Attribute
+    {
 		public TargetNamespaceAttribute (string value) 
 		{
+
 		}
 	}
 }
