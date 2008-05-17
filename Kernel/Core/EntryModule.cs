@@ -98,7 +98,7 @@ namespace SharpOS.Kernel {
 			}
 			
 			kernelStartLoc = (void*)kernelStart;
-			kern    elEndLoc = (void*)kernelEnd;
+			kernelEndLoc = (void*)kernelEnd;
 
 			StageMessage ("Commandline setup...");
 			CommandLine.Setup ();
