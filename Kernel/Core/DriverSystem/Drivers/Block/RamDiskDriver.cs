@@ -9,34 +9,74 @@
 //
 
 using System;
+using SharpOS.Kernel;
+using SharpOS.AOT.X86;
+using SharpOS.AOT.IR;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.DriverSystem;
 
 namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 {
 	public class RamDiskDriver : GenericDriver, IBlockDeviceController
 	{
-		private MemoryBlock ram;
-		private uint blocks;
-		private uint blockSize = 512;
+		protected const uint MaxRamDisks = 9;
+
+		protected uint blockSize = 512;
+
+		protected struct RamDisk
+		{
+			public MemoryBlock ram;
+			public uint blocks;
+		}
+
+		protected RamDisk[] ramDisks;
+		protected uint diskCount;
 
 		#region Initialize
 		public override bool Initialize (IDriverContext context)
 		{
-			Diagnostics.Message("Ram Disk Controller");
+			//TextMode.WriteLine ("ramdisk: Ram Disk Controller");
 
-			context.Initialize(DriverFlags.IOStream8Bit);	// ??
+			ramDisks = new RamDisk[MaxRamDisks];
+			diskCount = 0;
 
-			// Question: what size? how is this passed in?
-			blocks = 1024 * 2;
-			ram.Allocate(blockSize * blocks);	// 1 Meg
+			DeviceController deviceController = new DeviceController ("ramdisk", 0);
 
-			Diagnostics.Message("-->Creating Ram Disk Found");
-			Diagnostics.Message("--->Size in KB: ", (int)blockSize / 2);
+			context.Initialize ();
+			isInitialized = true;
 
-			DeviceResource resource = new DeviceResource("ramdisk1", DeviceResourceType.RamDisk, new GenericBlockDeviceAdapter(this, 0), DeviceResourceStatus.Online, 0, 0);
-			DeviceResourceManager.Add(resource);
+			TextMode.WriteLine ("ramdisk: driver installed, max: ", (int)MaxRamDisks);
 
-			return (isInitialized = false);
+			CreateDisk (deviceController, 1024 * 2);
+
+			return true;
+		}
+
+		protected bool CreateDisk (DeviceController deviceController, uint blocks)
+		{
+			if (diskCount >= MaxRamDisks)
+				return false;
+
+			ramDisks[diskCount].blocks = blocks;
+			ramDisks[diskCount].ram.Allocate (blockSize * blocks);
+
+			//TextMode.Write (ramDiskNames[diskCount]);
+			TextMode.Write ("Disk #");
+			TextMode.Write ((int)diskCount);
+			TextMode.Write (" - ", (int)(ramDisks[diskCount].blocks * 2));
+			TextMode.Write ("KB");
+			TextMode.WriteLine ();
+
+			deviceController.AddDisk (new GenericBlockDeviceAdapter (this, diskCount));
+
+			//DeviceResource resource = new DeviceResource (ramDiskNames[diskCount], DeviceResourceType.RamDisk, new GenericBlockDeviceAdapter (this, 0), DeviceResourceStatus.Online, 0, 0);
+			//DeviceResourceManager.Add (resource);
+
+			DeviceControllers.Add (deviceController);
+
+			diskCount++;
+			return true;
 		}
 
 		public int Open (uint drive)
@@ -49,14 +89,14 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			return 0;
 		}
 
-		public uint GetBlockSize (uint drive)
+		public uint GetSectorSize (uint drive)
 		{
 			return blockSize;
 		}
 
-		public uint GetTotalBlocks (uint drive)
+		public uint GetTotalSectors (uint drive)
 		{
-			return blocks;
+			return ramDisks[diskCount].blocks;
 		}
 
 		public bool CanWrite (uint drive)
@@ -66,26 +106,25 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 
 		public unsafe bool ReadBlock (uint drive, uint lba, uint count, MemoryBlock memory)
 		{
-			if (lba + count > blocks)
+			if (lba + count > ramDisks[diskCount].blocks)
 				return false;
 
-			memory.CopyFrom(ram.Offset(blockSize * lba), blockSize * count);
+			ramDisks[drive].ram.CopyFrom (ramDisks[drive].ram.Offset (blockSize * lba), blockSize * count);
 			return true;
 		}
 
 		public unsafe bool WriteBlock (uint drive, uint lba, uint count, MemoryBlock memory)
 		{
-			if (lba + count > blocks)
+			if (lba + count > ramDisks[diskCount].blocks)
 				return false;
 
-			memory.CopyTo(ram.Offset(blockSize * lba), blockSize * count);
+			ramDisks[drive].ram.CopyTo (ramDisks[drive].ram.Offset (blockSize * lba), blockSize * count);
 			return true;
 		}
 
 		public IDevice GetDeviceDriver ()
 		{
-			return null;
-			//return (IDevice)this;
+			return (IDevice)this;
 		}
 
 		#endregion

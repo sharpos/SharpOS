@@ -43,7 +43,7 @@ namespace SharpOS.Kernel.ADC.X86
 			public DriverContext (HardwareResourceManager _manager, IDevice _device)
 			{
 				if (_manager == null)
-					throw new ArgumentNullException("manager");
+					throw new ArgumentNullException ("manager");
 				manager = _manager;
 				device = _device;
 			}
@@ -69,95 +69,93 @@ namespace SharpOS.Kernel.ADC.X86
 			{
 				if (isReleased)
 					return;
-				try { manager.Release(this); }
+				try { manager.Release (this); }
 				finally { isReleased = true; }
 			}
 
 			// TODO: this should eventually be done trough attributes
-			public void Initialize (DriverFlags _flags)
+			public void Initialize ()
 			{
-				flags = _flags;
 			}
 
 			public MemoryBlock CreateMemoryBuffer (uint address, uint length)
 			{
-				return manager.CreateMemoryBuffer(this, address, length);
+				return manager.CreateMemoryBuffer (this, address, length);
 			}
 
-			public IOPortStream CreateIOPortStream (ushort port)
+			public IOPortStream CreateIOPortStream (uint port)
 			{
-				return manager.CreateIOPortStream(this, port);
+				return manager.CreateIOPortStream (this, port);
+			}
+
+			public IOPortStream CreateIOPortStream (uint port, uint offset)
+			{
+				return manager.CreateIOPortStream (this, port + offset);
 			}
 
 			public DMAChannel CreateDMAChannel (byte channel)
 			{
-				return manager.CreateDMAChannel(this, channel);
+				return manager.CreateDMAChannel (this, channel);
 			}
 
 			public IRQHandler CreateIRQHandler (byte irq)
 			{
-				return manager.CreateIRQHandler(this, irq);
+				return manager.CreateIRQHandler (this, irq);
 			}
 		}
 
 
 		public IDriverContext CreateDriverContext (IDevice device)
 		{
-			return new DriverContext(this, device);
+			return new DriverContext (this, device);
 		}
 
 		internal void Release (IDriverContext context)
 		{
 			if (context == null)
-				throw new ArgumentNullException("context");
+				throw new ArgumentNullException ("context");
 			if (context.IsReleased)
-				throw new InvalidOperationException("Context has already been released.");
+				throw new InvalidOperationException ("Context has already been released.");
 		}
 
 		internal MemoryBlock CreateMemoryBuffer (IDriverContext context, uint address, uint length)
 		{
 			if (context == null)
-				throw new ArgumentNullException("context");
+				throw new ArgumentNullException ("context");
 			if (context.IsReleased)
-				throw new InvalidOperationException("Context was used after it was released.");
+				throw new InvalidOperationException ("Context was used after it was released.");
 
-			return new MemoryBlock(address, length);
+			return new MemoryBlock (address, length);
 		}
 
-		internal IOPortStream CreateIOPortStream (IDriverContext context, ushort port)
+		internal IOPortStream CreateIOPortStream (IDriverContext context, uint port)
 		{
 			if (context == null)
-				throw new ArgumentNullException("context");
+				throw new ArgumentNullException ("context");
 			if (context.IsReleased)
-				throw new InvalidOperationException("Context was used after it was released.");
+				throw new InvalidOperationException ("Context was used after it was released.");
 
-			switch ((DriverFlags)(context.Flags & DriverFlags.IOStreamMask)) {
-				default:
-				case DriverFlags.IOStream8Bit: return new IOPortStream8bit((IO.Port)port);
-				case DriverFlags.IOStream16Bit: throw new NotImplementedException();
-				case DriverFlags.IOStream32Bit: throw new NotImplementedException();
-				case DriverFlags.IOStream64Bit: throw new NotImplementedException();
-			}
+			return new IOPortStream (port);
 		}
 
 		internal DMAChannel CreateDMAChannel (IDriverContext context, byte channel)
 		{
 			if (context == null)
-				throw new ArgumentNullException("context");
+				throw new ArgumentNullException ("context");
 			if (context.IsReleased)
-				throw new InvalidOperationException("Context was used after it was released.");
+				throw new InvalidOperationException ("Context was used after it was released.");
 
-			return new DMAChannel8bit(channel);
+			return new DMAChannel8bit (channel);
 		}
 
 		internal IRQHandler CreateIRQHandler (IDriverContext context, byte irq)
 		{
 			if (context == null)
-				throw new ArgumentNullException("context");
+				throw new ArgumentNullException ("context");
 			if (context.IsReleased)
-				throw new InvalidOperationException("Context was used after it was released.");
+				throw new InvalidOperationException ("Context was used after it was released.");
 
-			return new IRQHandler16bit(irq);
+			return new IRQHandler16bit (irq);
 		}
 	}
 }

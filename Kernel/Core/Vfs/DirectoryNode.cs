@@ -50,13 +50,13 @@ namespace SharpOS.Kernel.Vfs
 
 		#region IVfsNode members
 
-		public override IVfsNode Create (char[] name, VfsNodeType nodeType, object settings)
+		public override IVfsNode Create (string name, VfsNodeType nodeType, object settings)
 		{
 			// FIXME: throw new NotImplementedException();
 			return null;
 		}
 
-		public override IVfsNode Lookup (char[] name)
+		public override IVfsNode Lookup (string name)
 		{
 			// FIXME: Lookup the node in the members
 			return null;

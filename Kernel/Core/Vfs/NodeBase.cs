@@ -49,9 +49,9 @@ namespace SharpOS.Kernel.Vfs {
 
 		public VfsNodeType NodeType { get { return type; } }
 
-		public abstract IVfsNode Create (char[] name, VfsNodeType type, object settings);
+		public abstract IVfsNode Create (string name, VfsNodeType type, object settings);
 
-		public virtual IVfsNode Lookup (char[] name)
+		public virtual IVfsNode Lookup (string name)
 		{
 			return null;
 		}

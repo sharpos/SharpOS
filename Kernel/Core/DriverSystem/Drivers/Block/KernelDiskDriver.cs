@@ -9,6 +9,12 @@
 //
 
 using System;
+using SharpOS.Kernel;
+using SharpOS.AOT.X86;
+using SharpOS.AOT.IR;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.DriverSystem;
 
 namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 {
@@ -17,13 +23,14 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 		private MemoryBlock ram;
 		private uint blocks;
 		private uint blockSize = 512;
+		private string deviceName;
 
 		#region Initialize
 		public unsafe override bool Initialize (IDriverContext context)
 		{
-			Diagnostics.Message ("Kernel Disk Controller");
 
-			context.Initialize (DriverFlags.IOStream8Bit);	// ??
+			context.Initialize ();	
+			deviceName = "embedded";
 
 			// Question: what size? how is this passed in?
 			void* fat = (void*)Stubs.GetLabelAddress ("SharpOS.Kernel/Resources/fat12.img");
@@ -31,14 +38,22 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			if (fat == null)
 				return true;
 
-			blocks = 1474560 / 2;
+			blocks = 1474560 / 1024 / 2;
 			ram = new MemoryBlock ((uint)fat, blocks * blockSize);
 
-			Diagnostics.Message ("-->Embedded Kernel Disk Found");
-			Diagnostics.Message ("--->Size in KB: ", (int)blocks / 2);
+			DeviceController deviceController = new DeviceController (deviceName, 0);
+			
+			TextMode.Write (deviceName);
+			TextMode.Write (": ", (int)(blocks * 2));
+			TextMode.Write ("KB");
+			TextMode.WriteLine ();
 
-			DeviceResource resource = new DeviceResource ("embedded", DeviceResourceType.RamDisk, new GenericBlockDeviceAdapter (this, 0), DeviceResourceStatus.Online, 0, 0);
-			DeviceResourceManager.Add (resource);
+			deviceController.AddDisk (new GenericBlockDeviceAdapter (this, 0));
+
+			//DeviceResource resource = new DeviceResource ("embedded", DeviceResourceType.RamDisk, new GenericBlockDeviceAdapter (this, 0), DeviceResourceStatus.Online, 0, 0);
+			//DeviceResourceManager.Add (resource);
+
+			DeviceControllers.Add (deviceController);
 
 			return (isInitialized = false);
 		}
@@ -53,12 +68,12 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			return 0;
 		}
 
-		public uint GetBlockSize (uint drive)
+		public uint GetSectorSize (uint drive)
 		{
 			return blockSize;
 		}
 
-		public uint GetTotalBlocks (uint drive)
+		public uint GetTotalSectors (uint drive)
 		{
 			return blocks;
 		}
@@ -88,8 +103,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 
 		public IDevice GetDeviceDriver ()
 		{
-			return null;
-			//return (IDevice)this;
+			return (IDevice)this;
 		}
 
 		#endregion

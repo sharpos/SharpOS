@@ -9,8 +9,10 @@
 //  with Classpath Linking Exception for Libraries
 //
 
-namespace SharpOS.Kernel.ADC.X86 {
-  public unsafe class PCIController	{
+namespace SharpOS.Kernel.ADC.X86
+{
+	public unsafe class PCIController
+	{
 		#region Constants
 
 		private static readonly uint MAX_DEVICES = 16;
@@ -28,11 +30,11 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		#region ADC implementation
 
-		public unsafe static uint Devices(int index) 
+		public unsafe static uint Devices (int index)
 		{
-			if (index >= 0 && index < MAX_DEVICES) 
-				return (uint)deviceList[index]; 
-			return 0; 
+			if (index >= 0 && index < MAX_DEVICES)
+				return (uint)deviceList[index];
+			return 0;
 		}
 
 		public static int DeviceCount
@@ -40,9 +42,9 @@ namespace SharpOS.Kernel.ADC.X86 {
 			get { return deviceCount; }
 		}
 
-		public static uint ReadConfig(uint bus, uint slot, uint function, uint register)
+		public static uint ReadConfig (uint bus, uint slot, uint function, uint register)
 		{
-			uint address = 0x80000000
+			uint address = BASE_VALUE
 					   | ((bus & 0xFF) << 16)
 					   | ((slot & 0x0F) << 11)
 					   | ((function & 0x07) << 8)
@@ -52,32 +54,30 @@ namespace SharpOS.Kernel.ADC.X86 {
 			return IO.ReadUInt32(IO.Port.PCI_Config_Data);
 		}
 
-			// check for the presence of a device at the specific PCI address
-		public static bool ProbeDevice(uint bus, uint slot, uint fun)
+		// check for the presence of a device at the specific PCI address
+		public static bool ProbeDevice (uint bus, uint slot, uint fun)
 		{
 			uint data = ReadConfig(bus, slot, fun, 0);
 			return (data != 0xFFFFFFFF);
 		}
 
-			// check PCI bus availability by probing IO
-		public static bool IsAvailable 
+		// check PCI bus availability by probing IO
+		public static bool IsAvailable
 		{
 			get { return isAvailable; }
-		}
-			
+		} 
 
-		public unsafe static void Setup()
+		public unsafe static void Setup ()
 		{
 			IO.WriteUInt32(IO.Port.PCI_Config_Address, BASE_VALUE);
-			isAvailable = (IO.ReadUInt32 (IO.Port.PCI_Config_Address) == BASE_VALUE);
+			isAvailable = (IO.ReadUInt32(IO.Port.PCI_Config_Address) == BASE_VALUE);
 
 			//CR- Don't know why but the following static allocation code cannot be AOTted.
 			//CR- The same error occurs when the allocation is done with the declaration of deviceList.
 			//CR-     EXEC : error : SharpOS.AOT.IR.EngineException: Could not propagate 'Reg0_4__I4'.
 			//deviceList = (PCIDevice**)Stubs.StaticAlloc((uint)(sizeof(PCIDevice*) * MAX_DEVICES));
-			deviceList = (PCIDevice**)MemoryManager.Allocate ((uint)sizeof (PCIDevice*) * MAX_DEVICES);
-			for (int index = 0; index < MAX_DEVICES; index++)
-			{
+			deviceList = (PCIDevice**)MemoryManager.Allocate((uint)sizeof(PCIDevice*) * MAX_DEVICES);
+			for (int index = 0; index < MAX_DEVICES; index++) {
 				deviceList[index] = (PCIDevice*)0;
 			}
 			deviceCount = 0;
@@ -88,6 +88,17 @@ namespace SharpOS.Kernel.ADC.X86 {
 					for (uint fun = 0; fun < 7 && deviceCount < MAX_DEVICES; fun++) {
 						if (ProbeDevice(bus, slot, fun)) {
 							deviceList[deviceCount++] = PCIDevice.CREATE(bus, slot, fun);
+
+							//SharpOS.Kernel.ADC.TextMode.Write("PCI ", (int)bus);
+							//SharpOS.Kernel.ADC.TextMode.Write("-", (int)slot);
+							//SharpOS.Kernel.ADC.TextMode.Write("-", (int)fun);
+							//SharpOS.Kernel.ADC.TextMode.Write(", class = 0x");
+							//SharpOS.Kernel.ADC.TextMode.Write((int)deviceList[deviceCount-1]->ClassCode, true, 4);
+							//SharpOS.Kernel.ADC.TextMode.Write(", pf: 0x");
+							//SharpOS.Kernel.ADC.TextMode.Write((int)deviceList[deviceCount-1]->ProgIF, true, 2);
+							//SharpOS.Kernel.ADC.TextMode.Write(", vendorid: 0x");
+							//SharpOS.Kernel.ADC.TextMode.Write((int)deviceList[deviceCount-1]->VendorID, true, 4);
+							//SharpOS.Kernel.ADC.TextMode.WriteLine();
 						}
 					}
 				}
@@ -95,14 +106,14 @@ namespace SharpOS.Kernel.ADC.X86 {
 		}
 
 		//[cedrou] is this member really useful ???
-		public unsafe static void Destroy()
+		public unsafe static void Destroy ()
 		{
 			for (int index = 0; index < MAX_DEVICES; index++) {
 				if ((int)deviceList[index] != 0) {
 					MemoryManager.Free((void*)deviceList[index]);
 				}
 			}
-			MemoryManager.Free ((void*)deviceList);
+			MemoryManager.Free((void*)deviceList);
 		}
 
 		#endregion

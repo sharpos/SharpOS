@@ -3,25 +3,67 @@
 //
 // Authors:
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
+//	Phil Garcia <phil@thinkedge.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
 //
+// Some source code has been adapted from the Mono project under the following 
+// copyright and license:
+//
+// (C) 2001 Ximian, Inc.  http://www.ximian.com
+// Copyright (C) 2004-2005 Novell (http://www.novell.com)
+//
+// Permission is hereby granted, free of charge, to any person obtaining
+// a copy of this software and associated documentation files (the
+// "Software"), to deal in the Software without restriction, including
+// without limitation the rights to use, copy, modify, merge, publish,
+// distribute, sublicense, and/or sell copies of the Software, and to
+// permit persons to whom the Software is furnished to do so, subject to
+// the following conditions:
+// 
+// The above copyright notice and this permission notice shall be
+// included in all copies or substantial portions of the Software.
+// 
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+// EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+// MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND
+// NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE
+// LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION
+// OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
+// WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 using System.Runtime.InteropServices;
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 
-namespace InternalSystem {
+namespace InternalSystem
+{
 	[StructLayout (LayoutKind.Sequential)]
 	[TargetNamespace ("System")]
-	public class String : 
-		InternalSystem.Object, 
-		System.Collections.IEnumerable 
+	public class String :
+		InternalSystem.Object,
+		System.Collections.IEnumerable
 	{
 		private int length;
 		private char firstChar;
+
+		public static readonly string Empty = "";
+
+		internal static unsafe InternalSystem.String AllocNewString (int size)
+		{
+			InternalSystem.String res = SharpOS.Korlib.Runtime.Runtime.AllocNewString (size);
+			res.length = size;
+			return res;
+		}
+
+		internal unsafe char* _GetBuffer ()
+		{
+			fixed (char* p = &this.firstChar) {
+				return p;
+			}
+		}
 
 		public int Length
 		{
@@ -31,7 +73,7 @@ namespace InternalSystem {
 			}
 		}
 
-		public char this [int index]
+		public char this[int index]
 		{
 			[Label ("System.String.get_Chars(System.Int32)")]
 			get
@@ -40,15 +82,21 @@ namespace InternalSystem {
 			}
 		}
 
+		public override string ToString ()
+		{
+			object o = (object)this;
+			return (string)o;
+		}
+
 		private unsafe char GetChar (int index)
 		{
 			if (index < 0)
-				throw new System.ArgumentOutOfRangeException("index is less than zero.");
+				throw new System.ArgumentOutOfRangeException ("index is less than zero.");
 			if (index >= this.length)
-				throw new System.ArgumentOutOfRangeException("index specifies a position that is not within this string.");
+				throw new System.ArgumentOutOfRangeException ("index specifies a position that is not within this string.");
 
 			fixed (char* p = &this.firstChar) {
-				return p [index];
+				return p[index];
 			}
 		}
 
@@ -72,7 +120,7 @@ namespace InternalSystem {
 			fixed (char* pa = &a.firstChar) {
 				fixed (char* pb = &b.firstChar) {
 					for (int i = 0; i < a.Length; ++i) {
-						if (pa [i] != pb [i])
+						if (pa[i] != pb[i])
 							return false;
 					}
 				}
@@ -95,11 +143,11 @@ namespace InternalSystem {
 			return !(a == b);
 		}
 
-		public System.Collections.IEnumerator GetEnumerator()
+		public System.Collections.IEnumerator GetEnumerator ()
 		{
-			return new CharEnumerator(this);
+			return new CharEnumerator (this);
 		}
-		
+
 		public bool Equals (System.String i)
 		{
 			return ((InternalSystem.String)(object)i) == this;
@@ -113,5 +161,320 @@ namespace InternalSystem {
 			String other = (String)o;
 			return other == this;
 		}
+
+		[Label ("System.String.Concat(System.String,System.String)")]
+		public static string Concat (InternalSystem.String a, InternalSystem.String b)
+		{
+			InternalSystem.String result = AllocNewString (a.length + b.length);
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+				char* ptr = a._GetBuffer ();
+				for (int i = 0; i < a.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+				ptr = b._GetBuffer ();
+				for (int i = 0; i < b.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+			}
+			return result as object as string;
+		}
+
+		public string Substring (int startIndex)
+		{
+			if (startIndex == 0)
+				return this as object as string;
+
+			if (startIndex < 0 || startIndex > this.length)
+				throw new System.ArgumentOutOfRangeException ("startIndex");
+
+			int newlen = this.length - startIndex;
+			InternalSystem.String result = AllocNewString (newlen);
+
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+				char* ptr = this._GetBuffer ();
+
+				ptr = ptr + startIndex;
+
+				for (int i = 0; i < newlen; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+			}
+
+			return result as object as string;
+		}
+
+		public string Substring (int startIndex, int length)
+		{
+			if (length < 0)
+				throw new System.ArgumentOutOfRangeException ("length", "< 0");
+			if (startIndex < 0)
+				throw new System.ArgumentOutOfRangeException ("startIndex", "< 0");
+			if (startIndex > this.length - length)
+				throw new System.ArgumentOutOfRangeException ("startIndex + length > this.length");
+
+			if (length == 0)
+			    return String.Empty;
+
+			InternalSystem.String result = AllocNewString (length);
+
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+				char* ptr = this._GetBuffer ();
+
+				ptr = ptr + startIndex;
+
+				for (int i = 0; i < length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+			}
+
+			return result as object as string;
+		}
+
+		public int IndexOf (char value)
+		{
+			if (this.length == 0)
+				return -1;
+
+			return IndexOfImpl (value, 0, this.length);
+		}
+
+		public int IndexOf (char value, int startIndex)
+		{
+			return IndexOf (value, startIndex, this.length - startIndex);
+		}
+
+		public int IndexOf (char value, int startIndex, int count)
+		{
+			if (startIndex < 0)
+				throw new System.ArgumentOutOfRangeException ("startIndex", "< 0");
+			if (count < 0)
+				throw new System.ArgumentOutOfRangeException ("count", "< 0");
+			if (startIndex > this.length - count)
+				throw new System.ArgumentOutOfRangeException ("startIndex + count > this.length");
+
+			if ((startIndex == 0 && this.length == 0) || (startIndex == this.length) || (count == 0))
+				return -1;
+
+			return IndexOfImpl (value, startIndex, count);
+		}
+
+		public int IndexOfAny (char[] anyOf)
+		{
+			if (anyOf == null)
+				throw new System.ArgumentNullException ("anyOf");
+			if (this.length == 0)
+				return -1;
+
+			return IndexOfAnyImpl (anyOf, 0, this.length);
+		}
+
+		public int IndexOfAny (char[] anyOf, int startIndex)
+		{
+			if (anyOf == null)
+				throw new System.ArgumentNullException ("anyOf");
+			if (startIndex < 0 || startIndex > this.length)
+				throw new System.ArgumentOutOfRangeException ("startIndex");
+
+			return IndexOfAnyImpl (anyOf, startIndex, this.length - startIndex);
+		}
+
+		public int IndexOfAny (char[] anyOf, int startIndex, int count)
+		{
+			if (anyOf == null)
+				throw new System.ArgumentNullException ("anyOf");
+			if (startIndex < 0)
+				throw new System.ArgumentOutOfRangeException ("startIndex", "< 0");
+			if (count < 0)
+				throw new System.ArgumentOutOfRangeException ("count", "< 0");
+			if (startIndex > this.length - count)
+				throw new System.ArgumentOutOfRangeException ("startIndex + count > this.length");
+
+			return IndexOfAnyImpl (anyOf, startIndex, count);
+		}
+
+		public int LastIndexOfAny (char[] anyOf)
+		{
+			if (anyOf == null)
+				throw new System.ArgumentNullException ("anyOf");
+
+			return LastIndexOfAnyImpl (anyOf, this.length - 1, this.length);
+		}
+
+		public int LastIndexOfAny (char[] anyOf, int startIndex)
+		{
+			if (anyOf == null)
+				throw new System.ArgumentNullException ("anyOf");
+
+			if (startIndex < 0 || startIndex >= this.length)
+				throw new System.ArgumentOutOfRangeException ();
+
+			if (this.length == 0)
+				return -1;
+
+			return IndexOfAnyImpl (anyOf, startIndex, startIndex + 1);
+		}
+
+		public int LastIndexOfAny (char[] anyOf, int startIndex, int count)
+		{
+			if (anyOf == null)
+				throw new System.ArgumentNullException ("anyOf");
+			if ((startIndex < 0) || (startIndex >= this.Length))
+				throw new System.ArgumentOutOfRangeException ("startIndex", "< 0 || > this.Length");
+			if ((count < 0) || (count > this.Length))
+				throw new System.ArgumentOutOfRangeException ("count", "< 0 || > this.Length");
+			if (startIndex - count + 1 < 0)
+				throw new System.ArgumentOutOfRangeException ("startIndex - count + 1 < 0");
+
+			if (this.length == 0)
+				return -1;
+
+			return LastIndexOfAnyImpl (anyOf, startIndex, count);
+		}
+
+		public int LastIndexOf (char value)
+		{
+			if (this.length == 0)
+				return -1;
+
+			return LastIndexOfImpl (value, this.length - 1, this.length);
+		}
+
+		public int LastIndexOf (char value, int startIndex)
+		{
+			return LastIndexOf (value, startIndex, startIndex + 1);
+		}
+
+		public int LastIndexOf (char value, int startIndex, int count)
+		{
+			if (startIndex == 0 && this.length == 0)
+				return -1;
+			if ((startIndex < 0) || (startIndex >= this.Length))
+				throw new System.ArgumentOutOfRangeException ("startIndex", "< 0 || >= this.Length");
+			if ((count < 0) || (count > this.Length))
+				throw new System.ArgumentOutOfRangeException ("count", "< 0 || > this.Length");
+			if (startIndex - count + 1 < 0)
+				throw new System.ArgumentOutOfRangeException ("startIndex - count + 1 < 0");
+
+			return LastIndexOfImpl (value, startIndex, count);
+		}
+
+		private int IndexOfImpl (char value, int startIndex, int count)
+		{
+			unsafe {
+				char* ptr = this._GetBuffer () + startIndex;
+
+				for (int i = 0; i < count; i++) {
+					if (*ptr == value)
+						return startIndex + i;
+					ptr++;
+				}
+			}
+			return -1;
+		}
+
+		private int IndexOfAnyImpl (char[] anyOf, int startIndex, int count)
+		{
+			unsafe {
+				char* ptr = this._GetBuffer () + startIndex;
+
+				for (int i = 0; i < count; i++) {
+					for (int loop = 0; loop != anyOf.Length; loop++)
+						if (*ptr == anyOf[loop])
+							return startIndex + i;
+					ptr++;
+				}
+			}
+			return -1;
+		}
+
+		private int LastIndexOfImpl (char value, int startIndex, int count)
+		{
+			unsafe {
+				char* ptr = this._GetBuffer () + startIndex;
+
+				for (int i = 0; i < count; i++) {
+					if (*ptr == value)
+						return startIndex - i;
+					ptr--;
+				}
+			}
+			return -1;
+		}
+
+		private int LastIndexOfAnyImpl (char[] anyOf, int startIndex, int count)
+		{
+			unsafe {
+				char* ptr = this._GetBuffer () + startIndex;
+
+				for (int i = 0; i < count; i++) {
+					for (int loop = 0; loop != anyOf.Length; loop++)
+						if (*ptr == anyOf[loop])
+							return startIndex - i;
+					ptr--;
+				}
+			}
+			return -1;
+		}
+
+		public static string CreateStringImpl (char[] val, int startIndex, int length)
+		{
+			if (val == null)
+				throw new System.ArgumentNullException ("val");
+			if (startIndex < 0)
+				throw new System.ArgumentOutOfRangeException ("startIndex");
+			if (length < 0)
+				throw new System.ArgumentOutOfRangeException ("length");
+			if (startIndex > val.Length - length)
+				throw new System.ArgumentOutOfRangeException ("Out of range");
+			if (length == 0)
+				return string.Empty;
+
+			InternalSystem.String result = AllocNewString (length);
+
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+
+				for (int i = startIndex; i < length; i++) {
+					*ptrres = val[i];
+					ptrres++;
+				}
+			}
+
+			return result as object as string;
+		}
+
+		public static string CreateStringImpl (char[] val)
+		{
+			if (val == null)
+				return string.Empty;
+			if (val.Length == 0)
+				return string.Empty;
+
+			InternalSystem.String result = AllocNewString (val.Length);
+
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+
+				for (int i = 0; i < val.Length; i++) {
+					*ptrres = val[i];
+					ptrres++;
+				}
+			}
+
+			return result as object as string;
+		}
+
 	}
 }
+

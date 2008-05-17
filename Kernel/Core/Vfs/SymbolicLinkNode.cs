@@ -18,13 +18,13 @@ namespace SharpOS.Kernel.Vfs {
 		/// <summary>
 		/// The target of the symbolic link.
 		/// </summary>
-		private char[] target;
+		private string target;
 
 		#endregion // Data members
 
 		#region Construction
 
-		public SymbolicLinkNode (IFileSystem fs, char[] target)
+		public SymbolicLinkNode (IFileSystem fs, string target)
 			: base (fs, VfsNodeType.SymbolicLink)
 		{
 			this.target = target;
@@ -37,7 +37,7 @@ namespace SharpOS.Kernel.Vfs {
 		/// <summary>
 		/// Retrieves the target path of the symbolic link.
 		/// </summary>
-		public char[] Target
+		public string Target
 		{
 			get
 			{
@@ -49,7 +49,7 @@ namespace SharpOS.Kernel.Vfs {
 
 		#region IVfsNode Members
 
-		public override IVfsNode Create (char[] name, VfsNodeType type, object settings)
+		public override IVfsNode Create (string name, VfsNodeType type, object settings)
 		{
 			// Pass this request to the link target node.
 			// FIXME: throw new NotImplementedException();

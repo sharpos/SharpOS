@@ -10,14 +10,14 @@ namespace SharpOS.Kernel.Vfs
 	/// derived class should be created for specific file systems and its type should be returned from
 	/// IFileSystemService.SettingsType to allow mkfs style commands to automate most processing.
 	/// </remarks>
-	public class FSSettings
+	public class FSSettingsBase
 	{
 		#region Data members
 
 		/// <summary>
 		/// The volume label.
 		/// </summary>
-		private char[] label;
+		private string label;
 
 		#endregion // Data members
 
@@ -26,9 +26,9 @@ namespace SharpOS.Kernel.Vfs
 		/// <summary>
 		/// Initializes a new instance of <see cref="FSSettings"/>.
 		/// </summary>
-		public FSSettings ()
+		public FSSettingsBase ()
 		{
-			label = new char[0];
+			label = "New Volume";
 		}
 
 		#endregion // Construction
@@ -38,7 +38,7 @@ namespace SharpOS.Kernel.Vfs
 		/// <summary>
 		/// Gets or sets the volume label.
 		/// </summary>
-		public char[] Label
+		public string Label
 		{
 			get { return label; }
 			set

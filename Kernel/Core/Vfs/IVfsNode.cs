@@ -49,14 +49,14 @@ namespace SharpOS.Kernel.Vfs {
 		/// <para />
 		/// Access rights do not need to be checked by the node implementation. They have been already been checked by the VirtualFileSystem itself.
 		/// </remarks>
-		IVfsNode Create(char[] name, VfsNodeType type, object settings);
+		IVfsNode Create(string name, VfsNodeType type, object settings);
 
 		/// <summary>
 		/// Requests the IVfsNode to perform a lookup on its children.
 		/// </summary>
 		/// <param name="name">The name of the item to find.</param>
 		/// <returns>The vfs node, which represents the item. If there's no node with the specified name, the return value is null.</returns>
-		IVfsNode Lookup (char[] name);
+		IVfsNode Lookup (string name);
 
 		/// <summary>
 		/// Opens the IVfsNode and returns an object capable of doing something smart with the IVfsNode.

@@ -9,6 +9,8 @@
 //
 
 using System;
+using SharpOS.Kernel.Foundation;
+using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.DriverSystem;
 using SharpOS.Kernel.DriverSystem.Drivers.Block;
 
@@ -42,7 +44,7 @@ namespace SharpOS.Kernel.FileSystem
 	internal struct PartitionTypes
 	{
 		internal const byte GPT = 0xEE;
-		internal const byte Empty = 0xEE;
+		internal const byte Empty = 0x00;
 		internal const byte ExtendedPartition = 0x0F;
 		internal const byte OldExtendedPartition = 0x05; // limited to disks under 8.4Gb
 	}
@@ -50,7 +52,7 @@ namespace SharpOS.Kernel.FileSystem
 	public class GenericDisk
 	{
 		private IBlockDevice device;
-		private string diskname;
+		//private string diskname;
 		private uint totalsectors;
 		private Partition[] partitions;
 		private uint disksignature;
@@ -60,11 +62,11 @@ namespace SharpOS.Kernel.FileSystem
 		public const uint MaxSupportedParitions = 256;
 		public const uint MaxMBRParitions = 4;
 
-		public GenericDisk (IBlockDevice device, uint totalsectors, string diskname)
+		public GenericDisk (IBlockDevice device)
 		{
 			this.device = device;
-			this.totalsectors = totalsectors;
-			this.diskname = diskname;
+			this.totalsectors = device.GetTotalSectors ();
+			//			this.diskname = diskname;
 			this.validmbr = false;	// needs to be read first
 			partitions = new Partition[MaxSupportedParitions];
 			Code = null;
@@ -74,62 +76,75 @@ namespace SharpOS.Kernel.FileSystem
 		{
 			validmbr = false;
 
-			if (device.GetBlockSize() != 512)	// only going to work with 512 sector sizes
+			if (device.GetSectorSize () != 512)	// only going to work with 512 sector sizes
 				return false;
 
-			MemoryBlock masterboot = new MemoryBlock(512);
+			MemoryBlock masterboot = new MemoryBlock (512);
 
-			device.ReadBlock(0, 1, masterboot);
+			device.ReadBlock (0, 1, masterboot);
 
-			ushort mbrsignature = masterboot.GetUShort(MasterBootRecord.MBRSignature);
-			disksignature = masterboot.GetUInt(MasterBootRecord.DiskSignature);
+			ushort mbrsignature = masterboot.GetUShort (MasterBootRecord.MBRSignature);
+			disksignature = masterboot.GetUInt (MasterBootRecord.DiskSignature);
 
-			validmbr = (mbrsignature != MasterBootConstants.MBRSignature);
+			validmbr = (mbrsignature == MasterBootConstants.MBRSignature);
 
 			if (validmbr) {
 				for (uint index = 0; index < MaxMBRParitions; index++) {
 
 					uint offset = MasterBootRecord.PrimaryPartitions + (index * 16);
-					byte status = masterboot.GetByte(offset + PartitionRecord.Status);
-					byte type = masterboot.GetByte(offset + PartitionRecord.PartitionType);
-					uint lba = masterboot.GetUInt(offset + PartitionRecord.LBA);
-					uint sectors = masterboot.GetUInt(offset + PartitionRecord.Status);
+					byte status = masterboot.GetByte (offset + PartitionRecord.Status);
+					byte type = masterboot.GetByte (offset + PartitionRecord.PartitionType);
+					uint startinglba = masterboot.GetUInt (offset + PartitionRecord.LBA);
+					uint sectors = masterboot.GetUInt (offset + PartitionRecord.Status);
 
-					PartitionDescription partition = new PartitionDescription((ushort)index, lba, sectors, type, status == 0x80);
+					PartitionDescription partition = new PartitionDescription ((ushort)index, startinglba, sectors, type, status == 0x80);
 
-					if (type != PartitionTypes.Empty)
-						partitions[index] = new Partition(this, partition);
+					if (type != PartitionTypes.Empty) {
+						partitions[index] = new Partition (this, partition);
+
+						TextMode.Write ("partition #", (int)index);
+						TextMode.Write (" found, lba=", (int)startinglba);
+						TextMode.Write (", count=", (int)sectors);
+						TextMode.Write (", type=", (int)type);
+
+						// for testing
+						IBlockDevice block = new GenericBlockDevicePartition (device, startinglba, sectors);
+						if (Fat.FileSystem.IsFat (block))
+							TextMode.Write (" (fat)");
+
+						TextMode.WriteLine ();
+
+					}
 				}
-
 				//TODO: Follow Extended Partitions
 			}
 
 			Code = new byte[MasterBootConstants.CodeAreaSize];
 			for (uint index = 0; index < MasterBootConstants.CodeAreaSize; index++)
-				Code[index] = masterboot.GetByte(index);
+				Code[index] = masterboot.GetByte (index);
 
-			masterboot.Release();
+			masterboot.Release ();
 
 			return validmbr;
 		}
 
 		public bool FormatMasterBootBlock ()
 		{
-			if (!device.CanWrite())
+			if (!device.CanWrite ())
 				return false;
 
-			MemoryBlock masterboot = new MemoryBlock(512);
+			MemoryBlock masterboot = new MemoryBlock (512);
 
-			masterboot.SetUInt(MasterBootRecord.DiskSignature, disksignature);
-			masterboot.SetUShort(MasterBootRecord.MBRSignature, MasterBootConstants.MBRSignature);
+			masterboot.SetUInt (MasterBootRecord.DiskSignature, disksignature);
+			masterboot.SetUShort (MasterBootRecord.MBRSignature, MasterBootConstants.MBRSignature);
 
 			if (Code != null)
 				for (uint index = 0; index < MasterBootConstants.CodeAreaSize; index++)
-					masterboot.SetByte(index, Code[index]);
+					masterboot.SetByte (index, Code[index]);
 
 			//TODO: write partitions too?
 
-			device.WriteBlock(0, 1, masterboot);
+			device.WriteBlock (0, 1, masterboot);
 
 			return true;
 		}

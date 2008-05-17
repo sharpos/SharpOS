@@ -15,11 +15,6 @@ namespace SharpOS.Kernel.DriverSystem {
 	[Flags]
 	public enum DriverFlags : uint
 	{
-		IOStream8Bit	= 0,
-		IOStream16Bit	= 1,
-		IOStream32Bit	= 2,
-		IOStream64Bit	= 3,	// ... is this even possible?
-		IOStreamMask	= 3
 
 	}
 }

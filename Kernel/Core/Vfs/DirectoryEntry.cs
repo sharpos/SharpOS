@@ -36,7 +36,7 @@ namespace SharpOS.Kernel.Vfs
 		/// <summary>
 		/// The name of this directory entry.
 		/// </summary>
-		private char[] name;
+		private string name;
 
 		/// <summary>
 		/// Ptr to the parent directory entry. 
@@ -63,7 +63,7 @@ namespace SharpOS.Kernel.Vfs
 
 		#region Properties
 
-		public char[] Name
+		public string Name
 		{
 			get
 			{
@@ -91,7 +91,7 @@ namespace SharpOS.Kernel.Vfs
 
 		#region Methods
 
-		public DirectoryEntry Lookup (char[] name)
+		public DirectoryEntry Lookup (string name)
 		{
 			/*
 				DirectoryEntry entry = null;
@@ -127,13 +127,13 @@ namespace SharpOS.Kernel.Vfs
 			 */
 
 			DirectoryEntry e = child;
-			while ((null != e) && (e.name != name))
+			while ((e != null) && (e.name != name))
 				e = e.next;
 
 			return e;
 		}
 
-		private void Setup (DirectoryEntry parent, char[] name, IVfsNode node)
+		private void Setup (DirectoryEntry parent, string name, IVfsNode node)
 		{
 			if (!Object.ReferenceEquals (this, parent))
 				this.parent.InsertChild (this);
@@ -257,7 +257,7 @@ namespace SharpOS.Kernel.Vfs
 		/// This method is used to control the DirectoryEntry allocation and maintain a cache of them. Also used to
 		/// prevent infinite name allocations.
 		/// </remarks>
-		public static DirectoryEntry Allocate (DirectoryEntry parent, char[] name, IVfsNode node)
+		public static DirectoryEntry Allocate (DirectoryEntry parent, string name, IVfsNode node)
 		{
 #if VFS_NO_EXCEPTIONS
 			if (parent = null)

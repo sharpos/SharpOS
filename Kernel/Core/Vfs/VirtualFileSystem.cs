@@ -26,12 +26,12 @@ namespace SharpOS.Kernel.Vfs {
 		/// <summary>
 		/// The virtual root directory.
 		/// </summary>
-		private static DirectoryNode _rootDirectory;
+		private static DirectoryNode rootDirectory;
 
 		/// <summary>
 		/// Root entry of the virtual file system.
 		/// </summary>
-		private static DirectoryEntry _rootNode;
+		private static DirectoryEntry rootNode;
 
 		#endregion // Data members
 
@@ -46,10 +46,10 @@ namespace SharpOS.Kernel.Vfs {
 		/// </summary>
         public static void Setup()
         {
-			_rootDirectory = new DirectoryNode(null);
-			_rootNode = DirectoryEntry.AllocateRoot(_rootDirectory);
+			rootDirectory = new DirectoryNode(null);
+			rootNode = DirectoryEntry.AllocateRoot(rootDirectory);
 
-			// FIXME: Add an entry of the virtual file system to /proc/filesystems
+			// FIXME: Add an entry of the virtual file system to /system/filesystems
         }
 
         #endregion // Construction
@@ -62,7 +62,7 @@ namespace SharpOS.Kernel.Vfs {
 		{
 			get
 			{
-				return _rootNode;
+				return rootNode;
 			}
 		}
 
@@ -75,9 +75,9 @@ namespace SharpOS.Kernel.Vfs {
 		/// </summary>
 		/// <param name="path">The resource to check permissions for.</param>
 		/// <returns>True if the requested access mode combination is available to the immediate caller. If any one requested access mode is not available, the result is false.</returns>
-		public static bool Access(char[] path, AccessMode mode)
+		public static bool Access(string path, AccessMode mode)
 		{
-			DirectoryEntry entry = PathResolver.Resolve(_rootNode, ref path, PathResolutionFlags.DoNotThrowNotFoundException);
+			DirectoryEntry entry = PathResolver.Resolve(rootNode, ref path, PathResolutionFlags.DoNotThrowNotFoundException);
 			if (null != entry) {
 				return AccessCheck.Perform(entry, mode, AccessCheckFlags.NoThrow);
 			}
@@ -100,10 +100,10 @@ namespace SharpOS.Kernel.Vfs {
 		/// require additional settings, which are specified in a settings object passed as the third
 		/// parameter.
 		/// </remarks>
-		public static object Create(char[] path, VfsNodeType type, object settings, FileAccess access, FileShare share)
+		public static object Create(string path, VfsNodeType type, object settings, FileAccess access, FileShare share)
 		{
 			// Retrieve the parent directory
-			DirectoryEntry parent = PathResolver.Resolve(_rootNode, ref path, PathResolutionFlags.RetrieveParent);
+			DirectoryEntry parent = PathResolver.Resolve(rootNode, ref path, PathResolutionFlags.RetrieveParent);
 
 			// Check if the caller has write access in the directory
 			AccessCheck.Perform(parent, AccessMode.Write, AccessCheckFlags.None);
@@ -122,9 +122,9 @@ namespace SharpOS.Kernel.Vfs {
 		/// </summary>
 		/// <param name="path">The path to change to. This path may be relative or absolute.</param>
 		/// <
-		public static void ChangeDirectory (char[] path)
+		public static void ChangeDirectory (string path)
 		{
-			DirectoryEntry entry = PathResolver.Resolve(_rootNode, ref path);
+			DirectoryEntry entry = PathResolver.Resolve(rootNode, ref path);
 			// FIXME: Set the current directory in the thread execution block
 		}
 
@@ -132,9 +132,9 @@ namespace SharpOS.Kernel.Vfs {
 		/// Deletes the named node from the filesystem.
 		/// </summary>
 		/// <param name="path">The path, which identifies a node.</param>
-		public static void Delete (char[] path)
+		public static void Delete (string path)
 		{
-			DirectoryEntry entry = PathResolver.Resolve(_rootNode, ref path, PathResolutionFlags.DoNotThrowNotFoundException);
+			DirectoryEntry entry = PathResolver.Resolve(rootNode, ref path, PathResolutionFlags.DoNotThrowNotFoundException);
 			if (null != entry)
 			{
 				AccessCheck.Perform(entry, AccessMode.Delete, AccessCheckFlags.None);
@@ -149,22 +149,17 @@ namespace SharpOS.Kernel.Vfs {
 		/// </summary>
 		/// <param name="source">The source of the filesystem. This is ussually a device name, but can also be another directory.</param>
 		/// <param name="target">The path including the name of the mount point, where to mount the new filesystem.</param>
-		public static void Mount (char[] source, char[] target)
+		public static void Mount (string source, string target)
 		{
 			// Retrieve the parent directory of the mount
-			DirectoryEntry parent = PathResolver.Resolve(_rootNode, ref target, PathResolutionFlags.RetrieveParent);
+			DirectoryEntry parent = PathResolver.Resolve(rootNode, ref target, PathResolutionFlags.RetrieveParent);
 
 			// Attempt to mount the filesystem
 		}
 
 		public static object Open (string path, FileAccess access, FileShare share)
 		{
-			return Open (Util.ToChar (path), access, share);
-		}
-
-		public static object Open (char[] path, FileAccess access, FileShare share)
-		{
-			DirectoryEntry entry = PathResolver.Resolve(_rootNode, ref path);
+			DirectoryEntry entry = PathResolver.Resolve(rootNode, ref path);
 
 			/* HINT:
 			 * 
@@ -202,7 +197,7 @@ namespace SharpOS.Kernel.Vfs {
 			return entry.Node.Open(access, share);
 		}
 
-		public static void Rename (char[] old, char[] newname)
+		public static void Rename (string old, string newname)
 		{
 			// FIXME: throw new NotImplementedException();
 		}
@@ -267,7 +262,7 @@ namespace SharpOS.Kernel.Vfs {
 
 		IVfsNode IFileSystem.Root
 		{
-			get { return VirtualFileSystem._rootDirectory; }
+			get { return VirtualFileSystem.rootDirectory; }
 		}
 
 		#endregion // IFileSystem Members
@@ -276,13 +271,13 @@ namespace SharpOS.Kernel.Vfs {
 
         object IFileSystemService.SettingsType { get { return null; } }
 
-		IFileSystem IFileSystemService.Mount(char[] path)
+		IFileSystem IFileSystemService.Mount(string path)
 		{
 			// Even though we're a file system, we are not mountable.
 			return null;
 		}
 
-		IFileSystem IFileSystemService.Format(char[] path, FSSettings settings)
+		IFileSystem IFileSystemService.Format(string path, FSSettingsBase settings)
 		{
 			// We do not support formatting.
             throw new NotSupportedException();

@@ -51,7 +51,7 @@ namespace SharpOS.Kernel.Vfs {
         /// until it finds one, which returns a non-null IFileSystem. So a failure in a mount operation
         /// is not considered an exception, but a normal process.
         /// </remarks>
-		IFileSystem Mount(char[] path);
+		IFileSystem Mount(string path);
 
         /// <summary>
         /// Formats the media with the filesystem.
@@ -59,7 +59,7 @@ namespace SharpOS.Kernel.Vfs {
         /// <param name="path">The path of the stream/device to format with the file system.</param>
         /// <param name="settings">The settings for the filesystem to create.</param>
         /// <returns>The created and mounted filesystem.</returns>
-		IFileSystem Format(char[] path, FSSettings settings);
+		IFileSystem Format(string path, FSSettingsBase settings);
 
         #endregion // Methods
     }

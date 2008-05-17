@@ -31,7 +31,7 @@ namespace SharpOS.Kernel.DriverSystem.Character
 		#region Initialize
 		public override bool Initialize (IDriverContext context)
 		{
-			context.Initialize(DriverFlags.IOStream8Bit);
+			context.Initialize();
 
 			keyBuffer.Allocate(KeyboardBufferSize);
 			keysInBuffer = 0;
@@ -121,7 +121,7 @@ namespace SharpOS.Kernel.DriverSystem.Character
 		{
 			// wait for register to be ready
 			while (true) {
-				uint status = ControllerCommands.ReadByte();
+				uint status = ControllerCommands.Read8();
 
 				if ((status & 0x20) == 0x00)
 					return true;
@@ -129,7 +129,7 @@ namespace SharpOS.Kernel.DriverSystem.Character
 				//TODO: add timeout check
 			}
 
-			return false;
+			//return false;
 		}
 
 		private void SendCommand (KeyboardCommands command)
@@ -137,12 +137,12 @@ namespace SharpOS.Kernel.DriverSystem.Character
 			KeyboardMessages message = KeyboardMessages.Acknowledge;
 
 			do {
-				DataPort.WriteByte((byte)command);
+				DataPort.Write8((byte)command);
 
 				// Wait for acknowledge and receieve it
 				WaitUntilReady();
 
-				message = (KeyboardMessages)DataPort.ReadByte();
+				message = (KeyboardMessages)DataPort.Read8();
 
 				if (message == KeyboardMessages.Request_Resend)
 					continue;
@@ -170,7 +170,7 @@ namespace SharpOS.Kernel.DriverSystem.Character
 			SendCommand(KeyboardCommands.Set_Keyboard_LEDs);
 
 			WaitUntilReady();
-			DataPort.WriteByte(value);
+			DataPort.Write8(value);
 		}
 
 		public bool OnInterrupt (uint irq)
@@ -183,16 +183,16 @@ namespace SharpOS.Kernel.DriverSystem.Character
 			try {
 				spinLock.Enter();
 
-				input = DataPort.ReadByte();
+				input = DataPort.Read8();
 
 				if (input == 0xE0) {
-					input = DataPort.ReadByte();
+					input = DataPort.Read8();
 					scancode = (uint)((input & 0x7F) >> 8) | 0xe0;
 					pressed = (input & 0x80) == 0;
 
 				}
 				else if (input == 0xE1) {
-					input = DataPort.ReadByte();
+					input = DataPort.Read8();
 					scancode = (uint)(input & 0x7F);
 					pressed = (input & 0x80) == 0;
 					return true;

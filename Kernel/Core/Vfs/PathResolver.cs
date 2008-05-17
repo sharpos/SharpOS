@@ -11,11 +11,13 @@
 using System;
 using System.IO;
 
-namespace SharpOS.Kernel.Vfs {
+namespace SharpOS.Kernel.Vfs
+{
 	/// <summary>
 	/// Implements path resolution functionality for the <see cref="SharpOS.Kernel.Vfs.VirtualFileSystem"/>.
 	/// </summary>
-	class PathResolver {
+	class PathResolver
+	{
 		#region Constants
 
 		// FIXME: Make this configurable - do we have some sort of configuration provider?
@@ -52,7 +54,7 @@ namespace SharpOS.Kernel.Vfs {
 
 		#region Construction
 
-		private PathResolver(DirectoryEntry rootDirectory, DirectoryEntry currentDirectory)
+		private PathResolver (DirectoryEntry rootDirectory, DirectoryEntry currentDirectory)
 		{
 			this.rootDirectory = rootDirectory;
 			this.currentDirectory = currentDirectory;
@@ -77,15 +79,15 @@ namespace SharpOS.Kernel.Vfs {
 		/// This call my result in other exceptions not specified in the above list. Other exceptions can be thrown by IVfsNode implementations, which are visited during the traversal
 		/// process. For example a network file system node may throw an exception, if the server is unreachable.
 		/// </remarks>
-		public static DirectoryEntry Resolve (DirectoryEntry rootDirectory, ref char[] path)
+		public static DirectoryEntry Resolve (DirectoryEntry rootDirectory, ref string path)
 		{
 			// FIXME: Remove the root argument. The filesystem root should be unique for a process as part of a security model similar to jails, e.g. give apps from
 			// untrusted sources their private filesystem regions.
 
 			// FIXME: Get the root from the thread execution block
 			DirectoryEntry current = rootDirectory;
-			PathResolver resolver = new PathResolver(rootDirectory, current);
-			return resolver.Resolve(ref path, PathResolutionFlags.None);
+			PathResolver resolver = new PathResolver (rootDirectory, current);
+			return resolver.Resolve (ref path, PathResolutionFlags.None);
 		}
 
 		/// <summary>
@@ -103,12 +105,12 @@ namespace SharpOS.Kernel.Vfs {
 		/// This call my result in other exceptions not specified in the above list. Other exceptions can be thrown by IVfsNode implementations, which are visited during the traversal
 		/// process. For example a network file system node may throw an exception, if the server is unreachable.
 		/// </remarks>
-		public static DirectoryEntry Resolve(DirectoryEntry rootDirectory, ref char[] path, PathResolutionFlags flags)
+		public static DirectoryEntry Resolve (DirectoryEntry rootDirectory, ref string path, PathResolutionFlags flags)
 		{
 			// FIXME: Get the root from the thread execution block
 			DirectoryEntry current = rootDirectory;
-			PathResolver resolver = new PathResolver(rootDirectory, current);
-			return resolver.Resolve(ref path, flags);
+			PathResolver resolver = new PathResolver (rootDirectory, current);
+			return resolver.Resolve (ref path, flags);
 		}
 
 		#endregion // Static methods
@@ -130,7 +132,7 @@ namespace SharpOS.Kernel.Vfs {
 		/// This call may result in other exceptions not specified in the above list. Other exceptions can be thrown by IVfsNode implementations, which are visited during the traversal
 		/// process. For example a network file system node may throw an exception, if the server is unreachable.
 		/// </remarks>
-		private DirectoryEntry Resolve(ref char[] path, PathResolutionFlags flags)
+		private DirectoryEntry Resolve (ref string path, PathResolutionFlags flags)
 		{
 			// DirectoryNode entry found by stepping through the path
 			DirectoryEntry entry = null;
@@ -143,49 +145,42 @@ namespace SharpOS.Kernel.Vfs {
 			int max = dirs.Length;
 
 			// Current path component
-			char[] item;
+			string item;
 			// Loop index
 			int index = 0;
 
 			// Perform an access check on the root directory
-			AccessCheck.Perform(currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
+			AccessCheck.Perform (currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
 
 			// Do not resolve the last name, if we want the parent directory.
-			if (PathResolutionFlags.RetrieveParent == (flags & PathResolutionFlags.RetrieveParent))
-			{
+			if (PathResolutionFlags.RetrieveParent == (flags & PathResolutionFlags.RetrieveParent)) {
 				path = dirs[dirs.Length - 1];
 				max--;
 			}
 
 			// Check if this is an absolute path?
-			if (dirs[0].Length == 0)
-			{
+			if (dirs[0].Length == 0) {
 				// Yes, replace the current directory
 				currentDirectory = rootDirectory;
 				index++;
 			}
 
 			// Iterate over the remaining path components
-			while ((null != currentDirectory) && (index < max))
-			{
+			while ((currentDirectory != null) && (index < max)) {
 				item = dirs[index];
 				entry = null;
-				if (VfsNodeType.SymbolicLink == currentDirectory.Node.NodeType)
-				{
+				if (currentDirectory.Node.NodeType == VfsNodeType.SymbolicLink) {
 					SymbolicLinkNode link = (SymbolicLinkNode)currentDirectory.Node;
-					if (0 != depth--)
-					{
+					if (0 != depth--) {
 						// The symlink stores a relative path, use it for a current relative lookup.
-						char[] target = link.Target;
+						string target = link.Target;
 
 						// Build a new flags set for symlink lookups, as we do not want all of them.
 						PathResolutionFlags symflags = (flags & PathResolutionFlags.SymLinkLookupSafe);
-						entry = Resolve(ref target, symflags);
+						entry = Resolve (ref target, symflags);
 					}
-					else
-					{
-						if (PathResolutionFlags.DoNotThrowNotFoundException != (PathResolutionFlags.DoNotThrowNotFoundException & flags))
-						{
+					else {
+						if (PathResolutionFlags.DoNotThrowNotFoundException != (PathResolutionFlags.DoNotThrowNotFoundException & flags)) {
 							// FIXME: Provide a MUI resource string for the exception
 #if VFS_EXCEPTIONS
 							throw new PathTooLongException();
@@ -193,18 +188,15 @@ namespace SharpOS.Kernel.Vfs {
 						}
 					}
 				}
-				else
-				{
+				else {
 					// Pass the lookup to the DirectoryEntry (and ultimately to the inode itself.)
-					entry = currentDirectory.Lookup(item);
+					entry = currentDirectory.Lookup (item);
 
 					// If lookup in the directory entry failed, ask the real INode to perform the lookup.
-					if (null == entry)
-					{
-						IVfsNode node = currentDirectory.Node.Lookup(item);
-						if (null != node)
-						{
-							entry = DirectoryEntry.Allocate(currentDirectory, item, node);
+					if (entry == null) {
+						IVfsNode node = currentDirectory.Node.Lookup (item);
+						if (node != null) {
+							entry = DirectoryEntry.Allocate (currentDirectory, item, node);
 						}
 					}
 				}
@@ -213,8 +205,7 @@ namespace SharpOS.Kernel.Vfs {
 				index++;
 
 				// Check if we have a new path component?
-				if (null == entry && PathResolutionFlags.DoNotThrowNotFoundException != (PathResolutionFlags.DoNotThrowNotFoundException & flags))
-				{
+				if ((entry == null) && (PathResolutionFlags.DoNotThrowNotFoundException != (PathResolutionFlags.DoNotThrowNotFoundException & flags))) {
 					// FIXME: Move exception messages to MUI resources
 #if VFS_EXCEPTIONS
 					if (index == max)
@@ -228,7 +219,7 @@ namespace SharpOS.Kernel.Vfs {
 				currentDirectory = entry;
 
 				// Check if the caller has traverse access to the directory
-				AccessCheck.Perform(currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
+				AccessCheck.Perform (currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
 			}
 
 			return currentDirectory;

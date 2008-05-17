@@ -182,13 +182,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 							new PCIBusDriver()),
 
 						new GenericDevice(
-							"Primary FDC",
-							"Unknown",
-							"Primary Floppy Disk Controller",
-							new FloppyDiskDriver()
-						),
-						
-						new GenericDevice(
 						    "Kernel Disk",
 						    "Unknown",
 						    "Kernel Disk",
@@ -196,10 +189,24 @@ namespace SharpOS.Kernel.ADC.X86 {
 						),
 
 						new GenericDevice(
-						    "Ram Disk Controller",
+						    "Ramdisk",
 						    "Unknown",
-						    "Ram Disk Controller",
+						    "Ramdisk Controller",
 						    new RamDiskDriver()
+						),
+
+						new GenericDevice(
+							"Primary FDC",
+							"Unknown",
+							"Primary Floppy Disk Controller",
+							new FloppyDiskDriver()
+						),
+						
+						new GenericDevice(
+							"Primary IDE",
+							"Unknown",
+							"Primary IDE Controller",
+							new IDEDiskDriver()
 						),
 
 						/*

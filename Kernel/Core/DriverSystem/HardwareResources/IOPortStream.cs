@@ -9,33 +9,33 @@
 //
 
 using System;
-using System.Collections.Generic;
-using System.Text;
+using SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.DriverSystem
 {
+	//public interface IOPortReadStream
+	//{
+	//    byte Read8 ();
+	//    UInt16 Read16 ();
+	//    UInt32 Read32 ();
+	//}
 
-	public interface IOPortStream
+	//public interface IOPortWriteStream
+	//{
+	//    void Write8 (byte value);
+	//    void Write16 (UInt16 value);
+	//    void Write32 (UInt32 value);
+	//}
+
+	//public interface IOPortReadWriteStream : IOPortReadStream, IOPortWriteStream
+	//{
+	//}
+
+	public class IOPortStream : IOPort
 	{
-		sbyte ReadSByte ();
-		byte ReadByte ();
-		Int16 ReadInt16 ();
-		UInt16 ReadUInt16 ();
-		Int32 ReadInt32 ();
-		UInt32 ReadUInt32 ();
-		Int64 ReadInt64 ();
-		UInt64 ReadUInt64 ();
-
-		void Write (sbyte value);
-		void Write (byte value);
-		void Write (Int16 value);
-		void Write (UInt16 value);
-		void Write (Int32 value);
-		void Write (UInt32 value);
-		void Write (Int64 value);
-		void Write (UInt64 value);
-		void Write (byte[] buffer);
-
-		void WriteByte (byte value);
+		public IOPortStream (uint port)
+			: base (port)
+		{
+		}
 	}
 }

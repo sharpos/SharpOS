@@ -10,8 +10,8 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 		bool ReadBlock (uint drive, uint lba, uint count, MemoryBlock memory);
 		bool WriteBlock (uint drive, uint lba, uint count, MemoryBlock memory);
 
-		uint GetBlockSize (uint drive);
-		uint GetTotalBlocks (uint drive);
+		uint GetSectorSize (uint drive);
+		uint GetTotalSectors (uint drive);
 		bool CanWrite (uint drive);
 
 		IDevice GetDeviceDriver();

@@ -63,7 +63,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			internal const byte EnableController = 0x04;
 			internal const byte MotorShift = 0x10;
 			internal const byte DisableAll = 0x00;
-			internal const byte DriveSelectMask = 0x03;
+			internal const uint driveSelectMask = 0x03;
 		};
 
 		internal struct FDC
@@ -102,7 +102,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 		protected struct LastSeek
 		{
 			public bool calibrated;
-			public byte drive;
+			public uint drive;
 			public byte track;
 			public byte head;
 		}
@@ -118,58 +118,60 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 		protected SpinLock spinLock;
 		protected bool enchancedController = false;
 
-		public const uint DrivesPerConroller = 2; // the maximun that is supported
+		public const uint DrivesPerController = 2; // the maximum supported
 
 		protected FloppyDriveInfo[] floppyDrives;
 		protected FloppyMediaInfo[] floppyMedia;
 
-		private TrackCache[] trackCache;
-		private LastSeek[] lastSeek;
+		protected TrackCache[] trackCache;
+		protected LastSeek[] lastSeek;
 
-		private IOPortStream ControllerCommands;
-		private IOPortStream DataPort;
-		private IOPortStream ConfigPort;
-		private IOPortStream StatusPort;
-		private IOPortStream CMOSComand;
-		private IOPortStream CMOSResponse;
-		private DMAChannel FloppyDMA;
-		private IRQHandler FloppyIRQ;
-		private bool verbose;
+		protected IOPortStream ControllerCommands;
+		protected IOPortStream DataPort;
+		protected IOPortStream ConfigPort;
+		protected IOPortStream StatusPort;
 
-		private static String[] driveNames;
+		protected IOPortStream CMOSComand;
+		protected IOPortStream CMOSResponse;
+
+		protected DMAChannel FloppyDMA;
+		protected IRQHandler FloppyIRQ;
+		protected bool verbose;
+
+		//protected static String[] driveNames;
+		protected string deviceName;
+		protected const ushort IOBase = 0x03F2; // Secondary is at 0x0372
 
 		public override bool Initialize (IDriverContext context)
 		{
 			spinLock.Enter ();
 
-			Diagnostics.Message ("Floppy Disk Controller");
+			deviceName = "fdc1";
 
-			context.Initialize (DriverFlags.IOStream8Bit);
+			context.Initialize ();
 
-			ushort iobase = 0x03F2; // Secondary is at 0x0372
+			ControllerCommands = context.CreateIOPortStream (IOBase);
+			StatusPort = context.CreateIOPortStream (IOBase, 2);
+			DataPort = context.CreateIOPortStream (IOBase, 3);
+			ConfigPort = context.CreateIOPortStream (IOBase, 5);
 
-			ControllerCommands = context.CreateIOPortStream ((ushort)iobase);
-			StatusPort = context.CreateIOPortStream ((ushort)(iobase + 2));
-			DataPort = context.CreateIOPortStream ((ushort)(iobase + 3));
-			ConfigPort = context.CreateIOPortStream ((ushort)(iobase + 5));
-
-			CMOSComand = context.CreateIOPortStream ((ushort)(0x70));
-			CMOSResponse = context.CreateIOPortStream ((ushort)(0x71));
+			CMOSComand = context.CreateIOPortStream (0x70);
+			CMOSResponse = context.CreateIOPortStream (0x71);
 
 			FloppyDMA = context.CreateDMAChannel (2);
 			FloppyIRQ = context.CreateIRQHandler (6);
 
-			driveNames = new string[DrivesPerConroller];
-			driveNames[0] = "floppy1";
-			driveNames[1] = "floppy2";
+			//driveNames = new string[DrivesPerController];
+			//driveNames[0] = "floppy1";
+			//driveNames[1] = "floppy2";
 
-			floppyDrives = new FloppyDriveInfo[DrivesPerConroller];
-			floppyMedia = new FloppyMediaInfo[DrivesPerConroller];
+			floppyDrives = new FloppyDriveInfo[DrivesPerController];
+			floppyMedia = new FloppyMediaInfo[DrivesPerController];
 
-			trackCache = new TrackCache[DrivesPerConroller];
-			lastSeek = new LastSeek[DrivesPerConroller];
+			trackCache = new TrackCache[DrivesPerController];
+			lastSeek = new LastSeek[DrivesPerController];
 
-			for (int drive = 0; drive < DrivesPerConroller; drive++) {
+			for (int drive = 0; drive < DrivesPerController; drive++) {
 				trackCache[drive].buffer.Allocate (FDC.MaxBytesPerTrack);
 				trackCache[drive].valid = false;
 
@@ -196,40 +198,51 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			else
 				enchancedController = true;
 
+			TextMode.Write (deviceName);
+			TextMode.Write (": ");
+
 			if (enchancedController)
-				Diagnostics.Message ("->Enhanced controller detected");
+				TextMode.WriteLine ("enhanced floppy disk controller at 0x03F2");
 			else
-				Diagnostics.Message ("->Non-enhanced controller detected");
+				TextMode.WriteLine ("non-enhanced floppy disk controller at 0x03F2");
 
 			DetectDrives ();
 
-			for (uint drive = 0; drive < DrivesPerConroller; drive++) {
+			DeviceController deviceController = new DeviceController (deviceName, 0);
+
+			for (uint drive = 0; drive < DrivesPerController; drive++) {
 				if (floppyDrives[drive].Type != FloppyDriveType.None) {
 					Open (drive);
 
-					Diagnostics.Message ("-->Drive Found: ", (int)drive);
-					Diagnostics.Message ("--->Max. Drive Size in KB: ", (int)floppyDrives[drive].KiloByteSize);
-					Diagnostics.Message ("---->Current Media - Sectors Per Track: ", (int)floppyMedia[drive].SectorsPerTrack);
+//					TextMode.Write (driveNames[drive]);
+					TextMode.Write ("Disk #");
+					TextMode.Write ((int)drive);
+					TextMode.Write (" - ", (int)floppyDrives[drive].KiloByteSize);
+					TextMode.WriteLine ("KB, media sector/track=", (int)floppyMedia[drive].SectorsPerTrack);
+
+					deviceController.AddDisk (new GenericBlockDeviceAdapter (this, drive));
 
 					//Timer.Delay (1000 * 5);
-					DeviceResource resource = new DeviceResource (driveNames[drive], DeviceResourceType.FloppyDisk, new GenericBlockDeviceAdapter (this, drive), DeviceResourceStatus.Online, 0, drive);
-					DeviceResourceManager.Add (resource);
+					//DeviceResource resource = new DeviceResource (driveNames[drive], DeviceResourceType.FloppyDisk, new GenericBlockDeviceAdapter (this, drive), DeviceResourceStatus.Online, 0, drive);
+					//DeviceResourceManager.Add (resource);
 				}
 			}
 
-			//MemoryBlock block = new MemoryBlock();
+			DeviceControllers.Add (deviceController);
 
-			//block.Allocate(FDC.BYTES_PER_TRACK);
+			//MemoryBlock block = new MemoryBlock ();
+			//block.Allocate (FDC.BytesPerSector);
 
-			//for (uint i = 0; i < FDC.TRACKS_PER_DISK * FDC.SECTORS_PER_TRACK * 2; i = i + 18) {
-			//    ReadBlock(0, i, 18, block);
-			//    Diagnostics.Message("Sector #", (int)i);
-			//    Diagnostics.Message("->", (int)((uint)*((uint*)block.address)));
-			//    MemoryUtil.MemSet(0, (uint)block.address, 32);
+			//for (uint i = 0; i < 80 * 16 * 2; i = i + 1) {
+			//    ReadBlock (0, i, 18, block);
+			//    TextMode.WriteLine ("Sector #", (int)i);
+			//    TextMode.WriteLine ("->", (int)((uint)*((uint*)block.address)));
+			//    MemoryUtil.MemSet (0, (uint)block.address, 32);
 			//}
 
+			isInitialized = true;
 
-			return (isInitialized = false);
+			return true;
 		}
 
 		public int Open (uint drive)
@@ -293,8 +306,6 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 				verbose = true;
 			}
 
-			return -1;
-
 		}
 
 		public int Release (uint drive)
@@ -302,12 +313,12 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			return 0;
 		}
 
-		public uint GetBlockSize (uint drive)
+		public uint GetSectorSize (uint drive)
 		{
 			return 512;
 		}
 
-		public uint GetTotalBlocks (uint drive)
+		public uint GetTotalSectors (uint drive)
 		{
 			return floppyMedia[drive].SectorsPerTrack * floppyMedia[drive].TotalTracks * 2;
 		}
@@ -322,15 +333,14 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 
 		public IDevice GetDeviceDriver ()
 		{
-			return null;
-			//return (IDevice)this;
+			return (IDevice)this;
 		}
 
 		protected bool WaitForReqisterReady ()
 		{
 			// wait for RQM data register to be ready
 			while (true) {
-				uint status = StatusPort.ReadByte ();
+				uint status = StatusPort.Read8 ();
 
 				if ((status & 0x80) == 0x80)
 					return true;
@@ -338,40 +348,40 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 				//TODO: add timeout check
 			}
 
-			return false;
+			//return false;
 		}
 
 		protected void SendByte (byte command)
 		{
 			WaitForReqisterReady ();
-			DataPort.Write (command);
+			DataPort.Write8 (command);
 		}
 
 		protected byte GetByte ()
 		{
 			WaitForReqisterReady ();
-			return DataPort.ReadByte ();
+			return DataPort.Read8 ();
 		}
 
 		protected void ResetController ()
 		{
 			FloppyIRQ.ClearInterrupt ();
 
-			ControllerCommands.WriteByte (DORFlags.ResetController);
+			ControllerCommands.Write8 (DORFlags.ResetController);
 
 			Timer.Delay (200);	// 20 msec
 
-			ControllerCommands.WriteByte (DORFlags.EnableController);
+			ControllerCommands.Write8 (DORFlags.EnableController);
 
 			FloppyIRQ.WaitForInterrupt (3000);
 
-			ControllerCommands.WriteByte (DORFlags.EnableController | DORFlags.EnableDMA);
+			ControllerCommands.Write8 (DORFlags.EnableController | DORFlags.EnableDMA);
 
 			SendByte (FIFOCommand.SenseInterrupt);
 			GetByte ();
 			GetByte ();
 
-			ConfigPort.WriteByte (0x00); // 500 Kb/s (MFM)			
+			ConfigPort.Write8 (0x00); // 500 Kb/s (MFM)			
 
 			SendByte (FIFOCommand.Specify);
 			SendByte ((((16 - (3)) << 4) | ((240 / 16))));	// set step rate to 3ms & head unload time to 240ms 
@@ -397,34 +407,34 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 
 		protected void DetectDrives ()
 		{
-			CMOSComand.WriteByte (0x10);
-			byte types = CMOSResponse.ReadByte ();
+			CMOSComand.Write8 (0x10);
+			byte types = CMOSResponse.Read8 ();
 
 			floppyDrives[0] = DetermineByType ((byte)(types >> 4));
 			floppyDrives[1] = DetermineByType ((byte)(types & 0xF));
 		}
 
-		protected void TurnOffMotor (byte drive)
+		protected void TurnOffMotor (uint drive)
 		{
-			//Diagnostics.Message("..Motor Off");
-			ControllerCommands.Write ((byte)(DORFlags.EnableDMA | DORFlags.EnableController | drive));
+			//TextMode.WriteLine("..Motor Off");
+			ControllerCommands.Write8 ((byte)(DORFlags.EnableDMA | DORFlags.EnableController | drive));
 		}
 
-		protected void TurnOnMotor (byte drive)
+		protected void TurnOnMotor (uint drive)
 		{
-			byte reg = ControllerCommands.ReadByte ();
-			byte bits = (byte)(DORFlags.MotorShift << drive | DORFlags.EnableDMA | DORFlags.EnableController | drive);
+			byte reg = ControllerCommands.Read8 ();
+			byte bits = (byte)(DORFlags.MotorShift << (byte)drive | DORFlags.EnableDMA | DORFlags.EnableController | (byte)drive);
 
 			if (reg != bits) {
-				///Diagnostics.Message("..Motor On");
-				ControllerCommands.Write (bits);
+				///TextMode.WriteLine("..Motor On");
+				ControllerCommands.Write8 (bits);
 				Timer.Delay (500);	// 500 msec
 			}
 		}
 
-		protected bool Recalibrate (byte drive)
+		protected bool Recalibrate (uint drive)
 		{
-			//Diagnostics.Message("..Recalibrating");
+			//TextMode.WriteLine("..Recalibrating");
 
 			lastSeek[drive].calibrated = false;
 
@@ -434,7 +444,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 				FloppyIRQ.ClearInterrupt ();
 
 				SendByte (FIFOCommand.Recalibrate);
-				SendByte (drive);
+				SendByte ((byte)drive);
 
 				FloppyIRQ.WaitForInterrupt (3000);
 
@@ -449,16 +459,16 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 					return true;	// Note: motor is left on				
 				}
 
-				//Diagnostics.Message("...Retrying");
+				//TextMode.WriteLine("...Retrying");
 			}
 
-			if (verbose) Diagnostics.Message ("Recalibrating failed");
+			if (verbose) TextMode.WriteLine ("Recalibrating failed");
 			TurnOffMotor (drive);
 
 			return false;
 		}
 
-		protected bool Seek (byte drive, byte track, byte head)
+		protected bool Seek (uint drive, byte track, byte head)
 		{
 			TurnOnMotor (drive);
 
@@ -469,7 +479,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			if ((lastSeek[drive].calibrated) && (lastSeek[drive].track == track) && (lastSeek[drive].head == head))
 				return true;
 
-			//Diagnostics.Message("..Seeking #", track);
+			//TextMode.WriteLine("..Seeking #", track);
 
 			for (int i = 0; i < 5; i++) {
 				FloppyIRQ.ClearInterrupt ();
@@ -477,7 +487,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 				lastSeek[drive].calibrated = false;
 
 				SendByte (FIFOCommand.Seek);
-				SendByte ((byte)((drive | (head << 2))));
+				SendByte ((byte)(((byte)drive | (head << 2))));
 				SendByte (track);
 
 				if (!FloppyIRQ.WaitForInterrupt (3000))
@@ -489,17 +499,17 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 				byte sr0 = GetByte ();
 				byte trk = GetByte ();
 
-				if ((sr0 == (0x20 + (drive | (head << 2)))) && (trk == track)) {
+				if ((sr0 == (0x20 + ((byte)drive | (head << 2)))) && (trk == track)) {
 					lastSeek[drive].calibrated = true;
 					lastSeek[drive].track = track;
 					lastSeek[drive].head = head;
 					return true;
 				}
 
-				//Diagnostics.Message("...Retrying");
+				//TextMode.WriteLine("...Retrying");
 			}
 
-			if (verbose) Diagnostics.Message ("Seek failed");
+			if (verbose) TextMode.WriteLine ("Seek failed");
 			return false;
 		}
 
@@ -555,7 +565,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			}
 		}
 
-		protected bool ReadBlock2 (byte drive, uint lba, MemoryBlock memory)
+		protected bool ReadBlock2 (uint drive, uint lba, MemoryBlock memory)
 		{
 			byte track = LBAToTrack (drive, lba);
 			byte head = LBAToHead (drive, lba);
@@ -577,7 +587,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			return true;
 		}
 
-		protected bool WriteBlock2 (byte drive, uint lba, uint count, MemoryBlock memory)
+		protected bool WriteBlock2 (uint drive, uint lba, uint count, MemoryBlock memory)
 		{
 			byte track = LBAToTrack (drive, lba);
 			byte head = LBAToHead (drive, lba);
@@ -604,11 +614,11 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 			Write
 		}
 
-		protected bool SectorIO (SectorOperation operation, byte drive, byte sector, byte track, byte head, uint count, MemoryBlock memory)
+		protected bool SectorIO (SectorOperation operation, uint drive, byte sector, byte track, byte head, uint count, MemoryBlock memory)
 		{
-			//Diagnostics.Message("Sector: ", (int)sector);
-			//Diagnostics.Message("Track: ", (int)track);
-			//Diagnostics.Message("Head: ", (int)head);
+			//TextMode.WriteLine("Sector: ", (int)sector);
+			//TextMode.WriteLine("Track: ", (int)track);
+			//TextMode.WriteLine("Head: ", (int)head);
 
 			for (int i = 0; i < 5; i++) {
 				int error = 0;
@@ -618,7 +628,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 				//TODO: Check for disk change
 
 				if (Seek (drive, track, head)) {
-					//Diagnostics.Message(".Setup DMA Channel");
+					//TextMode.WriteLine(".Setup DMA Channel");
 
 					if (operation == SectorOperation.Write) {
 						FloppyDMA.TransferIn (memory, count * FDC.BytesPerSector);
@@ -634,7 +644,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 					else
 						SendByte (FIFOCommand.ReadSector | FIFOCommand.MFMModeMask);
 
-					SendByte ((byte)((drive) | (head << 2)));	// 0:0:0:0:0:HD:US1:US0 = head and drive
+					SendByte ((byte)((byte)drive | (head << 2)));	// 0:0:0:0:0:HD:US1:US0 = head and drive
 					SendByte (track);// C: 
 					SendByte (head);	// H: first head (should match with above)
 					SendByte ((byte)(sector + 1));	// R: first sector, strangely counts from 1
@@ -655,76 +665,76 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 					byte sec = GetByte ();	// sector number
 					byte bps = GetByte ();	// bytes per sector
 
-					//Diagnostics.Message("ST0: ", (int)st0);
-					//Diagnostics.Message("ST1: ", (int)st1);
-					//Diagnostics.Message("ST2: ", (int)st2);
-					//Diagnostics.Message("TRK: ", (int)trk);
-					//Diagnostics.Message("RHE: ", (int)rhe);
-					//Diagnostics.Message("SEC: ", (int)sec);
-					//Diagnostics.Message("BPS: ", (int)bps);
+					//TextMode.WriteLine("ST0: ", (int)st0);
+					//TextMode.WriteLine("ST1: ", (int)st1);
+					//TextMode.WriteLine("ST2: ", (int)st2);
+					//TextMode.WriteLine("TRK: ", (int)trk);
+					//TextMode.WriteLine("RHE: ", (int)rhe);
+					//TextMode.WriteLine("SEC: ", (int)sec);
+					//TextMode.WriteLine("BPS: ", (int)bps);
 
 					if ((st0 & 0xC0) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: error");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: error");
 						error = 1;
 					}
 					if (trk != track + 1) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: wrong track: ", trk - 1);
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: wrong track: ", trk - 1);
 						error = 1;
 					}
 					if (rhe != head) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: wrong track: ", trk - 1);
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: wrong track: ", trk - 1);
 						error = 1;
 					}
 					if ((st1 & 0x80) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: end of cylinder");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: end of cylinder");
 						error = 1;
 					}
 					if ((st0 & 0x08) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: drive not ready");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: drive not ready");
 						error = 1;
 					}
 					if ((st1 & 0x20) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: CRC error");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: CRC error");
 						error = 1;
 					}
 					if ((st1 & 0x10) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: controller timeout");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: controller timeout");
 						error = 1;
 					}
 					if ((st1 & 0x04) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: no data found");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: no data found");
 						error = 1;
 					}
 					if (((st1 | st2) & 0x01) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: no address mark found");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: no address mark found");
 						error = 1;
 					}
 					if ((st2 & 0x40) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: deleted address mark");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: deleted address mark");
 						error = 1;
 					}
 					if ((st2 & 0x20) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: CRC error in data");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: CRC error in data");
 						error = 1;
 					}
 					if ((st2 & 0x10) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: wrong cylinder");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: wrong cylinder");
 						error = 1;
 					}
 					if ((st2 & 0x04) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: sector not found");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: sector not found");
 						error = 1;
 					}
 					if ((st2 & 0x02) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: bad cylinder");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: bad cylinder");
 						error = 1;
 					}
 					if (bps != 0x02) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: wanted 512B/sector, got something else: ", (int)bps);
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: wanted 512B/sector, got something else: ", (int)bps);
 						error = 1;
 					}
 					if ((st1 & 0x02) != 0x0) {
-						if (verbose) Diagnostics.Message ("FloppyDiskController: not writable");
+						if (verbose) TextMode.WriteLine ("FloppyDiskController: not writable");
 						error = 2;
 					}
 				}
@@ -745,7 +755,7 @@ namespace SharpOS.Kernel.DriverSystem.Drivers.Block
 				lastSeek[drive].calibrated = false;	// will force recalibration
 
 				if (error > 1) {
-					if (verbose) Diagnostics.Message ("FloppyDiskController: not retrying..");
+					if (verbose) TextMode.WriteLine ("FloppyDiskController: not retrying..");
 					TurnOffMotor (drive);
 					break;
 				}

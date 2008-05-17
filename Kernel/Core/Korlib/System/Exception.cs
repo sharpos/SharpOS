@@ -15,22 +15,9 @@ using SharpOS.Kernel.ADC;
 namespace InternalSystem {
 	[TargetNamespace ("System")]
 	public class Exception: InternalSystem.Object {
-		/// <summary>
-		/// It contains the calling stack, from the entry point to where the exception occured.
-		/// </summary>
 		internal StackFrame [] CallingStack = null;
-
-		/// <summary>
-		/// At the top of the calling stack there are a couple of stack frames that are irrelevant.
-		/// </summary>
 		internal int IgnoreStackFramesCount = 0;
-
-		/// <summary>
-		/// It keeps the last stack frame that has been processed so that when a rethrow occurs
-		/// it continues with the next one.
-		/// </summary>
 		internal int CurrentStackFrame = 0;
-
 		private string message;
 
 		public Exception ():

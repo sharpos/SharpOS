@@ -10,9 +10,11 @@
 
 using SharpOS.AOT.Attributes;
 
-namespace InternalSystem.IO {
+namespace InternalSystem.IO
+{
 	[TargetNamespace ("System.IO")]
-	public static class Path {
+	public static class Path
+	{
 		public static readonly char AltDirectorySeparatorChar = '\\';
 		public static readonly char DirectorySeparatorChar = '/';
 	}

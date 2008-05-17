@@ -11,9 +11,11 @@
 using SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
 
-namespace InternalSystem {
+namespace InternalSystem
+{
 	[TargetNamespace ("System")]
-	public class Object {
+	public class Object
+	{
 		internal VTable VTable;
 		internal uint Synchronisation = 0;
 
@@ -22,7 +24,7 @@ namespace InternalSystem {
 		}
 
 #pragma warning disable 114
-		public virtual string ToString()
+		public virtual string ToString ()
 		{
 			return this.VTable.Type.Name;
 		}
@@ -34,8 +36,8 @@ namespace InternalSystem {
 
 		public unsafe virtual bool Equals (object o)
 		{
-			void *p1 = Runtime.GetPointerFromObject (this);
-			void *p2 = Runtime.GetPointerFromObject (o);
+			void* p1 = Runtime.GetPointerFromObject (this);
+			void* p2 = Runtime.GetPointerFromObject (o);
 
 			return p1 == p2;
 		}

@@ -30,22 +30,22 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn
 			TextMode.WriteLine ("Device Resources:");
 
 			for (uint slot = 0; ; slot++) {
-				DeviceResource resource = DeviceResourceManager.GetBySlot (slot);
+				//DeviceResource resource = DeviceResourceManager.GetBySlot (slot);
 
-				if (resource.Status == DeviceResourceStatus.UnableToLocated)
-					break;
+				//if (resource.Status == DeviceResourceStatus.UnableToLocated)
+				//    break;
 
-				if (resource.Status == DeviceResourceStatus.None)
-					continue;
+				//if (resource.Status == DeviceResourceStatus.None)
+				//    continue;
 
-				TextMode.Write ((int)slot);
-				TextMode.Write (": /devices/");
-				TextMode.Write (resource.Name);
-				TextMode.Write (" - ");
-				TextMode.Write ((int)resource.BlockDevice.GetTotalBlocks ());
-				TextMode.Write ("/");
-				TextMode.Write ((int)resource.BlockDevice.GetBlockSize ());
-				TextMode.WriteLine ();
+				//TextMode.Write ((int)slot);
+				//TextMode.Write (": /devices/");
+				//TextMode.Write (resource.Name);
+				//TextMode.Write (" - ");
+				//TextMode.Write ((int)resource.BlockDevice.GetTotalSectors ());
+				//TextMode.Write ("/");
+				//TextMode.Write ((int)resource.BlockDevice.GetSectorSize ());
+				//TextMode.WriteLine ();
 			}
 		}
 

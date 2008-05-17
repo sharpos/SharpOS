@@ -22,10 +22,15 @@ namespace SharpOS.Kernel.DriverSystem
 		bool IsReleased { get; }
 
 		// TODO: this should eventually be done trough attributes
-		void Initialize(DriverFlags _flags);
+		void Initialize();
 
 		MemoryBlock CreateMemoryBuffer(uint address, uint length);
-		IOPortStream CreateIOPortStream(ushort port);
+		
+		IOPortStream CreateIOPortStream(uint port);
+		IOPortStream CreateIOPortStream (uint port, uint offset);
+		//IOPortReadStream CreateIOPortReadStream (uint port);
+		//IOPortWriteStream CreateIOPortWriteStream (uint port);
+	
 		DMAChannel CreateDMAChannel(byte channel);
 		IRQHandler CreateIRQHandler (byte irq);
 	}

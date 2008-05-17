@@ -910,7 +910,6 @@ namespace SharpOS.Korlib.Runtime {
 
 			StackFrame [] stackFrames = ExceptionHandling.GetCallingStack ();
 
-			// It is null if it is a throw and not null if it is a rethrow.
 			if (exception.CallingStack == null) {
 				exception.CallingStack = stackFrames;
 				exception.IgnoreStackFramesCount = skipFrames;
@@ -1084,6 +1083,28 @@ namespace SharpOS.Korlib.Runtime {
 			start = exception.CurrentStackFrame;
 			end = i;
 			exception.CurrentStackFrame = i - 1;
+		}
+
+		internal static unsafe InternalSystem.String AllocNewString (int size)
+		{
+			// TODO add GC support here
+
+			void* vtableptr = (void*)Stubs.GetLabelAddress ("System.String VTable");
+			VTable vtable = (VTable)GetObjectFromPointer (vtableptr);
+
+			int allocSize = 0;
+			if (size > 0) {
+				// allocate size-1, because string object contains always one char
+				allocSize += sizeof (char) * (size - 1);
+			}
+			allocSize += (int)vtable.Size;
+
+			void* result = (void*)SharpOS.Kernel.ADC.MemoryManager.Allocate ((uint)allocSize);
+
+			InternalSystem.Object _object = (InternalSystem.Object)GetObjectFromPointer (result);
+			_object.VTable = vtable;
+
+			return _object as InternalSystem.String;
 		}
 
 		[SharpOS.AOT.Attributes.AllocObject]
