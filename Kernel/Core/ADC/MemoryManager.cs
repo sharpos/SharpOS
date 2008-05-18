@@ -23,13 +23,26 @@ namespace SharpOS.Kernel.ADC {
 		private static uint memoryStart = 0;
 		private static uint startAddress = 0x40000000; // 1gb Mark
 		private static ulong allocated = 0;
+		private static uint treeCount = 1;
 
 		[StructLayout (LayoutKind.Sequential)]
 		private struct Header {
 			public Header* Previous;
 			public Header* Next;
+
+			public Header* Left;
+			public Header* Right;
+			public Header* Parent;
+
+			//Secondary linked list used only for tree buckets
+			public Header* SPrevious;
+			public Header* SNext;
+
 			public uint Size;
 			public uint Free;
+			//Black = 1
+			//Red = 0
+			public uint Color;
 		}
 
 		public static bool LogAllocations = false;
@@ -37,16 +50,39 @@ namespace SharpOS.Kernel.ADC {
 		private static Header* firstNode = null;
 		private static Header* lastFreeNode = null;
 
+		private static Header* Sentinel = null;
+		private static Header* RBHead = null;
+
 		public static unsafe void Setup ()
 		{
 			memoryStart = (uint) Pager.PageAlign ((void*) startAddress, 0);
 			memoryEnd = UInt32.MaxValue;
 
-			firstNode = (Header*) memoryStart;
+			Sentinel = (Header*)memoryStart;
+			firstNode = Sentinel + 1;
+			RBHead = firstNode;
 			firstNode->Previous = null;
 			firstNode->Next = firstNode;
-			firstNode->Size = memoryEnd - memoryStart - (uint) sizeof (Header);
+			//RB initialization
+			firstNode->Left = Sentinel;
+			firstNode->Right = Sentinel;
+			firstNode->Parent = null;
+			firstNode->SPrevious = null;
+			firstNode->SNext = null;
+			firstNode->Size = memoryEnd - (uint)firstNode - (uint) sizeof (Header);
 			firstNode->Free = 1;
+			firstNode->Color = 1;
+
+			Sentinel->Size = 0;
+			Sentinel->Free = 0;
+			Sentinel->Next = null;
+			Sentinel->Previous = null;
+			Sentinel->Left = null;
+			Sentinel->Right = null;
+			Sentinel->SNext = null;
+			Sentinel->SPrevious = null;
+			Sentinel->Parent = null;
+			Sentinel->Color = 1;
 
 			lastFreeNode = firstNode;
 		}
@@ -346,6 +382,183 @@ namespace SharpOS.Kernel.ADC {
 
 			if (LogAllocations)
 				DumpAllocation("Free", currentNode);
+		}
+
+		private static unsafe void RBAdd(Header* node)
+		{
+			//Node that gets added in must have
+			//null/sentinel for parent
+			if (node == null)
+			{
+				return;
+			}
+
+			Header* temp = RBHead;
+
+			while (temp != Sentinel)
+			{
+				node->Parent = temp;
+				if (node->Size == temp->Size)
+				{
+					temp->SNext = node;
+					node->SPrevious = temp;
+					node->Parent = null;
+					temp->Right = node->Right;
+					temp->Left = node->Left;
+					node->Right = null;
+					node->Left = null;
+					temp->Parent = node->Parent;
+
+					if (temp->Size > temp->Parent->Size)
+						temp->Parent->Right = temp;
+					else
+						temp->Parent->Left = temp;
+
+					return;
+				}
+
+				if (node->Size > temp->Size)
+					temp = temp->Right;
+				else
+					temp = temp->Left;
+			}
+
+			node->Left = Sentinel;
+			node->Right = Sentinel;
+
+			if (node->Parent != null)
+			{
+				if (node->Size > node->Parent->Size)
+					node->Parent->Right = node;
+				else
+					node->Parent->Left = node;
+			}
+			else
+				RBHead = node;
+
+			node->Color = 0;
+
+			RestoreAddBalance(node);
+		}
+
+		private static unsafe void RestoreAddBalance(Header* node)
+		{
+			Header* temp;
+
+			while (node != RBHead && node->Parent->Color == 0)
+			{
+				if (node->Parent == node->Parent->Parent->Left)
+				{
+					temp = node->Parent->Parent->Left;
+					if (temp != null && temp->Color == 0)
+					{
+						node->Parent->Color = 1;
+						temp->Color = 1;
+
+						node->Parent->Parent->Color = 0;
+						node = node->Parent->Parent;
+					}
+					else
+					{
+						if (node == node->Parent->Right)
+						{
+							node = node->Parent;
+							RotateLeft(node);
+						}
+
+						node->Parent->Color = 1;
+						node->Parent->Parent->Color = 0;
+						RotateRight(node->Parent->Parent);
+					}
+				}
+				else
+				{
+					temp = node->Parent->Parent->Left;
+
+					if (temp != null && temp->Color == 0)
+					{
+						node->Parent->Color = 1;
+						temp->Color = 1;
+						node->Parent->Parent->Color = 0;
+						node = node->Parent->Parent;
+					}
+					else
+					{
+						if (node == node->Parent->Left)
+						{
+							node = node->Parent;
+							RotateRight(node);
+						}
+						node->Parent->Color = 1;
+						node->Parent->Parent->Color = 0;
+						RotateLeft(node->Parent->Parent);
+					}
+				}
+			}
+
+			RBHead->Color = 1;
+		}
+		/*
+		private static unsafe Header* RBDelete(uint size)
+		{
+		}
+		*/
+		private static unsafe void RestoreDeleteBalance(Header* node)
+		{
+		}
+		
+		private static unsafe void RotateLeft(Header* node)
+		{
+			Header* temp = node->Right;
+
+			node->Right = temp->Left;
+
+			if (temp->Left != Sentinel)
+				temp->Left->Parent = node;
+
+			if (temp != Sentinel)
+				temp->Parent = node->Parent;
+
+			if (node->Parent != null)
+			{
+				if (node == node->Parent->Left)
+					node->Parent->Left = temp;
+				else
+					node->Parent->Right = temp;
+			}
+			else
+				RBHead = temp;
+
+			temp->Left = node;
+			if (node != Sentinel)
+				node->Parent = temp;
+		}
+
+		private static unsafe void RotateRight(Header* node)
+		{
+			Header* temp = node->Left;
+
+			node->Left = temp->Right;
+
+			if (temp->Right != Sentinel)
+				temp->Right->Parent = node;
+
+			if (temp != Sentinel)
+				temp->Parent = node->Parent;
+
+			if (node->Parent != null)
+			{
+				if (node == node->Parent->Right)
+					node->Parent->Right = temp;
+				else
+					node->Parent->Left = temp;
+			}
+			else
+				RBHead = temp;
+
+			temp->Right = node;
+			if (node != Sentinel)
+				node->Parent = temp;
 		}
 
 		private static unsafe void DumpNode (string msg, Header* node)
