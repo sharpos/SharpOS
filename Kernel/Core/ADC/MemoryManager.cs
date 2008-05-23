@@ -87,6 +87,58 @@ namespace SharpOS.Kernel.ADC {
 			lastFreeNode = firstNode;
 		}
 
+		public static unsafe void* Allocate_New(uint allocate_size)
+		{
+			/*
+			 * Simplistically, this finds the first block big enough
+			 * to accommodate the requested size and splits as necessary.
+			 * Haven't put in any of the asserts yet, but look at how
+			 * elegant and clean this code is compared to the old search!
+			 */ 
+			Header* temp = RBHead;
+			while (temp != null)
+			{
+				if (temp->Size > allocate_size)
+				{
+					allocated += allocate_size;
+					RBDelete(temp);
+					uint memoryLeft = temp->Size - allocate_size;
+
+					if (memoryEnd > (uint)sizeof(Header))
+					{
+						/*
+						 * The number 4 is a placeholder until I figure out a
+						 * more appropriate value.  At a certain point, we need
+						 * to decide on what to do regarding those small slivers
+						 * of memory that slip through
+						 */
+						if ((memoryLeft - (uint)sizeof(Header)) > 4)
+						{
+							uint memoryHeaderPointer = (uint)(temp + 1) + allocate_size;
+							Header* newNode = (Header*)memoryHeaderPointer;
+							
+							newNode->Previous = temp;
+							newNode->Next = temp->Next;
+							newNode->Size = memoryLeft - (uint)sizeof(Header);
+							temp->Next = newNode;
+
+							RBAdd(newNode);
+
+							return (void*)(temp + 1);
+						}
+					}
+
+					temp->Size = allocate_size;
+
+					return (void*)(temp + 1);
+				}
+
+				temp = temp->Right;
+			}
+
+			return null;
+		}
+
 		public static unsafe void* Allocate (uint allocate_size)
 		{
 			Kernel.Diagnostics.Assert (firstNode != null, "MemoryManager.Allocate(uint): Unable to allocate because the MemoryManager has not been initialized. ");
@@ -235,7 +287,7 @@ namespace SharpOS.Kernel.ADC {
 			 * specialized handling needs to be done.  We need to check
 			 * whether we need to extend into the current block, which requires
 			 * care in not overwriting the Header information too early and
-			 * creatinng and possibly consolidating a new free node.  Or there
+			 * creating and possibly consolidating a new free node.  Or there
 			 * is sufficient space in the previous node to move everything
 			 * over, in which case we need to check if any space left over
 			 * needs to be consolidated with the newly freed current node.
@@ -306,6 +358,18 @@ namespace SharpOS.Kernel.ADC {
 			return nextPtr;
 		}
 
+		public static unsafe void Free_New(void* memory)
+		{
+			uint memoryHeaderPointer = (uint)memory - (uint)sizeof(Header);
+			Header* temp = (Header*)memoryHeaderPointer;
+
+			/*
+			 * Basically this will scan for adjacent free blocks and
+			 * remove them from the tree, before combining the blocks
+			 * and adding the final big block into the tree
+			 */
+		}
+
 		public static unsafe void Free (void* memory)
 		{
 			uint memoryHeaderPointer = (uint) memory - (uint) sizeof (Header);
@@ -329,19 +393,18 @@ namespace SharpOS.Kernel.ADC {
 			Header* currentNode = freeHeader;
 
 
-			// I fixed this piece of code, 
-			//	but i'm not sure how usefull it realy is in the first place... 
-			//	can someone explain? (logicalerror)
+			// In response, yes this code serves a purpose, as
+			// before we were basically leaking memory in certain
+			// special cases (Z98)
 			uint startOfBlock	= (uint)memory;
+
 			uint endOfBlock		= startOfBlock + currentNode->Size;
-			if (currentNode->Next != firstNode && 
-				endOfBlock < (uint)currentNode->Next)
+
+			if (currentNode->Next != firstNode && endOfBlock < (uint)currentNode->Next)
 				currentNode->Size = (uint)currentNode->Next - startOfBlock;
 			else 
-			if (currentNode->Next == firstNode && 
-				endOfBlock < memoryEnd)
+			if (currentNode->Next == firstNode && endOfBlock < memoryEnd)
 				currentNode->Size = memoryEnd - startOfBlock;
-
 
 			//Scan forward for the last consecutive free node
 			if (currentNode->Next > currentNode && currentNode->Next->Free == 1)
@@ -498,13 +561,89 @@ namespace SharpOS.Kernel.ADC {
 
 			RBHead->Color = 1;
 		}
-		/*
-		private static unsafe Header* RBDelete(uint size)
+		
+		private static unsafe void RBDelete(Header* node)
 		{
+			/*
+			 * Currently considering my options on how to
+			 * implement this without even more placeholders
+			 */
 		}
-		*/
+		
 		private static unsafe void RestoreDeleteBalance(Header* node)
 		{
+			Header* temp;
+
+			while (node != RBHead && node->Color == 1)
+			{
+				if (node == node->Parent->Left)
+				{
+					temp = node->Parent->Right;
+					if (temp->Color == 0)
+					{
+						temp->Color = 1;
+						node->Parent->Color = 0;
+						RotateLeft(node->Parent);
+						temp = node->Parent->Right;
+					}
+					if (temp->Left->Color == 1 && temp->Right->Color == 1)
+					{
+						temp->Color = 0;
+						node = node->Parent;
+					}
+					else
+					{
+						if (temp->Right->Color == 1)
+						{
+							temp->Left->Color = 1;
+							temp->Color = 0;
+							RotateRight(temp);
+							temp = node->Parent->Right;
+						}
+
+						temp->Color = node->Parent->Color;
+						node->Parent->Color = 1;
+						temp->Right->Color = 1;
+						RotateLeft(node->Parent);
+
+						node = RBHead;
+					}
+				}
+				else
+				{
+					temp = node->Parent->Left;
+					if (temp->Color == 0)
+					{
+						temp->Color = 1;
+						node->Parent->Color = 0;
+						RotateRight(node->Parent);
+						temp = node->Parent->Left;
+					}
+					if (temp->Right->Color == 1 && temp->Left->Color == 1)
+					{
+						temp->Color = 0;
+						node = node->Parent;
+					}
+					else
+					{
+						if (temp->Left->Color == 1)
+						{
+							temp->Right->Color = 1;
+							temp->Color = 0;
+							RotateLeft(temp);
+							temp = node->Parent->Left;
+						}
+
+						temp->Color = node->Parent->Color;
+						node->Parent->Color = 1;
+						temp->Left->Color = 1;
+						RotateRight(node->Parent);
+						node = RBHead;
+					}
+				}
+			}
+
+			node->Color = 1;
 		}
 		
 		private static unsafe void RotateLeft(Header* node)
