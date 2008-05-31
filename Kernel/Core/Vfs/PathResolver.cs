@@ -185,6 +185,7 @@ namespace SharpOS.Kernel.Vfs
 #if VFS_EXCEPTIONS
 							throw new PathTooLongException();
 #endif // #if !VFS_EXCEPTIONS
+						} else {
 						}
 					}
 				}
@@ -213,6 +214,7 @@ namespace SharpOS.Kernel.Vfs
 					else
 						throw new DirectoryNotFoundException(@"Failed to resolve the path.");
 #endif // #if VFS_EXCEPTIONS
+				} else {
 				}
 
 				// Set the current resolution directory
