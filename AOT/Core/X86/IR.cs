@@ -1660,6 +1660,7 @@ namespace SharpOS.AOT.X86 {
 			case InternalType.O:
 			case InternalType.M:
 			case InternalType.I4:
+			case InternalType.SZArray:
 				if (first.IsRegisterSet)
 					this.assembly.MOV (R32.EAX, Assembly.GetRegister (first.Register));
 				else
