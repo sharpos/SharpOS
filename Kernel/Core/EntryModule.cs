@@ -155,17 +155,17 @@ namespace SharpOS.Kernel {
 
 #if KERNEL_TESTS
 			// Testcases
-			Serial.COM1.WriteLine ("Failed AOT Tests:");
-			SharpOS.Kernel.Tests.Wrapper.Run ();
-			Serial.COM1.WriteLine ();
-			Serial.COM1.WriteLine ("Kernel Tests:");
-			MemoryManager.__RunTests ();
+			MemoryManager.__RunTests (); 
 			ByteString.__RunTests ();
 			StringBuilder.__RunTests ();
 			CString8.__RunTests ();
 			PString8.__RunTests ();
 			InternalSystem.String.__RunTests ();
 			Runtime.__RunTests ();
+			Serial.COM1.WriteLine ("Failed AOT Tests:");
+			SharpOS.Kernel.Tests.Wrapper.Run ();
+			Serial.COM1.WriteLine ();
+			Serial.COM1.WriteLine ("Kernel Tests:");			
 #endif
 			/*
 			void* thread = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST"));
