@@ -51,13 +51,6 @@ namespace InternalSystem
 
 		public static readonly string Empty = "";
 
-		internal static unsafe InternalSystem.String AllocNewString (int size)
-		{
-			InternalSystem.String res = SharpOS.Korlib.Runtime.Runtime.AllocNewString (size);
-			res.length = size;
-			return res;
-		}
-
 		internal unsafe char* _GetBuffer ()
 		{
 			fixed (char* p = &this.firstChar) {
@@ -95,6 +88,13 @@ namespace InternalSystem
 			if (index >= this.length)
 				throw new System.ArgumentOutOfRangeException ("index specifies a position that is not within this string.");
 
+			fixed (char* p = &this.firstChar) {
+				return p[index];
+			}
+		}
+
+		private unsafe char FastGetChar (int index)
+		{
 			fixed (char* p = &this.firstChar) {
 				return p[index];
 			}
@@ -165,7 +165,7 @@ namespace InternalSystem
 		[Label ("System.String.Concat(System.String,System.String)")]
 		public static string Concat (InternalSystem.String a, InternalSystem.String b)
 		{
-			InternalSystem.String result = AllocNewString (a.length + b.length);
+			InternalSystem.String result = InternalAllocateStr (a.length + b.length);
 			unsafe {
 				char* ptrres = result._GetBuffer ();
 				char* ptr = a._GetBuffer ();
@@ -184,6 +184,34 @@ namespace InternalSystem
 			return result as object as string;
 		}
 
+		[Label ("System.String.Concat(System.String,System.String,System.String)")]
+		public static string Concat (InternalSystem.String a, InternalSystem.String b, InternalSystem.String c)
+		{
+			InternalSystem.String result = InternalAllocateStr (a.length + b.length + c.length);
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+				char* ptr = a._GetBuffer ();
+				for (int i = 0; i < a.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+				ptr = b._GetBuffer ();
+				for (int i = 0; i < b.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+				ptr = c._GetBuffer ();
+				for (int i = 0; i < c.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+			}
+			return result as object as string;
+		}
+
 		public string Substring (int startIndex)
 		{
 			if (startIndex == 0)
@@ -193,7 +221,7 @@ namespace InternalSystem
 				throw new System.ArgumentOutOfRangeException ("startIndex");
 
 			int newlen = this.length - startIndex;
-			InternalSystem.String result = AllocNewString (newlen);
+			InternalSystem.String result = InternalAllocateStr (newlen);
 
 			unsafe {
 				char* ptrres = result._GetBuffer ();
@@ -221,9 +249,9 @@ namespace InternalSystem
 				throw new System.ArgumentOutOfRangeException ("startIndex + length > this.length");
 
 			if (length == 0)
-			    return String.Empty;
+				return String.Empty;
 
-			InternalSystem.String result = AllocNewString (length);
+			InternalSystem.String result = InternalAllocateStr (length);
 
 			unsafe {
 				char* ptrres = result._GetBuffer ();
@@ -308,7 +336,7 @@ namespace InternalSystem
 			if (anyOf == null)
 				throw new System.ArgumentNullException ("anyOf");
 
-			return LastIndexOfAnyImpl (anyOf, this.length - 1, this.length);
+			return InternalLastIndexOfAny (anyOf, this.length - 1, this.length);
 		}
 
 		public int LastIndexOfAny (char[] anyOf, int startIndex)
@@ -339,7 +367,7 @@ namespace InternalSystem
 			if (this.length == 0)
 				return -1;
 
-			return LastIndexOfAnyImpl (anyOf, startIndex, count);
+			return InternalLastIndexOfAny (anyOf, startIndex, count);
 		}
 
 		public int LastIndexOf (char value)
@@ -371,15 +399,20 @@ namespace InternalSystem
 
 		private int IndexOfImpl (char value, int startIndex, int count)
 		{
+			//"safe" implementation
+			//for (int i = startIndex; i < count; i++)
+			//    if (FastGetChar(i) == value)
+			//        return i;
+
 			unsafe {
 				char* ptr = this._GetBuffer () + startIndex;
-
 				for (int i = 0; i < count; i++) {
 					if (*ptr == value)
 						return startIndex + i;
 					ptr++;
 				}
 			}
+
 			return -1;
 		}
 
@@ -412,20 +445,6 @@ namespace InternalSystem
 			return -1;
 		}
 
-		private int LastIndexOfAnyImpl (char[] anyOf, int startIndex, int count)
-		{
-			unsafe {
-				char* ptr = this._GetBuffer () + startIndex;
-
-				for (int i = 0; i < count; i++) {
-					for (int loop = 0; loop != anyOf.Length; loop++)
-						if (*ptr == anyOf[loop])
-							return startIndex - i;
-					ptr--;
-				}
-			}
-			return -1;
-		}
 
 		public static string CreateStringImpl (char[] val, int startIndex, int length)
 		{
@@ -440,7 +459,7 @@ namespace InternalSystem
 			if (length == 0)
 				return string.Empty;
 
-			InternalSystem.String result = AllocNewString (length);
+			InternalSystem.String result = InternalAllocateStr (length);
 
 			unsafe {
 				char* ptrres = result._GetBuffer ();
@@ -461,7 +480,11 @@ namespace InternalSystem
 			if (val.Length == 0)
 				return string.Empty;
 
-			InternalSystem.String result = AllocNewString (val.Length);
+			InternalSystem.String result = InternalAllocateStr (val.Length);
+
+			//"safe" implementation
+			//for (int i = 0; i < val.Length; i++)
+			//    result[i] = val[i];
 
 			unsafe {
 				char* ptrres = result._GetBuffer ();
@@ -475,6 +498,106 @@ namespace InternalSystem
 			return result as object as string;
 		}
 
+		public static string CreateStringImpl (uint value, bool signed, bool hex)
+		{
+			int offset = 0;
+
+			uint uvalue = (uint)value;
+			ushort divisor = hex ? (ushort)16 : (ushort)10;
+			int length = 0;
+			int count = 0;
+			uint temp;
+			bool negative = false;
+
+			if (value < 0 && !hex && signed) {
+				count++;
+				uvalue = (uint)-value;
+				negative = true;
+			}
+
+			temp = uvalue;
+
+			do {
+				temp /= divisor;
+				count++;
+			}
+			while (temp != 0);
+
+			length = count;
+			InternalSystem.String result = InternalAllocateStr (length);
+
+			unsafe {
+				fixed (char* p = &result.firstChar) {
+
+					if (negative) {
+						p[offset++] = '-';
+						count--;
+					}
+
+					for (int i = 0; i < count; i++) {
+						uint remainder = uvalue % divisor;
+
+						if (remainder < 10)
+							p[offset + count - 1 - i] = (char)('0' + remainder);
+
+						else
+							p[offset + count - 1 - i] = (char)('A' + remainder - 10);
+
+						uvalue /= divisor;
+					}
+				}
+			}
+
+			return result as object as string;
+		}
+
+		public unsafe static string CreateStringImpl (CString8* val)
+		{
+			if (val->Length == 0)
+				return string.Empty;
+
+			InternalSystem.String result = InternalAllocateStr (val->Length);
+
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+
+				for (int i = 0; i < val->Length; i++) {
+					*ptrres = (char)(*(val->Pointer + i));
+					ptrres++;
+				}
+			}
+
+			return result as object as string;
+		}
+
+		public static bool IsNullOrEmpty (string value)
+		{
+			return (value == null) || (value.Length == 0);
+		}
+
+		// Stubs for Mono
+
+		internal static String InternalAllocateStr (int length)
+		{
+			InternalSystem.String res = SharpOS.Korlib.Runtime.Runtime.AllocNewString (length);
+			res.length = length;
+			return res;
+		}
+
+		private int InternalLastIndexOfAny (char[] anyOf, int sIndex, int count)
+		{
+			unsafe {
+				char* ptr = this._GetBuffer () + sIndex;
+
+				for (int i = 0; i < count; i++) {
+					for (int loop = 0; loop != anyOf.Length; loop++)
+						if (*ptr == anyOf[loop])
+							return sIndex - i;
+					ptr--;
+				}
+			}
+			return -1;
+		}
 	}
 }
 

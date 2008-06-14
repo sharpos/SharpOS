@@ -10,6 +10,7 @@
 
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
+using SharpOS.Kernel.Foundation;
 
 namespace InternalSystem {
 	[TargetNamespace ("System")]
@@ -37,5 +38,12 @@ namespace InternalSystem {
 			UInt32 other = (UInt32)o;
 			return other.Value == Value;
 		}
+
+		public string ToString()
+		{
+			return InternalSystem.String.CreateStringImpl (Value, false, false);
+		}
+
+
 	}
 }

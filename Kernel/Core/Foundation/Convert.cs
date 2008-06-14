@@ -461,5 +461,20 @@ namespace SharpOS.Kernel.Foundation {
 			}
 			return str1;
 		}
+
+		static public string ToString (char[] val, int startIndex, int length)
+		{
+			return InternalSystem.String.CreateStringImpl (val, startIndex, length);
+		}
+
+		static public string ToString (char[] val)
+		{
+			return InternalSystem.String.CreateStringImpl (val);
+		}
+
+		static public string ToString (CString8* cstring)
+		{
+			return InternalSystem.String.CreateStringImpl (cstring);
+		}
 	}
 }
