@@ -96,7 +96,7 @@ namespace SharpOS.Kernel.ADC {
 			 * elegant and clean this code is compared to the old search!
 			 */ 
 			Header* temp = RBHead;
-			while (temp != null)
+			while (temp != Sentinel)
 			{
 				if (temp->Size > allocate_size)
 				{
@@ -568,6 +568,47 @@ namespace SharpOS.Kernel.ADC {
 			 * Currently considering my options on how to
 			 * implement this without even more placeholders
 			 */
+
+			Header* temp;
+			Header* work;
+
+			if (node->Left == Sentinel || node->Right == Sentinel)
+				temp = node;
+			else
+			{
+				temp = node->Right;
+				while (temp->Left != Sentinel)
+					temp = temp->Left;
+			}
+
+			if (temp->Left != Sentinel)
+				work = temp->Left;
+			else
+				work = temp->Right;
+
+			work->Parent = temp->Parent;
+
+			if (temp->Parent != null)
+			{
+				if (temp == temp->Parent->Left)
+					temp->Parent->Left = work;
+				else
+					temp->Parent->Right = work;
+			}
+			else
+				RBHead = work;
+
+			if (temp != node)
+			{
+				temp->Parent = node->Parent;
+				temp->Left = node->Left;
+				temp->Left->Parent = temp;
+				temp->Right = node->Right;
+				temp->Right->Parent = temp;
+			}
+
+			if (temp->Color == 1)
+				RestoreDeleteBalance(work);
 		}
 		
 		private static unsafe void RestoreDeleteBalance(Header* node)
