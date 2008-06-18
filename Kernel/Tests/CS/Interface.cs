@@ -250,5 +250,26 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
+
+		public static uint CMPIsOperator ()
+		{
+			object obj = new object();
+
+			if (obj is Iface2)
+				return 0;
+
+
+			return 1;
+		}
+
+		public static uint CMPIsOperator2 ()
+		{
+			Class1 cl = new Class1();
+
+			if (!(cl is Class1))
+				return 0;
+
+			return 1;
+		}
 	}
 }

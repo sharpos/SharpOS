@@ -92,5 +92,19 @@ namespace SharpOS.Kernel.Tests.CS {
 
 			return 0;
 		}
+
+		public static uint CMPIsOperator ()
+		{
+			object obj = new object();
+			
+			if (!(obj is object))
+				return 0;
+
+			if (obj is string)
+				return 0;
+
+			return 1;
+		}
+
 	}
 }

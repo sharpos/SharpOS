@@ -91,6 +91,7 @@
     <Compile Include="String.cs" />
     <Compile Include="Struct.cs" />
     <Compile Include="Switch.cs" />
+    <Compile Include="UInt32.cs" />
     <Compile Include="UnsignedIntegerCast.cs" />
     <Compile Include="WhileLoop.cs" />
     <Compile Include="X86.cs" />

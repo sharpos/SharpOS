@@ -49,5 +49,12 @@ namespace InternalSystem
 			return p1 == p2;
 		}
 #pragma warning restore 114
+
+		public unsafe Type GetType ()
+		{
+			return null; // TODO
+		}
+
+		
 	}
 }
