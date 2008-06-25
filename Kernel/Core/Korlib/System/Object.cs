@@ -16,7 +16,11 @@ namespace InternalSystem
 	[TargetNamespace ("System")]
 	public class Object
 	{
+        /// <summary>
+        /// Used to support runtime method binding / Dynamic Dispatch
+        /// </summary>
 		internal VTable VTable;
+
 		internal uint Synchronisation = 0;
 
 		public Object ()
