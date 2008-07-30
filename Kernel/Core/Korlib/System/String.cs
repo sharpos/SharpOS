@@ -212,6 +212,65 @@ namespace InternalSystem
 			return result as object as string;
 		}
 
+		[Label ("System.String.Concat(System.String,System.String,System.String,System.String)")]
+		public static string Concat (InternalSystem.String a, InternalSystem.String b, InternalSystem.String c, InternalSystem.String d)
+		{
+			InternalSystem.String result = InternalAllocateStr (a.length + b.length + c.length + d.length);
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+				char* ptr = a._GetBuffer ();
+				for (int i = 0; i < a.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+				ptr = b._GetBuffer ();
+				for (int i = 0; i < b.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+				ptr = c._GetBuffer ();
+				for (int i = 0; i < c.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+				ptr = d._GetBuffer ();
+				for (int i = 0; i < d.length; i++) {
+					*ptrres = *ptr;
+					ptrres++;
+					ptr++;
+				}
+			}
+			return result as object as string;
+		}
+
+		[Label ("System.String.Concat(System.String[])")]
+		public static string Concat (InternalSystem.String[] strings)
+		{
+			int length = 0;
+
+			foreach (String s in strings)
+				length = length + s.Length;
+
+			InternalSystem.String result = InternalAllocateStr (length);
+
+			unsafe {
+				char* ptrres = result._GetBuffer ();
+
+				foreach (String s in strings) {
+					char* ptr = s._GetBuffer ();
+					for (int i = 0; i < s.length; i++) {
+						*ptrres = *ptr;
+						ptrres++;
+						ptr++;
+					}
+				}
+			}
+			return result as object as string;
+		}
+
 		public string Substring (int startIndex)
 		{
 			if (startIndex == 0)
@@ -539,7 +598,6 @@ namespace InternalSystem
 
 						if (remainder < 10)
 							p[offset + count - 1 - i] = (char)('0' + remainder);
-
 						else
 							p[offset + count - 1 - i] = (char)('A' + remainder - 10);
 

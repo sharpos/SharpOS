@@ -21,9 +21,11 @@ using SharpOS.Korlib.Runtime;
 using SharpOS.AOT.Metadata;
 using System.Collections.Generic;
 
-namespace SharpOS.Kernel {
+namespace SharpOS.Kernel
+{
 
-	public unsafe class EntryModule {
+	public unsafe class EntryModule
+	{
 		#region Global fields
 
 		static bool stayInLoop = true;
@@ -60,7 +62,7 @@ namespace SharpOS.Kernel {
 
 		/// <summary>
 		/// The kernel entry point. This function is called after static
-        /// constructors and initialization are done (currenly doen by Assembly.cs::AddEntryPoint().
+		/// constructors and initialization are done (currenly doen by Assembly.cs::AddEntryPoint().
 		/// </summary>
 		/// <param name="magic">
 		/// Magic number of the multiboot loader.
@@ -90,13 +92,12 @@ namespace SharpOS.Kernel {
 			// Write the banner
 			DisplayBanner ();
 
-			StageMessage ("Multiboot setup...");			
-			if (!Multiboot.Setup (magic, pointer, kernelStart, kernelEnd))
-			{
+			StageMessage ("Multiboot setup...");
+			if (!Multiboot.Setup (magic, pointer, kernelStart, kernelEnd)) {
 				StageError ("Error: multiboot loader required!");
 				return;
 			}
-			
+
 			kernelStartLoc = (void*)kernelStart;
 			kernelEndLoc = (void*)kernelEnd;
 
@@ -105,43 +106,44 @@ namespace SharpOS.Kernel {
 
 			StageMessage ("PageAllocator setup...");
 			PageAllocator.Setup (
-				Multiboot.KernelAddress, 
+				Multiboot.KernelAddress,
 				Multiboot.KernelSize,
 				Multiboot.UpperMemorySize + 1000);
 
 			StageMessage ("MemoryManager setup...");
 			ADC.MemoryManager.Setup ();
 
+			StageMessage ("Debug setup...");
+			Debug.Setup ();
+
 			// Must be done after MemoryManager setup.
 			StageMessage ("Runtime setup...");
 			ExceptionHandling.Setup ();
 
-			StageMessage ("Serial I/O setup...");
-			Serial.Setup ();
-
-			StageMessage("Diagnostic Tool setup...");
-			DiagnosticTool.Server.Setup();
-
-			StageMessage("Scheduler setup...");
-			ThreadManager.Setup();
+			StageMessage ("Event Dispatch setup...");
+			SimpleEventDispatch.Setup ();
 
 			StageMessage ("Device setup...");
-			ADC.Architecture.DeviceManager.Setup ();
+			DeviceSystem.Boot.Start ();
+			Debug.Setup2 ();
+
+			StageMessage ("Diagnostic Tool setup...");
+			DiagnosticTool.Server.Setup ();
+
+			StageMessage ("Scheduler setup...");
+			ThreadManager.Setup ();
+
+			StageMessage ("File System setup...");
+			FileSystem.Boot.Start ();
 
 			//StageMessage ("Clock setup...");
 			Clock.Setup ();
-		
+
 			StageMessage ("Keymap setup...");
 			KeyMap.Setup ();
 
 			StageMessage ("Keyboard setup...");
 			Keyboard.Setup ();
-
-			StageMessage ("PCIController setup...");
-			PCIController.Setup ();
-		
-			//StageMessage("Ext2FS FileSystem setup...");
-			//SharpOS.Kernel.FileSystem.Ext2FS.Setup();
 
 			StageMessage ("Console setup...");
 			SharpOS.Kernel.Console.Setup ();
@@ -153,19 +155,21 @@ namespace SharpOS.Kernel {
 			TextMode.WriteLine ("The Brain: The same thing we do every night, Pinky - Try to take over the world!");
 			TextMode.RestoreAttributes ();
 
+			//SharpOS.Kernel.Memory.PageAllocator.DumpInfo ();
+
 #if KERNEL_TESTS
 			// Testcases
-			MemoryManager.__RunTests (); 
+			MemoryManager.__RunTests ();
 			ByteString.__RunTests ();
 			StringBuilder.__RunTests ();
 			CString8.__RunTests ();
 			PString8.__RunTests ();
 			InternalSystem.String.__RunTests ();
 			Runtime.__RunTests ();
-			Serial.COM1.WriteLine ("Failed AOT Tests:");
+			Debug.COM1.WriteLine ("Failed AOT Tests:");
 			SharpOS.Kernel.Tests.Wrapper.Run ();
-			Serial.COM1.WriteLine ();
-			Serial.COM1.WriteLine ("Kernel Tests:");			
+			Debug.COM1.WriteLine ();
+			Debug.COM1.WriteLine ("Kernel Tests:");
 #endif
 			/*
 			void* thread = ThreadManager.CreateThread(Stubs.GetFunctionPointer ("TEST"));
@@ -188,33 +192,29 @@ namespace SharpOS.Kernel {
 			//FIXME We must know on each processor the current thread runs on. 
 			//      Halt all other procs, then halt the current one.
 			IProcessor[] procs = Architecture.GetProcessors ();
-			int procCount = Architecture.GetProcessorCount();
-			while (stayInLoop)
-			{
-				for (int i=0; i < procCount; i++)
-				{
-					procs [i].Halt ();
+			int procCount = Architecture.GetProcessorCount ();
+			while (stayInLoop) {
+				for (int i = 0; i < procCount; i++) {
+					procs[i].Halt ();
 				}
 			}
 		}
-		
+
 		[SharpOS.AOT.Attributes.Label ("TEST")]
-		public static void Test()
+		public static void Test ()
 		{
 			bool stayInLoop = true;
-			while (stayInLoop)
-			{
-				TextMode.Write(".");
+			while (stayInLoop) {
+				TextMode.Write (".");
 			}
 		}
-		
+
 		[SharpOS.AOT.Attributes.Label ("TEST2")]
-		public static void Test2()
+		public static void Test2 ()
 		{
 			bool stayInLoop = true;
-			while (stayInLoop)
-			{
-				TextMode.Write("+");
+			while (stayInLoop) {
+				TextMode.Write ("+");
 			}
 		}
 
@@ -246,10 +246,10 @@ namespace SharpOS.Kernel {
 		#endregion
 		#region Kernel properties
 
-		static void *kernelStartLoc = null;
-		static void *kernelEndLoc = null;
+		static void* kernelStartLoc = null;
+		static void* kernelEndLoc = null;
 
-		public unsafe static void GetKernelLocation (out void *start, out void *end)
+		public unsafe static void GetKernelLocation (out void* start, out void* end)
 		{
 			start = kernelStartLoc;
 			end = kernelEndLoc;

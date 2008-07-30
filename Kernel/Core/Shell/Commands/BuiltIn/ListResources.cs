@@ -13,7 +13,8 @@ using System.Text;
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.Foundation;
 using SharpOS.Kernel.ADC;
-using SharpOS.Kernel.DriverSystem;
+using SharpOS.Kernel.DeviceSystem;
+using SharpOS.Kernel.DeviceSystem.PCI;
 
 namespace SharpOS.Kernel.Shell.Commands.BuiltIn
 {
@@ -29,23 +30,76 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn
 		{
 			TextMode.WriteLine ("Device Resources:");
 
-			for (uint slot = 0; ; slot++) {
-				//DeviceResource resource = DeviceResourceManager.GetBySlot (slot);
+			Device[] devices = DeviceManager.GetDevices ();
 
-				//if (resource.Status == DeviceResourceStatus.UnableToLocated)
-				//    break;
+			foreach (Device device in devices) {
 
-				//if (resource.Status == DeviceResourceStatus.None)
-				//    continue;
+				if (!(device is PCIDevice))
+					continue;
 
-				//TextMode.Write ((int)slot);
-				//TextMode.Write (": /devices/");
-				//TextMode.Write (resource.Name);
-				//TextMode.Write (" - ");
-				//TextMode.Write ((int)resource.BlockDevice.GetTotalSectors ());
-				//TextMode.Write ("/");
-				//TextMode.Write ((int)resource.BlockDevice.GetSectorSize ());
-				//TextMode.WriteLine ();
+				TextMode.Write ("Resource: ");
+				TextMode.Write (device.Name);
+
+				if (device.Parent != null) {
+					TextMode.Write (" - Parent: ");
+					TextMode.Write (device.Parent.Name);
+				}
+				TextMode.WriteLine ();
+
+				if (device is PCIDevice) {
+					PCIDevice pciDevice = (device as PCIDevice);
+
+					TextMode.Write ("  Vendor:0x");
+					TextMode.Write (pciDevice.VendorID.ToString ("X"));
+					TextMode.Write (" Device:0x");
+					TextMode.Write (pciDevice.DeviceID.ToString ("X"));
+					TextMode.Write (" Class:0x");
+					TextMode.Write (pciDevice.ClassCode.ToString ("X"));
+					TextMode.Write (" Rev:0x");
+					TextMode.Write (pciDevice.RevisionID.ToString ("X"));
+					TextMode.WriteLine ();
+
+					foreach (PCIBaseAddress address in pciDevice.BaseAddresses) {
+						if (address.Address != 0) {
+							TextMode.Write ("    ");
+							//TextMode.WriteLine (address.ToString ());
+
+							if (address.Region == AddressRegion.IO)
+								TextMode.Write ("I/O Port at 0x");
+							else
+								TextMode.Write ("Memory at 0x");
+
+							TextMode.Write (address.Address.ToString ("X"));
+
+							TextMode.Write (" [size=");
+
+							if ((address.Size & 0xFFFFF) == 0) {
+								TextMode.Write ((address.Size >> 20).ToString ());
+								TextMode.Write ("M");
+							}
+							else if ((address.Size & 0x3FF) == 0) {
+								TextMode.Write ((address.Size >> 10).ToString ());
+								TextMode.Write ("K");
+							}
+							else
+								TextMode.Write (address.Size.ToString ());
+
+							TextMode.Write ("]");
+
+							if (address.Prefetchable)
+								TextMode.Write ("(prefetchable)");
+
+							TextMode.WriteLine ();
+						}
+					}
+
+					if (pciDevice.IRQ != 0) {
+						TextMode.Write ("    ");
+						TextMode.Write ("IRQ at ");
+						TextMode.Write (pciDevice.IRQ.ToString ());
+						TextMode.WriteLine ();
+					}
+				}
 			}
 		}
 

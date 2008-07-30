@@ -134,10 +134,10 @@ namespace SharpOS.Kernel.Vfs
 		}
 
 		private void Setup (DirectoryEntry parent, string name, IVfsNode node)
-		{
-			if (!Object.ReferenceEquals (this, parent))
-				this.parent.InsertChild (this);
-
+		{			
+			if (!Object.ReferenceEquals (this, parent)) 
+				parent.InsertChild (this);
+			
 			this.parent = parent;
 			this.name = name;
 			inode = node;
@@ -259,22 +259,27 @@ namespace SharpOS.Kernel.Vfs
 		/// </remarks>
 		public static DirectoryEntry Allocate (DirectoryEntry parent, string name, IVfsNode node)
 		{
-#if VFS_NO_EXCEPTIONS
-			if (parent = null)
-				throw new ArgumentNullException(@"parent");
-			if (name = null)
-				throw new ArgumentNullException(@"name");
-			if (node = null)
-				throw new ArgumentNullException(@"node");
+			//#if VFS_NO_EXCEPTIONS
+			if (parent == null)
+				throw new ArgumentNullException (@"parent");
+
+			if (name == null)
+				throw new ArgumentNullException (@"name");
+	
+			if (node == null)
+				throw new ArgumentNullException (@"node");
+			
 			if (name.Length == 0)
-				throw new ArgumentException(@"Invalid directory entry name.", @"name");
+				throw new ArgumentException (@"Invalid directory entry name."); // , @"name"
 			// FIXME: Add precondition check for invalid characters
 			// FIXME: Localize exception messages
-#endif // #if VFS_NO_EXCEPTIONS
+			//#endif // #if VFS_NO_EXCEPTIONS
 
-			DirectoryEntry d = new DirectoryEntry ();
-			d.Setup (parent, name, node);
-			return d;
+			DirectoryEntry directory = new DirectoryEntry ();
+
+			directory.Setup (parent, name, node);
+
+			return directory;
 		}
 
 		/// <summary>
@@ -294,13 +299,11 @@ namespace SharpOS.Kernel.Vfs
 		public static DirectoryEntry AllocateRoot (IVfsNode node)
 		{
 #if VFS_NO_EXCEPTIONS
-			if (node = null)
+			if (node == null)
 				throw new ArgumentNullException(@"node");
 #endif // #if VFS_NO_EXCEPTIONS
-
 			DirectoryEntry result = new DirectoryEntry ();
-			//result.Setup(result, String.Empty, node);	
-			result.Setup (result, null, node);
+			result.Setup (result, String.Empty, node);
 			return result;
 		}
 

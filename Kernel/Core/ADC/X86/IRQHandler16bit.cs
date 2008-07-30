@@ -9,7 +9,7 @@
 //
 
 using System;
-using SharpOS.Kernel.DriverSystem;
+using SharpOS.Kernel.HAL;
 
 namespace SharpOS.Kernel.ADC.X86
 {
@@ -22,14 +22,14 @@ namespace SharpOS.Kernel.ADC.X86
 			public IIRQCallBack callback;
 		}
 
-		internal SpinLock spinLock;
+		internal static SpinLock spinLock;
 		internal static bool[] irqs;
 		internal static IRQCallBack[] callBacks;	//TODO: create list per IRQ (for shared IRQs)
 
 		#region Constructor
 		internal IRQHandler16bit (byte irq)
 		{
-			spinLock.Enter();
+			spinLock.Enter ();
 
 			if (irqs == null) {
 				irqs = new bool[16];
@@ -40,20 +40,18 @@ namespace SharpOS.Kernel.ADC.X86
 
 			IDT.Interrupt interrupt = (IDT.Interrupt)(irq + 0x20);
 
-			IDT.RegisterIRQ(interrupt, Stubs.GetFunctionPointer(INTERRUPT16BIT_HANDLER));
+			IDT.RegisterIRQ (interrupt, Stubs.GetFunctionPointer (INTERRUPT16BIT_HANDLER));
 
-			spinLock.Exit();
+			spinLock.Exit ();
 		}
 
 		#endregion
 
-		#region Channel
 		protected byte irq;
-		#endregion
 
 		const string INTERRUPT16BIT_HANDLER = "INTERRUPT16BIT_HANDLER";
 
-		[SharpOS.AOT.Attributes.Label(INTERRUPT16BIT_HANDLER)]
+		[SharpOS.AOT.Attributes.Label (INTERRUPT16BIT_HANDLER)]
 		static unsafe void IRQHandler (IDT.ISRData data)
 		{
 			uint index = (uint)data.Stack->IrqIndex - 0x20;
@@ -67,7 +65,7 @@ namespace SharpOS.Kernel.ADC.X86
 				// call the callback methods
 				// note this is a temporary solution until threads are implemented
 
-				bool mine = callBacks[index].callback.OnInterrupt(index);
+				bool mine = callBacks[index].callback.OnInterrupt (index);
 
 				//if (mine)
 				//	irqs[index] = false;

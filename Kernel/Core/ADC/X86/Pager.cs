@@ -57,12 +57,10 @@ namespace SharpOS.Kernel.ADC.X86
 		#endregion
 		#region Implementation Details
 
-		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
-		//private static PageAttr GetNativePMA (PageAttributes attr)
-		private static uint GetNativePMA(PageAttributes attr)
+		private static PageAttr GetNativePMA (PageAttributes attr)
 		{
 			if ((uint)attr == 0xFFFFFFFF)
-				return (uint)attr;
+				return (PageAttr)attr;
 
 			PageAttr attrMask = 0;
 
@@ -75,15 +73,13 @@ namespace SharpOS.Kernel.ADC.X86
 			if ((attr & PageAttributes.Present) != 0)
 				attrMask |= PageAttr.Present;
 
-			return (uint)attrMask;
+			return attrMask;
 		}
 
-		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
-		//private static PageAttributes GetAbstractPMA (PageAttr attr)
-		private static uint GetAbstractPMA(PageAttr attr)
+		private static PageAttributes GetAbstractPMA (PageAttr attr)
 		{
 			if ((uint)attr == 0xFFFFFFFF)
-				return (uint)attr;
+				return (PageAttributes)attr;
 
 			PageAttributes ret = PageAttributes.None;
 
@@ -96,7 +92,7 @@ namespace SharpOS.Kernel.ADC.X86
 			if ((attr & PageAttr.Present) != 0)
 				ret |= PageAttributes.Present;
 
-			return (uint)ret;
+			return ret;
 		}
 
 		/*
@@ -228,7 +224,7 @@ namespace SharpOS.Kernel.ADC.X86
 			uint* table = (uint*)PageTables;
 
 			// Page directory needs to span all 4 GBs
-			// FIXME: What about PAE support might diffrent implementation
+			// FIXME: What about PAE support might different implementation
 			// uint totalPages = UInt32.MaxValue / 4096; // Each page spans of memory 4MB
 			uint totalTables = 1024; // 1024 * 4MB = 4GB
 
@@ -266,12 +262,6 @@ namespace SharpOS.Kernel.ADC.X86
 				table += 1024;	// 1024 x sizeof(int) = 4k
 			}
 
-			// Reserve memory below 0x100000 (1MB) for the BIOS/video memory
-			uint ceil = 0x100000;
-			byte* page = (byte*)null;
-			PageAllocator.ReservePageRange(page, (ceil / ADC.Pager.AtomicPageSize), "Reserve memory below 0x100000 (1MB) for the BIOS/video memory");
-
-			// TODO: move to X86.Architecture
 			DMA.Setup((byte*)((uint)pagemap) + pagemapLen);
 
 			*error = PageAllocator.Errors.Success;
@@ -321,7 +311,7 @@ namespace SharpOS.Kernel.ADC.X86
 
 			// perform mapping
 
-			nativeAttr = GetNativePMA(attr);
+			nativeAttr = (uint) GetNativePMA(attr);
 
 			PagePtrToTables(page, &pde, &pte);
 
@@ -344,9 +334,7 @@ namespace SharpOS.Kernel.ADC.X86
 			return PageAllocator.Errors.Success;
 		}
 
-		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
-		// public static PageAllocator.Errors SetPageAttributes (void *page, uint granularity, PageAttributes attr)
-		public static uint SetPageAttributes(void* page, uint granularity,
+		public static PageAllocator.Errors SetPageAttributes (void* page, uint granularity,
 								      PageAttributes attr)
 		{
 			uint pde = 0, pte = 0;
@@ -354,7 +342,7 @@ namespace SharpOS.Kernel.ADC.X86
 			uint nativeAttr = (uint)GetNativePMA(attr);
 
 			if (granularity < 0 || granularity > 1)
-				return (uint)PageAllocator.Errors.UnsupportedGranularity;
+				return PageAllocator.Errors.UnsupportedGranularity;
 
 			Diagnostics.Assert(nativeAttr != 0xFFFFFFFF,
 				"X86.Pager::SetPageAttributes(): bad page map attributes");
@@ -371,12 +359,10 @@ namespace SharpOS.Kernel.ADC.X86
 
 			table[pte] = (table[pte] & (uint)PageAttr.FrameMask) | nativeAttr;
 
-			return (uint)PageAllocator.Errors.Success;
+			return PageAllocator.Errors.Success;
 		}
 
-		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
-		// public static PageAttributes GetPageAttributes (void *page, uint granularity, PageAllocator.Errors *ret_err)
-		public static uint GetPageAttributes(void* page, uint granularity,
+		public static PageAttributes GetPageAttributes (void* page, uint granularity,
 								      PageAllocator.Errors* ret_err)
 		{
 			uint pde = 0, pte = 0;
@@ -384,7 +370,7 @@ namespace SharpOS.Kernel.ADC.X86
 
 			if (granularity < 0 || granularity > 1) {
 				*ret_err = PageAllocator.Errors.UnsupportedGranularity;
-				return (uint)PageAttributes.None;
+				return PageAttributes.None;
 			}
 
 			Diagnostics.Assert(ADC.Pager.GetPointerGranularity(page) == granularity,

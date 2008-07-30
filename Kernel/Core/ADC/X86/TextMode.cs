@@ -18,7 +18,6 @@ using SharpOS.Kernel;
 using SharpOS.AOT.X86;
 using SharpOS.AOT.IR;
 using SharpOS.Kernel.ADC.X86;
-using SharpOS.Kernel.DriverSystem;
 using ADC = SharpOS.Kernel.ADC;
 
 namespace SharpOS.Kernel.ADC.X86 {

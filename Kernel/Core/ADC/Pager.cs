@@ -104,19 +104,15 @@ namespace SharpOS.Kernel.ADC {
 		}
 
 		[AOTAttr.ADCStub]
-		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
-		// public static PageAllocator.Errors SetPageAttributes (void *page, uint granularity, PageAttributes attr)
-		public static uint SetPageAttributes (void* page, uint granularity,
+		public static PageAllocator.Errors SetPageAttributes (void* page, uint granularity,
 						       PageAttributes attr)
 		{
 			Diagnostics.Warning ("Pager.SetPageAttributes - not implemented!");
-			return (uint) PageAllocator.Errors.NotImplemented;
+			return PageAllocator.Errors.NotImplemented;
 		}
 
 		[AOTAttr.ADCStub]
-		// FIXME: Returning enum is not supported atm by AOT - asgeirh 2007-11-16
-		// public static PageAttributes GetPageAttributes (void *page, uint granularity,PageAllocator.Errors *ret_err)
-		public static uint GetPageAttributes (void* page, uint granularity,
+		public static PageAttributes GetPageAttributes (void* page, uint granularity,
 								     PageAllocator.Errors* ret_err)
 		{
 			*ret_err = PageAllocator.Errors.NotImplemented;

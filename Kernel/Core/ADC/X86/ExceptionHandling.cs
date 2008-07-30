@@ -86,8 +86,8 @@ namespace SharpOS.Kernel.ADC.X86 {
 		
 		internal unsafe static void DumpCallingStack ()
 		{
-			if (!Serial.Initialized)
-				return;
+			//if (!Serial.Initialized)
+			//    return;
 			bool found;
 			uint bp, ip;
 
@@ -116,12 +116,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 					if (ip >= (uint) Runtime.MethodBoundaries [i].Begin
 							&& ip < (uint) Runtime.MethodBoundaries [i].End) {
 						
-						Serial.COM1.Write (Runtime.MethodBoundaries [i].Name);
-						Serial.COM1.Write (" [IP=0x");
-						Serial.COM1.WriteNumber ((int) ip, true);
-						Serial.COM1.Write (", BP=0x");
-						Serial.COM1.WriteNumber ((int) bp, true);
-						Serial.COM1.WriteLine ("]");
+						Debug.COM1.Write (Runtime.MethodBoundaries [i].Name);
+						Debug.COM1.Write (" [IP=0x");
+						Debug.COM1.WriteNumber ((int) ip, true);
+						Debug.COM1.Write (", BP=0x");
+						Debug.COM1.WriteNumber ((int) bp, true);
+						Debug.COM1.WriteLine ("]");
 						found = true;
 						break;
 					}
@@ -129,12 +129,12 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 				if (!found)
 				{
-					Serial.COM1.Write ("(unknown)");
-					Serial.COM1.Write (" [IP=0x");
-					Serial.COM1.WriteNumber ((int) ip, true);
-					Serial.COM1.Write (", BP=0x");
-					Serial.COM1.WriteNumber ((int) bp, true);
-					Serial.COM1.WriteLine ("]");
+					Debug.COM1.Write ("(unknown)");
+					Debug.COM1.Write (" [IP=0x");
+					Debug.COM1.WriteNumber ((int) ip, true);
+					Debug.COM1.Write (", BP=0x");
+					Debug.COM1.WriteNumber ((int) bp, true);
+					Debug.COM1.WriteLine ("]");
 				}
 
 			} while (bp != 0);

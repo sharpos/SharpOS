@@ -2,7 +2,7 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.50727</ProductVersion>
+    <ProductVersion>9.0.21022</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{1BDA3EE0-BC5F-4C4A-986C-31730A8EFADC}</ProjectGuid>
     <OutputType>Library</OutputType>
@@ -57,11 +57,6 @@
     <ErrorReport>prompt</ErrorReport>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-  </ItemGroup>
-  <ItemGroup>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\AOT\Core\SharpOS.AOT.Core.csproj">
@@ -84,25 +79,20 @@
     <Compile Include="ADC\X86\BootControl.cs" />
     <Compile Include="ADC\X86\CMOS.cs" />
     <Compile Include="ADC\X86\DMA.cs" />
-    <Compile Include="ADC\X86\DMAChannel8bit.cs" />
     <Compile Include="ADC\X86\DTPointer.cs" />
     <Compile Include="ADC\X86\ExceptionHandling.cs" />
     <Compile Include="ADC\X86\GDT.cs" />
-    <Compile Include="ADC\X86\HardwareResourceManager.cs" />
     <Compile Include="ADC\X86\IDT.cs" />
     <Compile Include="ADC\X86\Interlocked.cs" />
     <Compile Include="ADC\X86\IO.cs" />
-    <Compile Include="ADC\X86\IOPortAccess.cs" />
     <Compile Include="ADC\X86\IRQHandler16bit.cs" />
     <Compile Include="ADC\X86\Keyboard.cs" />
     <Compile Include="ADC\X86\MemoryUtil.cs" />
     <Compile Include="ADC\X86\Pager.cs" />
-    <Compile Include="ADC\X86\PCI.cs" />
     <Compile Include="ADC\X86\PIC.cs" />
     <Compile Include="ADC\X86\PIT.cs" />
     <Compile Include="ADC\X86\Processor.cs" />
     <Compile Include="ADC\X86\RTC.cs" />
-    <Compile Include="ADC\X86\Serial.cs" />
     <Compile Include="ADC\X86\TextMode.cs" />
     <Compile Include="ADC\X86\Thread.cs" />
     <Compile Include="ADC\X86\ThreadManager.cs" />
@@ -110,11 +100,11 @@
     <Compile Include="ADC\Architecture.cs" />
     <Compile Include="ADC\Barrier.cs" />
     <Compile Include="ADC\BootControl.cs" />
+    <Compile Include="ADC\Debug.cs" />
     <Compile Include="ADC\Dispatcher.cs" />
     <Compile Include="ADC\ExceptionHandling.cs" />
     <Compile Include="ADC\Interlocked.cs" />
-    <Compile Include="ADC\IOPort.cs" />
-    <Compile Include="ADC\IOPortAccess.cs" />
+    <Compile Include="ADC\IO.cs" />
     <Compile Include="ADC\IProcessor.cs" />
     <Compile Include="ADC\IScheduler.cs" />
     <Compile Include="ADC\Keyboard.cs" />
@@ -122,62 +112,50 @@
     <Compile Include="ADC\MemoryManager.cs" />
     <Compile Include="ADC\MemoryUtil.cs" />
     <Compile Include="ADC\Pager.cs" />
-    <Compile Include="ADC\PCI.cs" />
     <Compile Include="ADC\ProcessorType.cs" />
     <Compile Include="ADC\RoundRobinScheduler.cs" />
     <Compile Include="ADC\RTC.cs" />
-    <Compile Include="ADC\Serial.cs" />
+    <Compile Include="ADC\SimpleEventDispatch.cs" />
     <Compile Include="ADC\SpinLock.cs" />
     <Compile Include="ADC\TextColor.cs" />
     <Compile Include="ADC\TextMode.cs" />
     <Compile Include="ADC\Thread.cs" />
     <Compile Include="ADC\ThreadManager.cs" />
     <Compile Include="ADC\Timer.cs" />
+    <Compile Include="DeviceSystem\Drivers\DiskControllers\FloppyDiskDriver.cs" />
+    <Compile Include="DeviceSystem\Drivers\DiskControllers\IDEDiskDriver.cs" />
+    <Compile Include="DeviceSystem\Drivers\DiskControllers\IDiskControllerDevice.cs" />
+    <Compile Include="DeviceSystem\Drivers\PCI\IPCIController.cs" />
+    <Compile Include="DeviceSystem\Drivers\PCI\PCIBaseAddress.cs" />
+    <Compile Include="DeviceSystem\Drivers\PCI\PCIController.cs" />
+    <Compile Include="DeviceSystem\Drivers\PCI\PCIDevice.cs" />
+    <Compile Include="DeviceSystem\Drivers\ISerialDevice.cs" />
+    <Compile Include="DeviceSystem\Drivers\SerialDevice.cs" />
+    <Compile Include="DeviceSystem\Boot.cs" />
+    <Compile Include="DeviceSystem\Device.cs" />
+    <Compile Include="DeviceSystem\DeviceManager.cs" />
+    <Compile Include="DeviceSystem\HardwareDevice.cs" />
+    <Compile Include="DeviceSystem\HardwareResources.cs" />
+    <Compile Include="DeviceSystem\IDevice.cs" />
+    <Compile Include="DeviceSystem\IDiskDevice.cs" />
+    <Compile Include="DeviceSystem\IFileSystemDevice.cs" />
+    <Compile Include="DeviceSystem\IPartitionDevice.cs" />
     <Compile Include="DiagnosticTool\Server.cs" />
-    <Compile Include="DriverSystem\Drivers\Block\FloppyDiskDriver.cs" />
-    <Compile Include="DriverSystem\Drivers\Block\GenericBlockDeviceAdapter.cs" />
-    <Compile Include="DriverSystem\Drivers\Block\GenericBlockDevicePartition.cs" />
-    <Compile Include="DriverSystem\Drivers\Block\IBlockDevice.cs" />
-    <Compile Include="DriverSystem\Drivers\Block\IBlockDeviceController.cs" />
-    <Compile Include="DriverSystem\Drivers\Block\IDEDiskDriver.cs" />
-    <Compile Include="DriverSystem\Drivers\Block\KernelDiskDriver.cs" />
-    <Compile Include="DriverSystem\Drivers\Block\RamDiskDriver.cs" />
-    <Compile Include="DriverSystem\Drivers\Character\KeyboardDriver.cs" />
-    <Compile Include="DriverSystem\Drivers\LPCBusDriver.cs" />
-    <Compile Include="DriverSystem\Drivers\PCIBusDriver.cs" />
-    <Compile Include="DriverSystem\Drivers\RTCDriver.cs" />
-    <Compile Include="DriverSystem\HardwareResources\DMAChannel.cs" />
-    <Compile Include="DriverSystem\HardwareResources\IOPortStream.cs" />
-    <Compile Include="DriverSystem\HardwareResources\IRQHandler.cs" />
-    <Compile Include="DriverSystem\HardwareResources\MemoryBlock.cs" />
-    <Compile Include="DriverSystem\DeviceController.cs" />
-    <Compile Include="DriverSystem\DeviceControllers.cs" />
-    <Compile Include="DriverSystem\DeviceManager.cs" />
-    <Compile Include="DriverSystem\DriverFlags.cs" />
-    <Compile Include="DriverSystem\DriverManager.cs" />
-    <Compile Include="DriverSystem\GenericDevice.cs" />
-    <Compile Include="DriverSystem\GenericDriver.cs" />
-    <Compile Include="DriverSystem\IDevice.cs" />
-    <Compile Include="DriverSystem\IDeviceController.cs" />
-    <Compile Include="DriverSystem\IDeviceManager.cs" />
-    <Compile Include="DriverSystem\IDriver.cs" />
-    <Compile Include="DriverSystem\IDriverContext.cs" />
-    <Compile Include="DriverSystem\IHardwareResourceManager.cs" />
-    <Compile Include="FileSystem\Ext2\Block.cs" />
-    <Compile Include="FileSystem\Ext2\DirectoryFileFormat.cs" />
-    <Compile Include="FileSystem\Ext2\Ext2FS.cs" />
-    <Compile Include="FileSystem\Ext2\FileSystem.cs" />
-    <Compile Include="FileSystem\Ext2\GroupDescriptor.cs" />
-    <Compile Include="FileSystem\Ext2\INode.cs" />
-    <Compile Include="FileSystem\Ext2\SuperBlock.cs" />
-    <Compile Include="FileSystem\FAT\Compare.cs" />
-    <Compile Include="FileSystem\FAT\Directory.cs" />
-    <Compile Include="FileSystem\FAT\File.cs" />
-    <Compile Include="FileSystem\FAT\FileStream.cs" />
-    <Compile Include="FileSystem\FAT\FileSystem.cs" />
-    <Compile Include="FileSystem\FAT\FSSettings.cs" />
-    <Compile Include="FileSystem\GenericDisk.cs" />
-    <Compile Include="FileSystem\Partition.cs" />
+    <Compile Include="FileSystem\FATFileSystem\FAT.cs" />
+    <Compile Include="FileSystem\FATFileSystem\FATDevice.cs" />
+    <Compile Include="FileSystem\FATFileSystem\FATFileStream.cs" />
+    <Compile Include="FileSystem\FATFileSystem\FATSettings.cs" />
+    <Compile Include="FileSystem\FATFileSystem\VfsDirectory.cs" />
+    <Compile Include="FileSystem\FATFileSystem\VfsFile.cs" />
+    <Compile Include="FileSystem\FATFileSystem\VfsFileSystem.cs" />
+    <Compile Include="FileSystem\BinaryFormat.cs" />
+    <Compile Include="FileSystem\Boot.cs" />
+    <Compile Include="FileSystem\DiskDevice.cs" />
+    <Compile Include="FileSystem\GenericFileSystem.cs" />
+    <Compile Include="FileSystem\GenericPartition.cs" />
+    <Compile Include="FileSystem\MasterBootBlock.cs" />
+    <Compile Include="FileSystem\PartitionDevice.cs" />
+    <Compile Include="FileSystem\SettingsBase.cs" />
     <Compile Include="Foundation\BinaryTool.cs" />
     <Compile Include="Foundation\ByteString.cs" />
     <Compile Include="Foundation\CalendarManager.cs" />
@@ -192,6 +170,9 @@
     <Compile Include="Foundation\Time.cs" />
     <Compile Include="Foundation\Timestamp.cs" />
     <Compile Include="Foundation\Timezone.cs" />
+    <Compile Include="HAL\DMAChannel.cs" />
+    <Compile Include="HAL\IOPort.cs" />
+    <Compile Include="HAL\IRQHandler.cs" />
     <Compile Include="Korlib\Runtime\ExceptionHandlingClause.cs" />
     <Compile Include="Korlib\Runtime\FieldMetadata.cs" />
     <Compile Include="Korlib\Runtime\ITable.cs" />
@@ -236,6 +217,7 @@
     <Compile Include="Korlib\System\Int16.cs" />
     <Compile Include="Korlib\System\Int32.cs" />
     <Compile Include="Korlib\System\Int64.cs" />
+    <Compile Include="Korlib\System\IntPtr.cs" />
     <Compile Include="Korlib\System\InvalidCastException.cs" />
     <Compile Include="Korlib\System\InvalidOperationException.cs" />
     <Compile Include="Korlib\System\NotImplementedException.cs" />
@@ -244,6 +226,7 @@
     <Compile Include="Korlib\System\Object.cs" />
     <Compile Include="Korlib\System\OutOfMemoryException.cs" />
     <Compile Include="Korlib\System\OverflowException.cs" />
+    <Compile Include="Korlib\System\RuntimeTypeHandle.cs" />
     <Compile Include="Korlib\System\SByte.cs" />
     <Compile Include="Korlib\System\String.cs" />
     <Compile Include="Korlib\System\SystemException.cs" />
@@ -266,6 +249,8 @@
     <Compile Include="Shell\Commands\BuiltIn\LsPci.cs" />
     <Compile Include="Shell\Commands\BuiltIn\MemDump.cs" />
     <Compile Include="Shell\Commands\BuiltIn\MemView.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\More.cs" />
+    <Compile Include="Shell\Commands\BuiltIn\Mount.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Panic.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Reboot.cs" />
     <Compile Include="Shell\Commands\BuiltIn\Show.cs" />
@@ -285,7 +270,6 @@
     <Compile Include="Vfs\DirectoryEntry.cs" />
     <Compile Include="Vfs\DirectoryNode.cs" />
     <Compile Include="Vfs\FileSystemFactory.cs" />
-    <Compile Include="Vfs\FSSettingsBase.cs" />
     <Compile Include="Vfs\IDirectory.cs" />
     <Compile Include="Vfs\IFileSystem.cs" />
     <Compile Include="Vfs\IFileSystemService.cs" />
@@ -307,8 +291,8 @@
     <Compile Include="EventRegisterStatus.cs" />
     <Compile Include="KernelError.cs" />
     <Compile Include="KernelStage.cs" />
-    <Compile Include="KernelTestsWrapper.cs" />
     <Compile Include="KeyMap.cs" />
+    <Compile Include="MemoryBlock.cs" />
     <Compile Include="Multiboot.cs" />
     <Compile Include="PageAllocator.cs" />
     <Compile Include="PageAttributes.cs" />
@@ -330,6 +314,14 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Config\BuiltinKeyMaps.cfg" />
+  </ItemGroup>
+  <ItemGroup>
+    <Service Include="{B4F97281-0DBD-4835-9ED8-7DFB966E87FF}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

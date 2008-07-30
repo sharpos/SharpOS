@@ -283,6 +283,8 @@ namespace SharpOS.Kernel.Shell.Commands
 			header->AddEntry (BuiltIn.Timezone.CREATE ());
 			header->AddEntry (BuiltIn.Testcase.CREATE ());
 			header->AddEntry (BuiltIn.ListResources.CREATE ());
+			header->AddEntry (BuiltIn.Mount.CREATE ());
+			header->AddEntry (BuiltIn.More.CREATE ());
 
 			return header;
 		}

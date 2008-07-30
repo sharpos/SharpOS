@@ -285,8 +285,8 @@ namespace SharpOS.Korlib.Runtime {
 			out AssemblyMetadata destAssembly, out uint typeDefToken)
 		{
 			if (type != TokenType.TypeRef && type != TokenType.TypeDef) {
-				Serial.COM1.Write ("Token type: ");
-				Serial.COM1.WriteLine (MetadataToken.GetTokenTypeString (type));
+				Debug.COM1.Write ("Token type: ");
+				Debug.COM1.WriteLine (MetadataToken.GetTokenTypeString (type));
 				throw new System.Exception ("token type must be either TypeRef or TypeDef");
 			}
 
@@ -496,9 +496,9 @@ namespace SharpOS.Korlib.Runtime {
 			name = GetString (assembly, type.Name);
 			ns = GetString (assembly, type.Namespace);
 
-			Serial.COM1.Write (ns);
-			Serial.COM1.Write (".");
-			Serial.COM1.Write (name);
+			Debug.COM1.Write (ns);
+			Debug.COM1.Write (".");
+			Debug.COM1.Write (name);
 
 			MemoryManager.Free (name);
 			MemoryManager.Free (ns);
@@ -511,9 +511,9 @@ namespace SharpOS.Korlib.Runtime {
 			name = GetString (assembly, type.Name);
 			ns = GetString (assembly, type.Namespace);
 
-			Serial.COM1.Write (ns);
-			Serial.COM1.Write (".");
-			Serial.COM1.Write (name);
+			Debug.COM1.Write (ns);
+			Debug.COM1.Write (".");
+			Debug.COM1.Write (name);
 
 			MemoryManager.Free (name);
 			MemoryManager.Free (ns);
@@ -534,24 +534,24 @@ namespace SharpOS.Korlib.Runtime {
 
 		public unsafe static void DumpTypeDef (AssemblyMetadata assembly, TypeDefRow row, int index)
 		{
-			Serial.COM1.Write (" ");
-			Serial.COM1.Write ("TypeDefRow#");
-			Serial.COM1.Write (index);
-			Serial.COM1.Write (" ");
-			Serial.COM1.Write ((int)row.Flags, true);
-			Serial.COM1.Write (" ");
-			Serial.COM1.Write ((int)row.Name, true);
-			Serial.COM1.Write (" ");
-			Serial.COM1.Write ((int)row.Namespace, true);
-			Serial.COM1.Write (" ");
-			Serial.COM1.Write ((int)row.Extends, true);
-			Serial.COM1.Write (" ");
-			Serial.COM1.Write ((int)row.FieldList, true);
-			Serial.COM1.Write (" ");
-			Serial.COM1.Write ((int)row.MethodList, true);
-			Serial.COM1.Write (" ");
+			Debug.COM1.Write (" ");
+			Debug.COM1.Write ("TypeDefRow#");
+			Debug.COM1.Write (index);
+			Debug.COM1.Write (" ");
+			Debug.COM1.Write ((int)row.Flags, true);
+			Debug.COM1.Write (" ");
+			Debug.COM1.Write ((int)row.Name, true);
+			Debug.COM1.Write (" ");
+			Debug.COM1.Write ((int)row.Namespace, true);
+			Debug.COM1.Write (" ");
+			Debug.COM1.Write ((int)row.Extends, true);
+			Debug.COM1.Write (" ");
+			Debug.COM1.Write ((int)row.FieldList, true);
+			Debug.COM1.Write (" ");
+			Debug.COM1.Write ((int)row.MethodList, true);
+			Debug.COM1.Write (" ");
 			PrintTypeName (assembly, row);
-			Serial.COM1.WriteLine ();
+			Debug.COM1.WriteLine ();
 		}
 
 #pragma warning disable 649
@@ -578,29 +578,29 @@ namespace SharpOS.Korlib.Runtime {
 
 			ptr = (byte*)GetPointerFromObject (testdvt);
 			if (testd.Assembly == null)
-				Serial.COM1.WriteLine ("*** testd.Assembly == null");
+				Debug.COM1.WriteLine ("*** testd.Assembly == null");
 			else
-				Serial.COM1.WriteLine ("*** testd.Assembly != null");
+				Debug.COM1.WriteLine ("*** testd.Assembly != null");
 
 			if (testd.MetadataToken == 0)
-				Serial.COM1.WriteLine ("*** testd.MetadataToken == 0");
+				Debug.COM1.WriteLine ("*** testd.MetadataToken == 0");
 			else
-				Serial.COM1.WriteLine ("*** testd.MetadataToken != 0");
+				Debug.COM1.WriteLine ("*** testd.MetadataToken != 0");
 
 			if (HasValidMetadataToken (testd.Assembly, testd.MetadataToken))
-				Serial.COM1.WriteLine ("*** testd.MetadataToken is valid");
+				Debug.COM1.WriteLine ("*** testd.MetadataToken is valid");
 			else
-				Serial.COM1.WriteLine ("*** testd.MetadataToken is NOT valid");
+				Debug.COM1.WriteLine ("*** testd.MetadataToken is NOT valid");
 
 			if (testdvt.Type == testd)
-				Serial.COM1.WriteLine ("*** testdvt.Type == testd");
+				Debug.COM1.WriteLine ("*** testdvt.Type == testd");
 			else
-				Serial.COM1.WriteLine ("*** testdvt.Type != testd");
+				Debug.COM1.WriteLine ("*** testdvt.Type != testd");
 
 			if (ptr >= kernelEnd)
-				Serial.COM1.WriteLine ("ERROR");
+				Debug.COM1.WriteLine ("ERROR");
 			else
-				Serial.COM1.WriteLine ("Location OK");
+				Debug.COM1.WriteLine ("Location OK");
 
 			__TestMethodBoundaries ();
 			__TestObjectConversion ();
@@ -626,21 +626,21 @@ namespace SharpOS.Korlib.Runtime {
 
 		private unsafe static void PrintCallingStack (int skipFrames, StackFrame [] callingStack)
 		{
-			Serial.COM1.WriteLine ("=============================================================");
-			Serial.COM1.WriteLine ("Stack Trace:");
+			Debug.COM1.WriteLine ("=============================================================");
+			Debug.COM1.WriteLine ("Stack Trace:");
 
 			for (int i = skipFrames; i < callingStack.Length; i++) {
-				Serial.COM1.Write (" at ");
+				Debug.COM1.Write (" at ");
 
 				if (callingStack [i] == null) {
-					Serial.COM1.WriteLine ("(unknown)");
+					Debug.COM1.WriteLine ("(unknown)");
 				} else {
-					Serial.COM1.Write (callingStack [i].MethodBoundary.Name);
-					Serial.COM1.Write (" [IP=0x");
-					Serial.COM1.WriteNumber ((int) callingStack [i].IP, true);
-					Serial.COM1.Write (", BP=0x");
-					Serial.COM1.WriteNumber ((int) callingStack [i].BP, true);
-					Serial.COM1.WriteLine ("]");
+					Debug.COM1.Write (callingStack [i].MethodBoundary.Name);
+					Debug.COM1.Write (" [IP=0x");
+					Debug.COM1.WriteNumber ((int) callingStack [i].IP, true);
+					Debug.COM1.Write (", BP=0x");
+					Debug.COM1.WriteNumber ((int) callingStack [i].BP, true);
+					Debug.COM1.WriteLine ("]");
 				}
 			}
 		}
@@ -665,13 +665,13 @@ namespace SharpOS.Korlib.Runtime {
 
 		private static void PrintMethodBoundary (MethodBoundary methodBoundary)
 		{
-			Serial.COM1.Write ("MethodBoundary: ");
-			Serial.COM1.WriteLine (methodBoundary.Name);
+			Debug.COM1.Write ("MethodBoundary: ");
+			Debug.COM1.WriteLine (methodBoundary.Name);
 
 			if (methodBoundary.ExceptionHandlingClauses != null) {
-				Serial.COM1.Write ("\tExceptions: ");
-				Serial.COM1.WriteNumber (methodBoundary.ExceptionHandlingClauses.Length, false);
-				Serial.COM1.WriteLine ();
+				Debug.COM1.Write ("\tExceptions: ");
+				Debug.COM1.WriteNumber (methodBoundary.ExceptionHandlingClauses.Length, false);
+				Debug.COM1.WriteLine ();
 
 				for (int i = 0; i < methodBoundary.ExceptionHandlingClauses.Length; i++)
 					PrintExceptionHandlingClauses (methodBoundary.ExceptionHandlingClauses [i]);
@@ -680,16 +680,16 @@ namespace SharpOS.Korlib.Runtime {
 
 		private static void PrintExceptionHandlingClauses (ExceptionHandlingClause exceptionHandlingClause)
 		{
-			Serial.COM1.Write ("\t\tType: ");
-			Serial.COM1.WriteNumber ((int) exceptionHandlingClause.ExceptionType, true);
-			Serial.COM1.WriteLine ();
+			Debug.COM1.Write ("\t\tType: ");
+			Debug.COM1.WriteNumber ((int) exceptionHandlingClause.ExceptionType, true);
+			Debug.COM1.WriteLine ();
 
 			if (exceptionHandlingClause.ExceptionType == ExceptionHandlerType.Catch) {
 				Testcase.Test (exceptionHandlingClause.TypeInfo != null, "Runtime", "exceptionHandlingClause.TypeInfo != null");
 
 				if (exceptionHandlingClause.TypeInfo != null) {
-					Serial.COM1.Write ("\t\tCatch Type: ");
-					Serial.COM1.WriteLine (exceptionHandlingClause.TypeInfo.Name);
+					Debug.COM1.Write ("\t\tCatch Type: ");
+					Debug.COM1.WriteLine (exceptionHandlingClause.TypeInfo.Name);
 				}
 			}
 		}
@@ -989,11 +989,11 @@ namespace SharpOS.Korlib.Runtime {
 		{
 			if (handler != null) {
 #if DEBUG_EXCEPTION_HANDLING
-				Serial.COM1.Write ("Calling the found handler from Frame: #");
-				Serial.COM1.WriteNumber ((int) (i - exception.IgnoreStackFramesCount), false);
-				Serial.COM1.Write ("/Clause: #");
-				Serial.COM1.WriteNumber ((int) clauseIndex, false);
-				Serial.COM1.WriteLine ();
+				Debug.COM1.Write ("Calling the found handler from Frame: #");
+				Debug.COM1.WriteNumber ((int) (i - exception.IgnoreStackFramesCount), false);
+				Debug.COM1.Write ("/Clause: #");
+				Debug.COM1.WriteNumber ((int) clauseIndex, false);
+				Debug.COM1.WriteLine ();
 #endif
 
 				exception.CallingStack [i].IgnoreMethodBoundaryClause [clauseIndex] = true;
@@ -1071,10 +1071,10 @@ namespace SharpOS.Korlib.Runtime {
 				TextMode.WriteLine (exception.Message);
 				PrintCallingStackToScreen (exception.CallingStack);
 
-				Serial.COM1.Write ("Unhandled exception: ");
-				Serial.COM1.Write (exception.VTable.Type.Name);
-				Serial.COM1.Write (": ");
-				Serial.COM1.WriteLine (exception.Message);
+				Debug.COM1.Write ("Unhandled exception: ");
+				Debug.COM1.Write (exception.VTable.Type.Name);
+				Debug.COM1.Write (": ");
+				Debug.COM1.WriteLine (exception.Message);
 				PrintCallingStack (exception.IgnoreStackFramesCount, exception.CallingStack);
 
 				Diagnostics.Panic ("No exception handler found");
@@ -1187,18 +1187,18 @@ namespace SharpOS.Korlib.Runtime {
 
 			// If the type infos are the same, then the result is true
 
-			Serial.COM1.Write ("type: 0x");
-			Serial.COM1.Write ((int)type.MetadataToken, true);
-			Serial.COM1.Write (" '");
-			Serial.COM1.Write (type.Name);
-			Serial.COM1.WriteLine ("'");
+			Debug.COM1.Write ("type: 0x");
+			Debug.COM1.Write ((int)type.MetadataToken, true);
+			Debug.COM1.Write (" '");
+			Debug.COM1.Write (type.Name);
+			Debug.COM1.WriteLine ("'");
 
 
-			Serial.COM1.Write ("basetype: 0x");
-			Serial.COM1.Write ((int)baseType.MetadataToken, true);
-			Serial.COM1.Write (" '");
-			Serial.COM1.Write (baseType.Name);
-			Serial.COM1.WriteLine ("'");
+			Debug.COM1.Write ("basetype: 0x");
+			Debug.COM1.Write ((int)baseType.MetadataToken, true);
+			Debug.COM1.Write (" '");
+			Debug.COM1.Write (baseType.Name);
+			Debug.COM1.WriteLine ("'");
 
 			if (type == baseType)
 				return true;

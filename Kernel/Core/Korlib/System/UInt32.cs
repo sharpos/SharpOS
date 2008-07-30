@@ -12,19 +12,20 @@ using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
 using SharpOS.Kernel.Foundation;
 
-namespace InternalSystem {
+namespace InternalSystem
+{
 	[TargetNamespace ("System")]
 	public struct UInt32/*:
 		IComparable, 
 		IFormattable, 
 		IConvertible, 
 		IComparable<uint>, 
-		IEquatable<uint>*/ 
+		IEquatable<uint>*/
 	{
 #pragma warning disable 649
 		internal uint Value;
 #pragma warning restore 649
-		
+
 		public bool Equals (System.UInt32 i)
 		{
 			return i == Value;
@@ -39,11 +40,17 @@ namespace InternalSystem {
 			return other.Value == Value;
 		}
 
-		public string ToString()
+		public string ToString ()
 		{
 			return InternalSystem.String.CreateStringImpl (Value, false, false);
 		}
 
-
+		public string ToString (string format)
+		{
+			if (format == "X")
+				return InternalSystem.String.CreateStringImpl (Value, false, true);
+			else
+				return ToString ();
+		}
 	}
 }

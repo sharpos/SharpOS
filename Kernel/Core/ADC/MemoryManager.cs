@@ -764,48 +764,48 @@ namespace SharpOS.Kernel.ADC {
 
 		private static unsafe void DumpNodeSerial (Header* node)
 		{
-			if (!Serial.Initialized)
-				return;
+            //if (!Serial.Initialized)
+            //    return;
 
-			Serial.COM1.Write ("Current node: ");
-			Serial.COM1.Write ((uint) node);
-			Serial.COM1.Write (", Next node: ");
-			Serial.COM1.Write ((uint) node->Next);
-			Serial.COM1.Write (", Prev node: ");
-			Serial.COM1.Write ((uint) node->Previous);
-			Serial.COM1.Write (", Size: ");
-			Serial.COM1.Write ((uint) node->Size);
-			Serial.COM1.Write (", IsFree: ");
+			Debug.COM1.Write ("Current node: ");
+			Debug.COM1.Write ((uint) node);
+			Debug.COM1.Write (", Next node: ");
+			Debug.COM1.Write ((uint) node->Next);
+			Debug.COM1.Write (", Prev node: ");
+			Debug.COM1.Write ((uint) node->Previous);
+			Debug.COM1.Write (", Size: ");
+			Debug.COM1.Write ((uint) node->Size);
+			Debug.COM1.Write (", IsFree: ");
 			if (node->Free == 1)
-				Serial.COM1.Write ("true");
+				Debug.COM1.Write ("true");
 			else
-				Serial.COM1.Write ("false");
-			Serial.COM1.WriteLine ();
+				Debug.COM1.Write ("false");
+			Debug.COM1.WriteLine ();
 		}
 
 		private static unsafe void DumpAllocation (string text, Header* node)
 		{
-			if (!Serial.Initialized)
-				return;
+            //if (!Serial.Initialized)
+            //    return;
 
-			Serial.COM1.WriteLine("--------------");
-			Serial.COM1.Write (text);
-			Serial.COM1.Write (": ");
-			Serial.COM1.Write ((uint) node);
-			Serial.COM1.Write (", Next node: ");
-			Serial.COM1.Write ((uint) node->Next);
-			Serial.COM1.Write (", Prev node: ");
-			Serial.COM1.Write ((uint) node->Previous);
-			Serial.COM1.Write (", Size: ");
-			Serial.COM1.Write ((uint) node->Size);
-			Serial.COM1.Write (", IsFree: ");
+			Debug.COM1.WriteLine("--------------");
+			Debug.COM1.Write (text);
+			Debug.COM1.Write (": ");
+			Debug.COM1.Write ((uint) node);
+			Debug.COM1.Write (", Next node: ");
+			Debug.COM1.Write ((uint) node->Next);
+			Debug.COM1.Write (", Prev node: ");
+			Debug.COM1.Write ((uint) node->Previous);
+			Debug.COM1.Write (", Size: ");
+			Debug.COM1.Write ((uint) node->Size);
+			Debug.COM1.Write (", IsFree: ");
 			if (node->Free == 1)
-				Serial.COM1.Write ("true");
+				Debug.COM1.Write ("true");
 			else
-				Serial.COM1.Write ("false");
-			Serial.COM1.WriteLine("--------------");
+				Debug.COM1.Write ("false");
+			Debug.COM1.WriteLine("--------------");
 			ExceptionHandling.DumpCallingStack();
-			Serial.COM1.WriteLine ();
+			Debug.COM1.WriteLine ();
 		}
 
 		public static void Dump ()
@@ -824,16 +824,16 @@ namespace SharpOS.Kernel.ADC {
 
 		public static void DumpSerial ()
 		{
-			if (!Serial.Initialized)
-				return;
+            //if (!Serial.Initialized)
+            //    return;
 						
-			Serial.COM1.WriteLine ("-------------");
-			Serial.COM1.WriteLine ("Memory dump: ");
+			Debug.COM1.WriteLine ("-------------");
+			Debug.COM1.WriteLine ("Memory dump: ");
 			
 			Header* currentNode = firstNode;
 			
 			if (currentNode == null)
-				Serial.COM1.WriteLine ("null");
+				Debug.COM1.WriteLine ("null");
 
 			while (currentNode != null) {
 				DumpNodeSerial (currentNode);
@@ -843,7 +843,7 @@ namespace SharpOS.Kernel.ADC {
 					break;
 			}
 
-			Serial.COM1.WriteLine ();
+			Debug.COM1.WriteLine ();
 		}
 
 		public static void __RunTests ()
@@ -874,10 +874,10 @@ namespace SharpOS.Kernel.ADC {
 				kend = (byte*)ke;
 			}
 
-			Serial.COM1.WriteLine ("Memory Management: Stress Test:");
+			Debug.COM1.WriteLine ("Memory Management: Stress Test:");
 
-			Serial.COM1.Write (" - Allocating ", StressAllocLimit);
-			Serial.COM1.Write (" buffers");
+			Debug.COM1.Write (" - Allocating ", StressAllocLimit);
+			Debug.COM1.Write (" buffers");
 
 			for (int x = 0; x < StressAllocLimit; ++x) {
 				ptrs [x] = (byte*)MemoryManager.Allocate ((uint)num);
@@ -891,7 +891,7 @@ namespace SharpOS.Kernel.ADC {
 					++num;
 			}
 
-			Serial.COM1.WriteLine (" - Checking allocations...");
+			Debug.COM1.WriteLine (" - Checking allocations...");
 			// Check the allocations for the correct number.
 			num = 1;
 
@@ -907,10 +907,10 @@ namespace SharpOS.Kernel.ADC {
 				}
 
 				if (alloc <= kend) {
-					Serial.COM1.Write (" - Allocation #", x);
-					Serial.COM1.Write (" is not exclusive: ");
-					Serial.COM1.Write (" overlaps with kernel!");
-					Serial.COM1.WriteLine ();
+					Debug.COM1.Write (" - Allocation #", x);
+					Debug.COM1.Write (" is not exclusive: ");
+					Debug.COM1.Write (" overlaps with kernel!");
+					Debug.COM1.WriteLine ();
 					++exclusiveFailures;
 					continue;
 				}
@@ -928,16 +928,16 @@ namespace SharpOS.Kernel.ADC {
 					ya = ptrs [y];
 
 					if (ya > xa && ya < xa + num) {
-						Serial.COM1.Write (" - Allocation #", x);
-						Serial.COM1.Write (" is not exclusive: ");
-						Serial.COM1.Write ("Overlap with alloc #", y);
-						Serial.COM1.WriteLine ();
+						Debug.COM1.Write (" - Allocation #", x);
+						Debug.COM1.Write (" is not exclusive: ");
+						Debug.COM1.Write ("Overlap with alloc #", y);
+						Debug.COM1.WriteLine ();
 						fail = true;
 					} else if (xa == ya) {
-						Serial.COM1.Write (" - Allocation #", x);
-						Serial.COM1.Write (" is not exclusive: ");
-						Serial.COM1.Write ("Same as alloc #", y);
-						Serial.COM1.WriteLine ();
+						Debug.COM1.Write (" - Allocation #", x);
+						Debug.COM1.Write (" is not exclusive: ");
+						Debug.COM1.Write ("Same as alloc #", y);
+						Debug.COM1.WriteLine ();
 						fail  =  true;
 					}
 
@@ -959,8 +959,8 @@ namespace SharpOS.Kernel.ADC {
 				}
 
 				if (oldFail == exclusiveFailures) {
-					Serial.COM1.Write (" - Allocation #", x);
-					Serial.COM1.WriteLine (" is correct");
+					Debug.COM1.Write (" - Allocation #", x);
+					Debug.COM1.WriteLine (" is correct");
 				}
 
 				if (num + 1 >= 256)
@@ -969,11 +969,11 @@ namespace SharpOS.Kernel.ADC {
 					++num;
 			}
 
-			Serial.COM1.Write (" - Failures: ", failures * 100 / StressAllocLimit);
-			Serial.COM1.WriteLine ("%");
-			Serial.COM1.Write (" - Exclusivity Failures: ",
+			Debug.COM1.Write (" - Failures: ", failures * 100 / StressAllocLimit);
+			Debug.COM1.WriteLine ("%");
+			Debug.COM1.Write (" - Exclusivity Failures: ",
 				exclusiveFailures * 100 / StressAllocLimit);
-			Serial.COM1.WriteLine ("%");
+			Debug.COM1.WriteLine ("%");
 
 			// Deallocate
 
@@ -995,7 +995,7 @@ namespace SharpOS.Kernel.ADC {
 				kend = (byte*)ke;
 			}
 
-			Serial.COM1.WriteLine ("Memory Management: Exclusivity Test:");
+			Debug.COM1.WriteLine ("Memory Management: Exclusivity Test:");
 			// Make our allocations
 
 			for (int x = 0; x < ExclusivityTestLimit; ++x) {
@@ -1008,9 +1008,9 @@ namespace SharpOS.Kernel.ADC {
 				bool fail = false;
 
 				if (ptrs [x] <= kend) {
-					Serial.COM1.Write ("Allocation #", x);
-					Serial.COM1.Write (" is not exclusive: ");
-					Serial.COM1.Write (" overlaps with kernel!");
+					Debug.COM1.Write ("Allocation #", x);
+					Debug.COM1.Write (" is not exclusive: ");
+					Debug.COM1.Write (" overlaps with kernel!");
 					fail = true;
 				}
 
@@ -1024,19 +1024,19 @@ namespace SharpOS.Kernel.ADC {
 					ya = ptrs [y];
 
 					if (ya > xa && ya <= xa + ExclusivityTestBlockSize) {
-						Serial.COM1.Write (" - Allocation #", x);
-						Serial.COM1.Write (" is not exclusive: ");
-						Serial.COM1.Write ("Overlap with alloc #", y);
+						Debug.COM1.Write (" - Allocation #", x);
+						Debug.COM1.Write (" is not exclusive: ");
+						Debug.COM1.Write ("Overlap with alloc #", y);
 						fail = true;
 					} else if (xa > ya && xa <= ya + ExclusivityTestBlockSize) {
-						Serial.COM1.Write (" - (inv) Allocation #", x);
-						Serial.COM1.Write (" is not exclusive: ");
-						Serial.COM1.Write ("Overlap with alloc #", y);
+						Debug.COM1.Write (" - (inv) Allocation #", x);
+						Debug.COM1.Write (" is not exclusive: ");
+						Debug.COM1.Write ("Overlap with alloc #", y);
 						fail = true;
 					} else if (xa == ya) {
-						Serial.COM1.Write ("Allocation #", x);
-						Serial.COM1.Write (" is not exclusive: ");
-						Serial.COM1.Write ("Same as alloc #", y);
+						Debug.COM1.Write ("Allocation #", x);
+						Debug.COM1.Write (" is not exclusive: ");
+						Debug.COM1.Write ("Same as alloc #", y);
 						fail  =  true;
 					}
 
@@ -1054,8 +1054,8 @@ namespace SharpOS.Kernel.ADC {
 					exclusiveFailures++;
 			}
 
-			Serial.COM1.Write (" - Failures: ", exclusiveFailures * 100 / ExclusivityTestLimit);
-			Serial.COM1.WriteLine ("%");
+			Debug.COM1.Write (" - Failures: ", exclusiveFailures * 100 / ExclusivityTestLimit);
+			Debug.COM1.WriteLine ("%");
 
 			// Deallocate
 

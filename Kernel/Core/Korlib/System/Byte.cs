@@ -37,5 +37,18 @@ namespace InternalSystem {
 			Byte other = (Byte)o;
 			return other.Value == Value;
 		}
+
+		public string ToString ()
+		{
+			return InternalSystem.String.CreateStringImpl ((uint)Value, true, false);
+		}
+
+		public string ToString (string format)
+		{
+			if (format == "X")
+				return InternalSystem.String.CreateStringImpl ((uint)Value, true, true);
+			else
+				return ToString ();
+		}
 	}
 }

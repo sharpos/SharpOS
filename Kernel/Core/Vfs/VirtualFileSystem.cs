@@ -3,6 +3,7 @@
 //
 // Authors:
 //	Michael Ruck (aka grover) <sharpos@michaelruck.de>
+//  Phil Garcia (aka tgiphil) <phil@thinkedge.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -10,6 +11,7 @@
 
 using System;
 using System.IO;
+using SharpOS.Kernel.FileSystem;
 
 namespace SharpOS.Kernel.Vfs {
 	/// <summary>
@@ -147,20 +149,29 @@ namespace SharpOS.Kernel.Vfs {
 		/// <summary>
 		/// Mounts a new file system.
 		/// </summary>
-		/// <param name="source">The source of the filesystem. This is ussually a device name, but can also be another directory.</param>
+		/// <param name="source">The source of the filesystem. This is usually a device name, but can also be another directory.</param>
 		/// <param name="target">The path including the name of the mount point, where to mount the new filesystem.</param>
 		public static void Mount (string source, string target)
 		{
 			// Retrieve the parent directory of the mount
 			DirectoryEntry parent = PathResolver.Resolve(rootNode, ref target, PathResolutionFlags.RetrieveParent);
 
-			// Attempt to mount the filesystem
+			if (parent == null)
+				throw new System.ArgumentException ();
+
+			IFileSystem root = FileSystemFactory.CreateFileSystem (source);
+
+			if (root == null)
+				throw new System.ArgumentException ();
+
+			PathSplitter path = new PathSplitter (target);	
+			DirectoryEntry.Allocate (parent, path.Last, root.Root);
 		}
 
 		public static object Open (string path, FileAccess access, FileShare share)
 		{
 			DirectoryEntry entry = PathResolver.Resolve(rootNode, ref path);
-
+			
 			/* HINT:
 			 * 
 			 * 1. Do we really need to pass the FileShare flags down to the inode? 
@@ -192,14 +203,20 @@ namespace SharpOS.Kernel.Vfs {
 					modeFlags = AccessMode.Read | AccessMode.Write;
 					break;
 			}
+	
 			AccessCheck.Perform(entry, modeFlags, AccessCheckFlags.None);
 
+			if (entry == null)
+				SharpOS.Kernel.ADC.TextMode.WriteLine ("VirtualFileSystem.Open.4a");
+			if (entry.Node == null)
+				SharpOS.Kernel.ADC.TextMode.WriteLine ("VirtualFileSystem.Open.4b");
 			return entry.Node.Open(access, share);
 		}
 
 		public static void Rename (string old, string newname)
 		{
-			// FIXME: throw new NotImplementedException();
+			// FIXME: 
+			throw new NotImplementedException();
 		}
 
 		/// <summary>
@@ -251,7 +268,8 @@ namespace SharpOS.Kernel.Vfs {
 		/// FIXME: We need to check the FS tree for in use status and throw an InvalidOperationException?
 		public static void Unmount (string path)
 		{
-			// FIXME: throw new NotImplementedException();
+			// FIXME: 
+			throw new NotImplementedException();
 		}
 
 		#endregion // Methods
@@ -271,13 +289,13 @@ namespace SharpOS.Kernel.Vfs {
 
         object IFileSystemService.SettingsType { get { return null; } }
 
-		IFileSystem IFileSystemService.Mount(string path)
+		bool IFileSystemService.Mount()
 		{
 			// Even though we're a file system, we are not mountable.
-			return null;
+			return false;
 		}
 
-		IFileSystem IFileSystemService.Format(string path, FSSettingsBase settings)
+		bool IFileSystemService.Format(SettingsBase settings)
 		{
 			// We do not support formatting.
             throw new NotSupportedException();

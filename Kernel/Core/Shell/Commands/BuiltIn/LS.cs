@@ -25,7 +25,7 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		[Label (lblExecute)]
 		public static void Execute (CommandExecutionContext* context)
 		{
-			SharpOS.Kernel.FileSystem.Ext2.Ext2FS.ListFile ();
+			//SharpOS.Kernel.FileSystem.Ext2.Ext2FS.ListFile ();
 		}
 
 		public static CommandTableEntry* CREATE ()

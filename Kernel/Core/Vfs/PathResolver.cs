@@ -133,12 +133,11 @@ namespace SharpOS.Kernel.Vfs
 		/// process. For example a network file system node may throw an exception, if the server is unreachable.
 		/// </remarks>
 		private DirectoryEntry Resolve (ref string path, PathResolutionFlags flags)
-		{
+		{			
 			// DirectoryNode entry found by stepping through the path
 			DirectoryEntry entry = null;
 
 			// Split the given path to its components
-			//String[] dirs = path.Split(splitChars);
 			PathSplitter dirs = new PathSplitter (path);
 
 			// Determine the number of path components
@@ -148,7 +147,6 @@ namespace SharpOS.Kernel.Vfs
 			string item;
 			// Loop index
 			int index = 0;
-
 			// Perform an access check on the root directory
 			AccessCheck.Perform (currentDirectory, AccessMode.Traverse, AccessCheckFlags.None);
 
@@ -157,14 +155,14 @@ namespace SharpOS.Kernel.Vfs
 				path = dirs[dirs.Length - 1];
 				max--;
 			}
-
+	
 			// Check if this is an absolute path?
 			if (dirs[0].Length == 0) {
 				// Yes, replace the current directory
 				currentDirectory = rootDirectory;
 				index++;
 			}
-
+						
 			// Iterate over the remaining path components
 			while ((currentDirectory != null) && (index < max)) {
 				item = dirs[index];
@@ -185,7 +183,6 @@ namespace SharpOS.Kernel.Vfs
 #if VFS_EXCEPTIONS
 							throw new PathTooLongException();
 #endif // #if !VFS_EXCEPTIONS
-						} else {
 						}
 					}
 				}
@@ -214,7 +211,6 @@ namespace SharpOS.Kernel.Vfs
 					else
 						throw new DirectoryNotFoundException(@"Failed to resolve the path.");
 #endif // #if VFS_EXCEPTIONS
-				} else {
 				}
 
 				// Set the current resolution directory

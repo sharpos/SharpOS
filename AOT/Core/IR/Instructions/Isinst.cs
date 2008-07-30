@@ -52,12 +52,11 @@ namespace SharpOS.AOT.IR.Instructions {
 		/// <param name="method">The method.</param>
 		public override void Process (Method method)
 		{
-			if (this.type.IsClass || this.type.IsInterface) {
+			//if (this.type.IsClass || this.type.IsInterface) {
 				this.def.InternalType = InternalType.O;
 				this.def.Type = type;
-
-			} else
-				throw new NotImplementedEngineException ();
+			//} else
+			//    throw new NotImplementedEngineException ();
 		}
 	}
 }

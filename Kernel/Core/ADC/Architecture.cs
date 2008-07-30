@@ -10,7 +10,7 @@
 //
 
 using SharpOS.AOT;
-using SharpOS.Kernel.DriverSystem;
+using SharpOS.Kernel.DeviceSystem;
 using AOTAttr = SharpOS.AOT.Attributes;
 
 namespace SharpOS.Kernel.ADC {
@@ -78,24 +78,6 @@ namespace SharpOS.Kernel.ADC {
 		{
 			return null;
 		}
-		#endregion
-		
-		#region DeviceManager
-		public static IDeviceManager DeviceManager 
-		{
-			[AOTAttr.ADCStub]
-			get { return null; }
-		}
-		#endregion
-		
-		// .. temporarily put here untill we have a beter mechanism to determine 
-		// which root devices are available (=platform specific)
-		#region RootDevices		
-		public static IDevice[] RootDevices
-		{
-			[AOTAttr.ADCStub]
-			get { return null; }
-		}
-		#endregion
+		#endregion				
 	}
 }

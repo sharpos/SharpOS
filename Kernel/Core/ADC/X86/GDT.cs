@@ -44,7 +44,7 @@ namespace SharpOS.Kernel.ADC.X86 {
 				Expansion = 4,
 				Executable = 8,
 				Descriptor = 16,
-				Privilege_Ring_0 = 0,   
+				Privilege_Ring_0 = 0,
 				Privilege_Ring_1 = 32,
 				Privilege_Ring_2 = 64,
 				Privilege_Ring_3 = 96,
@@ -82,7 +82,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 
 		internal static void Setup ()
 		{
-            
 			gdtPointer->Setup ((ushort) (sizeof (Entry) * GDTEntries - 1), (uint) gdt);
 
 #if DISPLAY_GDT_SETUP_SUMMARY // TO TOGGLE, REFER TO TOP OF FILE

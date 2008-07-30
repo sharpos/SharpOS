@@ -22,46 +22,46 @@ namespace SharpOS.Kernel.Shell.Commands.BuiltIn {
 		[Label (lblExecute)]
 		public static void Execute (CommandExecutionContext* context)
 		{
-			if (!PCIController.IsAvailable) {
-				ADC.TextMode.WriteLine ("Pci not found");
-			}
+			//if (!PCIController.IsAvailable) {
+			//    ADC.TextMode.WriteLine ("Pci not found");
+			//}
 
-			StringBuilder* sb = SharpOS.Kernel.Foundation.StringBuilder.CREATE ();
+			//StringBuilder* sb = SharpOS.Kernel.Foundation.StringBuilder.CREATE ();
 
-			sb->AppendNumber (PCIController.DeviceCount);
-			sb->Append (" PCI devices were detected.");
-			ADC.TextMode.WriteLine (sb->buffer);
+			//sb->AppendNumber (PCIController.DeviceCount);
+			//sb->Append (" PCI devices were detected.");
+			//ADC.TextMode.WriteLine (sb->buffer);
 
-			for (int index = 0; index < PCIController.DeviceCount; index++)
-			{
-				PCIDevice* pciDev = (PCIDevice*)PCIController.Devices (index);
-				if ((int)pciDev != 0)
-				{
-					sb->Clear ();
-					sb->Append ("PCI");
-					sb->AppendNumber (index);
-					sb->Append (":");
-					sb->AppendNumber ((int)pciDev->Bus);
-					sb->Append (":");
-					sb->AppendNumber ((int)pciDev->Slot);
-					sb->Append (".");
-					sb->AppendNumber ((int)pciDev->Function);
-					sb->Append (" Vendor:0x");
-					sb->AppendNumber (pciDev->VendorID, true);
-					sb->Append (" Device:0x");
-					sb->AppendNumber (pciDev->DeviceID, true);
-					sb->Append (" Rev:0x");
-					sb->AppendNumber (pciDev->RevisionID, true);
-					sb->Append (" Class:0x");
-					sb->AppendNumber ((int)((uint)pciDev->ClassCode << 8 | pciDev->ProgIF), true);
-					//[cedrou] not yet !
-					//sb->Append (pciDev->ClassCode.ToString());
-					ADC.TextMode.WriteLine (sb->buffer);
-				}
-			}
+			//for (int index = 0; index < PCIController.DeviceCount; index++)
+			//{
+			//    PCIDevice* pciDev = (PCIDevice*)PCIController.Devices (index);
+			//    if ((int)pciDev != 0)
+			//    {
+			//        sb->Clear ();
+			//        sb->Append ("PCI");
+			//        sb->AppendNumber (index);
+			//        sb->Append (":");
+			//        sb->AppendNumber ((int)pciDev->Bus);
+			//        sb->Append (":");
+			//        sb->AppendNumber ((int)pciDev->Slot);
+			//        sb->Append (".");
+			//        sb->AppendNumber ((int)pciDev->Function);
+			//        sb->Append (" Vendor:0x");
+			//        sb->AppendNumber (pciDev->VendorID, true);
+			//        sb->Append (" Device:0x");
+			//        sb->AppendNumber (pciDev->DeviceID, true);
+			//        sb->Append (" Rev:0x");
+			//        sb->AppendNumber (pciDev->RevisionID, true);
+			//        sb->Append (" Class:0x");
+			//        sb->AppendNumber ((int)((uint)pciDev->ClassCode << 8 | pciDev->ProgIF), true);
+			//        //[cedrou] not yet !
+			//        //sb->Append (pciDev->ClassCode.ToString());
+			//        ADC.TextMode.WriteLine (sb->buffer);
+			//    }
+			//}
 
-			MemoryManager.Free ((void*)sb->buffer);
-			MemoryManager.Free ((void*)sb);
+			//MemoryManager.Free ((void*)sb->buffer);
+			//MemoryManager.Free ((void*)sb);
 		}
 
 		[Label (lblGetHelp)]

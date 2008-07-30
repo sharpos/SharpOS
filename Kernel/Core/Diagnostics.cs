@@ -99,18 +99,18 @@ namespace SharpOS.Kernel {
 				TextMode.Write ("Assertion Failed: ");
 				TextMode.Write (msg);
 				
-				if (Serial.Initialized)
-				{
-					Serial.COM1.WriteLine ("");
-					Serial.COM1.WriteLine ("----------------- ");
-					Serial.COM1.WriteLine ("Assertion Failed: ");
-					Serial.COM1.WriteLine (msg);
+				//if (Serial.Initialized)
+				//{
+					Debug.COM1.WriteLine ("");
+					Debug.COM1.WriteLine ("----------------- ");
+					Debug.COM1.WriteLine ("Assertion Failed: ");
+					Debug.COM1.WriteLine (msg);
 					
-					Serial.COM1.WriteLine ("=============================================================");
-					Serial.COM1.WriteLine ("Stack Trace:");
+					Debug.COM1.WriteLine ("=============================================================");
+					Debug.COM1.WriteLine ("Stack Trace:");
 				
 					ExceptionHandling.DumpCallingStack();
-				}			
+				//}			
 				Panic (msg);
 				
 				Barrier.Exit();

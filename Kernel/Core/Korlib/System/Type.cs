@@ -10,41 +10,57 @@
 
 using SharpOS.AOT.Attributes;
 using SharpOS.Korlib.Runtime;
+using SharpOS.AOT.Metadata;
 
 namespace InternalSystem
 {
-	[TargetNamespace("System")]
-	public abstract class Type
-	{
+    [TargetNamespace("System")]
+    public abstract class Type
+    {
+        //protected TypeDefRow typeDefRow;
 
-		protected Type ()
-		{
-		}
+        protected Type()
+        {
+        }
 
-		public abstract Type BaseType
-		{
-			get;
-		}
+        ///// <summary>
+        /////   Returns the Attributes associated with the type.
+        ///// </summary>
+        //public TypeAttributes Attributes
+        //{
+        //    get
+        //    {
+        //        return typeDefRow.Flags;
+        //    }
+        //}
 
-		public unsafe bool IsSubclassOf (System.Type type)
-		{
-			//return Runtime.IsBaseClassOf (this, type); 
-			return false;
-		}
+        //public Assembly Assembly
+        //{
+        //    get;
+        //}
 
-		public unsafe bool IsAssignableFrom (System.Type type)
-		{
-			//return Runtime.IsBaseClassOf (this, type) || ;
-			return false;
-		}
+        //public string ToString()
+        //{
+        //    return String.CreateStringImpl(Runtime.GetString(Assembly, typeDef.Name));
+        //}
 
-		//public static Type GetTypeFromHandle (System.RuntimeTypeHandle handle)
-		//{
-		//    if (handle.Value == System.IntPtr.Zero)	
-		//        return null;
+        //public unsafe bool IsSubclassOf (InternalSystem.Type type)
+        //{
+        //    return Runtime.IsBaseClassOf (typeInfo, type.typeInfo); 			
+        //}
 
-		//    return null; // TODO
-		//}
+        //public unsafe bool IsAssignableFrom (System.Type type)
+        //{
+        //    //return Runtime.IsBaseClassOf (this, type) || ;
+        //    return false;
+        //}
 
-	}
+        //public static Type GetTypeFromHandle (System.RuntimeTypeHandle handle)
+        //{
+        //    if (handle.Value == System.IntPtr.Zero)	
+        //        return null;
+
+        //    return null; // TODO
+        //}
+    }
 }

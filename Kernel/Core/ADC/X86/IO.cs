@@ -5,6 +5,7 @@
 //	Mircea-Cristian Racasan <darx_kies@gmx.net>
 //	Sander van Rossen <sander.vanrossen@gmail.com>
 //	Bruce Markham <illuminus86@gmail.com>
+//  Phil Garcia (aka tgiphil) <phil@thinkedge.com>
 //
 // Licensed under the terms of the GNU GPL v3,
 //  with Classpath Linking Exception for Libraries
@@ -830,38 +831,40 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#region ReadByte
 		public unsafe static byte ReadByte (Port port)
 		{
+			return Read8 ((uint)port);
+		}
+		#endregion
+
+		#region WriteByte
+		public unsafe static void WriteByte (Port port, byte value)
+		{
+			Write8 ((uint)port, value);
+		}
+		#endregion
+
+		#region ReadByte
+		public unsafe static byte Read8 (uint port)
+		{
+			ushort uport = (ushort)port;
 			byte value = 0;
 
 			Asm.XOR (R32.EAX, R32.EAX);
-			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.MOV (R16.DX, (ushort*)&uport);
 			Asm.IN_AL__DX ();
 			Asm.MOV (&value, R8.AL);
 
 			return value;
 		}
 		#endregion
-		
-		#region ReadSByte
-		public unsafe static sbyte ReadSByte (Port port)
-		{
-			sbyte value = 0;
-
-			Asm.XOR (R32.EAX, R32.EAX);
-			Asm.MOV (R16.DX, (ushort*) &port);
-			Asm.IN_AL__DX ();
-			Asm.MOV ((byte*)&value, R8.AL);
-
-			return value;
-		}
-		#endregion
 
 		#region ReadUInt16
-		public unsafe static ushort ReadUInt16 (Port port)
+		public unsafe static UInt16 Read16 (uint port)
 		{
+			ushort uport = (ushort)port;
 			ushort value = 0;
 
 			Asm.XOR (R32.EAX, R32.EAX);
-			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.MOV (R16.DX, (ushort*)&uport);
 			Asm.IN_AX__DX ();
 			Asm.MOV (&value, R16.AX);
 
@@ -870,12 +873,13 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 
 		#region ReadUInt32
-		public unsafe static uint ReadUInt32 (Port port)
+		public unsafe static UInt32 Read32 (uint port)
 		{
+			ushort uport = (ushort)port;
 			uint value = 0;
 
 			Asm.XOR (R32.EAX, R32.EAX);
-			Asm.MOV (R16.DX, (ushort*) &port);
+			Asm.MOV (R16.DX, (ushort*)&uport);
 			Asm.IN_EAX__DX ();
 			Asm.MOV (&value, R32.EAX);
 
@@ -884,44 +888,30 @@ namespace SharpOS.Kernel.ADC.X86 {
 		#endregion
 
 		#region WriteByte
-		public unsafe static void WriteByte (Port port, byte value)
+		public unsafe static void Write8 (uint port, byte value)
 		{
-			Asm.MOV (R16.DX, (ushort*) &port);
+			ushort uport = (ushort)port;
+			Asm.MOV (R16.DX, (ushort*)&uport);
 			Asm.MOV (R8.AL, &value);
 			Asm.OUT_DX__AL ();
 		}
 		#endregion
 
-		#region WriteSByte
-		public unsafe static void WriteSByte (Port port, sbyte value)
-		{
-			Asm.MOV (R16.DX, (ushort*) &port);
-			Asm.MOV (R8.AL, (byte*)&value);
-			Asm.OUT_DX__AL ();
-		}
-		#endregion
-
-		#region WriteByte2
-		public unsafe static void WriteByte2 (Port port, ushort value)
-		{
-			WriteByte(port, (byte)((value     ) & 0xFF));
-			WriteByte(port, (byte)((value >> 8) & 0xFF));
-		}
-		#endregion
-
 		#region WriteUInt16
-		public unsafe static void WriteUInt16 (Port port, ushort value)
+		public unsafe static void Write16 (uint port, UInt16 value)
 		{
-			Asm.MOV (R16.DX, (ushort*) &port);
+			ushort uport = (ushort)port;
+			Asm.MOV (R16.DX, (ushort*)&uport);
 			Asm.MOV (R16.AX, &value);
 			Asm.OUT_DX__AX ();
 		}
 		#endregion
 
 		#region Write32
-		public unsafe static void WriteUInt32 (Port port, uint value)
+		public unsafe static void Write32 (uint port, UInt32 value)
 		{
-			Asm.MOV (R16.DX, (ushort*) &port);
+			ushort uport = (ushort)port;
+			Asm.MOV (R16.DX, (ushort*)&uport);
 			Asm.MOV (R32.EAX, &value);
 			Asm.OUT_DX__EAX ();
 		}
@@ -934,5 +924,6 @@ namespace SharpOS.Kernel.ADC.X86 {
 			Asm.OUT__AL (0x80);
 		}
 		#endregion
+
 	}
 }

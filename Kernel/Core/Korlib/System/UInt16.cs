@@ -37,5 +37,18 @@ namespace InternalSystem {
 			UInt16 other = (UInt16)o;
 			return other.Value == Value;
 		}
+
+		public string ToString ()
+		{
+			return InternalSystem.String.CreateStringImpl (Value, false, false);
+		}
+
+		public string ToString (string format)
+		{			
+			if (format == "X")
+				return InternalSystem.String.CreateStringImpl (Value, false, true);
+			else
+				return ToString ();
+		}
 	}
 }

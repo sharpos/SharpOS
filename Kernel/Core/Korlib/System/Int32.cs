@@ -11,7 +11,8 @@
 using SharpOS.AOT.Attributes;
 using SharpOS.Kernel.ADC;
 
-namespace InternalSystem {
+namespace InternalSystem
+{
 	[TargetNamespace ("System")]
 	public struct Int32 /*:
 		IComparable, 
@@ -23,7 +24,7 @@ namespace InternalSystem {
 #pragma warning disable 649
 		internal int Value;
 #pragma warning restore 649
-		
+
 		public bool Equals (System.Int32 i)
 		{
 			return i == Value;
@@ -36,6 +37,19 @@ namespace InternalSystem {
 
 			Int32 other = (Int32)o;
 			return other.Value == Value;
+		}
+
+		public string ToString ()
+		{
+			return InternalSystem.String.CreateStringImpl ((uint)Value, true, false);
+		}
+
+		public string ToString (string format)
+		{
+			if (format == "X")
+				return InternalSystem.String.CreateStringImpl ((uint)Value, true, true);
+			else
+				return ToString ();
 		}
 	}
 }
