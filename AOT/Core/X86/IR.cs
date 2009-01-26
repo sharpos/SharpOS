@@ -1990,7 +1990,7 @@ namespace SharpOS.AOT.X86 {
 				else
 					this.assembly.MOV (R32.EAX, new DWordMemory (this.GetAddress (first)));
 
-				if (instruction.MulType == IR.Instructions.Mul.Type.Mul) {
+				if (instruction.MulType == IR.Instructions.Mul.Type.Mul || instruction.MulType == IR.Instructions.Mul.Type.MulUnsignedWithOverflowCheck ) {
 					if (second.IsRegisterSet)
 						this.assembly.IMUL (R32.EAX, Assembly.GetRegister (second.Register));
 					else

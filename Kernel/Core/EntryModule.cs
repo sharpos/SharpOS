@@ -167,7 +167,7 @@ namespace SharpOS.Kernel
 			InternalSystem.String.__RunTests ();
 			Runtime.__RunTests ();
 			Debug.COM1.WriteLine ("Failed AOT Tests:");
-			SharpOS.Kernel.Tests.Wrapper.Run ();
+			//SharpOS.Kernel.Tests.Wrapper.Run ();
 			Debug.COM1.WriteLine ();
 			Debug.COM1.WriteLine ("Kernel Tests:");
 #endif

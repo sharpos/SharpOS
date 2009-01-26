@@ -90,7 +90,7 @@ namespace KernelTestsWrapperGen {
 						string errorMessage = "\"'" + entry.DeclaringType.FullName + "." + entry.Name + "' failed.\"";
 
 						tr.WriteLine ("\t\t\t\tTextMode.WriteLine (" + errorMessage + ");");
-						tr.WriteLine ("\t\t\t\tSerial.COM1.WriteLine (" + errorMessage + ");");
+						tr.WriteLine ("\t\t\t\tDebug.COM1.WriteLine (" + errorMessage + ");");
 						tr.WriteLine ("\t\t\t\tfailures++;");
 						tr.WriteLine ("\t\t\t}");
 						tr.WriteLine ("");

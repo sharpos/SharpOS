@@ -170,16 +170,16 @@ namespace SharpOS.Kernel.DeviceSystem.DiskController
 
 			for (uint drive = 0; drive < DrivesPerConroller; drive++) {
 				if (driveInfo[drive].Present) {
-					Open (drive);
+					if (Open(drive)) {
+						TextMode.Write(base.name);
+						TextMode.Write(": Disk #");
+						TextMode.Write((int)drive);
+						TextMode.Write(" - ", (int)(driveInfo[drive].MaxLBA / 1024 / 2));
+						TextMode.Write("MB, LBA=", (int)driveInfo[drive].MaxLBA);
+						TextMode.WriteLine("");
 
-					TextMode.Write (base.name);
-					TextMode.Write (": Disk #");
-					TextMode.Write ((int)drive);
-					TextMode.Write (" - ", (int)(driveInfo[drive].MaxLBA / 1024 / 2));
-					TextMode.Write ("MB, LBA=", (int)driveInfo[drive].MaxLBA);
-					TextMode.WriteLine ("");
-
-					DeviceManager.Add (new DiskDevice (this, drive, false));
+						DeviceManager.Add(new DiskDevice(this, drive, false));
+					}
 				}
 			}
 
